@@ -20,12 +20,44 @@ export default async function StudentFormationPage() {
   ]);
 
   return (
-    <section className="rounded-lg border border-border bg-background p-6">
-      <h2 className="mb-1 text-sm font-medium tracking-wide text-muted">MINISTÈRES</h2>
-      <p className="mb-6 text-sm text-muted">
-        À partir de janvier, les cours se poursuivent par ministère à MLK Studio, le samedi et le
-        dimanche (mêmes contenus, au choix de l&apos;étudiant).
-      </p>
+    <div className="space-y-6">
+      {/* PHASE 1 : Tronc commun */}
+      <section className="rounded-lg border border-border bg-background p-6">
+        <div className="mb-1 flex items-center justify-between">
+          <h2 className="text-sm font-medium tracking-wide text-muted">PHASE 1 — TRONC COMMUN</h2>
+          <span className="rounded-full border border-border bg-foreground/5 px-2.5 py-0.5 text-xs text-muted">
+            Octobre → Décembre
+          </span>
+        </div>
+        <p className="mb-4 text-sm text-muted">
+          Enseignement commun à tous les ministères, un week-end par mois à l’<strong>Espace Grand Paris</strong>.
+          Plénière le matin et ateliers de mise en pratique. Salles disponibles : Giroud, Rosa Parks, Denis.
+        </p>
+
+        <div className="rounded-md border border-accent/30 bg-accent/5 p-4">
+          <span className="text-xs font-semibold uppercase tracking-wider text-accent">Ce samedi 19 septembre</span>
+          <p className="mt-1 text-base font-semibold text-foreground">Le caractère</p>
+          <p className="mt-0.5 text-sm text-foreground">
+            Intervenant : <strong className="font-semibold">Paul Goulet</strong>
+          </p>
+          <p className="mt-1 text-xs text-muted">
+            Lieu : <strong>MLK 2</strong> (MLK Studio) · Horaires : 09h30 – 17h00 · Tronc commun tous ministères
+          </p>
+        </div>
+      </section>
+
+      {/* PHASE 2 : Ministères */}
+      <section className="rounded-lg border border-border bg-background p-6">
+        <div className="mb-1 flex items-center justify-between">
+          <h2 className="text-sm font-medium tracking-wide text-muted">PHASE 2 — PAR MINISTÈRE</h2>
+          <span className="rounded-full border border-border bg-foreground/5 px-2.5 py-0.5 text-xs text-muted">
+            À partir de janvier
+          </span>
+        </div>
+        <p className="mb-6 text-sm text-muted">
+          À partir de janvier, les cours se poursuivent par ministère à <strong>MLK 2</strong> (= MLK Studio), le samedi et le
+          dimanche (mêmes contenus, au choix de l&apos;étudiant).
+        </p>
 
       <ul className="grid gap-3 sm:grid-cols-2">
         {(ministries ?? []).map((m) => {
@@ -50,6 +82,7 @@ export default async function StudentFormationPage() {
           );
         })}
       </ul>
-    </section>
+      </section>
+    </div>
   );
 }

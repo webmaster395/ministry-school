@@ -160,7 +160,11 @@ export default function WeekCalendar({ sessions }: { sessions: CalendarSession[]
                   {s.location}
                   {s.room ? ` · ${s.room}` : ""}
                 </p>
-                {s.teacher && <p className="text-muted">Intervenant : {s.teacher}</p>}
+                {s.teacher && (
+                  <p className="text-muted">
+                    Intervenant : <strong className="font-medium text-foreground">{s.teacher}</strong>
+                  </p>
+                )}
               </li>
             ))}
           </ul>

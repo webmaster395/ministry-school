@@ -25,8 +25,12 @@ export default async function StudentCalendarPage() {
               </span>
               <span className="text-muted">
                 {formatTimeRange(s.start_time, s.end_time)} · {s.location}
-                {s.room ? ` · ${s.room}` : ""}
-                {s.teacher ? ` · ${s.teacher.full_name}` : ""}
+                {s.teacher ? (
+                  <>
+                    {" · "}Intervenant :{" "}
+                    <strong className="font-medium text-foreground">{s.teacher.full_name}</strong>
+                  </>
+                ) : null}
               </span>
             </li>
           ))}

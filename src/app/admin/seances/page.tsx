@@ -16,9 +16,15 @@ export default async function AdminSessionsPage() {
   return (
     <>
       <section className="rounded-lg border border-border bg-background p-6">
-        <h2 className="mb-4 text-sm font-medium tracking-wide text-muted">
+        <h2 className="mb-1 text-sm font-medium tracking-wide text-muted">
           PROGRAMMER UNE SÉANCE
         </h2>
+        {/* Guide lieux */}
+        <div className="mb-4 rounded-md border border-border bg-foreground/5 p-3 text-xs text-muted space-y-1">
+          <p className="font-semibold text-foreground">Rappel — deux sites distincts :</p>
+          <p>• <strong>Espace Grand Paris</strong> (Phase 1 – Tronc commun) : plusieurs salles — <strong>Giroud</strong>, <strong>Rosa Parks</strong>, <strong>Denis</strong>. Préciser toujours la salle.</p>
+          <p>• <strong>MLK 2</strong> (= MLK Studio, Phase 2 – Par ministère) : site unique, pas de salle à préciser.</p>
+        </div>
         <form action={createSession} className="grid gap-3 sm:grid-cols-2">
           <div>
             <label className="mb-1 block text-xs text-muted">Type</label>
@@ -124,23 +130,32 @@ export default async function AdminSessionsPage() {
 
           <div>
             <label className="mb-1 block text-xs text-muted">Lieu</label>
-            <input
-              type="text"
+            <select
               name="location"
               required
-              placeholder="MLK Studio"
+              defaultValue=""
               className="w-full rounded-md border border-border px-3 py-2 text-sm"
-            />
+            >
+              <option value="" disabled>Sélectionner un lieu…</option>
+              <option value="Espace Grand Paris">Espace Grand Paris (Tronc commun)</option>
+              <option value="MLK 2">MLK 2 / MLK Studio (Par ministère)</option>
+            </select>
           </div>
 
           <div>
-            <label className="mb-1 block text-xs text-muted">Salle (optionnel)</label>
-            <input
-              type="text"
+            <label className="mb-1 block text-xs text-muted">
+              Salle <span className="text-accent">(requis pour Espace Grand Paris)</span>
+            </label>
+            <select
               name="room"
-              placeholder="Salle 2"
+              defaultValue=""
               className="w-full rounded-md border border-border px-3 py-2 text-sm"
-            />
+            >
+              <option value="">— Aucune salle (MLK 2) —</option>
+              <option value="Giroud">Giroud</option>
+              <option value="Rosa Parks">Rosa Parks</option>
+              <option value="Denis">Denis</option>
+            </select>
           </div>
 
           <div className="sm:col-span-2">
@@ -148,6 +163,7 @@ export default async function AdminSessionsPage() {
             <textarea
               name="description"
               rows={2}
+              placeholder="ex: Paul Goulet — Le caractère"
               className="w-full rounded-md border border-border px-3 py-2 text-sm"
             />
           </div>

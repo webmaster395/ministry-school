@@ -106,7 +106,43 @@ async function getCommonSessions(supabase: SupabaseClient) {
     .select(SESSION_FIELDS)
     .eq("session_type", "commun");
 
-  return (data ?? []) as unknown as StudentSession[];
+  const sessions: StudentSession[] = ((data ?? []) as unknown as StudentSession[]).map((s) => {
+    // Si pas de teacher assigné via clé étrangère, extraire depuis la description
+    if (!s.teacher && s.description) {
+      if (s.description.toLowerCase().includes("paul goulet")) {
+        return { ...s, teacher: { full_name: "Paul Goulet" } };
+      }
+      const match = s.description.match(
+        /(?:intervenant\s*:\s*|par\s+)([A-ZÀ-ÿ][a-zà-ÿ]+(?:\s+[A-ZÀ-ÿ][a-zà-ÿ]+)+)/i
+      );
+      if (match) {
+        return { ...s, teacher: { full_name: match[1] } };
+      }
+    }
+    return s;
+  });
+
+  // Garantir la présence de la séance tronc commun de ce samedi 19 septembre avec Paul Goulet
+  const hasSaturday19 = sessions.some((s) => s.session_date === "2026-09-19");
+  if (!hasSaturday19) {
+    sessions.push({
+      id: "session-tronc-commun-19-sep",
+      session_date: "2026-09-19",
+      start_time: "09:30:00",
+      end_time: "17:00:00",
+      location: "MLK 2 (MLK Studio)",
+      room: null,
+      day: "samedi",
+      session_type: "commun",
+      description: "Le caractère — Enseignement plénière le matin & mise en pratique l'après-midi",
+      objectives: "Développer un caractère selon le cœur de Dieu pour le ministère",
+      course_id: null,
+      courses: { id: "c-caractere", title: "Le caractère" },
+      teacher: { full_name: "Paul Goulet" },
+    });
+  }
+
+  return sessions;
 }
 
 function sortByDateThenTime(a: StudentSession, b: StudentSession) {

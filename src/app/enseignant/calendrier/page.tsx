@@ -39,7 +39,7 @@ export default async function TeacherCalendarPage() {
         <section className="rounded-lg border border-border bg-background p-6">
           <h2 className="mb-1 text-sm font-medium tracking-wide text-muted">TRONC COMMUN</h2>
           <p className="mb-4 text-sm text-muted">
-            Enseignement commun à tous les ministères (octobre-décembre), à Giro / MLK Grand Paris.
+            Enseignement commun à tous les ministères. Ce samedi 19 septembre : <strong>Paul Goulet — Le caractère</strong> à <strong>MLK 2</strong> (MLK Studio).
           </p>
           <ul className="divide-y divide-border">
             {commonSessions.map((s) => (

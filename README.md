@@ -10,10 +10,14 @@ Plateforme de formation de Ministry School — espaces étudiant, enseignant et 
 
 | Phase | Période | Contenu | Lieu |
 |---|---|---|---|
-| **1 — Tronc commun** | Octobre → décembre | Enseignement commun à tous les ministères, un week-end par mois. Plénière le matin, mise en pratique l'après-midi. | Giro / MLK Grand Paris |
-| **2 — Par ministère** | À partir de janvier | Cours par ministère, organisés en paliers d'environ 3 mois. Mêmes contenus le samedi et le dimanche, au choix de l'étudiant. | MLK Studio |
+| **1 — Tronc commun** | Septembre → décembre | Enseignement commun à tous les ministères, un week-end par mois. Plénière le matin, mise en pratique l'après-midi. Ce premier samedi (19 sept.) : **Paul Goulet** — **Le caractère** (à MLK 2). Prochaines sessions à l'Espace Grand Paris. | MLK 2 (ce samedi 19) / Espace Grand Paris (salles : Giroud, Rosa Parks, Denis) |
+| **2 — Par ministère** | À partir de janvier | Cours par ministère, organisés en paliers d'environ 3 mois. Mêmes contenus le samedi et le dimanche, au choix de l'étudiant. | MLK 2 (= MLK Studio) |
 
 Les cinq ministères : **Apôtre**, **Prophète**, **Évangéliste**, **Pasteur**, **Docteur**.
+
+> **Lieux** — deux sites distincts :
+> - **MLK 2 / MLK Studio** : site unique, une seule adresse. Utilisé pour **ce samedi 19 septembre** (Paul Goulet) ainsi que pour la **Phase 2** (cours par ministère). « MLK 2 » et « MLK Studio » désignent le même endroit.
+> - **Espace Grand Paris** (Phase 1 – Tronc commun) : plusieurs salles nommées — **Giroud**, **Rosa Parks**, **Denis**. À préciser salle par salle dans le champ « Salle » lors de la programmation.
 
 ---
 

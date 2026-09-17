@@ -119,7 +119,10 @@ export default async function StudentDashboardPage() {
                 {nextSession.room ? ` · ${nextSession.room}` : ""}
               </p>
               {nextSession.teacher && (
-                <p className="text-sm text-muted">Intervenant : {nextSession.teacher.full_name}</p>
+                <p className="text-sm text-foreground">
+                  <span className="text-muted">Intervenant :</span>{" "}
+                  <strong className="font-semibold text-foreground">{nextSession.teacher.full_name}</strong>
+                </p>
               )}
               {nextSession.session_type === "commun" && nextSession.description && (
                 <p className="text-sm text-muted">{nextSession.description}</p>
