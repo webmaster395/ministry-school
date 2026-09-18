@@ -1,19 +1,24 @@
 @import "tailwindcss";
 
+/* Charte « L'ovale » — interface monochrome encre sur papier crème.
+   Les cinq couleurs de ministère ne servent que d'étiquettes. */
 :root {
-  /* Neutres légèrement chauds, pour s'accorder à l'ambre plutôt que le contrarier */
-  --background: #ffffff;
-  --foreground: #1c1917;
-  --muted: #78716c;
-  --border: #e7e5e4;
-  --surface: #fafaf9;
+  --background: #fffdf9; /* papier crème */
+  --surface: #f7f4ee; /* fond de zone de contenu */
+  --foreground: #27302f; /* encre — couleur du badge de la charte */
+  --muted: #6b7270; /* texte secondaire, 4,8:1 sur le papier */
+  --border: #e5ded2;
+  --border-soft: #f0ebe1; /* séparateurs internes de liste / tableau */
+  --accent: #27302f; /* encre : nav active, boutons primaires, anneau */
+  --on-accent: #fbeeda; /* crème du wordmark */
+  --link: #b83c13; /* rouge doctoral assombri, AA sur papier */
 
-  /* Ambre : fait écho à la flamme du logo. Contraste 5.0 sur blanc (AA). */
-  --accent: #b45309;
-  --on-accent: #ffffff;
-
-  /* Bleu nuit de la page de connexion, pour les fonds sombres */
-  --deep: #0b1526;
+  /* Cinq ministères — étiquettes uniquement, jamais une couleur d'interface */
+  --m-pastoral: #f19f00;
+  --m-prophetique: #59c9ca;
+  --m-doctoral: #e34d1b;
+  --m-evangelique: #ee9a9c;
+  --m-apostolique: #c9dc6a;
 }
 
 @theme inline {
@@ -21,16 +26,66 @@
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-border: var(--border);
+  --color-border-soft: var(--border-soft);
   --color-surface: var(--surface);
   --color-accent: var(--accent);
   --color-on-accent: var(--on-accent);
-  --color-deep: var(--deep);
+  --color-link: var(--link);
+  --color-m-pastoral: var(--m-pastoral);
+  --color-m-prophetique: var(--m-prophetique);
+  --color-m-doctoral: var(--m-doctoral);
+  --color-m-evangelique: var(--m-evangelique);
+  --color-m-apostolique: var(--m-apostolique);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  /* Titres : Etna (Adobe Fonts) quand le kit est chargé, sinon une serif système */
+  --font-title: "etna", Georgia, "Times New Roman", serif;
+  --font-label: var(--font-jost), "Jost", sans-serif;
+
+  /* Rayons de la charte : cartes 10px, boutons et champs 8px */
+  --radius-lg: 10px;
+  --radius-md: 8px;
 }
 
-html {
-  font-size: 18px;
+/* Champs de formulaire de l'application : fond crème, focus encre (charte).
+   Couche « base » : les utilitaires Tailwind restent prioritaires quand une page les précise. */
+@layer base {
+  main input:not([type="checkbox"]):not([type="radio"]),
+  main select,
+  main textarea {
+    background-color: #faf7f1;
+    border-color: #ded6c9;
+    color: var(--foreground);
+  }
+
+  main input:focus,
+  main select:focus,
+  main textarea:focus {
+    outline: none;
+    border-color: var(--foreground);
+    box-shadow: 0 0 0 1px var(--foreground);
+  }
+
+  main input::placeholder,
+  main textarea::placeholder {
+    color: #8b918e;
+  }
+}
+
+/* En couche « components » pour que les utilitaires Tailwind (tracking, font-weight…) l'emportent */
+@layer components {
+  /* Titres de section, en-têtes de tableau, pastilles, boutons : capitales Jost espacées */
+  .label {
+    font-family: var(--font-label);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+  }
+
+  .font-title {
+    font-family: var(--font-title);
+    font-weight: 600;
+  }
 }
 
 /* Entrée du contenu à chaque changement de page : discret, jamais dans le chemin de l'utilisateur */

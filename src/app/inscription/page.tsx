@@ -3,9 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
-import { LogoImage } from "@/components/Logo";
+import { LogoLockup } from "@/components/Logo";
 import { Mail, Lock, User, Eye, EyeOff, ArrowRight, CheckCircle2 } from "lucide-react";
 
 const MINISTRIES = [
@@ -93,68 +92,41 @@ export default function InscriptionPage() {
   }
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center p-4 sm:p-6 bg-slate-950 overflow-hidden">
-      {/* Halo discret en arrière-plan */}
-      <div className="absolute top-1/3 left-1/3 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="relative z-10 w-full max-w-[860px] rounded-2xl overflow-hidden shadow-2xl shadow-black/60 border border-slate-800 grid grid-cols-1 md:grid-cols-12 bg-white">
-        {/* PANNEAU GAUCHE : Logo & Identité visuelle */}
-        <div className="relative md:col-span-5 flex flex-col justify-center items-center bg-[#0B1526] p-8 text-white text-center overflow-hidden">
-          <div className="absolute inset-0 opacity-15 pointer-events-none">
-            <Image src="/bible-glow.jpg" alt="Atmosphere" fill className="object-cover object-center" />
+    <div
+      className="relative flex min-h-screen w-full items-center justify-center bg-cover bg-center p-4 sm:p-6"
+      style={{ backgroundImage: "url('/texture-pastoral.png')" }}
+    >
+      <div className="grid w-full max-w-[900px] grid-cols-1 overflow-hidden rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.45)] md:grid-cols-[5fr_7fr]">
+        {/* PANNEAU GAUCHE : l'ovale de la charte sur fond encre */}
+        <div className="flex flex-col items-center justify-center bg-foreground px-8 py-11 text-center">
+          <div className="w-full max-w-[280px]">
+            <LogoLockup priority />
           </div>
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0B1526] via-[#0B1526]/85 to-[#0B1526]" />
-
-          <div className="relative z-10 flex flex-col items-center">
-            <div className="mb-4 p-2 rounded-2xl bg-white shadow-md border border-slate-100 flex items-center justify-center">
-              <LogoImage size={56} />
-            </div>
-
-            <h2
-              className="text-xl font-bold uppercase tracking-[0.2em] text-white"
-              style={{ fontFamily: "var(--font-cinzel), serif" }}
-            >
-              Ministry
-            </h2>
-
-            <div className="flex items-center gap-2 my-1.5 w-full justify-center opacity-80">
-              <div className="h-[1px] w-5 bg-white/40" />
-              <span className="text-[0.72rem] font-semibold tracking-[0.32em] uppercase text-slate-200">
-                School
-              </span>
-              <div className="h-[1px] w-5 bg-white/40" />
-            </div>
-
-            <p className="text-[0.62rem] tracking-[0.2em] uppercase font-medium text-slate-300/90 mt-0.5">
-              Grandir • Servir • Impacter
-            </p>
-
-            <p className="mt-6 text-xs leading-relaxed text-slate-300/80 max-w-[220px]">
-              Rejoignez le parcours de formation et grandissez dans votre appel.
-            </p>
-          </div>
+          <p className="label mt-6 text-[11px] font-medium tracking-[0.24em] text-[rgba(251,238,218,0.75)]">
+            Grandir • Servir • Impacter
+          </p>
+          <p className="mt-6 max-w-[240px] text-sm leading-relaxed text-[rgba(251,238,218,0.75)]">
+            Rejoignez le parcours de formation et grandissez dans votre appel.
+          </p>
         </div>
 
-        {/* PANNEAU DROIT : Formulaire d'inscription */}
-        <div className="relative md:col-span-7 flex flex-col justify-center bg-white p-6 sm:p-8">
+        {/* PANNEAU DROIT : formulaire sur papier */}
+        <div className="flex flex-col justify-center bg-background px-8 py-10 sm:px-11">
           {success ? (
-            <div className="text-center py-6">
-              <div className="mx-auto mb-4 w-12 h-12 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center">
-                <CheckCircle2 className="text-emerald-600" size={24} />
+            <div className="py-6 text-center">
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-border bg-surface">
+                <CheckCircle2 className="text-foreground" size={24} />
               </div>
-              <h1
-                className="text-xl font-bold text-slate-900 tracking-tight"
-                style={{ fontFamily: "var(--font-cinzel), serif" }}
-              >
+              <h1 className="font-title text-[28px] leading-tight text-foreground">
                 Inscription enregistrée
               </h1>
-              <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-                Un e-mail de confirmation vous a été envoyé. Une fois votre adresse validée, votre
-                accès sera ouvert dès la réception de votre règlement.
+              <p className="mt-3 text-[15px] leading-relaxed text-muted">
+                Un e-mail de confirmation vous a été envoyé. Une fois votre adresse validée, vous
+                pourrez vous connecter à votre espace.
               </p>
               <Link
                 href="/login"
-                className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[#0B1526] hover:bg-[#162540] px-4 py-2.5 text-sm font-semibold text-white transition"
+                className="label mt-6 inline-flex items-center gap-2 rounded-lg bg-foreground px-5 py-3.5 text-sm tracking-[0.12em] text-on-accent transition hover:bg-[#1b2221]"
               >
                 Aller à la connexion
                 <ArrowRight size={14} />
@@ -163,74 +135,50 @@ export default function InscriptionPage() {
           ) : (
             <>
               <div className="mb-5">
-                <p className="text-xs font-medium text-slate-500">Première inscription</p>
-                <h1
-                  className="text-2xl font-bold text-slate-900 tracking-tight"
-                  style={{ fontFamily: "var(--font-cinzel), serif" }}
-                >
+                <p className="label text-xs font-medium tracking-[0.16em] text-muted">
+                  Première inscription
+                </p>
+                <h1 className="font-title mt-1 text-[32px] leading-tight text-foreground">
                   Créer mon compte
                 </h1>
               </div>
 
               {error && (
-                <div className="mb-4 p-2.5 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
-                  <span>⚠️</span>
+                <div className="mb-4 flex items-center gap-2 rounded-lg border border-m-doctoral/40 bg-m-doctoral/[0.08] p-2.5 text-xs text-link">
                   <span>{error}</span>
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-3">
-                {/* Nom complet */}
-                <div>
-                  <label htmlFor="fullName" className="block text-xs font-medium text-slate-700 mb-1">
-                    Nom et prénom
-                  </label>
-                  <div className="relative flex items-center">
-                    <div className="absolute left-3 text-slate-400 pointer-events-none">
-                      <User size={15} />
-                    </div>
-                    <input
-                      id="fullName"
-                      type="text"
-                      required
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                      className="w-full rounded-lg border border-slate-200 bg-slate-50/50 pl-9 pr-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-slate-800 focus:bg-white focus:ring-1 focus:ring-slate-800"
-                      placeholder="Michael Coulibaly"
-                      autoComplete="name"
-                    />
-                  </div>
-                </div>
+              <form onSubmit={handleSubmit} className="space-y-3.5">
+                <Field id="fullName" label="Nom et prénom" icon={<User size={16} />}>
+                  <input
+                    id="fullName"
+                    type="text"
+                    required
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    className={inputClass("pl-10 pr-3.5")}
+                    placeholder="Michael Coulibaly"
+                    autoComplete="name"
+                  />
+                </Field>
 
-                {/* E-mail */}
-                <div>
-                  <label htmlFor="email" className="block text-xs font-medium text-slate-700 mb-1">
-                    E-mail
-                  </label>
-                  <div className="relative flex items-center">
-                    <div className="absolute left-3 text-slate-400 pointer-events-none">
-                      <Mail size={15} />
-                    </div>
-                    <input
-                      id="email"
-                      type="email"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full rounded-lg border border-slate-200 bg-slate-50/50 pl-9 pr-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-slate-800 focus:bg-white focus:ring-1 focus:ring-slate-800"
-                      placeholder="votre@email.com"
-                      autoComplete="email"
-                    />
-                  </div>
-                </div>
+                <Field id="email" label="E-mail" icon={<Mail size={16} />}>
+                  <input
+                    id="email"
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className={inputClass("pl-10 pr-3.5")}
+                    placeholder="votre@email.com"
+                    autoComplete="email"
+                  />
+                </Field>
 
-                {/* Ministère + Jour */}
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label
-                      htmlFor="ministry"
-                      className="block text-xs font-medium text-slate-700 mb-1"
-                    >
+                    <label htmlFor="ministry" className={labelClass}>
                       Ministère
                     </label>
                     <select
@@ -238,7 +186,7 @@ export default function InscriptionPage() {
                       required
                       value={ministrySlug}
                       onChange={(e) => setMinistrySlug(e.target.value)}
-                      className="w-full rounded-lg border border-slate-200 bg-slate-50/50 px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-slate-800 focus:bg-white focus:ring-1 focus:ring-slate-800 cursor-pointer"
+                      className={inputClass("px-3.5 cursor-pointer")}
                     >
                       <option value="" disabled>
                         Choisir…
@@ -252,14 +200,14 @@ export default function InscriptionPage() {
                   </div>
 
                   <div>
-                    <label htmlFor="day" className="block text-xs font-medium text-slate-700 mb-1">
+                    <label htmlFor="day" className={labelClass}>
                       Jour de cours
                     </label>
                     <select
                       id="day"
                       value={preferredDay}
                       onChange={(e) => setPreferredDay(e.target.value)}
-                      className="w-full rounded-lg border border-slate-200 bg-slate-50/50 px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-slate-800 focus:bg-white focus:ring-1 focus:ring-slate-800 cursor-pointer"
+                      className={inputClass("px-3.5 cursor-pointer")}
                     >
                       <option value="samedi">Samedi</option>
                       <option value="dimanche">Dimanche</option>
@@ -267,95 +215,89 @@ export default function InscriptionPage() {
                   </div>
                 </div>
 
-                {/* Mot de passe */}
-                <div>
-                  <label htmlFor="password" className="block text-xs font-medium text-slate-700 mb-1">
-                    Mot de passe
-                  </label>
-                  <div className="relative flex items-center">
-                    <div className="absolute left-3 text-slate-400 pointer-events-none">
-                      <Lock size={15} />
-                    </div>
-                    <input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      required
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="w-full rounded-lg border border-slate-200 bg-slate-50/50 pl-9 pr-9 py-2 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-slate-800 focus:bg-white focus:ring-1 focus:ring-slate-800"
-                      placeholder="8 caractères minimum"
-                      autoComplete="new-password"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword((v) => !v)}
-                      className="absolute right-2.5 text-slate-400 hover:text-slate-700 transition p-1"
-                      aria-label={showPassword ? "Masquer" : "Afficher"}
-                    >
-                      {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Confirmation */}
-                <div>
-                  <label
-                    htmlFor="confirmPassword"
-                    className="block text-xs font-medium text-slate-700 mb-1"
-                  >
-                    Confirmer le mot de passe
-                  </label>
-                  <div className="relative flex items-center">
-                    <div className="absolute left-3 text-slate-400 pointer-events-none">
-                      <Lock size={15} />
-                    </div>
-                    <input
-                      id="confirmPassword"
-                      type={showPassword ? "text" : "password"}
-                      required
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="w-full rounded-lg border border-slate-200 bg-slate-50/50 pl-9 pr-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-slate-800 focus:bg-white focus:ring-1 focus:ring-slate-800"
-                      placeholder="••••••••"
-                      autoComplete="new-password"
-                    />
-                  </div>
-                </div>
-
-                {/* Bouton */}
-                <div className="pt-1">
+                <Field id="password" label="Mot de passe" icon={<Lock size={16} />}>
+                  <input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className={inputClass("pl-10 pr-10")}
+                    placeholder="8 caractères minimum"
+                    autoComplete="new-password"
+                  />
                   <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full rounded-lg bg-[#0B1526] hover:bg-[#162540] active:scale-[0.99] px-4 py-2.5 text-sm font-semibold text-white transition shadow-sm flex items-center justify-center gap-2 group disabled:opacity-60 cursor-pointer"
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                    className="absolute right-3 p-1 text-[#8b918e] transition hover:text-foreground"
+                    aria-label={showPassword ? "Masquer" : "Afficher"}
                   >
-                    <span>{loading ? "Création du compte..." : "Créer mon compte"}</span>
-                    {!loading && (
-                      <ArrowRight
-                        size={14}
-                        className="transition-transform group-hover:translate-x-0.5"
-                      />
-                    )}
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
-                </div>
+                </Field>
 
-                <p className="text-[0.7rem] leading-relaxed text-slate-500 pt-1">
-                  Votre accès aux cours sera activé dès la réception de votre règlement.
-                </p>
+                <Field id="confirmPassword" label="Confirmer le mot de passe" icon={<Lock size={16} />}>
+                  <input
+                    id="confirmPassword"
+                    type={showPassword ? "text" : "password"}
+                    required
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className={inputClass("pl-10 pr-3.5")}
+                    placeholder="••••••••"
+                    autoComplete="new-password"
+                  />
+                </Field>
 
-                <div className="pt-1 text-xs text-center text-slate-600">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="label mt-1 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-foreground px-[18px] py-3.5 text-sm tracking-[0.12em] text-on-accent transition hover:bg-[#1b2221] active:scale-[0.99] disabled:opacity-60"
+                >
+                  <span>{loading ? "Création du compte..." : "Créer mon compte"}</span>
+                  {!loading && <ArrowRight size={14} />}
+                </button>
+
+                <p className="pt-1 text-center text-[13px] text-muted">
                   Vous avez déjà un compte ?{" "}
-                  <Link
-                    href="/login"
-                    className="text-blue-600 hover:text-blue-800 font-medium hover:underline transition"
-                  >
+                  <Link href="/login" className="font-medium text-link hover:underline">
                     Se connecter
                   </Link>
-                </div>
+                </p>
               </form>
             </>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+const labelClass = "mb-1.5 block text-xs font-medium text-foreground";
+
+function inputClass(extra: string) {
+  return `w-full rounded-lg border border-[#ded6c9] bg-[#faf7f1] py-3 text-[15px] text-foreground outline-none transition placeholder:text-[#8b918e] focus:border-foreground focus:ring-1 focus:ring-foreground ${extra}`;
+}
+
+function Field({
+  id,
+  label,
+  icon,
+  children,
+}: {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <label htmlFor={id} className={labelClass}>
+        {label}
+      </label>
+      <div className="relative flex items-center">
+        <div className="pointer-events-none absolute left-3.5 text-[#8b918e]">{icon}</div>
+        {children}
       </div>
     </div>
   );

@@ -33,9 +33,9 @@ export default async function TeacherSupportsPage() {
 
   return (
     <>
-      <section className="rounded-lg border border-accent/30 bg-accent/5 p-6">
-        <h2 className="mb-1 flex items-center gap-2 text-sm font-medium tracking-wide text-accent">
-          <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+      <section className="rounded-lg border border-foreground/20 bg-foreground/[0.03] p-6">
+        <h2 className="label mb-1 flex items-center gap-2 text-xs tracking-[0.18em] text-foreground">
+          <span className="h-2 w-2 rounded-full bg-m-doctoral" />
           PARTAGER EN DIRECT
         </h2>
         <p className="mb-4 text-sm text-muted">
@@ -67,7 +67,7 @@ export default async function TeacherSupportsPage() {
           />
           <button
             type="submit"
-            className="rounded-md bg-accent px-3 py-2 text-sm font-medium text-on-accent transition hover:opacity-90 sm:col-span-2 sm:w-fit"
+            className="rounded-md label bg-accent px-4 py-2.5 text-xs tracking-[0.12em] text-on-accent transition hover:bg-[#1b2221] sm:col-span-2 sm:w-fit"
           >
             Partager maintenant
           </button>
@@ -75,7 +75,7 @@ export default async function TeacherSupportsPage() {
       </section>
 
       <section className="rounded-lg border border-border bg-background p-6">
-        <h2 className="mb-4 text-sm font-medium tracking-wide text-muted">
+        <h2 className="mb-4 label text-xs tracking-[0.18em] text-muted">
           PUBLIER UN SUPPORT DE COURS
         </h2>
         <form action={addMaterial} className="grid gap-3 sm:grid-cols-2">
@@ -114,7 +114,7 @@ export default async function TeacherSupportsPage() {
           </div>
           <button
             type="submit"
-            className="rounded-md bg-accent px-3 py-2 text-sm font-medium text-on-accent transition hover:opacity-90 sm:col-span-2 sm:w-fit"
+            className="rounded-md label bg-accent px-4 py-2.5 text-xs tracking-[0.12em] text-on-accent transition hover:bg-[#1b2221] sm:col-span-2 sm:w-fit"
           >
             Publier
           </button>
@@ -139,7 +139,7 @@ export default async function TeacherSupportsPage() {
       </section>
 
       <section className="rounded-lg border border-border bg-background p-6">
-        <h2 className="mb-4 text-sm font-medium tracking-wide text-muted">DONNER UNE CONSIGNE</h2>
+        <h2 className="mb-4 label text-xs tracking-[0.18em] text-muted">DONNER UNE CONSIGNE</h2>
         <form action={addAssignment} className="grid gap-3">
           <select
             name="session_id"
@@ -162,7 +162,7 @@ export default async function TeacherSupportsPage() {
           />
           <button
             type="submit"
-            className="w-fit rounded-md bg-accent px-3 py-2 text-sm font-medium text-on-accent transition hover:opacity-90"
+            className="w-fit rounded-md label bg-accent px-4 py-2.5 text-xs tracking-[0.12em] text-on-accent transition hover:bg-[#1b2221]"
           >
             Envoyer
           </button>

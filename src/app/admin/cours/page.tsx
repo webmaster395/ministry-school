@@ -12,7 +12,7 @@ export default async function AdminCoursesPage() {
   return (
     <>
       <section className="rounded-lg border border-border bg-background p-6">
-        <h2 className="mb-1 text-sm font-medium tracking-wide text-muted">CRÉER UN COURS</h2>
+        <h2 className="mb-1 label text-xs tracking-[0.18em] text-muted">CRÉER UN COURS</h2>
         <p className="mb-4 text-sm text-muted">
           Un cours regroupe plusieurs séances. Il est ensuite rattaché aux séances depuis
           l&apos;onglet Séances.
@@ -68,7 +68,7 @@ export default async function AdminCoursesPage() {
 
           <button
             type="submit"
-            className="rounded-md bg-accent px-3 py-2 text-sm font-medium text-on-accent transition hover:opacity-90 sm:col-span-2 sm:w-fit"
+            className="rounded-md label bg-accent px-4 py-2.5 text-xs tracking-[0.12em] text-on-accent transition hover:bg-[#1b2221] sm:col-span-2 sm:w-fit"
           >
             Créer le cours
           </button>
@@ -76,7 +76,7 @@ export default async function AdminCoursesPage() {
       </section>
 
       <section className="rounded-lg border border-border bg-background p-6">
-        <h2 className="mb-4 text-sm font-medium tracking-wide text-muted">TOUS LES COURS</h2>
+        <h2 className="mb-4 label text-xs tracking-[0.18em] text-muted">TOUS LES COURS</h2>
         {courses.length ? (
           <ul className="divide-y divide-border">
             {courses.map((c) => (
@@ -89,7 +89,7 @@ export default async function AdminCoursesPage() {
                       <input type="hidden" name="course_id" value={c.id} />
                       <button
                         type="submit"
-                        className="text-xs text-red-600 transition hover:text-red-800"
+                        className="text-xs text-link transition hover:underline"
                       >
                         Supprimer
                       </button>

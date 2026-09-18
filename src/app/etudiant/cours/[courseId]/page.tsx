@@ -48,12 +48,12 @@ export default async function StudentCourseDetailPage({
       </div>
 
       <section className="rounded-lg border border-border bg-background p-6">
-        <h1 className="text-xl font-semibold text-foreground">{course.title}</h1>
+        <h1 className="font-title text-[26px] leading-tight text-foreground">{course.title}</h1>
         {course.description && <p className="mt-2 text-sm text-muted">{course.description}</p>}
 
         {objectives.length > 0 && (
           <div className="mt-5">
-            <h2 className="mb-2 text-sm font-medium tracking-wide text-muted">OBJECTIFS</h2>
+            <h2 className="mb-2 label text-xs tracking-[0.18em] text-muted">OBJECTIFS</h2>
             <ul className="space-y-1.5">
               {objectives.map((o) => (
                 <li key={o} className="flex gap-2 text-sm text-foreground">
@@ -67,7 +67,7 @@ export default async function StudentCourseDetailPage({
       </section>
 
       <section className="rounded-lg border border-border bg-background p-6">
-        <h2 className="mb-4 text-sm font-medium tracking-wide text-muted">SÉANCES</h2>
+        <h2 className="mb-4 label text-xs tracking-[0.18em] text-muted">SÉANCES</h2>
         <ul className="space-y-5">
           {course.sessions.map((s) => {
             const sessionMaterials = materials.filter((m) => m.session_id === s.id);
@@ -97,7 +97,7 @@ export default async function StudentCourseDetailPage({
 
                 {sessionObjectives.length > 0 && (
                   <div className="mt-3">
-                    <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted">
+                    <p className="mb-1 label text-[11px] tracking-[0.14em] text-muted">
                       Objectifs de la séance
                     </p>
                     <ul className="space-y-1">
@@ -112,7 +112,7 @@ export default async function StudentCourseDetailPage({
                 )}
 
                 <div className="mt-3">
-                  <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted">
+                  <p className="mb-1 label text-[11px] tracking-[0.14em] text-muted">
                     Supports
                   </p>
                   {sessionMaterials.length ? (
@@ -121,8 +121,8 @@ export default async function StudentCourseDetailPage({
                         <li key={m.id} className="flex flex-wrap items-center gap-2 text-sm">
                           <MaterialLink title={m.title} url={m.link_url ?? m.file_url ?? null} />
                           {isRecentlyShared(m.visible_at) && (
-                            <span className="flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-2 py-0.5 text-xs text-accent">
-                              <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                            <span className="flex items-center gap-1.5 rounded-full border border-foreground/20 bg-foreground/[0.06] px-2 py-0.5 text-xs text-foreground">
+                              <span className="h-1.5 w-1.5 rounded-full bg-m-doctoral" />
                               Partagé à l&apos;instant
                             </span>
                           )}
@@ -138,7 +138,7 @@ export default async function StudentCourseDetailPage({
 
                 {sessionAssignments.length > 0 && (
                   <div className="mt-3">
-                    <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted">
+                    <p className="mb-1 label text-[11px] tracking-[0.14em] text-muted">
                       Consignes
                     </p>
                     <ul className="space-y-1">

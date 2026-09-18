@@ -79,6 +79,15 @@ L'application démarre sur `http://localhost:3000`.
 
 ---
 
+## Charte graphique
+
+Direction « L'ovale » : interface monochrome encre sur papier crème, le logo ovale comme élément de marque. Les cinq couleurs de ministère (pastoral, prophétique, doctoral, évangélique, apostolique) ne servent que d'étiquettes — filet, point, barre de graphique, picto — et ne sont jamais une couleur d'interface.
+
+- Jetons de couleur et rayons : `src/app/globals.css`
+- Correspondance ministère → couleur et picto : `src/lib/ministry.ts`
+- Titres : **Etna** (Adobe Fonts). Renseigner `NEXT_PUBLIC_ADOBE_FONTS_URL` avec l'adresse du projet Web ; sans elle, une serif système s'affiche.
+- Libellés : **Jost** ; corps de texte : **Geist**
+
 ## Structure
 
 ```

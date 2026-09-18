@@ -1,13 +1,16 @@
 import Sidebar from "@/components/Sidebar";
 import AppHeader from "@/components/AppHeader";
+import { getViewer } from "@/lib/data/viewer";
 
-export default function TeacherLayout({ children }: { children: React.ReactNode }) {
+export default async function TeacherLayout({ children }: { children: React.ReactNode }) {
+  const viewer = await getViewer();
+
   return (
     <div className="flex min-h-screen w-full">
-      <Sidebar role="teacher" />
-      <div className="flex min-h-screen flex-1 flex-col bg-surface">
+      <Sidebar role="teacher" ministrySlug={viewer?.ministrySlug} />
+      <div className="flex min-h-screen min-w-0 flex-1 flex-col bg-surface">
         <AppHeader roleLabel="Enseignant" />
-        <main className="mx-auto w-full max-w-5xl flex-1 space-y-6 px-6 py-8">{children}</main>
+        <main className="mx-auto w-full max-w-[1280px] flex-1 px-7 py-7">{children}</main>
       </div>
     </div>
   );

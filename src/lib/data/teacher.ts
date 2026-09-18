@@ -10,14 +10,15 @@ export type TeacherSession = {
   day: string;
   session_type: "commun" | "ministere";
   description: string | null;
-  ministries: { name: string } | null;
+  ministries: { name: string; slug: string } | null;
+  courses: { title: string } | null;
 };
 
 export async function getTeacherSessions(supabase: SupabaseClient, teacherId: string) {
   const { data } = await supabase
     .from("sessions")
     .select(
-      "id, session_date, start_time, end_time, location, room, day, session_type, description, ministries(name)"
+      "id, session_date, start_time, end_time, location, room, day, session_type, description, ministries(name, slug), courses(title)"
     )
     .eq("teacher_id", teacherId)
     .order("session_date", { ascending: true });
@@ -32,7 +33,7 @@ export async function getCommonSessions(supabase: SupabaseClient) {
     .eq("session_type", "commun")
     .order("session_date", { ascending: true });
 
-  const sessions: TeacherSession[] = (data ?? []).map((s) => ({ ...s, ministries: null })) as unknown as TeacherSession[];
+  const sessions: TeacherSession[] = (data ?? []).map((s) => ({ ...s, ministries: null, courses: null })) as unknown as TeacherSession[];
 
   const hasSaturday19 = sessions.some((s) => s.session_date === "2026-09-19");
   if (!hasSaturday19) {
@@ -47,6 +48,7 @@ export async function getCommonSessions(supabase: SupabaseClient) {
       session_type: "commun",
       description: "Paul Goulet — Le caractère (Tronc commun)",
       ministries: null,
+      courses: null,
     });
   }
 

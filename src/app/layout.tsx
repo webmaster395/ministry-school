@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Cinzel } from "next/font/google";
+import { Geist, Jost } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -7,10 +7,10 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
-const cinzel = Cinzel({
-  variable: "--font-cinzel",
+const jost = Jost({
+  variable: "--font-jost",
   subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
+  weight: ["500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -18,17 +18,22 @@ export const metadata: Metadata = {
   description: "Plateforme de formation Ministry School. Grandir, Servir, Impacter.",
 };
 
+// Etna est servie par Adobe Fonts : renseigner l'adresse du projet Web
+// (https://use.typekit.net/XXXXXXX.css) dans NEXT_PUBLIC_ADOBE_FONTS_URL.
+// Sans elle, les titres s'affichent dans la serif de secours.
+const adobeFontsUrl = process.env.NEXT_PUBLIC_ADOBE_FONTS_URL;
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr" className={`${geistSans.variable} ${cinzel.variable} h-full antialiased`}>
+    <html lang="fr" className={`${geistSans.variable} ${jost.variable} h-full antialiased`}>
+      <head>{adobeFontsUrl && <link rel="stylesheet" href={adobeFontsUrl} />}</head>
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
         {children}
       </body>
     </html>
   );
 }
-

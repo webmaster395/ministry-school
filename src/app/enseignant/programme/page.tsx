@@ -48,7 +48,7 @@ export default async function TeacherProgrammePage() {
 
   return (
     <section className="rounded-lg border border-border bg-background p-6">
-      <h2 className="mb-1 text-sm font-medium tracking-wide text-muted">VUE PROMO</h2>
+      <h2 className="mb-1 label text-xs tracking-[0.18em] text-muted">VUE PROMO</h2>
       <p className="mb-6 text-sm text-muted">
         Ce que la promotion a déjà vu, tous ministères confondus — pour éviter les redites entre
         intervenants.

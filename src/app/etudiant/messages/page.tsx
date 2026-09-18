@@ -27,7 +27,7 @@ export default async function StudentMessagesPage() {
 
   return (
     <section className="rounded-lg border border-border bg-background p-6">
-      <h2 className="mb-1 text-sm font-medium tracking-wide text-muted">MESSAGES</h2>
+      <h2 className="mb-1 label text-xs tracking-[0.18em] text-muted">MESSAGES</h2>
       <p className="mb-6 text-sm text-muted">
         Les annonces de vos enseignants et de l&apos;équipe pédagogique.
       </p>

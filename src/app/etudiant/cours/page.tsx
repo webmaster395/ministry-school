@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { getStudentCourses } from "@/lib/data/student";
+import { getStudentCourses, getStudentProfile } from "@/lib/data/student";
 import { formatSessionDate } from "@/lib/format";
+import { getMinistry, INK } from "@/lib/ministry";
 
 export default async function StudentCoursesPage() {
   const supabase = await createClient();
@@ -9,54 +10,77 @@ export default async function StudentCoursesPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const courses = await getStudentCourses(supabase, user!.id);
+  const [courses, { ministrySlug }] = await Promise.all([
+    getStudentCourses(supabase, user!.id),
+    getStudentProfile(supabase, user!.id),
+  ]);
   const today = new Date().toISOString().slice(0, 10);
+  const ministryColor = getMinistry(ministrySlug)?.color ?? INK;
 
-  return (
-    <section className="rounded-lg border border-border bg-background p-6">
-      <h2 className="mb-1 text-sm font-medium tracking-wide text-muted">MES COURS</h2>
-      <p className="mb-6 text-sm text-muted">
-        Ouvrez un cours pour accéder à ses objectifs, ses supports et ses consignes.
-      </p>
-
-      {courses.length ? (
-        <ul className="space-y-3">
-          {courses.map((c) => {
-            const upcomingSessions = c.sessions.filter((s) => s.session_date >= today);
-            const upcoming = upcomingSessions.length;
-            const nextSession = upcomingSessions[0];
-            return (
-              <li key={c.id}>
-                <Link
-                  href={`/etudiant/cours/${c.id}`}
-                  className="block rounded-md border border-border p-4 transition hover:border-accent/40 hover:bg-surface"
-                >
-                  <div className="flex flex-wrap items-baseline justify-between gap-2">
-                    <p className="font-medium text-foreground">{c.title}</p>
-                    <span className="text-xs text-muted">
-                      {c.sessions.length} séance{c.sessions.length > 1 ? "s" : ""}
-                      {upcoming > 0 && ` · ${upcoming} à venir`}
-                    </span>
-                  </div>
-                  {c.description && (
-                    <p className="mt-1 text-sm text-muted">{c.description}</p>
-                  )}
-                  <p className="mt-2 text-xs text-muted">
-                    {nextSession
-                      ? `Prochaine séance : ${formatSessionDate(nextSession.session_date)}`
-                      : "Toutes les séances de ce cours ont eu lieu."}
-                  </p>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      ) : (
-        <p className="text-sm text-muted">
+  if (!courses.length) {
+    return (
+      <section className="rounded-lg border border-border bg-background p-6">
+        <p className="text-[15px] text-muted">
           Aucun cours pour le moment. Vos cours apparaîtront ici une fois le programme de votre
           ministère publié.
         </p>
-      )}
-    </section>
+      </section>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <p className="text-[15px] text-muted">
+        Ouvrez un cours pour accéder à ses objectifs, ses supports et ses consignes.
+      </p>
+
+      <ul className="space-y-4">
+        {courses.map((c) => {
+          const upcomingSessions = c.sessions.filter((s) => s.session_date >= today);
+          const nextSession = upcomingSessions[0];
+          const finished = upcomingSessions.length === 0;
+          const isCommon = c.sessions.every((s) => s.session_type === "commun");
+
+          return (
+            <li key={c.id}>
+              <Link
+                href={`/etudiant/cours/${c.id}`}
+                className={`block rounded-lg border border-l-4 bg-background p-6 transition hover:border-[#27302f] ${
+                  finished ? "border-border opacity-70" : "border-border"
+                }`}
+                style={{
+                  borderLeftColor: finished ? "var(--border)" : isCommon ? INK : ministryColor,
+                }}
+              >
+                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                  <h2 className="font-title text-[22px] leading-tight text-foreground">
+                    {c.title}
+                  </h2>
+                  <span className="label text-xs tracking-[0.1em] text-muted">
+                    {c.sessions.length} séance{c.sessions.length > 1 ? "s" : ""}
+                    {upcomingSessions.length > 0 && ` · ${upcomingSessions.length} à venir`}
+                  </span>
+                </div>
+                {c.description && (
+                  <p className="mt-2 text-[15px] text-muted">{c.description}</p>
+                )}
+                <p className="mt-3 text-sm text-foreground">
+                  {nextSession ? (
+                    <>
+                      Prochaine séance :{" "}
+                      <span className="font-semibold">
+                        {formatSessionDate(nextSession.session_date)}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-muted">Toutes les séances de ce cours ont eu lieu.</span>
+                  )}
+                </p>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
 }

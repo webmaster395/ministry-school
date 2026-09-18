@@ -10,6 +10,7 @@ import WeekCalendar from "@/components/WeekCalendar";
 import ProgressRing from "@/components/ProgressRing";
 import SessionTypeBadge from "@/components/SessionTypeBadge";
 import QuickLinks from "@/components/QuickLinks";
+import { getMinistry, INK } from "@/lib/ministry";
 import { markNotificationsSeen } from "./actions";
 
 export default async function StudentDashboardPage() {
@@ -18,7 +19,7 @@ export default async function StudentDashboardPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { ministryName, preferredDay, notificationsSeenAt } = await getStudentProfile(
+  const { ministryName, ministrySlug, preferredDay, notificationsSeenAt } = await getStudentProfile(
     supabase,
     user!.id
   );
@@ -47,6 +48,9 @@ export default async function StudentDashboardPage() {
   const totalCount = allSessions.length;
   const progress = totalCount ? (completedCount / totalCount) * 100 : 0;
 
+  const ministryColor = getMinistry(ministrySlug)?.color ?? INK;
+  const colorFor = (type: "commun" | "ministere") => (type === "commun" ? INK : ministryColor);
+
   const calendarSessions = allSessions.map((s) => ({
     id: s.id,
     date: s.session_date,
@@ -56,39 +60,43 @@ export default async function StudentDashboardPage() {
     room: s.room,
     teacher: s.teacher?.full_name ?? null,
     course: s.courses?.title ?? null,
+    color: colorFor(s.session_type),
   }));
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-      <div className="space-y-6">
+    <div className="grid items-start gap-[22px] lg:grid-cols-[1fr_330px]">
+      <div className="space-y-5">
         {ministryName && (
           <p className="text-sm text-muted">
             Ministère : <span className="font-medium text-foreground">{ministryName}</span>
             {preferredDay && (
               <>
                 {" · "}
-                <span className="font-medium text-foreground capitalize">{preferredDay}</span>
+                <span className="font-medium capitalize text-foreground">{preferredDay}</span>
               </>
             )}
           </p>
         )}
 
         {totalNew > 0 && (
-          <section className="rounded-lg border border-accent/30 bg-accent/5 p-4">
+          <section className="rounded-lg border border-border bg-background px-[18px] py-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-2 text-sm text-foreground">
-                <span className="flex h-2 w-2 shrink-0 rounded-full bg-accent" />
-                <span className="font-medium">{newsLabel}</span>
+              <div className="flex items-center gap-2.5 text-[15px] font-medium text-foreground">
+                <span className="h-2 w-2 shrink-0 rounded-full bg-m-doctoral" />
+                <span>{newsLabel}</span>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                 <Link
                   href={newCounts.messages > 0 ? "/etudiant/messages" : "/etudiant/cours"}
-                  className="text-sm font-medium text-accent hover:underline"
+                  className="text-sm font-medium text-link hover:underline"
                 >
                   {newCounts.messages > 0 ? "Voir les messages" : "Voir mes cours"}
                 </Link>
                 <form action={markNotificationsSeen}>
-                  <button type="submit" className="text-xs text-muted hover:text-foreground">
+                  <button
+                    type="submit"
+                    className="text-[13px] text-muted transition hover:text-foreground"
+                  >
                     Marquer comme lu
                   </button>
                 </form>
@@ -97,35 +105,42 @@ export default async function StudentDashboardPage() {
           </section>
         )}
 
-        <section className="rounded-lg border border-border bg-background p-6">
-          <h2 className="mb-4 text-sm font-medium tracking-wide text-muted">PROCHAINE SÉANCE</h2>
+        <section
+          className="rounded-lg border border-border border-l-4 bg-background p-6"
+          style={{
+            borderLeftColor: nextSession ? colorFor(nextSession.session_type) : "var(--border)",
+          }}
+        >
+          <h2 className="label mb-4 text-xs tracking-[0.18em] text-muted">Prochaine séance</h2>
 
           {nextSession ? (
-            <div className="grid gap-1">
-              <div className="flex items-center gap-2">
-                <p className="text-lg font-semibold text-foreground">
+            <div className="grid gap-1.5">
+              <div className="flex flex-wrap items-center gap-3">
+                <p className="font-title text-[28px] leading-tight text-foreground">
                   {formatSessionDate(nextSession.session_date)}
                 </p>
                 <SessionTypeBadge type={nextSession.session_type} />
               </div>
               {nextSession.courses && (
-                <p className="text-sm font-medium text-foreground">
+                <p className="text-base font-medium text-foreground">
                   {nextSession.courses.title}
                 </p>
               )}
-              <p className="text-sm text-muted">
+              <p className="text-[15px] text-muted">
                 {formatTimeRange(nextSession.start_time, nextSession.end_time)} ·{" "}
                 {nextSession.location}
                 {nextSession.room ? ` · ${nextSession.room}` : ""}
               </p>
               {nextSession.teacher && (
-                <p className="text-sm text-foreground">
-                  <span className="text-muted">Intervenant :</span>{" "}
-                  <strong className="font-semibold text-foreground">{nextSession.teacher.full_name}</strong>
+                <p className="text-[15px] text-muted">
+                  Intervenant :{" "}
+                  <span className="font-semibold text-foreground">
+                    {nextSession.teacher.full_name}
+                  </span>
                 </p>
               )}
               {nextSession.session_type === "commun" && nextSession.description && (
-                <p className="text-sm text-muted">{nextSession.description}</p>
+                <p className="text-[15px] text-muted">{nextSession.description}</p>
               )}
             </div>
           ) : (
@@ -134,7 +149,7 @@ export default async function StudentDashboardPage() {
         </section>
 
         <section className="rounded-lg border border-border bg-background p-6">
-          <h2 className="mb-4 text-sm font-medium tracking-wide text-muted">MA PROGRESSION</h2>
+          <h2 className="label mb-4 text-xs tracking-[0.18em] text-muted">Ma progression</h2>
           {totalCount ? (
             <ProgressRing
               percentage={progress}
@@ -142,7 +157,9 @@ export default async function StudentDashboardPage() {
               sublabel="Progression sur votre parcours"
             />
           ) : (
-            <p className="text-sm text-muted">Votre progression apparaîtra ici une fois inscrit à des séances.</p>
+            <p className="text-sm text-muted">
+              Votre progression apparaîtra ici une fois inscrit à des séances.
+            </p>
           )}
         </section>
 

@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Logo from "@/components/Logo";
+import { LogoLockup } from "@/components/Logo";
+import MinistryPicto from "@/components/MinistryPicto";
+import { getMinistry } from "@/lib/ministry";
 
 function ChevronIcon({ direction }: { direction: "left" | "right" }) {
   return (
@@ -178,11 +180,18 @@ const adminSections: NavSection[] = [
   },
 ];
 
-export default function Sidebar({ role }: { role: "student" | "teacher" | "admin" }) {
+export default function Sidebar({
+  role,
+  ministrySlug,
+}: {
+  role: "student" | "teacher" | "admin";
+  ministrySlug?: string | null;
+}) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const sections =
     role === "student" ? studentSections : role === "teacher" ? teacherSections : adminSections;
+  const ministry = getMinistry(ministrySlug);
 
   // Restaure le choix de l'utilisateur d'une visite à l'autre
   useEffect(() => {
@@ -197,50 +206,49 @@ export default function Sidebar({ role }: { role: "student" | "teacher" | "admin
     });
   }
 
+  const footerLabel =
+    role === "admin" ? "Administration" : ministry ? `Sensibilité ${ministry.adjective}` : null;
+
   return (
     <aside
-      className={`hidden shrink-0 border-r border-border bg-background transition-[width] duration-200 md:flex md:flex-col ${
-        collapsed ? "w-16" : "w-60"
+      className={`hidden shrink-0 flex-col border-r border-border bg-background transition-[width] duration-200 md:flex ${
+        collapsed ? "w-[72px]" : "w-[272px]"
       }`}
     >
-      <div
-        className={`flex items-center py-5 text-foreground ${
-          collapsed ? "justify-center px-2" : "justify-between px-5"
-        }`}
-      >
-        {collapsed ? <Logo size={26} variant="mark" /> : <Logo size={30} />}
-        {!collapsed && (
-          <button
-            type="button"
-            onClick={toggle}
-            aria-label="Réduire le menu"
-            title="Réduire le menu"
-            className="rounded-md p-1 text-muted transition hover:bg-surface hover:text-foreground"
-          >
-            <ChevronIcon direction="left" />
-          </button>
+      {/* En-tête : l'ovale de la charte sur fond encre */}
+      <div className="relative bg-foreground p-5">
+        {collapsed ? (
+          <div className="flex h-[54px] items-center justify-center">
+            {ministry ? (
+              <MinistryPicto slug={ministry.slug} size={32} />
+            ) : (
+              <span className="label text-[13px] text-on-accent">MS</span>
+            )}
+          </div>
+        ) : (
+          <LogoLockup priority />
         )}
       </div>
 
-      {collapsed && (
+      <div className={`flex ${collapsed ? "justify-center" : "justify-end"} px-3 pt-2`}>
         <button
           type="button"
           onClick={toggle}
-          aria-label="Déployer le menu"
-          title="Déployer le menu"
-          className="mx-auto mb-2 rounded-md p-1 text-muted transition hover:bg-surface hover:text-foreground"
+          aria-label={collapsed ? "Déployer le menu" : "Réduire le menu"}
+          title={collapsed ? "Déployer le menu" : "Réduire le menu"}
+          className="rounded-md p-1 text-muted transition hover:bg-foreground/[0.04] hover:text-foreground"
         >
-          <ChevronIcon direction="right" />
+          <ChevronIcon direction={collapsed ? "right" : "left"} />
         </button>
-      )}
+      </div>
 
-      <nav className={`flex-1 space-y-6 pb-6 ${collapsed ? "px-2" : "px-3"}`}>
+      <nav className={`flex-1 space-y-6 pb-6 pt-2 ${collapsed ? "px-3" : "px-4"}`}>
         {sections.map((section) => (
           <div key={section.title}>
             {collapsed ? (
-              <div className="mx-3 mb-2 border-t border-border" aria-hidden="true" />
+              <div className="mx-3 mb-2 border-t border-border-soft" aria-hidden="true" />
             ) : (
-              <p className="mb-2 px-3 text-xs font-medium uppercase tracking-wide text-muted">
+              <p className="label mb-2 px-3 text-[11px] !font-medium tracking-[0.16em] text-muted">
                 {section.title}
               </p>
             )}
@@ -252,15 +260,17 @@ export default function Sidebar({ role }: { role: "student" | "teacher" | "admin
                     <Link
                       href={item.href}
                       title={collapsed ? item.label : undefined}
-                      className={`flex items-center rounded-md py-2 text-sm transition ${
-                        collapsed ? "justify-center px-2" : "gap-2.5 px-3"
+                      className={`flex items-center rounded-[7px] py-2.5 text-[15px] transition ${
+                        collapsed ? "justify-center px-2" : "gap-[11px] px-3"
                       } ${
                         active
-                          ? "bg-accent/10 font-medium text-accent"
-                          : "text-foreground/80 hover:bg-surface hover:text-foreground"
+                          ? "bg-foreground/[0.08] font-medium text-foreground"
+                          : "text-[#4b524f] hover:bg-foreground/[0.04]"
                       }`}
                     >
-                      <span className={active ? "text-accent" : "text-muted"}>{item.icon}</span>
+                      <span className={active ? "text-foreground" : "text-[#8b918e]"}>
+                        {item.icon}
+                      </span>
                       {!collapsed && item.label}
                     </Link>
                   </li>
@@ -270,6 +280,20 @@ export default function Sidebar({ role }: { role: "student" | "teacher" | "admin
           </div>
         ))}
       </nav>
+
+      {/* Pied : sensibilité de l'utilisateur */}
+      {footerLabel && (
+        <div
+          className={`flex items-center gap-2.5 border-t border-border-soft py-4 ${
+            collapsed ? "justify-center px-2" : "px-5"
+          }`}
+        >
+          {role !== "admin" && ministry && <MinistryPicto slug={ministry.slug} size={20} />}
+          {!collapsed && (
+            <span className="label text-[10px] tracking-[0.18em] text-muted">{footerLabel}</span>
+          )}
+        </div>
+      )}
     </aside>
   );
 }

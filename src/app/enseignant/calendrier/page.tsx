@@ -17,7 +17,7 @@ export default async function TeacherCalendarPage() {
   return (
     <>
       <section className="rounded-lg border border-border bg-background p-6">
-        <h2 className="mb-4 text-sm font-medium tracking-wide text-muted">MES SÉANCES</h2>
+        <h2 className="mb-4 label text-xs tracking-[0.18em] text-muted">MES SÉANCES</h2>
         {allSessions.length ? (
           <ul className="divide-y divide-border">
             {allSessions.map((s) => (
@@ -37,7 +37,7 @@ export default async function TeacherCalendarPage() {
 
       {commonSessions.length > 0 && (
         <section className="rounded-lg border border-border bg-background p-6">
-          <h2 className="mb-1 text-sm font-medium tracking-wide text-muted">TRONC COMMUN</h2>
+          <h2 className="mb-1 label text-xs tracking-[0.18em] text-muted">TRONC COMMUN</h2>
           <p className="mb-4 text-sm text-muted">
             Enseignement commun à tous les ministères. Ce samedi 19 septembre : <strong>Paul Goulet — Le caractère</strong> à <strong>MLK 2</strong> (MLK Studio).
           </p>

@@ -14,7 +14,7 @@ export default async function TeacherStudentsPage() {
 
   return (
     <section className="rounded-lg border border-border bg-background p-6">
-      <h2 className="mb-4 text-sm font-medium tracking-wide text-muted">MES ÉTUDIANTS</h2>
+      <h2 className="mb-4 label text-xs tracking-[0.18em] text-muted">MES ÉTUDIANTS</h2>
 
       {allSessions.length === 0 ? (
         <p className="text-sm text-muted">Aucune séance assignée pour le moment.</p>

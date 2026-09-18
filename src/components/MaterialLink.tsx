@@ -101,14 +101,14 @@ export default function MaterialLink({ title, url }: { title: string; url: strin
       href={url}
       target="_blank"
       rel="noreferrer"
-      className="group flex items-center gap-2 text-accent"
+      className="group flex items-center gap-2 text-link"
       title={`Ouvrir « ${title} » dans un nouvel onglet`}
     >
-      <span className="text-muted transition group-hover:text-accent">
+      <span className="text-muted transition group-hover:text-link">
         <KindIcon kind={kind} />
       </span>
       <span className="font-medium group-hover:underline">{title}</span>
-      <span className="rounded border border-border px-1.5 py-0.5 text-[0.65rem] font-medium uppercase tracking-wide text-muted">
+      <span className="label rounded border border-border px-1.5 py-0.5 text-[10px] tracking-[0.12em] text-muted">
         {labels[kind]}
       </span>
       {/* Indique une ouverture hors de la page courante */}
@@ -121,7 +121,7 @@ export default function MaterialLink({ title, url }: { title: string; url: strin
         strokeWidth="2.2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="text-muted transition group-hover:text-accent"
+        className="text-muted transition group-hover:text-link"
         aria-hidden="true"
       >
         <path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />

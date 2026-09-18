@@ -20,7 +20,7 @@ export default async function TeacherSoclesPage() {
 
   return (
     <section className="rounded-lg border border-border bg-background p-6">
-      <h2 className="mb-1 text-sm font-medium tracking-wide text-muted">SOCLES</h2>
+      <h2 className="mb-1 label text-xs tracking-[0.18em] text-muted">SOCLES</h2>
       <p className="mb-6 text-sm text-muted">
         Les dates précises ne sont pas encore fixées. Indiquez ce que les étudiants doivent voir
         à la place — une date, une période approximative, ou tout autre repère.
@@ -41,7 +41,7 @@ export default async function TeacherSoclesPage() {
               />
               <button
                 type="submit"
-                className="rounded-md bg-accent px-3 py-2 text-sm font-medium text-on-accent transition hover:opacity-90"
+                className="rounded-md label bg-accent px-4 py-2.5 text-xs tracking-[0.12em] text-on-accent transition hover:bg-[#1b2221]"
               >
                 Enregistrer
               </button>

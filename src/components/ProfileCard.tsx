@@ -24,14 +24,14 @@ export default function ProfileCard({
     <>
       <section className="rounded-lg border border-border bg-background p-6">
         <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-accent text-lg font-semibold text-on-accent">
+          <div className="font-title flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-accent text-lg text-on-accent">
             {initials || "?"}
           </div>
           <div>
-            <p className="text-lg font-semibold text-foreground">{fullName}</p>
+            <p className="font-title text-2xl leading-tight text-foreground">{fullName}</p>
             <p className="text-sm text-muted">{email}</p>
           </div>
-          <span className="ml-auto rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-medium text-accent">
+          <span className="label ml-auto rounded-full border border-border px-3 py-1 text-xs tracking-[0.1em] text-foreground">
             {roleLabel}
           </span>
         </div>
@@ -39,7 +39,7 @@ export default function ProfileCard({
 
       {fields.length > 0 && (
         <section className="rounded-lg border border-border bg-background p-6">
-          <h2 className="mb-4 text-sm font-medium tracking-wide text-muted">MES INFORMATIONS</h2>
+          <h2 className="mb-4 label text-xs tracking-[0.18em] text-muted">MES INFORMATIONS</h2>
           <dl className="divide-y divide-border">
             {fields.map((f) => (
               <div key={f.label} className="flex items-center justify-between py-3 text-sm">
@@ -52,7 +52,7 @@ export default function ProfileCard({
       )}
 
       <section className="rounded-lg border border-border bg-background p-6">
-        <h2 className="mb-1 text-sm font-medium tracking-wide text-muted">SESSION</h2>
+        <h2 className="mb-1 label text-xs tracking-[0.18em] text-muted">SESSION</h2>
         <p className="mb-4 text-sm text-muted">
           Pour modifier vos informations, contactez l&apos;équipe administrative.
         </p>

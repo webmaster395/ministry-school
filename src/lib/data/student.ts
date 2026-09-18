@@ -22,7 +22,7 @@ const SESSION_FIELDS =
 export async function getStudentProfile(supabase: SupabaseClient, userId: string) {
   const { data } = await supabase
     .from("profiles")
-    .select("full_name, preferred_day, ministry_id, notifications_seen_at, ministries(name)")
+    .select("full_name, preferred_day, ministry_id, notifications_seen_at, ministries(name, slug)")
     .eq("id", userId)
     .single();
 
@@ -31,7 +31,8 @@ export async function getStudentProfile(supabase: SupabaseClient, userId: string
     preferredDay: data?.preferred_day as string | null | undefined,
     ministryId: data?.ministry_id as string | null | undefined,
     notificationsSeenAt: data?.notifications_seen_at as string,
-    ministryName: (data?.ministries as unknown as { name: string } | null)?.name,
+    ministryName: (data?.ministries as unknown as { name: string; slug: string } | null)?.name,
+    ministrySlug: (data?.ministries as unknown as { name: string; slug: string } | null)?.slug,
   };
 }
 

@@ -16,7 +16,7 @@ export default async function AdminSessionsPage() {
   return (
     <>
       <section className="rounded-lg border border-border bg-background p-6">
-        <h2 className="mb-1 text-sm font-medium tracking-wide text-muted">
+        <h2 className="mb-1 label text-xs tracking-[0.18em] text-muted">
           PROGRAMMER UNE SÉANCE
         </h2>
         {/* Guide lieux */}
@@ -144,7 +144,7 @@ export default async function AdminSessionsPage() {
 
           <div>
             <label className="mb-1 block text-xs text-muted">
-              Salle <span className="text-accent">(requis pour Espace Grand Paris)</span>
+              Salle <span className="text-link">(requis pour Espace Grand Paris)</span>
             </label>
             <select
               name="room"
@@ -170,7 +170,7 @@ export default async function AdminSessionsPage() {
 
           <button
             type="submit"
-            className="rounded-md bg-accent px-3 py-2 text-sm font-medium text-on-accent transition hover:opacity-90 sm:col-span-2 sm:w-fit"
+            className="rounded-md label bg-accent px-4 py-2.5 text-xs tracking-[0.12em] text-on-accent transition hover:bg-[#1b2221] sm:col-span-2 sm:w-fit"
           >
             Programmer la séance
           </button>
@@ -178,7 +178,7 @@ export default async function AdminSessionsPage() {
       </section>
 
       <section className="rounded-lg border border-border bg-background p-6">
-        <h2 className="mb-4 text-sm font-medium tracking-wide text-muted">TOUTES LES SÉANCES</h2>
+        <h2 className="mb-4 label text-xs tracking-[0.18em] text-muted">TOUTES LES SÉANCES</h2>
         {sessions.length ? (
           <ul className="divide-y divide-border">
             {sessions.map((s) => (
@@ -202,7 +202,7 @@ export default async function AdminSessionsPage() {
                     <input type="hidden" name="session_id" value={s.id} />
                     <button
                       type="submit"
-                      className="text-xs text-red-600 transition hover:text-red-800"
+                      className="text-xs text-link transition hover:underline"
                     >
                       Supprimer
                     </button>

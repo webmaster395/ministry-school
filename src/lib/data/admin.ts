@@ -33,7 +33,7 @@ export async function getGlobalStats(supabase: SupabaseClient) {
 }
 
 export type EnrollmentBreakdown = {
-  byMinistry: { name: string; count: number }[];
+  byMinistry: { name: string; slug?: string; count: number }[];
   byDay: { day: string; count: number }[];
 };
 
@@ -41,14 +41,15 @@ export async function getEnrollmentBreakdown(
   supabase: SupabaseClient
 ): Promise<EnrollmentBreakdown> {
   const [{ data: ministries }, { data: students }] = await Promise.all([
-    supabase.from("ministries").select("id, name").order("name"),
+    supabase.from("ministries").select("id, name, slug").order("name"),
     supabase.from("profiles").select("ministry_id, preferred_day").eq("role", "student"),
   ]);
 
   const rows = students ?? [];
 
-  const byMinistry = (ministries ?? []).map((m) => ({
+  const byMinistry: EnrollmentBreakdown["byMinistry"] = (ministries ?? []).map((m) => ({
     name: m.name as string,
+    slug: m.slug as string,
     count: rows.filter((s) => s.ministry_id === m.id).length,
   }));
 
@@ -97,13 +98,13 @@ export type AdminUser = {
   preferred_day: string | null;
   email_confirmed: boolean;
   created_at: string;
-  ministries: { name: string } | null;
+  ministries: { name: string; slug: string } | null;
 };
 
 export async function getAllUsers(supabase: SupabaseClient) {
   const { data } = await supabase
     .from("profiles")
-    .select("id, full_name, role, preferred_day, email_confirmed, created_at, ministries(name)")
+    .select("id, full_name, role, preferred_day, email_confirmed, created_at, ministries(name, slug)")
     .order("role")
     .order("full_name");
 
@@ -113,7 +114,7 @@ export async function getAllUsers(supabase: SupabaseClient) {
 export async function getStudents(supabase: SupabaseClient) {
   const { data } = await supabase
     .from("profiles")
-    .select("id, full_name, role, preferred_day, email_confirmed, created_at, ministries(name)")
+    .select("id, full_name, role, preferred_day, email_confirmed, created_at, ministries(name, slug)")
     .eq("role", "student")
     .order("created_at", { ascending: false });
 

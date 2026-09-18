@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { getAllUsers, getStudents } from "@/lib/data/admin";
+import MinistryPicto from "@/components/MinistryPicto";
 
 const roleLabels: Record<string, string> = {
   student: "Étudiant",
@@ -23,14 +24,14 @@ export default async function AdminUsersPage() {
       <section className="rounded-lg border border-border bg-background p-6">
         <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h2 className="text-sm font-medium tracking-wide text-muted">ÉTUDIANTS INSCRITS</h2>
+            <h2 className="label text-xs tracking-[0.18em] text-muted">ÉTUDIANTS INSCRITS</h2>
             <p className="mt-1 text-sm text-muted">
               {students.length} inscription{students.length > 1 ? "s" : ""} au total.
             </p>
           </div>
           <a
             href="/admin/utilisateurs/export"
-            className="rounded-md border border-border px-3 py-2 text-sm font-medium text-foreground transition hover:bg-surface"
+            className="label rounded-md border border-foreground px-4 py-2.5 text-xs tracking-[0.12em] text-foreground transition hover:bg-foreground/[0.04]"
           >
             Télécharger (CSV)
           </a>
@@ -40,32 +41,37 @@ export default async function AdminUsersPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-border text-xs uppercase tracking-wide text-muted">
-                  <th className="py-2 pr-4 font-medium">Nom</th>
-                  <th className="py-2 pr-4 font-medium">Ministère</th>
-                  <th className="py-2 pr-4 font-medium">Jour</th>
-                  <th className="py-2 pr-4 font-medium">Statut</th>
-                  <th className="py-2 font-medium">Inscrit le</th>
+                <tr className="label border-b border-border text-[11px] tracking-[0.16em] text-muted">
+                  <th className="py-3 pr-4">Nom</th>
+                  <th className="py-3 pr-4">Ministère</th>
+                  <th className="py-3 pr-4">Jour</th>
+                  <th className="py-3 pr-4">Statut</th>
+                  <th className="py-3">Inscrit le</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border">
+              <tbody className="divide-y divide-border-soft">
                 {students.map((s) => (
                   <tr key={s.id}>
-                    <td className="py-3 pr-4 text-foreground">{s.full_name}</td>
-                    <td className="py-3 pr-4 text-muted">{s.ministries?.name ?? "—"}</td>
-                    <td className="py-3 pr-4 capitalize text-muted">{s.preferred_day ?? "—"}</td>
-                    <td className="py-3 pr-4">
+                    <td className="py-3.5 pr-4 text-foreground">{s.full_name}</td>
+                    <td className="py-3.5 pr-4 text-sm text-foreground">
+                      <span className="flex items-center gap-2">
+                        <MinistryPicto slug={s.ministries?.slug} size={16} />
+                        {s.ministries?.name ?? <span className="text-muted">—</span>}
+                      </span>
+                    </td>
+                    <td className="py-3.5 pr-4 capitalize text-muted">{s.preferred_day ?? "—"}</td>
+                    <td className="py-3.5 pr-4">
                       <span
-                        className={`rounded-full px-2.5 py-0.5 text-xs ${
+                        className={`label rounded-full px-2.5 py-0.5 text-[10px] tracking-[0.12em] ${
                           s.email_confirmed
                             ? "border border-border text-muted"
-                            : "border border-amber-600/30 bg-amber-600/10 text-amber-700"
+                            : "border border-m-doctoral/40 bg-m-doctoral/[0.08] text-link"
                         }`}
                       >
                         {s.email_confirmed ? "Finalisée" : "À confirmer"}
                       </span>
                     </td>
-                    <td className="py-3 tabular-nums text-muted">{formatDate(s.created_at)}</td>
+                    <td className="py-3.5 tabular-nums text-muted">{formatDate(s.created_at)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -77,8 +83,8 @@ export default async function AdminUsersPage() {
       </section>
 
       {pending.length > 0 && (
-        <section className="rounded-lg border border-amber-600/30 bg-amber-600/5 p-6">
-          <h2 className="mb-1 text-sm font-medium tracking-wide text-amber-700">
+        <section className="rounded-lg border border-m-doctoral/35 bg-m-doctoral/[0.05] p-6">
+          <h2 className="label mb-1 text-xs tracking-[0.18em] text-link">
             INSCRIPTIONS À FINALISER
           </h2>
           <p className="mb-4 text-sm text-muted">
@@ -97,7 +103,7 @@ export default async function AdminUsersPage() {
       )}
 
       <section className="rounded-lg border border-border bg-background p-6">
-        <h2 className="mb-4 text-sm font-medium tracking-wide text-muted">ÉQUIPE</h2>
+        <h2 className="mb-4 label text-xs tracking-[0.18em] text-muted">ÉQUIPE</h2>
         <ul className="divide-y divide-border">
           {staff.map((u) => (
             <li key={u.id} className="flex items-center justify-between py-3 text-sm">

@@ -39,7 +39,7 @@ export default async function TeacherMessagesPage() {
   return (
     <>
       <section className="rounded-lg border border-border bg-background p-6">
-        <h2 className="mb-1 text-sm font-medium tracking-wide text-muted">
+        <h2 className="mb-1 label text-xs tracking-[0.18em] text-muted">
           ENVOYER UN MESSAGE
         </h2>
         <p className="mb-4 text-sm text-muted">
@@ -99,7 +99,7 @@ export default async function TeacherMessagesPage() {
 
           <button
             type="submit"
-            className="rounded-md bg-accent px-3 py-2 text-sm font-medium text-on-accent transition hover:opacity-90 sm:col-span-2 sm:w-fit"
+            className="rounded-md label bg-accent px-4 py-2.5 text-xs tracking-[0.12em] text-on-accent transition hover:bg-[#1b2221] sm:col-span-2 sm:w-fit"
           >
             Envoyer le message
           </button>
@@ -107,7 +107,7 @@ export default async function TeacherMessagesPage() {
       </section>
 
       <section className="rounded-lg border border-border bg-background p-6">
-        <h2 className="mb-4 text-sm font-medium tracking-wide text-muted">MESSAGES ENVOYÉS</h2>
+        <h2 className="mb-4 label text-xs tracking-[0.18em] text-muted">MESSAGES ENVOYÉS</h2>
         {announcements.length ? (
           <ul className="space-y-4">
             {announcements.map((a) => (
@@ -121,7 +121,7 @@ export default async function TeacherMessagesPage() {
                         <input type="hidden" name="announcement_id" value={a.id} />
                         <button
                           type="submit"
-                          className="text-red-600 transition hover:text-red-800"
+                          className="text-link transition hover:underline"
                         >
                           Supprimer
                         </button>

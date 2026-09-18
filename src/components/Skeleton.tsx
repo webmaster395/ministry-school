@@ -5,7 +5,7 @@
  */
 
 function Bar({ className = "" }: { className?: string }) {
-  return <div className={`animate-pulse rounded bg-surface ${className}`} />;
+  return <div className={`animate-pulse rounded bg-[#efe9dd] ${className}`} />;
 }
 
 export function CardSkeleton({ lines = 3 }: { lines?: number }) {

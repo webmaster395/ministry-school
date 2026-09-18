@@ -16,7 +16,7 @@ export default function LogoutButton() {
   return (
     <button
       onClick={handleLogout}
-      className="text-sm font-medium text-foreground/80 transition hover:text-accent"
+      className="text-sm font-medium text-[#4b524f] transition hover:text-[#27302f]"
     >
       Déconnexion
     </button>
