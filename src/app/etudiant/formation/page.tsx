@@ -59,7 +59,7 @@ export default async function StudentFormationPage({
 
   const discover = (
     <div className="space-y-8">
-      <div className="mx-auto max-w-[760px] text-center">
+      <div className="max-w-[760px]">
         <h2 className="font-title text-[26px] leading-tight text-foreground">
           Comprendre les ministères
         </h2>
@@ -71,7 +71,7 @@ export default async function StudentFormationPage({
         </p>
       </div>
 
-      <ul className="flex flex-wrap justify-center gap-2.5">
+      <ul className="flex flex-wrap gap-2.5">
         {ORDER.map((k) => MINISTRIES[k]).map((m) => (
           <li
             key={m.slug}
