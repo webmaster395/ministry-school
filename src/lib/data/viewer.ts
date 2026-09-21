@@ -1,18 +1,11 @@
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 
-/**
- * Les rôles se cumulent : tout le monde a la vue étudiant, et chaque rôle
- * ajoute un ou plusieurs onglets.
- */
-export type ViewerRoles = {
-  teacher: boolean;
-  admin: boolean;
-  serviceLead: boolean;
-  projectLead: boolean;
-  /** Ministères pilotés (en propre ou par délégation), par identifiant */
-  steeringMinistryIds: string[];
-};
+import type { ViewerRoles } from "@/lib/roles";
+import { signedAvatarUrls } from "@/lib/avatars";
+
+export type { ViewerRoles };
+export { isPlainStudent } from "@/lib/roles";
 
 export type Viewer = {
   id: string;
@@ -22,6 +15,7 @@ export type Viewer = {
   ministryName: string | null;
   roles: ViewerRoles;
   deactivated: boolean;
+  avatarUrl: string | null;
 };
 
 /**
@@ -41,7 +35,7 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
   const [{ data }, { data: steering }] = await Promise.all([
     supabase
       .from("profiles")
-      .select("full_name, role, is_teacher, deactivated, is_service_lead, is_project_lead, ministries!profiles_ministry_id_fkey(slug, name)")
+      .select("full_name, role, is_teacher, deactivated, avatar_path, is_service_lead, is_project_lead, ministries!profiles_ministry_id_fkey(slug, name)")
       .eq("id", user.id)
       .single(),
     supabase.rpc("steering_ministries"),
@@ -49,6 +43,8 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
 
   const ministry = data?.ministries as unknown as { slug: string; name: string } | null;
   const role = (data?.role as Viewer["role"] | undefined) ?? "student";
+  const avatarPath = (data?.avatar_path as string | null | undefined) ?? null;
+  const avatarUrl = avatarPath ? ((await signedAvatarUrls(supabase, [avatarPath])).get(avatarPath) ?? null) : null;
 
   return {
     id: user.id,
@@ -57,6 +53,7 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
     ministrySlug: ministry?.slug ?? null,
     ministryName: ministry?.name ?? null,
     deactivated: !!data?.deactivated,
+    avatarUrl,
     roles: {
       teacher: role === "teacher" || !!data?.is_teacher,
       admin: role === "admin",

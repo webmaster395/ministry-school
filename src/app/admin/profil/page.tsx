@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import ProfileCard from "@/components/ProfileCard";
+import { getViewer } from "@/lib/data/viewer";
 
 export default async function AdminProfilePage() {
   const supabase = await createClient();
@@ -15,6 +16,8 @@ export default async function AdminProfilePage() {
 
   return (
     <ProfileCard
+      userId={user?.id}
+      avatarUrl={(await getViewer())?.avatarUrl ?? null}
       fullName={profile?.full_name ?? ""}
       email={user?.email ?? ""}
       roleLabel="Administrateur"

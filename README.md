@@ -160,7 +160,7 @@ Avant l'ouverture au public :
 - **Supprimer les comptes de démonstration** (adresses en `.demo@ministryschool.app`).
 
 ### Stockage
-Un espace privé `comptes-rendus` reçoit les fichiers (PDF ou PowerPoint, 20 Mo au plus). Le dépôt part directement du navigateur vers le stockage, sans passer par le serveur. À surveiller : la place disponible selon la formule Supabase.
+Deux espaces privés. `avatars` reçoit les photos de profil (facultatives, réduites à 256 px dans le navigateur, 512 Ko au plus, une seule par personne) : elles ne sont visibles que de la personne et de l'administrateur. `comptes-rendus` reçoit les fichiers (PDF ou PowerPoint, 20 Mo au plus). Le dépôt part directement du navigateur vers le stockage, sans passer par le serveur. À surveiller : la place disponible selon la formule Supabase.
 
 ---
 

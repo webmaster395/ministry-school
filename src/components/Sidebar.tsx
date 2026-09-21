@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LogoCompact } from "@/components/Logo";
-import { BookOpen, Building2, CalendarDays, CircleUser, FileText, Globe, GraduationCap, ClipboardCheck, Compass, HandHeart, HelpCircle, House, KeyRound, MessageSquare, Users } from "lucide-react";
 import MinistryPicto from "@/components/MinistryPicto";
 import { getMinistry } from "@/lib/ministry";
-import type { ViewerRoles } from "@/lib/data/viewer";
+import { navSections } from "@/lib/nav";
+import type { ViewerRoles } from "@/lib/roles";
 
 function ChevronIcon({ direction }: { direction: "left" | "right" }) {
   return (
@@ -27,116 +27,6 @@ function ChevronIcon({ direction }: { direction: "left" | "right" }) {
   );
 }
 
-type NavItem = {
-  label: string;
-  href: string;
-  icon: React.ReactNode;
-};
-
-type NavSection = {
-  title: string;
-  items: NavItem[];
-};
-
-const iconProps = { size: 20, strokeWidth: 1.6 } as const;
-
-const icons = {
-  dashboard: <House {...iconProps} />,
-  calendar: <CalendarDays {...iconProps} />,
-  book: <BookOpen {...iconProps} />,
-  users: <Users {...iconProps} />,
-  megaphone: <MessageSquare {...iconProps} />,
-  layers: <GraduationCap {...iconProps} />,
-  compass: <Users {...iconProps} />,
-  globe: <Globe {...iconProps} />,
-  building: <Building2 {...iconProps} />,
-  user: <CircleUser {...iconProps} />,
-  task: <FileText {...iconProps} />,
-  spark: <HandHeart {...iconProps} />,
-  key: <KeyRound {...iconProps} />,
-  help: <HelpCircle {...iconProps} />,
-  prep: <ClipboardCheck {...iconProps} />,
-  steer: <Compass {...iconProps} />,
-};
-
-const studentSections: NavSection[] = [
-  {
-    title: "Principale",
-    items: [{ label: "Accueil", href: "/etudiant", icon: icons.dashboard }],
-  },
-  {
-    title: "Calendrier",
-    items: [{ label: "Calendrier", href: "/etudiant/calendrier", icon: icons.calendar }],
-  },
-  {
-    title: "Pédagogie",
-    items: [
-      { label: "Mes cours", href: "/etudiant/cours", icon: icons.book },
-      { label: "Travail à faire", href: "/etudiant/travail", icon: icons.task },
-      { label: "Ministères", href: "/etudiant/formation", icon: icons.compass },
-      { label: "Services et projets", href: "/etudiant/services", icon: icons.spark },
-    ],
-  },
-  {
-    title: "Communication",
-    items: [{ label: "Messages", href: "/etudiant/messages", icon: icons.megaphone }],
-  },
-  {
-    title: "Compte",
-    items: [
-      { label: "Profil", href: "/etudiant/profil", icon: icons.user },
-      { label: "Une question ?", href: "/etudiant/aide", icon: icons.help },
-    ],
-  },
-];
-
-/** Onglets en plus, selon les rôles : tout le monde garde la vue étudiant. */
-function extraSections(roles: ViewerRoles): NavSection[] {
-  const out: NavSection[] = [];
-
-  if (roles.teacher) {
-    out.push({
-      title: "Enseignement",
-      items: [
-        { label: "Préparer mes cours", href: "/etudiant/enseignement", icon: icons.prep },
-        { label: "Messages aux étudiants", href: "/enseignant/messages", icon: icons.megaphone },
-      ],
-    });
-  }
-
-  if (roles.steeringMinistryIds.length > 0) {
-    out.push({
-      title: "Pilotage ministériel",
-      items: [{ label: "Pilotage", href: "/etudiant/pilotage", icon: icons.steer }],
-    });
-  }
-
-  if (roles.serviceLead || roles.projectLead || roles.admin) {
-    const label =
-      roles.serviceLead && !roles.projectLead && !roles.admin
-        ? "Proposer une formation"
-        : roles.projectLead && !roles.serviceLead && !roles.admin
-          ? "Proposer un projet"
-          : "Proposer";
-    out.push({
-      title: "Services et projets",
-      items: [{ label, href: "/etudiant/services/nouveau", icon: icons.spark }],
-    });
-  }
-
-  if (roles.admin) {
-    out.push({
-      title: "Administration",
-      items: [
-        { label: "Vue d'ensemble", href: "/admin", icon: icons.dashboard },
-        { label: "Séances", href: "/admin/seances", icon: icons.calendar },
-      ],
-    });
-  }
-
-  return out;
-}
-
 export default function Sidebar({
   roles,
   ministrySlug,
@@ -146,7 +36,8 @@ export default function Sidebar({
 }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
-  const sections = [...studentSections, ...extraSections(roles)];
+  // Sur téléphone, ces mêmes sections sont servies par MobileNav.
+  const sections = navSections(roles);
   const ministry = getMinistry(ministrySlug);
 
   // Restaure le choix de l'utilisateur d'une visite à l'autre
@@ -200,7 +91,17 @@ export default function Sidebar({
       </div>
 
       <nav className={`flex-1 space-y-6 pb-6 pt-2 ${collapsed ? "px-3" : "px-4"}`}>
-        {sections.map((section) => (
+        {sections.map((section) =>
+          section.items.length === 0 ? (
+            // Séparateur : marque le début de la vue étudiant, sous les onglets de gestion
+            <div key={section.title} className="border-t border-border pt-5">
+              {!collapsed && (
+                <p className="label px-3 text-[11px] !font-medium tracking-[0.16em] text-foreground">
+                  {section.title}
+                </p>
+              )}
+            </div>
+          ) : (
           <div key={section.title}>
             {collapsed ? (
               <div className="mx-3 mb-2 border-t border-border-soft" aria-hidden="true" />
@@ -235,7 +136,8 @@ export default function Sidebar({
               })}
             </ul>
           </div>
-        ))}
+          )
+        )}
       </nav>
 
       {/* Pied : sensibilité de l'utilisateur */}

@@ -16,4 +16,5 @@ export async function markNotificationsSeen() {
     .eq("id", user.id);
 
   revalidatePath("/etudiant");
+  revalidatePath("/etudiant/messages");
 }

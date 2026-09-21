@@ -1,4 +1,6 @@
+import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getViewer, isPlainStudent } from "@/lib/data/viewer";
 import { QUESTION_CATEGORIES, type QuestionCategory } from "@/lib/questions";
 import { askQuestion } from "./actions";
 
@@ -6,6 +8,10 @@ const field = "w-full rounded-md border border-border bg-background px-3 py-2.5 
 
 export default async function HelpPage({ searchParams }: { searchParams: Promise<{ envoye?: string }> }) {
   const { envoye } = await searchParams;
+
+  // Les questions sont réservées aux étudiants : les autres profils n'en ont pas besoin
+  const viewer = await getViewer();
+  if (!viewer || !isPlainStudent(viewer.roles)) redirect("/etudiant");
   const supabase = await createClient();
   const {
     data: { user },

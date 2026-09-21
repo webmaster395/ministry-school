@@ -40,42 +40,6 @@ export async function getStudentProfile(supabase: SupabaseClient, userId: string
   };
 }
 
-export async function getStudentNewCounts(
-  supabase: SupabaseClient,
-  sessionIds: string[],
-  since: string
-) {
-  // Les annonces ne dépendent pas des séances : elles sont filtrées par RLS
-  const { count: messages } = await supabase
-    .from("announcements")
-    .select("id", { count: "exact", head: true })
-    .gt("created_at", since);
-
-  if (!sessionIds.length) {
-    return { materials: 0, assignments: 0, messages: messages ?? 0 };
-  }
-
-  const [{ count: materials }, { count: assignments }] = await Promise.all([
-    supabase
-      .from("materials")
-      .select("id", { count: "exact", head: true })
-      .in("session_id", sessionIds)
-      .lte("visible_at", new Date().toISOString())
-      .gt("visible_at", since),
-    supabase
-      .from("assignments")
-      .select("id", { count: "exact", head: true })
-      .in("session_id", sessionIds)
-      .gt("created_at", since),
-  ]);
-
-  return {
-    materials: materials ?? 0,
-    assignments: assignments ?? 0,
-    messages: messages ?? 0,
-  };
-}
-
 /**
  * Un étudiant suit les séances de son ministère, le jour qu'il a choisi.
  * Le rattachement est déduit de son profil : il n'y a pas d'inscription

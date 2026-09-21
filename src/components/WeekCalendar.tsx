@@ -146,7 +146,7 @@ export default function WeekCalendar({ sessions }: { sessions: CalendarSession[]
             type="button"
             onClick={() => shiftWeek(-1)}
             aria-label="Semaine précédente"
-            className="flex h-7 w-7 items-center justify-center rounded-full border border-border text-muted transition hover:border-foreground hover:text-foreground"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted transition hover:border-foreground hover:text-foreground sm:h-7 sm:w-7"
           >
             ‹
           </button>
@@ -154,7 +154,7 @@ export default function WeekCalendar({ sessions }: { sessions: CalendarSession[]
             type="button"
             onClick={() => shiftWeek(1)}
             aria-label="Semaine suivante"
-            className="flex h-7 w-7 items-center justify-center rounded-full border border-border text-muted transition hover:border-foreground hover:text-foreground"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted transition hover:border-foreground hover:text-foreground sm:h-7 sm:w-7"
           >
             ›
           </button>

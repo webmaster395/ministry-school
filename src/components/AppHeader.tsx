@@ -1,7 +1,8 @@
 import { getViewer } from "@/lib/data/viewer";
 import HeaderTitle from "./HeaderTitle";
 import LogoutButton from "./LogoutButton";
-import MinistryPicto from "./MinistryPicto";
+import HeaderBadge from "./HeaderBadge";
+import MobileNav from "./MobileNav";
 
 export default async function AppHeader() {
   const viewer = await getViewer();
@@ -12,20 +13,19 @@ export default async function AppHeader() {
 
   return (
     <header id="top" className="border-b border-border bg-background">
-      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 px-5 py-5 sm:px-7">
-        <HeaderTitle greeting={greeting} />
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4 py-4 sm:gap-x-4 sm:px-7 sm:py-5">
+        <div className="flex min-w-0 items-center gap-2">
+          {viewer && <MobileNav roles={viewer.roles} ministrySlug={viewer.ministrySlug} />}
+          <HeaderTitle greeting={greeting} />
+        </div>
 
-        <div className="flex items-center gap-4">
-          {firstName && (
-            <span
-              className={`inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-border py-[5px] text-sm font-medium text-foreground ${
-                hasPicto ? "pl-2 pr-3.5" : "px-3.5"
-              }`}
-            >
-              {hasPicto && <MinistryPicto slug={viewer.ministrySlug} size={20} />}
-              {firstName}
-            </span>
-          )}
+        <div className="flex shrink-0 items-center gap-3 sm:gap-4">
+          <HeaderBadge
+            firstName={firstName}
+            ministrySlug={viewer?.ministrySlug ?? null}
+            showPicto={hasPicto}
+            avatarUrl={viewer?.avatarUrl ?? null}
+          />
           <LogoutButton />
         </div>
       </div>

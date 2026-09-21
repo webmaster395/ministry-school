@@ -105,8 +105,8 @@ export default function MonthCalendar({
       </div>
 
       <div className="grid items-start gap-[22px] lg:grid-cols-[1fr_400px]">
-        <section className="rounded-lg border border-border bg-background p-6">
-          <div className="mb-5 flex items-center justify-center gap-6">
+        <section className="rounded-lg border border-border bg-background p-4 sm:p-6">
+          <div className="mb-5 flex items-center justify-center gap-3 sm:gap-6">
             <button
               type="button"
               onClick={() => go(-1)}
@@ -115,7 +115,7 @@ export default function MonthCalendar({
             >
               <ChevronLeft size={18} strokeWidth={1.8} />
             </button>
-            <h2 className="font-title min-w-[180px] text-center text-[20px] text-foreground">
+            <h2 className="font-title min-w-0 flex-1 text-center text-[18px] text-foreground sm:min-w-[180px] sm:flex-none sm:text-[20px]">
               {MONTHS[month]} {year}
             </h2>
             <button
@@ -138,7 +138,7 @@ export default function MonthCalendar({
 
           <div className="grid grid-cols-7 overflow-hidden rounded-lg border border-border-soft">
             {cells.map((d, i) => {
-              if (!d) return <div key={i} className="h-[76px] border-b border-r border-border-soft" />;
+              if (!d) return <div key={i} className="h-[62px] border-b border-r border-border-soft sm:h-[76px]" />;
               const key = iso(year, month, d);
               const list = byDate.get(key) ?? [];
               const isSel = key === selected;
@@ -148,7 +148,7 @@ export default function MonthCalendar({
                   key={i}
                   type="button"
                   onClick={() => setSelected(key)}
-                  className={`flex h-[76px] flex-col items-center justify-start gap-1 border-b border-r border-border-soft pt-3 transition hover:bg-surface ${
+                  className={`flex h-[62px] flex-col items-center justify-start gap-1 border-b border-r border-border-soft pt-2 transition hover:bg-surface sm:h-[76px] sm:pt-3 ${
                     isSel ? "bg-surface" : ""
                   }`}
                 >

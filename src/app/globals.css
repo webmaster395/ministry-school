@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Etna Local";
+  src: url("/fonts/etna-free-font.otf") format("opentype");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
 /* Charte « L'ovale » — interface monochrome encre sur papier crème.
    Les cinq couleurs de ministère ne servent que d'étiquettes. */
 :root {
@@ -43,8 +50,8 @@
   --color-m-apostolique: var(--m-apostolique);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  /* Titres : Etna (Adobe Fonts) quand le kit est chargé, sinon une serif système */
-  --font-title: "etna", Georgia, "Times New Roman", serif;
+  /* Titres : Etna si disponible (fichier local ou Adobe Fonts), sinon Bricolage Grotesque (libre de droits) */
+  --font-title: "Etna Local", "etna", var(--font-bricolage), Georgia, serif;
   --font-label: var(--font-jost), "Jost", sans-serif;
 
   /* Rayons de la charte : cartes 10px, boutons et champs 8px */

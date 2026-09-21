@@ -1,15 +1,15 @@
 import Link from "next/link";
-import { ChevronRight, FileText, Video } from "lucide-react";
+import { Bell, ChevronRight, FileText, Video } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import {
   getStudentAllSessions,
   getStudentAssignments,
   getStudentCompletedIds,
-  getStudentNewCounts,
   getStudentProfile,
 } from "@/lib/data/student";
 import { formatSessionDate, formatTimeRange } from "@/lib/format";
 import SessionTypeBadge from "@/components/SessionTypeBadge";
+import { getStudentMessages, shortDate } from "@/lib/data/messages";
 import { getMinistry, INK, sessionColor } from "@/lib/ministry";
 import { markNotificationsSeen } from "./actions";
 
@@ -22,22 +22,10 @@ export default async function StudentDashboardPage() {
   const { ministrySlug, notificationsSeenAt } = await getStudentProfile(supabase, user!.id);
   const allSessions = await getStudentAllSessions(supabase, user!.id);
 
-  const sessionIds = allSessions.map((s) => s.id);
-  const newCounts = await getStudentNewCounts(supabase, sessionIds, notificationsSeenAt);
-  const totalNew = newCounts.materials + newCounts.assignments + newCounts.messages;
-
-  const plural = (n: number, singulier: string, pluriel: string) =>
-    `${n} ${n > 1 ? pluriel : singulier}`;
-
-  const newsLabel = [
-    newCounts.messages > 0 && plural(newCounts.messages, "nouveau message", "nouveaux messages"),
-    newCounts.assignments > 0 &&
-      plural(newCounts.assignments, "nouvelle consigne", "nouvelles consignes"),
-    newCounts.materials > 0 &&
-      plural(newCounts.materials, "nouveau document", "nouveaux documents"),
-  ]
-    .filter(Boolean)
-    .join(" · ");
+  // Messages des enseignants uniquement : le travail à faire a sa propre carte et sa propre page
+  const messages = await getStudentMessages(supabase, notificationsSeenAt);
+  const newCount = messages.filter((m) => m.isNew).length;
+  const preview = messages.slice(0, 3);
 
   const today = new Date().toISOString().slice(0, 10);
   const nextSession = allSessions.find((s) => s.session_date >= today);
@@ -72,13 +60,13 @@ export default async function StudentDashboardPage() {
 
   return (
     <div className="grid items-start gap-[22px] lg:grid-cols-[1fr_360px]">
-      <section className="rounded-lg border border-border bg-background p-7">
+      <section className="rounded-lg border border-border bg-background p-5 sm:p-7">
         {nextSession ? (
           <>
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-sm text-muted">Prochaine journée</p>
-                <h2 className="font-title mt-1 text-[30px] leading-tight text-foreground">
+                <h2 className="font-title mt-1 text-[26px] leading-tight text-foreground sm:text-[30px]">
                   Votre prochaine journée de formation
                 </h2>
               </div>
@@ -102,11 +90,16 @@ export default async function StudentDashboardPage() {
 
             <ol className="mt-7">
               {daySessions.map((s, i) => (
-                <li key={s.id} className="grid grid-cols-[150px_22px_1fr] gap-x-4">
-                  <p className="pt-1 text-[15px] font-semibold text-foreground">
+                // L'horaire passe au-dessus du titre tant que la place manque. Le seuil est
+                // « lg » et non « sm » : entre les deux, la barre latérale réduit déjà le contenu.
+                <li
+                  key={s.id}
+                  className="grid grid-cols-[22px_1fr] gap-x-3 lg:grid-cols-[150px_22px_1fr] lg:gap-x-4"
+                >
+                  <p className="col-start-2 row-start-1 text-[15px] font-semibold text-foreground lg:col-start-1 lg:pt-1">
                     {formatTimeRange(s.start_time, s.end_time)}
                   </p>
-                  <div className="flex flex-col items-center">
+                  <div className="col-start-1 row-span-2 row-start-1 flex flex-col items-center lg:col-start-2 lg:row-span-1">
                     <span
                       className="mt-1.5 h-3.5 w-3.5 shrink-0 rounded-full border-[3px] border-background"
                       style={{
@@ -116,7 +109,7 @@ export default async function StudentDashboardPage() {
                     />
                     {i < daySessions.length - 1 && <span className="w-px flex-1 bg-border" />}
                   </div>
-                  <div className="pb-7">
+                  <div className="col-start-2 row-start-2 pb-6 pt-1.5 lg:col-start-3 lg:row-start-1 lg:pb-7 lg:pt-0">
                     {s.track ? (
                       <span
                         className="label rounded-full px-3 py-1 text-[11px] tracking-[0.1em] text-foreground"
@@ -153,39 +146,71 @@ export default async function StudentDashboardPage() {
       </section>
 
       <div className="space-y-5">
-        <section className="rounded-lg border border-border bg-background p-6">
-          <div className="flex items-center gap-2.5">
-            <h2 className="font-title text-[22px] text-foreground">Messages</h2>
-            {totalNew > 0 && (
-              <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-m-doctoral px-1.5 text-xs font-semibold text-white">
-                {totalNew}
-              </span>
-            )}
+        <section className="rounded-lg border border-border bg-background p-5 sm:p-6">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <h2 className="font-title text-[22px] text-foreground">Messages</h2>
+              {newCount > 0 && (
+                <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-m-doctoral px-1.5 text-xs font-semibold text-white">
+                  {newCount}
+                </span>
+              )}
+            </div>
+            <Bell size={20} strokeWidth={1.6} className="text-muted" aria-hidden="true" />
           </div>
-          <div className="mt-4 border-t border-border-soft pt-4">
-            <p className="text-[15px] text-foreground">
-              {totalNew > 0 ? newsLabel : "Rien de nouveau pour le moment."}
+
+          {preview.length ? (
+            <ul className="mt-4 divide-y divide-border-soft border-t border-border-soft">
+              {preview.map((m) => (
+                <li key={m.id}>
+                  <Link href="/etudiant/messages" className="group flex items-start gap-3.5 py-4">
+                    <span
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
+                        m.isNew ? "bg-accent text-on-accent" : "bg-surface text-muted"
+                      }`}
+                    >
+                      <Bell size={18} strokeWidth={1.7} />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span
+                        className={`block text-[16px] leading-snug text-foreground ${
+                          m.isNew ? "font-semibold" : "font-medium"
+                        }`}
+                      >
+                        {m.title}
+                      </span>
+                      <span className="mt-0.5 line-clamp-2 block text-sm text-muted">{m.body}</span>
+                      <span className="mt-1.5 block text-xs text-muted">
+                        {m.by ? `${m.by} · ` : ""}
+                        {shortDate(m.at)}
+                      </span>
+                    </span>
+                    <ChevronRight size={16} className="mt-1 shrink-0 text-muted transition group-hover:text-foreground" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-4 border-t border-border-soft pt-4 text-[15px] text-muted">
+              Aucun message pour le moment.
             </p>
-            {totalNew > 0 && (
-              <form action={markNotificationsSeen} className="mt-1.5">
-                <button
-                  type="submit"
-                  className="text-[13px] text-muted transition hover:text-foreground"
-                >
-                  Marquer comme lu
+          )}
+
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+            <Link href="/etudiant/messages" className="text-sm font-medium text-foreground hover:underline">
+              Voir tous les messages →
+            </Link>
+            {newCount > 0 && (
+              <form action={markNotificationsSeen}>
+                <button type="submit" className="text-[13px] text-muted transition hover:text-foreground">
+                  Tout marquer comme lu
                 </button>
               </form>
             )}
           </div>
-          <Link
-            href="/etudiant/messages"
-            className="mt-4 inline-block text-sm font-medium text-foreground hover:underline"
-          >
-            Voir tous les messages →
-          </Link>
         </section>
 
-        <section className="rounded-lg border border-border bg-background p-6">
+        <section className="rounded-lg border border-border bg-background p-5 sm:p-6">
           <div className="flex items-start justify-between gap-3">
             <div>
               <h2 className="font-title text-[22px] text-foreground">À préparer</h2>

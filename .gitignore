@@ -32,3 +32,6 @@ npm-debug.log*
 
 # Document de travail interne — reste en local
 CAHIER_DES_CHARGES.md
+
+# Police Etna : licence « usage personnel », ne pas publier
+public/fonts/

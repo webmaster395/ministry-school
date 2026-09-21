@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import ProfileCard from "@/components/ProfileCard";
+import { getViewer } from "@/lib/data/viewer";
 import { getTeacherSessions } from "@/lib/data/teacher";
 
 export default async function TeacherProfilePage() {
@@ -19,6 +20,8 @@ export default async function TeacherProfilePage() {
 
   return (
     <ProfileCard
+      userId={user?.id}
+      avatarUrl={(await getViewer())?.avatarUrl ?? null}
       fullName={profile?.full_name ?? ""}
       email={user?.email ?? ""}
       roleLabel="Enseignant"

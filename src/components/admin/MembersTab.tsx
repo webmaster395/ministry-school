@@ -3,9 +3,10 @@ import { createClient } from "@/lib/supabase/server";
 import { getMinistries } from "@/lib/data/admin";
 import { getServices } from "@/lib/data/opportunities";
 import { getMembers, memberStatus, type Member } from "@/lib/data/admin-hub";
+import { signedAvatarUrls } from "@/lib/avatars";
 import { getMinistry } from "@/lib/ministry";
 import MinistryPicto from "@/components/MinistryPicto";
-import { addDelegate, removeDelegate, setMemberActive, updateMember } from "@/app/admin/actions";
+import { addDelegate, removeDelegate, removeMemberAvatar, setMemberActive, updateMember } from "@/app/admin/actions";
 
 const field = "rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground";
 
@@ -43,6 +44,7 @@ export default async function MembersTab({
     supabase.from("ministry_delegates").select("id, email, user_id, ministry_id").order("created_at"),
   ]);
 
+  const avatarUrls = await signedAvatarUrls(supabase, members.map((m) => m.avatar_path));
   const serviceName = new Map(services.map((s) => [s.id, s.name]));
   const ministryName = new Map(ministries.map((m) => [m.id, m.name]));
   const ministryById = new Map(ministries.map((m) => [m.id, m]));
@@ -137,9 +139,19 @@ export default async function MembersTab({
               return (
                 <li key={m.id} className="px-5 py-3.5">
                   <div className="grid items-center gap-2 md:grid-cols-[1.4fr_1fr_1.6fr_110px_90px] md:gap-4">
-                    <div className="min-w-0">
-                      <p className="truncate text-[15px] font-semibold text-foreground">{m.full_name || "Sans nom"}</p>
-                      <p className="truncate text-xs text-muted">{m.email}</p>
+                    <div className="flex min-w-0 items-center gap-3">
+                      {m.avatar_path && avatarUrls.get(m.avatar_path) ? (
+                        // eslint-disable-next-line @next/next/no-img-element -- adresse temporaire signée
+                        <img src={avatarUrls.get(m.avatar_path)} alt="" className="h-9 w-9 shrink-0 rounded-full object-cover" />
+                      ) : (
+                        <span className="font-title flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface text-sm text-foreground">
+                          {(m.full_name || "?").charAt(0).toUpperCase()}
+                        </span>
+                      )}
+                      <div className="min-w-0">
+                        <p className="truncate text-[15px] font-semibold text-foreground">{m.full_name || "Sans nom"}</p>
+                        <p className="truncate text-xs text-muted">{m.email}</p>
+                      </div>
                     </div>
                     <span className="flex items-center gap-2 text-[15px] text-foreground">
                       {mi ? (
@@ -218,6 +230,17 @@ export default async function MembersTab({
                           Enregistrer
                         </button>
                       </form>
+
+                      {m.avatar_path && (
+                        <form action={removeMemberAvatar} className="border-t border-border pt-3">
+                          <input type="hidden" name="user_id" value={m.id} />
+                          <input type="hidden" name="path" value={m.avatar_path} />
+                          <button type="submit" className="text-sm font-medium text-link underline underline-offset-2">
+                            Retirer la photo de profil
+                          </button>
+                          <p className="mt-1 text-xs text-muted">À utiliser si la photo est inappropriée.</p>
+                        </form>
+                      )}
 
                       <form action={setMemberActive} className="border-t border-border pt-3">
                         <input type="hidden" name="user_id" value={m.id} />

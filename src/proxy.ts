@@ -51,5 +51,5 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   // Ne s'exécute pas sur les assets statiques (images publiques, favicon, etc.)
-  matcher: ["/((?!_next/static|_next/image|.*\\.(?:png|jpg|jpeg|svg|ico|webp|gif)$).*)"],
+  matcher: ["/((?!_next/static|_next/image|.*\\.(?:png|jpg|jpeg|svg|ico|webp|gif|otf|woff2?)$).*)"],
 };

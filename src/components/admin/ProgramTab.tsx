@@ -10,8 +10,13 @@ export function DayList({ entries }: { entries: ProgramEntry[] }) {
     <ul className="divide-y divide-border-soft overflow-hidden rounded-lg border border-border bg-background">
       {entries.map((e) => (
         <li key={e.key}>
-          <Link href={e.href} className="flex items-center gap-4 px-5 py-4 transition hover:bg-surface">
-            <span className="w-[110px] shrink-0 text-[15px] text-foreground">{formatTimeRange(e.start, e.end)}</span>
+          <Link
+            href={e.href}
+            className="flex flex-col gap-1 px-4 py-4 transition hover:bg-surface sm:flex-row sm:items-center sm:gap-4 sm:px-5"
+          >
+            <span className="text-sm text-muted sm:w-[110px] sm:shrink-0 sm:text-[15px] sm:text-foreground">
+              {formatTimeRange(e.start, e.end)}
+            </span>
             <span className="min-w-0 flex-1">
               <span className="block text-[16px] font-semibold text-foreground">{e.title}</span>
               <span className="block truncate text-sm text-muted">{e.sub}</span>

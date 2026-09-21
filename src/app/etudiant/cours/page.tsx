@@ -4,6 +4,7 @@ import { getStudentAllSessions, getStudentProfile } from "@/lib/data/student";
 import { getParcours, parcoursSlugOf } from "@/lib/data/parcours";
 import { formatSessionDate } from "@/lib/format";
 import { getMinistry, INK } from "@/lib/ministry";
+import { PROMOTION } from "@/lib/promotion";
 
 const COLORS: Record<string, string> = {
   coeur: "var(--f-coeur)",
@@ -28,7 +29,7 @@ export default async function StudentCoursesPage() {
   return (
     <div className="space-y-5">
       <div>
-        <p className="text-sm text-muted">Promotion 2026–2027</p>
+        <p className="text-sm text-muted">Promotion {PROMOTION}</p>
         <h2 className="font-title text-[26px] leading-tight text-foreground">
           Votre parcours de cours
         </h2>

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getViewer, isPlainStudent } from "@/lib/data/viewer";
 import { QUESTION_CATEGORIES, type QuestionCategory } from "@/lib/questions";
 
 /** Enregistre la question de la personne connectée. Elle est ensuite traitée depuis l'administration. */
@@ -12,6 +13,11 @@ export async function askQuestion(formData: FormData) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Non authentifié");
+
+  const viewer = await getViewer();
+  if (!viewer || !isPlainStudent(viewer.roles)) {
+    throw new Error("Les questions sont réservées aux étudiants.");
+  }
 
   const text = (key: string) => ((formData.get(key) as string) ?? "").trim();
   const category = text("category") as QuestionCategory;

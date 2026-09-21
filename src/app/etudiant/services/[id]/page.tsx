@@ -13,6 +13,7 @@ import {
   STATUS_LABEL,
 } from "@/lib/data/opportunities";
 import ReportUpload from "@/components/ReportUpload";
+import { signedAvatarUrls } from "@/lib/avatars";
 import { formatSessionDate } from "@/lib/format";
 import { setRegistrationOpen, toggleRegistration } from "../actions";
 
@@ -57,8 +58,13 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
   const participants = canManage
     ? (((await supabase.rpc("opportunity_participants", { p_opp: o.id })).data ?? []) as {
         full_name: string;
+        avatar_path: string | null;
       }[])
     : [];
+  const participantPhotos = await signedAvatarUrls(
+    supabase,
+    participants.map((p) => p.avatar_path)
+  );
 
   const canJoin = registered || status === "disponible";
 
@@ -189,7 +195,15 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
               {participants.length > 0 && (
                 <ul className="mt-3 divide-y divide-border-soft text-[15px] text-foreground">
                   {participants.map((p, i) => (
-                    <li key={i} className="py-2">
+                    <li key={i} className="flex items-center gap-3 py-2">
+                      {p.avatar_path && participantPhotos.get(p.avatar_path) ? (
+                        // eslint-disable-next-line @next/next/no-img-element -- adresse temporaire signée
+                        <img src={participantPhotos.get(p.avatar_path)} alt="" className="h-8 w-8 rounded-full object-cover" />
+                      ) : (
+                        <span className="font-title flex h-8 w-8 items-center justify-center rounded-full bg-surface text-xs text-foreground">
+                          {p.full_name.charAt(0).toUpperCase()}
+                        </span>
+                      )}
                       {p.full_name}
                     </li>
                   ))}

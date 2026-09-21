@@ -76,3 +76,15 @@ export async function setQuestionHandled(formData: FormData) {
   revalidatePath("/admin");
   revalidatePath("/etudiant/aide");
 }
+
+/** Retire la photo de profil d'un membre (modération) : fichier et référence. */
+export async function removeMemberAvatar(formData: FormData) {
+  const supabase = await createClient();
+  const userId = formData.get("user_id") as string;
+  const path = formData.get("path") as string;
+
+  if (path) await supabase.storage.from("avatars").remove([path]);
+  await supabase.from("profiles").update({ avatar_path: null }).eq("id", userId);
+
+  revalidatePath("/admin");
+}
