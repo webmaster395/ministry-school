@@ -7,7 +7,12 @@ import { createOpportunity } from "../actions";
 
 const field = "w-full rounded-md border border-border px-3 py-2 text-sm text-foreground";
 
-export default async function NewOpportunityPage() {
+export default async function NewOpportunityPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ type?: string }>;
+}) {
+  const { type } = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -29,15 +34,27 @@ export default async function NewOpportunityPage() {
       </Link>
 
       <section className="max-w-[760px] rounded-lg border border-border bg-background p-6 sm:p-7">
-        <h2 className="font-title text-[24px] text-foreground">Proposer une formation ou un projet</h2>
+        <h2 className="font-title text-[24px] text-foreground">
+          {type === "formation" && rights.formation
+            ? "Proposer une formation"
+            : type === "projet" && rights.projet
+              ? "Proposer un projet"
+              : "Proposer une formation ou un projet"}
+        </h2>
         <p className="mt-1 text-sm text-muted">
-          Une formation est proposée par un responsable de service, un projet par un chef de projet.
+          {type === "formation" && rights.formation
+            ? "Une formation est proposée par un responsable de service."
+            : type === "projet" && rights.projet
+              ? "Un projet est proposé par un chef de projet."
+              : "Une formation est proposée par un responsable de service, un projet par un chef de projet."}
         </p>
 
-        <form action={createOpportunity} className="mt-6 grid gap-4 sm:grid-cols-2">
+        <form key={type ?? "auto"} action={createOpportunity} className="mt-6 grid gap-4 sm:grid-cols-2">
           <div>
             <label className="mb-1 block text-xs text-muted">Type</label>
-            <select name="kind" required className={field} defaultValue={rights.formation ? "formation" : "projet"}>
+            <select name="kind" required className={field} defaultValue={
+                type === "projet" && rights.projet ? "projet" : type === "formation" && rights.formation ? "formation" : rights.formation ? "formation" : "projet"
+              }>
               {rights.formation && <option value="formation">Formation par un service</option>}
               {rights.projet && <option value="projet">Projet</option>}
             </select>

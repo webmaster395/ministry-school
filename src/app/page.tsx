@@ -23,8 +23,10 @@ export default async function HomePage() {
         ? "/etudiant/enseignement"
         : r && r.steeringMinistryIds.length > 0
           ? "/etudiant/pilotage"
-          : r?.serviceLead || r?.projectLead
-            ? "/etudiant/services"
-            : "/etudiant"
+          : r?.serviceLead
+            ? "/etudiant/services/nouveau?type=formation"
+            : r?.projectLead
+              ? "/etudiant/services/nouveau?type=projet"
+              : "/etudiant"
   );
 }

@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { navSpaces, spaceForPath, spaceHome, type Space, type SpaceKey } from "@/lib/nav";
+import { navSpaces, spaceHome, spacesForPath, type Space, type SpaceKey } from "@/lib/nav";
 import type { ViewerRoles } from "@/lib/roles";
 
 type SpaceContext = {
@@ -35,7 +35,13 @@ export function SpaceProvider({ roles, children }: { roles: ViewerRoles; childre
     }
   }, []);
 
-  const key = spaceForPath(spaces, pathname) ?? spaces.find((s) => s.key === stored)?.key ?? spaces[0].key;
+  // Une page partagée entre deux espaces garde celui que la personne a choisi.
+  const matches = spacesForPath(spaces, pathname);
+  const key =
+    matches.find((k) => k === stored) ??
+    matches[0] ??
+    spaces.find((s) => s.key === stored)?.key ??
+    spaces[0].key;
   const current = spaces.find((s) => s.key === key) ?? spaces[0];
 
   function select(next: SpaceKey) {

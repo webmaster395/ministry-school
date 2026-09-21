@@ -102,7 +102,7 @@ export default function Sidebar({
             )}
             <ul className="space-y-0.5">
               {section.items.map((item) => {
-                const active = pathname === item.href;
+                const active = pathname === item.href.split("?")[0];
                 return (
                   <li key={item.label}>
                     <Link

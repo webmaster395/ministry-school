@@ -11,6 +11,7 @@ import {
   House,
   LayoutDashboard,
   Lightbulb,
+  Rocket,
   Megaphone,
   MessageSquare,
   Presentation,
@@ -45,6 +46,7 @@ const icons = {
   announce: <Megaphone {...iconProps} />,
   steer: <Compass {...iconProps} />,
   propose: <Lightbulb {...iconProps} />,
+  projectPropose: <Rocket {...iconProps} />,
   adminHome: <LayoutDashboard {...iconProps} />,
   adminSessions: <CalendarClock {...iconProps} />,
 };
@@ -90,7 +92,7 @@ function studentSectionsFor(roles: ViewerRoles): NavSection[] {
   );
 }
 
-export type SpaceKey = "admin" | "teacher" | "steering" | "services" | "student";
+export type SpaceKey = "admin" | "teacher" | "steering" | "services" | "project" | "student";
 
 /** Une « casquette » : un ensemble d'entrées de menu que la personne choisit d'afficher. */
 export type Space = {
@@ -153,19 +155,39 @@ export function navSpaces(roles: ViewerRoles): Space[] {
     });
   }
 
-  if (roles.admin || roles.serviceLead || roles.projectLead) {
-    const both = roles.admin || (roles.serviceLead && roles.projectLead);
+  // Deux casquettes distinctes : le responsable de service propose des formations,
+  // le chef de projet des projets. L'administrateur a les deux.
+  if (roles.admin || roles.serviceLead) {
     spaces.push({
       key: "services",
-      label: both ? "Responsable et chef de projet" : roles.projectLead ? "Chef de projet" : "Responsable de service",
+      label: "Responsable de service",
       sections: [
         {
-          title: "Services et projets",
+          title: "Services",
           items: [
             {
-              label: both ? "Proposer" : roles.projectLead ? "Proposer un projet" : "Proposer une formation",
-              href: "/etudiant/services/nouveau",
+              label: "Proposer une formation",
+              href: "/etudiant/services/nouveau?type=formation",
               icon: icons.propose,
+            },
+          ],
+        },
+      ],
+    });
+  }
+
+  if (roles.admin || roles.projectLead) {
+    spaces.push({
+      key: "project",
+      label: "Chef de projet",
+      sections: [
+        {
+          title: "Projets",
+          items: [
+            {
+              label: "Proposer un projet",
+              href: "/etudiant/services/nouveau?type=projet",
+              icon: icons.projectPropose,
             },
           ],
         },
@@ -183,22 +205,30 @@ export function spaceHome(space: Space): string {
 }
 
 /**
- * L'espace auquel appartient une page, d'après le menu : une entrée exacte l'emporte,
- * sinon la plus longue entrée dont l'adresse est un préfixe. Renvoie null pour une page
- * qui n'est dans aucun menu (par exemple le détail d'une séance).
+ * Les espaces auxquels une page peut appartenir, d'après le menu : une entrée exacte l'emporte,
+ * sinon la plus longue entrée dont l'adresse est un préfixe. Plusieurs espaces peuvent
+ * partager une même page (« Proposer ») ; l'appelant garde alors celui déjà choisi.
+ * Liste vide pour une page absente du menu (par exemple le détail d'une séance).
  */
-export function spaceForPath(spaces: Space[], pathname: string): SpaceKey | null {
-  let best: { key: SpaceKey; length: number } | null = null;
+export function spacesForPath(spaces: Space[], pathname: string): SpaceKey[] {
+  let bestLength = -1;
+  let keys: SpaceKey[] = [];
   for (const space of spaces) {
     for (const section of space.sections) {
       for (const item of section.items) {
-        const exact = pathname === item.href;
-        const prefix = item.href !== "/etudiant" && pathname.startsWith(item.href + "/");
+        const path = item.href.split("?")[0];
+        const exact = pathname === path;
+        const prefix = path !== "/etudiant" && pathname.startsWith(path + "/");
         if (!exact && !prefix) continue;
-        const length = exact ? Infinity : item.href.length;
-        if (!best || length > best.length) best = { key: space.key, length };
+        const length = exact ? Infinity : path.length;
+        if (length > bestLength) {
+          bestLength = length;
+          keys = [space.key];
+        } else if (length === bestLength && !keys.includes(space.key)) {
+          keys.push(space.key);
+        }
       }
     }
   }
-  return best?.key ?? null;
+  return keys;
 }
