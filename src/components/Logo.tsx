@@ -21,3 +21,17 @@ export function LogoLockup({
 }
 
 export default LogoLockup;
+
+/** Version compacte pour l'en-tête du menu : pictos et « MINISTRY SCHOOL » sur fond encre. */
+export function LogoCompact({ priority = false }: { priority?: boolean }) {
+  return (
+    <Image
+      src="/logo-compact.png"
+      alt="Ministry School"
+      width={466}
+      height={122}
+      priority={priority}
+      className="h-auto w-[224px] select-none"
+    />
+  );
+}

@@ -9,7 +9,7 @@ export default async function TeacherProfilePage() {
   } = await supabase.auth.getUser();
 
   const [{ data: profile }, sessions] = await Promise.all([
-    supabase.from("profiles").select("full_name, ministries(name)").eq("id", user!.id).single(),
+    supabase.from("profiles").select("full_name, ministries!profiles_ministry_id_fkey(name)").eq("id", user!.id).single(),
     getTeacherSessions(supabase, user!.id),
   ]);
 

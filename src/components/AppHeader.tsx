@@ -3,17 +3,12 @@ import HeaderTitle from "./HeaderTitle";
 import LogoutButton from "./LogoutButton";
 import MinistryPicto from "./MinistryPicto";
 
-export default async function AppHeader({ roleLabel }: { roleLabel: string }) {
+export default async function AppHeader() {
   const viewer = await getViewer();
 
   const firstName = viewer?.fullName.split(" ")[0] ?? "";
   const greeting = firstName ? `Bonjour ${firstName}` : "Bonjour";
-
-  // Pastille : « Pasteur · Étudiant », ou « Administrateur » seul
-  const pillLabel =
-    viewer?.role !== "admin" && viewer?.ministryName
-      ? `${viewer.ministryName} · ${roleLabel}`
-      : roleLabel;
+  const hasPicto = viewer?.role !== "admin" && !!viewer?.ministrySlug;
 
   return (
     <header id="top" className="border-b border-border bg-background">
@@ -21,14 +16,16 @@ export default async function AppHeader({ roleLabel }: { roleLabel: string }) {
         <HeaderTitle greeting={greeting} />
 
         <div className="flex items-center gap-4">
-          <span
-            className={`label inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-border py-[5px] text-xs tracking-[0.1em] text-foreground ${
-              viewer?.role !== "admin" && viewer?.ministrySlug ? "pl-2 pr-3" : "px-3"
-            }`}
-          >
-            {viewer?.role !== "admin" && <MinistryPicto slug={viewer?.ministrySlug} size={18} />}
-            {pillLabel}
-          </span>
+          {firstName && (
+            <span
+              className={`inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-border py-[5px] text-sm font-medium text-foreground ${
+                hasPicto ? "pl-2 pr-3.5" : "px-3.5"
+              }`}
+            >
+              {hasPicto && <MinistryPicto slug={viewer.ministrySlug} size={20} />}
+              {firstName}
+            </span>
+          )}
           <LogoutButton />
         </div>
       </div>

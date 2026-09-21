@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogoLockup } from "@/components/Logo";
+import { LogoCompact } from "@/components/Logo";
+import { BookOpen, Building2, CalendarDays, CircleUser, FileText, Globe, GraduationCap, ClipboardCheck, Compass, HandHeart, House, KeyRound, MessageSquare, Users } from "lucide-react";
 import MinistryPicto from "@/components/MinistryPicto";
 import { getMinistry } from "@/lib/ministry";
+import type { ViewerRoles } from "@/lib/data/viewer";
 
 function ChevronIcon({ direction }: { direction: "left" | "right" }) {
   return (
@@ -36,88 +38,42 @@ type NavSection = {
   items: NavItem[];
 };
 
+const iconProps = { size: 20, strokeWidth: 1.6 } as const;
+
 const icons = {
-  dashboard: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-      <rect x="3" y="3" width="7" height="9" rx="1.5" />
-      <rect x="14" y="3" width="7" height="5" rx="1.5" />
-      <rect x="14" y="12" width="7" height="9" rx="1.5" />
-      <rect x="3" y="16" width="7" height="5" rx="1.5" />
-    </svg>
-  ),
-  calendar: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-      <rect x="3" y="5" width="18" height="16" rx="2" />
-      <path d="M3 10h18M8 3v4M16 3v4" />
-    </svg>
-  ),
-  book: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-      <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5v-15Z" />
-      <path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20" />
-    </svg>
-  ),
-  users: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-      <circle cx="9" cy="8" r="3.25" />
-      <path d="M2.5 20c0-3.2 2.9-5.5 6.5-5.5s6.5 2.3 6.5 5.5" />
-      <path d="M16.5 4.8c1.6.4 2.75 1.8 2.75 3.45s-1.15 3.05-2.75 3.45" />
-      <path d="M21.5 20c0-2.6-1.9-4.6-4.5-5.3" />
-    </svg>
-  ),
-  megaphone: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-      <path d="M3 10v4a1 1 0 0 0 1 1h2l4 4V5L6 9H4a1 1 0 0 0-1 1Z" />
-      <path d="M14 8.5c1.1.9 1.1 6.1 0 7M17.5 6c2.2 1.7 2.2 10.3 0 12" />
-    </svg>
-  ),
-  layers: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-      <path d="m12 3 9 5-9 5-9-5 9-5Z" />
-      <path d="m3 13 9 5 9-5" />
-    </svg>
-  ),
-  compass: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-      <circle cx="12" cy="12" r="9" />
-      <path d="m14.5 9.5-2 5-3-1.5 2-5 3 1.5Z" />
-    </svg>
-  ),
-  globe: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-      <circle cx="12" cy="12" r="9" />
-      <path d="M3 12h18M12 3c2.5 2.5 3.5 6 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-6-3.5-9s1-6.5 3.5-9Z" />
-    </svg>
-  ),
-  building: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-      <rect x="4" y="3" width="16" height="18" rx="1.5" />
-      <path d="M9 8h1M14 8h1M9 12h1M14 12h1M9 16h1M14 16h1" />
-    </svg>
-  ),
-  user: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75">
-      <circle cx="12" cy="8" r="3.5" />
-      <path d="M4.5 20c0-3.6 3.4-6 7.5-6s7.5 2.4 7.5 6" />
-    </svg>
-  ),
+  dashboard: <House {...iconProps} />,
+  calendar: <CalendarDays {...iconProps} />,
+  book: <BookOpen {...iconProps} />,
+  users: <Users {...iconProps} />,
+  megaphone: <MessageSquare {...iconProps} />,
+  layers: <GraduationCap {...iconProps} />,
+  compass: <Users {...iconProps} />,
+  globe: <Globe {...iconProps} />,
+  building: <Building2 {...iconProps} />,
+  user: <CircleUser {...iconProps} />,
+  task: <FileText {...iconProps} />,
+  spark: <HandHeart {...iconProps} />,
+  key: <KeyRound {...iconProps} />,
+  prep: <ClipboardCheck {...iconProps} />,
+  steer: <Compass {...iconProps} />,
 };
 
 const studentSections: NavSection[] = [
   {
     title: "Principale",
-    items: [{ label: "Dashboard", href: "/etudiant", icon: icons.dashboard }],
+    items: [{ label: "Accueil", href: "/etudiant", icon: icons.dashboard }],
   },
   {
     title: "Calendrier",
-    items: [{ label: "Mon calendrier", href: "/etudiant/calendrier", icon: icons.calendar }],
+    items: [{ label: "Calendrier", href: "/etudiant/calendrier", icon: icons.calendar }],
   },
   {
     title: "Pédagogie",
     items: [
       { label: "Mes cours", href: "/etudiant/cours", icon: icons.book },
-      { label: "Ma formation", href: "/etudiant/palier", icon: icons.layers },
+      { label: "Travail à faire", href: "/etudiant/travail", icon: icons.task },
       { label: "Ministères", href: "/etudiant/formation", icon: icons.compass },
+      { label: "Services et projets", href: "/etudiant/services", icon: icons.spark },
     ],
   },
   {
@@ -130,71 +86,68 @@ const studentSections: NavSection[] = [
   },
 ];
 
-const teacherSections: NavSection[] = [
-  {
-    title: "Principale",
-    items: [{ label: "Dashboard", href: "/enseignant", icon: icons.dashboard }],
-  },
-  {
-    title: "Calendrier",
-    items: [{ label: "Mon calendrier", href: "/enseignant/calendrier", icon: icons.calendar }],
-  },
-  {
-    title: "Pédagogie",
-    items: [
-      { label: "Supports & consignes", href: "/enseignant/supports", icon: icons.megaphone },
-      { label: "Vue promo", href: "/enseignant/programme", icon: icons.globe },
-      { label: "Socles", href: "/enseignant/socles", icon: icons.layers },
-    ],
-  },
-  {
-    title: "Communication",
-    items: [{ label: "Messages", href: "/enseignant/messages", icon: icons.megaphone }],
-  },
-  {
-    title: "Suivi",
-    items: [{ label: "Mes étudiants", href: "/enseignant/etudiants", icon: icons.users }],
-  },
-  {
-    title: "Compte",
-    items: [{ label: "Profil", href: "/enseignant/profil", icon: icons.user }],
-  },
-];
+/** Onglets en plus, selon les rôles : tout le monde garde la vue étudiant. */
+function extraSections(roles: ViewerRoles): NavSection[] {
+  const out: NavSection[] = [];
 
-const adminSections: NavSection[] = [
-  {
-    title: "Principale",
-    items: [{ label: "Dashboard", href: "/admin", icon: icons.dashboard }],
-  },
-  {
-    title: "Suivi",
-    items: [
-      { label: "Cours", href: "/admin/cours", icon: icons.book },
-      { label: "Séances", href: "/admin/seances", icon: icons.calendar },
-      { label: "Utilisateurs", href: "/admin/utilisateurs", icon: icons.users },
-    ],
-  },
-  {
-    title: "Compte",
-    items: [{ label: "Profil", href: "/admin/profil", icon: icons.user }],
-  },
-];
+  if (roles.teacher) {
+    out.push({
+      title: "Enseignement",
+      items: [
+        { label: "Préparer mes cours", href: "/etudiant/enseignement", icon: icons.prep },
+        { label: "Messages aux étudiants", href: "/enseignant/messages", icon: icons.megaphone },
+      ],
+    });
+  }
+
+  if (roles.steeringMinistryIds.length > 0) {
+    out.push({
+      title: "Pilotage ministériel",
+      items: [{ label: "Pilotage", href: "/etudiant/pilotage", icon: icons.steer }],
+    });
+  }
+
+  if (roles.serviceLead || roles.projectLead || roles.admin) {
+    const label =
+      roles.serviceLead && !roles.projectLead && !roles.admin
+        ? "Proposer une formation"
+        : roles.projectLead && !roles.serviceLead && !roles.admin
+          ? "Proposer un projet"
+          : "Proposer";
+    out.push({
+      title: "Services et projets",
+      items: [{ label, href: "/etudiant/services/nouveau", icon: icons.spark }],
+    });
+  }
+
+  if (roles.admin) {
+    out.push({
+      title: "Administration",
+      items: [
+        { label: "Vue d'ensemble", href: "/admin", icon: icons.dashboard },
+        { label: "Séances", href: "/admin/seances", icon: icons.calendar },
+      ],
+    });
+  }
+
+  return out;
+}
 
 export default function Sidebar({
-  role,
+  roles,
   ministrySlug,
 }: {
-  role: "student" | "teacher" | "admin";
+  roles: ViewerRoles;
   ministrySlug?: string | null;
 }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
-  const sections =
-    role === "student" ? studentSections : role === "teacher" ? teacherSections : adminSections;
+  const sections = [...studentSections, ...extraSections(roles)];
   const ministry = getMinistry(ministrySlug);
 
   // Restaure le choix de l'utilisateur d'une visite à l'autre
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- lu après le montage pour éviter un écart serveur/navigateur
     setCollapsed(localStorage.getItem("sidebar-collapsed") === "1");
   }, []);
 
@@ -207,7 +160,7 @@ export default function Sidebar({
   }
 
   const footerLabel =
-    role === "admin" ? "Administration" : ministry ? `Sensibilité ${ministry.adjective}` : null;
+    roles.admin ? "Administration" : ministry ? `Sensibilité ${ministry.adjective}` : null;
 
   return (
     <aside
@@ -216,9 +169,9 @@ export default function Sidebar({
       }`}
     >
       {/* En-tête : l'ovale de la charte sur fond encre */}
-      <div className="relative bg-foreground p-5">
+      <div className="relative flex h-[88px] items-center justify-center bg-foreground">
         {collapsed ? (
-          <div className="flex h-[54px] items-center justify-center">
+          <div className="flex items-center justify-center">
             {ministry ? (
               <MinistryPicto slug={ministry.slug} size={32} />
             ) : (
@@ -226,7 +179,7 @@ export default function Sidebar({
             )}
           </div>
         ) : (
-          <LogoLockup priority />
+          <LogoCompact priority />
         )}
       </div>
 
@@ -288,7 +241,7 @@ export default function Sidebar({
             collapsed ? "justify-center px-2" : "px-5"
           }`}
         >
-          {role !== "admin" && ministry && <MinistryPicto slug={ministry.slug} size={20} />}
+          {!roles.admin && ministry && <MinistryPicto slug={ministry.slug} size={20} />}
           {!collapsed && (
             <span className="label text-[10px] tracking-[0.18em] text-muted">{footerLabel}</span>
           )}

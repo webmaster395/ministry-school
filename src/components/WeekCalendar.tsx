@@ -81,6 +81,7 @@ export default function WeekCalendar({ sessions }: { sessions: CalendarSession[]
   useEffect(() => {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- lu après le montage pour éviter un écart serveur/navigateur
     setToday(now);
     setWeekStart(startOfWeek(now));
     setSelected(now);

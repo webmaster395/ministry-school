@@ -1,37 +1,5 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 
-export async function getGlobalStats(supabase: SupabaseClient) {
-  const [
-    { count: studentCount },
-    { count: confirmedCount },
-    { count: teacherCount },
-    { count: sessionCount },
-    { count: materialCount },
-  ] = await Promise.all([
-    supabase.from("profiles").select("id", { count: "exact", head: true }).eq("role", "student"),
-    supabase
-      .from("profiles")
-      .select("id", { count: "exact", head: true })
-      .eq("role", "student")
-      .eq("email_confirmed", true),
-    supabase.from("profiles").select("id", { count: "exact", head: true }).eq("role", "teacher"),
-    supabase.from("sessions").select("id", { count: "exact", head: true }),
-    supabase.from("materials").select("id", { count: "exact", head: true }),
-  ]);
-
-  const students = studentCount ?? 0;
-  const confirmed = confirmedCount ?? 0;
-
-  return {
-    studentCount: students,
-    confirmedCount: confirmed,
-    pendingCount: students - confirmed,
-    teacherCount: teacherCount ?? 0,
-    sessionCount: sessionCount ?? 0,
-    materialCount: materialCount ?? 0,
-  };
-}
-
 export type EnrollmentBreakdown = {
   byMinistry: { name: string; slug?: string; count: number }[];
   byDay: { day: string; count: number }[];
@@ -77,13 +45,19 @@ export type AdminSession = {
   ministries: { name: string } | null;
   courses: { title: string } | null;
   teacher: { full_name: string } | null;
+  description: string | null;
+  track: string | null;
+  speaker_name: string | null;
+  summary: string | null;
+  objectives: string | null;
+  bible_refs: string | null;
 };
 
 export async function getAllSessions(supabase: SupabaseClient) {
   const { data } = await supabase
     .from("sessions")
     .select(
-      "id, session_date, start_time, end_time, location, room, session_type, ministries(name), courses(title), teacher:profiles!sessions_teacher_id_fkey(full_name)"
+      "id, session_date, start_time, end_time, location, room, session_type, description, track, speaker_name, summary, objectives, bible_refs, ministries(name), courses(title), teacher:profiles!sessions_teacher_id_fkey(full_name)"
     )
     .order("session_date", { ascending: true })
     .order("start_time", { ascending: true });
@@ -101,20 +75,10 @@ export type AdminUser = {
   ministries: { name: string; slug: string } | null;
 };
 
-export async function getAllUsers(supabase: SupabaseClient) {
-  const { data } = await supabase
-    .from("profiles")
-    .select("id, full_name, role, preferred_day, email_confirmed, created_at, ministries(name, slug)")
-    .order("role")
-    .order("full_name");
-
-  return (data ?? []) as unknown as AdminUser[];
-}
-
 export async function getStudents(supabase: SupabaseClient) {
   const { data } = await supabase
     .from("profiles")
-    .select("id, full_name, role, preferred_day, email_confirmed, created_at, ministries(name, slug)")
+    .select("id, full_name, role, preferred_day, email_confirmed, created_at, ministries!profiles_ministry_id_fkey(name, slug)")
     .eq("role", "student")
     .order("created_at", { ascending: false });
 

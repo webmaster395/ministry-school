@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getAllSessions, getCourses, getMinistries, getTeachers } from "@/lib/data/admin";
 import { formatSessionDate, formatTimeRange } from "@/lib/format";
 import SessionTypeBadge from "@/components/SessionTypeBadge";
+import SessionEditForm from "@/components/SessionEditForm";
 import { createSession, deleteSession } from "./actions";
 
 export default async function AdminSessionsPage() {
@@ -184,8 +185,9 @@ export default async function AdminSessionsPage() {
             {sessions.map((s) => (
               <li
                 key={s.id}
-                className="flex flex-col gap-1 py-3 text-sm sm:flex-row sm:items-center sm:justify-between"
+                className="py-3 text-sm"
               >
+                <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                 <span className="flex flex-wrap items-center gap-2 text-foreground">
                   {formatSessionDate(s.session_date)}
                   <SessionTypeBadge type={s.session_type} />
@@ -208,6 +210,8 @@ export default async function AdminSessionsPage() {
                     </button>
                   </form>
                 </span>
+                </div>
+                <SessionEditForm session={{ ...s, teacherName: s.teacher?.full_name }} />
               </li>
             ))}
           </ul>

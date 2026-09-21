@@ -19,6 +19,11 @@
   --m-doctoral: #e34d1b;
   --m-evangelique: #ee9a9c;
   --m-apostolique: #c9dc6a;
+  /* Formations : palette à part, sans lien avec les cinq couleurs de ministères */
+  --f-coeur: #8b6fc0;
+  --f-caractere: #4a7bc4;
+  --f-sensibilite: #27302f;
+  --f-projet: #6b7a8f;
 }
 
 @theme inline {

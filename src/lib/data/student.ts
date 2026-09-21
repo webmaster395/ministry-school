@@ -14,15 +14,19 @@ export type StudentSession = {
   course_id: string | null;
   courses: { id: string; title: string } | null;
   teacher: { full_name: string } | null;
+  speaker_name?: string | null;
+  track?: string | null;
+  summary?: string | null;
+  bible_refs?: string | null;
 };
 
 const SESSION_FIELDS =
-  "id, session_date, start_time, end_time, location, room, day, session_type, description, objectives, course_id, courses(id, title), teacher:profiles!sessions_teacher_id_fkey(full_name)";
+  "id, session_date, start_time, end_time, location, room, day, session_type, description, objectives, speaker_name, track, summary, bible_refs, course_id, courses(id, title), teacher:profiles!sessions_teacher_id_fkey(full_name)";
 
 export async function getStudentProfile(supabase: SupabaseClient, userId: string) {
   const { data } = await supabase
     .from("profiles")
-    .select("full_name, preferred_day, ministry_id, notifications_seen_at, ministries(name, slug)")
+    .select("full_name, preferred_day, ministry_id, notifications_seen_at, ministries!profiles_ministry_id_fkey(name, slug)")
     .eq("id", userId)
     .single();
 
@@ -108,11 +112,12 @@ async function getCommonSessions(supabase: SupabaseClient) {
     .eq("session_type", "commun");
 
   const sessions: StudentSession[] = ((data ?? []) as unknown as StudentSession[]).map((s) => {
-    // Si pas de teacher assigné via clé étrangère, extraire depuis la description
+    // Intervenant sans compte : son nom est porté par la séance elle-même
+    if (!s.teacher && s.speaker_name) {
+      return { ...s, teacher: { full_name: s.speaker_name } };
+    }
+    // Sinon, extraire depuis la description
     if (!s.teacher && s.description) {
-      if (s.description.toLowerCase().includes("paul goulet")) {
-        return { ...s, teacher: { full_name: "Paul Goulet" } };
-      }
       const match = s.description.match(
         /(?:intervenant\s*:\s*|par\s+)([A-ZÀ-ÿ][a-zà-ÿ]+(?:\s+[A-ZÀ-ÿ][a-zà-ÿ]+)+)/i
       );
@@ -122,26 +127,6 @@ async function getCommonSessions(supabase: SupabaseClient) {
     }
     return s;
   });
-
-  // Garantir la présence de la séance tronc commun de ce samedi 19 septembre avec Paul Goulet
-  const hasSaturday19 = sessions.some((s) => s.session_date === "2026-09-19");
-  if (!hasSaturday19) {
-    sessions.push({
-      id: "session-tronc-commun-19-sep",
-      session_date: "2026-09-19",
-      start_time: "09:30:00",
-      end_time: "17:00:00",
-      location: "MLK 2 (MLK Studio)",
-      room: null,
-      day: "samedi",
-      session_type: "commun",
-      description: "Le caractère — Enseignement plénière le matin & mise en pratique l'après-midi",
-      objectives: "Développer un caractère selon le cœur de Dieu pour le ministère",
-      course_id: null,
-      courses: { id: "c-caractere", title: "Le caractère" },
-      teacher: { full_name: "Paul Goulet" },
-    });
-  }
 
   return sessions;
 }
@@ -192,11 +177,21 @@ export async function getStudentAssignments(supabase: SupabaseClient, sessionIds
 
   const { data } = await supabase
     .from("assignments")
-    .select("id, instructions, session_id, created_at")
+    .select("id, instructions, session_id, created_at, kind, duration_min, due_at")
     .in("session_id", sessionIds)
     .order("created_at", { ascending: false });
 
   return data ?? [];
+}
+
+/** Identifiants des travaux que l'étudiant a déjà cochés. */
+export async function getStudentCompletedIds(supabase: SupabaseClient, userId: string) {
+  const { data } = await supabase
+    .from("assignment_completions")
+    .select("assignment_id")
+    .eq("user_id", userId);
+
+  return new Set((data ?? []).map((c) => c.assignment_id as string));
 }
 
 export type StudentCourse = {

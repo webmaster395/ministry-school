@@ -18,7 +18,9 @@ function LoginForm() {
   const [error, setError] = useState<string | null>(
     searchParams.get("erreur") === "lien_invalide"
       ? "Ce lien de confirmation n'est plus valide. Connectez-vous ou demandez un nouveau lien."
-      : null
+      : searchParams.get("erreur") === "desactive"
+        ? "Ce compte est désactivé. Rapprochez-vous de l'équipe Ministry School."
+        : null
   );
   const [loading, setLoading] = useState(false);
 
@@ -35,7 +37,11 @@ function LoginForm() {
     setLoading(false);
 
     if (signInError) {
-      setError("Identifiants incorrects. Vérifiez votre e-mail et votre mot de passe.");
+      setError(
+        signInError.message.toLowerCase().includes("banned")
+          ? "Ce compte est désactivé. Rapprochez-vous de l'équipe Ministry School."
+          : "Identifiants incorrects. Vérifiez votre e-mail et votre mot de passe."
+      );
       return;
     }
 

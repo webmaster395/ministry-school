@@ -35,23 +35,6 @@ export async function getCommonSessions(supabase: SupabaseClient) {
 
   const sessions: TeacherSession[] = (data ?? []).map((s) => ({ ...s, ministries: null, courses: null })) as unknown as TeacherSession[];
 
-  const hasSaturday19 = sessions.some((s) => s.session_date === "2026-09-19");
-  if (!hasSaturday19) {
-    sessions.push({
-      id: "session-tronc-commun-19-sep",
-      session_date: "2026-09-19",
-      start_time: "09:30:00",
-      end_time: "17:00:00",
-      location: "MLK 2 (MLK Studio)",
-      room: null,
-      day: "samedi",
-      session_type: "commun",
-      description: "Paul Goulet — Le caractère (Tronc commun)",
-      ministries: null,
-      courses: null,
-    });
-  }
-
   return sessions;
 }
 

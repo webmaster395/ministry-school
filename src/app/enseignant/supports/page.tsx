@@ -160,6 +160,26 @@ export default async function TeacherSupportsPage() {
             placeholder="Consigne pour la prochaine séance..."
             className="rounded-md border border-border px-3 py-2 text-sm"
           />
+          <div className="grid gap-3 sm:grid-cols-3">
+            <input
+              name="kind"
+              placeholder="Type (lecture, vidéo, document…)"
+              className="rounded-md border border-border px-3 py-2 text-sm"
+            />
+            <input
+              type="number"
+              min={1}
+              name="duration_min"
+              placeholder="Durée (min)"
+              className="rounded-md border border-border px-3 py-2 text-sm"
+            />
+            <input
+              type="datetime-local"
+              name="due_at"
+              aria-label="Échéance"
+              className="rounded-md border border-border px-3 py-2 text-sm"
+            />
+          </div>
           <button
             type="submit"
             className="w-fit rounded-md label bg-accent px-4 py-2.5 text-xs tracking-[0.12em] text-on-accent transition hover:bg-[#1b2221]"

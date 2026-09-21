@@ -11,19 +11,6 @@ export default async function HomePage() {
     redirect("/login");
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single();
-
-  if (profile?.role === "teacher") {
-    redirect("/enseignant");
-  }
-
-  if (profile?.role === "admin") {
-    redirect("/admin");
-  }
-
+  // Tout le monde arrive sur la vue étudiant ; les rôles ajoutent des onglets.
   redirect("/etudiant");
 }

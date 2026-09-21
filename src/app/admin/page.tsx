@@ -1,62 +1,80 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { getEnrollmentBreakdown, getGlobalStats } from "@/lib/data/admin";
-import BarChart from "@/components/BarChart";
+import { getMembers, getOpportunitiesWithDates, getProgramEntries } from "@/lib/data/admin-hub";
+import OverviewTab from "@/components/admin/OverviewTab";
+import ProgramTab from "@/components/admin/ProgramTab";
+import ProjectsTab from "@/components/admin/ProjectsTab";
+import ReportsTab from "@/components/admin/ReportsTab";
+import MembersTab from "@/components/admin/MembersTab";
 
-export default async function AdminDashboardPage() {
+const TABS = [
+  { key: "vue", label: "Vue d'ensemble" },
+  { key: "programme", label: "Programme" },
+  { key: "projets", label: "Projets et formations" },
+  { key: "comptes-rendus", label: "Comptes rendus" },
+  { key: "membres", label: "Membres et accès" },
+];
+
+type Params = {
+  onglet?: string;
+  vue?: string;
+  type?: string;
+  phase?: string;
+  filtre?: string;
+  q?: string;
+  role?: string;
+  sens?: string;
+  statut?: string;
+  tri?: string;
+};
+
+export default async function AdminPage({ searchParams }: { searchParams: Promise<Params> }) {
+  const p = await searchParams;
+  const tab = TABS.some((t) => t.key === p.onglet) ? (p.onglet as string) : "vue";
+
   const supabase = await createClient();
-  const [stats, breakdown] = await Promise.all([
-    getGlobalStats(supabase),
-    getEnrollmentBreakdown(supabase),
-  ]);
+  const today = new Date().toISOString().slice(0, 10);
 
-  const cards = [
-    { label: "Étudiants inscrits", value: stats.studentCount, hero: true, pending: false },
-    { label: "Inscriptions finalisées", value: stats.confirmedCount, pending: false },
-    { label: "En attente de confirmation", value: stats.pendingCount, pending: true },
-    { label: "Enseignants", value: stats.teacherCount, pending: false },
-    { label: "Séances programmées", value: stats.sessionCount, pending: false },
-    { label: "Supports publiés", value: stats.materialCount, pending: false },
-  ];
+  const opps = await getOpportunitiesWithDates(supabase);
 
   return (
-    <>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {cards.map((c) => (
-          <div
-            key={c.label}
-            className={`rounded-lg border border-border bg-background p-6 ${
-              c.pending ? "border-l-4 border-l-m-doctoral" : ""
+    <div className="space-y-6">
+      <nav className="grid grid-cols-2 gap-1 rounded-lg border border-border bg-background p-1 md:grid-cols-5">
+        {TABS.map((t) => (
+          <Link
+            key={t.key}
+            href={t.key === "vue" ? "/admin" : `/admin?onglet=${t.key}`}
+            className={`rounded-md py-3 text-center text-[15px] transition ${
+              tab === t.key ? "bg-accent font-medium text-on-accent" : "text-muted hover:text-foreground"
             }`}
           >
-            <p
-              className={`label text-[11px] tracking-[0.18em] ${
-                c.pending ? "text-link" : "text-muted"
-              }`}
-            >
-              {c.label}
-            </p>
-            <p
-              className={`font-title mt-3 leading-none text-foreground ${
-                c.hero ? "text-[56px]" : "text-4xl"
-              }`}
-            >
-              {c.value}
-            </p>
-          </div>
+            {t.label}
+          </Link>
         ))}
-      </div>
+      </nav>
 
-      <BarChart
-        title="Inscrits par ministère"
-        subtitle="Nombre d'étudiants ayant choisi chaque ministère."
-        data={breakdown.byMinistry.map((m) => ({ label: m.name, value: m.count, slug: m.slug }))}
-      />
-
-      <BarChart
-        title="Répartition par jour"
-        subtitle="Jour de cours choisi par les étudiants."
-        data={breakdown.byDay.map((d) => ({ label: d.day, value: d.count }))}
-      />
-    </>
+      {tab === "vue" && (
+        <OverviewTab
+          members={await getMembers(supabase)}
+          opps={opps}
+          program={await getProgramEntries(supabase, opps)}
+          today={today}
+        />
+      )}
+      {tab === "programme" && (
+        <ProgramTab entries={await getProgramEntries(supabase, opps)} view={p.vue ?? ""} today={today} />
+      )}
+      {tab === "projets" && <ProjectsTab opps={opps} type={p.type ?? "projet"} phase={p.phase ?? "actuel"} today={today} />}
+      {tab === "comptes-rendus" && <ReportsTab opps={opps} filter={p.filtre ?? "a_recevoir"} today={today} />}
+      {tab === "membres" && (
+        <MembersTab
+          q={p.q ?? ""}
+          role={p.role ?? "tous"}
+          sens={p.sens ?? "toutes"}
+          statut={p.statut ?? "tous"}
+          tri={p.tri ?? "nom"}
+        />
+      )}
+    </div>
   );
 }

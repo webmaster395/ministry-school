@@ -9,7 +9,7 @@ export default async function StudentProfilePage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, preferred_day, has_paid, ministries(name)")
+    .select("full_name, preferred_day, has_paid, ministries!profiles_ministry_id_fkey(name)")
     .eq("id", user!.id)
     .single();
 

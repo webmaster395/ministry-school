@@ -9,7 +9,6 @@ export type MinistryInfo = {
   adjective: string;
   /** Variable CSS de la couleur (voir globals.css) */
   color: string;
-  picto: string;
   /** Libellé coloré lisible sur papier — jamais la couleur brute pour du texte */
   textColor: string;
 };
@@ -20,7 +19,6 @@ export const MINISTRIES: Record<string, MinistryInfo> = {
     name: "Pasteur",
     adjective: "pastorale",
     color: "var(--m-pastoral)",
-    picto: "/picto-pastoral.png",
     textColor: "#a0700a",
   },
   prophete: {
@@ -28,7 +26,6 @@ export const MINISTRIES: Record<string, MinistryInfo> = {
     name: "Prophète",
     adjective: "prophétique",
     color: "var(--m-prophetique)",
-    picto: "/picto-prophetique.png",
     textColor: "var(--foreground)",
   },
   docteur: {
@@ -36,7 +33,6 @@ export const MINISTRIES: Record<string, MinistryInfo> = {
     name: "Docteur",
     adjective: "doctorale",
     color: "var(--m-doctoral)",
-    picto: "/picto-doctoral.png",
     textColor: "var(--link)",
   },
   evangeliste: {
@@ -44,7 +40,6 @@ export const MINISTRIES: Record<string, MinistryInfo> = {
     name: "Évangéliste",
     adjective: "évangélique",
     color: "var(--m-evangelique)",
-    picto: "/picto-evangelique.png",
     textColor: "var(--foreground)",
   },
   apotre: {
@@ -52,7 +47,6 @@ export const MINISTRIES: Record<string, MinistryInfo> = {
     name: "Apôtre",
     adjective: "apostolique",
     color: "var(--m-apostolique)",
-    picto: "/picto-apostolique.png",
     textColor: "var(--foreground)",
   },
 };
@@ -63,3 +57,20 @@ export function getMinistry(slug: string | null | undefined): MinistryInfo | nul
 
 /** Encre : couleur de repli pour le tronc commun, qui n'appartient à aucun ministère. */
 export const INK = "var(--foreground)";
+
+/**
+ * Couleur d'une formation. Palette volontairement distincte de celle des ministères
+ * (voir --f-* dans globals.css) pour ne jamais confondre une formation et un ministère.
+ */
+export function sessionColor(
+  track: string | null | undefined,
+  sessionType: "commun" | "ministere",
+  ministryColor: string
+) {
+  const t = (track ?? "").toLowerCase();
+  if (t.includes("cœur") || t.includes("coeur")) return "var(--f-coeur)";
+  if (t.includes("caractère") || t.includes("caractere")) return "var(--f-caractere)";
+  if (t.includes("sensibilité") || t.includes("sensibilite")) return "var(--f-sensibilite)";
+  if (t.includes("parcours") || t.includes("projet")) return "var(--f-projet)";
+  return sessionType === "commun" ? INK : ministryColor;
+}
