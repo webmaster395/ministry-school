@@ -16,6 +16,8 @@ export type Viewer = {
   roles: ViewerRoles;
   deactivated: boolean;
   avatarUrl: string | null;
+  /** Messages reçus depuis la dernière fois que la personne a tout marqué comme lu */
+  unreadMessages: number;
 };
 
 /**
@@ -35,7 +37,7 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
   const [{ data }, { data: steering }] = await Promise.all([
     supabase
       .from("profiles")
-      .select("full_name, role, is_teacher, deactivated, avatar_path, is_service_lead, is_project_lead, ministries!profiles_ministry_id_fkey(slug, name)")
+      .select("full_name, role, is_teacher, deactivated, avatar_path, notifications_seen_at, is_service_lead, is_project_lead, ministries!profiles_ministry_id_fkey(slug, name)")
       .eq("id", user.id)
       .single(),
     supabase.rpc("steering_ministries"),
@@ -46,8 +48,16 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
   const avatarPath = (data?.avatar_path as string | null | undefined) ?? null;
   const avatarUrl = avatarPath ? ((await signedAvatarUrls(supabase, [avatarPath])).get(avatarPath) ?? null) : null;
 
+  // Sert au compteur du menu et de l'onglet Messagerie
+  const seenAt = (data?.notifications_seen_at as string | undefined) ?? "1970-01-01T00:00:00Z";
+  const { count: unread } = await supabase
+    .from("announcements")
+    .select("id", { count: "exact", head: true })
+    .gt("created_at", seenAt);
+
   return {
     id: user.id,
+    unreadMessages: unread ?? 0,
     fullName: (data?.full_name as string | undefined) ?? "",
     role,
     ministrySlug: ministry?.slug ?? null,

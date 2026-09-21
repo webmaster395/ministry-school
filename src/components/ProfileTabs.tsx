@@ -11,7 +11,7 @@ import { profileTabs } from "@/lib/nav";
  */
 export default function ProfileTabs() {
   const pathname = usePathname();
-  const { roles } = useSpace();
+  const { roles, unread } = useSpace();
   const tabs = profileTabs(roles);
 
   return (
@@ -31,6 +31,7 @@ export default function ProfileTabs() {
           }`}
         >
           {tab.label}
+          {tab.href === "/etudiant/messages" && unread > 0 ? ` (${unread})` : ""}
         </Link>
       ))}
     </nav>

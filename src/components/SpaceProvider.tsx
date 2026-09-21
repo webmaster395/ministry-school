@@ -7,6 +7,8 @@ import type { ViewerRoles } from "@/lib/roles";
 
 type SpaceContext = {
   roles: ViewerRoles;
+  /** Messages non lus, pour les pastilles du menu et l'onglet Messagerie */
+  unread: number;
   /** Les espaces de gestion de la personne ; vide pour un étudiant simple */
   spaces: Space[];
   /** L'espace de gestion de la page ouverte ; null sur les pages étudiant */
@@ -24,7 +26,15 @@ const STORAGE_KEY = "space";
  * Porte l'espace de gestion (« casquette ») entre l'en-tête, la barre latérale et le menu du
  * téléphone. L'espace suit la page ouverte ; on retient le dernier utilisé pour « Mes fonctions ».
  */
-export function SpaceProvider({ roles, children }: { roles: ViewerRoles; children: React.ReactNode }) {
+export function SpaceProvider({
+  roles,
+  unread = 0,
+  children,
+}: {
+  roles: ViewerRoles;
+  unread?: number;
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const spaces = useMemo(() => navSpaces(roles), [roles]);
@@ -78,7 +88,7 @@ export function SpaceProvider({ roles, children }: { roles: ViewerRoles; childre
     router.push(spaceHome(space));
   }
 
-  return <Ctx.Provider value={{ roles, spaces, current: shown, home, select }}>{children}</Ctx.Provider>;
+  return <Ctx.Provider value={{ roles, unread, spaces, current: shown, home, select }}>{children}</Ctx.Provider>;
 }
 
 export function useSpace(): SpaceContext {

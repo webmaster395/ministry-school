@@ -13,8 +13,8 @@ type Tab = "decouvrir" | "choix" | "programme";
 const VIDEO_ID = "gSRxq7xwN_c";
 
 const TABS: { key: Tab; label: string; href: string }[] = [
-  { key: "decouvrir", label: "Découvrir", href: "/etudiant/formation" },
-  { key: "choix", label: "Mon choix", href: "/etudiant/formation?onglet=choix" },
+  { key: "decouvrir", label: "Découvrir", href: "/etudiant/formation?onglet=decouvrir" },
+  { key: "choix", label: "Mon choix", href: "/etudiant/formation" },
   { key: "programme", label: "Mon programme", href: "/etudiant/formation?onglet=programme" },
 ];
 
@@ -42,7 +42,9 @@ export default async function StudentFormationPage({
   searchParams: Promise<{ onglet?: string }>;
 }) {
   const { onglet } = await searchParams;
-  const tab: Tab = onglet === "choix" || onglet === "programme" ? onglet : "decouvrir";
+  // On arrive sur « Mon choix » : c'est la sensibilité de la personne qui compte en premier.
+  // Sans choix, cet onglet présente les cinq sensibilités pour aider à choisir.
+  const tab: Tab = onglet === "decouvrir" || onglet === "programme" ? onglet : "choix";
 
   const supabase = await createClient();
   const {

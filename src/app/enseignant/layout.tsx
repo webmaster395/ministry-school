@@ -11,7 +11,7 @@ export default async function TeacherLayout({ children }: { children: React.Reac
   if (!viewer?.roles.teacher && !viewer?.roles.admin) redirect("/etudiant");
 
   return (
-    <SpaceProvider roles={viewer!.roles}>
+    <SpaceProvider roles={viewer!.roles} unread={viewer!.unreadMessages}>
     <div className="flex min-h-screen w-full">
       <Sidebar fullName={viewer!.fullName} avatarUrl={viewer!.avatarUrl} ministrySlug={viewer?.ministrySlug} />
       <div className="flex min-h-screen min-w-0 flex-1 flex-col bg-surface">

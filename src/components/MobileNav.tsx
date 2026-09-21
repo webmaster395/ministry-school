@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { LogoCompact } from "@/components/Logo";
 import { NavSections, ProfileLink } from "@/components/NavBlocks";
+import { useSpace } from "@/components/SpaceProvider";
 
 /**
  * Menu du téléphone : un bouton dans l'en-tête ouvre un panneau latéral
@@ -23,6 +24,7 @@ export default function MobileNav({
   const [open, setOpen] = useState(false);
   const panel = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
+  const { unread } = useSpace();
 
   // Refermer dès que la page change, y compris avec le bouton « retour » du téléphone.
   // L'ajustement se fait pendant le rendu plutôt que dans un effet, pour éviter
@@ -61,11 +63,16 @@ export default function MobileNav({
         ref={trigger}
         type="button"
         onClick={() => setOpen(true)}
-        aria-label="Ouvrir le menu"
+        aria-label={unread > 0 ? `Ouvrir le menu, ${unread} message${unread > 1 ? "s" : ""} non lu${unread > 1 ? "s" : ""}` : "Ouvrir le menu"}
         aria-expanded={open}
         className="-ml-2 flex h-11 w-11 items-center justify-center rounded-md text-foreground transition hover:bg-foreground/[0.06]"
       >
-        <Menu size={24} strokeWidth={1.7} />
+        <span className="relative">
+          <Menu size={24} strokeWidth={1.7} />
+          {unread > 0 && (
+            <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full border-2 border-background bg-m-doctoral" aria-hidden="true" />
+          )}
+        </span>
       </button>
 
       {open && (

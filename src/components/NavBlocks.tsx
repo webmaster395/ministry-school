@@ -120,7 +120,7 @@ export function ProfileLink({
   collapsed?: boolean;
 }) {
   const pathname = usePathname();
-  const { roles } = useSpace();
+  const { roles, unread } = useSpace();
   const ministry = getMinistry(ministrySlug);
   const active = profileTabs(roles).some((t) => sameRoute(pathname, t.href));
   const firstName = fullName.split(" ")[0] || "Mon profil";
@@ -134,14 +134,19 @@ export function ProfileLink({
         active ? "bg-foreground/[0.08]" : "hover:bg-foreground/[0.04]"
       }`}
     >
-      {avatarUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element -- adresse temporaire signée, non optimisable
-        <img src={avatarUrl} alt="" className="h-9 w-9 shrink-0 rounded-full border border-border object-cover" />
-      ) : (
-        <span className="font-title flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent text-sm text-on-accent">
-          {initial}
-        </span>
-      )}
+      <span className="relative shrink-0">
+        {avatarUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element -- adresse temporaire signée, non optimisable
+          <img src={avatarUrl} alt="" className="h-9 w-9 rounded-full border border-border object-cover" />
+        ) : (
+          <span className="font-title flex h-9 w-9 items-center justify-center rounded-full bg-accent text-sm text-on-accent">
+            {initial}
+          </span>
+        )}
+        {unread > 0 && collapsed && (
+          <span className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full border-2 border-background bg-m-doctoral" aria-hidden="true" />
+        )}
+      </span>
       {!collapsed && (
         <span className="min-w-0 flex-1">
           <span className="block truncate text-[15px] font-medium text-foreground">{firstName}</span>
@@ -151,6 +156,14 @@ export function ProfileLink({
               {ministry.adjective}
             </span>
           )}
+        </span>
+      )}
+      {!collapsed && unread > 0 && (
+        <span
+          className="flex h-6 min-w-6 shrink-0 items-center justify-center rounded-full bg-m-doctoral px-1.5 text-xs font-semibold text-white"
+          aria-label={`${unread} message${unread > 1 ? "s" : ""} non lu${unread > 1 ? "s" : ""}`}
+        >
+          {unread}
         </span>
       )}
     </Link>
