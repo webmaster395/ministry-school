@@ -29,12 +29,15 @@ export async function proxy(request: NextRequest) {
 
   const isAuthRoute =
     request.nextUrl.pathname === "/login" || request.nextUrl.pathname === "/inscription";
+  // Pages ouvertes à tous : la landing et ses annexes, même sans compte.
+  const isPublicPage =
+    request.nextUrl.pathname === "/" || request.nextUrl.pathname === "/mentions-legales";
   // Le lien de confirmation arrive sans session : il doit passer pour être échangé.
   const isAuthCallback =
     request.nextUrl.pathname.startsWith("/auth/callback") ||
     request.nextUrl.pathname.startsWith("/auth/confirm");
 
-  if (!user && !isAuthRoute && !isAuthCallback) {
+  if (!user && !isAuthRoute && !isAuthCallback && !isPublicPage) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
@@ -42,7 +45,7 @@ export async function proxy(request: NextRequest) {
 
   if (user && isAuthRoute) {
     const url = request.nextUrl.clone();
-    url.pathname = "/";
+    url.pathname = "/app";
     return NextResponse.redirect(url);
   }
 
@@ -50,6 +53,7 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Ne s'exécute pas sur les assets statiques (images publiques, favicon, etc.)
-  matcher: ["/((?!_next/static|_next/image|.*\\.(?:png|jpg|jpeg|svg|ico|webp|gif|otf|woff2?)$).*)"],
+  // Ne s'exécute pas sur les fichiers statiques : images, polices, scripts et styles
+  // servis depuis /public. Sans cela, ils seraient renvoyés vers la page de connexion.
+  matcher: ["/((?!_next/static|_next/image|.*\\.(?:png|jpg|jpeg|svg|ico|webp|gif|otf|woff2?|js|css|txt|xml|webmanifest)$).*)"],
 };

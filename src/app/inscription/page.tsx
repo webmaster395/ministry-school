@@ -85,7 +85,7 @@ export default function InscriptionPage() {
     // Selon la configuration, la session peut être ouverte immédiatement
     // ou nécessiter une confirmation par e-mail.
     if (data.session) {
-      router.push("/");
+      router.push("/app");
       router.refresh();
       return;
     }

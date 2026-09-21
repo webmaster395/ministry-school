@@ -86,7 +86,13 @@ npm run lint     # vérification du code
 
 ## Adresses
 
-`/login` et `/inscription` (aussi `/connexion`), `/etudiant` (aussi `/app`) une fois connecté. Ces raccourcis préparent les adresses prévues sur le nom de domaine (`ministryschool.fr/app`).
+`/` est la **landing publique** : la page de présentation conçue par Rose Alice, reprise dans le projet avec la police et les couleurs de la charte. Elle est accessible sans compte, tout comme `/mentions-legales`. Ses boutons mènent à `/login` et `/inscription`, et « Prendre ma place » vers la billetterie BilletWeb (`NEXT_PUBLIC_BILLETWEB_URL` ; sans cette variable, le bouton reste désactivé).
+
+`/app` oriente la personne connectée vers son espace (administration, enseignant, pilotage, propositions, sinon la vue étudiant) : c'est là qu'arrivent la connexion, l'inscription et la confirmation d'e-mail. `/connexion` reste un raccourci vers `/login`.
+
+Un seul domaine pour tout, comme prévu : `ministryschool.fr` pour la landing, et la plateforme derrière les boutons du haut.
+
+Les fichiers de la landing : la page dans `src/app/page.tsx`, ses styles dans `src/app/landing.css` (limités au conteneur `.landing` pour ne pas déborder sur l'application), ses images et son script dans `public/landing/`.
 
 ---
 

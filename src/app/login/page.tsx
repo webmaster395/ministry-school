@@ -47,7 +47,7 @@ function LoginForm() {
       return;
     }
 
-    router.push("/");
+    router.push("/app");
     router.refresh();
   }
 

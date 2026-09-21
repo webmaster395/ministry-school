@@ -22,5 +22,5 @@ export async function confirmEmail(formData: FormData) {
     redirect("/login?erreur=lien_utilise");
   }
 
-  redirect("/");
+  redirect("/app");
 }
