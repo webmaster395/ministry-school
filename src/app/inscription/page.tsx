@@ -72,6 +72,10 @@ export default function InscriptionPage() {
         setError("Cette adresse e-mail n'est pas valide. Vérifiez votre saisie.");
       } else if (message.includes("already")) {
         setError("Un compte existe déjà avec cette adresse e-mail.");
+      } else if (code === "unexpected_failure" || message.includes("sending") || message.includes("email")) {
+        setError(
+          "Votre compte n'a pas pu être créé car l'e-mail de confirmation n'a pas pu partir. Réessayez dans un instant, ou écrivez-nous si le problème continue."
+        );
       } else {
         setError("L'inscription n'a pas abouti. Vérifiez vos informations et réessayez.");
       }

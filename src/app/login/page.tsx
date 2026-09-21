@@ -18,7 +18,9 @@ function LoginForm() {
   const [error, setError] = useState<string | null>(
     searchParams.get("erreur") === "lien_invalide"
       ? "Ce lien de confirmation n'est plus valide. Connectez-vous ou demandez un nouveau lien."
-      : searchParams.get("erreur") === "desactive"
+      : searchParams.get("erreur") === "lien_utilise"
+        ? "Ce lien a déjà été utilisé. Si vous avez déjà confirmé votre adresse, connectez-vous directement avec votre e-mail et votre mot de passe."
+        : searchParams.get("erreur") === "desactive"
         ? "Ce compte est désactivé. Rapprochez-vous de l'équipe Ministry School."
         : null
   );

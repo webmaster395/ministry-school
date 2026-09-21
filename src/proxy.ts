@@ -30,7 +30,9 @@ export async function proxy(request: NextRequest) {
   const isAuthRoute =
     request.nextUrl.pathname === "/login" || request.nextUrl.pathname === "/inscription";
   // Le lien de confirmation arrive sans session : il doit passer pour être échangé.
-  const isAuthCallback = request.nextUrl.pathname.startsWith("/auth/callback");
+  const isAuthCallback =
+    request.nextUrl.pathname.startsWith("/auth/callback") ||
+    request.nextUrl.pathname.startsWith("/auth/confirm");
 
   if (!user && !isAuthRoute && !isAuthCallback) {
     const url = request.nextUrl.clone();
