@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LogoCompact } from "@/components/Logo";
-import { BookOpen, Building2, CalendarDays, CircleUser, FileText, Globe, GraduationCap, ClipboardCheck, Compass, HandHeart, House, KeyRound, MessageSquare, Users } from "lucide-react";
+import { BookOpen, Building2, CalendarDays, CircleUser, FileText, Globe, GraduationCap, ClipboardCheck, Compass, HandHeart, HelpCircle, House, KeyRound, MessageSquare, Users } from "lucide-react";
 import MinistryPicto from "@/components/MinistryPicto";
 import { getMinistry } from "@/lib/ministry";
 import type { ViewerRoles } from "@/lib/data/viewer";
@@ -54,6 +54,7 @@ const icons = {
   task: <FileText {...iconProps} />,
   spark: <HandHeart {...iconProps} />,
   key: <KeyRound {...iconProps} />,
+  help: <HelpCircle {...iconProps} />,
   prep: <ClipboardCheck {...iconProps} />,
   steer: <Compass {...iconProps} />,
 };
@@ -82,7 +83,10 @@ const studentSections: NavSection[] = [
   },
   {
     title: "Compte",
-    items: [{ label: "Profil", href: "/etudiant/profil", icon: icons.user }],
+    items: [
+      { label: "Profil", href: "/etudiant/profil", icon: icons.user },
+      { label: "Une question ?", href: "/etudiant/aide", icon: icons.help },
+    ],
   },
 ];
 

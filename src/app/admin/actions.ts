@@ -63,3 +63,16 @@ export async function removeDelegate(formData: FormData) {
   await supabase.from("ministry_delegates").delete().eq("id", formData.get("delegate_id") as string);
   revalidatePath("/admin");
 }
+
+/** Marque une question comme traitée, ou la remet « à traiter ». */
+export async function setQuestionHandled(formData: FormData) {
+  const supabase = await createClient();
+  const handled = formData.get("handled") === "1";
+  await supabase
+    .from("questions")
+    .update({ status: handled ? "traitee" : "nouvelle", handled_at: handled ? new Date().toISOString() : null })
+    .eq("id", formData.get("question_id") as string);
+
+  revalidatePath("/admin");
+  revalidatePath("/etudiant/aide");
+}

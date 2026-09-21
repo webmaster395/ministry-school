@@ -1,7 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Adresses courtes prévues pour ministryschool.fr : /app (connecté) et /connexion
+  async redirects() {
+    return [
+      { source: "/app", destination: "/etudiant", permanent: false },
+      { source: "/connexion", destination: "/login", permanent: false },
+    ];
+  },
 };
 
 export default nextConfig;

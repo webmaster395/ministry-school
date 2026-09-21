@@ -6,6 +6,7 @@ import ProgramTab from "@/components/admin/ProgramTab";
 import ProjectsTab from "@/components/admin/ProjectsTab";
 import ReportsTab from "@/components/admin/ReportsTab";
 import MembersTab from "@/components/admin/MembersTab";
+import QuestionsTab from "@/components/admin/QuestionsTab";
 
 const TABS = [
   { key: "vue", label: "Vue d'ensemble" },
@@ -13,6 +14,7 @@ const TABS = [
   { key: "projets", label: "Projets et formations" },
   { key: "comptes-rendus", label: "Comptes rendus" },
   { key: "membres", label: "Membres et accès" },
+  { key: "questions", label: "Questions" },
 ];
 
 type Params = {
@@ -39,7 +41,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
 
   return (
     <div className="space-y-6">
-      <nav className="grid grid-cols-2 gap-1 rounded-lg border border-border bg-background p-1 md:grid-cols-5">
+      <nav className="grid grid-cols-2 gap-1 rounded-lg border border-border bg-background p-1 md:grid-cols-6">
         {TABS.map((t) => (
           <Link
             key={t.key}
@@ -66,6 +68,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
       )}
       {tab === "projets" && <ProjectsTab opps={opps} type={p.type ?? "projet"} phase={p.phase ?? "actuel"} today={today} />}
       {tab === "comptes-rendus" && <ReportsTab opps={opps} filter={p.filtre ?? "a_recevoir"} today={today} />}
+      {tab === "questions" && <QuestionsTab filter={p.filtre ?? "a_traiter"} />}
       {tab === "membres" && (
         <MembersTab
           q={p.q ?? ""}

@@ -28,7 +28,7 @@ Tout le monde a la **vue étudiant**. Chaque rôle ajoute des onglets, et les r�
 | **Responsable de service** | Propose des **formations de service** (avec un nombre de places) |
 | **Chef de projet** | Propose des **projets** |
 | **Pilotage ministériel** | Le pasteur d'un ministère, et son secrétaire (accès par adresse e-mail), préparent les cours du ministère : modalités, enseignant, présentation, objectifs, consignes, supports |
-| **Administrateur** | Administration en cinq onglets (voir plus bas) |
+| **Administrateur** | Administration en six onglets (voir plus bas) |
 
 Les rôles sont attribués uniquement par un administrateur, dans **Administration → Membres et accès**.
 
@@ -39,9 +39,10 @@ Les rôles sont attribués uniquement par un administrateur, dans **Administrati
 - **Travail à faire** : les consignes, à cocher, à venir / plus tard / terminées.
 - **Ministères** : découvrir (vidéo et présentation), choisir sa sensibilité, ressources.
 - **Services et projets** : s'inscrire aux formations de service et aux projets.
+- **Une question ?** : formulaire qui range la question selon son sujet (organisation → Flora, ministères et enseignement → Nathalie, technique → équipe technique).
 
 ### Administration
-Cinq onglets : **Vue d'ensemble** (chiffres pour les assemblées, préparation des cours par ministère), **Programme** (par journée), **Projets et formations**, **Comptes rendus** (PDF ou PowerPoint remis après chaque date), **Membres et accès** (recherche, rôles, désactivation d'un compte, secrétaires de pilotage, export CSV).
+Six onglets : **Vue d'ensemble** (chiffres pour les assemblées, préparation des cours par ministère), **Programme** (par journée), **Projets et formations**, **Comptes rendus** (PDF ou PowerPoint remis après chaque date), **Membres et accès** (recherche, rôles, désactivation d'un compte, secrétaires de pilotage, export CSV), **Questions** (celles posées par les membres, à transmettre puis à marquer comme traitées).
 
 ---
 
@@ -81,6 +82,12 @@ npm run lint     # vérification du code
 
 ---
 
+## Adresses
+
+`/login` et `/inscription` (aussi `/connexion`), `/etudiant` (aussi `/app`) une fois connecté. Ces raccourcis préparent les adresses prévues sur le nom de domaine (`ministryschool.fr/app`).
+
+---
+
 ## Structure
 
 ```
@@ -117,6 +124,7 @@ public/                               Logo, visuels des ministères, texture de 
 | `opportunities`, `opportunity_dates`, `opportunity_registrations` | Formations de service et projets, leurs dates, les inscriptions |
 | `opportunity_reports` | Comptes rendus remis après chaque date (fichiers dans le stockage `comptes-rendus`) |
 | `ministry_delegates` | Accès par e-mail d'un secrétaire à la vue d'un ministère |
+| `questions` | Questions posées par les membres, par sujet, avec leur état (à traiter ou traitée) |
 | `courses`, `enrollments`, `paliers`, `submissions` | Hérités d'une version précédente. `paliers` et `submissions` ne sont plus utilisés |
 
 ### Sécurité

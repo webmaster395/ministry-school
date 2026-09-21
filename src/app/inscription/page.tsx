@@ -24,7 +24,6 @@ export default function InscriptionPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [ministrySlug, setMinistrySlug] = useState("");
-  const [preferredDay, setPreferredDay] = useState("samedi");
   const [showPassword, setShowPassword] = useState(false);
 
   const [error, setError] = useState<string | null>(null);
@@ -55,7 +54,6 @@ export default function InscriptionPage() {
         data: {
           full_name: fullName,
           ministry_slug: ministrySlug,
-          preferred_day: preferredDay,
         },
       },
     });
@@ -158,7 +156,6 @@ export default function InscriptionPage() {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     className={inputClass("pl-10 pr-3.5")}
-                    placeholder="Michael Coulibaly"
                     autoComplete="name"
                   />
                 </Field>
@@ -176,43 +173,26 @@ export default function InscriptionPage() {
                   />
                 </Field>
 
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label htmlFor="ministry" className={labelClass}>
-                      Ministère
-                    </label>
-                    <select
-                      id="ministry"
-                      required
-                      value={ministrySlug}
-                      onChange={(e) => setMinistrySlug(e.target.value)}
-                      className={inputClass("px-3.5 cursor-pointer")}
-                    >
-                      <option value="" disabled>
-                        Choisir…
+                <div>
+                  <label htmlFor="ministry" className={labelClass}>
+                    Ministère
+                  </label>
+                  <select
+                    id="ministry"
+                    required
+                    value={ministrySlug}
+                    onChange={(e) => setMinistrySlug(e.target.value)}
+                    className={inputClass("px-3.5 cursor-pointer")}
+                  >
+                    <option value="" disabled>
+                      Choisir…
+                    </option>
+                    {MINISTRIES.map((m) => (
+                      <option key={m.slug} value={m.slug}>
+                        {m.name}
                       </option>
-                      {MINISTRIES.map((m) => (
-                        <option key={m.slug} value={m.slug}>
-                          {m.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label htmlFor="day" className={labelClass}>
-                      Jour de cours
-                    </label>
-                    <select
-                      id="day"
-                      value={preferredDay}
-                      onChange={(e) => setPreferredDay(e.target.value)}
-                      className={inputClass("px-3.5 cursor-pointer")}
-                    >
-                      <option value="samedi">Samedi</option>
-                      <option value="dimanche">Dimanche</option>
-                    </select>
-                  </div>
+                    ))}
+                  </select>
                 </div>
 
                 <Field id="password" label="Mot de passe" icon={<Lock size={16} />}>
