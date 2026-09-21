@@ -64,7 +64,7 @@ export default async function PreparationPage({ params }: { params: Promise<{ id
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
             {s.track && <p className="label text-[11px] tracking-[0.14em] text-muted">{s.track}</p>}
-            <h2 className="font-title mt-1 text-[30px] leading-tight text-foreground">
+            <h2 className="font-title mt-1 text-[26px] leading-tight text-foreground">
               {s.description ?? "À définir"}
             </h2>
             <p className="mt-2 text-[15px] text-muted">

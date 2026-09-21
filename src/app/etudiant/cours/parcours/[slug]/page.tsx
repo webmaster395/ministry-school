@@ -28,7 +28,7 @@ export default async function ParcoursPage({ params }: { params: Promise<{ slug:
       </Link>
 
       <section className="rounded-lg border border-border bg-background p-6">
-        <h2 className="font-title text-[26px] leading-tight text-foreground">{p.title}</h2>
+        <h2 className="font-title text-[24px] leading-tight text-foreground">{p.title}</h2>
         <p className="mt-2 text-[15px] text-muted">{p.description}</p>
         <p className="mt-3 text-sm text-muted">
           {p.period_label} · {p.schedule_label} · {p.planned_sessions} sessions

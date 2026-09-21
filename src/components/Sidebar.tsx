@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { LogoCompact } from "@/components/Logo";
 import MinistryPicto from "@/components/MinistryPicto";
 import { getMinistry } from "@/lib/ministry";
-import { navSections } from "@/lib/nav";
+import { useSpace } from "@/components/SpaceProvider";
 import type { ViewerRoles } from "@/lib/roles";
 
 function ChevronIcon({ direction }: { direction: "left" | "right" }) {
@@ -37,7 +37,7 @@ export default function Sidebar({
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   // Sur téléphone, ces mêmes sections sont servies par MobileNav.
-  const sections = navSections(roles);
+  const sections = useSpace().current.sections;
   const ministry = getMinistry(ministrySlug);
 
   // Restaure le choix de l'utilisateur d'une visite à l'autre
@@ -91,17 +91,7 @@ export default function Sidebar({
       </div>
 
       <nav className={`flex-1 space-y-6 pb-6 pt-2 ${collapsed ? "px-3" : "px-4"}`}>
-        {sections.map((section) =>
-          section.items.length === 0 ? (
-            // Séparateur : marque le début de la vue étudiant, sous les onglets de gestion
-            <div key={section.title} className="border-t border-border pt-5">
-              {!collapsed && (
-                <p className="label px-3 text-[11px] !font-medium tracking-[0.16em] text-foreground">
-                  {section.title}
-                </p>
-              )}
-            </div>
-          ) : (
+        {sections.map((section) => (
           <div key={section.title}>
             {collapsed ? (
               <div className="mx-3 mb-2 border-t border-border-soft" aria-hidden="true" />
@@ -136,8 +126,7 @@ export default function Sidebar({
               })}
             </ul>
           </div>
-          )
-        )}
+        ))}
       </nav>
 
       {/* Pied : sensibilité de l'utilisateur */}

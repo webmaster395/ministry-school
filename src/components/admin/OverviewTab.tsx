@@ -81,7 +81,7 @@ export default async function OverviewTab({
               c.attention ? "bg-m-doctoral/[0.05]" : ""
             }`}
           >
-            <p className="font-title text-[34px] leading-none text-foreground">{c.value}</p>
+            <p className="font-title text-[30px] leading-none text-foreground">{c.value}</p>
             <p className={`mt-3 text-sm ${c.attention ? "text-link" : "text-muted"}`}>
               {c.label}
               {c.sub ? ` · ${c.sub}` : ""}

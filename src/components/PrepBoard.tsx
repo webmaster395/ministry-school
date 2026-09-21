@@ -93,7 +93,7 @@ function Next({ row, today, ministryColor }: { row: PrepRow; today: string; mini
               {s.track}
             </span>
           )}
-          <h3 className="font-title mt-5 text-[30px] leading-tight text-foreground">{titleOf(s)}</h3>
+          <h3 className="font-title mt-5 text-[26px] leading-tight text-foreground">{titleOf(s)}</h3>
           <p className="mt-4 flex items-center gap-2 text-[15px] text-muted">
             <CalendarDays size={17} strokeWidth={1.6} />
             {formatSessionDate(s.session_date)} · {formatTimeRange(s.start_time, s.end_time)}

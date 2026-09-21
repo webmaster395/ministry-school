@@ -27,7 +27,7 @@ export default async function HelpPage({ searchParams }: { searchParams: Promise
   return (
     <div className="grid items-start gap-[22px] lg:grid-cols-[1fr_360px]">
       <section className="rounded-lg border border-border bg-background p-6 sm:p-7">
-        <h2 className="font-title text-[26px] leading-tight text-foreground">Une question ?</h2>
+        <h2 className="font-title text-[24px] leading-tight text-foreground">Une question ?</h2>
         <p className="mt-1 text-[15px] text-muted">
           Écrivez-nous : votre message est transmis à la personne qui peut vous répondre.
         </p>

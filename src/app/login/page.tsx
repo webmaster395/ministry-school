@@ -71,7 +71,7 @@ function LoginForm() {
         <div className="flex flex-col justify-center bg-background px-8 py-10 sm:px-11">
           <div className="mb-6">
             <p className="label text-xs font-medium tracking-[0.16em] text-muted">Bienvenue sur</p>
-            <h1 className="font-title mt-1 text-[34px] leading-tight text-foreground">
+            <h1 className="font-title mt-1 text-[30px] leading-tight text-foreground">
               Ministry School
             </h1>
           </div>

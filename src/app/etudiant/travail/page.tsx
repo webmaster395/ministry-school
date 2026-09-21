@@ -117,7 +117,7 @@ export default async function StudentWorkPage({
         <section className="flex flex-wrap items-end justify-between gap-6 rounded-lg border border-border bg-background p-6">
           <div>
             <p className="text-sm text-muted">Prochaine journée</p>
-            <h2 className="font-title mt-1 text-[26px] leading-tight text-foreground">
+            <h2 className="font-title mt-1 text-[24px] leading-tight text-foreground">
               {formatSessionDate(nextSession.session_date)}
             </h2>
             <p className="mt-1 text-[15px] text-muted">

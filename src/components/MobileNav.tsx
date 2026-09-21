@@ -7,7 +7,7 @@ import { Menu, X } from "lucide-react";
 import { LogoCompact } from "@/components/Logo";
 import MinistryPicto from "@/components/MinistryPicto";
 import { getMinistry } from "@/lib/ministry";
-import { navSections } from "@/lib/nav";
+import { useSpace } from "@/components/SpaceProvider";
 import type { ViewerRoles } from "@/lib/roles";
 
 /**
@@ -26,7 +26,8 @@ export default function MobileNav({
   const panel = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
 
-  const sections = navSections(roles);
+  const { spaces, current, select } = useSpace();
+  const sections = current.sections;
   const ministry = getMinistry(ministrySlug);
 
   // Refermer dès que la page change, y compris avec le bouton « retour » du téléphone.
@@ -102,16 +103,41 @@ export default function MobileNav({
               </button>
             </div>
 
+            {spaces.length > 1 && (
+              <div className="border-b border-border-soft px-4 pb-4 pt-4">
+                <p className="label mb-2 px-3 text-[11px] !font-medium tracking-[0.16em] text-muted">
+                  Mes espaces
+                </p>
+                <ul className="space-y-0.5">
+                  {spaces.map((space) => {
+                    const active = space.key === current.key;
+                    return (
+                      <li key={space.key}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (active) return;
+                            setOpen(false);
+                            select(space.key);
+                          }}
+                          aria-pressed={active}
+                          className={`flex w-full items-center justify-between rounded-[7px] px-3 py-2.5 text-left text-[15px] transition ${
+                            active
+                              ? "bg-accent font-medium text-on-accent"
+                              : "text-[#4b524f] hover:bg-foreground/[0.04]"
+                          }`}
+                        >
+                          {space.label}
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
+
             <nav className="flex-1 space-y-6 px-4 pb-6 pt-5">
-              {sections.map((section) =>
-                section.items.length === 0 ? (
-                  // Séparateur : marque le début de la vue étudiant, sous les onglets de gestion
-                  <div key={section.title} className="border-t border-border pt-5">
-                    <p className="label px-3 text-[11px] !font-medium tracking-[0.16em] text-foreground">
-                      {section.title}
-                    </p>
-                  </div>
-                ) : (
+              {sections.map((section) => (
                   <div key={section.title}>
                     <p className="label mb-2 px-3 text-[11px] !font-medium tracking-[0.16em] text-muted">
                       {section.title}
@@ -139,8 +165,7 @@ export default function MobileNav({
                       })}
                     </ul>
                   </div>
-                )
-              )}
+              ))}
             </nav>
 
             {(roles.admin || ministry) && (

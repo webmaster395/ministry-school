@@ -66,7 +66,7 @@ export default async function StudentDashboardPage() {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-sm text-muted">Prochaine journée</p>
-                <h2 className="font-title mt-1 text-[26px] leading-tight text-foreground sm:text-[30px]">
+                <h2 className="font-title mt-1 text-[24px] leading-tight text-foreground sm:text-[26px]">
                   Votre prochaine journée de formation
                 </h2>
               </div>
@@ -112,7 +112,7 @@ export default async function StudentDashboardPage() {
                   <div className="col-start-2 row-start-2 pb-6 pt-1.5 lg:col-start-3 lg:row-start-1 lg:pb-7 lg:pt-0">
                     {s.track ? (
                       <span
-                        className="label rounded-full px-3 py-1 text-[11px] tracking-[0.1em] text-foreground"
+                        className="label inline-block rounded-2xl px-3 py-1 text-[11px] leading-snug tracking-[0.1em] text-foreground"
                         style={{
                           background: `color-mix(in srgb, ${colorFor(s.session_type, s.track)} 28%, transparent)`,
                         }}
@@ -135,7 +135,7 @@ export default async function StudentDashboardPage() {
 
             <Link
               href="/etudiant/calendrier"
-              className="label mt-2 inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3.5 text-xs tracking-[0.12em] text-on-accent hover:bg-[#1b2221]"
+              className="label mt-2 flex w-full items-center justify-center gap-2 rounded-full bg-accent px-4 py-3.5 text-center text-[11px] tracking-[0.08em] text-on-accent hover:bg-[#1b2221] sm:inline-flex sm:w-auto sm:px-6 sm:text-xs sm:tracking-[0.12em]"
             >
               Voir le programme de la journée →
             </Link>

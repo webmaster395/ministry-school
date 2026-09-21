@@ -48,7 +48,7 @@ export default async function StudentCourseDetailPage({
       </div>
 
       <section className="rounded-lg border border-border bg-background p-6">
-        <h1 className="font-title text-[26px] leading-tight text-foreground">{course.title}</h1>
+        <h1 className="font-title text-[24px] leading-tight text-foreground">{course.title}</h1>
         {course.description && <p className="mt-2 text-sm text-muted">{course.description}</p>}
 
         {objectives.length > 0 && (

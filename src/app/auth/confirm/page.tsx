@@ -18,7 +18,7 @@ export default async function ConfirmPage({
         </div>
 
         <div className="p-8 text-center">
-          <h1 className="font-title text-[26px] leading-tight text-foreground">
+          <h1 className="font-title text-[24px] leading-tight text-foreground">
             Confirmer mon inscription
           </h1>
 

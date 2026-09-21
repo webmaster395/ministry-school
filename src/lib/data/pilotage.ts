@@ -160,15 +160,17 @@ export function progressOf(items: ChecklistItem[]) {
 }
 
 /** Les séances confiées à cet enseignant (par son compte). */
-export async function getTeacherPrepSessions(supabase: SupabaseClient, teacherId: string) {
-  const { data } = await supabase
+/** Les séances d'un enseignant ; sans identifiant, celles de tous (vue de l'administrateur). */
+export async function getTeacherPrepSessions(supabase: SupabaseClient, teacherId: string | null) {
+  let query = supabase
     .from("sessions")
     .select(
       "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, teacher:profiles!sessions_teacher_id_fkey(full_name)"
     )
-    .eq("teacher_id", teacherId)
     .order("session_date", { ascending: true })
     .order("start_time", { ascending: true });
+  if (teacherId) query = query.eq("teacher_id", teacherId);
+  const { data } = await query;
   return (data ?? []) as unknown as PilotSession[];
 }
 

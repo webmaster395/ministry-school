@@ -84,7 +84,7 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
               </span>
             </div>
 
-            <h2 className="font-title mt-5 text-[32px] leading-tight text-foreground">{title}</h2>
+            <h2 className="font-title mt-5 text-[28px] leading-tight text-foreground">{title}</h2>
 
             <dl className="mt-5 grid gap-x-6 gap-y-3 border-t border-border-soft pt-5 text-[15px] text-muted sm:grid-cols-2">
               <Row icon={<Calendar size={17} strokeWidth={1.6} />}>

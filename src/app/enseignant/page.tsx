@@ -45,7 +45,7 @@ export default async function TeacherDashboardPage() {
           {nextSession ? (
             <div className="grid gap-1.5">
               <div className="flex flex-wrap items-center gap-3">
-                <p className="font-title text-[28px] leading-tight text-foreground">
+                <p className="font-title text-[26px] leading-tight text-foreground">
                   {formatSessionDate(nextSession.session_date)}
                 </p>
                 <SessionTypeBadge type={nextSession.session_type} />

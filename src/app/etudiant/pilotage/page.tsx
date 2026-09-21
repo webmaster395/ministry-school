@@ -16,10 +16,14 @@ export default async function PilotagePage({
   const tab: PrepTab = onglet === "avenir" || onglet === "passes" ? onglet : "prochain";
 
   const viewer = await getViewer();
-  if (!viewer || viewer.roles.steeringMinistryIds.length === 0) redirect("/etudiant");
+  if (!viewer || (!viewer.roles.admin && viewer.roles.steeringMinistryIds.length === 0)) redirect("/etudiant");
 
   const supabase = await createClient();
-  const steered = await getSteeredMinistries(supabase, viewer.roles.steeringMinistryIds);
+  // L'administrateur pilote tous les ministères ; les autres, ceux qui leur sont confiés.
+  const ministryIds = viewer.roles.admin
+    ? ((await supabase.from("ministries").select("id")).data ?? []).map((m) => m.id as string)
+    : viewer.roles.steeringMinistryIds;
+  const steered = await getSteeredMinistries(supabase, ministryIds);
   const ministry = steered.find((x) => x.slug === m) ?? steered[0];
   if (!ministry) redirect("/etudiant");
 
@@ -68,13 +72,13 @@ export default async function PilotagePage({
             >
               <MinistryPicto slug={ministry.slug} size={22} />
             </span>
-            <h2 className="font-title text-[30px] leading-tight text-foreground">{ministry.name}</h2>
+            <h2 className="font-title text-[26px] leading-tight text-foreground">{ministry.name}</h2>
           </div>
         </div>
         <div className="md:pl-6">
           <div className="flex items-baseline justify-between gap-3">
             <p className="text-sm text-muted">Préparation du programme</p>
-            <p className="font-title text-[28px] text-foreground">{percent} %</p>
+            <p className="font-title text-[26px] text-foreground">{percent} %</p>
           </div>
           <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-surface">
             <div className="h-full rounded-full bg-accent" style={{ width: `${percent}%` }} />

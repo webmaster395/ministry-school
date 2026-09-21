@@ -17,7 +17,7 @@ export default async function TeachingPage({
   if (!viewer || (!viewer.roles.teacher && !viewer.roles.admin)) redirect("/etudiant");
 
   const supabase = await createClient();
-  const rows = await buildRows(supabase, await getTeacherPrepSessions(supabase, viewer.id), "enseignant");
+  const rows = await buildRows(supabase, await getTeacherPrepSessions(supabase, viewer.roles.admin ? null : viewer.id), "enseignant");
 
   return (
     <PrepBoard

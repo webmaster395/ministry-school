@@ -90,77 +90,115 @@ function studentSectionsFor(roles: ViewerRoles): NavSection[] {
   );
 }
 
-/** Onglets en plus, selon les rôles : tout le monde garde la vue étudiant. */
-function extraSections(roles: ViewerRoles): NavSection[] {
-  const out: NavSection[] = [];
+export type SpaceKey = "admin" | "teacher" | "steering" | "services" | "student";
 
-  if (roles.teacher) {
-    out.push({
-      title: "Vue enseignant",
-      items: [
-        { label: "Préparer mes cours", href: "/etudiant/enseignement", icon: icons.prep },
-        { label: "Messages aux étudiants", href: "/enseignant/messages", icon: icons.announce },
-      ],
-    });
-  }
+/** Une « casquette » : un ensemble d'entrées de menu que la personne choisit d'afficher. */
+export type Space = {
+  key: SpaceKey;
+  label: string;
+  sections: NavSection[];
+};
 
-  if (roles.steeringMinistryIds.length > 0) {
-    out.push({
-      title: "Vue pilotage ministériel",
-      items: [{ label: "Pilotage", href: "/etudiant/pilotage", icon: icons.steer }],
-    });
-  }
-
-  if (roles.serviceLead || roles.projectLead || roles.admin) {
-    const label =
-      roles.serviceLead && !roles.projectLead && !roles.admin
-        ? "Proposer une formation"
-        : roles.projectLead && !roles.serviceLead && !roles.admin
-          ? "Proposer un projet"
-          : "Proposer";
-    const title =
-      roles.serviceLead && roles.projectLead
-        ? "Vue responsable et chef de projet"
-        : roles.projectLead
-          ? "Vue chef de projet"
-          : roles.serviceLead
-            ? "Vue responsable de service"
-            : "Services et projets";
-    out.push({
-      title,
-      items: [{ label, href: "/etudiant/services/nouveau", icon: icons.propose }],
-    });
-  }
+/**
+ * Les espaces d'une personne, dans l'ordre du sélecteur : les casquettes de gestion d'abord
+ * (l'administration en tête), l'espace étudiant en dernier. Tout le monde a l'espace étudiant ;
+ * l'administrateur, lui, a tous les espaces.
+ * Le menu n'affiche qu'un seul espace à la fois, pour rester court même quand les rôles se cumulent.
+ */
+export function navSpaces(roles: ViewerRoles): Space[] {
+  const spaces: Space[] = [];
 
   if (roles.admin) {
-    out.push({
-      title: "Administration",
-      items: [
-        { label: "Vue d'ensemble", href: "/admin", icon: icons.adminHome },
-        { label: "Séances", href: "/admin/seances", icon: icons.adminSessions },
+    spaces.push({
+      key: "admin",
+      label: "Administration",
+      sections: [
+        {
+          title: "Administration",
+          items: [
+            { label: "Vue d'ensemble", href: "/admin", icon: icons.adminHome },
+            { label: "Séances", href: "/admin/seances", icon: icons.adminSessions },
+          ],
+        },
       ],
     });
   }
 
-  return out;
+  if (roles.admin || roles.teacher) {
+    spaces.push({
+      key: "teacher",
+      label: "Enseignant",
+      sections: [
+        {
+          title: "Enseignement",
+          items: [
+            { label: "Préparer mes cours", href: "/etudiant/enseignement", icon: icons.prep },
+            { label: "Messages aux étudiants", href: "/enseignant/messages", icon: icons.announce },
+          ],
+        },
+      ],
+    });
+  }
+
+  if (roles.admin || roles.steeringMinistryIds.length > 0) {
+    spaces.push({
+      key: "steering",
+      label: "Pilotage ministériel",
+      sections: [
+        {
+          title: "Pilotage",
+          items: [{ label: "Pilotage", href: "/etudiant/pilotage", icon: icons.steer }],
+        },
+      ],
+    });
+  }
+
+  if (roles.admin || roles.serviceLead || roles.projectLead) {
+    const both = roles.admin || (roles.serviceLead && roles.projectLead);
+    spaces.push({
+      key: "services",
+      label: both ? "Responsable et chef de projet" : roles.projectLead ? "Chef de projet" : "Responsable de service",
+      sections: [
+        {
+          title: "Services et projets",
+          items: [
+            {
+              label: both ? "Proposer" : roles.projectLead ? "Proposer un projet" : "Proposer une formation",
+              href: "/etudiant/services/nouveau",
+              icon: icons.propose,
+            },
+          ],
+        },
+      ],
+    });
+  }
+
+  spaces.push({ key: "student", label: "Étudiant", sections: studentSectionsFor(roles) });
+  return spaces;
+}
+
+/** La page d'accueil d'un espace : sa première entrée. */
+export function spaceHome(space: Space): string {
+  return space.sections[0]?.items[0]?.href ?? "/etudiant";
 }
 
 /**
- * Les sections du menu, dans l'ordre affiché : les vues de rôle d'abord
- * (l'administration tout en haut), puis la vue étudiant, en bas.
- * Une section sans entrée sert de séparateur titré.
+ * L'espace auquel appartient une page, d'après le menu : une entrée exacte l'emporte,
+ * sinon la plus longue entrée dont l'adresse est un préfixe. Renvoie null pour une page
+ * qui n'est dans aucun menu (par exemple le détail d'une séance).
  */
-export function navSections(roles: ViewerRoles): NavSection[] {
-  const studentSections = studentSectionsFor(roles);
-  const extras = extraSections(roles);
-  if (extras.length === 0) return studentSections;
-
-  const adminSection = extras.filter((e) => e.title === "Administration");
-  const otherExtras = extras.filter((e) => e.title !== "Administration");
-  return [
-    ...adminSection,
-    ...otherExtras,
-    { title: "Vue étudiant", items: [] as NavItem[] },
-    ...studentSections,
-  ];
+export function spaceForPath(spaces: Space[], pathname: string): SpaceKey | null {
+  let best: { key: SpaceKey; length: number } | null = null;
+  for (const space of spaces) {
+    for (const section of space.sections) {
+      for (const item of section.items) {
+        const exact = pathname === item.href;
+        const prefix = item.href !== "/etudiant" && pathname.startsWith(item.href + "/");
+        if (!exact && !prefix) continue;
+        const length = exact ? Infinity : item.href.length;
+        if (!best || length > best.length) best = { key: space.key, length };
+      }
+    }
+  }
+  return best?.key ?? null;
 }

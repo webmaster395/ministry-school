@@ -30,7 +30,7 @@ export default async function StudentCoursesPage() {
     <div className="space-y-5">
       <div>
         <p className="text-sm text-muted">Promotion {PROMOTION}</p>
-        <h2 className="font-title text-[26px] leading-tight text-foreground">
+        <h2 className="font-title text-[24px] leading-tight text-foreground">
           Votre parcours de cours
         </h2>
       </div>

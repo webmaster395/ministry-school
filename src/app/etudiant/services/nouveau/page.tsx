@@ -29,7 +29,7 @@ export default async function NewOpportunityPage() {
       </Link>
 
       <section className="max-w-[760px] rounded-lg border border-border bg-background p-6 sm:p-7">
-        <h2 className="font-title text-[26px] text-foreground">Proposer une formation ou un projet</h2>
+        <h2 className="font-title text-[24px] text-foreground">Proposer une formation ou un projet</h2>
         <p className="mt-1 text-sm text-muted">
           Une formation est proposée par un responsable de service, un projet par un chef de projet.
         </p>

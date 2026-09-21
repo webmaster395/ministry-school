@@ -59,8 +59,8 @@ export default async function StudentFormationPage({
 
   const discover = (
     <div className="space-y-8">
-      <div className="max-w-[760px]">
-        <h2 className="font-title text-[30px] leading-tight text-foreground">
+      <div className="mx-auto max-w-[760px] text-center">
+        <h2 className="font-title text-[26px] leading-tight text-foreground">
           Comprendre les ministères
         </h2>
         <p className="mt-3 text-[16px] leading-relaxed text-muted">
@@ -71,7 +71,7 @@ export default async function StudentFormationPage({
         </p>
       </div>
 
-      <ul className="flex flex-wrap gap-2.5">
+      <ul className="flex flex-wrap justify-center gap-2.5">
         {ORDER.map((k) => MINISTRIES[k]).map((m) => (
           <li
             key={m.slug}
@@ -84,7 +84,7 @@ export default async function StudentFormationPage({
         ))}
       </ul>
 
-      <div className="max-w-[960px] overflow-hidden rounded-lg border border-border bg-background">
+      <div className="mx-auto max-w-[640px] overflow-hidden rounded-lg border border-border bg-background">
         <div className="aspect-video">
           <iframe
             src={`https://www.youtube-nocookie.com/embed/${VIDEO_ID}`}
@@ -204,7 +204,7 @@ export default async function StudentFormationPage({
 
             {mine && info && content ? (
               <>
-                <h2 className="font-title mt-5 text-[34px] leading-tight text-foreground">
+                <h2 className="font-title mt-5 text-[30px] leading-tight text-foreground">
                   {capitalize(info.adjective)}
                 </h2>
                 <p className="mt-3 max-w-[560px] text-[16px] leading-relaxed text-muted">
@@ -245,6 +245,60 @@ export default async function StudentFormationPage({
         </div>
       </section>
 
+      {!mine && (
+        <section>
+          <h3 className="font-title mb-1 text-[22px] text-foreground">Laquelle vous ressemble ?</h3>
+          <p className="mb-4 max-w-[640px] text-[15px] text-muted">
+            Lisez les cinq sensibilités, puis choisissez celle qui vous parle le plus. Vous pourrez la
+            modifier plus tard.
+          </p>
+          <ul className="grid gap-[22px] sm:grid-cols-2 lg:grid-cols-3">
+            {ORDER.map((k) => (ministries ?? []).find((m) => m.slug === k))
+              .filter((m): m is NonNullable<typeof m> => !!m)
+              .map((m) => {
+                const mi = getMinistry(m.slug);
+                const profileContent = MINISTRY_PROFILES[m.slug];
+                return (
+                  <li
+                    key={m.id}
+                    className="flex flex-col overflow-hidden rounded-lg border border-border border-t-[3px] bg-background"
+                    style={{ borderTopColor: mi?.color ?? "var(--border)" }}
+                  >
+                    <Image
+                      src={`/ministeres/${m.slug}-v2.jpg`}
+                      alt={`Ministry School — sensibilité ${mi?.adjective ?? m.name}`}
+                      width={1080}
+                      height={1080}
+                      sizes="(min-width: 1024px) 380px, (min-width: 640px) 45vw, 100vw"
+                      className="aspect-[4/3] w-full object-cover"
+                    />
+                    <div className="flex flex-1 flex-col p-5">
+                      <div className="flex items-center gap-2">
+                        <MinistryPicto slug={m.slug} size={24} />
+                        <h4 className="font-title text-xl leading-tight text-foreground">{m.name}</h4>
+                      </div>
+                      <p className="mt-2 text-sm font-medium text-foreground">{descriptions[m.slug] ?? ""}</p>
+                      {profileContent && (
+                        <p className="mt-2 text-sm leading-normal text-muted">{profileContent.anime}</p>
+                      )}
+                      <form action={changeMinistry} className="mt-auto pt-4">
+                        <input type="hidden" name="ministry_id" value={m.id} />
+                        <button
+                          type="submit"
+                          className="label w-full rounded-full border border-foreground px-4 py-2.5 text-[11px] tracking-[0.12em] text-foreground transition hover:bg-accent hover:text-on-accent"
+                        >
+                          Choisir cette sensibilité
+                        </button>
+                      </form>
+                    </div>
+                  </li>
+                );
+              })}
+          </ul>
+        </section>
+      )}
+
+      {mine && (
       <section>
         <h3 className="font-title mb-3 text-[22px] text-foreground">Ressources pour ma sensibilité</h3>
         <ul className="divide-y divide-border-soft overflow-hidden rounded-lg border border-border bg-background">
@@ -282,6 +336,7 @@ export default async function StudentFormationPage({
           })}
         </ul>
       </section>
+      )}
     </div>
   );
 

@@ -91,7 +91,7 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
             </span>
           </div>
 
-          <h2 className="font-title mt-5 text-[32px] leading-tight text-foreground">{o.title}</h2>
+          <h2 className="font-title mt-5 text-[28px] leading-tight text-foreground">{o.title}</h2>
           <p className="mt-4 whitespace-pre-line text-[16px] leading-relaxed text-muted">
             {o.description}
           </p>

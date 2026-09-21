@@ -119,7 +119,7 @@ export default function InscriptionPage() {
               <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-border bg-surface">
                 <CheckCircle2 className="text-foreground" size={24} />
               </div>
-              <h1 className="font-title text-[28px] leading-tight text-foreground">
+              <h1 className="font-title text-[26px] leading-tight text-foreground">
                 Inscription enregistrée
               </h1>
               <p className="mt-3 text-[15px] leading-relaxed text-muted">
@@ -140,7 +140,7 @@ export default function InscriptionPage() {
                 <p className="label text-xs font-medium tracking-[0.16em] text-muted">
                   Première inscription
                 </p>
-                <h1 className="font-title mt-1 text-[32px] leading-tight text-foreground">
+                <h1 className="font-title mt-1 text-[28px] leading-tight text-foreground">
                   Créer mon compte
                 </h1>
               </div>

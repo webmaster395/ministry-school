@@ -21,6 +21,8 @@ Les cinq ministères : **Apôtre**, **Prophète**, **Évangéliste**, **Pasteur*
 
 Tout le monde a la **vue étudiant**. Chaque rôle ajoute des onglets, et les rôles se cumulent (Ivan enseigne un cours et suit les autres comme étudiant).
 
+Le menu n'affiche **qu'un espace à la fois** (une « casquette » : administration, enseignant, pilotage, responsable de service ou chef de projet, étudiant). Une personne qui cumule des rôles change d'espace avec le sélecteur en haut à droite (dans le tiroir sur téléphone), ce qui garde le menu court. **L'administrateur a tous les espaces** : il voit les cours de tous les enseignants, pilote les cinq ministères et propose des formations ou des projets. Les espaces sont définis dans `src/lib/nav.tsx`, l'espace courant est porté par `SpaceProvider`.
+
 | Rôle | Ce qu'il ajoute |
 |---|---|
 | **Étudiant** (tout le monde) | Accueil, Calendrier, Mes cours, Travail à faire, Ministères, Services et projets, Messages, Profil |
