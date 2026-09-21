@@ -1,25 +1,33 @@
+/* eslint-disable @next/next/no-img-element -- picto décoratif de la landing */
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Eye, EyeOff } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { LogoLockup } from "@/components/Logo";
-import { Mail, Lock, User, Eye, EyeOff, ArrowRight, CheckCircle2 } from "lucide-react";
+import "../landing.css";
 
-const MINISTRIES = [
-  { slug: "apotre", name: "Apôtre" },
-  { slug: "prophete", name: "Prophète" },
-  { slug: "evangeliste", name: "Évangéliste" },
-  { slug: "pasteur", name: "Pasteur" },
-  { slug: "docteur", name: "Docteur" },
-];
+/**
+ * Les cinq sensibilités, avec l'identifiant utilisé par la base et la classe de couleur de la
+ * maquette. « Je ne sais pas encore » n'enregistre aucun ministère : la personne le choisira
+ * plus tard dans « Mon choix ».
+ */
+const CHOICES = [
+  { value: "apotre", label: "Apostolique", css: "choice-apo" },
+  { value: "prophete", label: "Prophétique", css: "choice-pro" },
+  { value: "evangeliste", label: "Évangélique", css: "choice-eva" },
+  { value: "pasteur", label: "Pastorale", css: "choice-pas" },
+  { value: "docteur", label: "Doctorale", css: "choice-doc" },
+  { value: "", label: "Je ne sais pas encore", css: "choice-unknown" },
+] as const;
 
 export default function InscriptionPage() {
   const router = useRouter();
   const supabase = createClient();
 
-  const [fullName, setFullName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -52,7 +60,8 @@ export default function InscriptionPage() {
       options: {
         emailRedirectTo: `${window.location.origin}/auth/callback`,
         data: {
-          full_name: fullName,
+          // Le prénom d'abord : l'application salue la personne par son premier mot
+          full_name: `${firstName.trim()} ${lastName.trim()}`.trim(),
           ministry_slug: ministrySlug,
         },
       },
@@ -94,195 +103,158 @@ export default function InscriptionPage() {
   }
 
   return (
-    <div
-      className="relative flex min-h-screen w-full items-center justify-center bg-cover bg-center p-4 sm:p-6"
-      style={{ backgroundImage: "url('/texture-pastoral.png')" }}
-    >
-      <div className="grid w-full max-w-[900px] grid-cols-1 overflow-hidden rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.45)] md:grid-cols-[5fr_7fr]">
-        {/* PANNEAU GAUCHE : l'ovale de la charte sur fond encre */}
-        <div className="flex flex-col items-center justify-center bg-foreground px-8 py-11 text-center">
-          <div className="w-full max-w-[280px]">
-            <LogoLockup priority />
+    <div className="landing login-page">
+      <main className="login-shell signup-shell">
+        <section className="login-visual signup-visual" aria-label="Ministry School">
+          <Link className="login-brand" href="/" aria-label="Retour à Ministry School">
+            <img src="/landing/ministry-icons-transparent.png" alt="" />
+            <span>Ministry School</span>
+          </Link>
+          <div className="login-visual__copy">
+            <p>Commence ton parcours.</p>
+            <h2>
+              Découvrir.
+              <br />
+              Développer.
+              <br />
+              Contribuer.
+            </h2>
           </div>
-          <p className="label mt-6 text-[11px] font-medium tracking-[0.24em] text-[rgba(251,238,218,0.75)]">
-            Grandir • Servir • Impacter
-          </p>
-          <p className="mt-6 max-w-[240px] text-sm leading-relaxed text-[rgba(251,238,218,0.75)]">
-            Rejoignez le parcours de formation et grandissez dans votre appel.
-          </p>
-        </div>
+        </section>
 
-        {/* PANNEAU DROIT : formulaire sur papier */}
-        <div className="flex flex-col justify-center bg-background px-8 py-10 sm:px-11">
-          {success ? (
-            <div className="py-6 text-center">
-              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-border bg-surface">
-                <CheckCircle2 className="text-foreground" size={24} />
-              </div>
-              <h1 className="font-title text-[26px] leading-tight text-foreground">
-                Inscription enregistrée
-              </h1>
-              <p className="mt-3 text-[15px] leading-relaxed text-muted">
-                Un e-mail de confirmation vous a été envoyé. Une fois votre adresse validée, vous
-                pourrez vous connecter à votre espace.
-              </p>
-              <Link
-                href="/login"
-                className="label mt-6 inline-flex items-center gap-2 rounded-lg bg-foreground px-5 py-3.5 text-sm tracking-[0.12em] text-on-accent transition hover:bg-[#1b2221]"
-              >
-                Aller à la connexion
-                <ArrowRight size={14} />
-              </Link>
-            </div>
-          ) : (
-            <>
-              <div className="mb-5">
-                <p className="label text-xs font-medium tracking-[0.16em] text-muted">
-                  Première inscription
+        <section className="login-panel signup-panel">
+          <div className="login-form-wrap signup-form-wrap">
+            <Link className="login-back" href="/">
+              <span aria-hidden="true">←</span> Retour au site
+            </Link>
+
+            {success ? (
+              <>
+                <p className="login-overline">Espace personnel</p>
+                <h1>Inscription enregistrée</h1>
+                <p className="login-intro">
+                  Un e-mail de confirmation t&apos;a été envoyé. Une fois ton adresse validée, tu pourras te
+                  connecter à ton espace. Pense à regarder dans tes courriers indésirables si tu ne le
+                  vois pas arriver.
                 </p>
-                <h1 className="font-title mt-1 text-[28px] leading-tight text-foreground">
-                  Créer mon compte
-                </h1>
-              </div>
+                <Link className="login-submit" href="/login">
+                  Aller à la connexion <span aria-hidden="true">→</span>
+                </Link>
+              </>
+            ) : (
+              <>
+                <p className="login-overline">Espace personnel</p>
+                <h1>Créer un compte</h1>
+                <p className="login-intro">
+                  Quelques informations suffisent pour préparer ton espace Ministry School.
+                </p>
 
-              {error && (
-                <div className="mb-4 flex items-center gap-2 rounded-lg border border-m-doctoral/40 bg-m-doctoral/[0.08] p-2.5 text-xs text-link">
-                  <span>{error}</span>
-                </div>
-              )}
+                {error && (
+                  <p className="login-error" role="alert">
+                    {error}
+                  </p>
+                )}
 
-              <form onSubmit={handleSubmit} className="space-y-3.5">
-                <Field id="fullName" label="Nom et prénom" icon={<User size={16} />}>
-                  <input
-                    id="fullName"
-                    type="text"
-                    required
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    className={inputClass("pl-10 pr-3.5")}
-                    autoComplete="name"
-                  />
-                </Field>
+                <form className="login-form signup-form" onSubmit={handleSubmit}>
+                  <div className="signup-fields">
+                    <label>
+                      <span>Prénom</span>
+                      <input
+                        type="text"
+                        required
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        autoComplete="given-name"
+                        placeholder="Ton prénom"
+                      />
+                    </label>
+                    <label>
+                      <span>Nom</span>
+                      <input
+                        type="text"
+                        required
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        autoComplete="family-name"
+                        placeholder="Ton nom"
+                      />
+                    </label>
+                    <label className="signup-wide">
+                      <span>Adresse e-mail</span>
+                      <input
+                        type="email"
+                        required
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        autoComplete="email"
+                        placeholder="prenom@exemple.fr"
+                      />
+                    </label>
+                    <label>
+                      <span>Mot de passe</span>
+                      <span className="login-password">
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          required
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          autoComplete="new-password"
+                          placeholder="8 caractères minimum"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword((v) => !v)}
+                          aria-label={showPassword ? "Masquer les mots de passe" : "Afficher les mots de passe"}
+                        >
+                          {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+                        </button>
+                      </span>
+                    </label>
+                    <label>
+                      <span>Confirmer le mot de passe</span>
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        required
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        autoComplete="new-password"
+                        placeholder="••••••••"
+                      />
+                    </label>
+                  </div>
 
-                <Field id="email" label="E-mail" icon={<Mail size={16} />}>
-                  <input
-                    id="email"
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className={inputClass("pl-10 pr-3.5")}
-                    placeholder="votre@email.com"
-                    autoComplete="email"
-                  />
-                </Field>
+                  <fieldset className="ministry-choice">
+                    <legend>As-tu une idée de ta sensibilité ministérielle&nbsp;?</legend>
+                    <div className="ministry-choice__grid">
+                      {CHOICES.map((c) => (
+                        <label key={c.value || "inconnue"} className={c.css}>
+                          <input
+                            type="radio"
+                            name="ministry"
+                            value={c.value}
+                            checked={ministrySlug === c.value}
+                            onChange={() => setMinistrySlug(c.value)}
+                          />
+                          <span>{c.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                    <p>Ne t&apos;inquiète pas, tu pourras modifier ce choix à tout moment.</p>
+                  </fieldset>
 
-                <div>
-                  <label htmlFor="ministry" className={labelClass}>
-                    Ministère
-                  </label>
-                  <select
-                    id="ministry"
-                    required
-                    value={ministrySlug}
-                    onChange={(e) => setMinistrySlug(e.target.value)}
-                    className={inputClass("px-3.5 cursor-pointer")}
-                  >
-                    <option value="" disabled>
-                      Choisir…
-                    </option>
-                    {MINISTRIES.map((m) => (
-                      <option key={m.slug} value={m.slug}>
-                        {m.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <Field id="password" label="Mot de passe" icon={<Lock size={16} />}>
-                  <input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className={inputClass("pl-10 pr-10")}
-                    placeholder="8 caractères minimum"
-                    autoComplete="new-password"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((v) => !v)}
-                    className="absolute right-3 p-1 text-[#8b918e] transition hover:text-foreground"
-                    aria-label={showPassword ? "Masquer" : "Afficher"}
-                  >
-                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  <button className="login-submit signup-submit" type="submit" disabled={loading}>
+                    {loading ? "Création du compte…" : "Créer mon compte"} <span aria-hidden="true">→</span>
                   </button>
-                </Field>
+                </form>
 
-                <Field id="confirmPassword" label="Confirmer le mot de passe" icon={<Lock size={16} />}>
-                  <input
-                    id="confirmPassword"
-                    type={showPassword ? "text" : "password"}
-                    required
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className={inputClass("pl-10 pr-3.5")}
-                    placeholder="••••••••"
-                    autoComplete="new-password"
-                  />
-                </Field>
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="label mt-1 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-foreground px-[18px] py-3.5 text-sm tracking-[0.12em] text-on-accent transition hover:bg-[#1b2221] active:scale-[0.99] disabled:opacity-60"
-                >
-                  <span>{loading ? "Création du compte..." : "Créer mon compte"}</span>
-                  {!loading && <ArrowRight size={14} />}
-                </button>
-
-                <p className="pt-1 text-center text-[13px] text-muted">
-                  Vous avez déjà un compte ?{" "}
-                  <Link href="/login" className="font-medium text-link hover:underline">
-                    Se connecter
-                  </Link>
+                <p className="account-switch">
+                  Tu as déjà un compte&nbsp;? <Link href="/login">Se connecter</Link>
                 </p>
-              </form>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-const labelClass = "mb-1.5 block text-xs font-medium text-foreground";
-
-function inputClass(extra: string) {
-  return `w-full rounded-lg border border-[#ded6c9] bg-[#faf7f1] py-3 text-[15px] text-foreground outline-none transition placeholder:text-[#8b918e] focus:border-foreground focus:ring-1 focus:ring-foreground ${extra}`;
-}
-
-function Field({
-  id,
-  label,
-  icon,
-  children,
-}: {
-  id: string;
-  label: string;
-  icon: React.ReactNode;
-  children: React.ReactNode;
-}) {
-  return (
-    <div>
-      <label htmlFor={id} className={labelClass}>
-        {label}
-      </label>
-      <div className="relative flex items-center">
-        <div className="pointer-events-none absolute left-3.5 text-[#8b918e]">{icon}</div>
-        {children}
-      </div>
+              </>
+            )}
+          </div>
+        </section>
+      </main>
     </div>
   );
 }
