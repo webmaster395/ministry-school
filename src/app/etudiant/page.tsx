@@ -25,7 +25,7 @@ export default async function StudentDashboardPage() {
   // Messages des enseignants uniquement : le travail à faire a sa propre carte et sa propre page
   const messages = await getStudentMessages(supabase, notificationsSeenAt);
   const newCount = messages.filter((m) => m.isNew).length;
-  const preview = messages.slice(0, 3);
+  const preview = messages.slice(0, 2);
 
   const today = new Date().toISOString().slice(0, 10);
   const nextSession = allSessions.find((s) => s.session_date >= today);
@@ -59,14 +59,14 @@ export default async function StudentDashboardPage() {
   const todoCount = toPrepare.length;
 
   return (
-    <div className="grid items-start gap-[22px] lg:grid-cols-[1fr_360px]">
+    <div className="grid items-start gap-5 lg:grid-cols-[1fr_360px]">
       <section className="rounded-lg border border-border bg-background p-5 sm:p-7">
         {nextSession ? (
           <>
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-sm text-muted">Prochaine journée</p>
-                <h2 className="font-title mt-1 text-[24px] leading-tight text-foreground sm:text-[26px]">
+                <h2 className="font-title mt-1 text-[21px] leading-tight text-foreground sm:text-[23px]">
                   Votre prochaine journée de formation
                 </h2>
               </div>
@@ -75,7 +75,7 @@ export default async function StudentDashboardPage() {
               </span>
             </div>
 
-            <p className="mt-4 text-lg font-semibold text-foreground">
+            <p className="mt-3 text-[15px] font-semibold text-foreground">
               {formatSessionDate(nextSession.session_date)}
               <span className="mx-2 text-muted">·</span>
               {formatTimeRange(
@@ -83,12 +83,12 @@ export default async function StudentDashboardPage() {
                 daySessions[daySessions.length - 1].end_time
               )}
             </p>
-            <p className="mt-1 text-[15px] text-muted">
+            <p className="mt-0.5 text-[13px] text-muted">
               {nextSession.location}
               {nextSession.room ? ` · ${nextSession.room}` : ""}
             </p>
 
-            <ol className="mt-7">
+            <ol className="mt-5">
               {daySessions.map((s, i) => (
                 // L'horaire passe au-dessus du titre tant que la place manque. Le seuil est
                 // « lg » et non « sm » : entre les deux, la barre latérale réduit déjà le contenu.
@@ -96,7 +96,7 @@ export default async function StudentDashboardPage() {
                   key={s.id}
                   className="grid grid-cols-[22px_1fr] gap-x-3 lg:grid-cols-[150px_22px_1fr] lg:gap-x-4"
                 >
-                  <p className="col-start-2 row-start-1 text-[15px] font-semibold text-foreground lg:col-start-1 lg:pt-1">
+                  <p className="col-start-2 row-start-1 text-[14px] font-semibold text-foreground lg:col-start-1 lg:pt-1">
                     {formatTimeRange(s.start_time, s.end_time)}
                   </p>
                   <div className="col-start-1 row-span-2 row-start-1 flex flex-col items-center lg:col-start-2 lg:row-span-1">
@@ -109,7 +109,7 @@ export default async function StudentDashboardPage() {
                     />
                     {i < daySessions.length - 1 && <span className="w-px flex-1 bg-border" />}
                   </div>
-                  <div className="col-start-2 row-start-2 pb-6 pt-1.5 lg:col-start-3 lg:row-start-1 lg:pb-7 lg:pt-0">
+                  <div className="col-start-2 row-start-2 pb-4 pt-1 lg:col-start-3 lg:row-start-1 lg:pb-5 lg:pt-0">
                     {s.track ? (
                       <span
                         className="label inline-block rounded-2xl px-3 py-1 text-[11px] leading-snug tracking-[0.1em] text-foreground"
@@ -122,7 +122,7 @@ export default async function StudentDashboardPage() {
                     ) : (
                       <SessionTypeBadge type={s.session_type} />
                     )}
-                    <p className="mt-2 text-lg font-semibold text-foreground">
+                    <p className="mt-1.5 text-[16px] font-semibold text-foreground">
                       {s.courses?.title ?? s.description ?? "Séance"}
                     </p>
                     {s.teacher && (
@@ -135,7 +135,7 @@ export default async function StudentDashboardPage() {
 
             <Link
               href="/etudiant/calendrier"
-              className="label mt-2 flex w-full items-center justify-center gap-2 rounded-full bg-accent px-4 py-3.5 text-center text-[11px] tracking-[0.08em] text-on-accent hover:bg-[#1b2221] sm:inline-flex sm:w-auto sm:px-6 sm:text-xs sm:tracking-[0.12em]"
+              className="label mt-1 flex w-full items-center justify-center gap-2 rounded-full bg-accent px-4 py-3 text-center text-[11px] tracking-[0.08em] text-on-accent hover:bg-[#1b2221] sm:inline-flex sm:w-auto sm:px-6 sm:text-xs sm:tracking-[0.12em]"
             >
               Voir le programme de la journée →
             </Link>
@@ -145,11 +145,11 @@ export default async function StudentDashboardPage() {
         )}
       </section>
 
-      <div className="space-y-5">
-        <section className="rounded-lg border border-border bg-background p-5 sm:p-6">
+      <div className="space-y-4">
+        <section className="rounded-lg border border-border bg-background p-4 sm:p-5">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5">
-              <h2 className="font-title text-[22px] text-foreground">Messages</h2>
+              <h2 className="font-title text-[19px] text-foreground">Messages</h2>
               {newCount > 0 && (
                 <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-m-doctoral px-1.5 text-xs font-semibold text-white">
                   {newCount}
@@ -160,12 +160,12 @@ export default async function StudentDashboardPage() {
           </div>
 
           {preview.length ? (
-            <ul className="mt-4 divide-y divide-border-soft border-t border-border-soft">
+            <ul className="mt-3 divide-y divide-border-soft border-t border-border-soft">
               {preview.map((m) => (
                 <li key={m.id}>
-                  <Link href="/etudiant/messages" className="group flex items-start gap-3.5 py-4">
+                  <Link href="/etudiant/messages" className="group flex items-start gap-3 py-3">
                     <span
-                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
+                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
                         m.isNew ? "bg-accent text-on-accent" : "bg-surface text-muted"
                       }`}
                     >
@@ -173,7 +173,7 @@ export default async function StudentDashboardPage() {
                     </span>
                     <span className="min-w-0 flex-1">
                       <span
-                        className={`block text-[16px] leading-snug text-foreground ${
+                        className={`block text-[15px] leading-snug text-foreground ${
                           m.isNew ? "font-semibold" : "font-medium"
                         }`}
                       >
@@ -210,30 +210,30 @@ export default async function StudentDashboardPage() {
           </div>
         </section>
 
-        <section className="rounded-lg border border-border bg-background p-5 sm:p-6">
+        <section className="rounded-lg border border-border bg-background p-4 sm:p-5">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <h2 className="font-title text-[22px] text-foreground">À préparer</h2>
+              <h2 className="font-title text-[19px] text-foreground">À préparer</h2>
               {nextSession && (
                 <p className="mt-1 text-sm text-muted">
                   Avant le {formatSessionDate(nextSession.session_date)}
                 </p>
               )}
             </div>
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-surface text-sm font-semibold text-foreground">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface text-sm font-semibold text-foreground">
               {todoCount}
             </span>
           </div>
 
           {toPrepare.length ? (
-            <ul className="mt-4 divide-y divide-border-soft">
+            <ul className="mt-3 divide-y divide-border-soft">
               {toPrepare.map((a) => {
                 const Icon = /vid[ée]o/i.test(a.kind ?? "") ? Video : FileText;
                 return (
                   <li key={a.id}>
                     <Link
                       href="/etudiant/travail"
-                      className="group flex items-center gap-3 py-3.5 text-[15px] text-foreground"
+                      className="group flex items-center gap-3 py-3 text-[15px] text-foreground"
                     >
                       <span className="h-6 w-6 shrink-0 rounded-full border border-border" />
                       <Icon size={18} strokeWidth={1.6} className="shrink-0 text-muted" />

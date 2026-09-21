@@ -31,7 +31,7 @@ export function LogoCompact({ priority = false }: { priority?: boolean }) {
       width={466}
       height={122}
       priority={priority}
-      className="h-auto w-[224px] select-none"
+      className="h-auto w-[172px] select-none"
     />
   );
 }

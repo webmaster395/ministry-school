@@ -3,6 +3,7 @@ import Link from "next/link";
 import { BookOpen, ChevronRight, CircleUser, Heart, Pencil } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import MinistryPicto from "@/components/MinistryPicto";
+import MinistryLabels from "@/components/MinistryLabels";
 import { getMinistry, MINISTRIES } from "@/lib/ministry";
 import { MINISTRY_PROFILES, MINISTRY_RESOURCES } from "@/lib/ministry-content";
 import { changeMinistry } from "./actions";
@@ -71,20 +72,16 @@ export default async function StudentFormationPage({
         </p>
       </div>
 
-      <ul className="flex flex-wrap justify-center gap-2.5">
-        {ORDER.map((k) => MINISTRIES[k]).map((m) => (
-          <li
-            key={m.slug}
-            className="label inline-flex items-center gap-2 rounded-full border border-border py-1.5 pl-2.5 pr-4 text-[11px] tracking-[0.1em] text-foreground"
-            style={{ background: `color-mix(in srgb, ${m.color} 18%, var(--background))` }}
-          >
-            <MinistryPicto slug={m.slug} size={16} />
-            {m.adjective}
-          </li>
-        ))}
-      </ul>
+      <MinistryLabels
+        ministries={ORDER.map((k) => ({
+          slug: k,
+          name: MINISTRIES[k].name,
+          description: descriptions[k] ?? "",
+          profile: MINISTRY_PROFILES[k] ?? null,
+        }))}
+      />
 
-      <div className="mx-auto max-w-[640px] overflow-hidden rounded-lg border border-border bg-background">
+      <div className="max-w-[640px] overflow-hidden rounded-lg border border-border bg-background">
         <div className="aspect-video">
           <iframe
             src={`https://www.youtube-nocookie.com/embed/${VIDEO_ID}`}
