@@ -12,7 +12,7 @@ const TITLES: Record<string, string> = {
   "/etudiant/pilotage": "Pilotage ministériel",
   "/etudiant/calendrier": "Mon calendrier",
   "/etudiant/formation": "Ministères",
-  "/etudiant/messages": "Messages",
+  "/etudiant/messages": "Messagerie",
   "/etudiant/profil": "Profil",
   "/enseignant/calendrier": "Mon calendrier",
   "/enseignant/supports": "Supports & consignes",

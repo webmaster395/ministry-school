@@ -1,13 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { LogoCompact } from "@/components/Logo";
 import MinistryPicto from "@/components/MinistryPicto";
 import { getMinistry } from "@/lib/ministry";
-import { useSpace } from "@/components/SpaceProvider";
-import type { ViewerRoles } from "@/lib/roles";
+import { NavSections, ProfileLink } from "@/components/NavBlocks";
 
 function ChevronIcon({ direction }: { direction: "left" | "right" }) {
   return (
@@ -28,16 +25,16 @@ function ChevronIcon({ direction }: { direction: "left" | "right" }) {
 }
 
 export default function Sidebar({
-  roles,
+  fullName,
+  avatarUrl,
   ministrySlug,
 }: {
-  roles: ViewerRoles;
+  fullName: string;
+  avatarUrl: string | null;
   ministrySlug?: string | null;
 }) {
-  const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
-  // Sur téléphone, ces mêmes sections sont servies par MobileNav.
-  const sections = useSpace().current.sections;
+  // Sur téléphone, le même menu est servi par MobileNav.
   const ministry = getMinistry(ministrySlug);
 
   // Restaure le choix de l'utilisateur d'une visite à l'autre
@@ -53,9 +50,6 @@ export default function Sidebar({
       return next;
     });
   }
-
-  const footerLabel =
-    roles.admin ? "Administration" : ministry ? `Sensibilité ${ministry.adjective}` : null;
 
   return (
     <aside
@@ -91,57 +85,13 @@ export default function Sidebar({
       </div>
 
       <nav className={`flex-1 space-y-6 pb-6 pt-2 ${collapsed ? "px-3" : "px-4"}`}>
-        {sections.map((section) => (
-          <div key={section.title}>
-            {collapsed ? (
-              <div className="mx-3 mb-2 border-t border-border-soft" aria-hidden="true" />
-            ) : (
-              <p className="label mb-2 px-3 text-[11px] !font-medium tracking-[0.16em] text-muted">
-                {section.title}
-              </p>
-            )}
-            <ul className="space-y-0.5">
-              {section.items.map((item) => {
-                const active = pathname === item.href.split("?")[0];
-                return (
-                  <li key={item.label}>
-                    <Link
-                      href={item.href}
-                      title={collapsed ? item.label : undefined}
-                      className={`flex items-center rounded-[7px] py-2.5 text-[15px] transition ${
-                        collapsed ? "justify-center px-2" : "gap-[11px] px-3"
-                      } ${
-                        active
-                          ? "bg-foreground/[0.08] font-medium text-foreground"
-                          : "text-[#4b524f] hover:bg-foreground/[0.04]"
-                      }`}
-                    >
-                      <span className={active ? "text-foreground" : "text-[#8b918e]"}>
-                        {item.icon}
-                      </span>
-                      {!collapsed && item.label}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        ))}
+        <NavSections collapsed={collapsed} />
       </nav>
 
-      {/* Pied : sensibilité de l'utilisateur */}
-      {footerLabel && (
-        <div
-          className={`flex items-center gap-2.5 border-t border-border-soft py-4 ${
-            collapsed ? "justify-center px-2" : "px-5"
-          }`}
-        >
-          {!roles.admin && ministry && <MinistryPicto slug={ministry.slug} size={20} />}
-          {!collapsed && (
-            <span className="label text-[10px] tracking-[0.18em] text-muted">{footerLabel}</span>
-          )}
-        </div>
-      )}
+      {/* Bas du menu : le profil, avec la photo et le prénom */}
+      <div className={`border-t border-border-soft py-3 ${collapsed ? "px-2" : "px-3"}`}>
+        <ProfileLink fullName={fullName} avatarUrl={avatarUrl} ministrySlug={ministrySlug} collapsed={collapsed} />
+      </div>
     </aside>
   );
 }

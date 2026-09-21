@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import ProfileTabs from "@/components/ProfileTabs";
 import { getStudentProfile } from "@/lib/data/student";
 import { getStudentMessages } from "@/lib/data/messages";
 import { markNotificationsSeen } from "../actions";
@@ -18,6 +19,7 @@ export default async function StudentMessagesPage() {
 
   return (
     <div className="space-y-5">
+      <ProfileTabs />
       <div className="flex flex-wrap items-start justify-between gap-4">
         <p className="max-w-[560px] text-[15px] text-muted">
           Les messages de vos enseignants et de l&apos;équipe pédagogique.

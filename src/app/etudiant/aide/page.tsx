@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import ProfileTabs from "@/components/ProfileTabs";
 import { getViewer, isPlainStudent } from "@/lib/data/viewer";
 import { QUESTION_CATEGORIES, type QuestionCategory } from "@/lib/questions";
 import { askQuestion } from "./actions";
@@ -25,6 +26,8 @@ export default async function HelpPage({ searchParams }: { searchParams: Promise
     .limit(10);
 
   return (
+    <div className="space-y-5">
+    <ProfileTabs />
     <div className="grid items-start gap-[22px] lg:grid-cols-[1fr_360px]">
       <section className="rounded-lg border border-border bg-background p-6 sm:p-7">
         <h2 className="font-title text-[24px] leading-tight text-foreground">Une question ?</h2>
@@ -93,6 +96,7 @@ export default async function HelpPage({ searchParams }: { searchParams: Promise
           <p className="mt-2 text-sm text-muted">Vous n&apos;avez pas encore posé de question.</p>
         )}
       </aside>
+    </div>
     </div>
   );
 }

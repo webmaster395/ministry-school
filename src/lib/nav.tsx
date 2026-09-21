@@ -15,6 +15,7 @@ import {
   Megaphone,
   MessageSquare,
   Presentation,
+  SlidersHorizontal,
 } from "lucide-react";
 import { isPlainStudent, type ViewerRoles } from "@/lib/roles";
 
@@ -49,19 +50,20 @@ const icons = {
   projectPropose: <Rocket {...iconProps} />,
   adminHome: <LayoutDashboard {...iconProps} />,
   adminSessions: <CalendarClock {...iconProps} />,
+  functions: <SlidersHorizontal {...iconProps} />,
 };
 
-const baseStudentSections: NavSection[] = [
+/** Le menu étudiant, toujours affiché : celui de la maquette de Rose Alice. */
+export const studentSections: NavSection[] = [
   {
-    title: "Principale",
-    items: [{ label: "Accueil", href: "/etudiant", icon: icons.home }],
+    title: "Principal",
+    items: [
+      { label: "Accueil", href: "/etudiant", icon: icons.home },
+      { label: "Calendrier", href: "/etudiant/calendrier", icon: icons.calendar },
+    ],
   },
   {
-    title: "Calendrier",
-    items: [{ label: "Calendrier", href: "/etudiant/calendrier", icon: icons.calendar }],
-  },
-  {
-    title: "Pédagogie",
+    title: "Mon parcours",
     items: [
       { label: "Mes cours", href: "/etudiant/cours", icon: icons.book },
       { label: "Travail à faire", href: "/etudiant/travail", icon: icons.task },
@@ -69,30 +71,27 @@ const baseStudentSections: NavSection[] = [
       { label: "Services et projets", href: "/etudiant/services", icon: icons.services },
     ],
   },
-  {
-    title: "Communication",
-    items: [{ label: "Messages", href: "/etudiant/messages", icon: icons.messages }],
-  },
-  {
-    title: "Compte",
-    items: [{ label: "Profil", href: "/etudiant/profil", icon: icons.profile }],
-  },
 ];
 
-/** La vue étudiant ; « Une question ? » n'est proposée qu'aux étudiants simples. */
-function studentSectionsFor(roles: ViewerRoles): NavSection[] {
-  if (!isPlainStudent(roles)) return baseStudentSections;
-  return baseStudentSections.map((section) =>
-    section.title === "Compte"
-      ? {
-          ...section,
-          items: [...section.items, { label: "Une question ?", href: "/etudiant/aide", icon: icons.help }],
-        }
-      : section
-  );
+/** L'entrée « Mes fonctions » du bloc « Mes espaces », en bas du menu. */
+export const functionsIcon = icons.functions;
+
+export type ProfileTab = { label: string; href: string };
+
+/**
+ * Les onglets de l'espace Profil : le profil, la messagerie et, pour un étudiant simple,
+ * la question à l'administration. Ils rassemblent des pages qui n'ont plus d'entrée de menu.
+ */
+export function profileTabs(roles: ViewerRoles): ProfileTab[] {
+  const tabs: ProfileTab[] = [
+    { label: "Profil", href: "/etudiant/profil" },
+    { label: "Messagerie", href: "/etudiant/messages" },
+  ];
+  if (isPlainStudent(roles)) tabs.push({ label: "Une question ?", href: "/etudiant/aide" });
+  return tabs;
 }
 
-export type SpaceKey = "admin" | "teacher" | "steering" | "services" | "project" | "student";
+export type SpaceKey = "admin" | "teacher" | "steering" | "services" | "project";
 
 /** Une « casquette » : un ensemble d'entrées de menu que la personne choisit d'afficher. */
 export type Space = {
@@ -102,10 +101,8 @@ export type Space = {
 };
 
 /**
- * Les espaces d'une personne, dans l'ordre du sélecteur : les casquettes de gestion d'abord
- * (l'administration en tête), l'espace étudiant en dernier. Tout le monde a l'espace étudiant ;
- * l'administrateur, lui, a tous les espaces.
- * Le menu n'affiche qu'un seul espace à la fois, pour rester court même quand les rôles se cumulent.
+ * Les espaces de gestion d'une personne (ses « casquettes »), dans l'ordre du sélecteur, l'administration
+ * en tête. L'administrateur les a tous. Le menu étudiant, lui, est commun à tout le monde.
  */
 export function navSpaces(roles: ViewerRoles): Space[] {
   const spaces: Space[] = [];
@@ -195,7 +192,6 @@ export function navSpaces(roles: ViewerRoles): Space[] {
     });
   }
 
-  spaces.push({ key: "student", label: "Étudiant", sections: studentSectionsFor(roles) });
   return spaces;
 }
 

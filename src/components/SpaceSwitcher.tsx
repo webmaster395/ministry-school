@@ -29,7 +29,8 @@ export default function SpaceSwitcher() {
     };
   }, [open]);
 
-  if (spaces.length < 2) return null;
+  // Comme dans la maquette : le sélecteur n'apparaît que dans un espace de gestion
+  if (!current || spaces.length < 2) return null;
 
   return (
     <div ref={root} className="relative">
