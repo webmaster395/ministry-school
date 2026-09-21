@@ -798,7 +798,7 @@ body{color:#26302d;-webkit-font-smoothing:antialiased;text-rendering:optimizeLeg
 @media(max-width:520px){.day-program{margin:8px;padding:68px 10px 76px;border-radius:22px}}
 
 /* Page de connexion */
-.login-page{min-height:100svh;margin:0;padding:18px;background:#fff;color:var(--ink);font-family:Inter,Arial,sans-serif}
+.login-page{min-height:100svh;margin:0;padding:18px;background:#fff;color:var(--ink);font-family:var(--font-geist-sans),Inter,Arial,sans-serif}
 .login-shell{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(420px,.92fr);min-height:calc(100svh - 36px);overflow:hidden;border-radius:34px;background:var(--soft)}
 .login-visual{position:relative;display:flex;flex-direction:column;justify-content:space-between;min-height:680px;padding:44px 48px 54px;overflow:hidden;background:url("/landing/hero-split.webp") center/cover no-repeat;color:var(--cream)}
 .login-visual::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,23,21,.3),rgba(18,23,21,.04) 42%,rgba(18,23,21,.7))}
@@ -807,13 +807,13 @@ body{color:#26302d;-webkit-font-smoothing:antialiased;text-rendering:optimizeLeg
 .login-brand img{width:98px;height:28px;object-fit:contain;object-position:left center}
 .login-brand span{font-size:18px;letter-spacing:-.02em}
 .login-visual__copy p{margin:0 0 16px;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
-.login-visual__copy h2{max-width:640px;margin:0;color:var(--cream);font-family:Etna,Georgia,serif;font-size:clamp(54px,6vw,92px);font-weight:400;line-height:.89;letter-spacing:-.035em}
+.login-visual__copy h2{max-width:640px;margin:0;color:var(--cream);font-family:var(--font-bricolage),Georgia,serif;font-size:clamp(54px,6vw,92px);font-weight:400;line-height:.89;letter-spacing:-.035em}
 .login-panel{display:flex;align-items:center;justify-content:center;padding:64px clamp(42px,5vw,88px);background:#fff}
 .login-form-wrap{width:100%;max-width:440px}
 .login-back{display:inline-flex;align-items:center;gap:8px;margin-bottom:74px;color:#626a67;font-size:14px;text-decoration:none;transition:color .2s ease,transform .2s ease}
 .login-back:hover{color:var(--ink);transform:translateX(-3px)}
 .login-overline{margin:0 0 18px;font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase}
-.login-form-wrap h1{margin:0;font-family:Etna,Georgia,serif;font-size:clamp(50px,5vw,76px);font-weight:400;line-height:.95;letter-spacing:-.035em}
+.login-form-wrap h1{margin:0;font-family:var(--font-bricolage),Georgia,serif;font-size:clamp(50px,5vw,76px);font-weight:400;line-height:.95;letter-spacing:-.035em}
 .login-intro{max-width:390px;margin:24px 0 42px;color:#68706d;font-size:17px;line-height:1.55}
 .login-form{display:grid;gap:22px}
 .login-form>label{display:grid;gap:9px;color:var(--ink);font-size:14px;font-weight:500}
@@ -824,7 +824,7 @@ body{color:#26302d;-webkit-font-smoothing:antialiased;text-rendering:optimizeLeg
 .login-remember{display:flex;align-items:center;gap:8px;cursor:pointer}
 .login-remember input{width:16px;height:16px;accent-color:var(--ink)}
 .login-options a,.login-help a{color:var(--ink);text-underline-offset:3px}
-.login-submit{display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:5px;border:0;border-radius:999px;background:var(--ink);padding:17px 22px;color:#fff;font:600 15px/1 Inter,Arial,sans-serif;cursor:pointer;transition:transform .2s ease,background .2s ease}
+.login-submit{display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:5px;border:0;border-radius:999px;background:var(--ink);padding:17px 22px;color:#fff;font:600 15px/1 var(--font-geist-sans),Inter,Arial,sans-serif;cursor:pointer;transition:transform .2s ease,background .2s ease}
 .login-submit:hover{transform:translateY(-2px);background:#111715}
 .login-submit:focus-visible,.login-back:focus-visible,.login-options a:focus-visible{outline:3px solid #59c9ca;outline-offset:3px}
 .login-help{margin:30px 0 0;color:#747a77;font-size:13px;line-height:1.55}
@@ -1095,3 +1095,11 @@ html body #price.pricing-section{background-color:#fff!important;background-imag
   .ministry-choice__grid span{min-height:43px;padding-right:13px;padding-left:36px;font-size:11px}
   .ministry-choice__grid span:before{left:15px}
 }
+
+/* Ajouts à la maquette : message d'erreur de connexion et bouton « afficher le mot de passe ». */
+.login-error{margin:0 0 18px;border:1px solid rgba(227,77,27,.35);border-radius:14px;background:rgba(227,77,27,.08);padding:12px 14px;color:#b83c13;font-size:14px;line-height:1.5}
+.login-password{position:relative;display:block}
+.login-password input{width:100%;padding-right:46px}
+.login-password button{position:absolute;top:50%;right:10px;display:flex;align-items:center;justify-content:center;width:32px;height:32px;transform:translateY(-50%);border:0;border-radius:8px;background:none;color:#8b918e;cursor:pointer;transition:color .2s ease}
+.login-password button:hover{color:var(--ink)}
+.login-submit:disabled{opacity:.6;cursor:default}

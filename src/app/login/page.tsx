@@ -1,11 +1,12 @@
+/* eslint-disable @next/next/no-img-element -- picto décoratif de la landing */
 "use client";
 
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { Eye, EyeOff } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { LogoLockup } from "@/components/Logo";
-import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
+import "../landing.css";
 
 function LoginForm() {
   const router = useRouter();
@@ -21,8 +22,8 @@ function LoginForm() {
       : searchParams.get("erreur") === "lien_utilise"
         ? "Ce lien a déjà été utilisé. Si vous avez déjà confirmé votre adresse, connectez-vous directement avec votre e-mail et votre mot de passe."
         : searchParams.get("erreur") === "desactive"
-        ? "Ce compte est désactivé. Rapprochez-vous de l'équipe Ministry School."
-        : null
+          ? "Ce compte est désactivé. Rapprochez-vous de l'équipe Ministry School."
+          : null
   );
   const [loading, setLoading] = useState(false);
 
@@ -31,10 +32,7 @@ function LoginForm() {
     setError(null);
     setLoading(true);
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
 
     setLoading(false);
 
@@ -52,134 +50,105 @@ function LoginForm() {
   }
 
   return (
-    <div
-      className="relative flex min-h-screen w-full items-center justify-center bg-cover bg-center p-4 sm:p-6"
-      style={{ backgroundImage: "url('/texture-pastoral.png')" }}
-    >
-      <div className="grid w-full max-w-[820px] grid-cols-1 overflow-hidden rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.45)] md:grid-cols-[5fr_7fr]">
-        {/* PANNEAU GAUCHE : l'ovale de la charte sur fond encre */}
-        <div className="flex flex-col items-center justify-center bg-foreground px-8 py-11 text-center">
-          <div className="w-full max-w-[280px]">
-            <LogoLockup priority />
+    <div className="landing login-page">
+      <main className="login-shell">
+        <section className="login-visual" aria-label="Ministry School">
+          <Link className="login-brand" href="/" aria-label="Retour à Ministry School">
+            <img src="/landing/ministry-icons-transparent.png" alt="" />
+            <span>Ministry School</span>
+          </Link>
+          <div className="login-visual__copy">
+            <p>Ton parcours continue ici.</p>
+            <h2>
+              Se découvrir.
+              <br />
+              Grandir.
+              <br />
+              Servir.
+            </h2>
           </div>
-          <p className="label mt-6 text-[11px] font-medium tracking-[0.24em] text-[rgba(251,238,218,0.75)]">
-            Grandir • Servir • Impacter
-          </p>
-        </div>
+        </section>
 
-        {/* PANNEAU DROIT : formulaire sur papier */}
-        <div className="flex flex-col justify-center bg-background px-8 py-10 sm:px-11">
-          <div className="mb-6">
-            <p className="label text-xs font-medium tracking-[0.16em] text-muted">Bienvenue sur</p>
-            <h1 className="font-title mt-1 text-[30px] leading-tight text-foreground">
-              Ministry School
-            </h1>
-          </div>
+        <section className="login-panel">
+          <div className="login-form-wrap">
+            <Link className="login-back" href="/">
+              <span aria-hidden="true">←</span> Retour au site
+            </Link>
+            <p className="login-overline">Espace personnel</p>
+            <h1>Se connecter</h1>
+            <p className="login-intro">
+              Retrouve ton parcours et les informations liées à Ministry School.
+            </p>
 
-          {error && (
-            <div className="mb-4 flex items-center gap-2 rounded-lg border border-m-doctoral/40 bg-m-doctoral/[0.08] p-2.5 text-xs text-link">
-              <span>{error}</span>
-            </div>
-          )}
+            {error && (
+              <p className="login-error" role="alert">
+                {error}
+              </p>
+            )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* E-mail */}
-            <div>
-              <label htmlFor="email" className="mb-1.5 block text-xs font-medium text-foreground">
-                E-mail
-              </label>
-              <div className="relative flex items-center">
-                <div className="pointer-events-none absolute left-3.5 text-[#8b918e]">
-                  <Mail size={16} />
-                </div>
+            <form className="login-form" onSubmit={handleSubmit}>
+              <label>
+                <span>Adresse e-mail</span>
                 <input
-                  id="email"
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full rounded-lg border border-[#ded6c9] bg-[#faf7f1] py-3 pl-10 pr-3.5 text-[15px] text-foreground outline-none transition placeholder:text-[#8b918e] focus:border-foreground focus:ring-1 focus:ring-foreground"
-                  placeholder="votre@email.com"
                   autoComplete="email"
+                  placeholder="prenom@exemple.fr"
                 />
-              </div>
-            </div>
-
-            {/* Mot de passe */}
-            <div>
-              <label htmlFor="password" className="mb-1.5 block text-xs font-medium text-foreground">
-                Mot de passe
-              </label>
-              <div className="relative flex items-center">
-                <div className="pointer-events-none absolute left-3.5 text-[#8b918e]">
-                  <Lock size={16} />
-                </div>
-                <input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-lg border border-[#ded6c9] bg-[#faf7f1] py-3 pl-10 pr-10 text-[15px] text-foreground outline-none transition placeholder:text-[#8b918e] focus:border-foreground focus:ring-1 focus:ring-foreground"
-                  placeholder="••••••••"
-                  autoComplete="current-password"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-3 p-1 text-[#8b918e] transition hover:text-foreground"
-                  aria-label={showPassword ? "Masquer" : "Afficher"}
-                >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-            </div>
-
-            {/* Bouton de connexion */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="label flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-foreground px-[18px] py-3.5 text-sm tracking-[0.12em] text-on-accent transition hover:bg-[#1b2221] active:scale-[0.99] disabled:opacity-60"
-            >
-              <span>{loading ? "Connexion..." : "Se connecter"}</span>
-              {!loading && <ArrowRight size={14} />}
-            </button>
-
-            {/* Options */}
-            <div className="flex items-center justify-between pt-1 text-[13px]">
-              <label className="flex cursor-pointer select-none items-center gap-1.5 text-muted">
-                <input
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="h-3.5 w-3.5 cursor-pointer rounded border-[#ded6c9] accent-[#27302f]"
-                />
-                <span>Se souvenir de moi</span>
               </label>
 
-              <button
-                type="button"
-                onClick={() =>
-                  alert(
-                    "Pour réinitialiser votre mot de passe, veuillez contacter l'administration de Ministry School."
-                  )
-                }
-                className="font-medium text-link hover:underline"
-              >
-                Mot de passe oublié ?
+              <label>
+                <span>Mot de passe</span>
+                <span className="login-password">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    autoComplete="current-password"
+                    placeholder="••••••••"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                    aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+                  >
+                    {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+                  </button>
+                </span>
+              </label>
+
+              <div className="login-options">
+                <label className="login-remember">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                  />
+                  <span>Se souvenir de moi</span>
+                </label>
+                <a href="mailto:ministryschool@mlkgrandparis.com?subject=Mot%20de%20passe%20oubli%C3%A9">
+                  Mot de passe oublié&nbsp;?
+                </a>
+              </div>
+
+              <button className="login-submit" type="submit" disabled={loading}>
+                {loading ? "Connexion…" : "Se connecter"} <span aria-hidden="true">→</span>
               </button>
-            </div>
+            </form>
 
-            {/* Première inscription */}
-            <div className="mt-1 border-t border-border-soft pt-4 text-center text-[13px] text-muted">
-              Première fois ici ?{" "}
-              <Link href="/inscription" className="font-medium text-link hover:underline">
-                Créer mon compte
-              </Link>
-            </div>
-          </form>
-        </div>
-      </div>
+            <p className="account-switch">
+              Première fois ici&nbsp;? <Link href="/inscription">Créer mon compte</Link>
+            </p>
+            <p className="login-help">
+              Besoin d&apos;aide&nbsp;?{" "}
+              <a href="mailto:ministryschool@mlkgrandparis.com">ministryschool@mlkgrandparis.com</a>
+            </p>
+          </div>
+        </section>
+      </main>
     </div>
   );
 }
