@@ -71,7 +71,7 @@ export default async function StudentFormationPage({
         </p>
       </div>
 
-      <ul className="flex flex-wrap gap-2.5">
+      <ul className="flex flex-wrap justify-center gap-2.5">
         {ORDER.map((k) => MINISTRIES[k]).map((m) => (
           <li
             key={m.slug}
