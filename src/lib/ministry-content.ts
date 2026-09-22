@@ -62,7 +62,7 @@ export const MINISTRY_RESOURCES: MinistryResource[] = [
       "Un document pour découvrir les sensibilités apostolique, prophétique, évangélique, pastorale et doctorale.",
     action: "Découvrir",
     icon: "book",
-    href: "/etudiant/formation",
+    href: "/etudiant/formation?onglet=decouvrir",
   },
   {
     title: "Découvrir son fonctionnement avec le DISC",
