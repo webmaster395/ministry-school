@@ -1073,3 +1073,6 @@ html body #price.pricing-section{background-color:#fff!important;background-imag
 /* L'adresse e-mail occupe toute la largeur de la grille d'inscription. */
 .signup-fields .signup-wide{grid-column:1/-1}
 @media (max-width:560px){.signup-fields{grid-template-columns:1fr}}
+
+/* Le montant ne se coupe jamais entre le nombre et le symbole euro */
+.pricing-amount strong{flex-shrink:0;white-space:nowrap}
