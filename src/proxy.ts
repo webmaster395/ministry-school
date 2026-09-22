@@ -72,5 +72,5 @@ export async function proxy(request: NextRequest) {
 export const config = {
   // Ne s'exécute pas sur les fichiers statiques : images, polices, scripts et styles
   // servis depuis /public. Sans cela, ils seraient renvoyés vers la page de connexion.
-  matcher: ["/((?!_next/static|_next/image|.*\\.(?:png|jpg|jpeg|svg|ico|webp|gif|otf|woff2?|js|css|txt|xml|webmanifest)$).*)"],
+  matcher: ["/((?!_next/static|_next/image|.*\\.(?:png|jpg|jpeg|svg|ico|webp|gif|otf|woff2?|js|css|txt|xml|json|webmanifest)$).*)"],
 };
