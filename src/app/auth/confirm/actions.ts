@@ -18,7 +18,9 @@ export async function confirmEmail(formData: FormData) {
   const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type });
 
   if (error) {
-    // Jeton déjà utilisé ou expiré : le compte est peut-être déjà confirmé
+    // Jeton déjà utilisé ou expiré : si une session existe déjà, le compte est bien activé.
+    const { data } = await supabase.auth.getUser();
+    if (data.user) redirect("/app");
     redirect("/login?erreur=lien_utilise");
   }
 

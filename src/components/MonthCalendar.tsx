@@ -103,6 +103,27 @@ export default function MonthCalendar({
           Aujourd&apos;hui
         </button>
       </div>
+      <details className="mb-5 ml-auto max-w-[520px] rounded-lg border border-border bg-background px-4 py-3 text-sm text-muted">
+        <summary className="cursor-pointer font-medium text-foreground">
+          Comment ajouter les séances à mon agenda ?
+        </summary>
+        <ol className="mt-2 list-decimal space-y-1.5 pl-5 leading-relaxed">
+          <li>
+            <strong className="text-foreground">iPhone :</strong> touchez « Synchroniser avec mon
+            calendrier », puis « Tout ajouter » dans la fenêtre qui s&apos;ouvre.
+          </li>
+          <li>
+            <strong className="text-foreground">Android :</strong> touchez le bouton, ouvrez le fichier
+            téléchargé « ministry-school.ics » et choisissez Agenda Google.
+          </li>
+          <li>
+            <strong className="text-foreground">Ordinateur :</strong> cliquez sur le bouton, puis
+            double-cliquez sur le fichier téléchargé : votre agenda (Calendrier, Outlook) l&apos;importe.
+            Pour Google Agenda : Paramètres › Importer et exporter › Importer.
+          </li>
+        </ol>
+        <p className="mt-2">Si le planning change, refaites l&apos;opération pour ajouter les nouvelles séances.</p>
+      </details>
 
       <div className="grid items-start gap-[22px] lg:grid-cols-[1fr_400px]">
         <section className="rounded-lg border border-border bg-background p-4 sm:p-6">

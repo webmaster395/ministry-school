@@ -1,5 +1,6 @@
 import { LogoLockup } from "@/components/Logo";
 import { confirmEmail } from "./actions";
+import SubmitButton from "./SubmitButton";
 
 export default async function ConfirmPage({
   searchParams,
@@ -30,12 +31,7 @@ export default async function ConfirmPage({
               <form action={confirmEmail} className="mt-6">
                 <input type="hidden" name="token_hash" value={token_hash} />
                 <input type="hidden" name="type" value={type ?? "email"} />
-                <button
-                  type="submit"
-                  className="label w-full rounded-lg bg-foreground px-5 py-3.5 text-sm tracking-[0.12em] text-on-accent transition hover:bg-[#1b2221]"
-                >
-                  Activer mon compte
-                </button>
+                <SubmitButton />
               </form>
             </>
           ) : (
