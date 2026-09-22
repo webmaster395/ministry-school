@@ -92,7 +92,7 @@ npm run lint     # vérification du code
 
 **Mot de passe oublié** : `/mot-de-passe-oublie` envoie un e-mail avec un lien vers `/auth/reinitialiser`, où l'on choisit le nouveau mot de passe. Comme pour la confirmation d'inscription, le jeton n'est consommé qu'à l'enregistrement, pas à la visite du lien. La réponse est la même qu'un compte existe ou non, pour ne pas révéler qui est inscrit.
 
-**Aperçu partagé** (WhatsApp, LinkedIn, Facebook, X) : l'image est `src/app/opengraph-image.png` (et `twitter-image.png`), 1200 × 630 px ; titre et description dans `src/app/layout.tsx`.
+**Aperçu partagé** (WhatsApp, LinkedIn, Facebook, X) : l'image est `src/app/opengraph-image.jpg` (et `twitter-image.jpg`), 1200 × 630 px, en JPEG de moins de 300 Ko : au-delà, WhatsApp n'affiche souvent pas l'image ; titre et description dans `src/app/layout.tsx`.
 
 `/app` oriente la personne connectée vers son espace (administration, enseignant, pilotage, propositions, sinon la vue étudiant) : c'est là qu'arrivent la connexion, l'inscription et la confirmation d'e-mail. `/connexion` reste un raccourci vers `/login`.
 
