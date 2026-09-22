@@ -191,7 +191,7 @@
       pricingDescription.textContent = option.description;
       memberMessage.hidden = type !== "member";
       pricingCard.classList.toggle("member-active", type === "member");
-      pricingCta.textContent = type === "member" ? "Activer mon compte Membership" : "Prendre ma place";
+      pricingCta.textContent = "Prendre ma place";
     });
   });
 
