@@ -974,55 +974,70 @@ html body #price.pricing-section{background-color:#fff!important;background-imag
 }
 
 /* Création de compte */
-.account-switch{margin:18px 0 0;color:#68706d;font-size:13px;text-align:center}
+.account-switch{margin:16px 0 0;color:#68706d;font-size:13px;text-align:center}
 .account-switch a{color:var(--ink);font-weight:600;text-underline-offset:3px}
 .account-switch--notice{max-width:410px;margin-right:auto;margin-left:auto;line-height:1.45}
-.signup-shell{grid-template-columns:minmax(0,.9fr) minmax(570px,1.1fr)}
-.signup-visual{background-position:6% center}
-.signup-panel{padding-right:clamp(34px,4vw,68px);padding-left:clamp(34px,4vw,68px)}
-.signup-form-wrap{max-width:610px}
-.signup-form-wrap .login-back{margin-bottom:22px}
-.signup-form-wrap h1{font-size:clamp(42px,3.7vw,58px)}
-.signup-form-wrap .login-intro{margin:13px 0 21px}
-.signup-form{gap:16px}
-.signup-fields{display:grid;grid-template-columns:1fr 1fr;gap:13px}
-.signup-fields label{display:grid;gap:5px;color:var(--ink);font-size:12px;font-weight:500}
-.signup-fields input{width:100%;min-height:43px;box-sizing:border-box;border:1px solid #d9dcda;border-radius:12px;background:#fafaf8;padding:10px 13px;color:var(--ink);font:inherit;outline:none;transition:border-color .2s ease,box-shadow .2s ease,background .2s ease}
+.signup-shell{grid-template-columns:minmax(0,1.05fr) minmax(480px,.95fr);height:calc(100svh - 36px);min-height:0}
+.signup-visual{background-position:center;height:100%}
+.signup-panel{height:100%;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:clamp(20px,3vh,36px) clamp(28px,4.5vw,64px);scrollbar-width:thin;scrollbar-color:rgba(35,44,41,.18) transparent}
+.signup-panel::-webkit-scrollbar{width:6px}
+.signup-panel::-webkit-scrollbar-track{background:transparent}
+.signup-panel::-webkit-scrollbar-thumb{background:rgba(35,44,41,.18);border-radius:999px}
+.signup-panel::-webkit-scrollbar-thumb:hover{background:rgba(35,44,41,.32)}
+.signup-form-wrap{width:100%;max-width:580px;margin-block:auto}
+.signup-form-wrap .login-back{margin-bottom:clamp(12px,1.8vh,20px);font-size:13px}
+.signup-form-wrap .login-overline{margin:0 0 8px;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#68706d}
+.signup-form-wrap h1{margin:0;font-family:var(--font-bricolage),Georgia,serif;font-size:clamp(36px,3.3vw,48px);font-weight:400;line-height:.95;letter-spacing:-.035em}
+.signup-form-wrap .login-intro{max-width:520px;margin:8px 0 clamp(12px,1.8vh,20px);color:#68706d;font-size:14px;line-height:1.45}
+.signup-form{display:grid;gap:clamp(11px,1.5vh,15px)}
+.signup-fields{display:grid;grid-template-columns:1fr 1fr;gap:clamp(9px,1.4vh,13px) 14px}
+.signup-fields .signup-wide{grid-column:1/-1}
+.signup-fields label{display:grid;gap:5px;color:var(--ink);font-size:12.5px;font-weight:500}
+.signup-fields input{width:100%;min-height:42px;box-sizing:border-box;border:1px solid #d9dcda;border-radius:12px;background:#fafaf8;padding:10px 14px;color:var(--ink);font:inherit;font-size:13.5px;outline:none;transition:border-color .2s ease,box-shadow .2s ease,background .2s ease}
+.signup-fields input::placeholder{color:#9b9f9d}
 .signup-fields input:focus{border-color:var(--ink);background:#fff;box-shadow:0 0 0 3px rgba(35,44,41,.08)}
-.ministry-choice{min-width:0;margin:0;border:0;padding:0}
-.ministry-choice legend{margin-bottom:10px;padding:0;font-size:13px;font-weight:600}
-.ministry-choice__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.ministry-choice{min-width:0;margin:0;border:1px solid #e7eae8;border-radius:16px;padding:12px 14px;background:#fafaf8}
+.ministry-choice legend{float:left;width:100%;margin:0 0 8px;padding:0;font-size:12px;font-weight:600;color:var(--ink)}
+.ministry-choice__grid{clear:both;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
 .ministry-choice__grid label{position:relative;min-width:0;cursor:pointer}
 .ministry-choice__grid input{position:absolute;width:1px;height:1px;overflow:hidden;opacity:0}
-.ministry-choice__grid span{display:flex;min-height:38px;align-items:center;justify-content:center;border:1px solid #d9dcda;border-radius:999px;padding:8px 10px;background:#fff;color:#606965;font-size:11px;font-weight:600;text-align:center;transition:border-color .2s ease,background .2s ease,color .2s ease,transform .2s var(--ease)}
-.ministry-choice__grid label:hover span{transform:translateY(-1px)}
-.ministry-choice__grid input:focus-visible+span{outline:3px solid #27302f;outline-offset:2px}
-.ministry-choice__grid input:checked+span{border-color:var(--choice,var(--ink));background:color-mix(in srgb,var(--choice,var(--ink)) 18%,white);color:var(--ink)}
-.choice-apo{--choice:#c9dc6a}.choice-pro{--choice:#59c9ca}.choice-eva{--choice:#ee9a9c}.choice-pas{--choice:#f19f00}.choice-doc{--choice:#e34d1b}.choice-unknown{--choice:#91b6d9}
-.ministry-choice>p{margin:9px 0 0;color:#7a817e;font-size:11px;line-height:1.35}
-.signup-submit{min-height:46px}
-.signup-form-wrap>.account-switch{margin-top:13px}
+.ministry-choice__grid span{position:relative;display:flex;min-height:35px;align-items:center;justify-content:flex-start;border:1px solid #dcdfdc;border-radius:999px;padding:6px 10px 6px 27px;background:#fff;color:#4b524f;font-size:11px;font-weight:500;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;transition:border-color .2s ease,background .2s ease,color .2s ease,transform .2s var(--ease),box-shadow .2s ease}
+.ministry-choice__grid span::before{position:absolute;left:10px;top:50%;width:8px;height:8px;transform:translateY(-50%);border-radius:50%;background:var(--choice,#7094b8);content:"";transition:transform .2s ease}
+.ministry-choice__grid label:hover span{border-color:#adb3af;transform:translateY(-1px)}
+.ministry-choice__grid input:focus-visible+span{outline:2px solid var(--ink);outline-offset:2px}
+.ministry-choice__grid input:checked+span{border-color:var(--choice,var(--ink));background:color-mix(in srgb,var(--choice,var(--ink)) 16%,#fff);color:var(--ink);font-weight:600;box-shadow:0 2px 6px rgba(35,44,41,.06)}
+.ministry-choice__grid input:checked+span::before{transform:translateY(-50%) scale(1.15)}
+.choice-apo{--choice:#9db52c}.choice-pro{--choice:#2fa3a5}.choice-eva{--choice:#e46b6e}.choice-pas{--choice:#e68d00}.choice-doc{--choice:#d74012}.choice-unknown{--choice:#7094b8}
+.ministry-choice>p{clear:both;margin:7px 2px 0;color:#79807d;font-size:11px;line-height:1.35}
+.signup-submit{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:46px;margin-top:2px;border:0;border-radius:999px;background:var(--ink);padding:12px 20px;color:#fff;font:600 14px/1 var(--font-geist-sans),Inter,Arial,sans-serif;cursor:pointer;transition:transform .2s ease,background .2s ease}
+.signup-submit:hover{transform:translateY(-2px);background:#111715}
+.signup-form-wrap>.account-switch{margin:12px 0 0;font-size:13px}
+.signup-form-wrap .login-help{margin:9px 0 0;color:#747a77;font-size:12px;line-height:1.4;text-align:center}
 
 @media(max-width:900px){
   .signup-page{height:auto;min-height:100svh;overflow:auto}
-  .signup-shell{height:auto;min-height:calc(100svh - 16px);grid-template-columns:1fr;grid-template-rows:190px auto}
-  .signup-panel{padding:28px 24px 34px}
-  .signup-form-wrap{max-width:620px}
+  .signup-shell{height:auto;min-height:calc(100svh - 16px);grid-template-columns:1fr;grid-template-rows:200px auto}
+  .signup-panel{height:auto;overflow:visible;padding:28px 24px 34px}
+  .signup-form-wrap{max-width:540px;margin-block:0}
+  .signup-form-wrap .login-back{margin-bottom:16px}
+  .signup-form-wrap h1{font-size:38px}
 }
 
 @media(max-width:560px){
-  .signup-shell{grid-template-rows:150px auto}
+  .signup-shell{grid-template-rows:140px auto}
   .signup-visual .login-visual__copy{display:none}
-  .signup-panel{padding:24px 18px 30px}
-  .signup-form-wrap h1{font-size:36px}
-  .signup-fields{grid-template-columns:1fr;gap:9px}
-  .ministry-choice__grid{grid-template-columns:1fr 1fr}
-  .ministry-choice__grid span{min-height:40px;padding:8px 7px;font-size:10px}
+  .signup-panel{padding:20px 16px 28px}
+  .signup-form-wrap h1{font-size:32px}
+  .signup-fields{grid-template-columns:1fr;gap:10px}
+  .ministry-choice__grid{grid-template-columns:1fr 1fr;gap:6px}
+  .ministry-choice__grid span{min-height:36px;padding:6px 8px 6px 26px;font-size:10.5px}
+  .ministry-choice__grid span::before{left:9px}
 }
 
 @supports not (background:color-mix(in srgb,red 10%,white)){
   .ministry-choice__grid input:checked+span{background:#f0f1ef}
 }
+
 
 /* Programme responsive — hauteur strictement dictée par le contenu */
 @media(max-width:760px){
@@ -1046,55 +1061,6 @@ html body #price.pricing-section{background-color:#fff!important;background-imag
   .program-choices i{flex:0 0 auto}
 }
 
-/* Création de compte — composition plus calme et couleurs ministérielles visibles */
-.signup-panel{padding-top:44px;padding-bottom:44px}
-.signup-form-wrap{max-width:660px}
-.signup-form-wrap .login-back{margin-bottom:34px}
-.signup-form-wrap h1{font-size:clamp(40px,3.45vw,54px)}
-.signup-form-wrap .login-intro{max-width:500px;margin:17px 0 34px;font-size:14px;line-height:1.55}
-.signup-form{gap:28px}
-.signup-fields{gap:20px 18px}
-.signup-fields label{gap:8px;font-size:13px}
-.signup-fields input{min-height:49px;border-radius:14px;padding:13px 15px;background:#fff}
-.ministry-choice{border-radius:22px;padding:20px;background:#f6f7f5}
-.ministry-choice legend{float:left;width:100%;margin:0 0 16px;font-size:14px;line-height:1.4}
-.ministry-choice__grid{clear:both;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.ministry-choice__grid span{position:relative;min-height:44px;justify-content:flex-start;border-width:1.5px;padding:9px 14px 9px 34px;color:var(--ink);font-size:11px}
-.ministry-choice__grid span:before{position:absolute;left:14px;width:9px;height:9px;border-radius:50%;background:var(--choice);content:""}
-.ministry-choice__grid input:checked+span{border-color:var(--choice);box-shadow:inset 0 0 0 1px var(--choice),0 5px 14px rgba(35,44,41,.06);font-weight:700}
-.choice-apo span{border-color:#c9dc6a;background:#f8fae9}
-.choice-pro span{border-color:#59c9ca;background:#eaf7f7}
-.choice-eva span{border-color:#ee9a9c;background:#fbeeed}
-.choice-pas span{border-color:#f19f00;background:#fff3e4}
-.choice-doc span{border-color:#e34d1b;background:#feebe7}
-.choice-unknown span{border-color:#91b6d9;background:#edf4fa}
-.ministry-choice>p{clear:both;margin:15px 2px 0;color:#68716d;font-size:12px}
-.signup-submit{min-height:52px;margin-top:-4px}
-.signup-form-wrap>.account-switch{margin-top:19px}
-
-@media(max-width:900px){
-  .signup-shell{grid-template-rows:220px auto}
-  .signup-panel{padding:42px 34px 48px}
-  .signup-form-wrap{max-width:700px}
-  .signup-form-wrap .login-back{margin-bottom:30px}
-  .signup-form-wrap h1{font-size:44px}
-  .signup-form-wrap .login-intro{margin-bottom:31px}
-}
-
-@media(max-width:560px){
-  .signup-shell{grid-template-rows:128px auto}
-  .signup-panel{padding:32px 18px 38px}
-  .signup-form-wrap .login-back{margin-bottom:25px}
-  .signup-form-wrap h1{font-size:34px}
-  .signup-form-wrap .login-intro{margin:14px 0 28px;font-size:13px}
-  .signup-form{gap:24px}
-  .signup-fields{gap:16px}
-  .ministry-choice{border-radius:18px;padding:17px 14px}
-  .ministry-choice legend{margin-bottom:14px;font-size:13px}
-  .ministry-choice__grid{grid-template-columns:1fr;gap:8px}
-  .ministry-choice__grid span{min-height:43px;padding-right:13px;padding-left:36px;font-size:11px}
-  .ministry-choice__grid span:before{left:15px}
-}
 
 /* Ajouts à la maquette : message d'erreur de connexion et bouton « afficher le mot de passe ». */
 .login-error{margin:0 0 18px;border:1px solid rgba(227,77,27,.35);border-radius:14px;background:rgba(227,77,27,.08);padding:12px 14px;color:#b83c13;font-size:14px;line-height:1.5}

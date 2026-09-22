@@ -111,13 +111,13 @@ export default function InscriptionPage() {
             <span>Ministry School</span>
           </Link>
           <div className="login-visual__copy">
-            <p>Commence ton parcours.</p>
+            <p>Ton parcours continue ici.</p>
             <h2>
-              Découvrir.
+              Se découvrir.
               <br />
-              Développer.
+              Grandir.
               <br />
-              Contribuer.
+              Servir.
             </h2>
           </div>
         </section>
@@ -249,6 +249,10 @@ export default function InscriptionPage() {
 
                 <p className="account-switch">
                   Tu as déjà un compte&nbsp;? <Link href="/login">Se connecter</Link>
+                </p>
+                <p className="login-help">
+                  Besoin d&apos;aide&nbsp;?{" "}
+                  <a href="mailto:ministryschool@mlkgrandparis.com">ministryschool@mlkgrandparis.com</a>
                 </p>
               </>
             )}
