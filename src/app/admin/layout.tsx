@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import { SpaceProvider } from "@/components/SpaceProvider";
 import AppHeader from "@/components/AppHeader";
+import AppFooter from "@/components/AppFooter";
 import { getViewer } from "@/lib/data/viewer";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -17,6 +18,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <div className="flex min-h-screen min-w-0 flex-1 flex-col bg-surface">
         <AppHeader />
         <main className="mx-auto w-full max-w-[1280px] flex-1 px-4 py-5 sm:px-7 sm:py-7">{children}</main>
+        <AppFooter />
       </div>
     </div>
     </SpaceProvider>
