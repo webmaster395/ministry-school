@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getViewer, isPlainStudent } from "@/lib/data/viewer";
 import { QUESTION_CATEGORIES, type QuestionCategory } from "@/lib/questions";
+import { sendMail } from "@/lib/mail";
 
 /** Enregistre la question de la personne connectée. Elle est ensuite traitée depuis l'administration. */
 export async function askQuestion(formData: FormData) {
@@ -23,13 +24,29 @@ export async function askQuestion(formData: FormData) {
   const category = text("category") as QuestionCategory;
   if (!(category in QUESTION_CATEGORIES)) throw new Error("Type de question inconnu");
 
+  const subject = text("subject").slice(0, 160);
+  const body = text("body").slice(0, 4000);
+
   const { error } = await supabase.from("questions").insert({
     user_id: user.id,
     category,
-    subject: text("subject").slice(0, 160),
-    body: text("body").slice(0, 4000),
+    subject,
+    body,
   });
   if (error) throw new Error("L'envoi de la question a échoué : " + error.message);
+
+  // La question est déjà enregistrée (source fiable, visible dans l'Admin) : un souci d'e-mail
+  // ne doit pas faire échouer l'envoi pour la personne qui pose la question.
+  try {
+    const category_ = QUESTION_CATEGORIES[category];
+    await sendMail({
+      to: category_.email,
+      subject: `Nouvelle question Ministry School — ${category_.label}`,
+      text: `${viewer.fullName} a posé une question (${category_.label}) :\n\n${subject}\n\n${body}\n\nÀ traiter depuis l'espace Admin › Questions.`,
+    });
+  } catch (e) {
+    console.error("Échec de l'e-mail de notification de question", e);
+  }
 
   revalidatePath("/etudiant/aide");
   revalidatePath("/admin");

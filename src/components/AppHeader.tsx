@@ -13,8 +13,8 @@ export default async function AppHeader() {
   const hasPicto = viewer?.role !== "admin" && !!viewer?.ministrySlug;
 
   return (
-    <header id="top" className="border-b border-border bg-background md:h-[88px]">
-      <div className="flex h-full flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4 py-4 sm:gap-x-4 sm:px-7 md:flex-nowrap md:py-0">
+    <header id="top" className="border-b border-border bg-background md:h-[64px]">
+      <div className="flex h-full flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4 py-3 sm:gap-x-4 sm:px-7 md:flex-nowrap md:py-0">
         <div className="flex min-w-0 items-center gap-2">
           {viewer && (
             <MobileNav fullName={viewer.fullName} avatarUrl={viewer.avatarUrl} ministrySlug={viewer.ministrySlug} />

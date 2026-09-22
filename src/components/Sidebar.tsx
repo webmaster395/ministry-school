@@ -54,15 +54,15 @@ export default function Sidebar({
   return (
     <aside
       className={`hidden shrink-0 flex-col border-r border-border bg-background transition-[width] duration-200 md:flex ${
-        collapsed ? "w-[72px]" : "w-[272px]"
+        collapsed ? "w-[58px]" : "w-[272px]"
       }`}
     >
       {/* En-tête : l'ovale de la charte sur fond encre */}
-      <div className="relative flex h-[88px] items-center justify-center bg-foreground">
+      <div className="relative flex h-[64px] items-center justify-center bg-foreground">
         {collapsed ? (
           <div className="flex items-center justify-center">
             {ministry ? (
-              <MinistryPicto slug={ministry.slug} size={32} />
+              <MinistryPicto slug={ministry.slug} size={24} />
             ) : (
               <span className="label text-[13px] text-on-accent">MS</span>
             )}
@@ -84,12 +84,12 @@ export default function Sidebar({
         </button>
       </div>
 
-      <nav className={`flex-1 space-y-6 pb-6 pt-2 ${collapsed ? "px-3" : "px-4"}`}>
+      <nav className={`flex-1 space-y-6 pb-6 pt-2 ${collapsed ? "px-2" : "px-4"}`}>
         <NavSections collapsed={collapsed} />
       </nav>
 
       {/* Bas du menu : le profil, avec la photo et le prénom */}
-      <div className={`border-t border-border-soft py-3 ${collapsed ? "px-2" : "px-3"}`}>
+      <div className={`border-t border-border-soft py-2 ${collapsed ? "px-2" : "px-3"}`}>
         <ProfileLink fullName={fullName} avatarUrl={avatarUrl} ministrySlug={ministrySlug} collapsed={collapsed} />
       </div>
     </aside>

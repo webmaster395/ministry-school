@@ -1,7 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import ProfileCard from "@/components/ProfileCard";
 import ProfileTabs from "@/components/ProfileTabs";
+import NotificationPrefs from "@/components/NotificationPrefs";
 import { getViewer } from "@/lib/data/viewer";
+import { parseNotificationPrefs } from "@/lib/notification-prefs";
 
 export default async function StudentProfilePage() {
   const supabase = await createClient();
@@ -12,6 +14,14 @@ export default async function StudentProfilePage() {
   const { data: profile } = await supabase
     .from("profiles")
     .select("full_name, ministries!profiles_ministry_id_fkey(name)")
+    .eq("id", user!.id)
+    .single();
+
+  // Requête séparée et tolérante : tant que la colonne notification_prefs n'existe pas encore
+  // en base (voir le SQL fourni au Webmaster), le reste du profil continue de s'afficher.
+  const { data: notifRow } = await supabase
+    .from("profiles")
+    .select("notification_prefs")
     .eq("id", user!.id)
     .single();
 
@@ -41,6 +51,7 @@ export default async function StudentProfilePage() {
         { label: "Ministère", value: ministryName },
       ]}
     />
+    <NotificationPrefs initial={parseNotificationPrefs(notifRow?.notification_prefs)} />
     </div>
   );
 }

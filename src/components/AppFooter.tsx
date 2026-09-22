@@ -3,7 +3,7 @@
 export default function AppFooter() {
   return (
     <footer className="w-full border-t border-border-soft bg-surface">
-      <div className="mx-auto flex w-full max-w-[1280px] flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-4 text-xs text-muted sm:px-7">
+      <div className="mx-auto flex w-full max-w-[1280px] flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-3 text-xs text-muted sm:px-7">
         <p>© {new Date().getFullYear()} Ministry School · MLK Formation</p>
         <nav className="flex flex-wrap items-center gap-x-4 gap-y-1" aria-label="Liens de pied de page">
           <a href="/mentions-legales" className="hover:text-foreground hover:underline">

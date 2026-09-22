@@ -30,11 +30,19 @@ function NavLink({
       title={collapsed ? label : undefined}
       className={`flex items-center rounded-[7px] text-[15px] transition ${
         nested ? "py-2 text-[14px]" : "py-2.5"
-      } ${collapsed ? "justify-center px-2" : nested ? "gap-[11px] pl-[42px] pr-3" : "gap-[11px] px-3"} ${
+      } ${collapsed ? "justify-center px-1.5" : nested ? "gap-[11px] pl-[42px] pr-3" : "gap-[11px] px-3"} ${
         active ? "bg-foreground/[0.08] font-medium text-foreground" : "text-[#4b524f] hover:bg-foreground/[0.04]"
       }`}
     >
-      {icon && <span className={active ? "text-foreground" : "text-[#8b918e]"}>{icon}</span>}
+      {icon && (
+        <span
+          className={`${active ? "text-foreground" : "text-[#8b918e]"} ${
+            collapsed ? "[&>svg]:h-[17px] [&>svg]:w-[17px]" : ""
+          }`}
+        >
+          {icon}
+        </span>
+      )}
       {!collapsed && label}
     </Link>
   );
@@ -130,16 +138,16 @@ export function ProfileLink({
     <Link
       href="/etudiant/profil"
       title={collapsed ? "Mon profil" : undefined}
-      className={`flex items-center gap-3 rounded-[7px] py-2 transition ${collapsed ? "justify-center px-1" : "px-2"} ${
+      className={`flex items-center gap-3 rounded-[7px] py-1.5 transition ${collapsed ? "justify-center px-1" : "px-2"} ${
         active ? "bg-foreground/[0.08]" : "hover:bg-foreground/[0.04]"
       }`}
     >
       <span className="relative shrink-0">
         {avatarUrl ? (
           // eslint-disable-next-line @next/next/no-img-element -- adresse temporaire signée, non optimisable
-          <img src={avatarUrl} alt="" className="h-9 w-9 rounded-full border border-border object-cover" />
+          <img src={avatarUrl} alt="" className="h-8 w-8 rounded-full border border-border object-cover" />
         ) : (
-          <span className="font-title flex h-9 w-9 items-center justify-center rounded-full bg-accent text-sm text-on-accent">
+          <span className="font-title flex h-8 w-8 items-center justify-center rounded-full bg-accent text-sm text-on-accent">
             {initial}
           </span>
         )}
