@@ -86,7 +86,13 @@ npm run lint     # vérification du code
 
 ## Adresses
 
-`/` est la **landing publique** : la page de présentation conçue par Rose Alice, reprise dans le projet avec la police et les couleurs de la charte. Elle est accessible sans compte, tout comme `/mentions-legales`. Ses boutons mènent à `/login` et `/inscription`, et « Prendre ma place » vers la billetterie BilletWeb (`NEXT_PUBLIC_BILLETWEB_URL` ; sans cette variable, le bouton reste désactivé).
+`/` est la **landing publique** : la page de présentation conçue par Rose Alice, reprise dans le projet avec la police et les couleurs de la charte. Elle est accessible sans compte, tout comme `/mentions-legales`. Ses boutons mènent à `/login`, et « Prendre ma place » vers la billetterie BilletWeb (`NEXT_PUBLIC_BILLETWEB_URL` ; sans cette variable, le bouton reste désactivé).
+
+**La création de compte n'est pas publique** : son lien n'est communiqué qu'après le paiement, dans l'e-mail de BilletWeb. `/inscription` ne s'ouvre qu'avec la clé `INSCRIPTION_CLE` (`/inscription?cle=<valeur>`) ; sans elle, ou sans clé configurée, la page renvoie vers la landing. C'est une barrière pratique, pas un verrou : l'inscription passe par Supabase, qui accepte toute création de compte. Pour une fermeture stricte, il faudrait désactiver les inscriptions dans Supabase et inviter les personnes une à une. Changer la clé invalide l'ancien lien.
+
+**Mot de passe oublié** : `/mot-de-passe-oublie` envoie un e-mail avec un lien vers `/auth/reinitialiser`, où l'on choisit le nouveau mot de passe. Comme pour la confirmation d'inscription, le jeton n'est consommé qu'à l'enregistrement, pas à la visite du lien. La réponse est la même qu'un compte existe ou non, pour ne pas révéler qui est inscrit.
+
+**Aperçu partagé** (WhatsApp, LinkedIn, Facebook, X) : l'image est `src/app/opengraph-image.png` (et `twitter-image.png`), 1200 × 630 px ; titre et description dans `src/app/layout.tsx`.
 
 `/app` oriente la personne connectée vers son espace (administration, enseignant, pilotage, propositions, sinon la vue étudiant) : c'est là qu'arrivent la connexion, l'inscription et la confirmation d'e-mail. `/connexion` reste un raccourci vers `/login`.
 
@@ -147,8 +153,8 @@ public/                               Logo, visuels des ministères, texture de 
 ## Configuration Supabase
 
 ### Authentification — **Authentication → URL Configuration**
-- *Site URL* : l'adresse de l'application (`http://localhost:3000` en local, l'adresse Vercel puis le nom de domaine en production)
-- *Redirect URLs* : ajouter `<adresse>/auth/callback`
+- *Site URL* : `https://www.ministryschool.fr`. C'est l'adresse que les e-mails utilisent pour leurs liens.
+- *Redirect URLs* : `https://www.ministryschool.fr/**` (et `http://localhost:3000/**` pour travailler en local)
 
 ### E-mails — **Authentication → Emails → SMTP Settings**
 
@@ -160,7 +166,14 @@ public/                               Logo, visuels des ministères, texture de 
 | Password | clé API Resend |
 | Sender email | adresse du domaine vérifié |
 
-Le modèle de confirmation est dans [`emails/confirmation-inscription.html`](emails/confirmation-inscription.html), à coller dans **Authentication → Emails → Confirm signup** (onglet *Source*).
+Deux modèles d'e-mail, à coller dans **Authentication → Emails** (onglet *Source*), en remplaçant tout le contenu :
+
+| Modèle Supabase | Fichier | Sujet conseillé |
+|---|---|---|
+| *Confirm signup* | [`emails/confirmation-inscription.html`](emails/confirmation-inscription.html) | Confirmez votre inscription à Ministry School |
+| *Reset password* | [`emails/reinitialisation-mot-de-passe.html`](emails/reinitialisation-mot-de-passe.html) | Réinitialisez votre mot de passe Ministry School |
+
+Leurs liens mènent à une page du site avec un bouton (`/auth/confirm`, `/auth/reinitialiser`) : les messageries et outils qui ouvrent les liens à l'avance ne peuvent pas les consommer à la place de la personne. Avec le modèle par défaut de Supabase, le lien est à usage unique dès la première visite, et il est souvent « brûlé » avant que la personne clique.
 
 Avant l'ouverture au public :
 - **Vérifier le nom de domaine** chez le fournisseur d'e-mails (SPF, DKIM, DMARC). Sans cela, les e-mails partent en spam ou n'arrivent pas.

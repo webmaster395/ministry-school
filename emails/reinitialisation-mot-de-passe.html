@@ -1,16 +1,16 @@
 <!-- ============================================================
-     Ministry School — E-mail de confirmation d'inscription
-     À coller dans Supabase : Authentication > Emails > Confirm signup
+     Ministry School — E-mail de réinitialisation du mot de passe
+     À coller dans Supabase : Authentication > Emails > Reset password
      Variables Supabase utilisées : {{ .SiteURL }} et {{ .TokenHash }}
-     Le lien ouvre une page de notre site avec un bouton : c'est le clic qui confirme, pas la simple
-     visite du lien (les messageries qui vérifient les liens à l'avance ne le « consomment » plus).
+     Le lien ouvre une page de notre site où l'on choisit son nouveau mot de passe : le jeton n'est
+     consommé qu'à l'enregistrement, pas à la simple visite du lien (les messageries qui vérifient les liens à l'avance ne le « consomment » plus).
 
      Le logo est chargé depuis le site (public/logo-compact.png), sur ministryschool.fr.
      ============================================================ -->
 
 <!-- Texte d'aperçu affiché dans la liste des e-mails, invisible dans le message -->
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;font-size:1px;line-height:1px;color:#f7f4ee;">
-  Confirmez votre adresse e-mail pour activer votre compte Ministry School.
+  Choisissez un nouveau mot de passe pour votre compte Ministry School.
 </div>
 
 <table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="background-color:#f7f4ee;padding:32px 12px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
@@ -35,7 +35,7 @@
         <tr>
           <td style="padding:32px 32px 8px 32px;">
             <h1 style="margin:0 0 16px 0;font-family:Georgia,'Times New Roman',serif;font-size:24px;line-height:1.25;font-weight:700;color:#27302f;">
-              Confirmez votre adresse e-mail
+              Réinitialiser votre mot de passe
             </h1>
 
             <p style="margin:0 0 16px 0;font-size:15px;line-height:1.6;color:#3d4644;">
@@ -43,13 +43,12 @@
             </p>
 
             <p style="margin:0 0 16px 0;font-size:15px;line-height:1.6;color:#3d4644;">
-              Vous venez de créer votre compte sur la plateforme <strong>Ministry School</strong>,
-              l'espace de formation qui vous permettra de suivre vos cours, consulter votre
-              calendrier et accéder aux supports partagés par vos enseignants.
+              Vous avez demandé à changer le mot de passe de votre compte
+              <strong>Ministry School</strong>.
             </p>
 
             <p style="margin:0 0 24px 0;font-size:15px;line-height:1.6;color:#3d4644;">
-              Pour activer votre compte, cliquez sur le bouton ci-dessous :
+              Pour en choisir un nouveau, cliquez sur le bouton ci-dessous :
             </p>
           </td>
         </tr>
@@ -60,9 +59,9 @@
             <table cellpadding="0" cellspacing="0" border="0" role="presentation">
               <tr>
                 <td align="center" bgcolor="#27302f" style="background-color:#27302f;border-radius:8px;">
-                  <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&amp;type=email"
+                  <a href="{{ .SiteURL }}/auth/reinitialiser?token_hash={{ .TokenHash }}&amp;type=recovery"
                      style="display:inline-block;padding:15px 34px;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#fbeeda;text-decoration:none;">
-                    Confirmer mon inscription
+                    Choisir un nouveau mot de passe
                   </a>
                 </td>
               </tr>
@@ -77,7 +76,7 @@
               Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :
             </p>
             <p style="margin:0;font-size:12px;line-height:1.5;word-break:break-all;">
-              <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&amp;type=email" style="color:#b83c13;text-decoration:underline;">{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&amp;type=email</a>
+              <a href="{{ .SiteURL }}/auth/reinitialiser?token_hash={{ .TokenHash }}&amp;type=recovery" style="color:#b83c13;text-decoration:underline;">{{ .SiteURL }}/auth/reinitialiser?token_hash={{ .TokenHash }}&amp;type=recovery</a>
             </p>
           </td>
         </tr>
@@ -92,8 +91,8 @@
                     Et ensuite ?
                   </p>
                   <p style="margin:0;font-size:13px;line-height:1.6;color:#4b524f;">
-                    Une fois votre adresse confirmée, vous pourrez vous connecter à votre espace
-                    et retrouver vos cours, votre calendrier et vos supports.
+                    Une fois le nouveau mot de passe enregistré, vous serez connecté directement
+                    à votre espace. L'ancien mot de passe ne fonctionnera plus.
                   </p>
                 </td>
               </tr>
@@ -105,8 +104,9 @@
         <tr>
           <td style="padding:20px 32px 32px 32px;border-top:1px solid #f0ebe1;">
             <p style="margin:0;font-size:12px;line-height:1.6;color:#8b918e;">
-              Vous n'êtes pas à l'origine de cette demande ? Ignorez simplement ce message,
-              aucun compte ne sera activé. Ce lien expire dans 24 heures.
+              Vous n'êtes pas à l'origine de cette demande ? Ignorez simplement ce message :
+              votre mot de passe actuel reste valable. Pour votre sécurité, ce lien ne sert
+              qu'une fois et expire rapidement.
             </p>
           </td>
         </tr>

@@ -129,9 +129,7 @@ function LoginForm() {
                   />
                   <span>Se souvenir de moi</span>
                 </label>
-                <a href="mailto:ministryschool@mlkgrandparis.com?subject=Mot%20de%20passe%20oubli%C3%A9">
-                  Mot de passe oublié&nbsp;?
-                </a>
+                <Link href="/mot-de-passe-oublie">Mot de passe oublié&nbsp;?</Link>
               </div>
 
               <button className="login-submit" type="submit" disabled={loading}>

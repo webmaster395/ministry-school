@@ -27,22 +27,29 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // La création de compte est fermée : elle ne sera communiquée qu'après le paiement.
-  // Le retirer ici la rouvre à tout le monde.
-  if (request.nextUrl.pathname === "/inscription") {
-    const url = request.nextUrl.clone();
-    url.pathname = "/";
-    return NextResponse.redirect(url);
+  // La création de compte n'est pas publique : son lien n'est communiqué qu'après le paiement.
+  // Seul le lien complet, avec la clé INSCRIPTION_CLE (?cle=…), ouvre la page ; sans clé
+  // configurée, elle reste fermée à tous.
+  const isSignup = request.nextUrl.pathname === "/inscription";
+  if (isSignup) {
+    const key = process.env.INSCRIPTION_CLE;
+    if (!key || request.nextUrl.searchParams.get("cle") !== key) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/";
+      url.search = "";
+      return NextResponse.redirect(url);
+    }
   }
 
-  const isAuthRoute = request.nextUrl.pathname === "/login";
+  const isAuthRoute = request.nextUrl.pathname === "/login" || isSignup;
   // Pages ouvertes à tous : la landing et ses annexes, même sans compte.
   const isPublicPage =
-    request.nextUrl.pathname === "/" || request.nextUrl.pathname === "/mentions-legales";
-  // Le lien de confirmation arrive sans session : il doit passer pour être échangé.
-  const isAuthCallback =
-    request.nextUrl.pathname.startsWith("/auth/callback") ||
-    request.nextUrl.pathname.startsWith("/auth/confirm");
+    request.nextUrl.pathname === "/" ||
+    request.nextUrl.pathname === "/mentions-legales" ||
+    request.nextUrl.pathname === "/mot-de-passe-oublie";
+  // Les liens reçus par e-mail (confirmation, réinitialisation) arrivent sans session :
+  // ils doivent passer pour être échangés.
+  const isAuthCallback = request.nextUrl.pathname.startsWith("/auth/");
 
   if (!user && !isAuthRoute && !isAuthCallback && !isPublicPage) {
     const url = request.nextUrl.clone();

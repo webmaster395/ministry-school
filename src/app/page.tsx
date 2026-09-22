@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Ministry School — Se découvrir. Grandir. Servir.",
   description:
     "Une année pour découvrir ton appel, développer tes dons et passer de l'intention à l'action. Un samedi par mois, d'octobre à juin.",
+  alternates: { canonical: "/" },
 };
 
 /**

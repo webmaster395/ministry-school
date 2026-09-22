@@ -6,6 +6,9 @@ import { createClient } from "@/lib/supabase/server";
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
+  // Page où aller ensuite ; seulement une adresse de ce site, jamais un autre domaine
+  const nextParam = searchParams.get("next") ?? "";
+  const next = nextParam.startsWith("/") && !nextParam.startsWith("//") ? nextParam : "/app";
   const errorDescription = searchParams.get("error_description");
 
   if (errorDescription) {
@@ -17,8 +20,8 @@ export async function GET(request: NextRequest) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
-      // La session est ouverte : la page d'accueil oriente selon le rôle.
-      return NextResponse.redirect(`${origin}/`);
+      // La session est ouverte : /app oriente selon le rôle (l'accueil « / » est la landing)
+      return NextResponse.redirect(`${origin}${next}`);
     }
   }
 
