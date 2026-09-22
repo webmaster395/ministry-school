@@ -49,7 +49,9 @@ export async function proxy(request: NextRequest) {
   const isPublicPage =
     request.nextUrl.pathname === "/" ||
     request.nextUrl.pathname === "/mentions-legales" ||
-    request.nextUrl.pathname === "/mot-de-passe-oublie";
+    request.nextUrl.pathname === "/mot-de-passe-oublie" ||
+    // Lien d'abonnement au calendrier : personnel et secret, vérifié par la route elle-même.
+    request.nextUrl.pathname.startsWith("/agenda/");
   // Les liens reçus par e-mail (confirmation, réinitialisation) arrivent sans session :
   // ils doivent passer pour être échangés.
   const isAuthCallback = request.nextUrl.pathname.startsWith("/auth/");

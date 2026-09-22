@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { getStudentProfile, getStudentSessions } from "@/lib/data/student";
 import { getMinistry, sessionColor } from "@/lib/ministry";
+import { createCalendarToken } from "@/lib/calendar-token";
 import MonthCalendar from "@/components/MonthCalendar";
 
 export default async function StudentCalendarPage({
@@ -20,8 +21,18 @@ export default async function StudentCalendarPage({
   ]);
   const ministryColor = getMinistry(ministrySlug)?.color ?? "var(--foreground)";
 
+  // Sans le secret CALENDAR_TOKEN_SECRET côté serveur, pas de lien d'abonnement automatique
+  // (seul le téléchargement ponctuel reste proposé).
+  let subscribeUrl: string | null = null;
+  try {
+    subscribeUrl = `/agenda/${createCalendarToken(user!.id)}`;
+  } catch {
+    subscribeUrl = null;
+  }
+
   return (
     <MonthCalendar
+      subscribeUrl={subscribeUrl}
       initialDate={jour && /^\d{4}-\d{2}-\d{2}$/.test(jour) ? jour : undefined}
       sessions={sessions.map((s) => ({
         id: s.id,
