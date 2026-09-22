@@ -100,11 +100,17 @@
   }
 }
 
-/* Entrée du contenu à chaque changement de page : discret, jamais dans le chemin de l'utilisateur */
+/* Mouvement repris de la landing : même courbe, mêmes gestes, en plus retenu
+   dans les espaces (on y travaille, on ne les découvre pas). */
+:root {
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Entrée du contenu à chaque changement de page : les blocs arrivent en cascade */
 @keyframes page-enter {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(14px);
   }
   to {
     opacity: 1;
@@ -112,14 +118,82 @@
   }
 }
 
-.page-enter {
-  animation: page-enter 220ms ease-out both;
+.page-enter > *,
+.page-enter > * > section,
+.page-enter > * > div > section {
+  animation: page-enter 600ms var(--ease-out-soft) both;
+}
+
+.page-enter > * > :nth-child(2),
+.page-enter > * > div > :nth-child(2) {
+  animation-delay: 70ms;
+}
+
+.page-enter > * > :nth-child(3),
+.page-enter > * > div > :nth-child(3) {
+  animation-delay: 140ms;
+}
+
+.page-enter > * > :nth-child(n + 4),
+.page-enter > * > div > :nth-child(n + 4) {
+  animation-delay: 210ms;
+}
+
+/* Apparition au défilement, comme les .reveal de la landing (voir ScrollReveal) */
+.reveal-on-scroll {
+  animation: none !important; /* l'entrée de page ne doit pas figer l'opacité */
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 850ms var(--ease-out-soft),
+    transform 850ms var(--ease-out-soft);
+}
+
+.reveal-on-scroll.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* Boutons principaux : se soulèvent au survol, comme .btn sur la landing */
+:is(a, button).bg-accent {
+  transition:
+    transform 350ms var(--ease-out-soft),
+    background-color 250ms,
+    color 250ms;
+}
+
+:is(a, button).bg-accent:hover {
+  transform: translateY(-2px);
+}
+
+/* Cartes cliquables : léger décollement au survol */
+a.rounded-lg.border {
+  transition:
+    transform 350ms var(--ease-out-soft),
+    box-shadow 350ms var(--ease-out-soft),
+    border-color 250ms;
+}
+
+a.rounded-lg.border:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -14px rgb(39 48 47 / 0.35);
 }
 
 /* Respecte le réglage système « réduire les animations » */
 @media (prefers-reduced-motion: reduce) {
+  .page-enter *,
   .page-enter {
     animation: none;
+  }
+
+  .reveal-on-scroll {
+    opacity: 1;
+    transform: none;
+  }
+
+  :is(a, button).bg-accent:hover,
+  a.rounded-lg.border:hover {
+    transform: none;
   }
 
   *,
