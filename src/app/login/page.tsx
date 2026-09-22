@@ -139,9 +139,6 @@ function LoginForm() {
               </button>
             </form>
 
-            <p className="account-switch">
-              Première fois ici&nbsp;? <Link href="/inscription">Créer mon compte</Link>
-            </p>
             <p className="login-help">
               Besoin d&apos;aide&nbsp;?{" "}
               <a href="mailto:ministryschool@mlkgrandparis.com">ministryschool@mlkgrandparis.com</a>

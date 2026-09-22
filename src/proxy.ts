@@ -27,8 +27,15 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const isAuthRoute =
-    request.nextUrl.pathname === "/login" || request.nextUrl.pathname === "/inscription";
+  // La création de compte est fermée : elle ne sera communiquée qu'après le paiement.
+  // Le retirer ici la rouvre à tout le monde.
+  if (request.nextUrl.pathname === "/inscription") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/";
+    return NextResponse.redirect(url);
+  }
+
+  const isAuthRoute = request.nextUrl.pathname === "/login";
   // Pages ouvertes à tous : la landing et ses annexes, même sans compte.
   const isPublicPage =
     request.nextUrl.pathname === "/" || request.nextUrl.pathname === "/mentions-legales";
