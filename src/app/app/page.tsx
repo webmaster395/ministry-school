@@ -12,7 +12,9 @@ export default async function AppEntryPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/login");
+  // Non connecté → landing publique (pas la page de login directement,
+  // plus naturel surtout à l'ouverture de la PWA pour la première fois)
+  if (!user) redirect("/");
 
   const viewer = await getViewer();
   const r = viewer?.roles;
