@@ -1024,9 +1024,10 @@ html body #price.pricing-section{background-color:#fff!important;background-imag
 }
 
 @media(max-width:560px){
-  .signup-shell{grid-template-rows:140px auto}
-  .signup-visual .login-visual__copy{display:none}
-  .signup-panel{padding:20px 16px 28px}
+  .signup-shell{grid-template-rows:200px auto}
+  .signup-visual{padding:18px 20px 20px;background-position:left center}
+  .signup-visual .login-visual__copy p{margin-bottom:6px;font-size:10px}
+  .signup-visual .login-visual__copy h2{font-size:34px;line-height:.92}  .signup-panel{padding:20px 16px 28px}
   .signup-form-wrap h1{font-size:32px}
   .signup-fields{grid-template-columns:1fr;gap:10px}
   .ministry-choice__grid{grid-template-columns:1fr 1fr;gap:6px}

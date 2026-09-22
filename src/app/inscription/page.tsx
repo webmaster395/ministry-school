@@ -103,7 +103,7 @@ export default function InscriptionPage() {
   }
 
   return (
-    <div className="landing login-page">
+    <div className="landing login-page signup-page">
       <main className="login-shell signup-shell">
         <section className="login-visual signup-visual" aria-label="Ministry School">
           <Link className="login-brand" href="/" aria-label="Retour à Ministry School">
