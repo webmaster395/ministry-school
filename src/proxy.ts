@@ -28,20 +28,23 @@ export async function proxy(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   // La création de compte n'est pas publique : son lien n'est communiqué qu'après le paiement.
-  // Seul le lien complet, avec la clé INSCRIPTION_CLE (?cle=…), ouvre la page ; sans clé
-  // configurée, elle reste fermée à tous.
+  // « /inscription » lui-même reste fermé à tous ; seule l'adresse secrète INSCRIPTION_CHEMIN
+  // (ex. /bienvenue-2026) y mène. Sans variable configurée, personne ne peut créer de compte.
+  const signupPath = process.env.INSCRIPTION_CHEMIN;
+  const isSecretSignupLink = !!signupPath && request.nextUrl.pathname === `/${signupPath}`;
+  if (isSecretSignupLink) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/inscription";
+    return NextResponse.rewrite(url);
+  }
   const isSignup = request.nextUrl.pathname === "/inscription";
   if (isSignup) {
-    const key = process.env.INSCRIPTION_CLE;
-    if (!key || request.nextUrl.searchParams.get("cle") !== key) {
-      const url = request.nextUrl.clone();
-      url.pathname = "/";
-      url.search = "";
-      return NextResponse.redirect(url);
-    }
+    const url = request.nextUrl.clone();
+    url.pathname = "/";
+    return NextResponse.redirect(url);
   }
 
-  const isAuthRoute = request.nextUrl.pathname === "/login" || isSignup;
+  const isAuthRoute = request.nextUrl.pathname === "/login" || isSecretSignupLink;
   // Pages ouvertes à tous : la landing et ses annexes, même sans compte.
   const isPublicPage =
     request.nextUrl.pathname === "/" ||
