@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Geist, Jost } from "next/font/google";
 import "./globals.css";
+import InstallBanner from "@/components/InstallBanner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -56,9 +57,31 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" className={`${geistSans.variable} ${jost.variable} ${bricolage.variable} h-full antialiased`}>
-      <head>{adobeFontsUrl && <link rel="stylesheet" href={adobeFontsUrl} />}</head>
+      <head>
+        {adobeFontsUrl && <link rel="stylesheet" href={adobeFontsUrl} />}
+        {/* PWA */}
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#27302f" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Ministry School" />
+        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js');
+                });
+              }
+            `,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
         {children}
+        <InstallBanner />
       </body>
     </html>
   );

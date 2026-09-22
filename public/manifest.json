@@ -1,0 +1,36 @@
+{
+  "name": "Ministry School",
+  "short_name": "Ministry School",
+  "description": "Une année pour découvrir ton appel, développer tes dons et passer de l'intention à l'action.",
+  "lang": "fr-FR",
+  "start_url": "/app",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fffdf9",
+  "theme_color": "#27302f",
+  "orientation": "portrait-primary",
+  "categories": ["education", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/opengraph-image.jpg",
+      "sizes": "1200x630",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "Ministry School — Page d'accueil"
+    }
+  ]
+}
