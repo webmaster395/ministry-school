@@ -44,6 +44,7 @@ export default function InstallBanner() {
       return;
 
     const p = detectPlatform();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- détecté après le montage pour éviter un écart serveur/navigateur
     setPlatform(p);
 
     if (p === "ios") {
@@ -133,7 +134,7 @@ export default function InstallBanner() {
                   Installer Ministry School
                 </p>
                 <p style={{ margin: 0, fontSize: "0.8rem", opacity: 0.65, marginTop: 2 }}>
-                  Accès rapide depuis votre écran d'accueil
+                  Accès rapide depuis votre écran d&apos;accueil
                 </p>
               </div>
             </div>
