@@ -65,13 +65,6 @@ export const MINISTRY_RESOURCES: MinistryResource[] = [
     href: "/etudiant/formation?onglet=decouvrir",
   },
   {
-    title: "Découvrir son fonctionnement avec le DISC",
-    description:
-      "Un outil complémentaire pour mieux comprendre son comportement, sa communication et sa manière d'interagir avec les autres.",
-    action: "Commencer",
-    icon: "user",
-  },
-  {
     title: "Découvrir sa sensibilité avec l'APEST",
     description: "Un questionnaire pour mieux identifier sa sensibilité ministérielle.",
     action: "Commencer",

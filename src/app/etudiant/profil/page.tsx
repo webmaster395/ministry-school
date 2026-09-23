@@ -32,7 +32,7 @@ export default async function StudentProfilePage() {
   // Les fonctions de la personne, pour ne pas afficher « Étudiant » à un administrateur
   const functions = [
     r?.admin && "Administrateur",
-    r?.teacher && "Enseignant",
+    r?.teacher && "Formateur",
     r && r.steeringMinistryIds.length > 0 && "Pilotage",
     r?.serviceLead && "Responsable de service",
     r?.projectLead && "Chef de projet",

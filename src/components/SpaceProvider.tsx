@@ -56,7 +56,7 @@ export function SpaceProvider({
 
   // Le détail d'un cours à préparer n'est dans aucun menu : il appartient à l'espace de gestion
   // qui y a mené (enseignant, pilotage ou administration).
-  const inPreparation = !current && pathname.startsWith("/etudiant/preparation/");
+  const inPreparation = !current && pathname.startsWith("/gestion/enseignement/preparation/");
   const fallback = inPreparation
     ? (spaces.find((s) => s.key === stored) ?? spaces.find((s) => ["teacher", "steering", "admin"].includes(s.key)) ?? null)
     : null;

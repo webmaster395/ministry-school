@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Check, ChevronLeft, ChevronRight, Copy, MapPin, RefreshCw, UserRound } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, RefreshCw, UserRound } from "lucide-react";
+import CalendarSyncDialog from "@/components/CalendarSyncDialog";
 
 export type MonthSession = {
   id: string;
@@ -45,7 +46,7 @@ export default function MonthCalendar({
   initialDate?: string;
   subscribeUrl?: string | null;
 }) {
-  const [copied, setCopied] = useState(false);
+  const [syncOpen, setSyncOpen] = useState(false);
   const firstDate = sessions.find((s) => s.date >= new Date().toISOString().slice(0, 10))?.date;
   const start =
     initialDate ?? firstDate ?? sessions[0]?.date ?? new Date().toISOString().slice(0, 10);
@@ -55,28 +56,11 @@ export default function MonthCalendar({
   const [selected, setSelected] = useState<string>(start);
   const [today, setToday] = useState<string | null>(null);
 
-  // La date du jour et l'adresse du site ne sont connues qu'après le montage
-  // (évite un écart serveur/client)
-  const [origin, setOrigin] = useState("");
+  // La date du jour n'est connue qu'après le montage (évite un écart serveur/client)
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- lu après le montage pour éviter un écart serveur/navigateur
     setToday(new Date().toISOString().slice(0, 10));
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- idem
-    setOrigin(window.location.origin);
   }, []);
-
-  const httpsUrl = subscribeUrl ? `${origin}${subscribeUrl}` : "";
-  const webcalUrl = httpsUrl.replace(/^https?:\/\//, "webcal://");
-
-  async function copySubscribeLink() {
-    try {
-      await navigator.clipboard.writeText(httpsUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Copie manuelle si le presse-papier est refusé
-    }
-  }
 
   const byDate = new Map<string, MonthSession[]>();
   for (const s of sessions) byDate.set(s.date, [...(byDate.get(s.date) ?? []), s]);
@@ -108,21 +92,15 @@ export default function MonthCalendar({
   return (
     <div>
       <div className="mb-5 flex flex-wrap justify-end gap-3">
-        {subscribeUrl && (
-          <a
-            href={webcalUrl}
-            className="inline-flex items-center gap-2 rounded-full border border-foreground bg-background px-5 py-2.5 text-sm font-medium text-foreground transition hover:bg-surface"
-          >
-            <RefreshCw size={16} strokeWidth={1.8} />
-            S&apos;abonner à mon calendrier
-          </a>
-        )}
-        <a
-          href="/etudiant/calendrier/ics"
-          className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-2.5 text-sm font-medium text-foreground transition hover:border-foreground"
+        <button
+          type="button"
+          onClick={() => setSyncOpen(true)}
+          className="inline-flex items-center gap-2 rounded-full border border-foreground bg-background px-5 py-2.5 text-sm font-medium text-foreground transition hover:bg-surface"
         >
-          Télécharger le fichier
-        </a>
+          <RefreshCw size={16} strokeWidth={1.8} />
+          <span className="hidden sm:inline">Synchroniser avec mon calendrier</span>
+          <span className="sm:hidden">Synchroniser</span>
+        </button>
         <button
           type="button"
           onClick={goToday}
@@ -131,72 +109,7 @@ export default function MonthCalendar({
           Aujourd&apos;hui
         </button>
       </div>
-      <details className="mb-5 ml-auto max-w-[520px] rounded-lg border border-border bg-background px-4 py-3 text-sm text-muted">
-        <summary className="cursor-pointer font-medium text-foreground">
-          Comment ajouter les séances à mon agenda ?
-        </summary>
-        {subscribeUrl ? (
-          <>
-            <ol className="mt-2 list-decimal space-y-1.5 pl-5 leading-relaxed">
-              <li>
-                <strong className="text-foreground">iPhone :</strong> touchez « S&apos;abonner à mon
-                calendrier », puis « S&apos;abonner » dans la fenêtre qui s&apos;ouvre.
-              </li>
-              <li>
-                <strong className="text-foreground">Android (Google Agenda) :</strong> copiez le lien
-                ci-dessous, puis dans Google Agenda sur ordinateur : Paramètres → Ajouter un agenda → À
-                partir de l&apos;URL, et collez-le.
-              </li>
-              <li>
-                <strong className="text-foreground">Ordinateur (Calendrier, Outlook) :</strong> copiez
-                le lien, puis utilisez « Ajouter un agenda par URL » dans votre application.
-              </li>
-            </ol>
-            <p className="mt-2">
-              Une fois abonné, les nouvelles séances apparaissent automatiquement, sans rien refaire.
-            </p>
-            <div className="mt-2.5 flex items-center gap-2">
-              <input
-                readOnly
-                value={httpsUrl}
-                onFocus={(e) => e.currentTarget.select()}
-                className="min-w-0 flex-1 truncate rounded-md border border-border bg-surface px-2.5 py-1.5 text-xs text-muted"
-              />
-              <button
-                type="button"
-                onClick={copySubscribeLink}
-                className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-border px-2.5 py-1.5 text-xs font-medium text-foreground transition hover:border-foreground"
-              >
-                {copied ? <Check size={14} /> : <Copy size={14} />}
-                {copied ? "Copié" : "Copier"}
-              </button>
-            </div>
-            <p className="mt-2 text-xs">
-              Ce lien est personnel : ne le partagez pas. Vous pouvez aussi{" "}
-              <a href="/etudiant/calendrier/ics" className="underline">
-                télécharger un fichier ponctuel
-              </a>
-              , à refaire si le planning change.
-            </p>
-          </>
-        ) : (
-          <ol className="mt-2 list-decimal space-y-1.5 pl-5 leading-relaxed">
-            <li>
-              <strong className="text-foreground">iPhone :</strong> touchez « Télécharger le fichier »,
-              puis « Tout ajouter » dans la fenêtre qui s&apos;ouvre.
-            </li>
-            <li>
-              <strong className="text-foreground">Android :</strong> touchez le bouton, ouvrez le
-              fichier téléchargé « ministry-school.ics » et choisissez Agenda Google.
-            </li>
-            <li>
-              <strong className="text-foreground">Ordinateur :</strong> cliquez sur le bouton, puis
-              double-cliquez sur le fichier téléchargé : votre agenda (Calendrier, Outlook)
-              l&apos;importe. Pour Google Agenda : Paramètres › Importer et exporter › Importer.
-            </li>
-          </ol>
-        )}
-      </details>
+      <CalendarSyncDialog open={syncOpen} onClose={() => setSyncOpen(false)} subscribeUrl={subscribeUrl ?? null} />
 
       <div className="grid items-start gap-[22px] lg:grid-cols-[1fr_400px]">
         <section className="rounded-lg border border-border bg-background p-4 sm:p-6">

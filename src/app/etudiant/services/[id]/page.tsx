@@ -12,10 +12,8 @@ import {
   statusOf,
   STATUS_LABEL,
 } from "@/lib/data/opportunities";
-import ReportUpload from "@/components/ReportUpload";
-import { signedAvatarUrls } from "@/lib/avatars";
 import { formatSessionDate } from "@/lib/format";
-import { setRegistrationOpen, toggleRegistration } from "../actions";
+import { toggleRegistration } from "../actions";
 
 export default async function OpportunityPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -24,11 +22,10 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
     data: { user },
   } = await supabase.auth.getUser();
 
-  const [all, counts, mine, { data: me }] = await Promise.all([
+  const [all, counts, mine] = await Promise.all([
     getOpportunities(supabase),
     getOpportunityCounts(supabase),
     getMyRegistrationIds(supabase, user!.id),
-    supabase.from("profiles").select("role").eq("id", user!.id).single(),
   ]);
   const o = all.find((x) => x.id === id);
   if (!o) notFound();
@@ -40,31 +37,13 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
   const color = KIND_COLOR[o.kind];
   const places = placesLabel(o, taken);
   const organizer = o.organizer_label ?? o.services?.name;
-  const canManage = o.created_by === user!.id || me?.role === "admin";
 
-  const [{ data: dateRows }, { data: reportRows }] = await Promise.all([
-    supabase
-      .from("opportunity_dates")
-      .select("session_date, start_time, end_time, room")
-      .eq("opportunity_id", o.id)
-      .order("session_date"),
-    canManage
-      ? supabase.from("opportunity_reports").select("session_date, file_name").eq("opportunity_id", o.id)
-      : Promise.resolve({ data: [] as { session_date: string; file_name: string }[] }),
-  ]);
+  const { data: dateRows } = await supabase
+    .from("opportunity_dates")
+    .select("session_date, start_time, end_time, room")
+    .eq("opportunity_id", o.id)
+    .order("session_date");
   const dates = (dateRows ?? []) as { session_date: string; start_time: string; end_time: string; room: string | null }[];
-  const reportOf = new Map((reportRows ?? []).map((r) => [r.session_date as string, r.file_name as string]));
-
-  const participants = canManage
-    ? (((await supabase.rpc("opportunity_participants", { p_opp: o.id })).data ?? []) as {
-        full_name: string;
-        avatar_path: string | null;
-      }[])
-    : [];
-  const participantPhotos = await signedAvatarUrls(
-    supabase,
-    participants.map((p) => p.avatar_path)
-  );
 
   const canJoin = registered || status === "disponible";
 
@@ -119,7 +98,6 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
               <h3 className="font-title text-[20px] text-foreground">Dates</h3>
               <ul className="mt-2 divide-y divide-border-soft">
                 {dates.map((d) => {
-                  const passed = d.session_date <= today;
                   return (
                     <li key={d.session_date} className="flex flex-wrap items-center justify-between gap-3 py-3 text-[15px]">
                       <span className="text-foreground">
@@ -130,18 +108,6 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
                           {d.room ? ` · ${d.room}` : ""}
                         </span>
                       </span>
-                      {canManage && passed && (
-                        <span className="text-right">
-                          <span className="label mr-3 rounded-full bg-surface px-2.5 py-1 text-[10px] tracking-[0.1em] text-muted">
-                            {reportOf.has(d.session_date) ? `Compte rendu : ${reportOf.get(d.session_date)}` : "Compte rendu attendu"}
-                          </span>
-                          <ReportUpload
-                            opportunityId={o.id}
-                            sessionDate={d.session_date}
-                            hasReport={reportOf.has(d.session_date)}
-                          />
-                        </span>
-                      )}
                     </li>
                   );
                 })}
@@ -185,44 +151,6 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
               </>
             )}
           </section>
-
-          {canManage && (
-            <section className="rounded-lg border border-border bg-background p-6">
-              <h3 className="font-title text-[22px] text-foreground">Participants</h3>
-              <p className="mt-1 text-sm text-muted">
-                {participants.length} inscrit{participants.length > 1 ? "s" : ""}
-              </p>
-              {participants.length > 0 && (
-                <ul className="mt-3 divide-y divide-border-soft text-[15px] text-foreground">
-                  {participants.map((p, i) => (
-                    <li key={i} className="flex items-center gap-3 py-2">
-                      {p.avatar_path && participantPhotos.get(p.avatar_path) ? (
-                        // eslint-disable-next-line @next/next/no-img-element -- adresse temporaire signée
-                        <img src={participantPhotos.get(p.avatar_path)} alt="" className="h-8 w-8 rounded-full object-cover" />
-                      ) : (
-                        <span className="font-title flex h-8 w-8 items-center justify-center rounded-full bg-surface text-xs text-foreground">
-                          {p.full_name.charAt(0).toUpperCase()}
-                        </span>
-                      )}
-                      {p.full_name}
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {status !== "termine" && (
-                <form action={setRegistrationOpen} className="mt-4">
-                  <input type="hidden" name="opportunity_id" value={o.id} />
-                  <input type="hidden" name="open" value={o.registration_open ? "0" : "1"} />
-                  <button
-                    type="submit"
-                    className="text-sm font-medium text-foreground underline underline-offset-2"
-                  >
-                    {o.registration_open ? "Fermer les inscriptions" : "Ouvrir les inscriptions"}
-                  </button>
-                </form>
-              )}
-            </section>
-          )}
         </aside>
       </div>
     </div>

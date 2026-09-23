@@ -96,7 +96,7 @@ export default async function OverviewTab({
             <h3 className="font-title text-[24px] text-foreground">Programme de la prochaine journée</h3>
             {nextDate && <p className="text-sm text-muted">{formatSessionDate(nextDate)}</p>}
           </div>
-          <Link href="/admin?onglet=programme" className="text-sm font-medium text-foreground underline underline-offset-2">
+          <Link href="/gestion/admin?onglet=programme" className="text-sm font-medium text-foreground underline underline-offset-2">
             Voir tout le programme
           </Link>
         </div>

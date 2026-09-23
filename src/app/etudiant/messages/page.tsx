@@ -22,7 +22,7 @@ export default async function StudentMessagesPage() {
       <ProfileTabs />
       <div className="flex flex-wrap items-start justify-between gap-4">
         <p className="max-w-[560px] text-[15px] text-muted">
-          Les messages de vos enseignants et de l&apos;équipe pédagogique.
+          Les messages de vos formateurs et de l&apos;équipe pédagogique.
         </p>
         {newCount > 0 && (
           <form action={markNotificationsSeen}>

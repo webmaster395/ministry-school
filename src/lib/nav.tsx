@@ -67,7 +67,7 @@ export const studentSections: NavSection[] = [
     items: [
       { label: "Mes cours", href: "/etudiant/cours", icon: icons.book },
       { label: "Travail à faire", href: "/etudiant/travail", icon: icons.task },
-      { label: "Ministères", href: "/etudiant/formation", icon: icons.ministries },
+      { label: "Mon ministère", href: "/etudiant/formation", icon: icons.ministries },
       { label: "Services et projets", href: "/etudiant/services", icon: icons.services },
     ],
   },
@@ -97,6 +97,9 @@ export type SpaceKey = "admin" | "teacher" | "steering" | "services" | "project"
 export type Space = {
   key: SpaceKey;
   label: string;
+  /** Titre et sous-titre de l'en-tête quand la personne est dans cet espace */
+  title: string;
+  subtitle: string;
   sections: NavSection[];
 };
 
@@ -111,12 +114,13 @@ export function navSpaces(roles: ViewerRoles): Space[] {
     spaces.push({
       key: "admin",
       label: "Administration",
+      title: "Administration",
+      subtitle: "Administrez les espaces et les accès de la plateforme.",
       sections: [
         {
           title: "Administration",
           items: [
-            { label: "Vue d'ensemble", href: "/admin", icon: icons.adminHome },
-            { label: "Séances", href: "/admin/seances", icon: icons.adminSessions },
+            { label: "Vue d'ensemble", href: "/gestion/admin", icon: icons.adminHome },
           ],
         },
       ],
@@ -126,13 +130,15 @@ export function navSpaces(roles: ViewerRoles): Space[] {
   if (roles.admin || roles.teacher) {
     spaces.push({
       key: "teacher",
-      label: "Enseignant",
+      label: "Formateur",
+      title: "Mes cours",
+      subtitle: "Préparez les cours que vous enseignez.",
       sections: [
         {
           title: "Enseignement",
           items: [
-            { label: "Préparer mes cours", href: "/etudiant/enseignement", icon: icons.prep },
-            { label: "Messages aux étudiants", href: "/enseignant/messages", icon: icons.announce },
+            { label: "Préparer mes cours", href: "/gestion/enseignement", icon: icons.prep },
+            { label: "Messages aux étudiants", href: "/gestion/enseignement/messages", icon: icons.announce },
           ],
         },
       ],
@@ -143,10 +149,12 @@ export function navSpaces(roles: ViewerRoles): Space[] {
     spaces.push({
       key: "steering",
       label: "Pilotage ministériel",
+      title: "Pilotage du ministère",
+      subtitle: "Organisez et supervisez les formations de votre ministère.",
       sections: [
         {
           title: "Pilotage",
-          items: [{ label: "Pilotage", href: "/etudiant/pilotage", icon: icons.steer }],
+          items: [{ label: "Pilotage", href: "/gestion/pilotage", icon: icons.steer }],
         },
       ],
     });
@@ -158,16 +166,12 @@ export function navSpaces(roles: ViewerRoles): Space[] {
     spaces.push({
       key: "services",
       label: "Responsable de service",
+      title: "Responsable de service",
+      subtitle: "Créez et pilotez les formations de votre service.",
       sections: [
         {
           title: "Services",
-          items: [
-            {
-              label: "Proposer une formation",
-              href: "/etudiant/services/nouveau?type=formation",
-              icon: icons.propose,
-            },
-          ],
+          items: [{ label: "Mes formations", href: "/gestion/services", icon: icons.propose }],
         },
       ],
     });
@@ -177,16 +181,12 @@ export function navSpaces(roles: ViewerRoles): Space[] {
     spaces.push({
       key: "project",
       label: "Chef de projet",
+      title: "Chef de projet",
+      subtitle: "Créez et pilotez les projets dont vous êtes responsable.",
       sections: [
         {
           title: "Projets",
-          items: [
-            {
-              label: "Proposer un projet",
-              href: "/etudiant/services/nouveau?type=projet",
-              icon: icons.projectPropose,
-            },
-          ],
+          items: [{ label: "Mes projets", href: "/gestion/projets", icon: icons.projectPropose }],
         },
       ],
     });

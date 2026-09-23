@@ -15,7 +15,7 @@ export const DEFAULT_NOTIFICATION_PREFS: NotificationPrefs = {
 export const NOTIFICATION_LABELS: Record<keyof NotificationPrefs, { label: string; hint: string }> = {
   messages: {
     label: "Nouveaux messages",
-    hint: "Quand un enseignant ou l'équipe vous écrit.",
+    hint: "Quand un formateur ou l'équipe vous écrit.",
   },
   rappel_journee: {
     label: "Rappel de la prochaine journée",

@@ -1,4 +1,5 @@
 import { SupabaseClient } from "@supabase/supabase-js";
+import { DRAFTS_ENABLED } from "@/lib/drafts";
 
 export type StudentSession = {
   id: string;
@@ -59,6 +60,7 @@ async function getMinistrySessions(supabase: SupabaseClient, userId: string) {
     .select(SESSION_FIELDS)
     .eq("session_type", "ministere")
     .eq("ministry_id", profile.ministry_id);
+  if (DRAFTS_ENABLED) query = query.eq("is_draft", false);
 
   if (profile.preferred_day) {
     query = query.eq("day", profile.preferred_day);
@@ -70,10 +72,9 @@ async function getMinistrySessions(supabase: SupabaseClient, userId: string) {
 
 /** Le tronc commun concerne tous les étudiants, quel que soit leur ministère. */
 async function getCommonSessions(supabase: SupabaseClient) {
-  const { data } = await supabase
-    .from("sessions")
-    .select(SESSION_FIELDS)
-    .eq("session_type", "commun");
+  let common = supabase.from("sessions").select(SESSION_FIELDS).eq("session_type", "commun");
+  if (DRAFTS_ENABLED) common = common.eq("is_draft", false);
+  const { data } = await common;
 
   const sessions: StudentSession[] = ((data ?? []) as unknown as StudentSession[]).map((s) => {
     // Intervenant sans compte : son nom est porté par la séance elle-même

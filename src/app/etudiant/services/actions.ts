@@ -32,6 +32,10 @@ export async function toggleRegistration(formData: FormData) {
 
   revalidatePath("/etudiant/services");
   revalidatePath(`/etudiant/services/${id}`);
+  revalidatePath("/gestion/services");
+  revalidatePath("/gestion/projets");
+  revalidatePath(`/gestion/services/${id}`);
+  revalidatePath(`/gestion/projets/${id}`);
 }
 
 /** Propose une formation (responsable de service) ou un projet (chef de projet). */
@@ -69,7 +73,9 @@ export async function createOpportunity(formData: FormData) {
   }
 
   revalidatePath("/etudiant/services");
-  redirect(`/etudiant/services/${data.id}`);
+  const slug = kind === "projet" ? "projets" : "services";
+  revalidatePath(`/gestion/${slug}`);
+  redirect(`/gestion/${slug}/${data.id}`);
 }
 
 /** Ouvre ou ferme les inscriptions (auteur ou administrateur). */
@@ -82,6 +88,10 @@ export async function setRegistrationOpen(formData: FormData) {
 
   revalidatePath("/etudiant/services");
   revalidatePath(`/etudiant/services/${id}`);
+  revalidatePath("/gestion/services");
+  revalidatePath("/gestion/projets");
+  revalidatePath(`/gestion/services/${id}`);
+  revalidatePath(`/gestion/projets/${id}`);
 }
 
 /** Enregistre le compte rendu dont le fichier vient d'être déposé dans le stockage (dépôt fait depuis le navigateur). */
@@ -105,6 +115,7 @@ export async function recordReport(formData: FormData) {
   });
   if (error) throw new Error("L'enregistrement du compte rendu a échoué : " + error.message);
 
-  revalidatePath(`/etudiant/services/${opportunityId}`);
-  revalidatePath("/admin");
+  revalidatePath(`/gestion/services/${opportunityId}`);
+  revalidatePath(`/gestion/projets/${opportunityId}`);
+  revalidatePath("/gestion/admin");
 }

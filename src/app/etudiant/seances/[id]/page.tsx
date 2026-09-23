@@ -157,7 +157,7 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
               </>
             ) : (
               <p className="mt-2 text-sm text-muted">
-                Les supports apparaîtront ici quand l&apos;enseignant les aura publiés.
+                Les supports apparaîtront ici quand le formateur les aura publiés.
               </p>
             )}
           </section>

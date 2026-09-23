@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { CalendarDays, Check, ChevronRight, MapPin, Minus, Users } from "lucide-react";
-import { formatSessionDate, formatTimeRange } from "@/lib/format";
+import MinistryPicto from "@/components/MinistryPicto";
+import AddCourseDialog from "@/components/gestion/AddCourseDialog";
+import { DRAFTS_ENABLED } from "@/lib/drafts";
+import { formatSessionDate, formatTimeRange, formatTimeRangeFr } from "@/lib/format";
 import { progressOf, type ChecklistItem, type PilotSession } from "@/lib/data/pilotage";
 import { sessionColor } from "@/lib/ministry";
 
@@ -13,6 +16,7 @@ export type PrepRow = {
 };
 
 export type PrepTab = "prochain" | "avenir" | "passes";
+export type UpcomingFilter = "tous" | "a-completer" | "prets" | "sans-formateur";
 
 const TABS: { key: PrepTab; label: string }[] = [
   { key: "prochain", label: "Prochain cours" },
@@ -33,7 +37,16 @@ export default function PrepBoard({
   rows,
   ministryColor,
   today,
+  labels,
+  upcomingFilter,
+  ministry,
 }: {
+  /** Présent dans l'espace Pilotage : le ministère supervisé (présentation propre au pilotage) */
+  ministry?: { slug: string; name: string; id?: string };
+  /** Libellés des onglets « à venir » et « passés », propres à chaque espace */
+  labels?: Partial<Record<PrepTab, string>>;
+  /** Si présent, l'onglet « à venir » devient un tableau filtrable de tous les cours (espace enseignant) */
+  upcomingFilter?: { current: UpcomingFilter; hrefFor: (f: UpcomingFilter) => string; options?: UpcomingFilter[] };
   tab: PrepTab;
   hrefFor: (t: PrepTab) => string;
   rows: PrepRow[];
@@ -56,21 +69,31 @@ export default function PrepBoard({
               tab === t.key ? "bg-accent font-medium text-on-accent" : "text-muted hover:text-foreground"
             }`}
           >
-            {t.label}
+            {labels?.[t.key] ?? t.label}
           </Link>
         ))}
       </nav>
 
       {tab === "prochain" &&
-        (next ? <Next row={next} today={today} ministryColor={ministryColor} /> : <Empty text="Aucun cours à venir." />)}
+        (next ? (
+          <Next row={next} today={today} ministryColor={ministryColor} pilot={!!ministry} />
+        ) : (
+          <Empty text="Aucun cours à venir." />
+        ))}
       {tab === "avenir" &&
-        (later.length ? <List rows={later} /> : <Empty text="Aucun autre cours à venir." />)}
+        (upcomingFilter ? (
+          <UpcomingTable rows={upcoming} filter={upcomingFilter} ministryColor={ministryColor} ministry={ministry} />
+        ) : later.length ? (
+          <List rows={later} />
+        ) : (
+          <Empty text="Aucun autre cours à venir." />
+        ))}
       {tab === "passes" && (past.length ? <List rows={past} /> : <Empty text="Aucun cours passé pour le moment." />)}
     </div>
   );
 }
 
-function Next({ row, today, ministryColor }: { row: PrepRow; today: string; ministryColor: string }) {
+function Next({ row, today, ministryColor, pilot }: { row: PrepRow; today: string; ministryColor: string; pilot: boolean }) {
   const { s, items, progress, students } = row;
   const color = sessionColor(s.track, "commun", ministryColor);
   const days = Math.round(
@@ -80,12 +103,18 @@ function Next({ row, today, ministryColor }: { row: PrepRow; today: string; mini
 
   return (
     <>
+      {pilot && (
+        <div>
+          <h3 className="font-title text-[24px] text-foreground">Prochain cours du ministère</h3>
+          <p className="text-sm text-muted">{formatSessionDate(s.session_date).toLowerCase()} {s.session_date.slice(0, 4)}</p>
+        </div>
+      )}
       <section
         className="grid gap-6 rounded-lg border border-border border-t-[3px] bg-background p-6 sm:p-7 lg:grid-cols-[1fr_360px] lg:divide-x lg:divide-border-soft"
         style={{ borderTopColor: color }}
       >
         <div>
-          {s.track && (
+          {s.track && !pilot && (
             <span
               className="label rounded-full px-3 py-1 text-[11px] tracking-[0.1em] text-foreground"
               style={{ background: `color-mix(in srgb, ${color} 30%, transparent)` }}
@@ -93,19 +122,21 @@ function Next({ row, today, ministryColor }: { row: PrepRow; today: string; mini
               {s.track}
             </span>
           )}
-          <h3 className="font-title mt-5 text-[26px] leading-tight text-foreground">{titleOf(s)}</h3>
+          <h3 className={`font-title text-[26px] leading-tight text-foreground ${pilot ? "" : "mt-5"}`}>{titleOf(s)}</h3>
           <p className="mt-4 flex items-center gap-2 text-[15px] text-muted">
             <CalendarDays size={17} strokeWidth={1.6} />
-            {formatSessionDate(s.session_date)} · {formatTimeRange(s.start_time, s.end_time)}
+            {pilot
+              ? `${formatSessionDate(s.session_date).toLowerCase()} ${s.session_date.slice(0, 4)} · ${formatTimeRangeFr(s.start_time, s.end_time)}`
+              : `${formatSessionDate(s.session_date)} · ${formatTimeRange(s.start_time, s.end_time)}`}
           </p>
           <p className="mt-1.5 flex items-center gap-2 text-[15px] text-muted">
             <MapPin size={17} strokeWidth={1.6} />
             {s.location}
             {s.room ? ` · ${s.room}` : ""}
-            {teacher ? ` · ${teacher}` : ""}
-            {days > 0 ? ` · Dans ${days} jour${days > 1 ? "s" : ""}` : days === 0 ? " · Aujourd'hui" : ""}
+            {teacher ? ` · ${teacher}` : pilot ? " · Formateur à affecter" : ""}
+            {!pilot && (days > 0 ? ` · Dans ${days} jour${days > 1 ? "s" : ""}` : days === 0 ? " · Aujourd'hui" : "")}
           </p>
-          {students !== null && (
+          {students !== null && !pilot && (
             <p className="mt-1.5 flex items-center gap-2 text-[15px] text-foreground">
               <Users size={17} strokeWidth={1.6} className="text-muted" />
               {students} étudiant{students > 1 ? "s" : ""} attendu{students > 1 ? "s" : ""}
@@ -121,7 +152,7 @@ function Next({ row, today, ministryColor }: { row: PrepRow; today: string; mini
           <Segments items={items} />
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <Link
-              href={`/etudiant/preparation/${s.id}`}
+              href={`/gestion/enseignement/preparation/${s.id}`}
               className="label rounded-full bg-accent px-6 py-3.5 text-xs tracking-[0.12em] text-on-accent hover:bg-[#1b2221]"
             >
               Continuer la préparation
@@ -140,7 +171,9 @@ function Next({ row, today, ministryColor }: { row: PrepRow; today: string; mini
       <div>
         <h3 className="font-title text-[24px] text-foreground">Préparer le cours</h3>
         <p className="text-sm text-muted">
-          Complétez chaque partie pour que les étudiants disposent de toutes les informations nécessaires.
+          {pilot
+            ? "Complétez les informations nécessaires avec le formateur, sur la même fiche de cours."
+            : "Complétez chaque partie pour que les étudiants disposent de toutes les informations nécessaires."}
         </p>
       </div>
 
@@ -148,7 +181,7 @@ function Next({ row, today, ministryColor }: { row: PrepRow; today: string; mini
         {items.map((it) => (
           <li key={it.key}>
             <Link
-              href={`/etudiant/preparation/${s.id}#${it.key}`}
+              href={`/gestion/enseignement/preparation/${s.id}#${it.key}`}
               className="flex items-center gap-4 px-5 py-4 transition hover:bg-surface"
             >
               <span
@@ -200,7 +233,7 @@ function List({ rows }: { rows: PrepRow[] }) {
       {rows.map(({ s, items, progress, students }) => (
         <li key={s.id}>
           <Link
-            href={`/etudiant/preparation/${s.id}`}
+            href={`/gestion/enseignement/preparation/${s.id}`}
             className="flex flex-wrap items-center gap-4 px-5 py-4 transition hover:bg-surface"
           >
             <span className="min-w-0 flex-1">
@@ -232,6 +265,135 @@ function List({ rows }: { rows: PrepRow[] }) {
         </li>
       ))}
     </ul>
+  );
+}
+
+const FILTERS: { key: UpcomingFilter; label: string }[] = [
+  { key: "tous", label: "Tous" },
+  { key: "a-completer", label: "À compléter" },
+  { key: "prets", label: "Prêts" },
+  { key: "sans-formateur", label: "Sans formateur" },
+];
+
+/** « Brouillon » : cours pas encore publié ; sinon « À compléter » puis « Prêt » quand tout l'est. */
+function stateOf(r: PrepRow) {
+  if (r.s.is_draft) return { label: "Brouillon", cls: "bg-surface text-muted" };
+  if (r.progress.ready) return { label: "Prêt", cls: "bg-m-apostolique/25 text-foreground" };
+  return { label: "À compléter", cls: ATTENTION };
+}
+
+function UpcomingTable({
+  rows,
+  filter,
+  ministryColor,
+  ministry,
+}: {
+  rows: PrepRow[];
+  filter: { current: UpcomingFilter; hrefFor: (f: UpcomingFilter) => string; options?: UpcomingFilter[] };
+  ministryColor: string;
+  ministry?: { slug: string; name: string; id?: string };
+}) {
+  const noTeacher = (r: PrepRow) => !r.s.teacher && !r.s.speaker_name;
+  const shown = rows.filter((r) =>
+    filter.current === "prets"
+      ? r.progress.ready
+      : filter.current === "a-completer"
+        ? !r.progress.ready
+        : filter.current === "sans-formateur"
+          ? noTeacher(r)
+          : true
+  );
+  const options = FILTERS.filter((f) => (filter.options ?? ["tous", "a-completer", "prets"]).includes(f.key));
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+      <nav className="inline-flex flex-wrap gap-1 rounded-lg border border-border bg-background p-1" aria-label="Filtrer les cours">
+        {options.map((f) => (
+          <Link
+            key={f.key}
+            href={filter.hrefFor(f.key)}
+            aria-current={filter.current === f.key ? "page" : undefined}
+            className={`rounded-md px-5 py-2.5 text-[15px] transition ${
+              filter.current === f.key ? "bg-accent font-medium text-on-accent" : "text-muted hover:text-foreground"
+            }`}
+          >
+            {f.label}
+          </Link>
+        ))}
+      </nav>
+      {ministry?.id && <AddCourseDialog ministryId={ministry.id} drafts={DRAFTS_ENABLED} />}
+      </div>
+
+      {shown.length ? (
+        <section className="rounded-2xl border border-border bg-background px-5 pb-1 pt-4 sm:px-6">
+          {!ministry && <p className="text-[13px] font-semibold text-muted">Prochain cours</p>}
+          <ul className="divide-y divide-border-soft">
+            {shown.map((r) => {
+              const { s } = r;
+              const state = stateOf(r);
+              const color = sessionColor(s.track, "commun", ministryColor);
+              return (
+                <li key={s.id}>
+                  <Link
+                    href={`/gestion/enseignement/preparation/${s.id}`}
+                    className="grid items-center gap-x-5 gap-y-2 py-4 transition hover:opacity-80 sm:grid-cols-[190px_auto_1fr_auto_auto]"
+                  >
+                    <span className="block">
+                      <span className="block text-[16px] font-semibold text-foreground">
+                        {formatSessionDate(s.session_date).toLowerCase()} {s.session_date.slice(0, 4)}
+                      </span>
+                      <span className="block text-[14px] text-muted">{formatTimeRangeFr(s.start_time, s.end_time)}</span>
+                    </span>
+                    <span>
+                      {ministry ? (
+                        <span
+                          className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[13px] font-medium text-foreground"
+                          style={{ background: `color-mix(in srgb, ${ministryColor} 28%, transparent)` }}
+                        >
+                          <MinistryPicto slug={ministry.slug} size={14} />
+                          {ministry.name}
+                        </span>
+                      ) : (
+                        s.track && (
+                          <span
+                            className="label inline-block rounded-full px-3 py-1.5 text-[12px] tracking-[0.06em] text-foreground"
+                            style={{ background: `color-mix(in srgb, ${color} 28%, transparent)` }}
+                          >
+                            {s.track}
+                          </span>
+                        )
+                      )}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-[17px] font-semibold text-foreground">{titleOf(s)}</span>
+                      <span className="block text-[14px] text-muted">
+                        {ministry ? `${s.teacher?.full_name ?? s.speaker_name ?? "Formateur à affecter"} · ` : ""}
+                        {s.location}
+                        {s.room ? ` · ${s.room}` : ""}
+                      </span>
+                    </span>
+                    <span className="flex flex-col items-end gap-1.5 sm:items-end">
+                      {ministry && (
+                        <span className="text-[13px] text-muted">
+                          {r.progress.completed} éléments sur {r.progress.total}
+                        </span>
+                      )}
+                      <span className={`label w-fit rounded-full px-3.5 py-1.5 text-[12px] tracking-[0.06em] ${state.cls}`}>
+                        {state.label}
+                      </span>
+                    </span>
+                    <ChevronRight size={18} className="hidden text-muted sm:block" />
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ) : (
+        <Empty text="Aucun cours dans cette liste." />
+      )}
+    </div>
   );
 }
 

@@ -1,11 +1,10 @@
 import Link from "next/link";
-import { CalendarDays, ChevronRight, CircleUser, Plus, Users } from "lucide-react";
+import { CalendarDays, ChevronRight, CircleUser, Users } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import {
   getMyRegistrationIds,
   getOpportunities,
   getOpportunityCounts,
-  getProposalRights,
   KIND_COLOR,
   KIND_LABEL,
   placesLabel,
@@ -45,11 +44,10 @@ export default async function ServicesPage({
     data: { user },
   } = await supabase.auth.getUser();
 
-  const [all, counts, mine, rights] = await Promise.all([
+  const [all, counts, mine] = await Promise.all([
     getOpportunities(supabase),
     getOpportunityCounts(supabase),
     getMyRegistrationIds(supabase, user!.id),
-    getProposalRights(supabase, user!.id),
   ]);
 
   const today = new Date().toISOString().slice(0, 10);
@@ -78,15 +76,6 @@ export default async function ServicesPage({
     <div className="space-y-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <p className="text-[15px] text-muted">Choisissez comment mettre vos compétences en pratique.</p>
-        {(rights.formation || rights.projet) && (
-          <Link
-            href="/etudiant/services/nouveau"
-            className="label inline-flex items-center gap-2 rounded-full bg-accent px-5 py-3 text-xs tracking-[0.12em] text-on-accent hover:bg-[#1b2221]"
-          >
-            <Plus size={15} strokeWidth={2} />
-            Proposer
-          </Link>
-        )}
       </div>
 
       <nav className="grid grid-cols-3 gap-1 rounded-lg border border-border bg-background p-1">

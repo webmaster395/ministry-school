@@ -146,7 +146,7 @@ export async function getProgramEntries(supabase: SupabaseClient, opps: OppRow[]
       sub: [s.track, s.teacher?.full_name ?? s.speaker_name, s.location, s.room].filter(Boolean).join(" · "),
       badge: ready ? "Prêt" : "À compléter",
       attention: !ready,
-      href: `/etudiant/preparation/${s.id}`,
+      href: `/gestion/enseignement/preparation/${s.id}`,
     };
   });
 

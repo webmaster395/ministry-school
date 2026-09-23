@@ -53,8 +53,8 @@ export default function Sidebar({
 
   return (
     <aside
-      className={`hidden shrink-0 flex-col border-r border-border bg-background transition-[width] duration-200 md:flex ${
-        collapsed ? "w-[58px]" : "w-[272px]"
+      className={`sticky top-0 hidden h-screen shrink-0 flex-col self-start border-r border-border bg-background transition-[width] duration-200 md:flex ${
+        collapsed ? "w-[58px]" : "w-[220px]"
       }`}
     >
       {/* En-tête : l'ovale de la charte sur fond encre */}
@@ -84,7 +84,7 @@ export default function Sidebar({
         </button>
       </div>
 
-      <nav className={`flex-1 space-y-6 pb-6 pt-2 ${collapsed ? "px-2" : "px-4"}`}>
+      <nav className={`min-h-0 flex-1 space-y-6 overflow-y-auto pb-6 pt-2 ${collapsed ? "px-2" : "px-4"}`}>
         <NavSections collapsed={collapsed} />
       </nav>
 

@@ -6,7 +6,7 @@ import { getMembers, memberStatus, type Member } from "@/lib/data/admin-hub";
 import { signedAvatarUrls } from "@/lib/avatars";
 import { getMinistry } from "@/lib/ministry";
 import MinistryPicto from "@/components/MinistryPicto";
-import { addDelegate, removeDelegate, removeMemberAvatar, setMemberActive, updateMember } from "@/app/admin/actions";
+import { addDelegate, removeDelegate, removeMemberAvatar, setMemberActive, updateMember } from "@/app/gestion/admin/actions";
 
 const field = "rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground";
 
@@ -15,7 +15,7 @@ const STATUS_LABEL = { actif: "Actif", a_confirmer: "À confirmer", desactive: "
 const rolesOf = (m: Member, services: Map<string, string>, ministries: Map<string, string>) =>
   [
     m.role === "admin" ? "Admin" : null,
-    m.is_teacher || m.role === "teacher" ? "Enseignant" : null,
+    m.is_teacher || m.role === "teacher" ? "Formateur" : null,
     m.is_project_lead ? "Chef de projet" : null,
     m.is_service_lead ? `Responsable de service${m.service_id ? ` · ${services.get(m.service_id) ?? ""}` : ""}` : null,
     m.ministry_lead_of ? `Pilotage · ${ministries.get(m.ministry_lead_of) ?? ""}` : null,
@@ -83,7 +83,7 @@ export default async function MembersTab({
         <select name="role" defaultValue={role} className={field}>
           <option value="tous">Tous les rôles</option>
           <option value="etudiant">Étudiant seulement</option>
-          <option value="enseignant">Enseignant</option>
+          <option value="enseignant">Formateur</option>
           <option value="chef">Chef de projet</option>
           <option value="responsable">Responsable de service</option>
           <option value="pilotage">Pilotage ministériel</option>
@@ -114,7 +114,7 @@ export default async function MembersTab({
           Filtrer
         </button>
         <a
-          href="/admin/utilisateurs/export"
+          href="/gestion/admin/utilisateurs/export"
           className="label rounded-md border border-foreground px-4 py-2.5 text-xs tracking-[0.12em] text-foreground hover:bg-foreground/[0.04]"
         >
           Télécharger (CSV)
@@ -190,7 +190,7 @@ export default async function MembersTab({
                           </label>
                           <label className="flex items-center gap-2">
                             <input type="checkbox" name="is_teacher" defaultChecked={m.is_teacher || m.role === "teacher"} />{" "}
-                            Enseignant
+                            Formateur
                           </label>
                           <label className="flex items-center gap-2">
                             <input type="checkbox" name="is_service_lead" defaultChecked={m.is_service_lead} /> Responsable

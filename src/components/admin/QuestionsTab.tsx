@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { QUESTION_CATEGORIES, type QuestionCategory } from "@/lib/questions";
-import { setQuestionHandled } from "@/app/admin/actions";
+import { setQuestionHandled } from "@/app/gestion/admin/actions";
 
 const fmt = (d: string) =>
   new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }).format(
@@ -31,7 +31,7 @@ export default async function QuestionsTab({ filter }: { filter: string }) {
         ].map((t) => (
           <Link
             key={t.key}
-            href={`/admin?onglet=questions&filtre=${t.key}`}
+            href={`/gestion/admin?onglet=questions&filtre=${t.key}`}
             className={`rounded-md px-4 py-2 text-sm transition ${
               active === t.key ? "bg-accent font-medium text-on-accent" : "text-muted hover:text-foreground"
             }`}

@@ -27,7 +27,6 @@ export async function updateSession(formData: FormData) {
       speaker_name: text("speaker_name") || null,
       summary: text("summary") || null,
       objectives: text("objectives") || null,
-      bible_refs: text("bible_refs") || null,
     })
     .eq("id", id)
     .select("id");
@@ -39,11 +38,11 @@ export async function updateSession(formData: FormData) {
     throw new Error("Vous n'avez pas le droit de modifier cette séance.");
   }
 
-  revalidatePath("/admin/seances");
+  revalidatePath("/gestion/admin/seances");
   revalidatePath("/enseignant/seances");
   revalidatePath("/enseignant");
-  revalidatePath("/etudiant/preparation", "layout");
-  revalidatePath("/etudiant/pilotage", "layout");
-  revalidatePath("/etudiant/enseignement", "layout");
+  revalidatePath("/gestion/enseignement/preparation", "layout");
+  revalidatePath("/gestion/pilotage", "layout");
+  revalidatePath("/gestion/enseignement", "layout");
   revalidatePath("/etudiant", "layout");
 }

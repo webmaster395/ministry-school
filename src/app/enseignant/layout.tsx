@@ -3,6 +3,7 @@ import Sidebar from "@/components/Sidebar";
 import { SpaceProvider } from "@/components/SpaceProvider";
 import AppHeader from "@/components/AppHeader";
 import AppFooter from "@/components/AppFooter";
+import SpaceTabs from "@/components/SpaceTabs";
 import { getViewer } from "@/lib/data/viewer";
 
 export default async function TeacherLayout({ children }: { children: React.ReactNode }) {
@@ -17,7 +18,10 @@ export default async function TeacherLayout({ children }: { children: React.Reac
       <Sidebar fullName={viewer!.fullName} avatarUrl={viewer!.avatarUrl} ministrySlug={viewer?.ministrySlug} />
       <div className="flex min-h-screen min-w-0 flex-1 flex-col bg-surface">
         <AppHeader />
-        <main className="mx-auto w-full max-w-[1280px] flex-1 px-4 py-5 sm:px-7 sm:py-7">{children}</main>
+        <main className="mx-auto w-full max-w-[1280px] flex-1 px-4 py-5 sm:px-7 sm:py-7">
+          <SpaceTabs />
+          {children}
+        </main>
         <AppFooter />
       </div>
     </div>

@@ -30,7 +30,7 @@ export default function ProjectsTab({
   const current: OppPhase = phase === "plus_tard" || phase === "termine" ? phase : "actuel";
   const list = opps.filter((o) => o.kind === kind && phaseOf(o, today) === current);
 
-  const href = (k: string, p: string) => `/admin?onglet=projets&type=${k}&phase=${p}`;
+  const href = (k: string, p: string) => `/gestion/admin?onglet=projets&type=${k}&phase=${p}`;
 
   return (
     <div className="space-y-5">

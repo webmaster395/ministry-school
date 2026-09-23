@@ -49,6 +49,6 @@ export async function askQuestion(formData: FormData) {
   }
 
   revalidatePath("/etudiant/aide");
-  revalidatePath("/admin");
+  revalidatePath("/gestion/admin");
   redirect("/etudiant/aide?envoye=1");
 }

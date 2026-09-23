@@ -55,9 +55,9 @@ export default function ProgramTab({ entries, view, today }: { entries: ProgramE
         : groups(upcoming.filter((e) => e.date === nextDate));
 
   const tabs = [
-    { key: "journee", label: "Prochaine journée", href: "/admin?onglet=programme" },
-    { key: "avenir", label: "Journées à venir", href: "/admin?onglet=programme&vue=avenir" },
-    { key: "passees", label: "Journées passées", href: "/admin?onglet=programme&vue=passees" },
+    { key: "journee", label: "Prochaine journée", href: "/gestion/admin?onglet=programme" },
+    { key: "avenir", label: "Journées à venir", href: "/gestion/admin?onglet=programme&vue=avenir" },
+    { key: "passees", label: "Journées passées", href: "/gestion/admin?onglet=programme&vue=passees" },
   ];
 
   return (
@@ -76,7 +76,7 @@ export default function ProgramTab({ entries, view, today }: { entries: ProgramE
             </Link>
           ))}
         </nav>
-        <Link href="/admin/seances" className="text-sm font-medium text-foreground underline underline-offset-2">
+        <Link href="/gestion/admin/seances" className="text-sm font-medium text-foreground underline underline-offset-2">
           Gérer les séances
         </Link>
       </div>

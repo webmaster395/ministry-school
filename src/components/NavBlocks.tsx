@@ -37,7 +37,7 @@ function NavLink({
       {icon && (
         <span
           className={`${active ? "text-foreground" : "text-[#8b918e]"} ${
-            collapsed ? "[&>svg]:h-[17px] [&>svg]:w-[17px]" : ""
+            collapsed ? "[&>svg]:h-[21px] [&>svg]:w-[21px]" : "[&>svg]:h-[17px] [&>svg]:w-[17px]"
           }`}
         >
           {icon}
@@ -92,22 +92,6 @@ export function NavSections({ collapsed = false }: { collapsed?: boolean }) {
             <li>
               <NavLink href={home} label="Mes fonctions" icon={functionsIcon} active={!!current} collapsed={collapsed} />
             </li>
-            {/* Dans un espace de gestion, ses pages se déplient sous « Mes fonctions » */}
-            {current &&
-              !collapsed &&
-              current.sections.flatMap((section) =>
-                section.items.map((item) => (
-                  <li key={item.label}>
-                    <NavLink
-                      href={item.href}
-                      label={item.label}
-                      active={sameRoute(pathname, item.href)}
-                      collapsed={false}
-                      nested
-                    />
-                  </li>
-                ))
-              )}
           </ul>
         </div>
       )}

@@ -20,15 +20,15 @@ export default async function AppEntryPage() {
   const r = viewer?.roles;
   redirect(
     r?.admin
-      ? "/admin"
+      ? "/gestion/admin"
       : r?.teacher
-        ? "/etudiant/enseignement"
+        ? "/gestion/enseignement"
         : r && r.steeringMinistryIds.length > 0
-          ? "/etudiant/pilotage"
+          ? "/gestion/pilotage"
           : r?.serviceLead
-            ? "/etudiant/services/nouveau?type=formation"
+            ? "/gestion/services"
             : r?.projectLead
-              ? "/etudiant/services/nouveau?type=projet"
+              ? "/gestion/projets"
               : "/etudiant"
   );
 }

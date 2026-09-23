@@ -52,7 +52,7 @@ export default async function ReportsTab({
         {FILTERS.map((f) => (
           <Link
             key={f.key}
-            href={`/admin?onglet=comptes-rendus&filtre=${f.key}`}
+            href={`/gestion/admin?onglet=comptes-rendus&filtre=${f.key}`}
             className={`rounded-md px-4 py-2 text-sm transition ${
               active === f.key ? "bg-accent font-medium text-on-accent" : "text-muted hover:text-foreground"
             }`}

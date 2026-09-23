@@ -26,7 +26,7 @@ Le menu suit la maquette de Rose Alice : le **menu étudiant** (Principal, Mon p
 | Rôle | Ce qu'il ajoute |
 |---|---|
 | **Étudiant** (tout le monde) | Accueil, Calendrier, Mes cours, Travail à faire, Ministères, Services et projets, Messages, Profil |
-| **Enseignant** | « Préparer mes cours » : présentation, objectifs, consignes et supports de ses séances ; « Messages aux étudiants » |
+| **Formateur** | « Préparer mes cours » : présentation, objectifs, consignes et supports de ses séances ; « Messages aux étudiants » |
 | **Responsable de service** | Propose des **formations de service** (avec un nombre de places) |
 | **Chef de projet** | Propose des **projets** |
 | **Pilotage ministériel** | Le pasteur d'un ministère, et son secrétaire (accès par adresse e-mail), préparent les cours du ministère : modalités, enseignant, présentation, objectifs, consignes, supports |

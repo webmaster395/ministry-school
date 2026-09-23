@@ -97,11 +97,6 @@ export default function SessionEditForm({
           <textarea name="objectives" rows={3} defaultValue={s.objectives ?? ""} className={field} />
         </div>
 
-        <div>
-          <label className="mb-1 block text-xs text-muted">Références bibliques (une par ligne)</label>
-          <textarea name="bible_refs" rows={3} defaultValue={s.bible_refs ?? ""} className={field} />
-        </div>
-
         <button
           type="submit"
           className="label rounded-md bg-accent px-4 py-2.5 text-xs tracking-[0.12em] text-on-accent transition hover:bg-[#1b2221] sm:col-span-2 sm:w-fit"

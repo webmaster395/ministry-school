@@ -24,7 +24,7 @@ export default async function TeacherProfilePage() {
       avatarUrl={(await getViewer())?.avatarUrl ?? null}
       fullName={profile?.full_name ?? ""}
       email={user?.email ?? ""}
-      roleLabel="Enseignant"
+      roleLabel="Formateur"
       fields={[
         { label: "Ministère", value: ministryName },
         { label: "Séances assignées", value: String(sessions.length) },
