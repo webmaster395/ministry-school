@@ -211,7 +211,7 @@ export async function rejectOpportunity(_prev: RejectState, formData: FormData):
       rejected_at: new Date().toISOString(),
       rejected_by: user.id,
     };
-    let res = await supabase.from("opportunities").update(payload).eq("id", id);
+    const res = await supabase.from("opportunities").update(payload).eq("id", id);
     if (res.error) {
       // Fallback sans colonnes optionnelles
       await supabase.from("opportunities").update({ registration_open: false }).eq("id", id);

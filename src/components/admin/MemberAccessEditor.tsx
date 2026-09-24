@@ -37,6 +37,7 @@ export default function MemberAccessEditor({
 
   useEffect(() => {
     if (state.success) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- affiche le message de succès pendant 4 secondes
       setShowSuccess(true);
       const timer = setTimeout(() => setShowSuccess(false), 4000);
       return () => clearTimeout(timer);

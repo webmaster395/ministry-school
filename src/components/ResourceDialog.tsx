@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Paperclip, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { addSupport } from "@/app/gestion/pilotage/actions";
@@ -79,7 +80,8 @@ export default function ResourceDialog({ sessionId, withTypes }: { sessionId: st
         Ajouter une ressource
       </button>
 
-      {open && (
+      {/* Sorti du bloc de la page : un bloc animé ou décalé fausserait la position de la fenêtre */}
+      {open && createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={(e) => e.target === e.currentTarget && close()}>
           <form
             onSubmit={submit}
@@ -153,7 +155,8 @@ export default function ResourceDialog({ sessionId, withTypes }: { sessionId: st
               {busy ? "Ajout en cours…" : "Ajouter la ressource"}
             </button>
           </form>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

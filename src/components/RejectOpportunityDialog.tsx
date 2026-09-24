@@ -25,6 +25,7 @@ export default function RejectOpportunityDialog({
 
   useEffect(() => {
     if (state.success) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- ferme la fenêtre après un refus enregistré
       setOpen(false);
     }
   }, [state.success]);

@@ -22,6 +22,7 @@ export default function BackButton({
   useEffect(() => {
     // Si l'utilisateur est arrivé depuis une page interne (history > 1)
     if (typeof window !== "undefined" && window.history.length > 1) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- l'historique n'est connu qu'après le montage
       setCanGoBack(true);
     }
   }, []);

@@ -22,7 +22,7 @@ export default async function AppHeader() {
           <HeaderTitle greeting={greeting} />
         </div>
 
-        <div className="flex shrink-0 flex-wrap items-center justify-end gap-x-3 gap-y-2 sm:gap-x-4">
+        <div className="flex max-w-full shrink-0 flex-wrap items-center justify-end gap-x-3 gap-y-2 sm:gap-x-4">
           <SpaceSwitcher />
           <HeaderBadge
             firstName={firstName}

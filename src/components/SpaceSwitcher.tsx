@@ -40,7 +40,7 @@ export default function SpaceSwitcher() {
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={`Espace : ${current.label}. Changer d'espace`}
-        className="inline-flex max-w-[220px] items-center gap-2 rounded-full border border-foreground/30 py-[7px] pl-3.5 pr-3 text-sm font-medium text-foreground transition hover:border-foreground"
+        className="inline-flex max-w-[150px] items-center sm:max-w-[220px] gap-2 rounded-full border border-foreground/30 py-[7px] pl-3.5 pr-3 text-sm font-medium text-foreground transition hover:border-foreground"
       >
         <span className="truncate">{current.label}</span>
         <ChevronDown size={16} strokeWidth={1.8} className={`shrink-0 transition ${open ? "rotate-180" : ""}`} />
@@ -50,7 +50,7 @@ export default function SpaceSwitcher() {
         <ul
           role="listbox"
           aria-label="Mes espaces"
-          className="absolute right-0 top-full z-40 mt-2 w-[248px] overflow-hidden rounded-lg border border-border bg-background py-1 shadow-[0_12px_32px_rgba(0,0,0,0.14)]"
+          className="absolute left-0 top-full z-40 mt-2 w-[248px] max-w-[calc(100vw-32px)] sm:left-auto sm:right-0 overflow-hidden rounded-lg border border-border bg-background py-1 shadow-[0_12px_32px_rgba(0,0,0,0.14)]"
         >
           <li className="label px-4 pb-1 pt-2 text-[10px] tracking-[0.16em] text-muted" aria-hidden="true">
             Mes espaces
