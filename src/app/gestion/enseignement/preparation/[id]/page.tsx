@@ -48,7 +48,8 @@ export default async function PreparationPage({ params }: { params: Promise<{ id
       .order("created_at"),
   ]);
 
-  const isPilot = !!s.ministry_id && viewer.roles.steeringMinistryIds.includes(s.ministry_id);
+  // L'administrateur a la vue du pilotage sur tous les ministères, sans être limité au sien
+  const isPilot = !!s.ministry_id && (viewer.roles.admin || viewer.roles.steeringMinistryIds.includes(s.ministry_id));
   const kind = isPilot ? "pilotage" : "enseignant";
   const afterCount = (assignments ?? []).filter((a) => isAfterClass(a.due_at, s.session_date)).length;
   const items = checklistOf(s, (assignments?.length ?? 0) - afterCount, materials?.length ?? 0, kind, afterCount);
