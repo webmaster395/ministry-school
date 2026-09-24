@@ -6,6 +6,7 @@ export type Member = {
   full_name: string;
   email: string;
   role: string;
+  gender?: string | null;
   is_teacher: boolean;
   is_service_lead: boolean;
   is_project_lead: boolean;
@@ -24,15 +25,29 @@ export const memberStatus = (m: Member): MemberStatus =>
   m.deactivated ? "desactive" : m.email_confirmed ? "actif" : "a_confirmer";
 
 export async function getMembers(supabase: SupabaseClient) {
-  const [{ data: profiles }, { data: emails }] = await Promise.all([
+  let profiles: unknown[] = [];
+  const [{ data, error }, { data: emails }] = await Promise.all([
     supabase
       .from("profiles")
       .select(
-        "id, full_name, role, is_teacher, is_service_lead, is_project_lead, service_id, ministry_lead_of, ministry_id, email_confirmed, deactivated, created_at, avatar_path"
+        "id, full_name, role, gender, is_teacher, is_service_lead, is_project_lead, service_id, ministry_lead_of, ministry_id, email_confirmed, deactivated, created_at, avatar_path"
       )
       .order("full_name"),
     supabase.rpc("admin_user_emails"),
   ]);
+
+  if (error) {
+    const { data: fallback } = await supabase
+      .from("profiles")
+      .select(
+        "id, full_name, role, is_teacher, is_service_lead, is_project_lead, service_id, ministry_lead_of, ministry_id, email_confirmed, deactivated, created_at, avatar_path"
+      )
+      .order("full_name");
+    profiles = fallback ?? [];
+  } else {
+    profiles = data ?? [];
+  }
+
   const emailOf = new Map(((emails ?? []) as { id: string; email: string }[]).map((e) => [e.id, e.email]));
   return ((profiles ?? []) as Omit<Member, "email">[]).map((p) => ({ ...p, email: emailOf.get(p.id) ?? "" }));
 }

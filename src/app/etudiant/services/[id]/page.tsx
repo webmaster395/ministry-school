@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
-import { CalendarDays, Check, ChevronLeft, Clock } from "lucide-react";
+import { notFound, redirect } from "next/navigation";
+import { CalendarDays, Check, Clock } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import { createClient } from "@/lib/supabase/server";
 import {
   getMyRegistrationIds,
@@ -64,12 +65,12 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
     supabase.from("profiles").select("role").eq("id", user!.id).single(),
   ]);
   const o = all.find((x) => x.id === id);
-  if (!o) notFound();
+  if (!o) redirect("/etudiant/services");
 
   const isAdmin = me?.role === "admin";
   const isOwner = o.created_by === user!.id;
   if (!o.registration_open && !isAdmin && !isOwner) {
-    notFound();
+    redirect("/etudiant/services");
   }
 
   const today = new Date().toISOString().slice(0, 10);
@@ -129,12 +130,10 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
           </p>
         </div>
       )}
-      <Link
-        href="/etudiant/services"
-        className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-foreground"
-      >
-        <ChevronLeft size={16} /> Retour aux services et projets
-      </Link>
+      <BackButton
+        fallbackHref="/etudiant/services"
+        fallbackLabel="Retour aux services et projets"
+      />
 
       <div className="grid items-start gap-8 lg:grid-cols-[1fr_340px]">
         <article className="min-w-0">

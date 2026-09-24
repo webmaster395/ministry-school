@@ -32,6 +32,7 @@ export default function InscriptionPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [ministrySlug, setMinistrySlug] = useState("");
+  const [gender, setGender] = useState<"homme" | "femme" | "">("");
   const [showPassword, setShowPassword] = useState(false);
 
   const [error, setError] = useState<string | null>(null);
@@ -41,6 +42,11 @@ export default function InscriptionPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+
+    if (!gender) {
+      setError("Merci d'indiquer si vous êtes un homme ou une femme.");
+      return;
+    }
 
     if (password.length < 8) {
       setError("Le mot de passe doit contenir au moins 8 caractères.");
@@ -63,6 +69,7 @@ export default function InscriptionPage() {
           // Le prénom d'abord : l'application salue la personne par son premier mot
           full_name: `${firstName.trim()} ${lastName.trim()}`.trim(),
           ministry_slug: ministrySlug,
+          gender,
         },
       },
     });
@@ -94,6 +101,13 @@ export default function InscriptionPage() {
     // Selon la configuration, la session peut être ouverte immédiatement
     // ou nécessiter une confirmation par e-mail.
     if (data.session) {
+      if (data.session.user?.id) {
+        try {
+          await supabase.from("profiles").update({ gender }).eq("id", data.session.user.id);
+        } catch {
+          // Si la colonne n'est pas encore créée en base, la navigation continue sans blocage
+        }
+      }
       router.push("/app");
       router.refresh();
       return;
@@ -179,6 +193,33 @@ export default function InscriptionPage() {
                         placeholder="Ton nom"
                       />
                     </label>
+
+                    <div className="signup-wide signup-gender-field">
+                      <span className="signup-field-label">Genre</span>
+                      <div className="signup-gender-toggle" role="radiogroup" aria-label="Genre">
+                        <label className={`signup-gender-option ${gender === "homme" ? "is-active" : ""}`}>
+                          <input
+                            type="radio"
+                            name="gender"
+                            value="homme"
+                            checked={gender === "homme"}
+                            onChange={() => setGender("homme")}
+                          />
+                          <span>Homme</span>
+                        </label>
+                        <label className={`signup-gender-option ${gender === "femme" ? "is-active" : ""}`}>
+                          <input
+                            type="radio"
+                            name="gender"
+                            value="femme"
+                            checked={gender === "femme"}
+                            onChange={() => setGender("femme")}
+                          />
+                          <span>Femme</span>
+                        </label>
+                      </div>
+                    </div>
+
                     <label className="signup-wide">
                       <span>Adresse e-mail</span>
                       <input

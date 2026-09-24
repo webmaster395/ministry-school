@@ -1,7 +1,8 @@
 import { TYPE_COLUMN } from "@/lib/material-types";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { CalendarDays, ChevronLeft, Clock, MapPin, UserCircle } from "lucide-react";
+import { CalendarDays, Clock, MapPin, UserCircle } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import { createClient } from "@/lib/supabase/server";
 import { getViewer } from "@/lib/data/viewer";
 import { checklistOf, isAfterClass, progressOf, type PilotSession } from "@/lib/data/pilotage";
@@ -53,6 +54,7 @@ export default async function PreparationPage({ params }: { params: Promise<{ id
   const items = checklistOf(s, (assignments?.length ?? 0) - afterCount, materials?.length ?? 0, kind, afterCount);
   const progress = progressOf(items);
   const back = isPilot ? "/gestion/pilotage" : "/gestion/enseignement";
+  const backLabel = isPilot ? "Retour à la préparation" : "Retour à l'Espace formateur";
   const panels = teacherPanels(s, assignments ?? [], materials ?? []);
   const color = sessionColor(s.track, "commun", "#1d2625");
   const teacher = s.teacher?.full_name ?? s.speaker_name;
@@ -60,9 +62,7 @@ export default async function PreparationPage({ params }: { params: Promise<{ id
 
   return (
     <div className="space-y-4">
-      <Link href={back} className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-foreground">
-        <ChevronLeft size={16} /> {isPilot ? "Retour à la préparation" : "Retour à l'Espace formateur"}
-      </Link>
+      <BackButton fallbackHref={back} fallbackLabel={backLabel} />
 
       <section className="rounded-2xl border bg-background p-6 sm:p-7" style={{ borderColor: color }}>
         <div className="flex flex-wrap items-start justify-between gap-3">

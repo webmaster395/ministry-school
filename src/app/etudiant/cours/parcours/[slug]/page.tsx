@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronLeft, ChevronRight, CircleUser, MapPin } from "lucide-react";
+import { ChevronRight, CircleUser, MapPin } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import { createClient } from "@/lib/supabase/server";
 import {
   getStudentAllSessions,
@@ -86,12 +87,7 @@ export default async function ParcoursPage({ params, searchParams }: Props) {
 
       {/* ── Lien retour ── */}
       <div>
-        <Link
-          href="/etudiant/cours"
-          className="inline-flex items-center gap-1.5 text-sm text-muted transition hover:text-foreground"
-        >
-          <ChevronLeft size={16} /> Retour à Mes cours
-        </Link>
+        <BackButton fallbackHref="/etudiant/cours" fallbackLabel="Retour à Mes cours" />
       </div>
 
       {/* ── Hero Card du parcours ── */}

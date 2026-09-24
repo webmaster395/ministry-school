@@ -19,11 +19,21 @@ export default async function StudentProfilePage() {
 
   // Requête séparée et tolérante : tant que la colonne notification_prefs n'existe pas encore
   // en base (voir le SQL fourni au Webmaster), le reste du profil continue de s'afficher.
-  const { data: notifRow } = await supabase
-    .from("profiles")
-    .select("notification_prefs")
-    .eq("id", user!.id)
-    .single();
+  const [{ data: notifRow }, { data: genderRow }] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("notification_prefs")
+      .eq("id", user!.id)
+      .single(),
+    supabase
+      .from("profiles")
+      .select("gender")
+      .eq("id", user!.id)
+      .single(),
+  ]);
+
+  const rawGender = (genderRow?.gender as string | undefined) ?? (user?.user_metadata?.gender as string | undefined);
+  const genderLabel = rawGender === "homme" ? "Homme" : rawGender === "femme" ? "Femme" : null;
 
   const ministryName = (profile?.ministries as unknown as { name: string } | null)?.name;
 
@@ -49,6 +59,7 @@ export default async function StudentProfilePage() {
       roleLabel={functions.length ? functions.join(" · ") : "Étudiant"}
       fields={[
         { label: "Ministère", value: ministryName },
+        ...(genderLabel ? [{ label: "Genre", value: genderLabel }] : []),
       ]}
     />
     <NotificationPrefs initial={parseNotificationPrefs(notifRow?.notification_prefs)} />

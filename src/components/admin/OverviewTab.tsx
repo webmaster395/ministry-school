@@ -56,8 +56,13 @@ export default async function OverviewTab({
 
   const toValidate = opps.filter((o) => !o.registration_open && phaseOf(o, today) !== "termine").length;
 
+  const genderSub =
+    breakdown.byGender.men > 0 || breakdown.byGender.women > 0
+      ? `${breakdown.byGender.men} homme${breakdown.byGender.men > 1 ? "s" : ""} · ${breakdown.byGender.women} femme${breakdown.byGender.women > 1 ? "s" : ""}`
+      : undefined;
+
   const cards: { value: number | string; label: string; attention?: boolean; sub?: string }[] = [
-    { value: students.length, label: "Membres inscrits" },
+    { value: students.length, label: "Membres inscrits", sub: genderSub },
     { value: newThisMonth, label: "Nouveaux comptes ce mois" },
     { value: pending, label: "En attente de confirmation", attention: pending > 0 },
     {
@@ -157,11 +162,24 @@ export default async function OverviewTab({
         subtitle="Nombre d'étudiants ayant choisi chaque ministère."
         data={breakdown.byMinistry.map((m) => ({ label: m.name, value: m.count, slug: m.slug }))}
       />
-      <BarChart
-        title="Répartition par jour"
-        subtitle="Jour de cours choisi par les étudiants."
-        data={breakdown.byDay.map((d) => ({ label: d.day, value: d.count }))}
-      />
+      <div className="grid gap-6 md:grid-cols-2">
+        <BarChart
+          title="Répartition par jour"
+          subtitle="Jour de cours choisi par les étudiants."
+          data={breakdown.byDay.map((d) => ({ label: d.day, value: d.count }))}
+        />
+        <BarChart
+          title="Répartition par genre"
+          subtitle="Nombre d'hommes et de femmes inscrits."
+          data={[
+            { label: "Hommes", value: breakdown.byGender.men },
+            { label: "Femmes", value: breakdown.byGender.women },
+            ...(breakdown.byGender.unassigned > 0
+              ? [{ label: "Non renseigné", value: breakdown.byGender.unassigned }]
+              : []),
+          ]}
+        />
+      </div>
     </div>
   );
 }

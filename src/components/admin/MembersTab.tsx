@@ -149,7 +149,17 @@ export default async function MembersTab({
                         </span>
                       )}
                       <div className="min-w-0">
-                        <p className="truncate text-[15px] font-semibold text-foreground">{m.full_name || "Sans nom"}</p>
+                        <div className="flex items-center gap-1.5">
+                          <p className="truncate text-[15px] font-semibold text-foreground">{m.full_name || "Sans nom"}</p>
+                          {m.gender && (
+                            <span
+                              className="shrink-0 rounded bg-surface px-1.5 py-0.5 text-[10px] font-medium text-muted"
+                              title={m.gender === "homme" ? "Homme" : "Femme"}
+                            >
+                              {m.gender === "homme" ? "H" : "F"}
+                            </span>
+                          )}
+                        </div>
                         <p className="truncate text-xs text-muted">{m.email}</p>
                       </div>
                     </div>

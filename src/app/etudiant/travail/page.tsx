@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Check } from "lucide-react";
+import { Check, ChevronRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import {
   getStudentAllSessions,
@@ -139,20 +139,31 @@ export default async function StudentWorkPage({
       {orderedGroups.length ? (
         orderedGroups.map(({ session: s, items }) => {
           const color = sessionColor(s.track, s.session_type, ministryColor);
+          const detailHref = `/etudiant/seances/${s.id}`;
           return (
             <section key={s.id} className="rounded-lg border border-border bg-background p-6">
-              <div className="flex flex-wrap items-center gap-3 border-b border-border-soft pb-4">
-                {s.track && (
-                  <span
-                    className="label rounded-full px-3 py-1 text-[11px] tracking-[0.1em] text-foreground"
-                    style={{ background: `color-mix(in srgb, ${color} 28%, transparent)` }}
-                  >
-                    {s.track}
-                  </span>
-                )}
-                <h3 className="font-title text-[20px] text-foreground">
-                  {s.courses?.title ?? s.description ?? "Séance"}
-                </h3>
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border-soft pb-4">
+                <Link
+                  href={detailHref}
+                  className="group flex flex-wrap items-center gap-3 transition hover:opacity-80"
+                >
+                  {s.track && (
+                    <span
+                      className="label rounded-full px-3 py-1 text-[11px] tracking-[0.1em] text-foreground"
+                      style={{ background: `color-mix(in srgb, ${color} 28%, transparent)` }}
+                    >
+                      {s.track}
+                    </span>
+                  )}
+                  <h3 className="font-title text-[20px] text-foreground group-hover:underline">
+                    {s.courses?.title ?? s.description ?? "Séance"}
+                  </h3>
+                  <ChevronRight
+                    size={18}
+                    className="text-muted transition-transform group-hover:translate-x-0.5 group-hover:text-foreground"
+                  />
+                </Link>
+
                 {tab !== "prochaine" && (
                   <span className="text-sm text-muted">{formatSessionDate(s.session_date)}</span>
                 )}

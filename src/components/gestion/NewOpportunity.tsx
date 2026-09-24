@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ChevronLeft, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import { createClient } from "@/lib/supabase/server";
 import { getProposalRights, getServices } from "@/lib/data/opportunities";
 import { createOpportunity } from "@/app/etudiant/services/actions";
@@ -64,12 +65,10 @@ export default async function NewOpportunity({
 
   return (
     <div className="space-y-5">
-      <Link
-        href={back}
-        className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-foreground"
-      >
-        <ChevronLeft size={16} /> {type === "projet" ? "Mes projets" : "Mes formations"}
-      </Link>
+      <BackButton
+        fallbackHref={back}
+        fallbackLabel={type === "projet" ? "Mes projets" : "Mes formations"}
+      />
 
       <section className="max-w-[760px] rounded-lg border border-border bg-background p-6 sm:p-7">
         <div className="flex flex-wrap items-start justify-between gap-4">
@@ -232,7 +231,7 @@ export default async function NewOpportunity({
 
           <div className="sm:col-span-2">
             <label className="mb-1 block text-xs text-muted">
-              Dates des samedis (Horaire fixe : 14 h–17 h)
+              Dates des samedis (Horaire fixe : 14 h 30–17 h)
             </label>
             <div className="grid grid-cols-2 gap-2 rounded-md border border-border bg-surface/40 p-3 sm:grid-cols-3">
               {dates.map((d) => (

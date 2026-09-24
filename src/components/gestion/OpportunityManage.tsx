@@ -1,9 +1,8 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import {
   CalendarDays,
   Check,
-  ChevronLeft,
   CircleUser,
   Clock,
   ExternalLink,
@@ -12,6 +11,8 @@ import {
   UserCheck,
   Users,
 } from "lucide-react";
+import BackButton from "@/components/BackButton";
+import RejectOpportunityDialog from "@/components/RejectOpportunityDialog";
 import { createClient } from "@/lib/supabase/server";
 import {
   getOpportunities,
@@ -38,7 +39,7 @@ const COPY: Record<OpportunityKind, { slug: string; back: string; leadRole: stri
 /**
  * La page « Gérer » d'une formation ou d'un projet pour le chef de projet ou responsable :
  * affiche l'intégralité des informations saisies (titre, présentation, chef de projet, référent du suivi,
- * dates, horaire fixe 14h-17h, lieu et salle, capacité, objectifs, prérequis), permet de modifier la fiche
+ * dates, horaire fixe 14h30-17h, lieu et salle, capacité, objectifs, prérequis), permet de modifier la fiche
  * à tout moment, et gère les comptes rendus et les inscrits.
  */
 export default async function OpportunityManage({ id, kind }: { id: string; kind: OpportunityKind }) {
@@ -55,7 +56,9 @@ export default async function OpportunityManage({ id, kind }: { id: string; kind
     getServices(supabase),
   ]);
   const o = all.find((x) => x.id === id && x.kind === kind);
-  if (!o || (o.created_by !== user!.id && me?.role !== "admin")) notFound();
+  if (!o || (o.created_by !== user!.id && me?.role !== "admin")) {
+    redirect(`/gestion/${copy.slug}`);
+  }
 
   const today = new Date().toISOString().slice(0, 10);
   const taken = counts.get(o.id) ?? 0;
@@ -100,12 +103,7 @@ export default async function OpportunityManage({ id, kind }: { id: string; kind
     <div className="space-y-6">
       {/* ── Barre de navigation haute ── */}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <Link
-          href={`/gestion/${copy.slug}`}
-          className="inline-flex items-center gap-1.5 text-sm text-muted transition hover:text-foreground"
-        >
-          <ChevronLeft size={16} /> {copy.back}
-        </Link>
+        <BackButton fallbackHref={`/gestion/${copy.slug}`} fallbackLabel={copy.back} />
         <Link
           href={`/etudiant/services/${o.id}`}
           target="_blank"
@@ -167,15 +165,24 @@ export default async function OpportunityManage({ id, kind }: { id: string; kind
                         </span>
                       </div>
                     </div>
-                    <form action={validateOpportunity}>
-                      <input type="hidden" name="opportunity_id" value={o.id} />
-                      <button
-                        type="submit"
-                        className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-on-accent transition hover:bg-[#1b2221]"
-                      >
-                        <Check size={16} /> Valider et publier
-                      </button>
-                    </form>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <RejectOpportunityDialog
+                        id={o.id}
+                        title={o.title}
+                        kind={o.kind}
+                        variant="danger"
+                        triggerLabel="Refuser la proposition"
+                      />
+                      <form action={validateOpportunity}>
+                        <input type="hidden" name="opportunity_id" value={o.id} />
+                        <button
+                          type="submit"
+                          className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-on-accent transition hover:bg-[#1b2221]"
+                        >
+                          <Check size={16} /> Valider et publier
+                        </button>
+                      </form>
+                    </div>
                   </div>
                 </div>
               ) : (

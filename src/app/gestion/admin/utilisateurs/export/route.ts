@@ -19,11 +19,12 @@ export async function GET() {
 
   const students = await getStudents(supabase);
 
-  const header = ["Nom", "Ministère", "Jour", "Inscription finalisée", "Date d'inscription"];
+  const header = ["Nom", "Genre", "Ministère", "Jour", "Inscription finalisée", "Date d'inscription"];
 
   const rows = students.map((s) =>
     [
       s.full_name ?? "",
+      s.gender === "homme" ? "Homme" : s.gender === "femme" ? "Femme" : "",
       s.ministries?.name ?? "",
       s.preferred_day ?? "",
       s.email_confirmed ? "Oui" : "Non",

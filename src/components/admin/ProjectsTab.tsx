@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Check, ChevronRight, Clock } from "lucide-react";
+import RejectOpportunityDialog from "@/components/RejectOpportunityDialog";
 import {
   datesLabel,
   phaseOf,
@@ -112,17 +113,20 @@ export default function ProjectsTab({
                   </span>
                 </Link>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                   {!o.registration_open ? (
-                    <form action={validateOpportunity}>
-                      <input type="hidden" name="opportunity_id" value={o.id} />
-                      <button
-                        type="submit"
-                        className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3.5 py-2 text-xs font-semibold text-on-accent transition hover:bg-[#1b2221]"
-                      >
-                        <Check size={14} /> Valider et publier
-                      </button>
-                    </form>
+                    <>
+                      <RejectOpportunityDialog id={o.id} title={o.title} kind={o.kind} />
+                      <form action={validateOpportunity}>
+                        <input type="hidden" name="opportunity_id" value={o.id} />
+                        <button
+                          type="submit"
+                          className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3.5 py-2 text-xs font-semibold text-on-accent transition hover:bg-[#1b2221]"
+                        >
+                          <Check size={14} /> Valider et publier
+                        </button>
+                      </form>
+                    </>
                   ) : (
                     <div className="text-right">
                       <span className="block text-[14px] font-semibold text-foreground">Publié</span>

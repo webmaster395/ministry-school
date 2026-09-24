@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import BackButton from "@/components/BackButton";
 import { createClient } from "@/lib/supabase/server";
 import {
   getStudentAssignments,
@@ -26,7 +27,7 @@ export default async function StudentCourseDetailPage({
   } = await supabase.auth.getUser();
 
   const course = await getStudentCourse(supabase, user!.id, courseId);
-  if (!course) notFound();
+  if (!course) redirect("/etudiant/cours");
 
   const sessionIds = course.sessions.map((s) => s.id);
   const [materials, assignments] = await Promise.all([
@@ -42,9 +43,7 @@ export default async function StudentCourseDetailPage({
   return (
     <>
       <div>
-        <Link href="/etudiant/cours" className="text-sm text-muted hover:text-foreground">
-          ← Mes cours
-        </Link>
+        <BackButton fallbackHref="/etudiant/cours" fallbackLabel="Mes cours" />
       </div>
 
       <section className="rounded-lg border border-border bg-background p-6">

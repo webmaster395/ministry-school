@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   CalendarDays,
-  ChevronLeft,
   CircleUser,
   Clock,
   FileText,
@@ -10,6 +9,7 @@ import {
   MapPin,
   Video,
 } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import { createClient } from "@/lib/supabase/server";
 import {
   getStudentAllSessions,
@@ -101,12 +101,7 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
     <div className="space-y-6">
       {/* ── Lien de retour ── */}
       <div>
-        <Link
-          href={backHref}
-          className="inline-flex items-center gap-1.5 text-sm text-muted transition hover:text-foreground"
-        >
-          <ChevronLeft size={16} /> {backLabel}
-        </Link>
+        <BackButton fallbackHref={backHref} fallbackLabel={backLabel} />
       </div>
 
       <div className="grid items-start gap-6 lg:grid-cols-[1fr_340px]">

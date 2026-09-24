@@ -3,17 +3,34 @@ import { SupabaseClient } from "@supabase/supabase-js";
 export type EnrollmentBreakdown = {
   byMinistry: { name: string; slug?: string; count: number }[];
   byDay: { day: string; count: number }[];
+  byGender: {
+    men: number;
+    women: number;
+    unassigned: number;
+  };
 };
 
 export async function getEnrollmentBreakdown(
   supabase: SupabaseClient
 ): Promise<EnrollmentBreakdown> {
-  const [{ data: ministries }, { data: students }] = await Promise.all([
-    supabase.from("ministries").select("id, name, slug").order("name"),
-    supabase.from("profiles").select("ministry_id, preferred_day").eq("role", "student"),
-  ]);
+  const { data: ministries } = await supabase.from("ministries").select("id, name, slug").order("name");
 
-  const rows = students ?? [];
+  // Requête tolérante sur profiles : si la colonne gender existe, on la récupère, sinon fallback
+  let rows: { ministry_id: string | null; preferred_day: string | null; gender?: string | null }[] = [];
+  const { data: studentsWithGender, error } = await supabase
+    .from("profiles")
+    .select("ministry_id, preferred_day, gender")
+    .eq("role", "student");
+
+  if (error) {
+    const { data: fallbackStudents } = await supabase
+      .from("profiles")
+      .select("ministry_id, preferred_day")
+      .eq("role", "student");
+    rows = (fallbackStudents as typeof rows) ?? [];
+  } else {
+    rows = (studentsWithGender as typeof rows) ?? [];
+  }
 
   const byMinistry: EnrollmentBreakdown["byMinistry"] = (ministries ?? []).map((m) => ({
     name: m.name as string,
@@ -31,7 +48,19 @@ export async function getEnrollmentBreakdown(
     { day: "Dimanche", count: rows.filter((s) => s.preferred_day === "dimanche").length },
   ];
 
-  return { byMinistry, byDay };
+  const men = rows.filter((s) => s.gender === "homme").length;
+  const women = rows.filter((s) => s.gender === "femme").length;
+  const unassignedGender = rows.filter((s) => s.gender !== "homme" && s.gender !== "femme").length;
+
+  return {
+    byMinistry,
+    byDay,
+    byGender: {
+      men,
+      women,
+      unassigned: unassignedGender,
+    },
+  };
 }
 
 export type AdminSession = {
@@ -69,6 +98,7 @@ export type AdminUser = {
   id: string;
   full_name: string;
   role: string;
+  gender: string | null;
   preferred_day: string | null;
   email_confirmed: boolean;
   created_at: string;
@@ -76,13 +106,25 @@ export type AdminUser = {
 };
 
 export async function getStudents(supabase: SupabaseClient) {
-  const { data } = await supabase
+  let list: unknown[] = [];
+  const { data, error } = await supabase
     .from("profiles")
-    .select("id, full_name, role, preferred_day, email_confirmed, created_at, ministries!profiles_ministry_id_fkey(name, slug)")
+    .select("id, full_name, role, gender, preferred_day, email_confirmed, created_at, ministries!profiles_ministry_id_fkey(name, slug)")
     .eq("role", "student")
     .order("created_at", { ascending: false });
 
-  return (data ?? []) as unknown as AdminUser[];
+  if (error) {
+    const { data: fallback } = await supabase
+      .from("profiles")
+      .select("id, full_name, role, preferred_day, email_confirmed, created_at, ministries!profiles_ministry_id_fkey(name, slug)")
+      .eq("role", "student")
+      .order("created_at", { ascending: false });
+    list = fallback ?? [];
+  } else {
+    list = data ?? [];
+  }
+
+  return list as unknown as AdminUser[];
 }
 
 export type Ministry = { id: string; slug: string; name: string };

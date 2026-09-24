@@ -110,7 +110,7 @@ export async function createOpportunity(formData: FormData) {
       rawDates.map((d) => ({
         opportunity_id: oppId,
         session_date: d,
-        start_time: "14:00",
+        start_time: "14:30",
         end_time: "17:00",
         room,
       }))
@@ -157,6 +157,87 @@ export async function validateOpportunity(formData: FormData) {
   revalidatePath(`/gestion/services/${id}`);
   revalidatePath(`/gestion/projets/${id}`);
   revalidatePath("/gestion/admin");
+}
+
+export type RejectState = { error?: string; success?: boolean };
+
+/** Rejette ou demande des modifications sur une proposition (action réservée aux administrateurs). */
+export async function rejectOpportunity(_prev: RejectState, formData: FormData): Promise<RejectState> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "Non authentifié" };
+
+  const { data: me } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+  if (me?.role !== "admin") return { error: "Seul un administrateur peut refuser une proposition." };
+
+  const id = formData.get("opportunity_id") as string;
+  const reason = (formData.get("reason") as string)?.trim();
+  const deletePermanently = formData.get("delete_permanently") === "1";
+
+  if (!id) return { error: "Proposition introuvable" };
+
+  // Récupérer les informations de la proposition avant toute modification/suppression
+  const { data: opp } = await supabase
+    .from("opportunities")
+    .select("title, kind, created_by")
+    .eq("id", id)
+    .maybeSingle();
+
+  const oppKind = opp?.kind ?? "formation";
+  const slug = oppKind === "projet" ? "projets" : "services";
+
+  if (deletePermanently) {
+    // Suppression complète des dates, inscriptions, comptes rendus et de la proposition
+    await supabase.from("opportunity_registrations").delete().eq("opportunity_id", id);
+    await supabase.from("opportunity_dates").delete().eq("opportunity_id", id);
+    await supabase.from("opportunity_reports").delete().eq("opportunity_id", id);
+    const { error } = await supabase.from("opportunities").delete().eq("id", id);
+    if (error) return { error: "Échec de la suppression : " + error.message };
+
+    revalidatePath("/etudiant/services");
+    revalidatePath("/gestion/services");
+    revalidatePath("/gestion/projets");
+    revalidatePath("/gestion/admin");
+
+    redirect(`/gestion/${slug}`);
+  } else {
+    // Si des colonnes de rejet existent, on les renseigne ; sinon on laisse registration_open à false
+    const payload: Record<string, unknown> = {
+      registration_open: false,
+      is_validated: false,
+      rejection_reason: reason || null,
+      rejected_at: new Date().toISOString(),
+      rejected_by: user.id,
+    };
+    let res = await supabase.from("opportunities").update(payload).eq("id", id);
+    if (res.error) {
+      // Fallback sans colonnes optionnelles
+      await supabase.from("opportunities").update({ registration_open: false }).eq("id", id);
+    }
+
+    if (opp && reason) {
+      const typeLabel = opp.kind === "projet" ? "projet" : "formation";
+      await supabase.from("announcements").insert({
+        author_id: user.id,
+        title: `Validation en attente : retours sur votre ${typeLabel} « ${opp.title} »`,
+        body: `Bonjour,\n\nVotre proposition de ${typeLabel} « ${opp.title} » a été examinée par l'administration mais nécessite des ajustements avant publication :\n\n« ${reason} »\n\nVous pouvez modifier votre fiche directement depuis votre espace pour la soumettre à nouveau.\n\nL'équipe administrative`,
+      });
+      revalidatePath("/etudiant/messages");
+      revalidatePath("/etudiant");
+    }
+
+    revalidatePath("/etudiant/services");
+    revalidatePath(`/etudiant/services/${id}`);
+    revalidatePath("/gestion/services");
+    revalidatePath("/gestion/projets");
+    revalidatePath(`/gestion/services/${id}`);
+    revalidatePath(`/gestion/projets/${id}`);
+    revalidatePath("/gestion/admin");
+
+    return { success: true };
+  }
 }
 
 /** Ouvre ou ferme les inscriptions. Un non-admin ne peut ouvrir que si l'opportunité a été validée. */
