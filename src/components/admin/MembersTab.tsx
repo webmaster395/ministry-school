@@ -6,20 +6,27 @@ import { getMembers, memberStatus, type Member } from "@/lib/data/admin-hub";
 import { signedAvatarUrls } from "@/lib/avatars";
 import { getMinistry } from "@/lib/ministry";
 import MinistryPicto from "@/components/MinistryPicto";
-import { addDelegate, removeDelegate, removeMemberAvatar, setMemberActive, updateMember } from "@/app/gestion/admin/actions";
+import MemberAccessEditor from "@/components/admin/MemberAccessEditor";
+import { addDelegate, removeDelegate } from "@/app/gestion/admin/actions";
 
 const field = "rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground";
 
 const STATUS_LABEL = { actif: "Actif", a_confirmer: "À confirmer", desactive: "Désactivé" };
 
-const rolesOf = (m: Member, services: Map<string, string>, ministries: Map<string, string>) =>
-  [
-    m.role === "admin" ? "Admin" : null,
+const rolesOf = (m: Member, services: Map<string, string>, ministries: Map<string, string>) => {
+  if (m.role === "admin") {
+    const extra: string[] = [];
+    if (m.service_id && services.get(m.service_id)) extra.push(`Service · ${services.get(m.service_id)}`);
+    if (m.ministry_lead_of && ministries.get(m.ministry_lead_of)) extra.push(`Pilotage · ${ministries.get(m.ministry_lead_of)}`);
+    return extra.length > 0 ? ["Admin", ...extra] : ["Admin (accès complet)"];
+  }
+  return [
     m.is_teacher || m.role === "teacher" ? "Formateur" : null,
     m.is_project_lead ? "Chef de projet" : null,
     m.is_service_lead ? `Responsable de service${m.service_id ? ` · ${services.get(m.service_id) ?? ""}` : ""}` : null,
     m.ministry_lead_of ? `Pilotage · ${ministries.get(m.ministry_lead_of) ?? ""}` : null,
   ].filter(Boolean) as string[];
+};
 
 const fmt = (d: string) => new Intl.DateTimeFormat("fr-FR", { dateStyle: "short" }).format(new Date(d));
 
@@ -121,7 +128,7 @@ export default async function MembersTab({
         </a>
       </form>
 
-      <section className="overflow-hidden rounded-lg border border-border bg-background">
+      <section suppressHydrationWarning className="overflow-hidden rounded-lg border border-border bg-background">
         <div className="label hidden grid-cols-[1.4fr_1fr_1.6fr_110px_90px] gap-4 border-b border-border px-5 py-3 text-[11px] tracking-[0.14em] text-muted md:grid">
           <span>Membre</span>
           <span>Sensibilité</span>
@@ -187,85 +194,7 @@ export default async function MembersTab({
                     <span className="text-sm tabular-nums text-muted">{fmt(m.created_at)}</span>
                   </div>
 
-                  <details className="mt-2">
-                    <summary className="cursor-pointer list-none text-xs font-medium text-link hover:underline">
-                      Modifier les rôles et l&apos;accès
-                    </summary>
-                    <div className="mt-3 space-y-3 rounded-lg bg-surface p-4">
-                      <form action={updateMember} className="grid gap-3 sm:grid-cols-2">
-                        <input type="hidden" name="user_id" value={m.id} />
-                        <div className="flex flex-col gap-2 text-sm text-foreground">
-                          <label className="flex items-center gap-2">
-                            <input type="checkbox" name="is_admin" defaultChecked={m.role === "admin"} /> Administrateur
-                          </label>
-                          <label className="flex items-center gap-2">
-                            <input type="checkbox" name="is_teacher" defaultChecked={m.is_teacher || m.role === "teacher"} />{" "}
-                            Formateur
-                          </label>
-                          <label className="flex items-center gap-2">
-                            <input type="checkbox" name="is_service_lead" defaultChecked={m.is_service_lead} /> Responsable
-                            de service (propose des formations)
-                          </label>
-                          <label className="flex items-center gap-2">
-                            <input type="checkbox" name="is_project_lead" defaultChecked={m.is_project_lead} /> Chef de
-                            projet (propose des projets)
-                          </label>
-                        </div>
-                        <div className="space-y-3">
-                          <select name="service_id" defaultValue={m.service_id ?? ""} className={`${field} w-full`}>
-                            <option value="">Service : aucun</option>
-                            {services.map((s) => (
-                              <option key={s.id} value={s.id}>
-                                {s.name}
-                              </option>
-                            ))}
-                          </select>
-                          <select
-                            name="ministry_lead_of"
-                            defaultValue={m.ministry_lead_of ?? ""}
-                            className={`${field} w-full`}
-                          >
-                            <option value="">Pilotage ministériel : aucun</option>
-                            {ministries.map((x) => (
-                              <option key={x.id} value={x.id}>
-                                Pilotage · {x.name}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <button
-                          type="submit"
-                          className="label rounded-md bg-accent px-4 py-2.5 text-xs tracking-[0.12em] text-on-accent hover:bg-[#1b2221] sm:col-span-2 sm:w-fit"
-                        >
-                          Enregistrer
-                        </button>
-                      </form>
-
-                      {m.avatar_path && (
-                        <form action={removeMemberAvatar} className="border-t border-border pt-3">
-                          <input type="hidden" name="user_id" value={m.id} />
-                          <input type="hidden" name="path" value={m.avatar_path} />
-                          <button type="submit" className="text-sm font-medium text-link underline underline-offset-2">
-                            Retirer la photo de profil
-                          </button>
-                          <p className="mt-1 text-xs text-muted">À utiliser si la photo est inappropriée.</p>
-                        </form>
-                      )}
-
-                      <form action={setMemberActive} className="border-t border-border pt-3">
-                        <input type="hidden" name="user_id" value={m.id} />
-                        <input type="hidden" name="active" value={m.deactivated ? "1" : "0"} />
-                        <button type="submit" className="text-sm font-medium text-link underline underline-offset-2">
-                          {m.deactivated ? "Réactiver ce compte" : "Désactiver ce compte"}
-                        </button>
-                        <p className="mt-1 text-xs text-muted">
-                          {m.deactivated
-                            ? "La personne pourra de nouveau se connecter."
-                            : "La personne ne pourra plus se connecter. Ses données sont conservées."}
-                        </p>
-                      </form>
-                    </div>
-                  </details>
+                  <MemberAccessEditor member={m} services={services} ministries={ministries} />
                 </li>
               );
             })}
@@ -275,7 +204,7 @@ export default async function MembersTab({
         )}
       </section>
 
-      <section className="rounded-lg border border-border bg-background p-6">
+      <section suppressHydrationWarning className="rounded-lg border border-border bg-background p-6">
         <h3 className="font-title text-[22px] text-foreground">Secrétaires de pilotage</h3>
         <p className="mt-1 text-sm text-muted">
           Une adresse e-mail ajoutée ici donne la même vue que le pasteur du ministère. Si la personne n&apos;a pas

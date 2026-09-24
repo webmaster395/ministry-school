@@ -32,24 +32,30 @@ export default function ScrollReveal({ children }: { children: React.ReactNode }
     );
 
     // Le contenu arrive en streaming (squelette puis vraie page) : on rescanne à chaque ajout
+    // en différant pour laisser React terminer l'hydratation sans conflit d'attributs
     const scan = () => {
-      for (const el of root.querySelectorAll<HTMLElement>(SELECTOR)) {
-        if (seen.has(el)) continue;
-        seen.add(el);
-        // Les blocs imbriqués suivent leur parent : on n'anime que le plus haut
-        if (el.parentElement?.closest(SELECTOR)) continue;
-        if (el.getBoundingClientRect().top <= window.innerHeight) continue;
-        el.classList.add("reveal-on-scroll");
-        observer.observe(el);
-      }
+      requestAnimationFrame(() => {
+        if (!ref.current) return;
+        for (const el of root.querySelectorAll<HTMLElement>(SELECTOR)) {
+          if (seen.has(el)) continue;
+          seen.add(el);
+          // Les blocs imbriqués suivent leur parent : on n'anime que le plus haut
+          if (el.parentElement?.closest(SELECTOR)) continue;
+          if (el.getBoundingClientRect().top <= window.innerHeight) continue;
+          el.classList.add("reveal-on-scroll");
+          observer.observe(el);
+        }
+      });
     };
 
     let timer: ReturnType<typeof setTimeout> | undefined;
     const mutations = new MutationObserver(() => {
       clearTimeout(timer);
-      timer = setTimeout(scan, 60);
+      timer = setTimeout(scan, 200);
     });
-    scan();
+
+    // Laisse l'hydratation React initiale se terminer avant de scanner
+    timer = setTimeout(scan, 150);
     mutations.observe(root, { childList: true, subtree: true });
 
     return () => {

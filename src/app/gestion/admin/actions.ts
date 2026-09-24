@@ -3,11 +3,20 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 
+export type MemberActionResult = {
+  success?: boolean;
+  error?: string | null;
+};
+
 /** Attribue les rôles d'un membre (ils se cumulent). La base refuse l'opération à qui n'est pas administrateur. */
-export async function updateMember(formData: FormData) {
+export async function updateMember(
+  prevStateOrFormData: MemberActionResult | FormData,
+  maybeFormData?: FormData
+): Promise<MemberActionResult> {
+  const data = (maybeFormData instanceof FormData ? maybeFormData : prevStateOrFormData) as FormData;
   const supabase = await createClient();
-  const text = (key: string) => ((formData.get(key) as string) ?? "").trim();
-  const on = (key: string) => formData.get(key) === "on";
+  const text = (key: string) => ((data.get(key) as string) ?? "").trim();
+  const on = (key: string) => data.get(key) === "on";
 
   const { error } = await supabase.rpc("set_user_access", {
     target: text("user_id"),
@@ -18,22 +27,32 @@ export async function updateMember(formData: FormData) {
     p_service: text("service_id") || null,
     p_ministry_lead: text("ministry_lead_of") || null,
   });
-  if (error) throw new Error("L'attribution a échoué : " + error.message);
+  if (error) {
+    return { success: false, error: "L'attribution a échoué : " + error.message };
+  }
 
   revalidatePath("/gestion/admin");
   revalidatePath("/etudiant", "layout");
+  return { success: true };
 }
 
 /** Active ou désactive un compte (connexion refusée tant qu'il est désactivé). */
-export async function setMemberActive(formData: FormData) {
+export async function setMemberActive(
+  prevStateOrFormData: MemberActionResult | FormData,
+  maybeFormData?: FormData
+): Promise<MemberActionResult> {
+  const data = (maybeFormData instanceof FormData ? maybeFormData : prevStateOrFormData) as FormData;
   const supabase = await createClient();
   const { error } = await supabase.rpc("set_user_active", {
-    target: formData.get("user_id") as string,
-    p_active: formData.get("active") === "1",
+    target: data.get("user_id") as string,
+    p_active: data.get("active") === "1",
   });
-  if (error) throw new Error(error.message);
+  if (error) {
+    return { success: false, error: error.message };
+  }
 
   revalidatePath("/gestion/admin");
+  return { success: true };
 }
 
 /** Donne accès à la vue d'un ministère à une adresse e-mail (le secrétaire du pasteur, par exemple). */
@@ -78,13 +97,19 @@ export async function setQuestionHandled(formData: FormData) {
 }
 
 /** Retire la photo de profil d'un membre (modération) : fichier et référence. */
-export async function removeMemberAvatar(formData: FormData) {
+export async function removeMemberAvatar(
+  prevStateOrFormData: MemberActionResult | FormData,
+  maybeFormData?: FormData
+): Promise<MemberActionResult> {
+  const data = (maybeFormData instanceof FormData ? maybeFormData : prevStateOrFormData) as FormData;
   const supabase = await createClient();
-  const userId = formData.get("user_id") as string;
-  const path = formData.get("path") as string;
+  const userId = data.get("user_id") as string;
+  const path = data.get("path") as string;
 
   if (path) await supabase.storage.from("avatars").remove([path]);
-  await supabase.from("profiles").update({ avatar_path: null }).eq("id", userId);
+  const { error } = await supabase.from("profiles").update({ avatar_path: null }).eq("id", userId);
+  if (error) return { success: false, error: error.message };
 
   revalidatePath("/gestion/admin");
+  return { success: true };
 }
