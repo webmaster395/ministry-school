@@ -7,13 +7,23 @@ import { AFTERNOON, longDateLabel } from "@/lib/program-dates";
 
 const field = "w-full rounded-lg border border-border bg-background px-3 py-2.5 text-[15px] text-foreground";
 const label = "mb-1.5 block text-[14px] text-muted";
-const PLACES = ["MLK Studio", "MLK GP", "Autre"] as const;
+export const PLACES = ["MLK Studio", "MLK GP", "Autre"] as const;
 
 /** Champ de recherche de personne avec suggestions en live. */
-function PersonSearch({ name, label: labelText, placeholder = "Rechercher une personne" }: { name: string; label: string; placeholder?: string }) {
-  const [query, setQuery] = useState("");
+export function PersonSearch({
+  name,
+  label: labelText,
+  placeholder = "Rechercher une personne",
+  defaultValue = null,
+}: {
+  name: string;
+  label: string;
+  placeholder?: string;
+  defaultValue?: { id: string; full_name: string } | null;
+}) {
+  const [query, setQuery] = useState(defaultValue?.full_name ?? "");
   const [results, setResults] = useState<{ id: string; full_name: string }[]>([]);
-  const [selected, setSelected] = useState<{ id: string; full_name: string } | null>(null);
+  const [selected, setSelected] = useState<{ id: string; full_name: string } | null>(defaultValue);
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -87,7 +97,7 @@ function PersonSearch({ name, label: labelText, placeholder = "Rechercher une pe
 }
 
 /** Liste de lignes à saisir : ajouter, réordonner, supprimer (objectifs, prérequis). */
-function LineList({ name, items, setItems, addLabel }: { name: string; items: string[]; setItems: (v: string[]) => void; addLabel: string }) {
+export function LineList({ name, items, setItems, addLabel }: { name: string; items: string[]; setItems: (v: string[]) => void; addLabel: string }) {
   const move = (i: number, by: number) => {
     const next = [...items];
     const j = i + by;
@@ -141,14 +151,16 @@ export default function ProposeDialog({
   services,
   dates,
   details,
+  defaultOpen = false,
 }: {
   kind: "formation" | "projet";
   services: { id: string; name: string }[];
   dates: string[];
   /** Objectifs et prérequis disponibles (option lue côté serveur) */
   details: boolean;
+  defaultOpen?: boolean;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
   const [state, action, pending] = useActionState<ProposeState, FormData>(proposeOpportunity, {});
   const [selected, setSelected] = useState<string[]>([]);
   const [place, setPlace] = useState<(typeof PLACES)[number]>("MLK Studio");

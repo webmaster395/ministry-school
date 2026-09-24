@@ -87,13 +87,14 @@ export function reportState(o: OppRow, date: string, today: string): ReportState
   return due.toISOString().slice(0, 10) < today ? "en_retard" : "a_recevoir";
 }
 
-export type OppPhase = "actuel" | "plus_tard" | "termine";
+export type OppPhase = "actuel" | "a_valider" | "plus_tard" | "termine";
 
 export function phaseOf(o: OppRow, today: string): OppPhase {
-  const first = o.dates[0]?.session_date;
   const last = o.dates[o.dates.length - 1]?.session_date;
   if (last && last < today) return "termine";
-  if (first && first > today && !o.registration_open) return "plus_tard";
+  if (!o.registration_open) return "a_valider";
+  const first = o.dates[0]?.session_date;
+  if (first && first > today) return "plus_tard";
   return "actuel";
 }
 

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Clock } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { getEnrollmentBreakdown } from "@/lib/data/admin";
 import { getMinistries } from "@/lib/data/admin";
@@ -53,6 +54,8 @@ export default async function OverviewTab({
     })
   );
 
+  const toValidate = opps.filter((o) => !o.registration_open && phaseOf(o, today) !== "termine").length;
+
   const cards: { value: number | string; label: string; attention?: boolean; sub?: string }[] = [
     { value: students.length, label: "Membres inscrits" },
     { value: newThisMonth, label: "Nouveaux comptes ce mois" },
@@ -67,12 +70,34 @@ export default async function OverviewTab({
       label: "Formations de service actuelles",
       sub: `${count("formation", true)} terminées`,
     },
+    { value: toValidate, label: "Propositions à valider", attention: toValidate > 0 },
     { value: expected, label: "Comptes rendus attendus", attention: expected > 0 },
-    { value: members.filter((m) => m.deactivated).length, label: "Comptes désactivés" },
   ];
 
   return (
     <div className="space-y-6">
+      {toValidate > 0 && (
+        <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border bg-surface p-4 text-[14px]">
+          <div className="flex items-start gap-3">
+            <Clock size={18} className="mt-0.5 shrink-0 text-muted" />
+            <div>
+              <p className="font-semibold text-foreground">
+                {toValidate} proposition{toValidate > 1 ? "s" : ""} en attente de validation
+              </p>
+              <p className="mt-0.5 text-[13px] text-muted">
+                Des projets ou formations ont été soumis et nécessitent votre approbation avant d&apos;être publiés.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/gestion/admin?onglet=projets&phase=a_valider"
+            className="rounded-lg bg-accent px-4 py-2 text-xs font-semibold text-on-accent transition hover:bg-[#1b2221]"
+          >
+            Examiner et valider →
+          </Link>
+        </div>
+      )}
+
       <section className="grid overflow-hidden rounded-lg border border-border bg-background sm:grid-cols-2 lg:grid-cols-4">
         {cards.map((c, i) => (
           <div

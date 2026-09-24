@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CalendarDays, Check, ChevronLeft } from "lucide-react";
+import { CalendarDays, Check, ChevronLeft, Clock } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import {
   getMyRegistrationIds,
@@ -57,13 +57,20 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
     data: { user },
   } = await supabase.auth.getUser();
 
-  const [all, counts, mine] = await Promise.all([
+  const [all, counts, mine, { data: me }] = await Promise.all([
     getOpportunities(supabase),
     getOpportunityCounts(supabase),
     getMyRegistrationIds(supabase, user!.id),
+    supabase.from("profiles").select("role").eq("id", user!.id).single(),
   ]);
   const o = all.find((x) => x.id === id);
   if (!o) notFound();
+
+  const isAdmin = me?.role === "admin";
+  const isOwner = o.created_by === user!.id;
+  if (!o.registration_open && !isAdmin && !isOwner) {
+    notFound();
+  }
 
   const today = new Date().toISOString().slice(0, 10);
   const taken = counts.get(o.id) ?? 0;
@@ -98,7 +105,7 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
     .map((w) => w[0]?.toUpperCase())
     .join("");
 
-  const canJoin = registered || status === "disponible";
+  const canJoin = o.registration_open && (registered || status === "disponible");
   const target = o.kind === "projet" ? "ce projet" : "cette formation";
 
   const facts: { label: string; value: string | null }[] = [
@@ -111,6 +118,17 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
 
   return (
     <div className="space-y-5">
+      {!o.registration_open && (
+        <div className="flex items-start gap-3 rounded-xl border border-border bg-surface p-4 text-[14px]">
+          <Clock size={18} className="mt-0.5 shrink-0 text-muted" />
+          <p className="text-foreground">
+            <strong className="font-semibold">Mode aperçu :</strong>{" "}
+            <span className="text-muted">
+              Cette proposition est en attente de validation administrative. Elle n&apos;est pas visible par les étudiants et les inscriptions sont fermées.
+            </span>
+          </p>
+        </div>
+      )}
       <Link
         href="/etudiant/services"
         className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-foreground"

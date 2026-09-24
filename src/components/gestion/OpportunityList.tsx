@@ -9,7 +9,7 @@ type DateRow = { opportunity_id: string; session_date: string; start_time: strin
 const TABS = [
   { key: "prochaine", label: "Prochaine session" },
   { key: "plus-tard", label: "Plus tard" },
-  { key: "brouillons", label: "Brouillons" },
+  { key: "brouillons", label: "En attente / Brouillons" },
   { key: "termines", label: "Terminés" },
 ] as const;
 type TabKey = (typeof TABS)[number]["key"];
@@ -118,11 +118,15 @@ export default async function OpportunityList({ kind, tab: requested }: { kind: 
                   <p className="text-[15px] font-semibold text-foreground">
                     {o.capacity !== null ? `${taken} inscrits sur ${o.capacity}` : `${taken} inscrit${taken > 1 ? "s" : ""}`}
                   </p>
-                  {incomplete && (
+                  {!o.registration_open ? (
+                    <span className="inline-block rounded-full border border-border bg-surface px-2.5 py-0.5 text-[11px] font-medium text-foreground">
+                      En attente de validation
+                    </span>
+                  ) : incomplete ? (
                     <span className="inline-block rounded-full bg-m-doctoral/10 px-3 py-1 text-[13px] font-medium text-m-doctoral">
                       À compléter
                     </span>
-                  )}
+                  ) : null}
                 </div>
                 <div className="grid gap-2">
                   <Link

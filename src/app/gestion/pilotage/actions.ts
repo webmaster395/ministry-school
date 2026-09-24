@@ -4,8 +4,9 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { DRAFTS_ENABLED } from "@/lib/drafts";
+import { TYPES_ENABLED } from "@/lib/material-types";
 
-/** Ajoute un support (lien) à une séance du ministère piloté. La base vérifie le droit d'écriture. */
+/** Ajoute un support (lien ou fichier déposé) à une séance. La base vérifie le droit d'écriture. */
 export async function addSupport(formData: FormData) {
   const supabase = await createClient();
   const {
@@ -16,15 +17,29 @@ export async function addSupport(formData: FormData) {
   const text = (key: string) => ((formData.get(key) as string) ?? "").trim();
   const sessionId = text("session_id");
 
+  // Visibilité : tout de suite, au début du cours ou à sa fin
+  const visibility = text("visibility");
+  let visibleAt = new Date().toISOString();
+  if (visibility === "start" || visibility === "end") {
+    const { data: s } = await supabase.from("sessions").select("session_date, start_time, end_time").eq("id", sessionId).single();
+    if (s) {
+      const at = new Date(`${s.session_date}T${(visibility === "start" ? s.start_time : s.end_time).slice(0, 5)}:00`);
+      if (!Number.isNaN(at.getTime())) visibleAt = at.toISOString();
+    }
+  }
+
   const { error } = await supabase.from("materials").insert({
     session_id: sessionId,
     title: text("title"),
     link_url: text("link_url") || null,
+    visible_at: visibleAt,
     created_by: user.id,
+    ...(TYPES_ENABLED && text("resource_type") ? { resource_type: text("resource_type") } : {}),
   });
   if (error) throw new Error("L'ajout du support a échoué : " + error.message);
 
   revalidatePath(`/gestion/enseignement/preparation/${sessionId}`);
+  revalidatePath("/gestion/enseignement", "layout");
   revalidatePath("/gestion/pilotage");
   revalidatePath("/etudiant", "layout");
 }
@@ -115,4 +130,72 @@ export async function publishCourse(formData: FormData) {
   revalidatePath(`/gestion/enseignement/preparation/${sessionId}`);
   revalidatePath("/gestion/pilotage");
   revalidatePath("/etudiant", "layout");
+}
+
+function refreshPrep(sessionId: string) {
+  revalidatePath(`/gestion/enseignement/preparation/${sessionId}`);
+  revalidatePath("/gestion/enseignement", "layout");
+  revalidatePath("/gestion/pilotage");
+  revalidatePath("/etudiant", "layout");
+}
+
+/** Ajoute un objectif (un par ligne dans la fiche du cours). */
+export async function addObjective(formData: FormData) {
+  const supabase = await createClient();
+  const sessionId = ((formData.get("session_id") as string) ?? "").trim();
+  const objective = ((formData.get("objective") as string) ?? "").trim();
+  if (!objective) return;
+
+  const { data: current } = await supabase.from("sessions").select("objectives").eq("id", sessionId).single();
+  const existing = (current?.objectives ?? "").trim();
+  const { data, error } = await supabase
+    .from("sessions")
+    .update({ objectives: existing ? `${existing}\n${objective}` : objective })
+    .eq("id", sessionId)
+    .select("id");
+  if (error) throw new Error("L'ajout de l'objectif a échoué : " + error.message);
+  if (!data?.length) throw new Error("Vous n'avez pas le droit de modifier ce cours.");
+  refreshPrep(sessionId);
+}
+
+/** Retire l'objectif à la position donnée. */
+export async function removeObjective(formData: FormData) {
+  const supabase = await createClient();
+  const sessionId = ((formData.get("session_id") as string) ?? "").trim();
+  const index = parseInt((formData.get("index") as string) ?? "", 10);
+
+  const { data: current } = await supabase.from("sessions").select("objectives").eq("id", sessionId).single();
+  const lines = (current?.objectives ?? "").split("\n").map((l: string) => l.trim()).filter(Boolean);
+  if (!Number.isInteger(index) || index < 0 || index >= lines.length) return;
+  lines.splice(index, 1);
+  const { data, error } = await supabase
+    .from("sessions")
+    .update({ objectives: lines.join("\n") || null })
+    .eq("id", sessionId)
+    .select("id");
+  if (error) throw new Error("La suppression a échoué : " + error.message);
+  if (!data?.length) throw new Error("Vous n'avez pas le droit de modifier ce cours.");
+  refreshPrep(sessionId);
+}
+
+/** Supprime une consigne (avant ou après le cours). */
+export async function deleteAssignment(formData: FormData) {
+  const supabase = await createClient();
+  const id = ((formData.get("id") as string) ?? "").trim();
+  const sessionId = ((formData.get("session_id") as string) ?? "").trim();
+  const { data, error } = await supabase.from("assignments").delete().eq("id", id).select("id");
+  if (error) throw new Error("La suppression a échoué : " + error.message);
+  if (!data?.length) throw new Error("Vous n'avez pas le droit de supprimer cet élément.");
+  refreshPrep(sessionId);
+}
+
+/** Supprime un support de cours. */
+export async function deleteSupport(formData: FormData) {
+  const supabase = await createClient();
+  const id = ((formData.get("id") as string) ?? "").trim();
+  const sessionId = ((formData.get("session_id") as string) ?? "").trim();
+  const { data, error } = await supabase.from("materials").delete().eq("id", id).select("id");
+  if (error) throw new Error("La suppression a échoué : " + error.message);
+  if (!data?.length) throw new Error("Vous n'avez pas le droit de supprimer ce support.");
+  refreshPrep(sessionId);
 }

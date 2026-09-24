@@ -56,7 +56,7 @@ export default async function ServicesPage({
 
   const inTab = (o: Opportunity) =>
     tab === "decouvrir"
-      ? status(o) !== "termine" && !mine.has(o.id)
+      ? status(o) !== "termine" && o.registration_open && !mine.has(o.id)
       : tab === "inscriptions"
         ? status(o) !== "termine" && mine.has(o.id)
         : status(o) === "termine" && mine.has(o.id);

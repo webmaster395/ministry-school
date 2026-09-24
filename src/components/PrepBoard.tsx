@@ -1,4 +1,6 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
+import PrepAccordion from "@/components/PrepAccordion";
 import { CalendarDays, Check, ChevronRight, MapPin, Minus, Users } from "lucide-react";
 import MinistryPicto from "@/components/MinistryPicto";
 import AddCourseDialog from "@/components/gestion/AddCourseDialog";
@@ -40,7 +42,10 @@ export default function PrepBoard({
   labels,
   upcomingFilter,
   ministry,
+  panels,
 }: {
+  /** Contenu des lignes dépliables de la préparation (espace formateur) : édition sur place */
+  panels?: Record<string, ReactNode>;
   /** Présent dans l'espace Pilotage : le ministère supervisé (présentation propre au pilotage) */
   ministry?: { slug: string; name: string; id?: string };
   /** Libellés des onglets « à venir » et « passés », propres à chaque espace */
@@ -76,7 +81,7 @@ export default function PrepBoard({
 
       {tab === "prochain" &&
         (next ? (
-          <Next row={next} today={today} ministryColor={ministryColor} pilot={!!ministry} />
+          <Next row={next} today={today} ministryColor={ministryColor} pilot={!!ministry} panels={panels} />
         ) : (
           <Empty text="Aucun cours à venir." />
         ))}
@@ -93,13 +98,14 @@ export default function PrepBoard({
   );
 }
 
-function Next({ row, today, ministryColor, pilot }: { row: PrepRow; today: string; ministryColor: string; pilot: boolean }) {
+function Next({ row, today, ministryColor, pilot, panels }: { row: PrepRow; today: string; ministryColor: string; pilot: boolean; panels?: Record<string, ReactNode> }) {
   const { s, items, progress, students } = row;
   const color = sessionColor(s.track, "commun", ministryColor);
   const days = Math.round(
     (new Date(s.session_date).getTime() - new Date(today).getTime()) / 86400000
   );
   const teacher = s.teacher?.full_name ?? s.speaker_name;
+  const nextTodo = items.find((it) => !it.done);
 
   return (
     <>
@@ -151,12 +157,19 @@ function Next({ row, today, ministryColor, pilot }: { row: PrepRow; today: strin
           </p>
           <Segments items={items} />
           <div className="mt-4 flex flex-wrap items-center gap-3">
-            <Link
-              href={`/gestion/enseignement/preparation/${s.id}`}
-              className="label rounded-full bg-accent px-6 py-3.5 text-xs tracking-[0.12em] text-on-accent hover:bg-[#1b2221]"
-            >
-              Continuer la préparation
-            </Link>
+            {panels && !nextTodo ? (
+              <p className="flex items-center gap-2 text-[15px] text-foreground">
+                <Check size={17} strokeWidth={2.2} /> Votre cours est prêt à être publié.
+              </p>
+            ) : (
+              // Simple lien : le navigateur déclenche l'événement qui ouvre la partie voulue
+              <a
+                href={panels && nextTodo ? `#${nextTodo.key}` : `/gestion/enseignement/preparation/${s.id}`}
+                className="label rounded-full bg-accent px-6 py-3.5 text-xs tracking-[0.12em] text-on-accent hover:bg-[#1b2221]"
+              >
+                Continuer la préparation
+              </a>
+            )}
             <span
               className={`label rounded-full px-3.5 py-1.5 text-[11px] tracking-[0.1em] ${
                 progress.ready ? "bg-surface text-foreground" : ATTENTION
@@ -169,7 +182,7 @@ function Next({ row, today, ministryColor, pilot }: { row: PrepRow; today: strin
       </section>
 
       <div>
-        <h3 className="font-title text-[24px] text-foreground">Préparer le cours</h3>
+        <h3 className="font-title text-[24px] text-foreground">{pilot ? "Préparer le cours" : "Préparer mon cours"}</h3>
         <p className="text-sm text-muted">
           {pilot
             ? "Complétez les informations nécessaires avec le formateur, sur la même fiche de cours."
@@ -177,6 +190,9 @@ function Next({ row, today, ministryColor, pilot }: { row: PrepRow; today: strin
         </p>
       </div>
 
+      {panels ? (
+        <PrepAccordion items={items} panels={panels} />
+      ) : (
       <ul className="divide-y divide-border-soft overflow-hidden rounded-lg border border-border bg-background">
         {items.map((it) => (
           <li key={it.key}>
@@ -213,6 +229,7 @@ function Next({ row, today, ministryColor, pilot }: { row: PrepRow; today: strin
           </li>
         ))}
       </ul>
+      )}
     </>
   );
 }
