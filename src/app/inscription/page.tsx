@@ -171,6 +171,32 @@ export default function InscriptionPage() {
 
                 <form className="login-form signup-form" onSubmit={handleSubmit}>
                   <div className="signup-fields">
+                    <div className="signup-wide signup-gender-field">
+                      <span className="signup-field-label">Civilité</span>
+                      <div className="signup-gender-toggle" role="radiogroup" aria-label="Civilité">
+                        <label className={`signup-gender-option ${gender === "homme" ? "is-active" : ""}`}>
+                          <input
+                            type="radio"
+                            name="gender"
+                            value="homme"
+                            checked={gender === "homme"}
+                            onChange={() => setGender("homme")}
+                          />
+                          <span>Monsieur</span>
+                        </label>
+                        <label className={`signup-gender-option ${gender === "femme" ? "is-active" : ""}`}>
+                          <input
+                            type="radio"
+                            name="gender"
+                            value="femme"
+                            checked={gender === "femme"}
+                            onChange={() => setGender("femme")}
+                          />
+                          <span>Madame</span>
+                        </label>
+                      </div>
+                    </div>
+
                     <label>
                       <span>Prénom</span>
                       <input
@@ -193,32 +219,6 @@ export default function InscriptionPage() {
                         placeholder="Ton nom"
                       />
                     </label>
-
-                    <div className="signup-wide signup-gender-field">
-                      <span className="signup-field-label">Genre</span>
-                      <div className="signup-gender-toggle" role="radiogroup" aria-label="Genre">
-                        <label className={`signup-gender-option ${gender === "homme" ? "is-active" : ""}`}>
-                          <input
-                            type="radio"
-                            name="gender"
-                            value="homme"
-                            checked={gender === "homme"}
-                            onChange={() => setGender("homme")}
-                          />
-                          <span>Homme</span>
-                        </label>
-                        <label className={`signup-gender-option ${gender === "femme" ? "is-active" : ""}`}>
-                          <input
-                            type="radio"
-                            name="gender"
-                            value="femme"
-                            checked={gender === "femme"}
-                            onChange={() => setGender("femme")}
-                          />
-                          <span>Femme</span>
-                        </label>
-                      </div>
-                    </div>
 
                     <label className="signup-wide">
                       <span>Adresse e-mail</span>
