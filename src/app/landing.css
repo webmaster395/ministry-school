@@ -998,13 +998,10 @@ html body #price.pricing-section{background-color:#fff!important;background-imag
 .signup-fields input:focus{border-color:var(--ink);background:#fff;box-shadow:0 0 0 3px rgba(35,44,41,.08)}
 .signup-gender-field{display:grid;gap:6px}
 .signup-field-label{color:var(--ink);font-size:12.5px;font-weight:500}
-.signup-gender-toggle{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#fafaf8;border:1px solid #d9dcda;border-radius:12px;padding:4px}
-.signup-gender-option{position:relative;cursor:pointer;margin:0}
-.signup-gender-option input{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
-.signup-gender-option span{display:flex;align-items:center;justify-content:center;min-height:36px;border-radius:9px;font-size:13px;font-weight:500;color:#68706d;transition:background .2s ease,color .2s ease,box-shadow .2s ease}
-.signup-gender-option:hover span{color:var(--ink)}
-.signup-gender-option.is-active span{background:#fff;color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(35,44,41,.08)}
-.signup-gender-option input:focus-visible+span{outline:2px solid var(--ink);outline-offset:2px}
+.signup-gender-radios{display:flex;gap:28px;align-items:center;padding:4px 2px}
+.signup-fields label.signup-radio{display:inline-flex;align-items:center;gap:9px;cursor:pointer;font-size:14px;font-weight:500}
+.signup-radio input{width:18px;height:18px;min-height:0;margin:0;padding:0;accent-color:var(--ink);cursor:pointer;flex:0 0 auto}
+.signup-radio input:focus-visible{outline:2px solid var(--ink);outline-offset:3px;box-shadow:none}
 .ministry-choice{min-width:0;margin:0;border:1px solid #e7eae8;border-radius:16px;padding:12px 14px;background:#fafaf8}
 .ministry-choice legend{float:left;width:100%;margin:0 0 8px;padding:0;font-size:12px;font-weight:600;color:var(--ink)}
 .ministry-choice__grid{clear:both;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}

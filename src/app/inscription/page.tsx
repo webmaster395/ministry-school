@@ -172,23 +172,25 @@ export default function InscriptionPage() {
                 <form className="login-form signup-form" onSubmit={handleSubmit}>
                   <div className="signup-fields">
                     <div className="signup-wide signup-gender-field">
-                      <span className="signup-field-label">Civilité</span>
-                      <div className="signup-gender-toggle" role="radiogroup" aria-label="Civilité">
-                        <label className={`signup-gender-option ${gender === "homme" ? "is-active" : ""}`}>
+                      <span className="signup-field-label" id="civilite-label">Civilité</span>
+                      <div className="signup-gender-radios" role="radiogroup" aria-labelledby="civilite-label">
+                        <label className="signup-radio">
                           <input
                             type="radio"
                             name="gender"
                             value="homme"
+                            required
                             checked={gender === "homme"}
                             onChange={() => setGender("homme")}
                           />
                           <span>Monsieur</span>
                         </label>
-                        <label className={`signup-gender-option ${gender === "femme" ? "is-active" : ""}`}>
+                        <label className="signup-radio">
                           <input
                             type="radio"
                             name="gender"
                             value="femme"
+                            required
                             checked={gender === "femme"}
                             onChange={() => setGender("femme")}
                           />
