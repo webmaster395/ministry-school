@@ -25,6 +25,12 @@ function LoginForm() {
           ? "Ce compte est désactivé. Rapprochez-vous de l'équipe Ministry School."
           : null
   );
+  const notice =
+    searchParams.get("compte") === "active"
+      ? "Votre compte est activé. Connectez-vous avec votre e-mail et votre mot de passe."
+      : searchParams.get("mdp") === "modifie"
+        ? "Votre mot de passe a été modifié. Connectez-vous avec votre nouveau mot de passe."
+        : null;
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -80,6 +86,11 @@ function LoginForm() {
               Retrouve ton parcours et les informations liées à Ministry School.
             </p>
 
+            {notice && !error && (
+              <p className="login-notice" role="status">
+                {notice}
+              </p>
+            )}
             {error && (
               <p className="login-error" role="alert">
                 {error}

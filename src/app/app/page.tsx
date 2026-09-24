@@ -1,10 +1,9 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { getViewer } from "@/lib/data/viewer";
 
 /**
- * Point d'entrée de la plateforme, après la connexion : chacun arrive dans son espace de
- * gestion, sinon dans la vue étudiant. L'accueil du site (« / ») est la landing publique.
+ * Point d'entrée de la plateforme, après la connexion : tout le monde arrive sur la page d'accueil
+ * (vue étudiant). L'accueil du site (« / ») est la landing publique.
  */
 export default async function AppEntryPage() {
   const supabase = await createClient();
@@ -16,19 +15,6 @@ export default async function AppEntryPage() {
   // plus naturel surtout à l'ouverture de la PWA pour la première fois)
   if (!user) redirect("/");
 
-  const viewer = await getViewer();
-  const r = viewer?.roles;
-  redirect(
-    r?.admin
-      ? "/gestion/admin"
-      : r?.teacher
-        ? "/gestion/enseignement"
-        : r && r.steeringMinistryIds.length > 0
-          ? "/gestion/pilotage"
-          : r?.serviceLead
-            ? "/gestion/services"
-            : r?.projectLead
-              ? "/gestion/projets"
-              : "/etudiant"
-  );
+  // Tout le monde arrive sur la page d'accueil ; les fonctions s'ouvrent ensuite via « Mes fonctions »
+  redirect("/etudiant");
 }

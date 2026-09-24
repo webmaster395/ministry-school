@@ -24,5 +24,11 @@ export async function confirmEmail(formData: FormData) {
     redirect("/login?erreur=lien_utilise");
   }
 
+  // Inscription : le compte est activé, mais la personne se connecte elle-même avec ses identifiants.
+  if (type === "email") {
+    await supabase.auth.signOut();
+    redirect("/login?compte=active");
+  }
+
   redirect("/app");
 }

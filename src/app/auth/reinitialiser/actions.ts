@@ -50,5 +50,7 @@ export async function resetPassword(_prev: ResetState, formData: FormData): Prom
     return { error: message };
   }
 
-  redirect("/app");
+  // Comme à l'activation du compte : on se reconnecte soi-même avec le nouveau mot de passe
+  await supabase.auth.signOut();
+  redirect("/login?mdp=modifie");
 }

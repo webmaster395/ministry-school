@@ -1071,6 +1071,7 @@ html body #price.pricing-section{background-color:#fff!important;background-imag
 
 /* Ajouts à la maquette : message d'erreur de connexion et bouton « afficher le mot de passe ». */
 .login-error{margin:0 0 18px;border:1px solid rgba(227,77,27,.35);border-radius:14px;background:rgba(227,77,27,.08);padding:12px 14px;color:#b83c13;font-size:14px;line-height:1.5}
+.login-notice{margin:0 0 18px;border:1px solid rgba(35,44,41,.2);border-radius:14px;background:rgba(35,44,41,.06);padding:12px 14px;color:var(--ink);font-size:14px;line-height:1.5}
 .login-password{position:relative;display:block}
 .login-password input{width:100%;padding-right:46px}
 .login-password button{position:absolute;top:50%;right:10px;display:flex;align-items:center;justify-content:center;width:32px;height:32px;transform:translateY(-50%);border:0;border-radius:8px;background:none;color:#8b918e;cursor:pointer;transition:color .2s ease}
