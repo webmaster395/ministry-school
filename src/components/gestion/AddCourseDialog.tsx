@@ -30,19 +30,19 @@ export default function AddCourseDialog({ ministryId, drafts = false }: { minist
       </button>
 
       {open && (
-        <div
-          className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 sm:items-center sm:p-4"
-          onClick={() => setOpen(false)}
-        >
+        <div className="fixed inset-0 z-50 bg-black/40">
+        <div className="flex h-full items-start justify-center sm:items-center sm:p-4" onClick={(e) => e.target === e.currentTarget && setOpen(false)}>
           <form
             action={action}
             role="dialog"
             aria-modal="true"
             aria-label="Ajouter un cours"
             onClick={(e) => e.stopPropagation()}
-            className="relative max-h-[94vh] w-full max-w-[640px] space-y-4 overflow-y-auto rounded-t-2xl bg-surface p-5 shadow-[0_20px_60px_rgba(0,0,0,0.25)] sm:rounded-2xl sm:p-7"
+            className="relative max-h-full w-full max-w-[640px] overflow-y-auto overscroll-contain rounded-t-2xl bg-surface shadow-[0_20px_60px_rgba(0,0,0,0.25)] sm:rounded-2xl"
           >
             <input type="hidden" name="ministry_id" value={ministryId} />
+
+            <div className="rounded-t-2xl border-b border-border bg-surface px-5 pb-3 pt-4 sm:px-6 sm:pt-4">
             <button
               type="button"
               onClick={() => setOpen(false)}
@@ -51,14 +51,15 @@ export default function AddCourseDialog({ ministryId, drafts = false }: { minist
             >
               <X size={18} />
             </button>
-
-            <header className="pr-6">
+              <header className="pr-6">
               <h2 className="font-title text-[22px] leading-tight text-foreground">Ajouter un cours</h2>
               <p className="mt-1.5 text-[14px] text-muted">
                 Commencez par les informations indispensables. Les contenus pédagogiques pourront être complétés ensuite
                 dans la fiche partagée.
               </p>
             </header>
+            </div>
+            <div className="space-y-5 px-5 py-5 sm:px-7">
 
             <div>
               <label className={label} htmlFor="course-title">Titre *</label>
@@ -112,6 +113,9 @@ export default function AddCourseDialog({ ministryId, drafts = false }: { minist
               <textarea id="course-objectives" name="objectives" rows={3} className={field} />
             </div>
 
+            </div>
+
+            <div className="sticky bottom-0 z-10 space-y-3 rounded-b-2xl border-t border-border bg-surface px-5 py-4 sm:px-7">
             {state.error && (
               <p role="alert" className="rounded-lg border border-m-doctoral/30 bg-m-doctoral/10 px-3 py-2 text-[14px] text-link">
                 {state.error}
@@ -147,7 +151,9 @@ export default function AddCourseDialog({ ministryId, drafts = false }: { minist
                 {pending ? "Création…" : "Créer le cours"}
               </button>
             </div>
+            </div>
           </form>
+        </div>
         </div>
       )}
     </>

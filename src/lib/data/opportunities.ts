@@ -1,4 +1,5 @@
 import { SupabaseClient } from "@supabase/supabase-js";
+import { DETAIL_COLUMNS } from "@/lib/opportunity-details";
 
 export type OpportunityKind = "formation" | "projet";
 
@@ -16,6 +17,8 @@ export type Opportunity = {
   registration_open: boolean;
   created_by: string;
   services: { name: string } | null;
+  objectives?: string | null;
+  prerequisites?: string | null;
 };
 
 export type OpportunityStatus = "disponible" | "a_venir" | "complet" | "termine";
@@ -55,7 +58,7 @@ export async function getOpportunities(supabase: SupabaseClient) {
   const { data } = await supabase
     .from("opportunities")
     .select(
-      "id, kind, title, description, service_id, organizer_label, schedule_label, starts_on, ends_on, capacity, registration_open, created_by, services(name)"
+      "id, kind, title, description, service_id, organizer_label, schedule_label, starts_on, ends_on, capacity, registration_open, created_by, services(name)" + DETAIL_COLUMNS
     )
     .order("starts_on", { ascending: true, nullsFirst: false })
     .order("created_at", { ascending: true });

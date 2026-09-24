@@ -99,7 +99,7 @@ export default function CalendarSyncDialog({
         aria-modal="true"
         aria-label="Ajouter les formations à mon calendrier"
         onClick={(e) => e.stopPropagation()}
-        className="relative max-h-[92vh] w-full max-w-[540px] space-y-5 overflow-y-auto rounded-t-2xl bg-background p-5 shadow-[0_20px_60px_rgba(0,0,0,0.25)] sm:rounded-2xl sm:p-7"
+        className="relative max-h-full w-full max-w-[540px] space-y-5 overflow-y-auto rounded-t-2xl bg-background p-5 shadow-[0_20px_60px_rgba(0,0,0,0.25)] sm:rounded-2xl sm:p-7"
       >
         <button
           type="button"
