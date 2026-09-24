@@ -1,20 +1,23 @@
-/* eslint-disable @next/next/no-img-element -- picto décoratif de la landing */
-import Link from "next/link";
 import type { Metadata } from "next";
+import { createClient } from "@/lib/supabase/server";
+import LegalNav from "./LegalNav";
 import "../landing.css";
 
 export const metadata: Metadata = {
   title: "Mentions légales — Ministry School",
 };
 
-/** Mentions légales, reprises de la maquette : elles habillent la landing publique. */
-export default function MentionsLegalesPage() {
+/** Mentions légales, reprises de la maquette : elles habillent la landing publique et les espaces. */
+export default async function MentionsLegalesPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const isLoggedIn = !!user;
+
   return (
     <div className="landing legal-page">
-      <header className="legal-nav">
-          <Link className="footer-brand" href="/" aria-label="Retour à Ministry School"><img src="/landing/ministry-icons-transparent.png" alt="" /><span>Ministry School</span></Link>
-          <Link href="/">Retour au site</Link>
-        </header>
+      <LegalNav isLoggedIn={isLoggedIn} />
         <main className="legal-main">
           <header className="legal-header">
             <p className="over">Informations légales</p>

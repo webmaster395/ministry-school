@@ -1,3 +1,4 @@
+import Link from "next/link";
 import LogoutButton from "./LogoutButton";
 import AvatarEditor from "./AvatarEditor";
 
@@ -67,7 +68,15 @@ export default function ProfileCard({
         <p className="mb-4 text-sm text-muted">
           Pour modifier vos informations, contactez l&apos;équipe administrative.
         </p>
-        <LogoutButton />
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+          <LogoutButton />
+          <Link
+            href="/mentions-legales#donnees-personnelles"
+            className="text-xs text-muted hover:text-foreground hover:underline"
+          >
+            Politique de confidentialité →
+          </Link>
+        </div>
       </section>
     </>
   );
