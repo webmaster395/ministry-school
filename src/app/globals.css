@@ -217,3 +217,9 @@ html,body{max-width:100%;overflow-x:clip}
 .tabbar{gap:4px}
 .tabbar > *{border:1px solid var(--color-border, #e3ddd1)}
 .tabbar > .bg-accent{border-color:transparent}
+
+/* Menu latéral : hauteur réellement visible (barres du navigateur exclues), pour que le profil en bas reste à l'écran sur tablette */
+.app-sidebar{height:100vh;height:100dvh}
+
+/* Toute la page se cale aussi sur la hauteur visible : évite un défilement inutile quand les barres du navigateur se replient */
+.min-h-screen{min-height:100vh;min-height:100dvh}

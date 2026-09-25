@@ -53,7 +53,7 @@ export default function Sidebar({
 
   return (
     <aside
-      className={`sticky top-0 hidden h-screen shrink-0 flex-col self-start border-r border-border bg-background transition-[width] duration-200 md:flex ${
+      className={`app-sidebar sticky top-0 hidden shrink-0 flex-col self-start border-r border-border bg-background transition-[width] duration-200 md:flex ${
         collapsed ? "w-[58px]" : "w-[220px]"
       }`}
     >
