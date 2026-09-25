@@ -1459,3 +1459,9 @@ html body #price.pricing-section{background-color:#fff!important;background-imag
 .hero-brand{gap:14px}
 @media(max-width:768px){.hero-brand{gap:9px}.hero-church-mark{height:28px}.hero-brand__sep{height:28px}}
 @media(max-width:520px){.hero-brand{gap:7px}.hero-church-mark{height:22px}.hero-brand__sep{height:22px}}
+
+/* Le logo MLK reprend exactement la couleur du nom « Ministry School » à côté de lui */
+.hero-church-mark{display:block;width:calc(var(--mlk-h,38px)*1.298);height:var(--mlk-h,38px);background:var(--cream);filter:none;opacity:1;-webkit-mask:url(/logo-mlk.png) center/contain no-repeat;mask:url(/logo-mlk.png) center/contain no-repeat}
+@media(max-width:768px){.hero-brand{--mlk-h:28px}}
+@media(max-width:520px){.hero-brand{--mlk-h:22px}}
+.footer-church-logo{display:block;width:calc(44px*2.983);height:44px;background:var(--cream);filter:none;opacity:1;-webkit-mask:url(/logo-eglise-mlk-complet.png) center/contain no-repeat;mask:url(/logo-eglise-mlk-complet.png) center/contain no-repeat}

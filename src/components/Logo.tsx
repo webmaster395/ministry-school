@@ -47,14 +47,17 @@ export function LogoCompact({ priority = false, church = true }: { priority?: bo
           <>
             {/* Trait de séparation, puis le logo de l'Église : même hauteur que les icônes + le nom (≈ 22 px pour un logo Ministry School de 100 px) */}
             <span aria-hidden="true" className="h-[22px] w-px bg-white/25" />
-            <Image
-              src={full ? "/logo-eglise-mlk-complet.png" : "/logo-mlk.png"}
-              alt="Église MLK, Martin Luther King"
-              width={full ? 355 : 370}
-              height={full ? 119 : 285}
-              className="h-[22px] w-auto select-none"
-              // Le logo est noir sur transparent : on l'éclaircit pour le fond encre
-              style={{ filter: "brightness(0) invert(92%) sepia(15%) saturate(520%) hue-rotate(337deg)", opacity: 0.9, transform: "translateY(1px)" }}
+            {/* Même couleur exacte que « Ministry School » (#feead1) : le logo sert de masque, rempli de cette couleur */}
+            <span
+              role="img"
+              aria-label="Église MLK, Martin Luther King"
+              className="block h-[22px] select-none"
+              style={{
+                width: full ? 66 : 29,
+                backgroundColor: "#feead1",
+                WebkitMask: `url(${full ? "/logo-eglise-mlk-complet.png" : "/logo-mlk.png"}) center / contain no-repeat`,
+                mask: `url(${full ? "/logo-eglise-mlk-complet.png" : "/logo-mlk.png"}) center / contain no-repeat`,
+              }}
             />
           </>
         ) : (
