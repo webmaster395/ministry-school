@@ -22,6 +22,8 @@ export default function AuthShell({
           <Link className="login-brand" href="/" aria-label="Retour à Ministry School">
             <img src="/landing/ministry-icons-transparent.png" alt="" />
             <span>Ministry School</span>
+            <i aria-hidden="true" className="login-brand__sep" />
+            <i role="img" aria-label="Église MLK" className="login-brand__mlk" />
           </Link>
           <div className="login-visual__copy">
             <p>{tagline}</p>
