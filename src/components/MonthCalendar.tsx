@@ -210,8 +210,8 @@ export default function MonthCalendar({
                     className="flex items-start gap-2 p-4"
                   >
                     <div className="min-w-0 flex-1">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-[13px] font-semibold text-foreground">
+                  <div className="flex flex-col items-start gap-1.5 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+                    <p className="whitespace-nowrap text-[13px] font-semibold text-foreground">
                       {hm(s.start)} – {hm(s.end)}
                     </p>
                     <span

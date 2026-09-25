@@ -222,7 +222,7 @@ export default async function StudentDashboardPage() {
                       >
                         {m.title}
                       </span>
-                      <span className="mt-0.5 line-clamp-2 block text-sm text-muted">{m.body}</span>
+                      <span className="mt-0.5 line-clamp-2 text-sm text-muted">{m.body.replace(/\s+/g, " ")}</span>
                       <span className="mt-1.5 block text-xs text-muted">
                         {m.by ? `${m.by} · ` : "L'équipe Ministry School · "}
                         {shortDate(m.at)}

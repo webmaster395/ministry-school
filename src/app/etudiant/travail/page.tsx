@@ -10,6 +10,7 @@ import {
 } from "@/lib/data/student";
 import { formatSessionDate } from "@/lib/format";
 import { getMinistry, INK, sessionColor } from "@/lib/ministry";
+import TravailTabs from "@/components/TravailTabs";
 import FirstDayCard from "@/components/FirstDayCard";
 import { FIRST_DAY } from "@/lib/promotion";
 import { toggleAssignment } from "./actions";
@@ -97,28 +98,7 @@ export default async function StudentWorkPage({
         Retrouvez tout ce que vous devez préparer pour vos cours.
       </p>
 
-      <nav className="inline-flex gap-1 rounded-full border border-border bg-background p-1">
-        {tabs.map((t) => (
-          <Link
-            key={t.key}
-            href={t.href}
-            className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm transition ${
-              tab === t.key
-                ? "bg-accent font-medium text-on-accent"
-                : "text-muted hover:text-foreground"
-            }`}
-          >
-            {t.label}
-            <span
-              className={`flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] ${
-                tab === t.key ? "bg-white/20" : "bg-surface"
-              }`}
-            >
-              {t.count}
-            </span>
-          </Link>
-        ))}
-      </nav>
+      <TravailTabs tabs={tabs} active={tab} />
 
       {tab === "prochaine" && isFirstDay && <FirstDayCard />}
 

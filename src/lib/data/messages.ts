@@ -40,7 +40,7 @@ export async function getStudentMessages(supabase: SupabaseClient, since: string
   )
     .map((m) => {
       const at = m.is_welcome && arrival ? arrival : m.created_at;
-      return { id: m.id, title: m.title, body: m.body, by: m.author?.full_name ?? null, at, isNew: at > since };
+      return { id: m.id, title: m.title, body: m.body, by: m.is_welcome ? null : (m.author?.full_name ?? null), at, isNew: at > since };
     })
     .sort((a, b) => (a.at < b.at ? 1 : -1));
 }

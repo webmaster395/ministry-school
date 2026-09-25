@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Geist, Jost } from "next/font/google";
 import "./globals.css";
 import InstallBanner from "@/components/InstallBanner";
@@ -18,6 +18,9 @@ const bricolage = Bricolage_Grotesque({
   variable: "--font-bricolage",
   subsets: ["latin"],
 });
+
+/** Écran calé sur la largeur du téléphone, sans zoom de départ (évite l'effet « page trop large » en web app). */
+export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover" };
 
 const description =
   "Une année pour découvrir ton appel, développer tes dons et passer de l'intention à l'action.";
@@ -76,7 +79,7 @@ export default function RootLayout({
             __html: `
               if ('serviceWorker' in navigator) {
                 window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js');
+                  if (location.hostname !== 'localhost') navigator.serviceWorker.register('/sw.js').catch(function() {});
                 });
               }
             `,
