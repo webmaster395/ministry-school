@@ -15,9 +15,16 @@ export type Message = {
  * « Nouveau » = reçu depuis la dernière fois que la personne a tout marqué comme lu.
  */
 export async function getStudentMessages(supabase: SupabaseClient, since: string): Promise<Message[]> {
+  // Le message de bienvenue arrive « à l'instant » de l'inscription de chacun : on affiche sa date d'arrivée
+  const { data: auth } = await supabase.auth.getUser();
+  const { data: me } = auth.user
+    ? await supabase.from("profiles").select("created_at").eq("id", auth.user.id).single()
+    : { data: null };
+  const arrival = (me?.created_at as string | undefined) ?? null;
+
   const { data } = await supabase
     .from("announcements")
-    .select("id, title, body, created_at, author:profiles!announcements_author_id_fkey(full_name)")
+    .select("id, title, body, created_at, is_welcome, author:profiles!announcements_author_id_fkey(full_name)")
     .order("created_at", { ascending: false })
     .limit(50);
 
@@ -27,16 +34,15 @@ export async function getStudentMessages(supabase: SupabaseClient, since: string
       title: string;
       body: string;
       created_at: string;
+      is_welcome: boolean;
       author: { full_name: string } | null;
     }[]
-  ).map((m) => ({
-    id: m.id,
-    title: m.title,
-    body: m.body,
-    by: m.author?.full_name ?? null,
-    at: m.created_at,
-    isNew: m.created_at > since,
-  }));
+  )
+    .map((m) => {
+      const at = m.is_welcome && arrival ? arrival : m.created_at;
+      return { id: m.id, title: m.title, body: m.body, by: m.author?.full_name ?? null, at, isNew: at > since };
+    })
+    .sort((a, b) => (a.at < b.at ? 1 : -1));
 }
 
 /** « Aujourd'hui », « Hier » ou la date courte. */

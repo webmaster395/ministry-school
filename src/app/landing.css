@@ -1451,3 +1451,11 @@ html body #price.pricing-section{background-color:#fff!important;background-imag
 .section-cta,.section-cta--program{min-height:54px;font-size:.95rem}
 .footer-cta{font-size:.95rem}
 @media(max-width:768px){.price-tabs__header h2{font-size:2.3rem}}
+
+.hero-frame:after{display:none}
+.hero-brand{align-items:center}
+.hero-church-mark{height:38px;width:auto;margin:0;filter:brightness(0) invert(92%) sepia(15%) saturate(520%) hue-rotate(337deg);opacity:.95}
+.hero-brand__sep{width:1px;height:38px;background:rgba(255,255,255,.28)}
+.hero-brand{gap:14px}
+@media(max-width:768px){.hero-brand{gap:9px}.hero-church-mark{height:28px}.hero-brand__sep{height:28px}}
+@media(max-width:520px){.hero-brand{gap:7px}.hero-church-mark{height:22px}.hero-brand__sep{height:22px}}

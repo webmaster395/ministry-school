@@ -295,10 +295,15 @@ export default async function StudentDashboardPage() {
               })}
             </ul>
           ) : isFirstDay ? (
-            <p className="mt-4 text-[15px] leading-relaxed text-foreground">
-              Pensez à apporter de quoi prendre des notes et une bouteille d&apos;eau, et arrivez en avance : les places de
-              parking sont très limitées.
-            </p>
+            <div className="mt-3 text-[15px] leading-relaxed text-foreground">
+              <p>Pour profiter pleinement de cette première journée Ministry School, pensez à :</p>
+              <ul className="mt-2 list-disc space-y-1 pl-5">
+                <li>apporter de quoi prendre des notes ;</li>
+                <li>prévoir une bouteille d&apos;eau ;</li>
+                <li>arriver suffisamment en avance : les places de parking sont très limitées.</li>
+              </ul>
+              <p className="mt-3 text-muted">Il n&apos;y aura pas de restauration sur place.</p>
+            </div>
           ) : (
             <p className="mt-4 text-sm text-muted">Rien à préparer pour cette journée.</p>
           )}
@@ -306,7 +311,7 @@ export default async function StudentDashboardPage() {
             href="/etudiant/travail"
             className="mt-3 inline-block text-sm font-medium text-foreground hover:underline"
           >
-            {isFirstDay ? "Voir les informations pratiques →" : "Voir tout →"}
+            Voir tout →
           </Link>
         </section>
       </div>
