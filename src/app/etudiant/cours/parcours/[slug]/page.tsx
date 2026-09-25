@@ -190,7 +190,7 @@ export default async function ParcoursPage({ params, searchParams }: Props) {
             const hasAssignment = sessionAssignments.length > 0;
             const isCompleted = hasAssignment && sessionAssignments.every((a) => completedIds.has(a.id));
             const isPast = s.session_date < today;
-            const teacherName = s.teacher?.full_name ?? s.speaker_name;
+            const teacherName = s.speaker_name ?? s.teacher?.full_name;
 
             return (
               <li key={s.id}>

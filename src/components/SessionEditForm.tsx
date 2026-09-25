@@ -1,4 +1,7 @@
-import { updateSession } from "@/lib/actions/sessions";
+"use client";
+
+import { useActionState } from "react";
+import { updateSessionWithFeedback } from "@/lib/actions/sessions";
 
 export type EditableSession = {
   id: string;
@@ -27,13 +30,14 @@ export default function SessionEditForm({
   session: EditableSession;
   defaultOpen?: boolean;
 }) {
+  const [state, formAction, pending] = useActionState(updateSessionWithFeedback, null);
   return (
     <details className="group mt-2" open={defaultOpen}>
       <summary className="cursor-pointer list-none text-xs font-medium text-link hover:underline">
         Modifier
       </summary>
 
-      <form action={updateSession} className="mt-3 grid gap-3 rounded-lg bg-surface p-4 sm:grid-cols-2">
+      <form action={formAction} className="mt-3 grid gap-3 rounded-lg bg-surface p-4 sm:grid-cols-2">
         <input type="hidden" name="session_id" value={s.id} />
 
         <div className="sm:col-span-2">
@@ -99,10 +103,16 @@ export default function SessionEditForm({
 
         <button
           type="submit"
-          className="label rounded-md bg-accent px-4 py-2.5 text-xs tracking-[0.12em] text-on-accent transition hover:bg-[#1b2221] sm:col-span-2 sm:w-fit"
+          disabled={pending}
+          className="label rounded-md bg-accent px-4 py-2.5 disabled:opacity-60 text-xs tracking-[0.12em] text-on-accent transition hover:bg-[#1b2221] sm:col-span-2 sm:w-fit"
         >
-          Enregistrer
+          {pending ? "Enregistrement…" : "Enregistrer"}
         </button>
+        {state && (
+          <p role="status" className={`text-sm sm:col-span-2 ${state.ok ? "text-foreground" : "text-link"}`}>
+            {state.ok ? "✓ " : ""}{state.message}
+          </p>
+        )}
       </form>
     </details>
   );

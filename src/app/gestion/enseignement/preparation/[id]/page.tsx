@@ -58,7 +58,7 @@ export default async function PreparationPage({ params }: { params: Promise<{ id
   const backLabel = viewer.roles.admin ? "Retour au programme" : isPilot ? "Retour à la préparation" : "Retour à l'Espace formateur";
   const panels = teacherPanels(s, assignments ?? [], materials ?? []);
   const color = sessionColor(s.track, "commun", "#1d2625");
-  const teacher = s.teacher?.full_name ?? s.speaker_name;
+  const teacher = s.speaker_name ?? s.teacher?.full_name;
   const isDraft = DRAFTS_ENABLED && !!s.is_draft;
 
   return (

@@ -91,7 +91,7 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
   const objectives = lines(s.objectives);
   const refs = lines(s.bible_refs);
   const place = s.room ? `${s.location} · ${s.room}` : s.location;
-  const teacher = s.teacher?.full_name ?? s.speaker_name ?? null;
+  const teacher = s.speaker_name ?? s.teacher?.full_name ?? null;
   const canManage = me?.role === "admin" || me?.is_teacher;
 
   const backHref = parcoursSlug ? `/etudiant/cours/parcours/${parcoursSlug}` : `/etudiant/cours`;

@@ -46,3 +46,15 @@ export async function updateSession(formData: FormData) {
   revalidatePath("/gestion/enseignement", "layout");
   revalidatePath("/etudiant", "layout");
 }
+
+export type SessionSaveState = { ok: boolean; message: string } | null;
+
+/** Même modification, mais avec un retour clair à l'écran (enregistré ou refusé) au lieu d'une page d'erreur. */
+export async function updateSessionWithFeedback(_prev: SessionSaveState, formData: FormData): Promise<SessionSaveState> {
+  try {
+    await updateSession(formData);
+    return { ok: true, message: "Modifications enregistrées." };
+  } catch (e) {
+    return { ok: false, message: e instanceof Error ? e.message : "L'enregistrement a échoué." };
+  }
+}

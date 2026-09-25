@@ -96,7 +96,7 @@ export function checklistOf(
   kind: "pilotage" | "enseignant" = "pilotage",
   nAfter = 0
 ): ChecklistItem[] {
-  const teacher = s.teacher?.full_name ?? s.speaker_name;
+  const teacher = s.speaker_name ?? s.teacher?.full_name;
   const objectives = lines(s.objectives).length;
   const summaryLength = (s.summary ?? "").trim().length;
 

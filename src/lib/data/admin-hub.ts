@@ -159,7 +159,7 @@ export async function getProgramEntries(supabase: SupabaseClient, opps: OppRow[]
       start: s.start_time,
       end: s.end_time,
       title: s.description ?? "À définir",
-      sub: [s.track, s.teacher?.full_name ?? s.speaker_name, s.location, s.room].filter(Boolean).join(" · "),
+      sub: [s.track, s.speaker_name ?? s.teacher?.full_name, s.location, s.room].filter(Boolean).join(" · "),
       badge: ready ? "Prêt" : "À compléter",
       attention: !ready,
       href: `/gestion/admin/seances/${s.id}`,

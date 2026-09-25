@@ -77,8 +77,8 @@ async function getCommonSessions(supabase: SupabaseClient) {
   const { data } = await common;
 
   const sessions: StudentSession[] = ((data ?? []) as unknown as StudentSession[]).map((s) => {
-    // Intervenant sans compte : son nom est porté par la séance elle-même
-    if (!s.teacher && s.speaker_name) {
+    // Le nom saisi sur la séance prime : il désigne la personne qui donne réellement le cours
+    if (s.speaker_name) {
       return { ...s, teacher: { full_name: s.speaker_name } };
     }
     // Sinon, extraire depuis la description

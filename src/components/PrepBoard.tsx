@@ -108,7 +108,7 @@ function Next({ row, today, ministryColor, pilot, panels }: { row: PrepRow; toda
   const days = Math.round(
     (new Date(s.session_date).getTime() - new Date(today).getTime()) / 86400000
   );
-  const teacher = s.teacher?.full_name ?? s.speaker_name;
+  const teacher = s.speaker_name ?? s.teacher?.full_name;
   const nextTodo = items.find((it) => !it.done);
 
   return (
@@ -389,7 +389,7 @@ function UpcomingTable({
                     <span className="min-w-0">
                       <span className="block text-[17px] font-semibold text-foreground">{titleOf(s)}</span>
                       <span className="block text-[14px] text-muted">
-                        {ministry ? `${s.teacher?.full_name ?? s.speaker_name ?? "Formateur à affecter"} · ` : ""}
+                        {ministry ? `${s.speaker_name ?? s.teacher?.full_name ?? "Formateur à affecter"} · ` : ""}
                         {s.location}
                         {s.room ? ` · ${s.room}` : ""}
                       </span>
