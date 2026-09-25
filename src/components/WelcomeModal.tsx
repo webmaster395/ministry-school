@@ -145,7 +145,7 @@ export default function WelcomeModal({
               </div>
 
               <div className="flex items-center gap-3 border-b border-border/70 pb-3">
-                <span className="h-9 w-1 shrink-0 rounded-full bg-[#e34d1b]" />
+                <span className="h-9 w-1 shrink-0 rounded-full bg-[#f19f00]" />
                 <b className="font-title min-w-[58px] text-[18px] font-bold text-foreground">14h30</b>
                 <div className="text-[13px] leading-snug">
                   <span className="block font-semibold text-foreground">Place à la pratique</span>
