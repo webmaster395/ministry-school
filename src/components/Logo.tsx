@@ -22,15 +22,16 @@ export function LogoLockup({
 
 export default LogoLockup;
 
-/** Mention de l'Église MLK sous le logo du menu : « text » (mots) ou « logo » (l'image de l'Église). */
-const CHURCH_MARK: "text" | "logo" = "logo";
+/** Mention de l'Église MLK dans le menu : « text » (mots sous le logo), « sigle » (le MLK seul) ou « complet » (le logo entier, à droite). */
+const CHURCH_MARK: "text" | "sigle" | "complet" = "sigle";
 
 /**
  * Version compacte pour l'en-tête du menu : pictos et « MINISTRY SCHOOL » sur fond encre,
  * avec la mention « Église MLK » dessous (en texte ou avec le logo de l'Église, voir CHURCH_MARK).
  */
 export function LogoCompact({ priority = false, church = true }: { priority?: boolean; church?: boolean }) {
-  const withLogo = church && CHURCH_MARK === "logo";
+  const withLogo = church && CHURCH_MARK !== "text";
+  const full = CHURCH_MARK === "complet";
   return (
     <div className={withLogo ? "flex items-center gap-3" : "flex flex-col items-center gap-1.5"}>
       <Image
@@ -39,21 +40,21 @@ export function LogoCompact({ priority = false, church = true }: { priority?: bo
         width={466}
         height={122}
         priority={priority}
-        className={`h-auto select-none ${withLogo ? "w-[112px]" : "w-[136px]"}`}
+        className={`h-auto select-none ${withLogo ? "w-[100px]" : "w-[136px]"}`}
       />
       {church &&
         (withLogo ? (
           <>
-            {/* Petit trait de séparation, puis le logo de l'Église à droite de Ministry School */}
-            <span aria-hidden="true" className="h-7 w-px bg-white/25" />
+            {/* Trait de séparation, puis le logo de l'Église : même hauteur que les icônes + le nom (≈ 22 px pour un logo Ministry School de 100 px) */}
+            <span aria-hidden="true" className="h-[22px] w-px bg-white/25" />
             <Image
-              src="/logo-mlk.png"
-              alt="Église MLK"
-              width={370}
-              height={285}
-              className="h-[30px] w-auto select-none"
+              src={full ? "/logo-eglise-mlk-complet.png" : "/logo-mlk.png"}
+              alt="Église MLK, Martin Luther King"
+              width={full ? 355 : 370}
+              height={full ? 119 : 285}
+              className="h-[22px] w-auto select-none"
               // Le logo est noir sur transparent : on l'éclaircit pour le fond encre
-              style={{ filter: "brightness(0) invert(92%) sepia(15%) saturate(520%) hue-rotate(337deg)", opacity: 0.9 }}
+              style={{ filter: "brightness(0) invert(92%) sepia(15%) saturate(520%) hue-rotate(337deg)", opacity: 0.9, transform: "translateY(1px)" }}
             />
           </>
         ) : (

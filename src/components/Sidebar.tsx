@@ -92,6 +92,9 @@ export default function Sidebar({
       <div className={`border-t border-border-soft py-2 ${collapsed ? "px-2" : "px-3"}`}>
         <ProfileLink fullName={fullName} avatarUrl={avatarUrl} ministrySlug={ministrySlug} collapsed={collapsed} />
       </div>
+      {!collapsed && (
+        <p className="label px-3 pb-3 text-center text-[10px] tracking-[0.14em] text-muted">Église MLK</p>
+      )}
     </aside>
   );
 }
