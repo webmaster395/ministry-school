@@ -11,6 +11,7 @@ import { formatSessionDate, formatTimeRange } from "@/lib/format";
 import SessionTypeBadge from "@/components/SessionTypeBadge";
 import { getStudentMessages, shortDate } from "@/lib/data/messages";
 import { getMinistry, INK, sessionColor } from "@/lib/ministry";
+import { FIRST_DAY } from "@/lib/promotion";
 import { markNotificationsSeen } from "./actions";
 
 export default async function StudentDashboardPage() {
@@ -38,6 +39,7 @@ export default async function StudentDashboardPage() {
   const daySessions = nextSession
     ? allSessions.filter((s) => s.session_date === nextSession.session_date)
     : [];
+  const startsAtHalfPast = daySessions[0]?.start_time.startsWith("09:30") ?? false;
   const daysLeft = nextSession
     ? Math.max(
         0,
@@ -53,7 +55,9 @@ export default async function StudentDashboardPage() {
     ),
     getStudentCompletedIds(supabase, user!.id),
   ]);
-  const todo = dayAssignments.filter((a) => !doneIds.has(a.id));
+  // Première journée : aucun devoir, une carte d'information pratique à la place
+  const isFirstDay = nextSession?.session_date === FIRST_DAY;
+  const todo = isFirstDay ? [] : dayAssignments.filter((a) => !doneIds.has(a.id));
   // L'accueil ne montre que les deux premiers travaux ; « Voir tout » ouvre la liste complète
   const toPrepare = todo.slice(0, 2);
   const todoCount = toPrepare.length;
@@ -89,6 +93,39 @@ export default async function StudentDashboardPage() {
             </p>
 
             <ol className="mt-5">
+              {startsAtHalfPast && (
+                <>
+                  <li className="grid grid-cols-[22px_1fr] gap-x-3 lg:grid-cols-[150px_22px_1fr] lg:gap-x-4">
+                    <p className="col-start-2 row-start-1 text-[14px] font-semibold text-foreground lg:col-start-1 lg:pt-1">
+                      09:10 – 09:30
+                    </p>
+                    <div className="col-start-1 row-span-2 row-start-1 flex flex-col items-center lg:col-start-2 lg:row-span-1">
+                      <span className="mt-1.5 h-3.5 w-3.5 shrink-0 rounded-full border-[3px] border-background bg-foreground" style={{ boxShadow: "0 0 0 2px var(--foreground)" }} />
+                      <span className="w-px flex-1 bg-border" />
+                    </div>
+                    <div className="col-start-2 row-start-2 pb-4 pt-1 lg:col-start-3 lg:row-start-1 lg:pb-5 lg:pt-0">
+                      <span className="label inline-block rounded-2xl bg-surface px-3 py-1 text-[11px] leading-snug tracking-[0.1em] text-foreground">
+                        Accueil
+                      </span>
+                      <p className="mt-1.5 text-[16px] font-semibold text-foreground">Accueil des étudiants</p>
+                      <p className="mt-2 rounded-lg border border-border bg-surface px-3 py-2 text-[13.5px] leading-snug text-foreground">
+                        <strong className="font-semibold">Attention :</strong> les places de parking sont très limitées.
+                        Nous vous recommandons d&apos;arriver en avance.
+                      </p>
+                    </div>
+                  </li>
+                  <li className="grid grid-cols-[22px_1fr] gap-x-3 lg:grid-cols-[150px_22px_1fr] lg:gap-x-4">
+                    <p className="col-start-2 row-start-1 text-[14px] font-semibold text-foreground lg:col-start-1 lg:pt-1">09:30</p>
+                    <div className="col-start-1 row-span-2 row-start-1 flex flex-col items-center lg:col-start-2 lg:row-span-1">
+                      <span className="mt-1.5 h-3.5 w-3.5 shrink-0 rounded-full border-[3px] border-background bg-foreground" style={{ boxShadow: "0 0 0 2px var(--foreground)" }} />
+                      <span className="w-px flex-1 bg-border" />
+                    </div>
+                    <div className="col-start-2 row-start-2 pb-4 pt-1 lg:col-start-3 lg:row-start-1 lg:pb-5 lg:pt-0">
+                      <p className="text-[16px] font-semibold text-foreground">Début de la formation</p>
+                    </div>
+                  </li>
+                </>
+              )}
               {daySessions.map((s, i) => (
                 // L'horaire passe au-dessus du titre tant que la place manque. Le seuil est
                 // « lg » et non « sm » : entre les deux, la barre latérale réduit déjà le contenu.
@@ -165,11 +202,17 @@ export default async function StudentDashboardPage() {
                 <li key={m.id}>
                   <Link href="/etudiant/messages" className="group flex items-start gap-3 py-3">
                     <span
-                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
+                      className={`relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
                         m.isNew ? "bg-accent text-on-accent" : "bg-surface text-muted"
                       }`}
                     >
                       <Bell size={18} strokeWidth={1.7} />
+                      {m.isNew && (
+                        <span
+                          aria-label="Nouveau message"
+                          className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full border-2 border-background bg-m-doctoral"
+                        />
+                      )}
                     </span>
                     <span className="min-w-0 flex-1">
                       <span
@@ -181,7 +224,7 @@ export default async function StudentDashboardPage() {
                       </span>
                       <span className="mt-0.5 line-clamp-2 block text-sm text-muted">{m.body}</span>
                       <span className="mt-1.5 block text-xs text-muted">
-                        {m.by ? `${m.by} · ` : ""}
+                        {m.by ? `${m.by} · ` : "L'équipe Ministry School · "}
                         {shortDate(m.at)}
                       </span>
                     </span>
@@ -220,9 +263,11 @@ export default async function StudentDashboardPage() {
                 </p>
               )}
             </div>
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface text-sm font-semibold text-foreground">
-              {todoCount}
-            </span>
+            {!isFirstDay && (
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface text-sm font-semibold text-foreground">
+                {todoCount}
+              </span>
+            )}
           </div>
 
           {toPrepare.length ? (
@@ -249,6 +294,11 @@ export default async function StudentDashboardPage() {
                 );
               })}
             </ul>
+          ) : isFirstDay ? (
+            <p className="mt-4 text-[15px] leading-relaxed text-foreground">
+              Pensez à apporter de quoi prendre des notes et une bouteille d&apos;eau, et arrivez en avance : les places de
+              parking sont très limitées.
+            </p>
           ) : (
             <p className="mt-4 text-sm text-muted">Rien à préparer pour cette journée.</p>
           )}
@@ -256,7 +306,7 @@ export default async function StudentDashboardPage() {
             href="/etudiant/travail"
             className="mt-3 inline-block text-sm font-medium text-foreground hover:underline"
           >
-            Voir tout →
+            {isFirstDay ? "Voir les informations pratiques →" : "Voir tout →"}
           </Link>
         </section>
       </div>

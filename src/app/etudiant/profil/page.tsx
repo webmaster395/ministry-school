@@ -1,9 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import ProfileCard from "@/components/ProfileCard";
 import ProfileTabs from "@/components/ProfileTabs";
-import NotificationPrefs from "@/components/NotificationPrefs";
 import { getViewer } from "@/lib/data/viewer";
-import { parseNotificationPrefs } from "@/lib/notification-prefs";
 
 export default async function StudentProfilePage() {
   const supabase = await createClient();
@@ -17,20 +15,7 @@ export default async function StudentProfilePage() {
     .eq("id", user!.id)
     .single();
 
-  // Requête séparée et tolérante : tant que la colonne notification_prefs n'existe pas encore
-  // en base (voir le SQL fourni au Webmaster), le reste du profil continue de s'afficher.
-  const [{ data: notifRow }, { data: genderRow }] = await Promise.all([
-    supabase
-      .from("profiles")
-      .select("notification_prefs")
-      .eq("id", user!.id)
-      .single(),
-    supabase
-      .from("profiles")
-      .select("gender")
-      .eq("id", user!.id)
-      .single(),
-  ]);
+  const { data: genderRow } = await supabase.from("profiles").select("gender").eq("id", user!.id).single();
 
   const rawGender = (genderRow?.gender as string | undefined) ?? (user?.user_metadata?.gender as string | undefined);
   const genderLabel = rawGender === "homme" ? "Homme" : rawGender === "femme" ? "Femme" : null;
@@ -41,7 +26,7 @@ export default async function StudentProfilePage() {
   const r = viewer?.roles;
   // Les fonctions de la personne, pour ne pas afficher « Étudiant » à un administrateur
   const functions = [
-    r?.admin && "Administrateur",
+    r?.admin && "Admin",
     r?.teacher && "Formateur",
     r && r.steeringMinistryIds.length > 0 && "Pilotage",
     r?.serviceLead && "Responsable de service",
@@ -62,7 +47,6 @@ export default async function StudentProfilePage() {
         ...(genderLabel ? [{ label: "Genre", value: genderLabel }] : []),
       ]}
     />
-    <NotificationPrefs initial={parseNotificationPrefs(notifRow?.notification_prefs)} />
     </div>
   );
 }

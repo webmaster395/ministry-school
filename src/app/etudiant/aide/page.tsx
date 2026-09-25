@@ -2,13 +2,14 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import ProfileTabs from "@/components/ProfileTabs";
 import { getViewer, isPlainStudent } from "@/lib/data/viewer";
-import { QUESTION_CATEGORIES, type QuestionCategory } from "@/lib/questions";
+import { QUESTION_CATEGORIES, QUESTIONS_ENABLED, type QuestionCategory } from "@/lib/questions";
 import { askQuestion } from "./actions";
 
 const field = "w-full rounded-md border border-border bg-background px-3 py-2.5 text-[15px] text-foreground";
 
 export default async function HelpPage({ searchParams }: { searchParams: Promise<{ envoye?: string }> }) {
   const { envoye } = await searchParams;
+  if (!QUESTIONS_ENABLED) redirect("/etudiant/profil");
 
   // Les questions sont réservées aux étudiants : les autres profils n'en ont pas besoin
   const viewer = await getViewer();

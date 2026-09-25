@@ -10,6 +10,8 @@ import {
 } from "@/lib/data/student";
 import { formatSessionDate } from "@/lib/format";
 import { getMinistry, INK, sessionColor } from "@/lib/ministry";
+import FirstDayCard from "@/components/FirstDayCard";
+import { FIRST_DAY } from "@/lib/promotion";
 import { toggleAssignment } from "./actions";
 
 type Tab = "prochaine" | "plus-tard" | "termines";
@@ -42,10 +44,14 @@ export default async function StudentWorkPage({
     getStudentProfile(supabase, user!.id),
     getStudentCompletedIds(supabase, user!.id),
   ]);
-  const assignments = await getStudentAssignments(
-    supabase,
-    sessions.map((s) => s.id)
-  );
+  // La première journée n'a aucun devoir : une carte d'information pratique la remplace
+  const firstDaySessionIds = new Set(sessions.filter((s) => s.session_date === FIRST_DAY).map((s) => s.id));
+  const assignments = (
+    await getStudentAssignments(
+      supabase,
+      sessions.map((s) => s.id)
+    )
+  ).filter((a) => !firstDaySessionIds.has(a.session_id));
 
   const today = new Date().toISOString().slice(0, 10);
   const nextDate = sessions.find((s) => s.session_date >= today)?.session_date ?? null;
@@ -77,6 +83,7 @@ export default async function StudentWorkPage({
   const doneOnNextDay = nextDay.filter(isDone).length;
   const percent = nextDay.length ? (doneOnNextDay / nextDay.length) * 100 : 0;
   const nextSession = nextDate ? sessions.find((s) => s.session_date === nextDate) : null;
+  const isFirstDay = nextDate === FIRST_DAY;
 
   const tabs: { key: Tab; label: string; count: number; href: string }[] = [
     { key: "prochaine", label: "Prochaine session", count: nextDayTodo.length, href: "/etudiant/travail" },
@@ -113,7 +120,9 @@ export default async function StudentWorkPage({
         ))}
       </nav>
 
-      {tab === "prochaine" && nextSession && (
+      {tab === "prochaine" && isFirstDay && <FirstDayCard />}
+
+      {tab === "prochaine" && nextSession && !isFirstDay && (
         <section className="flex flex-wrap items-end justify-between gap-6 rounded-lg border border-border bg-background p-6">
           <div>
             <p className="text-sm text-muted">Prochaine journée</p>
@@ -214,6 +223,7 @@ export default async function StudentWorkPage({
           );
         })
       ) : (
+        !(tab === "prochaine" && isFirstDay) && (
         <section className="rounded-lg border border-border bg-background p-6">
           <p className="text-[15px] text-muted">
             {tab === "termines"
@@ -223,6 +233,7 @@ export default async function StudentWorkPage({
                 : "Rien à préparer pour la prochaine session."}
           </p>
         </section>
+        )
       )}
     </div>
   );

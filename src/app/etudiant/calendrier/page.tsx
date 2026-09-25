@@ -40,7 +40,7 @@ export default async function StudentCalendarPage({
         start: s.start_time,
         end: s.end_time,
         title: s.courses?.title ?? s.description ?? "Séance",
-        label: s.track ?? (s.session_type === "commun" ? "Tronc commun" : (ministryName ?? "Ministère")),
+        label: s.track?.replace(/^Votre parcours\s*:\s*/i, "") ?? (s.session_type === "commun" ? "Tronc commun" : (ministryName ?? "Ministère")),
         location: s.room ? `${s.location} · ${s.room}` : s.location,
         teacher: s.teacher?.full_name ?? null,
         color: sessionColor(s.track, s.session_type, ministryColor),

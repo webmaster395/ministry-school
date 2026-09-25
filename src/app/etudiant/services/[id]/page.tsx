@@ -68,7 +68,7 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
   if (!o) redirect("/etudiant/services");
 
   const isAdmin = me?.role === "admin";
-  const isOwner = o.created_by === user!.id;
+  const isOwner = o.created_by === user!.id || o.lead_id === user!.id;
   if (!o.registration_open && !isAdmin && !isOwner) {
     redirect("/etudiant/services");
   }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 
 /* ─── Types ─── */
 type Platform = "chrome" | "ios" | "unsupported";
@@ -30,6 +31,7 @@ const DISMISSED_KEY = "ms-pwa-dismissed";
 
 /* ─── Component ─── */
 export default function InstallBanner() {
+  const pathname = usePathname();
   const [visible, setVisible] = useState(false);
   const [platform, setPlatform] = useState<Platform>("unsupported");
   const [showIosSteps, setShowIosSteps] = useState(false);
@@ -81,7 +83,8 @@ export default function InstallBanner() {
     deferredPrompt.current = null;
   }
 
-  if (!visible) return null;
+  // Proposée uniquement sur la page de connexion, jamais sur la landing publique ni dans l'espace connecté
+  if (!visible || pathname !== "/login") return null;
 
   /* ── iOS : instructions guidées ── */
   if (platform === "ios") {

@@ -37,6 +37,9 @@ function longDate(d: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
+/** Synchronisation avec un agenda : masquée pour l'instant (lien ICS et tutoriel à finaliser). À passer à true pour la réactiver. */
+const SYNC_ENABLED = false;
+
 export default function MonthCalendar({
   sessions,
   initialDate,
@@ -92,6 +95,7 @@ export default function MonthCalendar({
   return (
     <div>
       <div className="mb-5 flex flex-wrap justify-end gap-3">
+        {SYNC_ENABLED && (
         <button
           type="button"
           onClick={() => setSyncOpen(true)}
@@ -101,6 +105,7 @@ export default function MonthCalendar({
           <span className="hidden sm:inline">Synchroniser avec mon calendrier</span>
           <span className="sm:hidden">Synchroniser</span>
         </button>
+        )}
         <button
           type="button"
           onClick={goToday}
@@ -109,7 +114,7 @@ export default function MonthCalendar({
           Aujourd&apos;hui
         </button>
       </div>
-      <CalendarSyncDialog open={syncOpen} onClose={() => setSyncOpen(false)} subscribeUrl={subscribeUrl ?? null} />
+      {SYNC_ENABLED && <CalendarSyncDialog open={syncOpen} onClose={() => setSyncOpen(false)} subscribeUrl={subscribeUrl ?? null} />}
 
       <div className="grid items-start gap-[22px] lg:grid-cols-[1fr_400px]">
         <section className="rounded-lg border border-border bg-background p-4 sm:p-6">

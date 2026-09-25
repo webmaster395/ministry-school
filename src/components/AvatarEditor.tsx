@@ -143,7 +143,7 @@ export default function AvatarEditor({
           )}
         </div>
         <p className="mt-1 text-xs text-muted">
-          Facultative. Seuls vous et l&apos;administrateur pouvez la voir.
+          Facultative. Seuls vous et les Admin pouvez la voir.
         </p>
         {error && <p className="mt-1 text-xs text-link">{error}</p>}
       </div>

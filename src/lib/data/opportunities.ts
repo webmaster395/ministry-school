@@ -16,6 +16,8 @@ export type Opportunity = {
   capacity: number | null;
   registration_open: boolean;
   created_by: string;
+  /** Responsable attribué par un Admin (formations) */
+  lead_id: string | null;
   services: { name: string } | null;
   objectives?: string | null;
   prerequisites?: string | null;
@@ -58,7 +60,7 @@ export async function getOpportunities(supabase: SupabaseClient) {
   const { data } = await supabase
     .from("opportunities")
     .select(
-      "id, kind, title, description, service_id, organizer_label, schedule_label, starts_on, ends_on, capacity, registration_open, created_by, services(name)" + DETAIL_COLUMNS
+      "id, kind, title, description, service_id, organizer_label, schedule_label, starts_on, ends_on, capacity, registration_open, created_by, lead_id, services(name)" + DETAIL_COLUMNS
     )
     .order("starts_on", { ascending: true, nullsFirst: false })
     .order("created_at", { ascending: true });
@@ -92,7 +94,8 @@ export async function getProposalRights(supabase: SupabaseClient, userId: string
     .single();
   const admin = data?.role === "admin";
   return {
-    formation: admin || !!data?.is_service_lead,
+    // Une formation est créée par un Admin, puis attribuée à un responsable de service
+    formation: admin,
     projet: admin || !!data?.is_project_lead,
   };
 }

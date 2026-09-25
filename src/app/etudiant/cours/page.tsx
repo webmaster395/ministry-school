@@ -18,7 +18,7 @@ export default async function StudentCoursesPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const [parcours, sessions, { ministrySlug, ministryName }] = await Promise.all([
+  const [parcours, sessions, { ministrySlug }] = await Promise.all([
     getParcours(supabase),
     getStudentAllSessions(supabase, user!.id),
     getStudentProfile(supabase, user!.id),
@@ -42,11 +42,17 @@ export default async function StudentCoursesPage() {
           const passed = mine.filter((s) => s.session_date < today).length;
           const next = mine.find((s) => s.session_date >= today);
           const toCome = Math.max(0, p.planned_sessions - passed);
+          // Sensibilité ministérielle : pas encore ouverte, bloc grisé et non cliquable
+          const locked = p.slug === "sensibilite";
 
           return (
             <li
               key={p.id}
-              className="flex flex-col rounded-lg border border-border border-t-[3px] bg-background p-6"
+              suppressHydrationWarning
+              data-locked={locked || undefined}
+              className={`flex flex-col rounded-lg border border-border border-t-[3px] bg-background p-6 ${
+                locked ? "pointer-events-none select-none opacity-55 grayscale" : ""
+              }`}
               style={{ borderTopColor: color }}
             >
               <div className="flex items-center justify-between gap-3">
@@ -64,6 +70,7 @@ export default async function StudentCoursesPage() {
               </h3>
               <p className="mt-2 text-[15px] leading-relaxed text-muted">{p.description}</p>
 
+              {!locked && (
               <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-4 border-t border-border-soft pt-5">
                 <Info label="Période" value={p.period_label} />
                 <Info label="Horaire habituel" value={p.schedule_label} />
@@ -76,21 +83,23 @@ export default async function StudentCoursesPage() {
                   value={`${passed} passée${passed > 1 ? "s" : ""} · ${toCome} à venir`}
                 />
               </dl>
+              )}
 
               {p.note && <p className="mt-5 text-[15px] text-muted">{p.note}</p>}
 
               <div className="mt-auto pt-5">
-                {p.slug === "sensibilite" && ministryName && (
-                  <p className="mb-3 rounded-md bg-surface px-4 py-3 text-[15px] font-semibold text-foreground">
-                    Votre parcours : {ministryName}
+                {locked ? (
+                  <p className="rounded-md bg-surface px-4 py-3 text-center text-[15px] font-semibold text-foreground">
+                    Votre parcours ministère sera bientôt disponible.
                   </p>
+                ) : (
+                  <Link
+                    href={`/etudiant/cours/parcours/${p.slug}`}
+                    className="label flex items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 text-xs tracking-[0.12em] text-on-accent hover:bg-[#1b2221]"
+                  >
+                    Voir les cours →
+                  </Link>
                 )}
-                <Link
-                  href={`/etudiant/cours/parcours/${p.slug}`}
-                  className="label flex items-center justify-center gap-2 rounded-full bg-accent px-6 py-3.5 text-xs tracking-[0.12em] text-on-accent hover:bg-[#1b2221]"
-                >
-                  Voir les cours →
-                </Link>
               </div>
             </li>
           );

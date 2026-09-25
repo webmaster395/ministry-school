@@ -6,6 +6,8 @@ import AppFooter from "@/components/AppFooter";
 import SpaceTabs from "@/components/SpaceTabs";
 import { getViewer } from "@/lib/data/viewer";
 
+import WelcomeModal from "@/components/WelcomeModal";
+
 export default async function StudentLayout({ children }: { children: React.ReactNode }) {
   const viewer = await getViewer();
   if (viewer?.deactivated) redirect("/auth/desactive");
@@ -23,6 +25,13 @@ export default async function StudentLayout({ children }: { children: React.Reac
         <AppFooter />
       </div>
     </div>
+    {viewer && !viewer.welcomeSeen && (
+      <WelcomeModal
+        fullName={viewer.fullName}
+        ministrySlug={viewer.ministrySlug}
+        ministryName={viewer.ministryName}
+      />
+    )}
     </SpaceProvider>
   );
 }

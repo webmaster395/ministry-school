@@ -15,11 +15,13 @@ const TITLES: Record<string, string> = {
   "/etudiant/formation": "Mon ministère",
   "/etudiant/messages": "Messagerie",
   "/etudiant/profil": "Profil",
+  "/etudiant/preferences": "Préférences",
   "/enseignant/calendrier": "Mon calendrier",
   "/enseignant/supports": "Supports & consignes",
   "/enseignant/seances": "Séances",
   "/enseignant/programme": "Vue promo",
-  "/gestion/enseignement/messages": "Messages",
+  "/gestion/enseignement/messages": "Communication",
+  "/gestion/communication": "Communication",
   "/enseignant/etudiants": "Mes étudiants",
   "/enseignant/profil": "Profil",
   "/gestion/admin/cours": "Cours",
@@ -45,7 +47,7 @@ export default function HeaderTitle({ greeting }: { greeting: string }) {
 
   // /etudiant/cours/<id> reste dans « Mes cours »
   const title =
-    TITLES[pathname] ?? (pathname.startsWith("/etudiant/cours/") ? "Mes cours" : pathname.startsWith("/etudiant/services/") ? "Services et projets" : pathname.startsWith("/gestion/enseignement/preparation/") ? "Préparer le cours" : greeting);
+    TITLES[pathname] ?? (pathname.startsWith("/etudiant/cours/") ? "Mes cours" : pathname.startsWith("/etudiant/services/") ? "Services et projets" : (pathname.startsWith("/gestion/enseignement/preparation/") || pathname.startsWith("/gestion/pilotage/preparation/")) ? "Préparer le cours" : greeting);
 
   return <h1 className="font-title text-[20px] leading-tight text-foreground">{title}</h1>;
 }

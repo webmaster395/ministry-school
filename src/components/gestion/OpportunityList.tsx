@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
-import { getOpportunities, getOpportunityCounts, type OpportunityKind } from "@/lib/data/opportunities";
+import { getOpportunities, getOpportunityCounts, getProposalRights, type OpportunityKind } from "@/lib/data/opportunities";
 import { formatSessionDate } from "@/lib/format";
 
 type DateRow = { opportunity_id: string; session_date: string; start_time: string; end_time: string; room: string | null };
@@ -35,13 +35,14 @@ export default async function OpportunityList({ kind, tab: requested }: { kind: 
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const [all, counts, { data: me }] = await Promise.all([
+  const [all, counts, { data: me }, rights] = await Promise.all([
     getOpportunities(supabase),
     getOpportunityCounts(supabase),
     supabase.from("profiles").select("role").eq("id", user!.id).single(),
+    getProposalRights(supabase, user!.id),
   ]);
   const isAdmin = me?.role === "admin";
-  const mine = all.filter((o) => o.kind === kind && (isAdmin || o.created_by === user!.id));
+  const mine = all.filter((o) => o.kind === kind && (isAdmin || o.created_by === user!.id || o.lead_id === user!.id));
 
   const { data: dateRows } = mine.length
     ? await supabase
@@ -88,12 +89,14 @@ export default async function OpportunityList({ kind, tab: requested }: { kind: 
             </Link>
           ))}
         </nav>
-        <Link
-          href={`/gestion/${copy.slug}/nouveau`}
-          className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-3 text-[15px] font-medium text-on-accent transition hover:bg-[#1b2221]"
-        >
-          <Plus size={16} strokeWidth={2} /> {copy.propose}
-        </Link>
+        {rights[kind] && (
+          <Link
+            href={`/gestion/${copy.slug}/nouveau`}
+            className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-3 text-[15px] font-medium text-on-accent transition hover:bg-[#1b2221]"
+          >
+            <Plus size={16} strokeWidth={2} /> {copy.propose}
+          </Link>
+        )}
       </div>
 
       {shown.length ? (

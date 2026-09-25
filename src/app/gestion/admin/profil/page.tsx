@@ -20,7 +20,7 @@ export default async function AdminProfilePage() {
       avatarUrl={(await getViewer())?.avatarUrl ?? null}
       fullName={profile?.full_name ?? ""}
       email={user?.email ?? ""}
-      roleLabel="Administrateur"
+      roleLabel="Admin"
     />
   );
 }

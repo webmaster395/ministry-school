@@ -63,6 +63,7 @@ export async function createOpportunity(formData: FormData) {
 
   const { data: me } = await supabase.from("profiles").select("role").eq("id", user.id).single();
   const isAdmin = me?.role === "admin";
+  if (kind === "formation" && !isAdmin) throw new Error("Seul un Admin peut créer une formation, puis l'attribuer à un responsable de service.");
 
   // Seul un administrateur peut publier directement à la création.
   // Une proposition faite par un chef de projet ou responsable de service reste non publiée
@@ -132,7 +133,7 @@ export async function validateOpportunity(formData: FormData) {
   if (!user) throw new Error("Non authentifié");
 
   const { data: me } = await supabase.from("profiles").select("role").eq("id", user.id).single();
-  if (me?.role !== "admin") throw new Error("Seul un administrateur peut valider une proposition.");
+  if (me?.role !== "admin") throw new Error("Seul un Admin peut valider une proposition.");
 
   const id = formData.get("opportunity_id") as string;
   if (!id) throw new Error("Proposition introuvable");
@@ -170,7 +171,7 @@ export async function rejectOpportunity(_prev: RejectState, formData: FormData):
   if (!user) return { error: "Non authentifié" };
 
   const { data: me } = await supabase.from("profiles").select("role").eq("id", user.id).single();
-  if (me?.role !== "admin") return { error: "Seul un administrateur peut refuser une proposition." };
+  if (me?.role !== "admin") return { error: "Seul un Admin peut refuser une proposition." };
 
   const id = formData.get("opportunity_id") as string;
   const reason = (formData.get("reason") as string)?.trim();
@@ -253,16 +254,16 @@ export async function setRegistrationOpen(formData: FormData) {
 
   const [{ data: me }, { data: opp }] = await Promise.all([
     supabase.from("profiles").select("role").eq("id", user.id).single(),
-    supabase.from("opportunities").select("registration_open, created_by").eq("id", id).single(),
+    supabase.from("opportunities").select("registration_open, created_by, lead_id").eq("id", id).single(),
   ]);
 
   const isAdmin = me?.role === "admin";
-  const isOwner = opp?.created_by === user.id;
+  const isOwner = opp?.created_by === user.id || opp?.lead_id === user.id;
   if (!isAdmin && !isOwner) throw new Error("Action non autorisée.");
 
   // Seul un administrateur peut ouvrir les inscriptions ou valider la proposition
   if (open && !isAdmin) {
-    throw new Error("Seul un administrateur peut valider et ouvrir les inscriptions d'une proposition.");
+    throw new Error("Seul un Admin peut valider et ouvrir les inscriptions d'une proposition.");
   }
 
   await supabase.from("opportunities").update({ registration_open: open }).eq("id", id);

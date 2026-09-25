@@ -15,9 +15,10 @@ import {
   Megaphone,
   MessageSquare,
   Presentation,
-  SlidersHorizontal,
+  Briefcase,
 } from "lucide-react";
 import { isPlainStudent, type ViewerRoles } from "@/lib/roles";
+import { QUESTIONS_ENABLED } from "@/lib/questions";
 
 export type NavItem = {
   label: string;
@@ -50,7 +51,7 @@ const icons = {
   projectPropose: <Rocket {...iconProps} />,
   adminHome: <LayoutDashboard {...iconProps} />,
   adminSessions: <CalendarClock {...iconProps} />,
-  functions: <SlidersHorizontal {...iconProps} />,
+  functions: <Briefcase {...iconProps} />,
 };
 
 /** Le menu étudiant, toujours affiché : celui de la maquette de Rose Alice. */
@@ -67,8 +68,9 @@ export const studentSections: NavSection[] = [
     items: [
       { label: "Mes cours", href: "/etudiant/cours", icon: icons.book },
       { label: "Travail à faire", href: "/etudiant/travail", icon: icons.task },
-      { label: "Mon ministère", href: "/etudiant/formation", icon: icons.ministries },
-      { label: "Services et projets", href: "/etudiant/services", icon: icons.services },
+      // Masquées aux étudiants tant que ces espaces ne sont pas prêts (pages et données conservées)
+      // { label: "Mon ministère", href: "/etudiant/formation", icon: icons.ministries },
+      // { label: "Services et projets", href: "/etudiant/services", icon: icons.services },
     ],
   },
 ];
@@ -86,8 +88,9 @@ export function profileTabs(roles: ViewerRoles): ProfileTab[] {
   const tabs: ProfileTab[] = [
     { label: "Profil", href: "/etudiant/profil" },
     { label: "Messagerie", href: "/etudiant/messages" },
+    { label: "Préférences", href: "/etudiant/preferences" },
   ];
-  if (isPlainStudent(roles)) tabs.push({ label: "Une question ?", href: "/etudiant/aide" });
+  if (QUESTIONS_ENABLED && isPlainStudent(roles)) tabs.push({ label: "Une question ?", href: "/etudiant/aide" });
   return tabs;
 }
 
@@ -121,6 +124,7 @@ export function navSpaces(roles: ViewerRoles): Space[] {
           title: "Administration",
           items: [
             { label: "Vue d'ensemble", href: "/gestion/admin", icon: icons.adminHome },
+            { label: "Communication", href: "/gestion/communication", icon: icons.announce },
           ],
         },
       ],
@@ -138,7 +142,7 @@ export function navSpaces(roles: ViewerRoles): Space[] {
           title: "Enseignement",
           items: [
             { label: "Préparer mes cours", href: "/gestion/enseignement", icon: icons.prep },
-            { label: "Messages aux étudiants", href: "/gestion/enseignement/messages", icon: icons.announce },
+            { label: "Communication", href: "/gestion/communication", icon: icons.announce },
           ],
         },
       ],
@@ -154,7 +158,10 @@ export function navSpaces(roles: ViewerRoles): Space[] {
       sections: [
         {
           title: "Pilotage",
-          items: [{ label: "Pilotage", href: "/gestion/pilotage", icon: icons.steer }],
+          items: [
+            { label: "Pilotage", href: "/gestion/pilotage", icon: icons.steer },
+            { label: "Communication", href: "/gestion/communication", icon: icons.announce },
+          ],
         },
       ],
     });
@@ -171,7 +178,10 @@ export function navSpaces(roles: ViewerRoles): Space[] {
       sections: [
         {
           title: "Services",
-          items: [{ label: "Mes formations", href: "/gestion/services", icon: icons.propose }],
+          items: [
+            { label: "Mes formations", href: "/gestion/services", icon: icons.propose },
+            { label: "Communication", href: "/gestion/communication", icon: icons.announce },
+          ],
         },
       ],
     });
@@ -186,7 +196,10 @@ export function navSpaces(roles: ViewerRoles): Space[] {
       sections: [
         {
           title: "Projets",
-          items: [{ label: "Mes projets", href: "/gestion/projets", icon: icons.projectPropose }],
+          items: [
+            { label: "Mes projets", href: "/gestion/projets", icon: icons.projectPropose },
+            { label: "Communication", href: "/gestion/communication", icon: icons.announce },
+          ],
         },
       ],
     });

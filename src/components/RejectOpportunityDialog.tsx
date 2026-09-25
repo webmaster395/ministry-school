@@ -1,5 +1,6 @@
 "use client";
 
+import Portal from "@/components/Portal";
 import { useActionState, useEffect, useState } from "react";
 import { AlertCircle, Ban, Trash2, X } from "lucide-react";
 import { rejectOpportunity, type RejectState } from "@/app/etudiant/services/actions";
@@ -48,6 +49,7 @@ export default function RejectOpportunityDialog({
       </button>
 
       {open && (
+        <Portal>
         <div
           role="dialog"
           aria-modal="true"
@@ -146,6 +148,7 @@ export default function RejectOpportunityDialog({
             </form>
           </div>
         </div>
+        </Portal>
       )}
     </>
   );

@@ -39,6 +39,7 @@ export async function addSupport(formData: FormData) {
   if (error) throw new Error("L'ajout du support a échoué : " + error.message);
 
   revalidatePath(`/gestion/enseignement/preparation/${sessionId}`);
+  revalidatePath("/gestion/pilotage", "layout");
   revalidatePath("/gestion/enseignement", "layout");
   revalidatePath("/gestion/pilotage");
   revalidatePath("/etudiant", "layout");
@@ -68,6 +69,7 @@ export async function addPilotAssignment(formData: FormData) {
   if (error) throw new Error("L'ajout de la consigne a échoué : " + error.message);
 
   revalidatePath(`/gestion/enseignement/preparation/${sessionId}`);
+  revalidatePath("/gestion/pilotage", "layout");
   revalidatePath("/gestion/pilotage");
   revalidatePath("/etudiant", "layout");
 }
@@ -128,12 +130,14 @@ export async function publishCourse(formData: FormData) {
   if (!data?.length) throw new Error("Vous n'avez pas le droit de publier ce cours.");
 
   revalidatePath(`/gestion/enseignement/preparation/${sessionId}`);
+  revalidatePath("/gestion/pilotage", "layout");
   revalidatePath("/gestion/pilotage");
   revalidatePath("/etudiant", "layout");
 }
 
 function refreshPrep(sessionId: string) {
   revalidatePath(`/gestion/enseignement/preparation/${sessionId}`);
+  revalidatePath("/gestion/pilotage", "layout");
   revalidatePath("/gestion/enseignement", "layout");
   revalidatePath("/gestion/pilotage");
   revalidatePath("/etudiant", "layout");

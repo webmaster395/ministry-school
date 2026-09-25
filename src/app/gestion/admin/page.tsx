@@ -7,6 +7,7 @@ import ProjectsTab from "@/components/admin/ProjectsTab";
 import ReportsTab from "@/components/admin/ReportsTab";
 import MembersTab from "@/components/admin/MembersTab";
 import QuestionsTab from "@/components/admin/QuestionsTab";
+import { QUESTIONS_ENABLED } from "@/lib/questions";
 
 const TABS = [
   { key: "vue", label: "Vue d'ensemble" },
@@ -15,7 +16,7 @@ const TABS = [
   { key: "comptes-rendus", label: "Comptes rendus" },
   { key: "membres", label: "Membres et accès" },
   { key: "questions", label: "Questions" },
-];
+].filter((t) => QUESTIONS_ENABLED || t.key !== "questions");
 
 type Params = {
   onglet?: string;
@@ -68,7 +69,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
       )}
       {tab === "projets" && <ProjectsTab opps={opps} type={p.type ?? "projet"} phase={p.phase ?? "actuel"} today={today} />}
       {tab === "comptes-rendus" && <ReportsTab opps={opps} filter={p.filtre ?? "a_recevoir"} today={today} />}
-      {tab === "questions" && <QuestionsTab filter={p.filtre ?? "a_traiter"} />}
+      {QUESTIONS_ENABLED && tab === "questions" && <QuestionsTab filter={p.filtre ?? "a_traiter"} />}
       {tab === "membres" && (
         <MembersTab
           q={p.q ?? ""}

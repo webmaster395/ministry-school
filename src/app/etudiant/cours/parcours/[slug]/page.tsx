@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { ChevronRight, CircleUser, MapPin } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import { createClient } from "@/lib/supabase/server";
@@ -10,7 +10,7 @@ import {
   getStudentCompletedIds,
 } from "@/lib/data/student";
 import { getParcours, parcoursSlugOf } from "@/lib/data/parcours";
-import { PROMOTION } from "@/lib/promotion";
+import { COURSES_VISIBLE_UNTIL, PROMOTION } from "@/lib/promotion";
 import { INK } from "@/lib/ministry";
 
 const TRACK_COLORS: Record<string, string> = {
@@ -43,6 +43,8 @@ type Props = {
 export default async function ParcoursPage({ params, searchParams }: Props) {
   const { slug } = await params;
   const { onglet } = await searchParams;
+  // La Sensibilité ministérielle n'est pas encore ouverte : aucune page à ouvrir
+  if (slug === "sensibilite") redirect("/etudiant/cours");
   const tab = onglet === "passes" ? "passes" : "a_venir";
 
   const supabase = await createClient();
@@ -62,7 +64,8 @@ export default async function ParcoursPage({ params, searchParams }: Props) {
   // On conserve rigoureusement la couleur du parcours (gris encre de la charte pour la sensibilité)
   const trackColor = TRACK_COLORS[slug] ?? INK;
 
-  const mine = sessions.filter((s) => parcoursSlugOf(s.track) === slug);
+  // Seules les sessions d'octobre à décembre sont visibles ; la suite arrive une fois le contenu finalisé
+  const mine = sessions.filter((s) => parcoursSlugOf(s.track) === slug && s.session_date <= COURSES_VISIBLE_UNTIL);
   const sessionIds = mine.map((s) => s.id);
 
   const [assignments, completedIds] = await Promise.all([
@@ -130,7 +133,7 @@ export default async function ParcoursPage({ params, searchParams }: Props) {
             </span>
           )}
           <span className="rounded-full border border-border bg-background px-4 py-1.5 text-[13px] text-muted">
-            {mine.length || p.planned_sessions} sessions
+            {p.planned_sessions} sessions
           </span>
         </div>
       </section>
@@ -262,6 +265,16 @@ export default async function ParcoursPage({ params, searchParams }: Props) {
           {tab === "passes"
             ? "Aucune session passée pour le moment."
             : "Aucune session à venir pour ce parcours."}
+        </div>
+      )}
+
+      {/* ── Suite du programme : grisée, pas encore disponible ── */}
+      {tab === "a_venir" && (
+        <div
+          aria-disabled="true"
+          className="pointer-events-none select-none rounded-2xl border border-dashed border-border bg-surface/60 p-6 text-center text-[15px] font-medium text-muted opacity-70"
+        >
+          Votre programme sera bientôt disponible.
         </div>
       )}
     </div>

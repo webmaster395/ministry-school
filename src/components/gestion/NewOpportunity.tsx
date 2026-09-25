@@ -29,7 +29,7 @@ export default async function NewOpportunity({
     supabase.from("profiles").select("id, full_name").order("full_name"),
     supabase.from("profiles").select("full_name, role").eq("id", user!.id).single(),
   ]);
-  if (!rights[type]) redirect("/gestion");
+  if (!rights[type]) redirect(back);
 
   const isAdmin = me?.role === "admin";
   const dates = programDates();
@@ -305,7 +305,7 @@ export default async function NewOpportunity({
             </button>
             {!isAdmin && (
               <p className="mt-1 w-full text-xs text-muted">
-                Votre proposition sera transmise aux administrateurs pour validation. Elle ne sera pas visible des étudiants tant qu&apos;elle n&apos;est pas validée.
+                Votre proposition sera transmise aux Admin pour validation. Elle ne sera pas visible des étudiants tant qu&apos;elle n&apos;est pas validée.
               </p>
             )}
           </div>

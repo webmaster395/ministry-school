@@ -3,6 +3,8 @@ export type NotificationPrefs = {
   rappel_journee: boolean;
   travail: boolean;
   reponse_question: boolean;
+  /** Combien de jours avant la journée le rappel est envoyé */
+  rappel_jours: 1 | 3 | 7;
 };
 
 export const DEFAULT_NOTIFICATION_PREFS: NotificationPrefs = {
@@ -10,16 +12,17 @@ export const DEFAULT_NOTIFICATION_PREFS: NotificationPrefs = {
   rappel_journee: true,
   travail: true,
   reponse_question: true,
+  rappel_jours: 1,
 };
 
-export const NOTIFICATION_LABELS: Record<keyof NotificationPrefs, { label: string; hint: string }> = {
+export const NOTIFICATION_LABELS: Record<Exclude<keyof NotificationPrefs, "rappel_jours">, { label: string; hint: string }> = {
   messages: {
-    label: "Nouveaux messages",
-    hint: "Quand un formateur ou l'équipe vous écrit.",
+    label: "Messages pédagogiques",
+    hint: "Recevoir les nouvelles communications liées à ma formation.",
   },
   rappel_journee: {
-    label: "Rappel de la prochaine journée",
-    hint: "La veille ou le matin du samedi de formation.",
+    label: "Rappels de formation",
+    hint: "Recevoir un rappel avant chaque journée de formation.",
   },
   travail: {
     label: "Travail à faire",
@@ -38,5 +41,6 @@ export function parseNotificationPrefs(value: unknown): NotificationPrefs {
     rappel_journee: v.rappel_journee ?? DEFAULT_NOTIFICATION_PREFS.rappel_journee,
     travail: v.travail ?? DEFAULT_NOTIFICATION_PREFS.travail,
     reponse_question: v.reponse_question ?? DEFAULT_NOTIFICATION_PREFS.reponse_question,
+    rappel_jours: v.rappel_jours === 3 || v.rappel_jours === 7 ? v.rappel_jours : DEFAULT_NOTIFICATION_PREFS.rappel_jours,
   };
 }

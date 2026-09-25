@@ -1,5 +1,9 @@
 (() => {
   "use strict";
+  // Le script ne s'applique qu'une fois par affichage de la page (le rejeu en développement dupliquerait les accordéons)
+  const landingRoot = document.querySelector(".landing");
+  if (!landingRoot || landingRoot.dataset.scripted === "1") return;
+  landingRoot.dataset.scripted = "1";
   // Renseignée par LandingScripts à partir de NEXT_PUBLIC_BILLETWEB_URL
   const TICKET_URL = window.__TICKET_URL__ || "";
 
@@ -49,8 +53,6 @@
     });
   }
 
-  const evolvingLabel = document.querySelector("#panel-growth .program-panel__meta small");
-  if (evolvingLabel) evolvingLabel.textContent = "Un créneau qui évolue au cours de l’année";
   const carousel = document.querySelector(".sensitivity-carousel");
   const track = document.querySelector(".sensitivity-track");
   const slides = [...document.querySelectorAll(".sensitivity-slide")];
@@ -103,6 +105,34 @@
 
   const programTabs = [...document.querySelectorAll("[data-program-tab]")];
   const programPanels = [...document.querySelectorAll("[data-program-panel]")];
+  const programTabsHost = document.querySelector(".program-tabs");
+  const programPanelsHost = document.querySelector(".program-panels");
+  const programSwitcher = document.querySelector(".program-switcher");
+  const mobileProgramQuery = matchMedia("(max-width: 900px)");
+  const mobileProgramList = document.createElement("div");
+  mobileProgramList.className = "program-mobile-list";
+  mobileProgramList.setAttribute("aria-label", "Choisir un horaire");
+  if (programSwitcher && programPanelsHost) programSwitcher.insertBefore(mobileProgramList, programPanelsHost);
+
+  const syncProgramLayout = () => {
+    if (!programTabsHost || !programPanelsHost || !programSwitcher) return;
+    if (mobileProgramQuery.matches) {
+      programTabs.forEach((tab, index) => {
+        let item = mobileProgramList.children[index];
+        if (!item) {
+          item = document.createElement("div");
+          item.className = "program-mobile-item";
+          mobileProgramList.appendChild(item);
+        }
+        item.append(tab, programPanels[index]);
+      });
+    } else {
+      programTabs.forEach((tab) => programTabsHost.appendChild(tab));
+      programPanels.forEach((panel) => programPanelsHost.appendChild(panel));
+      mobileProgramList.replaceChildren();
+    }
+  };
+
   const activateProgramTab = (tab, moveFocus = false) => {
     const target = tab.dataset.programTab;
     programTabs.forEach((item) => {
@@ -130,6 +160,8 @@
       activateProgramTab(programTabs[nextIndex], true);
     });
   });
+  syncProgramLayout();
+  mobileProgramQuery.addEventListener("change", syncProgramLayout);
 
   const phaseTabs = [...document.querySelectorAll("[data-phase-tab]")];
   const phasePanels = [...document.querySelectorAll("[data-phase-panel]")];
@@ -191,9 +223,89 @@
       pricingDescription.textContent = option.description;
       memberMessage.hidden = type !== "member";
       pricingCard.classList.toggle("member-active", type === "member");
-      pricingCta.textContent = "Prendre ma place";
+      pricingCta.textContent = type === "member" ? "Activer mon compte Membership" : "Prendre ma place";
     });
   });
+
+  const priceChoiceButtons = [...document.querySelectorAll("[data-price-choice]")];
+  const priceChoicePanels = [...document.querySelectorAll("[data-price-panel]")];
+  const activatePriceChoice = (button, focus = false) => {
+    const choice = button.dataset.priceChoice;
+    priceChoiceButtons.forEach((item) => {
+      const selected = item === button;
+      item.setAttribute("aria-selected", String(selected));
+      item.tabIndex = selected ? 0 : -1;
+    });
+    priceChoicePanels.forEach((panel) => {
+      const selected = panel.dataset.pricePanel === choice;
+      panel.hidden = !selected;
+      panel.classList.toggle("active", selected);
+    });
+    if (focus) button.focus();
+  };
+  priceChoiceButtons.forEach((button, index) => {
+    button.tabIndex = button.getAttribute("aria-selected") === "true" ? 0 : -1;
+    button.addEventListener("click", () => activatePriceChoice(button));
+    button.addEventListener("keydown", (event) => {
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      let nextIndex = index;
+      if (event.key === "ArrowLeft") nextIndex = (index - 1 + priceChoiceButtons.length) % priceChoiceButtons.length;
+      if (event.key === "ArrowRight") nextIndex = (index + 1) % priceChoiceButtons.length;
+      if (event.key === "Home") nextIndex = 0;
+      if (event.key === "End") nextIndex = priceChoiceButtons.length - 1;
+      activatePriceChoice(priceChoiceButtons[nextIndex], true);
+    });
+  });
+
+  const priceTabsRoot = document.querySelector(".price-tabs");
+  if (priceTabsRoot && priceChoiceButtons.length && priceChoicePanels.length) {
+    const mobileAccordion = document.createElement("div");
+    mobileAccordion.className = "price-mobile-accordion";
+    mobileAccordion.setAttribute("aria-label", "Choisir ta situation");
+
+    priceChoiceButtons.forEach((sourceButton, index) => {
+      const choice = sourceButton.dataset.priceChoice;
+      const sourcePanel = priceChoicePanels.find((panel) => panel.dataset.pricePanel === choice);
+      if (!sourcePanel) return;
+
+      const item = document.createElement("section");
+      item.className = "price-mobile-accordion__item";
+      const trigger = document.createElement("button");
+      const panel = sourcePanel.cloneNode(true);
+      const panelId = `price-mobile-${choice}`;
+      const startsOpen = choice === "general";
+
+      trigger.type = "button";
+      trigger.className = "price-mobile-accordion__trigger";
+      trigger.setAttribute("aria-expanded", String(startsOpen));
+      trigger.setAttribute("aria-controls", panelId);
+      trigger.innerHTML = `<span><small>0${index + 1}</small>${sourceButton.textContent}</span><i aria-hidden="true">+</i>`;
+
+      panel.id = panelId;
+      panel.classList.add("price-mobile-accordion__panel");
+      panel.removeAttribute("data-price-panel");
+      panel.hidden = !startsOpen;
+      panel.querySelectorAll(".checkout").forEach((link) => {
+        if (!TICKET_URL) link.addEventListener("click", (event) => event.preventDefault());
+      });
+
+      trigger.addEventListener("click", () => {
+        const opening = trigger.getAttribute("aria-expanded") !== "true";
+        mobileAccordion.querySelectorAll(".price-mobile-accordion__trigger").forEach((otherTrigger) => {
+          const otherPanel = document.getElementById(otherTrigger.getAttribute("aria-controls"));
+          const active = otherTrigger === trigger && opening;
+          otherTrigger.setAttribute("aria-expanded", String(active));
+          if (otherPanel) otherPanel.hidden = !active;
+        });
+      });
+
+      item.append(trigger, panel);
+      mobileAccordion.append(item);
+    });
+
+    priceTabsRoot.querySelector(".price-tabs__panels").after(mobileAccordion);
+  }
 
   const revealedElements = document.querySelectorAll(".reveal");
   if (reducedMotion || !window.IntersectionObserver) {

@@ -1,5 +1,6 @@
 "use client";
 
+import Portal from "@/components/Portal";
 import { useActionState, useEffect, useState } from "react";
 import { Plus, X } from "lucide-react";
 import { createCourse, type CourseFormState } from "@/app/gestion/pilotage/actions";
@@ -30,6 +31,7 @@ export default function AddCourseDialog({ ministryId, drafts = false }: { minist
       </button>
 
       {open && (
+        <Portal>
         <div className="fixed inset-0 z-50 bg-black/40">
         <div className="flex h-full items-start justify-center sm:items-center sm:p-4" onClick={(e) => e.target === e.currentTarget && setOpen(false)}>
           <form
@@ -155,6 +157,7 @@ export default function AddCourseDialog({ ministryId, drafts = false }: { minist
           </form>
         </div>
         </div>
+        </Portal>
       )}
     </>
   );

@@ -1,3 +1,6 @@
+/** « Une question ? » adressée à l'équipe : retirée pour l'instant (code et données conservés). À passer à true pour la réactiver. */
+export const QUESTIONS_ENABLED = false;
+
 export type QuestionCategory = "organisation" | "ministeres" | "technique";
 
 // Flora, Nathalie et l'équipe technique se partagent la même boîte : pas d'adresse

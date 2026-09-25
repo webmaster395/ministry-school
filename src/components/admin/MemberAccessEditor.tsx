@@ -75,7 +75,7 @@ export default function MemberAccessEditor({
                   if (showSuccess) setShowSuccess(false);
                 }}
               />
-              <span>Administrateur</span>
+              <span>Admin</span>
             </label>
 
             {isAdmin && (
@@ -84,7 +84,7 @@ export default function MemberAccessEditor({
                 <div>
                   <p className="font-semibold text-foreground">Accès complet inclus</p>
                   <p className="mt-0.5 text-muted">
-                    L&apos;administrateur a automatiquement accès à tous les espaces (Formateur, Pilotage, Services, Projets). Les autres cases sont donc figées.
+                    Un Admin a automatiquement accès à tous les espaces (Formateur, Pilotage, Services, Projets). Les autres cases sont donc figées.
                   </p>
                 </div>
               </div>

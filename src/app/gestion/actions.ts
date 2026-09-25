@@ -216,3 +216,50 @@ export async function updateOpportunity(_prev: UpdateOpportunityState, formData:
 
   return { success: true };
 }
+
+/**
+ * Supprime une fiche (projet ou formation) avec ses dates, inscriptions et comptes rendus.
+ * C'est la base qui décide : l'auteur ou un Admin seulement. Revient à la liste ensuite.
+ */
+export async function deleteOpportunity(formData: FormData) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Non authentifié");
+
+  const id = ((formData.get("id") as string) ?? "").trim();
+  if (!id) throw new Error("Fiche introuvable.");
+
+  const { data: opp } = await supabase.from("opportunities").select("kind").eq("id", id).maybeSingle();
+  if (!opp) throw new Error("Fiche introuvable ou déjà supprimée.");
+
+  // La fiche d'abord : si la base refuse (ce n'est pas la vôtre), rien d'autre n'est touché
+  const { data: removed, error } = await supabase.from("opportunities").delete().eq("id", id).select("id");
+  if (error) throw new Error("La suppression a échoué : " + error.message);
+  if (!removed?.length) throw new Error("Vous n'avez pas le droit de supprimer cette fiche.");
+
+  const slug = opp.kind === "projet" ? "projets" : "services";
+  revalidatePath("/etudiant/services");
+  revalidatePath(`/gestion/${slug}`);
+  revalidatePath("/gestion/admin");
+  redirect(`/gestion/${slug}`);
+}
+
+/** Attribue une formation à un responsable de service (Admin seulement : c'est la base qui le garantit). */
+export async function assignLead(formData: FormData) {
+  const supabase = await createClient();
+  const id = ((formData.get("id") as string) ?? "").trim();
+  const leadId = ((formData.get("lead_id") as string) ?? "").trim();
+
+  const { data, error } = await supabase
+    .from("opportunities")
+    .update({ lead_id: leadId || null })
+    .eq("id", id)
+    .select("id");
+  if (error) throw new Error("L'attribution a échoué : " + error.message);
+  if (!data?.length) throw new Error("Seul un Admin peut attribuer une formation.");
+
+  revalidatePath(`/gestion/services/${id}`);
+  revalidatePath("/gestion/services");
+}

@@ -29,6 +29,8 @@ import { formatSessionDate } from "@/lib/format";
 import { setRegistrationOpen, validateOpportunity } from "@/app/etudiant/services/actions";
 import { DETAILS_ENABLED, linesOf } from "@/lib/opportunity-details";
 import { AFTERNOON, programDates } from "@/lib/program-dates";
+import DeleteOpportunityButton from "./DeleteOpportunityButton";
+import { assignLead } from "@/app/gestion/actions";
 import EditOpportunityDialog from "./EditOpportunityDialog";
 
 const COPY: Record<OpportunityKind, { slug: string; back: string; leadRole: string }> = {
@@ -56,9 +58,18 @@ export default async function OpportunityManage({ id, kind }: { id: string; kind
     getServices(supabase),
   ]);
   const o = all.find((x) => x.id === id && x.kind === kind);
-  if (!o || (o.created_by !== user!.id && me?.role !== "admin")) {
+  if (!o || (o.created_by !== user!.id && o.lead_id !== user!.id && me?.role !== "admin")) {
     redirect(`/gestion/${copy.slug}`);
   }
+
+  const isAdmin = me?.role === "admin";
+  // Supprimer : l'auteur de la fiche ou un Admin (un responsable attribué ne supprime pas la formation)
+  const canDelete = o.created_by === user!.id || isAdmin;
+  // Un Admin attribue une formation à l'un des responsables de service
+  const serviceLeads =
+    isAdmin && kind === "formation"
+      ? ((await supabase.from("profiles").select("id, full_name").eq("is_service_lead", true).order("full_name")).data ?? [])
+      : [];
 
   const today = new Date().toISOString().slice(0, 10);
   const taken = counts.get(o.id) ?? 0;
@@ -131,7 +142,8 @@ export default async function OpportunityManage({ id, kind }: { id: string; kind
                 </span>
               </div>
 
-              {/* Bouton pour modifier / compléter la fiche */}
+              {/* Boutons pour modifier / supprimer la fiche */}
+              <div className="flex flex-wrap items-center gap-2">
               <EditOpportunityDialog
                 id={o.id}
                 kind={o.kind}
@@ -150,6 +162,8 @@ export default async function OpportunityManage({ id, kind }: { id: string; kind
                 dates={programDates()}
                 details={DETAILS_ENABLED}
               />
+              {canDelete && <DeleteOpportunityButton id={o.id} title={o.title} kind={o.kind} />}
+              </div>
             </div>
 
             {!o.registration_open && (
@@ -192,12 +206,42 @@ export default async function OpportunityManage({ id, kind }: { id: string; kind
                     <div>
                       <strong className="block font-semibold text-foreground">Proposition en attente de validation</strong>
                       <span className="text-[13px] text-muted">
-                        Votre proposition a été transmise à l&apos;équipe administrative. Elle ne sera publiée et ouverte aux inscriptions des étudiants qu&apos;après validation par un administrateur.
+                        Votre proposition a été transmise à l&apos;équipe administrative. Elle ne sera publiée et ouverte aux inscriptions des étudiants qu&apos;après validation par un Admin.
                       </span>
                     </div>
                   </div>
                 </div>
               )
+            )}
+
+            {isAdmin && kind === "formation" && (
+              <form action={assignLead} className="mt-4 flex flex-wrap items-end gap-3 rounded-xl border border-border bg-surface p-4">
+                <input type="hidden" name="id" value={o.id} />
+                <div className="min-w-[220px] flex-1">
+                  <label htmlFor="lead-select" className="mb-1.5 block text-[13px] text-muted">
+                    Responsable de service attribué
+                  </label>
+                  <select
+                    id="lead-select"
+                    name="lead_id"
+                    defaultValue={o.lead_id ?? ""}
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-[15px] text-foreground"
+                  >
+                    <option value="">Aucun responsable attribué</option>
+                    {serviceLeads.map((p) => (
+                      <option key={p.id as string} value={p.id as string}>
+                        {p.full_name as string}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <button
+                  type="submit"
+                  className="rounded-full bg-accent px-5 py-2.5 text-[14px] font-medium text-on-accent transition hover:bg-[#1b2221]"
+                >
+                  Attribuer
+                </button>
+              </form>
             )}
 
             {/* Titre */}

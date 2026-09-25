@@ -1,5 +1,6 @@
 "use client";
 
+import Portal from "@/components/Portal";
 import { useActionState, useEffect, useState } from "react";
 import { Edit3, X } from "lucide-react";
 import { updateOpportunity, type UpdateOpportunityState } from "@/app/gestion/actions";
@@ -88,6 +89,7 @@ export default function EditOpportunityDialog({
       </button>
 
       {open && (
+        <Portal>
         <div
           onClick={(e) => {
             if (e.target === e.currentTarget) setOpen(false);
@@ -362,6 +364,7 @@ export default function EditOpportunityDialog({
             </div>
           </form>
         </div>
+        </Portal>
       )}
     </>
   );

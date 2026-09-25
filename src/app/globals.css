@@ -30,7 +30,7 @@
   --f-coeur: #8b6fc0;
   --f-caractere: #4a7bc4;
   --f-sensibilite: #27302f;
-  --f-projet: #6b7a8f;
+  --f-projet: #f19f00; /* jaune moutarde de la charte : Accélérateur de projet */
 }
 
 @theme inline {

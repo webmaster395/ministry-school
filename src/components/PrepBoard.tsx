@@ -26,6 +26,10 @@ const TABS: { key: PrepTab; label: string }[] = [
   { key: "passes", label: "Passés" },
 ];
 
+/** Page de préparation d'un cours : dans l'espace du pilotage pour un pilote, dans celui du formateur sinon. */
+const prepHref = (pilot: boolean, id: string, hash = "") =>
+  `${pilot ? "/gestion/pilotage/preparation" : "/gestion/enseignement/preparation"}/${id}${hash}`;
+
 const titleOf = (s: PilotSession) => s.description ?? "À définir";
 const ATTENTION = "bg-m-doctoral/[0.12] text-link";
 
@@ -89,11 +93,11 @@ export default function PrepBoard({
         (upcomingFilter ? (
           <UpcomingTable rows={upcoming} filter={upcomingFilter} ministryColor={ministryColor} ministry={ministry} />
         ) : later.length ? (
-          <List rows={later} />
+          <List rows={later} pilot={!!ministry} />
         ) : (
           <Empty text="Aucun autre cours à venir." />
         ))}
-      {tab === "passes" && (past.length ? <List rows={past} /> : <Empty text="Aucun cours passé pour le moment." />)}
+      {tab === "passes" && (past.length ? <List rows={past} pilot={!!ministry} /> : <Empty text="Aucun cours passé pour le moment." />)}
     </div>
   );
 }
@@ -164,7 +168,7 @@ function Next({ row, today, ministryColor, pilot, panels }: { row: PrepRow; toda
             ) : (
               // Simple lien : le navigateur déclenche l'événement qui ouvre la partie voulue
               <a
-                href={panels && nextTodo ? `#${nextTodo.key}` : `/gestion/enseignement/preparation/${s.id}`}
+                href={panels && nextTodo ? `#${nextTodo.key}` : prepHref(pilot, s.id)}
                 className="label rounded-full bg-accent px-6 py-3.5 text-xs tracking-[0.12em] text-on-accent hover:bg-[#1b2221]"
               >
                 Continuer la préparation
@@ -197,7 +201,7 @@ function Next({ row, today, ministryColor, pilot, panels }: { row: PrepRow; toda
         {items.map((it) => (
           <li key={it.key}>
             <Link
-              href={`/gestion/enseignement/preparation/${s.id}#${it.key}`}
+              href={prepHref(pilot, s.id, `#${it.key}`)}
               className="flex items-center gap-4 px-5 py-4 transition hover:bg-surface"
             >
               <span
@@ -244,13 +248,13 @@ export function Segments({ items }: { items: { done: boolean }[] }) {
   );
 }
 
-function List({ rows }: { rows: PrepRow[] }) {
+function List({ rows, pilot }: { rows: PrepRow[]; pilot: boolean }) {
   return (
     <ul className="divide-y divide-border-soft overflow-hidden rounded-lg border border-border bg-background">
       {rows.map(({ s, items, progress, students }) => (
         <li key={s.id}>
           <Link
-            href={`/gestion/enseignement/preparation/${s.id}`}
+            href={prepHref(pilot, s.id)}
             className="flex flex-wrap items-center gap-4 px-5 py-4 transition hover:bg-surface"
           >
             <span className="min-w-0 flex-1">
@@ -353,7 +357,7 @@ function UpcomingTable({
               return (
                 <li key={s.id}>
                   <Link
-                    href={`/gestion/enseignement/preparation/${s.id}`}
+                    href={prepHref(!!ministry, s.id)}
                     className="grid items-center gap-x-5 gap-y-2 py-4 transition hover:opacity-80 sm:grid-cols-[190px_auto_1fr_auto_auto]"
                   >
                     <span className="block">
