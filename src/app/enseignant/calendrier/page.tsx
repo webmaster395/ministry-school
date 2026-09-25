@@ -15,8 +15,8 @@ export default async function TeacherCalendarPage() {
   const counts = await getEnrollmentCounts(supabase, allSessions);
 
   return (
-    <>
-      <section className="rounded-lg border border-border bg-background p-6">
+    <div className="space-y-6">
+      <section className="rounded-lg border border-border bg-background p-4 sm:p-6">
         <h2 className="mb-4 label text-xs tracking-[0.18em] text-muted">MES SÉANCES</h2>
         {allSessions.length ? (
           <ul className="divide-y divide-border">
@@ -36,7 +36,7 @@ export default async function TeacherCalendarPage() {
       </section>
 
       {commonSessions.length > 0 && (
-        <section className="rounded-lg border border-border bg-background p-6">
+        <section className="rounded-lg border border-border bg-background p-4 sm:p-6">
           <h2 className="mb-1 label text-xs tracking-[0.18em] text-muted">TRONC COMMUN</h2>
           <p className="mb-4 text-sm text-muted">
             Enseignement commun à tous les ministères.
@@ -53,6 +53,6 @@ export default async function TeacherCalendarPage() {
           </ul>
         </section>
       )}
-    </>
+    </div>
   );
 }

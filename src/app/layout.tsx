@@ -67,8 +67,11 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="Ministry School" />
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+      </head>
+      <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
+        {children}
+        <InstallBanner />
         <script
-          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `
               if ('serviceWorker' in navigator) {
@@ -79,10 +82,6 @@ export default function RootLayout({
             `,
           }}
         />
-      </head>
-      <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
-        {children}
-        <InstallBanner />
       </body>
     </html>
   );

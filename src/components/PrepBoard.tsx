@@ -394,7 +394,7 @@ function UpcomingTable({
                         {s.room ? ` · ${s.room}` : ""}
                       </span>
                     </span>
-                    <span className="flex flex-col items-end gap-1.5 sm:items-end">
+                    <span className="flex flex-col items-start gap-1.5 sm:items-end">
                       {ministry && (
                         <span className="text-[13px] text-muted">
                           {r.progress.completed} éléments sur {r.progress.total}

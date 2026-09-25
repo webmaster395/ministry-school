@@ -934,7 +934,7 @@ html body #price.pricing-section{background-color:#fff!important;background-imag
   .login-visual{min-height:0;padding:20px 26px 23px}
   .login-visual__copy p{margin-bottom:6px;font-size:10px}
   .login-visual__copy h2{font-size:clamp(33px,7vw,46px);line-height:.9}
-  .login-panel{min-height:0;padding:23px 26px 28px}
+  .login-panel{min-height:0;padding:23px 26px 28px;overflow-y:auto;-webkit-overflow-scrolling:touch}
   .login-form-wrap{max-width:520px}
   .login-back{margin-bottom:18px;font-size:12px}
   .login-overline{margin-bottom:8px;font-size:10px}

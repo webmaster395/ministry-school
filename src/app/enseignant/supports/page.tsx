@@ -32,8 +32,8 @@ export default async function TeacherSupportsPage() {
   }
 
   return (
-    <>
-      <section className="rounded-lg border border-foreground/20 bg-foreground/[0.03] p-6">
+    <div className="space-y-6">
+      <section className="rounded-lg border border-foreground/20 bg-foreground/[0.03] p-4 sm:p-6">
         <h2 className="label mb-1 flex items-center gap-2 text-xs tracking-[0.18em] text-foreground">
           <span className="h-2 w-2 rounded-full bg-m-doctoral" />
           PARTAGER EN DIRECT
@@ -74,7 +74,7 @@ export default async function TeacherSupportsPage() {
         </form>
       </section>
 
-      <section className="rounded-lg border border-border bg-background p-6">
+      <section className="rounded-lg border border-border bg-background p-4 sm:p-6">
         <h2 className="mb-4 label text-xs tracking-[0.18em] text-muted">
           PUBLIER UN SUPPORT DE COURS
         </h2>
@@ -138,7 +138,7 @@ export default async function TeacherSupportsPage() {
         )}
       </section>
 
-      <section className="rounded-lg border border-border bg-background p-6">
+      <section className="rounded-lg border border-border bg-background p-4 sm:p-6">
         <h2 className="mb-4 label text-xs tracking-[0.18em] text-muted">DONNER UNE CONSIGNE</h2>
         <form action={addAssignment} className="grid gap-3">
           <select
@@ -198,6 +198,6 @@ export default async function TeacherSupportsPage() {
           </ul>
         )}
       </section>
-    </>
+    </div>
   );
 }

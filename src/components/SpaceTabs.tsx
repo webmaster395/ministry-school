@@ -17,7 +17,7 @@ export default function SpaceTabs() {
   return (
     <nav
       aria-label={current.label}
-      className="mb-5 grid gap-1 rounded-lg border border-border bg-background p-1"
+      className="mb-5 flex items-stretch gap-1 overflow-x-auto rounded-lg border border-border bg-background p-1 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] sm:grid"
       style={{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` }}
     >
       {items.map((item) => {
@@ -27,7 +27,7 @@ export default function SpaceTabs() {
             key={item.href}
             href={item.href}
             aria-current={active ? "page" : undefined}
-            className={`rounded-md py-3 text-center text-[15px] transition ${
+            className={`flex-1 shrink-0 whitespace-nowrap rounded-md px-3 py-2 text-center text-xs font-medium transition sm:whitespace-normal sm:py-3 sm:text-[15px] ${
               active ? "bg-accent font-medium text-on-accent" : "text-muted hover:text-foreground"
             }`}
           >

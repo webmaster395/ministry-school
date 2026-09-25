@@ -27,35 +27,40 @@ export default function BarChart({
   const max = Math.max(...data.map((d) => d.value), 1);
   const total = data.reduce((sum, d) => sum + d.value, 0);
   const hasPictos = data.some((d) => d.slug);
-  const columns = hasPictos ? "grid-cols-[40px_150px_1fr_56px]" : "grid-cols-[150px_1fr_56px]";
+  const gridCols = hasPictos
+    ? "grid-cols-[32px_1fr_auto] sm:grid-cols-[36px_140px_1fr_52px]"
+    : "grid-cols-[1fr_auto] sm:grid-cols-[140px_1fr_52px]";
 
   return (
-    <section className="rounded-lg border border-border bg-background p-6">
+    <section className="rounded-lg border border-border bg-background p-4 sm:p-6">
       <h2 className="label text-xs tracking-[0.18em] text-muted">{title}</h2>
       {subtitle && <p className="mt-1 text-sm text-muted">{subtitle}</p>}
 
       {total === 0 ? (
         <p className="mt-4 text-sm text-muted">Aucune donnée pour l&apos;instant.</p>
       ) : (
-        <ul className="mt-5 space-y-3">
+        <ul className="mt-5 space-y-4 sm:space-y-3">
           {data.map((d) => {
             const color = getMinistry(d.slug)?.color ?? INK;
             return (
-              <li key={d.label} className={`grid ${columns} items-center gap-3`}>
+              <li key={d.label} className={`grid ${gridCols} items-center gap-x-3 gap-y-1.5`}>
                 {hasPictos && (
-                  <span className="flex justify-center">
-                    <MinistryPicto slug={d.slug} size={24} />
+                  <span className="flex items-center justify-center">
+                    <MinistryPicto slug={d.slug} size={22} />
                   </span>
                 )}
 
-                <span className="truncate text-[15px] text-foreground" title={d.label}>
+                <span className="truncate text-[14px] sm:text-[15px] text-foreground" title={d.label}>
                   {d.label}
                 </span>
 
-                {/* Piste discrète + barre pleine, extrémité arrondie côté valeur */}
-                <span className="h-3 w-full rounded-sm bg-[#f2ede3]" aria-hidden="true">
+                {/* Mobile: pleine largeur en bas (col-span-full) | Desktop: colonne 3 (1fr) */}
+                <span
+                  className="col-span-full order-last h-2.5 w-full rounded-sm bg-[#f2ede3] sm:order-none sm:col-span-1 sm:h-3"
+                  aria-hidden="true"
+                >
                   <span
-                    className="block h-3"
+                    className="block h-2.5 sm:h-3"
                     style={{
                       width: `${(d.value / max) * 100}%`,
                       background: color,
@@ -65,7 +70,7 @@ export default function BarChart({
                   />
                 </span>
 
-                <span className="font-title text-right tabular-nums text-[19px] text-foreground">
+                <span className="font-title text-right tabular-nums text-[16px] sm:text-[19px] text-foreground">
                   {d.value}
                   {unit}
                 </span>

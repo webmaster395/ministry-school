@@ -94,7 +94,7 @@ export default async function ParcoursPage({ params, searchParams }: Props) {
       </div>
 
       {/* ── Hero Card du parcours ── */}
-      <section className="rounded-3xl border border-border bg-background p-7 sm:p-8">
+      <section className="rounded-2xl border border-border bg-background p-5 sm:rounded-3xl sm:p-8">
         <span
           className="inline-flex items-center rounded-full px-3.5 py-1 text-[12px] font-semibold"
           style={{
@@ -106,7 +106,7 @@ export default async function ParcoursPage({ params, searchParams }: Props) {
         </span>
 
         <h2
-          className="font-title mt-4 text-[32px] sm:text-[38px] font-bold leading-tight"
+          className="font-title mt-4 text-[26px] sm:text-[38px] font-bold leading-tight"
           style={{ color: trackColor }}
         >
           {p.title}

@@ -26,7 +26,7 @@ export default function ProfileTabs() {
           key={tab.href}
           href={tab.href}
           aria-current={pathname === tab.href ? "page" : undefined}
-          className={`rounded-md py-3 text-center text-[15px] transition ${
+          className={`rounded-md px-1 py-2.5 text-center text-xs font-medium transition sm:py-3 sm:text-[15px] ${
             pathname === tab.href ? "bg-accent font-medium text-on-accent" : "text-muted hover:text-foreground"
           }`}
         >

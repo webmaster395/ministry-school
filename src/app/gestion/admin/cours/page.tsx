@@ -10,8 +10,8 @@ export default async function AdminCoursesPage() {
   ]);
 
   return (
-    <>
-      <section className="rounded-lg border border-border bg-background p-6">
+    <div className="space-y-6">
+      <section className="rounded-lg border border-border bg-background p-4 sm:p-6">
         <h2 className="mb-1 label text-xs tracking-[0.18em] text-muted">CRÉER UN COURS</h2>
         <p className="mb-4 text-sm text-muted">
           Un cours regroupe plusieurs séances. Il est ensuite rattaché aux séances depuis
@@ -75,7 +75,7 @@ export default async function AdminCoursesPage() {
         </form>
       </section>
 
-      <section className="rounded-lg border border-border bg-background p-6">
+      <section className="rounded-lg border border-border bg-background p-4 sm:p-6">
         <h2 className="mb-4 label text-xs tracking-[0.18em] text-muted">TOUS LES COURS</h2>
         {courses.length ? (
           <ul className="divide-y divide-border">
@@ -104,6 +104,6 @@ export default async function AdminCoursesPage() {
           <p className="text-sm text-muted">Aucun cours créé pour le moment.</p>
         )}
       </section>
-    </>
+    </div>
   );
 }

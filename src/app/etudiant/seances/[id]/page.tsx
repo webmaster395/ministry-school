@@ -108,7 +108,7 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
         {/* ── Colonne principale ── */}
         <div className="space-y-6">
           {/* ── Carte d'en-tête de la séance ── */}
-          <section className="rounded-3xl border border-border bg-background p-7 sm:p-8">
+          <section className="rounded-2xl border border-border bg-background p-5 sm:rounded-3xl sm:p-8">
             <div className="flex items-center justify-between gap-3">
               {s.track ? (
                 <span
@@ -128,7 +128,7 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
               </span>
             </div>
 
-            <h1 className="font-title mt-4 text-[30px] sm:text-[34px] font-bold leading-tight text-foreground">
+            <h1 className="font-title mt-4 text-[24px] sm:text-[34px] font-bold leading-tight text-foreground">
               {title}
             </h1>
 
