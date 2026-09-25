@@ -15,7 +15,7 @@ export default function LandingScripts() {
       process.env.NEXT_PUBLIC_BILLETWEB_URL ?? "";
 
     const script = document.createElement("script");
-    script.src = "/landing/script.js?v=20260925";
+    script.src = "/landing/script.js?v=20260926a";
     document.body.appendChild(script);
 
     return () => {

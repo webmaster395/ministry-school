@@ -48,7 +48,7 @@ export default async function ReportsTab({
 
   return (
     <div className="space-y-5">
-      <nav className="inline-flex gap-1 rounded-lg border border-border bg-background p-1">
+      <nav className="tabbar inline-flex gap-1 rounded-lg border border-border bg-background p-1">
         {FILTERS.map((f) => (
           <Link
             key={f.key}

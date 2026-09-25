@@ -278,6 +278,7 @@
 
       trigger.type = "button";
       trigger.className = "price-mobile-accordion__trigger";
+      trigger.dataset.choice = choice;
       trigger.setAttribute("aria-expanded", String(startsOpen));
       trigger.setAttribute("aria-controls", panelId);
       trigger.innerHTML = `<span><small>0${index + 1}</small>${sourceButton.textContent}</span><i aria-hidden="true">+</i>`;

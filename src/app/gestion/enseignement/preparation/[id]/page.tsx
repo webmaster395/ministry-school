@@ -49,13 +49,13 @@ export default async function PreparationPage({ params }: { params: Promise<{ id
   ]);
 
   // L'administrateur a la vue du pilotage sur tous les ministères, sans être limité au sien
-  const isPilot = !!s.ministry_id && (viewer.roles.admin || viewer.roles.steeringMinistryIds.includes(s.ministry_id));
+  const isPilot = viewer.roles.admin || (!!s.ministry_id && viewer.roles.steeringMinistryIds.includes(s.ministry_id));
   const kind = isPilot ? "pilotage" : "enseignant";
   const afterCount = (assignments ?? []).filter((a) => isAfterClass(a.due_at, s.session_date)).length;
   const items = checklistOf(s, (assignments?.length ?? 0) - afterCount, materials?.length ?? 0, kind, afterCount);
   const progress = progressOf(items);
-  const back = isPilot ? "/gestion/pilotage" : "/gestion/enseignement";
-  const backLabel = isPilot ? "Retour à la préparation" : "Retour à l'Espace formateur";
+  const back = viewer.roles.admin ? "/gestion/admin?onglet=programme" : isPilot ? "/gestion/pilotage" : "/gestion/enseignement";
+  const backLabel = viewer.roles.admin ? "Retour au programme" : isPilot ? "Retour à la préparation" : "Retour à l'Espace formateur";
   const panels = teacherPanels(s, assignments ?? [], materials ?? []);
   const color = sessionColor(s.track, "commun", "#1d2625");
   const teacher = s.teacher?.full_name ?? s.speaker_name;

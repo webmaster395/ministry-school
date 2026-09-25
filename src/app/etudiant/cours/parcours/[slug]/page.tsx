@@ -235,7 +235,7 @@ export default async function ParcoursPage({ params, searchParams }: Props) {
                       )}
                       <span className="inline-flex items-center gap-1.5">
                         <MapPin size={15} className="shrink-0 text-muted" />
-                        {s.location || "MLK Studio"}{s.room ? ` · ${s.room}` : ""}
+                        {s.location || "Espace Martin Luther King"}{s.room ? ` · ${s.room}` : ""}
                       </span>
                     </div>
                   </div>

@@ -47,7 +47,7 @@ export async function proposeOpportunity(_prev: ProposeState, formData: FormData
   const capacity = parseInt(text("capacity"), 10);
   const allowed = new Set(programDates());
   const dates = [...new Set(formData.getAll("date").map(String))].filter((d) => allowed.has(d)).sort();
-  const place = text("place") === "Autre" ? text("place_other") : text("place") || "MLK Studio";
+  const place = text("place") === "Autre" ? text("place_other") : text("place") || "Espace Martin Luther King";
 
   const referentId = text("referent_id");
 
@@ -137,7 +137,7 @@ export async function updateOpportunity(_prev: UpdateOpportunityState, formData:
   const capacity = parseInt(text("capacity"), 10);
   const allowed = new Set(programDates());
   const dates = [...new Set(formData.getAll("date").map(String))].filter((d) => allowed.has(d)).sort();
-  const place = text("place") === "Autre" ? text("place_other") : text("place") || "MLK Studio";
+  const place = text("place") === "Autre" ? text("place_other") : text("place") || "Espace Martin Luther King";
   const referentId = text("referent_id");
 
   if (!title || !lead || !description || !place)

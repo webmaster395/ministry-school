@@ -39,8 +39,8 @@ export default async function NewOpportunity({
         title: "Podcast & Média : Les Voix de l'Évangile",
         organizer: me?.full_name || "Mikaël Coulibaly",
         capacity: 15,
-        place: "MLK Studio",
-        room: "Studio Son B",
+        place: "Espace Martin Luther King",
+        room: "Salle Giroud",
         description:
           "Création et diffusion d'une série de podcasts thématiques sur la foi et la vie quotidienne. Les étudiants apprendront les techniques d'enregistrement en studio, d'interview, de montage audio et de diffusion sur les plateformes numériques.",
         objectives:
@@ -52,7 +52,7 @@ export default async function NewOpportunity({
         title: "Accompagnement et Écoute Pastorale",
         organizer: me?.full_name || "Responsable de Service",
         capacity: 25,
-        place: "MLK GP",
+        place: "Espace Martin Luther King",
         room: "Salle Emmaüs",
         description:
           "Formation pratique destinée aux bénévoles souhaitant développer leurs compétences d'écoute active, de prière d'accompagnement et de soutien spirituel auprès des membres de l'assemblée.",
@@ -211,10 +211,9 @@ export default async function NewOpportunity({
             <select
               name="place"
               className={field}
-              defaultValue={exemple ? sample.place : "MLK Studio"}
+              defaultValue={exemple ? sample.place : "Espace Martin Luther King"}
             >
-              <option value="MLK Studio">MLK Studio</option>
-              <option value="MLK GP">MLK GP</option>
+              <option value="Espace Martin Luther King">Espace Martin Luther King</option>
               <option value="Autre">Autre</option>
             </select>
           </div>

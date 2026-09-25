@@ -40,7 +40,7 @@ export default function SpaceSwitcher() {
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={`Espace : ${current.label}. Changer d'espace`}
-        className="inline-flex max-w-[150px] items-center sm:max-w-[220px] gap-2 rounded-full border border-foreground/30 py-[7px] pl-3.5 pr-3 text-sm font-medium text-foreground transition hover:border-foreground"
+        className="inline-flex max-w-[210px] items-center sm:max-w-[220px] gap-2 rounded-full border border-foreground/30 py-[7px] pl-3.5 pr-3 text-sm font-medium text-foreground transition hover:border-foreground"
       >
         <span className="truncate">{current.label}</span>
         <ChevronDown size={16} strokeWidth={1.8} className={`shrink-0 transition ${open ? "rotate-180" : ""}`} />

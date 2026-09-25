@@ -17,7 +17,7 @@ export default function SpaceTabs() {
   return (
     <nav
       aria-label={current.label}
-      className="mb-5 flex items-stretch gap-1 overflow-x-auto rounded-lg border border-border bg-background p-1 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] sm:grid"
+      className="tabbar mb-5 flex items-stretch gap-1 overflow-x-auto rounded-lg border border-border bg-background p-1 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] sm:grid"
       style={{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` }}
     >
       {items.map((item) => {

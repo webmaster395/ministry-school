@@ -350,7 +350,7 @@ export default async function StudentFormationPage({
 
   return (
     <div className="space-y-6">
-      <nav className="grid max-w-[1120px] grid-cols-3 gap-1 rounded-lg border border-border bg-background p-1">
+      <nav className="tabbar grid max-w-[1120px] auto-cols-fr grid-flow-col gap-1 rounded-lg border border-border bg-background p-1">
         {TABS.map((t) => (
           <Link
             key={t.key}

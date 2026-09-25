@@ -69,7 +69,7 @@ export default function PrepBoard({
 
   return (
     <div className="space-y-5">
-      <nav className="grid grid-cols-3 gap-1 rounded-lg border border-border bg-background p-1">
+      <nav className="tabbar grid grid-cols-3 gap-1 rounded-lg border border-border bg-background p-1">
         {TABS.map((t) => (
           <Link
             key={t.key}
@@ -329,7 +329,7 @@ function UpcomingTable({
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-      <nav className="inline-flex flex-wrap gap-1 rounded-lg border border-border bg-background p-1" aria-label="Filtrer les cours">
+      <nav className="tabbar inline-flex flex-wrap gap-1 rounded-lg border border-border bg-background p-1" aria-label="Filtrer les cours">
         {options.map((f) => (
           <Link
             key={f.key}

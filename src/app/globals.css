@@ -212,3 +212,8 @@ body {
 
 /* Rien ne doit dépasser la largeur de l'écran : sinon le téléphone dézoome toute la page */
 html,body{max-width:100%;overflow-x:clip}
+
+/* Barres d'onglets : chaque onglet est encadré, pour bien les distinguer sur fond blanc */
+.tabbar{gap:4px}
+.tabbar > *{border:1px solid var(--color-border, #e3ddd1)}
+.tabbar > .bg-accent{border-color:transparent}

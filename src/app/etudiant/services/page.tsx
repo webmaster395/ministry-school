@@ -78,7 +78,7 @@ export default async function ServicesPage({
         <p className="text-[15px] text-muted">Choisissez comment mettre vos compétences en pratique.</p>
       </div>
 
-      <nav className="grid grid-cols-3 gap-1 rounded-lg border border-border bg-background p-1">
+      <nav className="tabbar grid auto-cols-fr grid-flow-col gap-1 rounded-lg border border-border bg-background p-1">
         {TABS.map((t) => (
           <Link
             key={t.key}

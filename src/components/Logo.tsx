@@ -23,7 +23,7 @@ export function LogoLockup({
 export default LogoLockup;
 
 /** Mention de l'Église MLK dans le menu : « text » (mots sous le logo), « sigle » (le MLK seul) ou « complet » (le logo entier, à droite). */
-const CHURCH_MARK: "text" | "sigle" | "complet" = "sigle";
+const CHURCH_MARK: "text" | "sigle" | "complet" = "text";
 
 /**
  * Version compacte pour l'en-tête du menu : pictos et « MINISTRY SCHOOL » sur fond encre,
@@ -61,7 +61,7 @@ export function LogoCompact({ priority = false, church = true }: { priority?: bo
             />
           </>
         ) : (
-          <span className="label text-[9px] leading-none tracking-[0.24em] text-[#d9c9ad]">ÉGLISE MLK</span>
+          <span className="label text-[9px] leading-none tracking-[0.24em] text-[#feead1]">MLK FORMATION</span>
         ))}
     </div>
   );

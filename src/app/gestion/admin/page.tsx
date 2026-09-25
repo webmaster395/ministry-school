@@ -42,7 +42,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
 
   return (
     <div className="space-y-6">
-      <nav className="grid grid-cols-2 gap-1 rounded-lg border border-border bg-background p-1 md:grid-cols-6">
+      <nav className="tabbar grid grid-cols-2 gap-1 rounded-lg border border-border bg-background p-1 md:auto-cols-fr md:grid-flow-col md:grid-cols-none [&>*:last-child:nth-child(odd)]:col-span-2 md:[&>*:last-child:nth-child(odd)]:col-span-1">
         {TABS.map((t) => (
           <Link
             key={t.key}

@@ -162,7 +162,7 @@ export async function getProgramEntries(supabase: SupabaseClient, opps: OppRow[]
       sub: [s.track, s.teacher?.full_name ?? s.speaker_name, s.location, s.room].filter(Boolean).join(" · "),
       badge: ready ? "Prêt" : "À compléter",
       attention: !ready,
-      href: `/gestion/enseignement/preparation/${s.id}`,
+      href: `/gestion/admin/seances/${s.id}`,
     };
   });
 
@@ -173,7 +173,7 @@ export async function getProgramEntries(supabase: SupabaseClient, opps: OppRow[]
       start: d.start_time,
       end: d.end_time,
       title: o.title,
-      sub: [KIND_TEXT[o.kind], o.organizer_label, "MLK Studio", d.room].filter(Boolean).join(" · "),
+      sub: [KIND_TEXT[o.kind], o.organizer_label, "Espace Martin Luther King", d.room].filter(Boolean).join(" · "),
       badge: o.registration_open ? "Publié" : "Inscriptions à venir",
       attention: false,
       href: `/etudiant/services/${o.id}`,

@@ -7,7 +7,7 @@ import { AFTERNOON, longDateLabel } from "@/lib/program-dates";
 
 const field = "w-full rounded-lg border border-border bg-background px-3 py-2.5 text-[15px] text-foreground";
 const label = "mb-1.5 block text-[14px] text-muted";
-export const PLACES = ["MLK Studio", "MLK GP", "Autre"] as const;
+export const PLACES = ["Espace Martin Luther King", "Autre"] as const;
 
 /** Champ de recherche de personne avec suggestions en live. */
 export function PersonSearch({
@@ -163,7 +163,7 @@ export default function ProposeDialog({
   const [open, setOpen] = useState(defaultOpen);
   const [state, action, pending] = useActionState<ProposeState, FormData>(proposeOpportunity, {});
   const [selected, setSelected] = useState<string[]>([]);
-  const [place, setPlace] = useState<(typeof PLACES)[number]>("MLK Studio");
+  const [place, setPlace] = useState<(typeof PLACES)[number]>("Espace Martin Luther King");
   const [objectives, setObjectives] = useState<string[]>([""]);
   const [none, setNone] = useState(true);
   const [prerequisites, setPrerequisites] = useState<string[]>([""]);
@@ -180,7 +180,7 @@ export default function ProposeDialog({
   function handleClose() {
     setOpen(false);
     setSelected([]);
-    setPlace("MLK Studio");
+    setPlace("Espace Martin Luther King");
     setDialogKey((k) => k + 1);
   }
 

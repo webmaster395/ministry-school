@@ -22,9 +22,8 @@ export default async function AdminSessionsPage() {
         </h2>
         {/* Guide lieux */}
         <div className="mb-4 rounded-md border border-border bg-foreground/5 p-3 text-xs text-muted space-y-1">
-          <p className="font-semibold text-foreground">Rappel — deux sites distincts :</p>
-          <p>• <strong>Espace Grand Paris</strong> (Phase 1 – Tronc commun) : plusieurs salles — <strong>Giroud</strong>, <strong>Rosa Parks</strong>, <strong>Denis</strong>. Préciser toujours la salle.</p>
-          <p>• <strong>MLK 2</strong> (= MLK Studio, Phase 2 – Par ministère) : site unique, pas de salle à préciser.</p>
+          <p className="font-semibold text-foreground">Rappel — un seul lieu :</p>
+          <p>• <strong>Espace Martin Luther King</strong> : plusieurs salles — <strong>Giroud</strong>, <strong>Rosa Parks</strong>, <strong>Denis</strong>. Par défaut, la salle Giroud.</p>
         </div>
         <form action={createSession} className="grid gap-3 sm:grid-cols-2">
           <div>
@@ -134,25 +133,22 @@ export default async function AdminSessionsPage() {
             <select
               name="location"
               required
-              defaultValue=""
+              defaultValue="Espace Martin Luther King"
               className="w-full rounded-md border border-border px-3 py-2 text-sm"
             >
-              <option value="" disabled>Sélectionner un lieu…</option>
-              <option value="Espace Grand Paris">Espace Grand Paris (Tronc commun)</option>
-              <option value="MLK 2">MLK 2 / MLK Studio (Par ministère)</option>
+              <option value="Espace Martin Luther King">Espace Martin Luther King</option>
             </select>
           </div>
 
           <div>
             <label className="mb-1 block text-xs text-muted">
-              Salle <span className="text-link">(requis pour Espace Grand Paris)</span>
+              Salle <span className="text-link">(par défaut : Giroud)</span>
             </label>
             <select
               name="room"
-              defaultValue=""
+              defaultValue="Giroud"
               className="w-full rounded-md border border-border px-3 py-2 text-sm"
             >
-              <option value="">— Aucune salle (MLK 2) —</option>
               <option value="Giroud">Giroud</option>
               <option value="Rosa Parks">Rosa Parks</option>
               <option value="Denis">Denis</option>

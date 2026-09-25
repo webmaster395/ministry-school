@@ -15,18 +15,17 @@ export async function getEnrollmentBreakdown(
 ): Promise<EnrollmentBreakdown> {
   const { data: ministries } = await supabase.from("ministries").select("id, name, slug").order("name");
 
+  // Tout le monde est compté (administrateurs, formateurs, étudiants) : pas de distinction pour le moment.
   // Requête tolérante sur profiles : si la colonne gender existe, on la récupère, sinon fallback
   let rows: { ministry_id: string | null; preferred_day: string | null; gender?: string | null }[] = [];
   const { data: studentsWithGender, error } = await supabase
     .from("profiles")
-    .select("ministry_id, preferred_day, gender")
-    .eq("role", "student");
+    .select("ministry_id, preferred_day, gender");
 
   if (error) {
     const { data: fallbackStudents } = await supabase
       .from("profiles")
-      .select("ministry_id, preferred_day")
-      .eq("role", "student");
+      .select("ministry_id, preferred_day");
     rows = (fallbackStudents as typeof rows) ?? [];
   } else {
     rows = (studentsWithGender as typeof rows) ?? [];

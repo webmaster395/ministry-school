@@ -75,7 +75,7 @@ export default async function OpportunityList({ kind, tab: requested }: { kind: 
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
-        <nav className="grid min-w-0 basis-full grid-cols-2 sm:basis-0 sm:flex-1 gap-1 rounded-lg border border-border bg-background p-1 sm:grid-cols-4">
+        <nav className="tabbar grid min-w-0 basis-full grid-cols-2 sm:basis-0 sm:flex-1 gap-1 rounded-lg border border-border bg-background p-1 sm:grid-cols-4">
           {TABS.map((t) => (
             <Link
               key={t.key}

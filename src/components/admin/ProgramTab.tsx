@@ -63,7 +63,7 @@ export default function ProgramTab({ entries, view, today }: { entries: ProgramE
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <nav className="inline-flex gap-1 rounded-lg border border-border bg-background p-1">
+        <nav className="tabbar inline-flex gap-1 rounded-lg border border-border bg-background p-1">
           {tabs.map((t) => (
             <Link
               key={t.key}

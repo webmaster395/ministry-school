@@ -23,7 +23,8 @@ export default async function OverviewTab({
   const supabase = await createClient();
   const [breakdown, ministries] = await Promise.all([getEnrollmentBreakdown(supabase), getMinistries(supabase)]);
 
-  const students = members.filter((m) => m.role === "student");
+  // Pour le moment, aucune distinction : administrateurs, formateurs et étudiants sont comptés ensemble
+  const students = members;
   const monthStart = today.slice(0, 7);
   const newThisMonth = members.filter((m) => m.created_at.slice(0, 7) === monthStart).length;
   const pending = students.filter((m) => !m.email_confirmed && !m.deactivated).length;

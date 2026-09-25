@@ -40,7 +40,7 @@ export default function ProjectsTab({
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <nav className="inline-flex gap-1 rounded-lg border border-border bg-background p-1">
+        <nav className="tabbar inline-flex gap-1 rounded-lg border border-border bg-background p-1">
           {[
             { key: "projet", label: "Projets" },
             { key: "formation", label: "Formations de service" },
@@ -56,7 +56,7 @@ export default function ProjectsTab({
             </Link>
           ))}
         </nav>
-        <nav className="inline-flex gap-1 rounded-lg border border-border bg-background p-1">
+        <nav className="tabbar inline-flex gap-1 rounded-lg border border-border bg-background p-1">
           {PHASES.map((p) => (
             <Link
               key={p.key}
@@ -109,7 +109,7 @@ export default function ProjectsTab({
                     {o.services?.name ? ` · ${o.services.name}` : ""}
                   </span>
                   <span className="block text-sm text-muted">
-                    {datesLabel(o)} · MLK Studio{o.dates[0]?.room ? ` · ${o.dates[0].room}` : ""}
+                    {datesLabel(o)} · Espace Martin Luther King{o.dates[0]?.room ? ` · ${o.dates[0].room}` : ""}
                   </span>
                 </Link>
 

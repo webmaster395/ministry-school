@@ -103,7 +103,7 @@ export default async function OpportunityManage({ id, kind }: { id: string; kind
   // Lieu et salle extraits des dates
   const firstRoom = dates[0]?.room ?? "";
   const [firstPlace, ...restRoom] = firstRoom.split(" · ");
-  const initialPlace = firstPlace?.trim() || "MLK Studio";
+  const initialPlace = firstPlace?.trim() || "Espace Martin Luther King";
   const initialRoom = restRoom.join(" · ").trim();
 
   // Objectifs et prérequis

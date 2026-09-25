@@ -24,7 +24,7 @@ export default async function QuestionsTab({ filter }: { filter: string }) {
 
   return (
     <div className="space-y-5">
-      <nav className="inline-flex gap-1 rounded-lg border border-border bg-background p-1">
+      <nav className="tabbar inline-flex gap-1 rounded-lg border border-border bg-background p-1">
         {[
           { key: "a_traiter", label: "À traiter" },
           { key: "traitees", label: "Traitées" },

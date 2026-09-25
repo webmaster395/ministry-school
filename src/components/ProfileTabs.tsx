@@ -17,7 +17,7 @@ export default function ProfileTabs() {
   return (
     <nav
       aria-label="Profil"
-      className={`grid gap-1 rounded-lg border border-border bg-background p-1 ${
+      className={`tabbar grid gap-1 rounded-lg border border-border bg-background p-1 ${
         tabs.length === 3 ? "grid-cols-3" : "grid-cols-2"
       }`}
     >

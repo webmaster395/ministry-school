@@ -1471,3 +1471,63 @@ html body #price.pricing-section{background-color:#fff!important;background-imag
 .login-brand__sep{display:block;width:1px;height:var(--mlk-h);background:rgba(255,255,255,.28)}
 .login-brand__mlk{display:block;width:calc(var(--mlk-h)*1.298);height:var(--mlk-h);background:var(--cream);-webkit-mask:url(/logo-mlk.png) center/contain no-repeat;mask:url(/logo-mlk.png) center/contain no-repeat}
 @media(max-width:520px){.login-brand{--mlk-h:19px;gap:8px}}
+
+
+
+/* Tarif membre actif : panneau unique avec deux parcours (version de Rose Alice) */
+.price-panel--member{display:block;min-height:0;padding:42px 46px 46px;text-align:left}
+.price-panel--member:before{display:none}
+.member-price-intro{display:grid;max-width:1000px;margin:0 auto 34px;grid-template-columns:230px minmax(0,1fr);align-items:center;gap:28px}
+.member-price-amount{display:flex;align-items:flex-end;flex-wrap:wrap;gap:7px 9px}
+.member-price-amount strong{font-family:var(--serif);font-size:5.1rem;font-weight:500;line-height:.76;letter-spacing:-.055em}
+.member-price-amount span{max-width:100px;padding-bottom:3px;color:#68716d;font-size:.74rem;font-weight:650;line-height:1.25}
+.member-price-copy{display:grid;gap:7px}
+.member-price-intro p{max-width:700px;margin:0;color:#56605b;font-size:.84rem;line-height:1.5}
+.member-price-intro .member-price-lead{color:var(--ink);font-size:1rem}
+.member-price-paths{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.member-price-path{display:flex;min-width:0;border:1px solid #d9ddda;border-radius:20px;padding:30px;background:#fff;flex-direction:column}
+.member-price-option{margin:0 0 14px;color:#78817d;font-size:.62rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.member-price-path h3{max-width:390px;margin:0 0 24px;font-family:var(--sans);font-size:1.45rem;font-weight:680;line-height:1.12;letter-spacing:-.035em}
+.member-price-path h4{margin:0 0 15px;color:#3f4844;font-size:.71rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.member-price-path ul{display:grid;margin:0;padding:0;gap:10px;list-style:none}
+.member-price-path li{position:relative;padding-left:17px;color:#56605b;font-size:.78rem;line-height:1.45}
+.member-price-path li:before{position:absolute;left:0;content:"—"}
+.member-price-email{display:flex;margin-bottom:26px;border-radius:14px;padding:16px;background:#d9e88b;color:var(--ink);gap:11px}
+.member-price-email p{margin:0;font-size:.75rem;line-height:1.45}
+.member-price-email strong{display:block;margin-bottom:4px;font-size:.82rem}
+.member-price-monthly{margin:0 0 22px;color:var(--ink);font-size:.88rem}
+.member-price-includes{margin-top:auto}
+.member-price-path--candidate>p:not(.member-price-option){margin:16px 0 0;color:#626b67;font-size:.76rem;line-height:1.48}
+.member-price-path--candidate .member-price-confirmation{padding-top:16px;border-top:1px solid #e0e3e0;color:#3f4844}
+.member-price-path--candidate .btn{width:max-content;min-width:210px;margin-top:22px;border-radius:999px}
+@media(max-width:900px){.price-panel--member{padding:36px}.member-price-intro{grid-template-columns:190px minmax(0,1fr);gap:22px}.member-price-amount strong{font-size:4.55rem}.member-price-paths{grid-template-columns:1fr}}
+@media(max-width:620px){.price-panel--member{padding:24px 18px 20px!important}.member-price-intro{display:grid;margin-bottom:24px;grid-template-columns:1fr;gap:18px}.member-price-amount{margin:0}.member-price-amount strong{font-size:3.75rem}.member-price-amount span{max-width:88px;font-size:.66rem}.member-price-copy{grid-column:1/-1}.member-price-copy p+p{margin-top:5px}.member-price-path{padding:24px 20px;border-radius:17px}.member-price-path h3{font-size:1.3rem}.member-price-path--candidate .btn{width:100%;min-width:0}.price-mobile-accordion__panel.price-panel--member{background:#f5f5f3}}
+
+/* Repères couleur des deux tarifs */
+#price-general{border-top:5px solid #91b6d9}
+#price-member{border-top:5px solid #d9e88b}
+.price-tabs__choices button:first-child[aria-selected=true]{background:#91b6d9;color:var(--ink)}
+.price-tabs__choices button:nth-child(2)[aria-selected=true]{background:#d9e88b;color:var(--ink)}
+.price-mobile-accordion__item:first-child .price-mobile-accordion__trigger[aria-expanded=true]{background:#91b6d9}
+.price-mobile-accordion__item:nth-child(2) .price-mobile-accordion__trigger[aria-expanded=true]{background:#d9e88b}
+.member-price-path--existing{border-color:#cadb7a;background:#fbfdeb}
+.member-price-path--candidate{border-color:#cfd7dc;background:#f7f9fa}
+
+.login-brand__copy{display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+.login-brand__copy>span{line-height:1}
+.login-brand__copy small{color:var(--cream);font-size:.56rem;font-weight:600;line-height:1;letter-spacing:.14em;text-transform:uppercase}
+@media(max-width:520px){.login-brand__copy small{font-size:.46rem;letter-spacing:.1em}}
+/* Deux onglets de tarif : deux colonnes égales, sans place vide */
+.price-tabs__choices{grid-template-columns:repeat(2,1fr)}
+
+/* Panneau membre : le logo Église MLK complet à gauche du montant, comme dans la version de Rose Alice */
+.member-price-logo{width:118px;height:64px;object-fit:contain}
+.member-price-intro{grid-template-columns:130px 220px minmax(0,1fr)}
+@media(max-width:900px){.member-price-intro{grid-template-columns:110px 190px minmax(0,1fr)}}
+@media(max-width:620px){.member-price-intro{grid-template-columns:90px minmax(0,1fr)}.member-price-logo{width:90px;height:52px}}
+/* « 9 € / mois pendant 9 mois » sur une seule ligne */
+.member-price-amount{flex-wrap:nowrap;align-items:flex-end;gap:8px}
+.member-price-amount span{max-width:none;white-space:nowrap}
+.member-price-intro{grid-template-columns:130px 260px minmax(0,1fr)}
+@media(max-width:900px){.member-price-intro{grid-template-columns:110px 240px minmax(0,1fr)}}
+@media(max-width:620px){.member-price-intro{grid-template-columns:90px minmax(0,1fr)}.member-price-amount strong{font-size:3.2rem}.member-price-amount span{font-size:.7rem}}

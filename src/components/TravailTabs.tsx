@@ -27,7 +27,7 @@ export default function TravailTabs({ tabs, active }: { tabs: Tab[]; active: str
         <ChevronDown size={18} className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-muted" aria-hidden="true" />
       </div>
 
-      <nav className="hidden gap-1 rounded-full border border-border bg-background p-1 sm:inline-flex">
+      <nav className="tabbar hidden gap-1 rounded-full border border-border bg-background p-1 sm:inline-flex">
         {tabs.map((t) => (
           <Link
             key={t.key}

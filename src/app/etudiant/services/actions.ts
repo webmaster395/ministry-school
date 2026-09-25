@@ -52,7 +52,7 @@ export async function createOpportunity(formData: FormData) {
   const intent = text("intent");
   const isDraft = intent === "draft" || formData.get("registration_open") === "0";
   const referentId = text("referent_id");
-  const place = text("place") || "MLK Studio";
+  const place = text("place") || "Espace Martin Luther King";
   const roomText = text("room");
   const room = [place, roomText].filter(Boolean).join(" · ");
   const rawDates = formData.getAll("dates").map(String).filter(Boolean).sort();

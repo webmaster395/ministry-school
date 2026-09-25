@@ -61,9 +61,7 @@ function LoginForm() {
         <section className="login-visual" aria-label="Ministry School">
           <Link className="login-brand" href="/" aria-label="Retour à Ministry School">
             <img src="/landing/ministry-icons-transparent.png" alt="" />
-            <span>Ministry School</span>
-            <i aria-hidden="true" className="login-brand__sep" />
-            <i role="img" aria-label="Église MLK" className="login-brand__mlk" />
+            <span className="login-brand__copy"><span>Ministry School</span><small>MLK Formation</small></span>
           </Link>
           <div className="login-visual__copy">
             <p>Ton parcours continue ici.</p>

@@ -86,7 +86,7 @@ export default function AddCourseDialog({ ministryId, drafts = false }: { minist
             <div className="grid gap-4 sm:grid-cols-[1.4fr_1fr]">
               <div>
                 <label className={label} htmlFor="course-location">Lieu *</label>
-                <input id="course-location" name="location" required defaultValue="MLK Studio" className={field} />
+                <input id="course-location" name="location" required defaultValue="Espace Martin Luther King" className={field} />
               </div>
               <div>
                 <label className={label} htmlFor="course-room">Salle</label>

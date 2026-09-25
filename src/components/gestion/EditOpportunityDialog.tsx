@@ -22,7 +22,7 @@ export default function EditOpportunityDialog({
   prerequisites: rawPrerequisites,
   referent: initialReferent,
   selectedDates: initialSelectedDates,
-  initialPlace = "MLK Studio",
+  initialPlace = "Espace Martin Luther King",
   initialRoom = "",
   services,
   dates,
