@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, MapPin, RefreshCw, UserRound } from "lucide-react";
+import { CalendarClock, ChevronLeft, ChevronRight, MapPin, RefreshCw, UserRound } from "lucide-react";
 import CalendarSyncDialog from "@/components/CalendarSyncDialog";
+import { COURSES_VISIBLE_UNTIL } from "@/lib/promotion";
 
 export type MonthSession = {
   id: string;
@@ -11,10 +12,12 @@ export type MonthSession = {
   start: string;
   end: string;
   title: string;
+  description?: string | null;
   label: string;
-  location: string;
+  location: string | null;
   teacher: string | null;
   color: string;
+  informational?: boolean;
 };
 
 const MONTHS = [
@@ -77,8 +80,13 @@ export default function MonthCalendar({
 
   function go(delta: number) {
     const d = new Date(year, month + delta, 1);
-    setYear(d.getFullYear());
-    setMonth(d.getMonth());
+    const nextYear = d.getFullYear();
+    const nextMonth = d.getMonth();
+    const prefix = `${nextYear}-${pad(nextMonth + 1)}-`;
+    const firstSession = sessions.find((session) => session.date.startsWith(prefix));
+    setYear(nextYear);
+    setMonth(nextMonth);
+    setSelected(firstSession?.date ?? iso(nextYear, nextMonth, 1));
   }
 
   function goToday() {
@@ -89,6 +97,8 @@ export default function MonthCalendar({
   }
 
   const daySessions = byDate.get(selected) ?? [];
+  const displayedMonth = `${year}-${pad(month + 1)}`;
+  const coursesArePublished = `${displayedMonth}-01` <= COURSES_VISIBLE_UNTIL;
   const isNext = selected === firstDate;
   const isPast = !!today && selected < today;
 
@@ -152,7 +162,7 @@ export default function MonthCalendar({
             {cells.map((d, i) => {
               if (!d) return <div key={i} className="h-[62px] border-b border-r border-border-soft sm:h-[76px]" />;
               const key = iso(year, month, d);
-              const list = byDate.get(key) ?? [];
+              const list = coursesArePublished ? (byDate.get(key) ?? []) : [];
               const isSel = key === selected;
               const isToday = key === today;
               return (
@@ -187,17 +197,35 @@ export default function MonthCalendar({
         </section>
 
         <section className="rounded-lg border border-border bg-background p-6">
-          <p className="text-[13px] text-muted">{isNext ? "Prochaine journée" : isPast ? "Journée passée" : "Journée sélectionnée"}</p>
-          <h2 className="font-title mt-1 text-[19px] leading-tight text-foreground">
-            {longDate(selected)}
-          </h2>
-          {daySessions[0] && (
+          {coursesArePublished ? (
+            <>
+              <p className="text-[13px] text-muted">{isNext ? "Prochaine journée" : isPast ? "Journée passée" : "Journée sélectionnée"}</p>
+              <h2 className="font-title mt-1 text-[19px] leading-tight text-foreground">
+                {longDate(selected)}
+              </h2>
+            </>
+          ) : (
+            <p className="text-[13px] font-medium text-muted">{MONTHS[month]} {year}</p>
+          )}
+          {coursesArePublished && daySessions[0]?.location && (
             <p className="mt-1.5 border-b border-border-soft pb-4 text-[13px] text-muted">
               {daySessions[0].location}
             </p>
           )}
 
-          {daySessions.length ? (
+          {!coursesArePublished ? (
+            <div className="mt-5 rounded-lg border border-border-soft bg-surface p-5 sm:p-6">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-accent/15 text-foreground">
+                <CalendarClock size={21} strokeWidth={1.7} aria-hidden="true" />
+              </span>
+              <h3 className="font-title mt-5 text-[19px] leading-snug text-foreground">
+                La suite de ton programme arrive bientôt
+              </h3>
+              <p className="mt-2 text-[14px] leading-relaxed text-muted">
+                Les prochains cours sont en cours de préparation. Ils apparaîtront ici dès qu’ils seront disponibles.
+              </p>
+            </div>
+          ) : daySessions.length ? (
             <ul className="mt-4 space-y-3">
               {daySessions.map((s) => (
                 <li
@@ -205,36 +233,19 @@ export default function MonthCalendar({
                   className="rounded-lg border border-border border-l-4 transition hover:border-r-foreground hover:border-y-foreground"
                   style={{ borderLeftColor: s.color }}
                 >
-                  <Link
-                    href={`/etudiant/seances/${s.id}`}
-                    className="flex items-start gap-2 p-4"
-                  >
-                    <div className="min-w-0 flex-1">
-                  <div className="flex flex-col items-start gap-1.5 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
-                    <p className="whitespace-nowrap text-[13px] font-semibold text-foreground">
-                      {hm(s.start)} – {hm(s.end)}
-                    </p>
-                    <span
-                      className="label rounded-full px-2.5 py-1 text-[10px] tracking-[0.08em] text-foreground"
-                      style={{ background: `color-mix(in srgb, ${s.color} 28%, transparent)` }}
-                    >
-                      {s.label}
-                    </span>
-                  </div>
-                  <p className="mt-2 text-[14.5px] leading-snug text-foreground">{s.title}</p>
-                  <p className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[12px] text-muted">
-                    {s.teacher && (
-                      <span className="inline-flex items-center gap-1.5">
-                        <UserRound size={15} strokeWidth={1.6} /> {s.teacher}
-                      </span>
-                    )}
-                    <span className="inline-flex items-center gap-1.5">
-                      <MapPin size={15} strokeWidth={1.6} /> {s.location}
-                    </span>
-                  </p>
+                  {s.informational ? (
+                    <div className="flex items-start gap-2 p-4">
+                      <SessionContent session={s} />
                     </div>
-                    <ChevronRight size={16} className="mt-1 shrink-0 text-muted" />
-                  </Link>
+                  ) : (
+                    <Link
+                      href={`/etudiant/seances/${s.id}`}
+                      className="flex items-start gap-2 p-4"
+                    >
+                      <SessionContent session={s} />
+                      <ChevronRight size={16} className="mt-1 shrink-0 text-muted" />
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
@@ -243,6 +254,40 @@ export default function MonthCalendar({
           )}
         </section>
       </div>
+    </div>
+  );
+}
+
+function SessionContent({ session: s }: { session: MonthSession }) {
+  return (
+    <div className="min-w-0 flex-1">
+      <div className="flex flex-col items-start gap-1.5 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+        <p className="whitespace-nowrap text-[13px] font-semibold text-foreground">
+          {hm(s.start)} – {hm(s.end)}
+        </p>
+        <span
+          className="label rounded-full px-2.5 py-1 text-[10px] tracking-[0.08em] text-foreground"
+          style={{ background: `color-mix(in srgb, ${s.color} 28%, transparent)` }}
+        >
+          {s.label}
+        </span>
+      </div>
+      <p className="mt-2 text-[14.5px] font-medium leading-snug text-foreground">{s.title}</p>
+      {s.description && <p className="mt-1.5 text-[13px] leading-relaxed text-muted">{s.description}</p>}
+      {(s.teacher || s.location) && (
+        <p className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[12px] text-muted">
+          {s.teacher && (
+            <span className="inline-flex items-center gap-1.5">
+              <UserRound size={15} strokeWidth={1.6} /> {s.teacher}
+            </span>
+          )}
+          {s.location && (
+            <span className="inline-flex items-center gap-1.5">
+              <MapPin size={15} strokeWidth={1.6} /> {s.location}
+            </span>
+          )}
+        </p>
+      )}
     </div>
   );
 }
