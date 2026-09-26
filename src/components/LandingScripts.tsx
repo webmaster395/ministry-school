@@ -6,7 +6,7 @@ import { createPortal } from "react-dom";
 const MEMBER_REGISTRATION_URL = "https://www.billetweb.fr/mlk-ministry-school&quick=7261552";
 const GENERAL_REGISTRATION_URL = "https://www.billetweb.fr/mlk-ministry-school";
 const MEMBER_REQUEST_URL = "https://eglisemlk.fr/devenir-membre-actif-mlk/";
-const MEMBER_DISCOVERY_URL = "https://eglisemlk.fr/devenir-membre-actif";
+const MEMBER_DISCOVERY_URL = "https://eglisemlk.fr/devenir-membre/";
 
 type Answer = "yes" | "no" | "unknown" | null;
 type Result = "member" | "eligible" | "general" | null;
