@@ -223,3 +223,12 @@ html,body{max-width:100%;overflow-x:clip}
 
 /* Toute la page se cale aussi sur la hauteur visible : évite un défilement inutile quand les barres du navigateur se replient */
 .min-h-screen{min-height:100vh;min-height:100dvh}
+
+/* Téléphones et tablettes : les champs de saisie font au moins 16 px, sinon le navigateur zoome la page dès qu'on touche un champ (Android, iPhone) */
+@media (max-width: 1024px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}

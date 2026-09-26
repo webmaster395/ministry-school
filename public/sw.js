@@ -3,14 +3,13 @@
  * réseau prioritaire pour les pages et API.
  */
 
-const CACHE_NAME = "ms-v1";
+const CACHE_NAME = "ms-v2";
 
 const STATIC_ASSETS = [
   "/",
   "/manifest.json",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
-  "/fonts/etna-free-font.otf",
 ];
 
 // Installation : mise en cache des assets critiques
@@ -18,7 +17,8 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
       .open(CACHE_NAME)
-      .then((cache) => cache.addAll(STATIC_ASSETS))
+      // Chaque fichier est mis en cache séparément : l'absence de l'un d'eux ne doit pas empêcher l'installation
+      .then((cache) => Promise.all(STATIC_ASSETS.map((url) => cache.add(url).catch(() => undefined))))
       .then(() => self.skipWaiting())
   );
 });

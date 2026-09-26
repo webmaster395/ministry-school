@@ -8,29 +8,30 @@
   "display": "standalone",
   "background_color": "#fffdf9",
   "theme_color": "#27302f",
-  "orientation": "portrait-primary",
-  "categories": ["education", "lifestyle"],
+  "orientation": "any",
+  "categories": [
+    "education",
+    "lifestyle"
+  ],
   "icons": [
     {
       "src": "/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
-  "screenshots": [
-    {
-      "src": "/opengraph-image.jpg",
-      "sizes": "1200x630",
-      "type": "image/jpeg",
-      "form_factor": "wide",
-      "label": "Ministry School — Page d'accueil"
-    }
-  ]
+  "id": "/"
 }
