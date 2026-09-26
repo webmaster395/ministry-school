@@ -14,9 +14,13 @@ export async function updateSession(formData: FormData) {
   const id = formData.get("session_id") as string;
   const text = (key: string) => ((formData.get(key) as string) ?? "").trim();
 
+  // Les références bibliques ne sont modifiées que si le formulaire les propose
+  const refs = formData.has("bible_refs") ? { bible_refs: text("bible_refs") || null } : {};
+
   const { error, data } = await supabase
     .from("sessions")
     .update({
+      ...refs,
       session_date: text("session_date"),
       start_time: text("start_time"),
       end_time: text("end_time"),

@@ -1531,3 +1531,5 @@ html body #price.pricing-section{background-color:#fff!important;background-imag
 .member-price-intro{grid-template-columns:130px 260px minmax(0,1fr)}
 @media(max-width:900px){.member-price-intro{grid-template-columns:110px 240px minmax(0,1fr)}}
 @media(max-width:620px){.member-price-intro{grid-template-columns:90px minmax(0,1fr)}.member-price-amount strong{font-size:3.2rem}.member-price-amount span{font-size:.7rem}}
+
+.price-panel__total{margin:8px 0 0!important;flex-basis:100%;color:#68716d;font-size:.78rem;font-weight:650}

@@ -31,11 +31,11 @@ export default async function AdminSessionsPage() {
             <select
               name="session_type"
               required
-              defaultValue="ministere"
+              defaultValue="commun"
               className="w-full rounded-md border border-border px-3 py-2 text-sm"
             >
-              <option value="ministere">Par ministère</option>
               <option value="commun">Tronc commun</option>
+              <option value="ministere">Par ministère</option>
             </select>
           </div>
 
@@ -70,7 +70,7 @@ export default async function AdminSessionsPage() {
           </div>
 
           <div>
-            <label className="mb-1 block text-xs text-muted">Formateur</label>
+            <label className="mb-1 block text-xs text-muted">Formateur (compte, optionnel)</label>
             <select
               name="teacher_id"
               className="w-full rounded-md border border-border px-3 py-2 text-sm"
@@ -156,13 +156,43 @@ export default async function AdminSessionsPage() {
           </div>
 
           <div className="sm:col-span-2">
-            <label className="mb-1 block text-xs text-muted">Description (optionnel)</label>
-            <textarea
-              name="description"
-              rows={2}
-              placeholder="ex: Paul Goulet — Le caractère"
+            <label className="mb-1 block text-xs text-muted">Titre du cours</label>
+            <input name="description" required placeholder="ex : La Cuve" className="w-full rounded-md border border-border px-3 py-2 text-sm" />
+          </div>
+
+          <div>
+            <label className="mb-1 block text-xs text-muted">Parcours (pastille de couleur)</label>
+            <input
+              name="track"
+              list="parcours"
+              placeholder="ex : Formation du cœur"
               className="w-full rounded-md border border-border px-3 py-2 text-sm"
             />
+            <datalist id="parcours">
+              <option value="Formation du cœur" />
+              <option value="Formation du caractère" />
+              <option value="Accélérateur de projet" />
+            </datalist>
+          </div>
+
+          <div>
+            <label className="mb-1 block text-xs text-muted">Intervenant (nom affiché)</label>
+            <input name="speaker_name" placeholder="ex : Paul Goulet" className="w-full rounded-md border border-border px-3 py-2 text-sm" />
+          </div>
+
+          <div className="sm:col-span-2">
+            <label className="mb-1 block text-xs text-muted">Présentation</label>
+            <textarea name="summary" rows={3} className="w-full rounded-md border border-border px-3 py-2 text-sm" />
+          </div>
+
+          <div>
+            <label className="mb-1 block text-xs text-muted">Objectifs (un par ligne)</label>
+            <textarea name="objectives" rows={4} className="w-full rounded-md border border-border px-3 py-2 text-sm" />
+          </div>
+
+          <div>
+            <label className="mb-1 block text-xs text-muted">Références bibliques (une par ligne, optionnel)</label>
+            <textarea name="bible_refs" rows={4} className="w-full rounded-md border border-border px-3 py-2 text-sm" />
           </div>
 
           <button

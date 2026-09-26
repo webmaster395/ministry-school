@@ -17,6 +17,7 @@ export async function createSession(formData: FormData) {
   const room = formData.get("room") as string;
   const day = formData.get("day") as string;
   const description = formData.get("description") as string;
+  const text = (key: string) => ((formData.get(key) as string) ?? "").trim() || null;
 
   const { error } = await supabase.from("sessions").insert({
     session_type: sessionType,
@@ -29,7 +30,12 @@ export async function createSession(formData: FormData) {
     location,
     room: room || null,
     day,
-    description: description || null,
+    description: description?.trim() || null,
+    track: text("track"),
+    speaker_name: text("speaker_name"),
+    summary: text("summary"),
+    objectives: text("objectives"),
+    bible_refs: text("bible_refs"),
   });
 
   if (error) {

@@ -101,6 +101,11 @@ export default function SessionEditForm({
           <textarea name="objectives" rows={3} defaultValue={s.objectives ?? ""} className={field} />
         </div>
 
+        <div>
+          <label className="mb-1 block text-xs text-muted">Références bibliques (une par ligne, ex : Jean 15:1-8)</label>
+          <textarea name="bible_refs" rows={3} defaultValue={s.bible_refs ?? ""} className={field} />
+        </div>
+
         <button
           type="submit"
           disabled={pending}
