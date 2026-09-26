@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { getCourses, getMinistries } from "@/lib/data/admin";
-import { createCourse, deleteCourse } from "./actions";
+import { createCourse, deleteCourse, renameCourse } from "./actions";
 
 export default async function AdminCoursesPage() {
   const supabase = await createClient();
@@ -97,6 +97,15 @@ export default async function AdminCoursesPage() {
                   </span>
                 </div>
                 {c.description && <p className="mt-1 text-sm text-muted">{c.description}</p>}
+                <details className="mt-2">
+                  <summary className="cursor-pointer list-none text-xs font-medium text-link hover:underline">Modifier</summary>
+                  <form action={renameCourse} className="mt-2 grid gap-2 rounded-lg bg-surface p-3 sm:grid-cols-2">
+                    <input type="hidden" name="course_id" value={c.id} />
+                    <input name="title" required defaultValue={c.title} className="w-full rounded-md border border-border px-3 py-2 text-sm" />
+                    <input name="description" defaultValue={c.description ?? ""} placeholder="Description" className="w-full rounded-md border border-border px-3 py-2 text-sm" />
+                    <button type="submit" className="label rounded-md bg-accent px-4 py-2 text-xs tracking-[0.12em] text-on-accent sm:w-fit">Enregistrer</button>
+                  </form>
+                </details>
               </li>
             ))}
           </ul>

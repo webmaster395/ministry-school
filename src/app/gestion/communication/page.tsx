@@ -121,7 +121,7 @@ export default async function CommunicationPage() {
                   <p className="font-semibold text-foreground">{a.title}</p>
                   <span className="flex items-center gap-3 text-xs text-muted">
                     {fmt(a.created_at)}
-                    {a.author_id === viewer.id && (
+                    {(a.author_id === viewer.id || r.admin) && (
                       <form action={deleteCommunication}>
                         <input type="hidden" name="announcement_id" value={a.id} />
                         <button type="submit" className="text-link transition hover:underline">Supprimer</button>

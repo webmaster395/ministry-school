@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
 /**
@@ -17,10 +18,21 @@ export async function updateSession(formData: FormData) {
   // Les références bibliques ne sont modifiées que si le formulaire les propose
   const refs = formData.has("bible_refs") ? { bible_refs: text("bible_refs") || null } : {};
 
+  // Type, ministère, cours et jour : seulement quand le formulaire les propose (administrateur)
+  const admin: Record<string, string | null> = {};
+  if (formData.has("session_type")) {
+    const type = text("session_type");
+    admin.session_type = type;
+    admin.ministry_id = type === "commun" ? null : text("ministry_id") || null;
+    admin.course_id = text("course_id") || null;
+    admin.day = text("day") || "samedi";
+  }
+
   const { error, data } = await supabase
     .from("sessions")
     .update({
       ...refs,
+      ...admin,
       session_date: text("session_date"),
       start_time: text("start_time"),
       end_time: text("end_time"),
@@ -61,4 +73,16 @@ export async function updateSessionWithFeedback(_prev: SessionSaveState, formDat
   } catch (e) {
     return { ok: false, message: e instanceof Error ? e.message : "L'enregistrement a échoué." };
   }
+}
+
+/** Supprime une séance depuis sa fiche, puis revient au programme de l'administration. */
+export async function deleteSessionFromCard(formData: FormData) {
+  const supabase = await createClient();
+  const id = ((formData.get("session_id") as string) ?? "").trim();
+  const { data, error } = await supabase.from("sessions").delete().eq("id", id).select("id");
+  if (error) throw new Error("La suppression a échoué : " + error.message);
+  if (!data?.length) throw new Error("Vous n'avez pas le droit de supprimer cette séance.");
+  revalidatePath("/gestion/admin", "layout");
+  revalidatePath("/etudiant", "layout");
+  redirect("/gestion/admin?onglet=programme");
 }

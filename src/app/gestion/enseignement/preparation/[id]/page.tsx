@@ -26,7 +26,7 @@ export default async function PreparationPage({ params }: { params: Promise<{ id
   const { data } = await supabase
     .from("sessions")
     .select(
-      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, teacher_id, ministry_id, teacher:profiles!sessions_teacher_id_fkey(full_name)" + DRAFT_COLUMN
+      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, session_type, course_id, day, teacher_id, ministry_id, teacher:profiles!sessions_teacher_id_fkey(full_name)" + DRAFT_COLUMN
     )
     .eq("id", id)
     .single();
@@ -49,6 +49,12 @@ export default async function PreparationPage({ params }: { params: Promise<{ id
   ]);
 
   // L'administrateur a la vue du pilotage sur tous les ministères, sans être limité au sien
+  const adminOptions = viewer.roles.admin
+    ? {
+        courses: ((await supabase.from("courses").select("id, title").order("title")).data ?? []) as { id: string; title: string }[],
+        ministries: ((await supabase.from("ministries").select("id, name").order("name")).data ?? []) as { id: string; name: string }[],
+      }
+    : undefined;
   const isPilot = viewer.roles.admin || (!!s.ministry_id && viewer.roles.steeringMinistryIds.includes(s.ministry_id));
   const kind = isPilot ? "pilotage" : "enseignant";
   const afterCount = (assignments ?? []).filter((a) => isAfterClass(a.due_at, s.session_date)).length;
@@ -114,7 +120,7 @@ export default async function PreparationPage({ params }: { params: Promise<{ id
             <p className="text-sm text-muted">Date, horaire, lieu et formateur.</p>
           </div>
           <div className="px-6 pb-6 pt-2">
-            <SessionEditForm session={{ ...s, teacherName: s.teacher?.full_name }} />
+            <SessionEditForm session={{ ...s, teacherName: s.teacher?.full_name }} admin={adminOptions} />
           </div>
         </section>
       )}

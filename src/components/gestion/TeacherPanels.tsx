@@ -9,6 +9,9 @@ import {
   deleteAssignment,
   deleteSupport,
   removeObjective,
+  updateAssignment,
+  updateObjective,
+  updateSupport,
 } from "@/app/gestion/pilotage/actions";
 import { isAfterClass, type PilotSession } from "@/lib/data/pilotage";
 
@@ -32,6 +35,19 @@ function Remove({ action, fields }: { action: (f: FormData) => Promise<void>; fi
         Supprimer
       </button>
     </form>
+  );
+}
+
+/** « Modifier » replié : un petit formulaire sous la ligne, pour corriger sur place. */
+function Edit({ children, action }: { children: ReactNode; action: (f: FormData) => Promise<void> }) {
+  return (
+    <details className="group">
+      <summary className="cursor-pointer list-none text-[14px] text-link hover:underline">Modifier</summary>
+      <form action={action} className="mt-2 flex flex-wrap items-center gap-2">
+        {children}
+        <button type="submit" className={soft}>Enregistrer</button>
+      </form>
+    </details>
   );
 }
 
@@ -82,7 +98,7 @@ export function teacherPanels(s: PilotSession, assignments: Assignment[], materi
     rows.length > 0 && (
       <ul className="mb-4 divide-y divide-border-soft">
         {rows.map((a) => (
-          <li key={a.id} className="flex items-center gap-3 py-3">
+          <li key={a.id} className="flex flex-wrap items-start gap-3 py-3">
             <FileText size={20} className="shrink-0 text-foreground" strokeWidth={1.6} />
             <span className="min-w-0 flex-1">
               <span className="block text-[16px] font-semibold text-foreground">{a.instructions}</span>
@@ -92,7 +108,15 @@ export function teacherPanels(s: PilotSession, assignments: Assignment[], materi
                 </span>
               )}
             </span>
-            <Remove action={deleteAssignment} fields={{ id: a.id, session_id: s.id }} />
+            <div className="flex shrink-0 flex-col items-end gap-1">
+              <Remove action={deleteAssignment} fields={{ id: a.id, session_id: s.id }} />
+              <Edit action={updateAssignment}>
+                <input type="hidden" name="id" value={a.id} />
+                <input type="hidden" name="session_id" value={s.id} />
+                <input name="instructions" required defaultValue={a.instructions} className={`${field} min-w-[220px] flex-1`} />
+                <input name="duration_min" type="number" min={1} placeholder="min" defaultValue={a.duration_min ?? ""} className={`${field} w-[88px]`} />
+              </Edit>
+            </div>
           </li>
         ))}
       </ul>
@@ -124,8 +148,13 @@ export function teacherPanels(s: PilotSession, assignments: Assignment[], materi
         {objectives.length > 0 && (
           <ul className="mb-4 divide-y divide-border-soft">
             {objectives.map((o, i) => (
-              <li key={`${i}-${o}`} className="flex items-center gap-3 py-2.5 text-[16px] text-foreground">
+              <li key={`${i}-${o}`} className="flex flex-wrap items-start gap-3 py-2.5 text-[16px] text-foreground">
                 <span className="min-w-0 flex-1">{o}</span>
+                <Edit action={updateObjective}>
+                  <input type="hidden" name="session_id" value={s.id} />
+                  <input type="hidden" name="index" value={i} />
+                  <input name="objective" required defaultValue={o} className={`${field} min-w-[220px] flex-1`} />
+                </Edit>
                 <form action={removeObjective}>
                   <input type="hidden" name="session_id" value={s.id} />
                   <input type="hidden" name="index" value={i} />
@@ -158,14 +187,22 @@ export function teacherPanels(s: PilotSession, assignments: Assignment[], materi
         {materials.length > 0 && (
           <ul className="mb-4 divide-y divide-border-soft">
             {materials.map((m) => (
-              <li key={m.id} className="flex items-center gap-3 py-3 text-[15px]">
+              <li key={m.id} className="flex flex-wrap items-start gap-3 py-3 text-[15px]">
                 <span className="min-w-0 flex-1">
                   <MaterialLink title={m.title} url={m.link_url ?? m.file_url} />
                   <span className="mt-0.5 block text-[13px] text-muted">
                     {[m.resource_type, visibilityOf(m.visible_at)].filter(Boolean).join(" · ")}
                   </span>
                 </span>
-                <Remove action={deleteSupport} fields={{ id: m.id, session_id: s.id }} />
+                <div className="flex shrink-0 flex-col items-end gap-1">
+                  <Remove action={deleteSupport} fields={{ id: m.id, session_id: s.id }} />
+                  <Edit action={updateSupport}>
+                    <input type="hidden" name="id" value={m.id} />
+                    <input type="hidden" name="session_id" value={s.id} />
+                    <input name="title" required defaultValue={m.title} className={`${field} min-w-[200px] flex-1`} />
+                    {m.link_url !== null && <input name="link_url" defaultValue={m.link_url ?? ""} placeholder="Lien" className={`${field} min-w-[200px] flex-1`} />}
+                  </Edit>
+                </div>
               </li>
             ))}
           </ul>

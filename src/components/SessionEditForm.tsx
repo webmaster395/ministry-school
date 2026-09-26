@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { updateSessionWithFeedback } from "@/lib/actions/sessions";
+import { deleteSessionFromCard, updateSessionWithFeedback } from "@/lib/actions/sessions";
 
 export type EditableSession = {
   id: string;
@@ -17,6 +17,15 @@ export type EditableSession = {
   objectives?: string | null;
   bible_refs?: string | null;
   teacherName?: string | null;
+  session_type?: string | null;
+  ministry_id?: string | null;
+  course_id?: string | null;
+  day?: string | null;
+};
+
+export type AdminOptions = {
+  courses: { id: string; title: string }[];
+  ministries: { id: string; name: string }[];
 };
 
 const field =
@@ -26,9 +35,11 @@ const field =
 export default function SessionEditForm({
   session: s,
   defaultOpen = false,
+  admin,
 }: {
   session: EditableSession;
   defaultOpen?: boolean;
+  admin?: AdminOptions;
 }) {
   const [state, formAction, pending] = useActionState(updateSessionWithFeedback, null);
   return (
@@ -101,6 +112,43 @@ export default function SessionEditForm({
           <textarea name="objectives" rows={3} defaultValue={s.objectives ?? ""} className={field} />
         </div>
 
+        {admin && (
+          <>
+            <div>
+              <label className="mb-1 block text-xs text-muted">Type de séance</label>
+              <select name="session_type" defaultValue={s.session_type ?? "commun"} className={field}>
+                <option value="commun">Tronc commun</option>
+                <option value="ministere">Par ministère</option>
+              </select>
+            </div>
+            <div>
+              <label className="mb-1 block text-xs text-muted">Ministère (si par ministère)</label>
+              <select name="ministry_id" defaultValue={s.ministry_id ?? ""} className={field}>
+                <option value="">— Aucun —</option>
+                {admin.ministries.map((m) => (
+                  <option key={m.id} value={m.id}>{m.name}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="mb-1 block text-xs text-muted">Cours rattaché</label>
+              <select name="course_id" defaultValue={s.course_id ?? ""} className={field}>
+                <option value="">— Aucun cours rattaché —</option>
+                {admin.courses.map((c) => (
+                  <option key={c.id} value={c.id}>{c.title}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="mb-1 block text-xs text-muted">Jour</label>
+              <select name="day" defaultValue={s.day ?? "samedi"} className={field}>
+                <option value="samedi">Samedi</option>
+                <option value="dimanche">Dimanche</option>
+              </select>
+            </div>
+          </>
+        )}
+
         <div>
           <label className="mb-1 block text-xs text-muted">Références bibliques (une par ligne, ex : Jean 15:1-8)</label>
           <textarea name="bible_refs" rows={3} defaultValue={s.bible_refs ?? ""} className={field} />
@@ -119,6 +167,18 @@ export default function SessionEditForm({
           </p>
         )}
       </form>
+      {admin && (
+        <form
+          action={deleteSessionFromCard}
+          onSubmit={(e) => {
+            if (!window.confirm("Supprimer définitivement cette séance, avec ses objectifs, devoirs et supports ?")) e.preventDefault();
+          }}
+          className="mt-3"
+        >
+          <input type="hidden" name="session_id" value={s.id} />
+          <button type="submit" className="text-xs text-link transition hover:underline">Supprimer cette séance</button>
+        </form>
+      )}
     </details>
   );
 }

@@ -140,6 +140,7 @@ function refreshPrep(sessionId: string) {
   revalidatePath("/gestion/pilotage", "layout");
   revalidatePath("/gestion/enseignement", "layout");
   revalidatePath("/gestion/pilotage");
+  revalidatePath("/gestion/admin", "layout");
   revalidatePath("/etudiant", "layout");
 }
 
@@ -201,5 +202,53 @@ export async function deleteSupport(formData: FormData) {
   const { data, error } = await supabase.from("materials").delete().eq("id", id).select("id");
   if (error) throw new Error("La suppression a échoué : " + error.message);
   if (!data?.length) throw new Error("Vous n'avez pas le droit de supprimer ce support.");
+  refreshPrep(sessionId);
+}
+
+const str = (f: FormData, k: string) => ((f.get(k) as string) ?? "").trim();
+
+/** Corrige le texte (et la durée) d'une consigne. */
+export async function updateAssignment(formData: FormData) {
+  const supabase = await createClient();
+  const instructions = str(formData, "instructions");
+  if (!instructions) throw new Error("Le texte ne peut pas être vide.");
+  const duration = parseInt(str(formData, "duration_min"), 10);
+  const { data, error } = await supabase
+    .from("assignments")
+    .update({ instructions, duration_min: Number.isFinite(duration) && duration > 0 ? duration : null })
+    .eq("id", str(formData, "id"))
+    .select("id");
+  if (error) throw new Error("La modification a échoué : " + error.message);
+  if (!data?.length) throw new Error("Vous n'avez pas le droit de modifier cet élément.");
+  refreshPrep(str(formData, "session_id"));
+}
+
+/** Corrige le titre et le lien d'un support (le fichier déposé reste tel quel). */
+export async function updateSupport(formData: FormData) {
+  const supabase = await createClient();
+  const title = str(formData, "title");
+  if (!title) throw new Error("Le titre ne peut pas être vide.");
+  const changes: { title: string; link_url?: string | null } = { title };
+  if (formData.has("link_url")) changes.link_url = str(formData, "link_url") || null;
+  const { data, error } = await supabase.from("materials").update(changes).eq("id", str(formData, "id")).select("id");
+  if (error) throw new Error("La modification a échoué : " + error.message);
+  if (!data?.length) throw new Error("Vous n'avez pas le droit de modifier ce support.");
+  refreshPrep(str(formData, "session_id"));
+}
+
+/** Corrige le texte d'un objectif, à sa position dans la liste. */
+export async function updateObjective(formData: FormData) {
+  const supabase = await createClient();
+  const sessionId = str(formData, "session_id");
+  const index = parseInt(str(formData, "index"), 10);
+  const text = str(formData, "objective");
+  if (!text) throw new Error("L'objectif ne peut pas être vide.");
+  const { data: current } = await supabase.from("sessions").select("objectives").eq("id", sessionId).single();
+  const lines = (current?.objectives ?? "").split("\n").map((l: string) => l.trim()).filter(Boolean);
+  if (!(index >= 0 && index < lines.length)) return;
+  lines[index] = text;
+  const { data, error } = await supabase.from("sessions").update({ objectives: lines.join("\n") }).eq("id", sessionId).select("id");
+  if (error) throw new Error("La modification a échoué : " + error.message);
+  if (!data?.length) throw new Error("Vous n'avez pas le droit de modifier ce cours.");
   refreshPrep(sessionId);
 }
