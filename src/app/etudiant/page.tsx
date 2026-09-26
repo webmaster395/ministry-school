@@ -108,10 +108,6 @@ export default async function StudentDashboardPage() {
                         Accueil
                       </span>
                       <p className="mt-1.5 text-[16px] font-semibold text-foreground">Accueil des étudiants</p>
-                      <p className="mt-2 rounded-lg border border-border bg-surface px-3 py-2 text-[13.5px] leading-snug text-foreground">
-                        <strong className="font-semibold">Attention :</strong> les places de parking sont très limitées.
-                        Nous vous recommandons d&apos;arriver en avance.
-                      </p>
                     </div>
                   </li>
                   <li className="grid grid-cols-[22px_1fr] gap-x-3 lg:grid-cols-[150px_22px_1fr] lg:gap-x-4">
@@ -300,9 +296,7 @@ export default async function StudentDashboardPage() {
               <ul className="mt-2 list-disc space-y-1 pl-5">
                 <li>apporter de quoi prendre des notes ;</li>
                 <li>prévoir une bouteille d&apos;eau ;</li>
-                <li>arriver suffisamment en avance : les places de parking sont très limitées.</li>
               </ul>
-              <p className="mt-3 text-muted">Il n&apos;y aura pas de restauration sur place.</p>
             </div>
           ) : (
             <p className="mt-4 text-sm text-muted">Rien à préparer pour cette journée.</p>

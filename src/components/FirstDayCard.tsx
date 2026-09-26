@@ -21,11 +21,7 @@ export default function FirstDayCard() {
           <ul className="mt-2 list-disc space-y-1 pl-5 text-[15px] leading-relaxed text-foreground">
             <li>apporter de quoi prendre des notes ;</li>
             <li>prévoir une bouteille d&apos;eau ;</li>
-            <li>arriver suffisamment en avance : les places de parking sont très limitées.</li>
           </ul>
-          <p className="mt-4 text-[15px] leading-relaxed text-muted">
-            Il n&apos;y aura pas de restauration sur place.
-          </p>
         </div>
       </div>
     </section>
