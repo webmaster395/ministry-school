@@ -1606,3 +1606,11 @@ html body #price.pricing-section{background-color:#fff!important;background-imag
 
 /* Titres du parcours tarifaire, de la définition et de la FAQ : police des titres de la charte, comme le reste de la landing */
 .pricing-journey__intro h2,.pricing-question__title h3,.pricing-result h3,.pricing-definition h3,.faq-heading h2{font-family:var(--serif);font-weight:500;letter-spacing:-.04em}
+
+/* Onglets « Octobre — Décembre / Janvier — Juin » centrés, avec leur légende */
+.phase-switch{margin-left:auto;margin-right:auto}
+#panel-growth .program-panel__meta{text-align:center}
+#panel-growth .program-panel__meta small{text-align:center}
+/* Onglets de période plus aérés sur ordinateur et tablette */
+@media(min-width:901px){.phase-switch{display:grid;grid-template-columns:1fr 1fr;width:min(100%,480px);padding:6px;gap:6px}.phase-switch button{min-height:52px;padding:0 28px;font-size:.92rem;white-space:nowrap}}
+@media(min-width:621px) and (max-width:900px){.phase-switch{width:min(100%,420px)}.phase-switch button{min-height:46px;font-size:.85rem;padding:0 18px}}
