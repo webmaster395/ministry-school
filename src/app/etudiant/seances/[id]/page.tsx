@@ -16,7 +16,6 @@ import {
   getStudentAssignments,
   getStudentCompletedIds,
   getStudentMaterials,
-  getStudentProfile,
 } from "@/lib/data/student";
 import { parcoursSlugOf } from "@/lib/data/parcours";
 import { toggleAssignment } from "../../travail/actions";
@@ -85,7 +84,12 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
   const past = s.session_date < today;
 
   const parcoursSlug = parcoursSlugOf(s.track);
-  const trackColor = parcoursSlug ? (TRACK_COLORS[parcoursSlug] ?? "#27302f") : "#27302f";
+  const isPractice = s.track?.toLowerCase().includes("mise en pratique") ?? false;
+  const trackColor = isPractice
+    ? "var(--f-projet)"
+    : parcoursSlug
+      ? (TRACK_COLORS[parcoursSlug] ?? "#27302f")
+      : "#27302f";
   const title = s.courses?.title ?? s.description ?? "Séance";
   const aboutText = s.summary || s.description;
   const objectives = lines(s.objectives);

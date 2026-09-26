@@ -12,10 +12,10 @@ const AFTERNOON_SESSIONS: MonthSession[] = ["2026-11-07", "2026-12-05"].map((dat
   title: "Services & Projets",
   description:
     "Découvre les formations proposées par ton service ou les projets de l’Église MLK auxquels tu souhaites contribuer.",
-  label: "Mise en pratique",
+  label: "MISE EN PRATIQUE",
   location: null,
   teacher: null,
-  color: "var(--accent)",
+  color: "var(--f-projet)",
   informational: true,
 }));
 

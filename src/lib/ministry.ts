@@ -71,6 +71,7 @@ export function sessionColor(
   if (t.includes("cœur") || t.includes("coeur")) return "var(--f-coeur)";
   if (t.includes("caractère") || t.includes("caractere")) return "var(--f-caractere)";
   if (t.includes("sensibilité") || t.includes("sensibilite")) return "var(--f-sensibilite)";
+  if (t.includes("mise en pratique")) return "var(--f-projet)";
   if (t.includes("parcours") || t.includes("projet")) return "var(--f-projet)";
   return sessionType === "commun" ? INK : ministryColor;
 }

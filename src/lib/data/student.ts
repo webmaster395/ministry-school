@@ -102,6 +102,42 @@ function sortByDateThenTime(a: StudentSession, b: StudentSession) {
   );
 }
 
+/**
+ * Présentation commune des après-midi du premier trimestre de la promotion.
+ * La normalisation est faite ici pour garder l'Accueil, le Calendrier, Mes cours,
+ * À faire et les fiches de séance parfaitement cohérents.
+ */
+function normalizeAutumnPracticeSession(session: StudentSession): StudentSession {
+  const isAutumnAfternoon =
+    session.session_date >= "2026-10-01" &&
+    session.session_date <= "2026-12-31" &&
+    session.start_time.slice(0, 5) >= "14:00" &&
+    session.end_time.slice(0, 5) === "17:00";
+
+  if (!isAutumnAfternoon) return session;
+
+  const normalized = {
+    ...session,
+    start_time: "14:30:00",
+    track: "MISE EN PRATIQUE",
+  };
+  if (session.session_date !== "2026-10-03") return normalized;
+
+  return {
+    ...normalized,
+    description: "De la formation à l’action",
+    speaker_name: "Nathalie Boudehent",
+    courses: session.courses
+      ? { ...session.courses, title: "De la formation à l’action" }
+      : session.courses,
+    teacher: { full_name: "Nathalie Boudehent" },
+  };
+}
+
+function normalizeStudentSessions(sessions: StudentSession[]) {
+  return sessions.map(normalizeAutumnPracticeSession).sort(sortByDateThenTime);
+}
+
 export async function getStudentSessions(supabase: SupabaseClient, userId: string) {
   const [ministrySessions, commonSessions] = await Promise.all([
     getMinistrySessions(supabase, userId),
@@ -110,9 +146,9 @@ export async function getStudentSessions(supabase: SupabaseClient, userId: strin
 
   const today = new Date().toISOString().slice(0, 10);
 
-  return [...ministrySessions, ...commonSessions]
-    .filter((s) => s.session_date >= today)
-    .sort(sortByDateThenTime);
+  return normalizeStudentSessions(
+    [...ministrySessions, ...commonSessions].filter((s) => s.session_date >= today)
+  );
 }
 
 export async function getStudentAllSessions(supabase: SupabaseClient, userId: string) {
@@ -121,7 +157,7 @@ export async function getStudentAllSessions(supabase: SupabaseClient, userId: st
     getCommonSessions(supabase),
   ]);
 
-  return [...ministrySessions, ...commonSessions].sort(sortByDateThenTime);
+  return normalizeStudentSessions([...ministrySessions, ...commonSessions]);
 }
 
 export async function getStudentMaterials(supabase: SupabaseClient, sessionIds: string[]) {
@@ -184,13 +220,22 @@ export async function getStudentCourses(
     .in("id", courseIds)
     .order("title");
 
-  return (data ?? []).map((c) => ({
-    id: c.id as string,
-    title: c.title as string,
-    description: c.description as string | null,
-    objectives: c.objectives as string | null,
-    sessions: withCourse.filter((s) => s.course_id === c.id).sort(sortByDateThenTime),
-  }));
+  return (data ?? []).map((c) => {
+    const courseSessions = withCourse
+      .filter((s) => s.course_id === c.id)
+      .sort(sortByDateThenTime);
+    const isFirstPracticeCourse = courseSessions.some(
+      (s) => s.session_date === "2026-10-03" && s.start_time.slice(0, 5) === "14:30"
+    );
+
+    return {
+      id: c.id as string,
+      title: isFirstPracticeCourse ? "De la formation à l’action" : (c.title as string),
+      description: c.description as string | null,
+      objectives: c.objectives as string | null,
+      sessions: courseSessions,
+    };
+  });
 }
 
 export async function getStudentCourse(
