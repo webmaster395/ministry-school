@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 const MEMBER_REGISTRATION_URL = "https://www.billetweb.fr/mlk-ministry-school&quick=7261552";
 const GENERAL_REGISTRATION_URL = "https://www.billetweb.fr/mlk-ministry-school";
 const MEMBER_REQUEST_URL = "https://eglisemlk.fr/devenir-membre-actif-mlk/";
+const MEMBER_DISCOVERY_URL = "https://eglisemlk.fr/devenir-membre-actif";
 
 type Answer = "yes" | "no" | "unknown" | null;
 type Result = "member" | "eligible" | "general" | null;
@@ -74,7 +75,7 @@ function PricingJourney() {
             <p className="pricing-result__eyebrow">Tarif général</p><div className="pricing-result__price"><strong>90&nbsp;€</strong><span>/ mois</span></div>
             <h3>Le tarif général s’applique pour le moment</h3><p>D’après tes réponses, tu ne remplis pas actuellement les conditions permettant de demander le statut de membre actif MLK.</p>
             <p>Tu peux tout de même rejoindre Ministry School au <strong>tarif général de 90&nbsp;€/mois</strong>.</p><p>Si tu souhaites devenir membre actif par la suite, tu peux commencer à t’engager régulièrement comme <strong>Équipier MLK</strong> et/ou devenir <strong>donateur mensualisé</strong>.</p>
-            <ExternalLink href={GENERAL_REGISTRATION_URL}>M’inscrire à Ministry School — 90 €/mois</ExternalLink><ExternalLink href={MEMBER_REQUEST_URL} secondary>Découvrir comment devenir membre actif</ExternalLink>
+            <ExternalLink href={GENERAL_REGISTRATION_URL}>M’inscrire à Ministry School — 90 €/mois</ExternalLink><ExternalLink href={MEMBER_DISCOVERY_URL} secondary>Découvrir comment devenir membre actif</ExternalLink>
           </div>}
           <button className="pricing-back" type="button" onClick={editAnswers}>← Modifier mes réponses</button>
         </> : <div className="pricing-question">
