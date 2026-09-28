@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { FileText, X } from "lucide-react";
 import ResourceDialog from "@/components/ResourceDialog";
 import MaterialLink from "@/components/MaterialLink";
+import FormSubmitButton from "@/components/FormSubmitButton";
 import { updateSession } from "@/lib/actions/sessions";
 import {
   addObjective,
@@ -45,7 +46,7 @@ function Edit({ children, action }: { children: ReactNode; action: (f: FormData)
       <summary className="cursor-pointer list-none text-[14px] text-link hover:underline">Modifier</summary>
       <form action={action} className="mt-2 flex flex-wrap items-center gap-2">
         {children}
-        <button type="submit" className={soft}>Enregistrer</button>
+        <FormSubmitButton className={soft} />
       </form>
     </details>
   );
@@ -140,7 +141,7 @@ export function teacherPanels(s: PilotSession, assignments: Assignment[], materi
           Présentez en quelques lignes le sujet et l&apos;intérêt de ce cours pour les étudiants.
         </label>
         <textarea id="tp-summary" name="summary" rows={5} defaultValue={s.summary ?? ""} className={field} />
-        <button type="submit" className={save}>Enregistrer</button>
+        <FormSubmitButton className={save} />
       </form>
     ),
     objectifs: (

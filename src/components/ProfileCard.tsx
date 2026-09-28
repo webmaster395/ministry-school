@@ -2,6 +2,7 @@ import Link from "next/link";
 import LogoutButton from "./LogoutButton";
 import AvatarEditor from "./AvatarEditor";
 import { updateProfileDetails } from "@/app/etudiant/profil/actions";
+import FormSubmitButton from "./FormSubmitButton";
 
 type Field = { label: string; value: string | null | undefined };
 
@@ -106,12 +107,10 @@ export default function ProfileCard({
               </span>
             </label>
           </div>
-          <button
-            type="submit"
+          <FormSubmitButton
+            label="Enregistrer les modifications"
             className="mt-6 rounded-full bg-accent px-6 py-3 text-sm font-medium text-on-accent transition hover:bg-[#1b2221]"
-          >
-            Enregistrer les modifications
-          </button>
+          />
         </form>
       </section>
 

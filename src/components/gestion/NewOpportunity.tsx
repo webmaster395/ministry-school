@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getProposalRights, getServices } from "@/lib/data/opportunities";
 import { createOpportunity } from "@/app/etudiant/services/actions";
 import { longDateLabel, programDates } from "@/lib/program-dates";
+import FormSubmitButton from "@/components/FormSubmitButton";
 
 const field = "w-full rounded-md border border-border px-3 py-2 text-sm text-foreground bg-background";
 
@@ -286,22 +287,21 @@ export default async function NewOpportunity({
           </div>
 
           <div className="flex flex-wrap items-center gap-3 pt-2 sm:col-span-2">
-            <button
-              type="submit"
+            <FormSubmitButton
               name="intent"
               value="publish"
+              label={isAdmin ? `Publier ${type === "projet" ? "le projet" : "la formation"}` : "Soumettre à validation"}
+              pendingLabel="Publication…"
+              successLabel="Publié"
               className="label rounded-md bg-accent px-5 py-2.5 text-xs tracking-[0.12em] text-on-accent transition hover:bg-[#1b2221]"
-            >
-              {isAdmin ? `Publier ${type === "projet" ? "le projet" : "la formation"}` : "Soumettre à validation"}
-            </button>
-            <button
-              type="submit"
+            />
+            <FormSubmitButton
               name="intent"
               value="draft"
+              label="Enregistrer comme brouillon"
+              successLabel="Brouillon enregistré"
               className="rounded-md border border-border px-4 py-2 text-xs text-muted transition hover:text-foreground"
-            >
-              Enregistrer comme brouillon
-            </button>
+            />
             {!isAdmin && (
               <p className="mt-1 w-full text-xs text-muted">
                 Votre proposition sera transmise aux Admin pour validation. Elle ne sera pas visible des étudiants tant qu&apos;elle n&apos;est pas validée.

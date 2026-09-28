@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { getCourses, getMinistries } from "@/lib/data/admin";
 import { createCourse, deleteCourse, renameCourse } from "./actions";
+import FormSubmitButton from "@/components/FormSubmitButton";
 
 export default async function AdminCoursesPage() {
   const supabase = await createClient();
@@ -103,7 +104,7 @@ export default async function AdminCoursesPage() {
                     <input type="hidden" name="course_id" value={c.id} />
                     <input name="title" required defaultValue={c.title} className="w-full rounded-md border border-border px-3 py-2 text-sm" />
                     <input name="description" defaultValue={c.description ?? ""} placeholder="Description" className="w-full rounded-md border border-border px-3 py-2 text-sm" />
-                    <button type="submit" className="label rounded-md bg-accent px-4 py-2 text-xs tracking-[0.12em] text-on-accent sm:w-fit">Enregistrer</button>
+                    <FormSubmitButton className="label rounded-md bg-accent px-4 py-2 text-xs tracking-[0.12em] text-on-accent sm:w-fit" />
                   </form>
                 </details>
               </li>

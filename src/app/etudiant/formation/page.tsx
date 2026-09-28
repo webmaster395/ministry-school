@@ -4,6 +4,7 @@ import { BookOpen, ChevronRight, CircleUser, Heart, Pencil } from "lucide-react"
 import { createClient } from "@/lib/supabase/server";
 import MinistryPicto from "@/components/MinistryPicto";
 import MinistryLabels from "@/components/MinistryLabels";
+import FormSubmitButton from "@/components/FormSubmitButton";
 import { getMinistry, MINISTRIES } from "@/lib/ministry";
 import { MINISTRY_PROFILES, MINISTRY_RESOURCES } from "@/lib/ministry-content";
 import { changeMinistry } from "./actions";
@@ -191,12 +192,7 @@ export default async function StudentFormationPage({
                         </option>
                       ))}
                   </select>
-                  <button
-                    type="submit"
-                    className="label rounded-md bg-accent px-4 py-2.5 text-xs tracking-[0.12em] text-on-accent transition hover:bg-[#1b2221]"
-                  >
-                    Enregistrer
-                  </button>
+                  <FormSubmitButton className="label rounded-md bg-accent px-4 py-2.5 text-xs tracking-[0.12em] text-on-accent transition hover:bg-[#1b2221]" />
                 </form>
               </details>
             </div>

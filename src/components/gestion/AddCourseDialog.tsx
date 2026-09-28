@@ -2,6 +2,7 @@
 
 import Portal from "@/components/Portal";
 import { useActionState, useEffect, useState } from "react";
+import FormSubmitButton from "@/components/FormSubmitButton";
 import { Plus, X } from "lucide-react";
 import { createCourse, type CourseFormState } from "@/app/gestion/pilotage/actions";
 
@@ -133,15 +134,14 @@ export default function AddCourseDialog({ ministryId, drafts = false }: { minist
                 Annuler
               </button>
               {drafts && (
-                <button
-                  type="submit"
+                <FormSubmitButton
                   name="intent"
                   value="draft"
                   disabled={pending}
-                  className="rounded-full border border-border bg-background px-5 py-2.5 text-[15px] text-foreground transition hover:border-foreground disabled:opacity-60"
-                >
-                  Enregistrer comme brouillon
-                </button>
+                  label="Enregistrer comme brouillon"
+                  successLabel="Brouillon enregistré"
+                  className="rounded-full border border-border bg-background px-5 py-2.5 text-[15px] text-foreground transition hover:border-foreground"
+                />
               )}
               <button
                 type="submit"

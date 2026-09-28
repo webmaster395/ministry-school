@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
+import FormSubmitButton from "@/components/FormSubmitButton";
 import { ArrowDown, ArrowUp, Plus, Search, Trash2, X } from "lucide-react";
 import { proposeOpportunity, searchProfiles, type ProposeState } from "@/app/gestion/actions";
 import { AFTERNOON, longDateLabel } from "@/lib/program-dates";
@@ -345,9 +346,14 @@ export default function ProposeDialog({
                 <button type="button" onClick={handleClose} disabled={pending} className="rounded-full border border-border bg-background px-5 py-2.5 text-[15px] text-foreground transition hover:border-foreground disabled:opacity-60">
                   Annuler
                 </button>
-                <button type="submit" name="intent" value="draft" disabled={pending} className="rounded-full border border-border bg-background px-5 py-2.5 text-[15px] text-foreground transition hover:border-foreground disabled:opacity-60">
-                  Enregistrer comme brouillon
-                </button>
+                <FormSubmitButton
+                  name="intent"
+                  value="draft"
+                  disabled={pending}
+                  label="Enregistrer comme brouillon"
+                  successLabel="Brouillon enregistré"
+                  className="rounded-full border border-border bg-background px-5 py-2.5 text-[15px] text-foreground transition hover:border-foreground"
+                />
                 <button type="submit" name="intent" value="publish" disabled={pending} className="rounded-full bg-accent px-5 py-2.5 text-[15px] font-medium text-on-accent transition hover:bg-[#1b2221] disabled:opacity-60">
                   {pending ? "Enregistrement…" : `Publier ${kind === "projet" ? "le projet" : "la formation"}`}
                 </button>
