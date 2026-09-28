@@ -179,14 +179,22 @@ export default function MemberAccessEditor({
           </div>
 
           <div className="space-y-3">
-            <select name="service_id" defaultValue={member.service_id ?? ""} className={`${field} w-full`}>
-              <option value="">Service : aucun</option>
-              {services.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.name}
-                </option>
-              ))}
-            </select>
+            {isServiceLead && (
+              <label className="block text-xs font-medium text-foreground">
+                Formation de service gérée dans la plateforme
+                <select name="service_id" defaultValue={member.service_id ?? ""} className={`${field} mt-1.5 w-full`}>
+                  <option value="">Aucune formation attribuée</option>
+                  {services.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name}
+                    </option>
+                  ))}
+                </select>
+                <span className="mt-1.5 block font-normal leading-relaxed text-muted">
+                  Ce choix donne un accès de gestion. Il ne correspond pas au service d&apos;implication déclaré librement par la personne.
+                </span>
+              </label>
+            )}
             <select
               name="ministry_lead_of"
               defaultValue={member.ministry_lead_of ?? ""}
