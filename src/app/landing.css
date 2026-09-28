@@ -1002,10 +1002,10 @@ html body #price.pricing-section{background-color:#fff!important;background-imag
 .signup-fields label.signup-radio{display:inline-flex;align-items:center;gap:9px;cursor:pointer;font-size:14px;font-weight:500}
 .signup-radio input{width:18px;height:18px;min-height:0;margin:0;padding:0;accent-color:var(--ink);cursor:pointer;flex:0 0 auto}
 .signup-radio input:focus-visible{outline:2px solid var(--ink);outline-offset:3px;box-shadow:none}
-.signup-engagement{min-width:0;margin:0;border:1px solid #e7eae8;border-radius:16px;padding:12px 14px;background:#fafaf8}
+.signup-engagement{min-width:0;margin:3px 0;border:1px solid #e7eae8;border-radius:16px;padding:17px 18px;background:#fafaf8}
 .signup-engagement legend{float:left;width:100%;margin:0;padding:0;font-size:14px;font-weight:600;color:var(--ink)}
-.signup-engagement>p{clear:both;margin:5px 0 10px;color:#68706d;font-size:12.5px;line-height:1.4}
-.signup-engagement__grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.signup-engagement>p{clear:both;margin:7px 0 14px;color:#68706d;font-size:12.5px;line-height:1.4}
+.signup-engagement__grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .signup-engagement__grid label{position:relative;min-width:0;cursor:pointer}
 .signup-engagement__grid input{position:absolute;width:1px;height:1px;overflow:hidden;opacity:0}
 .signup-engagement__grid span{display:flex;min-height:44px;align-items:center;border:1px solid #dcdfdc;border-radius:12px;padding:9px 11px 9px 34px;background:#fff;color:#4b524f;font-size:13px;font-weight:500;line-height:1.3;transition:border-color .2s ease,background .2s ease}
@@ -1013,7 +1013,7 @@ html body #price.pricing-section{background-color:#fff!important;background-imag
 .signup-engagement__grid input:checked+span{border-color:var(--ink);background:#edf0e5;color:var(--ink);font-weight:600}
 .signup-engagement__grid input:checked+span::before{border-color:var(--ink);background:var(--ink);box-shadow:inset 0 0 0 2px #fff}
 .signup-engagement__grid input:focus-visible+span{outline:2px solid var(--ink);outline-offset:2px}
-.signup-engagement__services{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
+.signup-engagement__services{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:15px;padding-top:14px;border-top:1px solid #e2e5e2}
 .signup-engagement__services label{display:grid;gap:6px;color:var(--ink);font-size:13px;font-weight:500;line-height:1.35}
 .signup-engagement__services input{width:100%;min-width:0;min-height:44px;border:1px solid #d9dcda;border-radius:10px;background:#fff;padding:10px 12px;color:var(--ink);font:inherit;font-size:14px;outline:none}
 .signup-engagement__services input:focus{border-color:var(--ink);box-shadow:0 0 0 3px rgba(35,44,41,.08)}
