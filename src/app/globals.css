@@ -316,8 +316,19 @@ html,body{max-width:100%;overflow-x:clip}
   }
 
   .app-shell button,
-  .app-shell a[role="button"] {
+  .app-shell a[role="button"],
+  .app-shell .tabbar > a,
+  .app-shell .tabbar > button {
     min-height: 44px;
+  }
+
+  .app-main .tabbar {
+    max-width: 100%;
+  }
+
+  .app-main .tabbar > * {
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
 
   .app-main :is(h1, h2, h3, p, li, dd, dt, span, a) {
@@ -327,6 +338,12 @@ html,body{max-width:100%;overflow-x:clip}
   .app-main form > :is(input, select, textarea, button),
   .app-main form > label {
     max-width: 100%;
+  }
+}
+
+@media (max-width: 767px) and (display-mode: standalone) {
+  .app-header {
+    padding-top: max(12px, env(safe-area-inset-top, 0px));
   }
 }
 

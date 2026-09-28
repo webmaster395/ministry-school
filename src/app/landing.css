@@ -455,10 +455,10 @@ footer{border-top:0;padding:70px 0;background:var(--ink);color:#fff}footer img{w
 @media(max-width:520px){.site-footer{margin:0 8px 8px;border-radius:24px}.footer-shell{width:calc(100% - 36px);padding:46px 0 26px}.footer-lead{padding-bottom:42px;gap:34px}.footer-lead h2{font-size:2.7rem}.footer-cta{width:100%;min-height:54px}.footer-bottom{padding-top:26px;gap:24px}.footer-brand img{width:90px;height:28px}.footer-bottom nav{align-items:flex-start;flex-direction:column;gap:15px}}
 
 /* Mentions légales */
-.legal-page{background:#fff}
+.legal-page{min-height:100dvh;padding-top:env(safe-area-inset-top,0px);padding-right:env(safe-area-inset-right,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);background:#fff}
 .legal-nav{display:flex;width:min(950px,calc(100% - 48px));min-height:88px;margin:0 auto;align-items:center;justify-content:space-between;border-bottom:1px solid #dfe2e0}
 .legal-nav .footer-brand{color:var(--ink)}
-.legal-nav>a:last-child{font-size:.8rem;font-weight:600;text-decoration:none}
+.legal-nav>a:last-child{display:inline-flex;min-height:44px;align-items:center;justify-content:flex-end;font-size:.8rem;font-weight:600;text-decoration:none}
 .legal-main{width:min(950px,calc(100% - 48px));margin:0 auto;padding:100px 0 120px}
 .legal-header{max-width:720px;margin-bottom:76px}
 .legal-header h1{margin:0;font-size:clamp(4rem,7vw,7rem);line-height:.9}
@@ -466,11 +466,13 @@ footer{border-top:0;padding:70px 0;background:var(--ink);color:#fff}footer img{w
 .legal-content section{padding:36px 0;border-top:1px solid #dfe2e0;grid-column:2}
 .legal-content section:before{position:absolute}
 .legal-content h2{margin:0 0 24px;font-family:var(--sans);font-size:1.25rem;font-weight:600;line-height:1.2;letter-spacing:-.02em}
-.legal-content p{margin:0 0 12px;color:#5f6864;font-size:.94rem;line-height:1.7}
+.legal-content p{margin:0 0 12px;overflow-wrap:anywhere;color:#5f6864;font-size:.94rem;line-height:1.7}
 .legal-content p:last-child{margin-bottom:0}
 .legal-content strong{color:var(--ink);font-weight:600}
 .legal-content a{text-underline-offset:3px}
-@media(max-width:700px){.legal-nav{width:calc(100% - 32px)}.legal-main{width:calc(100% - 32px);padding:72px 0 86px}.legal-header{margin-bottom:54px}.legal-header h1{font-size:3.9rem}.legal-content{display:block}.legal-content section{padding:30px 0}.legal-content h2{font-size:1.12rem}}
+@media(max-width:700px){.legal-nav{width:calc(100% - 32px);min-height:78px;gap:16px}.legal-nav .footer-brand{min-width:0;gap:9px}.legal-nav .footer-brand img{width:82px;height:25px;flex-shrink:0}.legal-nav .footer-brand span{font-size:1.05rem;white-space:nowrap}.legal-nav>a:last-child{flex:0 1 auto;text-align:right}.legal-main{width:calc(100% - 32px);padding:64px 0 86px}.legal-header{margin-bottom:48px}.legal-header h1{font-size:clamp(3.05rem,16vw,3.9rem)}.legal-content{display:block}.legal-content section{padding:30px 0}.legal-content h2{font-size:1.12rem}}
+@media(max-width:380px){.legal-nav .footer-brand img{width:68px}.legal-nav .footer-brand span{font-size:.92rem}.legal-nav>a:last-child{font-size:.72rem}.legal-main{padding-top:52px}.legal-header h1{font-size:2.95rem}}
+@media(max-width:760px) and (display-mode:standalone){.legal-page{padding-top:max(12px,env(safe-area-inset-top,0px))}}
 
 /* Passe d'harmonisation globale */
 :root{--content:950px;--radius-lg:30px;--radius-md:22px}
@@ -1643,9 +1645,10 @@ html body #price.pricing-section{background-color:#fff!important;background-imag
   .landing .hero-copy .btn{width:min(100%,330px);padding-right:18px;padding-left:18px;text-align:center}
 }
 @media(max-width:760px) and (display-mode:standalone){
-  .landing .hero-nav{padding-top:calc(4px + env(safe-area-inset-top,0px))}
-  .landing .hero-nav nav{top:calc(54px + env(safe-area-inset-top,0px))}
-  .landing .hero-copy{padding-top:calc(108px + env(safe-area-inset-top,0px))}
+  .landing .hero{padding-top:max(18px,env(safe-area-inset-top,0px))}
+  .landing .hero-nav{padding-top:10px}
+  .landing .hero-nav nav{top:58px}
+  .landing .hero-copy{padding-top:112px}
 }
 @media(max-width:380px){
   .landing .hero-nav{padding-right:14px;padding-left:14px}
