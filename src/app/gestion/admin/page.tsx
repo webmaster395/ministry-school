@@ -30,6 +30,7 @@ type Params = {
   statut?: string;
   tri?: string;
   implication?: string;
+  genre?: string;
 };
 
 export default async function AdminPage({ searchParams }: { searchParams: Promise<Params> }) {
@@ -79,6 +80,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           statut={p.statut ?? "tous"}
           tri={p.tri ?? "nom"}
           implication={p.implication ?? "toutes"}
+          genre={p.genre ?? "tous"}
         />
       )}
     </div>

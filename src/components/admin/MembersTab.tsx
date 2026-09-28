@@ -38,6 +38,7 @@ export default async function MembersTab({
   statut,
   tri,
   implication,
+  genre,
 }: {
   q: string;
   role: string;
@@ -45,6 +46,7 @@ export default async function MembersTab({
   statut: string;
   tri: string;
   implication: string;
+  genre: string;
 }) {
   const supabase = await createClient();
   const [members, ministries, services, { data: delegates }] = await Promise.all([
@@ -71,8 +73,13 @@ export default async function MembersTab({
       if (role === "pilotage") return !!m.ministry_lead_of;
       return m.role === "student" && !m.is_teacher && !m.is_project_lead && !m.is_service_lead && !m.ministry_lead_of;
     })
-    .filter((m) => sens === "toutes" || ministryById.get(m.ministry_id ?? "")?.slug === sens)
+    .filter((m) => sens === "toutes" || (sens === "non_renseignee" ? !m.ministry_id : ministryById.get(m.ministry_id ?? "")?.slug === sens))
     .filter((m) => statut === "tous" || memberStatus(m) === statut)
+    .filter((m) => {
+      if (genre === "tous") return true;
+      if (genre === "non_renseigne") return m.gender !== "homme" && m.gender !== "femme";
+      return m.gender === genre;
+    })
     .filter((m) => {
       if (implication === "toutes") return true;
       const item = parseMlkEngagement(m.notification_prefs);
@@ -111,6 +118,7 @@ export default async function MembersTab({
         </select>
         <select name="sens" defaultValue={sens} className={field}>
           <option value="toutes">Toutes les sensibilités</option>
+          <option value="non_renseignee">Sensibilité non renseignée</option>
           {ministries.map((m) => (
             <option key={m.id} value={m.slug}>
               {m.name}
@@ -130,6 +138,12 @@ export default async function MembersTab({
           <option value="manager">Managers et managers adjoints</option>
           <option value="collaborateur">Collaborateurs salariés</option>
           <option value="non_renseigne">Non renseigné</option>
+        </select>
+        <select name="genre" defaultValue={genre} className={field}>
+          <option value="tous">Tous les genres</option>
+          <option value="homme">Hommes</option>
+          <option value="femme">Femmes</option>
+          <option value="non_renseigne">Genre non renseigné</option>
         </select>
         <select name="tri" defaultValue={tri} className={field}>
           <option value="nom">Tri par nom</option>

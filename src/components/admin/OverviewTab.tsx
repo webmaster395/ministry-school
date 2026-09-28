@@ -184,10 +184,10 @@ export default async function OverviewTab({
           title="Répartition par genre"
           subtitle="Nombre d'hommes et de femmes inscrits."
           data={[
-            { label: "Hommes", value: breakdown.byGender.men },
-            { label: "Femmes", value: breakdown.byGender.women },
+            { label: "Hommes", value: breakdown.byGender.men, href: "/gestion/admin?onglet=membres&genre=homme" },
+            { label: "Femmes", value: breakdown.byGender.women, href: "/gestion/admin?onglet=membres&genre=femme" },
             ...(breakdown.byGender.unassigned > 0
-              ? [{ label: "Non renseigné", value: breakdown.byGender.unassigned }]
+              ? [{ label: "Non renseigné", value: breakdown.byGender.unassigned, href: "/gestion/admin?onglet=membres&genre=non_renseigne" }]
               : []),
           ]}
         />
@@ -196,7 +196,12 @@ export default async function OverviewTab({
       <BarChart
         title="Inscrits par ministère"
         subtitle="Nombre d'étudiants ayant choisi chaque ministère."
-        data={breakdown.byMinistry.map((m) => ({ label: m.name, value: m.count, slug: m.slug }))}
+        data={breakdown.byMinistry.map((m) => ({
+          label: m.name,
+          value: m.count,
+          slug: m.slug,
+          href: m.slug ? `/gestion/admin?onglet=membres&sens=${m.slug}` : "/gestion/admin?onglet=membres&sens=non_renseignee",
+        }))}
       />
     </div>
   );

@@ -1,11 +1,13 @@
 import MinistryPicto from "@/components/MinistryPicto";
 import { getMinistry, INK } from "@/lib/ministry";
+import Link from "next/link";
 
 export type BarDatum = {
   label: string;
   value: number;
   /** Slug d'un ministère : la barre prend sa couleur et affiche son picto */
   slug?: string;
+  href?: string;
 };
 
 /**
@@ -42,8 +44,7 @@ export default function BarChart({
         <ul className="mt-5 space-y-4 sm:space-y-3">
           {data.map((d) => {
             const color = getMinistry(d.slug)?.color ?? INK;
-            return (
-              <li key={d.label} className={`grid ${gridCols} items-center gap-x-3 gap-y-1.5`}>
+            const content = <>
                 {hasPictos && (
                   <span className="flex items-center justify-center">
                     <MinistryPicto slug={d.slug} size={22} />
@@ -74,6 +75,16 @@ export default function BarChart({
                   {d.value}
                   {unit}
                 </span>
+              </>;
+            return (
+              <li key={d.label}>
+                {d.href ? (
+                  <Link href={d.href} className={`grid ${gridCols} items-center gap-x-3 gap-y-1.5 rounded-md transition hover:bg-surface/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground sm:-mx-2 sm:px-2 sm:py-1`}>
+                    {content}
+                  </Link>
+                ) : (
+                  <div className={`grid ${gridCols} items-center gap-x-3 gap-y-1.5`}>{content}</div>
+                )}
               </li>
             );
           })}
