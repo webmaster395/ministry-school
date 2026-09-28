@@ -82,7 +82,7 @@ export default function ResourceDialog({ sessionId, withTypes }: { sessionId: st
 
       {/* Sorti du bloc de la page : un bloc animé ou décalé fausserait la position de la fenêtre */}
       {open && createPortal(
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={(e) => e.target === e.currentTarget && close()}>
+        <div className="app-modal-layer fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={(e) => e.target === e.currentTarget && close()}>
           <form
             onSubmit={submit}
             role="dialog"

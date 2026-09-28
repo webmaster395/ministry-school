@@ -33,7 +33,7 @@ export default function AddCourseDialog({ ministryId, drafts = false }: { minist
 
       {open && (
         <Portal>
-        <div className="fixed inset-0 z-50 bg-black/40">
+        <div className="app-modal-layer fixed inset-0 z-50 bg-black/40">
         <div className="flex h-full items-start justify-center sm:items-center sm:p-4" onClick={(e) => e.target === e.currentTarget && setOpen(false)}>
           <form
             action={action}

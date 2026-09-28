@@ -98,7 +98,7 @@ export default function InstallBanner() {
           left: 0,
           right: 0,
           zIndex: 9999,
-          padding: "0 16px 16px",
+          padding: "0 max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left))",
           animation: "ms-banner-up 420ms cubic-bezier(0.22,1,0.36,1) both",
         }}
       >
@@ -240,7 +240,7 @@ export default function InstallBanner() {
         left: 0,
         right: 0,
         zIndex: 9999,
-        padding: "0 16px 16px",
+        padding: "0 max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left))",
         animation: "ms-banner-up 420ms cubic-bezier(0.22,1,0.36,1) both",
       }}
     >

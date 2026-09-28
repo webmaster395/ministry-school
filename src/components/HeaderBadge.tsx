@@ -23,7 +23,7 @@ export default function HeaderBadge({
 
   if (isHome) {
     return (
-      <span className="label inline-flex items-center whitespace-nowrap rounded-full border border-border px-3.5 py-[7px] text-[11px] tracking-[0.14em] text-foreground">
+      <span className="label hidden items-center whitespace-nowrap rounded-full border border-border px-3.5 py-[7px] text-[11px] tracking-[0.14em] text-foreground sm:inline-flex">
         Promotion {PROMOTION}
       </span>
     );
@@ -33,7 +33,7 @@ export default function HeaderBadge({
 
   return (
     <span
-      className={`inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-border py-[5px] text-sm font-medium text-foreground ${
+      className={`hidden items-center gap-2 whitespace-nowrap rounded-full border border-border py-[5px] text-sm font-medium text-foreground sm:inline-flex ${
         showPicto || avatarUrl ? "pl-2 pr-3.5" : "px-3.5"
       }`}
     >

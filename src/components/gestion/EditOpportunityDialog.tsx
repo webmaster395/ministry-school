@@ -94,7 +94,7 @@ export default function EditOpportunityDialog({
           onClick={(e) => {
             if (e.target === e.currentTarget) setOpen(false);
           }}
-          className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 sm:items-center sm:p-4"
+          className="app-modal-layer fixed inset-0 z-50 flex items-end justify-center bg-black/40 sm:items-center sm:p-4"
         >
           <form
             action={action}

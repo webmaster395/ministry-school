@@ -65,7 +65,7 @@ export default function MobileNav({
         onClick={() => setOpen(true)}
         aria-label={unread > 0 ? `Ouvrir le menu, ${unread} message${unread > 1 ? "s" : ""} non lu${unread > 1 ? "s" : ""}` : "Ouvrir le menu"}
         aria-expanded={open}
-        className="-ml-2 flex h-11 w-11 items-center justify-center rounded-md text-foreground transition hover:bg-foreground/[0.06]"
+        className="-ml-1 flex h-11 w-11 shrink-0 touch-manipulation items-center justify-center rounded-md text-foreground transition hover:bg-foreground/[0.06]"
       >
         <span className="relative">
           <Menu size={24} strokeWidth={1.7} />
@@ -76,7 +76,7 @@ export default function MobileNav({
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex">
+        <div className="fixed inset-0 z-50 flex h-[100dvh]">
           <button
             type="button"
             aria-label="Fermer le menu"
@@ -90,25 +90,25 @@ export default function MobileNav({
             aria-modal="true"
             aria-label="Menu"
             tabIndex={-1}
-            className="relative flex h-full w-[286px] max-w-[85vw] flex-col overflow-y-auto bg-background shadow-[0_0_40px_rgba(0,0,0,0.25)] outline-none"
+            className="mobile-nav-panel relative flex h-full w-[286px] max-w-[85vw] flex-col overflow-y-auto overscroll-contain bg-background shadow-[0_0_40px_rgba(0,0,0,0.25)] outline-none"
           >
-            <div className="relative flex h-[88px] shrink-0 items-center justify-center bg-foreground">
+            <div className="mobile-nav-panel__head relative flex min-h-[88px] shrink-0 items-center justify-center bg-foreground">
               <LogoCompact />
               <button
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-label="Fermer le menu"
-                className="absolute right-2 top-2 flex h-10 w-10 items-center justify-center rounded-md text-on-accent transition hover:bg-white/10"
+                className="mobile-nav-panel__close absolute right-2 top-2 flex h-11 w-11 items-center justify-center rounded-md text-on-accent transition hover:bg-white/10"
               >
                 <X size={22} strokeWidth={1.8} />
               </button>
             </div>
 
-            <nav className="flex-1 space-y-6 px-4 pb-6 pt-5">
+            <nav className="mobile-nav-panel__nav flex-1 space-y-6 px-4 pb-6 pt-5">
               <NavSections />
             </nav>
 
-            <div className="shrink-0 border-t border-border-soft px-3 py-3">
+            <div className="mobile-nav-panel__profile shrink-0 border-t border-border-soft px-3 py-3">
               <ProfileLink fullName={fullName} avatarUrl={avatarUrl} ministrySlug={ministrySlug} />
             </div>
           </div>

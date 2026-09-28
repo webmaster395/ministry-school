@@ -14,7 +14,7 @@ export default function MlkEngagementModal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#27302f]/70 p-3 backdrop-blur-xs sm:p-5" role="dialog" aria-modal="true" aria-labelledby="engagement-title">
+    <div className="app-modal-layer fixed inset-0 z-50 flex items-center justify-center bg-[#27302f]/70 p-3 backdrop-blur-xs sm:p-5" role="dialog" aria-modal="true" aria-labelledby="engagement-title">
       <section className="relative max-h-[94vh] w-full max-w-[620px] overflow-y-auto rounded-[20px] border border-border bg-background p-5 shadow-[0_24px_64px_rgba(0,0,0,0.32)] sm:p-7">
         <button type="button" onClick={() => setOpen(false)} aria-label="Compléter plus tard" className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-surface text-muted transition hover:text-foreground">
           <X size={18} />

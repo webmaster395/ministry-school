@@ -138,7 +138,7 @@ export default async function PreparationPage({ params }: { params: Promise<{ id
         );
       })}
 
-      <div className="sticky bottom-3 z-30 rounded-2xl border border-border bg-background/95 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur">
+      <div className="app-sticky-action sticky bottom-3 z-30 rounded-2xl border border-border bg-background/95 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur">
         <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-3">
           <span className="text-[14px] text-muted">
             {progress.completed} élément{progress.completed > 1 ? "s" : ""} complété{progress.completed > 1 ? "s" : ""} sur {progress.total}

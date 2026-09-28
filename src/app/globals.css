@@ -232,3 +232,123 @@ html,body{max-width:100%;overflow-x:clip}
     font-size: 16px !important;
   }
 }
+
+/* Webapp responsive : zones sûres iOS/Android, cibles tactiles et contenus fluides. */
+.app-shell {
+  min-width: 0;
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+.app-header {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.app-footer {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.mobile-nav-panel {
+  padding-left: env(safe-area-inset-left, 0px);
+}
+
+.mobile-nav-panel__head {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.mobile-nav-panel__close {
+  top: calc(0.5rem + env(safe-area-inset-top, 0px));
+}
+
+.mobile-nav-panel__profile {
+  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+}
+
+.app-modal-layer {
+  padding-top: max(0.75rem, env(safe-area-inset-top, 0px));
+  padding-right: max(0.75rem, env(safe-area-inset-right, 0px));
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
+  padding-left: max(0.75rem, env(safe-area-inset-left, 0px));
+}
+
+.app-modal-layer [role="dialog"] {
+  max-height: calc(100dvh - max(1.5rem, env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px)));
+  max-width: calc(100vw - max(1.5rem, env(safe-area-inset-left, 0px) + env(safe-area-inset-right, 0px)));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.app-sticky-action {
+  bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
+}
+
+.app-main,
+.app-main > *,
+.app-main section,
+.app-main article,
+.app-main form,
+.app-main nav {
+  min-width: 0;
+}
+
+.app-main img,
+.app-main video,
+.app-main iframe {
+  max-width: 100%;
+}
+
+@media (max-width: 767px) {
+  .app-header__inner {
+    min-height: 64px;
+  }
+
+  .app-header__actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .app-main {
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
+  }
+
+  .app-shell :is(button, a, input, select, textarea) {
+    touch-action: manipulation;
+  }
+
+  .app-shell button,
+  .app-shell a[role="button"] {
+    min-height: 44px;
+  }
+
+  .app-main :is(h1, h2, h3, p, li, dd, dt, span, a) {
+    overflow-wrap: anywhere;
+  }
+
+  .app-main form > :is(input, select, textarea, button),
+  .app-main form > label {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 389px) {
+  .app-header__inner {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .app-header__actions {
+    gap: 0.5rem;
+  }
+
+  .app-main {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .mobile-nav-panel__nav {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+}

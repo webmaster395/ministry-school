@@ -53,7 +53,7 @@ export default function WelcomeModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#27302f]/70 p-3 sm:p-5 backdrop-blur-xs transition-opacity duration-200"
+      className="app-modal-layer fixed inset-0 z-50 flex items-center justify-center bg-[#27302f]/70 p-3 sm:p-5 backdrop-blur-xs transition-opacity duration-200"
       onClick={() => void handleDismiss()}
       aria-modal="true"
       role="dialog"
