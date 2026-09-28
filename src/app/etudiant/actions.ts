@@ -16,13 +16,12 @@ export async function saveMlkEngagement(
   } = await supabase.auth.getUser();
   if (!user) return { error: "Tu dois être connecté(e)." };
 
-  const none = formData.get("none") === "on";
-  const equipier = formData.get("equipier") === "on";
-  const manager = formData.get("manager") === "on";
-  const collaborator = formData.get("collaborator") === "on";
-  if (!none && !equipier && !manager && !collaborator) {
-    return { error: "Sélectionne au moins une réponse." };
-  }
+  const status = String(formData.get("status") ?? "");
+  if (!["none", "equipier", "manager", "collaborator"].includes(status)) return { error: "Sélectionne une réponse." };
+  const none = status === "none";
+  const equipier = status === "equipier";
+  const manager = status === "manager";
+  const collaborator = status === "collaborator";
 
   const cleanServices = (key: string) =>
     String(formData.get(key) ?? "").trim().replace(/\s+/g, " ").slice(0, 500);

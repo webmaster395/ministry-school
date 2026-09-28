@@ -295,7 +295,7 @@ export default function InscriptionPage() {
 
                   <fieldset className="signup-engagement">
                     <legend>Quelle est ton implication actuelle à MLK&nbsp;?</legend>
-                    <p>Tu peux sélectionner plusieurs réponses.</p>
+                    <p>Sélectionne le statut qui correspond à ta situation.</p>
                     <div className="signup-engagement__grid">
                       {[
                         ["none", "Aucun engagement actuellement"],
@@ -307,11 +307,14 @@ export default function InscriptionPage() {
                         return (
                           <label key={key}>
                             <input
-                              type="checkbox"
+                              type="radio"
+                              name="mlk_status"
                               checked={engagement[name]}
-                              onChange={() => setEngagement((current) => {
-                                if (name === "none") return { none: !current.none, equipier: false, manager: false, collaborator: false };
-                                return { ...current, none: false, [name]: !current[name] };
+                              onChange={() => setEngagement({
+                                none: name === "none",
+                                equipier: name === "equipier",
+                                manager: name === "manager",
+                                collaborator: name === "collaborator",
                               })}
                             />
                             <span>{label}</span>

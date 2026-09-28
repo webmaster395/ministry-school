@@ -161,7 +161,7 @@ export default async function OverviewTab({
       <div className="grid items-start gap-6 lg:grid-cols-2">
         <section className="rounded-lg border border-border bg-background p-4 sm:p-6">
           <h2 className="label text-xs tracking-[0.18em] text-muted">Implication à MLK</h2>
-          <p className="mt-1 text-sm text-muted">Clique sur une ligne pour afficher les personnes. Plusieurs statuts peuvent se cumuler.</p>
+          <p className="mt-1 text-sm text-muted">Clique sur une ligne pour afficher les personnes. Un seul statut est attribué à chaque membre.</p>
           <ul className="mt-5 divide-y divide-border-soft">
             {[
               ["Aucun", breakdown.engagement.none, "aucun"],

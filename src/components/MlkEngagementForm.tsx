@@ -13,29 +13,11 @@ export default function MlkEngagementForm({
   onSaved?: () => void;
 }) {
   const [state, action, pending] = useActionState<EngagementState, FormData>(saveMlkEngagement, {});
-  const [none, setNone] = useState(initial.none);
-  const [equipier, setEquipier] = useState(initial.equipier);
-  const [manager, setManager] = useState(initial.manager);
-  const [collaborator, setCollaborator] = useState(initial.collaborator);
+  const [status, setStatus] = useState(initial.manager ? "manager" : initial.collaborator ? "collaborator" : initial.equipier ? "equipier" : initial.none ? "none" : "");
 
   useEffect(() => {
     if (state.success) onSaved?.();
   }, [onSaved, state.success]);
-
-  function chooseNone() {
-    const next = !none;
-    setNone(next);
-    if (next) {
-      setEquipier(false);
-      setManager(false);
-      setCollaborator(false);
-    }
-  }
-
-  function choose(setter: (value: boolean) => void, current: boolean) {
-    setNone(false);
-    setter(!current);
-  }
 
   const option = "flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-left transition";
 
@@ -43,32 +25,32 @@ export default function MlkEngagementForm({
     <form action={action} className="space-y-4">
       <div>
         <h3 className="font-title text-[21px] leading-tight text-foreground">Quelle est ta situation à MLK&nbsp;?</h3>
-        <p className="mt-1 text-[13px] leading-relaxed text-muted">Tu peux sélectionner plusieurs réponses.</p>
+        <p className="mt-1 text-[13px] leading-relaxed text-muted">Sélectionne le statut qui correspond à ta situation.</p>
       </div>
 
       <div className="grid gap-2 sm:grid-cols-2">
-        <label className={`${option} ${none ? "border-foreground bg-accent/15" : "border-border bg-background"}`}>
-          <input type="checkbox" name="none" checked={none} onChange={chooseNone} className="h-4 w-4 accent-[#27302f]" />
+        <label className={`${option} ${status === "none" ? "border-foreground bg-accent/15" : "border-border bg-background"}`}>
+          <input type="radio" name="status" value="none" checked={status === "none"} onChange={() => setStatus("none")} className="h-4 w-4 accent-[#27302f]" />
           <span className="text-sm font-medium text-foreground">Aucun engagement actuellement</span>
         </label>
-        <label className={`${option} ${equipier ? "border-foreground bg-accent/15" : "border-border bg-background"}`}>
-          <input type="checkbox" name="equipier" checked={equipier} onChange={() => choose(setEquipier, equipier)} className="h-4 w-4 accent-[#27302f]" />
+        <label className={`${option} ${status === "equipier" ? "border-foreground bg-accent/15" : "border-border bg-background"}`}>
+          <input type="radio" name="status" value="equipier" checked={status === "equipier"} onChange={() => setStatus("equipier")} className="h-4 w-4 accent-[#27302f]" />
           <span className="text-sm font-medium text-foreground">Équipier MLK</span>
         </label>
-        <label className={`${option} ${manager ? "border-foreground bg-accent/15" : "border-border bg-background"}`}>
-          <input type="checkbox" name="manager" checked={manager} onChange={() => choose(setManager, manager)} className="h-4 w-4 accent-[#27302f]" />
+        <label className={`${option} ${status === "manager" ? "border-foreground bg-accent/15" : "border-border bg-background"}`}>
+          <input type="radio" name="status" value="manager" checked={status === "manager"} onChange={() => setStatus("manager")} className="h-4 w-4 accent-[#27302f]" />
           <span className="text-sm font-medium text-foreground">Manager ou manager adjoint MLK</span>
         </label>
-        <label className={`${option} ${collaborator ? "border-foreground bg-accent/15" : "border-border bg-background"}`}>
-          <input type="checkbox" name="collaborator" checked={collaborator} onChange={() => choose(setCollaborator, collaborator)} className="h-4 w-4 accent-[#27302f]" />
+        <label className={`${option} ${status === "collaborator" ? "border-foreground bg-accent/15" : "border-border bg-background"}`}>
+          <input type="radio" name="status" value="collaborator" checked={status === "collaborator"} onChange={() => setStatus("collaborator")} className="h-4 w-4 accent-[#27302f]" />
           <span className="text-sm font-medium text-foreground">Collaborateur salarié MLK</span>
         </label>
       </div>
 
-      {(equipier || manager) && (
+      {(status === "equipier" || status === "manager") && (
         <div className="grid gap-3 sm:grid-cols-2">
-          {equipier && <ServiceField title="Dans quel(s) service(s) es-tu équipier ?" name="equipier_services" defaultValue={initial.equipierServices} />}
-          {manager && <ServiceField title="De quel(s) service(s) es-tu manager ou manager adjoint ?" name="manager_services" defaultValue={initial.managerServices} />}
+          {status === "equipier" && <ServiceField title="Dans quel(s) service(s) es-tu équipier ?" name="equipier_services" defaultValue={initial.equipierServices} />}
+          {status === "manager" && <ServiceField title="De quel(s) service(s) es-tu manager ou manager adjoint ?" name="manager_services" defaultValue={initial.managerServices} />}
         </div>
       )}
 
