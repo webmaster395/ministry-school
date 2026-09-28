@@ -352,3 +352,46 @@ html,body{max-width:100%;overflow-x:clip}
     padding-bottom: 0.75rem;
   }
 }
+
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 12mm;
+  }
+
+  body.statistics-printing {
+    background: #f7f4ed !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  body.statistics-printing * {
+    visibility: hidden;
+  }
+
+  body.statistics-printing .statistics-report,
+  body.statistics-printing .statistics-report * {
+    visibility: visible;
+  }
+
+  body.statistics-printing .statistics-report {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    padding: 0;
+  }
+
+  body.statistics-printing .statistics-report__actions,
+  body.statistics-printing .statistics-report__controls {
+    display: none !important;
+  }
+
+  body.statistics-printing .statistics-report__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  body.statistics-printing .statistics-report section,
+  body.statistics-printing .statistics-report article {
+    break-inside: avoid;
+  }
+}

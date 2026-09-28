@@ -4,7 +4,6 @@ import { getMembers, getOpportunitiesWithDates, getProgramEntries } from "@/lib/
 import OverviewTab from "@/components/admin/OverviewTab";
 import ProgramTab from "@/components/admin/ProgramTab";
 import ProjectsTab from "@/components/admin/ProjectsTab";
-import ReportsTab from "@/components/admin/ReportsTab";
 import MembersTab from "@/components/admin/MembersTab";
 import QuestionsTab from "@/components/admin/QuestionsTab";
 import StatisticsTab from "@/components/admin/StatisticsTab";
@@ -14,10 +13,9 @@ import { getMinistries } from "@/lib/data/admin";
 const TABS = [
   { key: "vue", label: "Vue d'ensemble" },
   { key: "statistiques", label: "Statistiques" },
+  { key: "membres", label: "Membres et accès" },
   { key: "programme", label: "Programme" },
   { key: "projets", label: "Projets et formations" },
-  { key: "comptes-rendus", label: "Comptes rendus" },
-  { key: "membres", label: "Membres et accès" },
   { key: "questions", label: "Questions" },
 ].filter((t) => QUESTIONS_ENABLED || t.key !== "questions");
 
@@ -38,7 +36,7 @@ type Params = {
 
 export default async function AdminPage({ searchParams }: { searchParams: Promise<Params> }) {
   const p = await searchParams;
-  const tab = TABS.some((t) => t.key === p.onglet) ? (p.onglet as string) : "vue";
+  const tab = p.onglet === "comptes-rendus" ? "projets" : TABS.some((t) => t.key === p.onglet) ? (p.onglet as string) : "vue";
 
   const supabase = await createClient();
   const today = new Date().toISOString().slice(0, 10);
@@ -75,8 +73,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
       {tab === "programme" && (
         <ProgramTab entries={await getProgramEntries(supabase, opps)} view={p.vue ?? ""} today={today} />
       )}
-      {tab === "projets" && <ProjectsTab opps={opps} type={p.type ?? "projet"} phase={p.phase ?? "actuel"} today={today} />}
-      {tab === "comptes-rendus" && <ReportsTab opps={opps} filter={p.filtre ?? "a_recevoir"} today={today} />}
+      {tab === "projets" && <ProjectsTab opps={opps} type={p.onglet === "comptes-rendus" ? "comptes-rendus" : p.type ?? "projet"} phase={p.phase ?? "actuel"} reportFilter={p.filtre ?? "a_recevoir"} today={today} />}
       {QUESTIONS_ENABLED && tab === "questions" && <QuestionsTab filter={p.filtre ?? "a_traiter"} />}
       {tab === "membres" && (
         <MembersTab

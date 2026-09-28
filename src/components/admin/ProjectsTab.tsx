@@ -10,18 +10,22 @@ import {
   type OppRow,
 } from "@/lib/data/admin-hub";
 import { validateOpportunity } from "@/app/etudiant/services/actions";
+import ReportsTab from "@/components/admin/ReportsTab";
 
-export default function ProjectsTab({
+export default async function ProjectsTab({
   opps,
   type,
   phase,
+  reportFilter,
   today,
 }: {
   opps: OppRow[];
   type: string;
   phase: string;
+  reportFilter: string;
   today: string;
 }) {
+  const section = type === "formation" || type === "comptes-rendus" ? type : "projet";
   const kind = type === "formation" ? "formation" : "projet";
   const current: OppPhase = phase === "a_valider" || phase === "plus_tard" || phase === "termine" ? phase : "actuel";
   const list = opps.filter((o) => o.kind === kind && phaseOf(o, today) === current);
@@ -37,25 +41,34 @@ export default function ProjectsTab({
 
   const href = (k: string, p: string) => `/gestion/admin?onglet=projets&type=${k}&phase=${p}`;
 
+  const sectionNav = (
+    <nav className="tabbar grid w-full grid-cols-1 gap-1 rounded-lg border border-border bg-background p-1 sm:inline-grid sm:w-auto sm:grid-cols-3">
+      {[
+        { key: "projet", label: "Projets" },
+        { key: "formation", label: "Formations de service" },
+        { key: "comptes-rendus", label: "Comptes rendus" },
+      ].map((tab) => (
+        <Link
+          key={tab.key}
+          href={tab.key === "comptes-rendus" ? "/gestion/admin?onglet=projets&type=comptes-rendus" : href(tab.key, current)}
+          className={`rounded-md px-4 py-2 text-center text-sm transition ${
+            section === tab.key ? "bg-accent font-medium text-on-accent" : "text-muted hover:text-foreground"
+          }`}
+        >
+          {tab.label}
+        </Link>
+      ))}
+    </nav>
+  );
+
+  if (section === "comptes-rendus") {
+    return <div className="space-y-5">{sectionNav}<ReportsTab opps={opps} filter={reportFilter} today={today} /></div>;
+  }
+
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <nav className="tabbar inline-flex gap-1 rounded-lg border border-border bg-background p-1">
-          {[
-            { key: "projet", label: "Projets" },
-            { key: "formation", label: "Formations de service" },
-          ].map((t) => (
-            <Link
-              key={t.key}
-              href={href(t.key, current)}
-              className={`rounded-md px-4 py-2 text-sm transition ${
-                kind === t.key ? "bg-accent font-medium text-on-accent" : "text-muted hover:text-foreground"
-              }`}
-            >
-              {t.label}
-            </Link>
-          ))}
-        </nav>
+        {sectionNav}
         <nav className="tabbar inline-flex gap-1 rounded-lg border border-border bg-background p-1">
           {PHASES.map((p) => (
             <Link
