@@ -163,24 +163,17 @@ export default async function OverviewTab({
         subtitle="Nombre d'étudiants ayant choisi chaque ministère."
         data={breakdown.byMinistry.map((m) => ({ label: m.name, value: m.count, slug: m.slug }))}
       />
-      <div className="grid gap-6 md:grid-cols-2">
-        <BarChart
-          title="Répartition par jour"
-          subtitle="Jour de cours choisi par les étudiants."
-          data={breakdown.byDay.map((d) => ({ label: d.day, value: d.count }))}
-        />
-        <BarChart
-          title="Répartition par genre"
-          subtitle="Nombre d'hommes et de femmes inscrits."
-          data={[
-            { label: "Hommes", value: breakdown.byGender.men },
-            { label: "Femmes", value: breakdown.byGender.women },
-            ...(breakdown.byGender.unassigned > 0
-              ? [{ label: "Non renseigné", value: breakdown.byGender.unassigned }]
-              : []),
-          ]}
-        />
-      </div>
+      <BarChart
+        title="Répartition par genre"
+        subtitle="Nombre d'hommes et de femmes inscrits."
+        data={[
+          { label: "Hommes", value: breakdown.byGender.men },
+          { label: "Femmes", value: breakdown.byGender.women },
+          ...(breakdown.byGender.unassigned > 0
+            ? [{ label: "Non renseigné", value: breakdown.byGender.unassigned }]
+            : []),
+        ]}
+      />
     </div>
   );
 }

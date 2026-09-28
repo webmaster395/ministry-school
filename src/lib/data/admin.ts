@@ -3,7 +3,6 @@ import { isDemoAdminEmail } from "@/lib/demo-admin";
 
 export type EnrollmentBreakdown = {
   byMinistry: { name: string; slug?: string; count: number }[];
-  byDay: { day: string; count: number }[];
   byGender: {
     men: number;
     women: number;
@@ -18,16 +17,16 @@ export async function getEnrollmentBreakdown(
 
   // Tout le monde est compté (administrateurs, formateurs, étudiants) : pas de distinction pour le moment.
   // Requête tolérante sur profiles : si la colonne gender existe, on la récupère, sinon fallback
-  let rows: { id: string; ministry_id: string | null; preferred_day: string | null; gender?: string | null }[] = [];
+  let rows: { id: string; ministry_id: string | null; gender?: string | null }[] = [];
   const [{ data: studentsWithGender, error }, { data: emails }] = await Promise.all([
-    supabase.from("profiles").select("id, ministry_id, preferred_day, gender"),
+    supabase.from("profiles").select("id, ministry_id, gender"),
     supabase.rpc("admin_user_emails"),
   ]);
 
   if (error) {
     const { data: fallbackStudents } = await supabase
       .from("profiles")
-      .select("id, ministry_id, preferred_day");
+      .select("id, ministry_id");
     rows = (fallbackStudents as typeof rows) ?? [];
   } else {
     rows = (studentsWithGender as typeof rows) ?? [];
@@ -53,18 +52,12 @@ export async function getEnrollmentBreakdown(
     byMinistry.push({ name: "Non renseigné", count: unassigned });
   }
 
-  const byDay = [
-    { day: "Samedi", count: rows.filter((s) => s.preferred_day === "samedi").length },
-    { day: "Dimanche", count: rows.filter((s) => s.preferred_day === "dimanche").length },
-  ];
-
   const men = rows.filter((s) => s.gender === "homme").length;
   const women = rows.filter((s) => s.gender === "femme").length;
   const unassignedGender = rows.filter((s) => s.gender !== "homme" && s.gender !== "femme").length;
 
   return {
     byMinistry,
-    byDay,
     byGender: {
       men,
       women,
