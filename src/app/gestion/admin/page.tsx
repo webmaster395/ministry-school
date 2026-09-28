@@ -7,10 +7,13 @@ import ProjectsTab from "@/components/admin/ProjectsTab";
 import ReportsTab from "@/components/admin/ReportsTab";
 import MembersTab from "@/components/admin/MembersTab";
 import QuestionsTab from "@/components/admin/QuestionsTab";
+import StatisticsTab from "@/components/admin/StatisticsTab";
 import { QUESTIONS_ENABLED } from "@/lib/questions";
+import { getMinistries } from "@/lib/data/admin";
 
 const TABS = [
   { key: "vue", label: "Vue d'ensemble" },
+  { key: "statistiques", label: "Statistiques" },
   { key: "programme", label: "Programme" },
   { key: "projets", label: "Projets et formations" },
   { key: "comptes-rendus", label: "Comptes rendus" },
@@ -65,6 +68,9 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           program={await getProgramEntries(supabase, opps)}
           today={today}
         />
+      )}
+      {tab === "statistiques" && (
+        <StatisticsTab members={await getMembers(supabase)} ministries={await getMinistries(supabase)} />
       )}
       {tab === "programme" && (
         <ProgramTab entries={await getProgramEntries(supabase, opps)} view={p.vue ?? ""} today={today} />
