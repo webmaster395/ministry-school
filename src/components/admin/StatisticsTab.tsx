@@ -6,6 +6,7 @@ import { BarChart3, Download, FileDown, List, Mail, PieChart } from "lucide-reac
 import BarChart, { type BarDatum } from "@/components/BarChart";
 import MinistryPicto from "@/components/MinistryPicto";
 import { parseMlkEngagement } from "@/lib/mlk-engagement";
+import { getMinistry } from "@/lib/ministry";
 import { memberStatus, type Member } from "@/lib/data/admin-hub";
 import type { Ministry } from "@/lib/data/admin";
 
@@ -21,7 +22,13 @@ function StatCard({ value, label, detail, href }: { value: number; label: string
 }
 
 function datumColor(datum: BarDatum, index: number) {
-  return COLORS[index % COLORS.length];
+  return datum.color ?? getMinistry(datum.slug)?.color ?? COLORS[index % COLORS.length];
+}
+
+function datumTextColor(datum: BarDatum, index: number) {
+  if (datum.slug) return datum.slug === "docteur" ? "#fff" : "#27302f";
+  if (datum.fallbackIcon || datum.color === "#27302f") return "#fff";
+  return [2, 4, 7, 9, 11].includes(index % COLORS.length) ? "#27302f" : "#fff";
 }
 
 function DataLink({ datum, children, className = "" }: { datum: BarDatum; children: React.ReactNode; className?: string }) {
@@ -62,7 +69,7 @@ function PieView({ data }: { data: BarDatum[] }) {
     <div className="relative mx-auto w-full max-w-[240px]">
     <svg viewBox="0 0 240 240" className="aspect-square w-full overflow-visible" role="img" aria-label={`Répartition de ${total} membres`}>
       {total === 0 && <circle cx="120" cy="120" r="100" fill="#ece8df" />}
-      {slices.map(({ datum, index, percent, path, middle }) => path && <g key={datum.label} className="group cursor-help" onMouseEnter={() => setActiveSlice(index)} onMouseLeave={() => setActiveSlice(null)} onFocus={() => setActiveSlice(index)} onBlur={() => setActiveSlice(null)} tabIndex={0}><path d={path} fill={datumColor(datum, index)} stroke="#fff" strokeWidth="2" className="origin-center transition duration-200 group-hover:opacity-80"><title>{datum.label} : {datum.value} — {Math.round(percent)} %</title></path><text x={middle.x} y={middle.y} textAnchor="middle" dominantBaseline="central" fill="#fff" stroke="rgba(0,0,0,.28)" strokeWidth="2.5" paintOrder="stroke" className="pointer-events-none text-[11px] font-bold">{Math.round(percent)}%</text></g>)}
+      {slices.map(({ datum, index, percent, path, middle }) => path && <g key={datum.label} className="group cursor-help" onMouseEnter={() => setActiveSlice(index)} onMouseLeave={() => setActiveSlice(null)} onFocus={() => setActiveSlice(index)} onBlur={() => setActiveSlice(null)} tabIndex={0}><path d={path} fill={datumColor(datum, index)} stroke="#fffdf9" strokeWidth="3" className="origin-center transition duration-200 group-hover:opacity-80"><title>{datum.label} : {datum.value} — {Math.round(percent)} %</title></path><text x={middle.x} y={middle.y} textAnchor="middle" dominantBaseline="central" fill={datumTextColor(datum, index)} className="pointer-events-none text-[10px] font-bold" style={{ filter: datumTextColor(datum, index) === "#fff" ? "drop-shadow(0 1px 1px rgba(0,0,0,.35))" : "none" }}>{Math.round(percent)}%</text></g>)}
       <circle cx="120" cy="120" r="43" fill="var(--background)" />
       <text x="120" y="116" textAnchor="middle" className="fill-foreground font-title text-[28px]">{total}</text>
       <text x="120" y="136" textAnchor="middle" className="fill-muted text-[10px] uppercase tracking-wider">total</text>
@@ -101,7 +108,7 @@ export default function StatisticsTab({ members, ministries }: { members: Member
     { label: "Hommes", value: members.filter((m) => m.gender === "homme").length, href: membersHref("genre=homme") },
     { label: "Non renseigné", value: members.filter((m) => m.gender !== "femme" && m.gender !== "homme").length, href: membersHref("genre=non_renseigne") },
   ];
-  const ministryData: BarDatum[] = [...ministries.map((m) => ({ label: m.name, value: members.filter((member) => member.ministry_id === m.id).length, slug: m.slug, href: membersHref(`sens=${m.slug}`) })), { label: "Ne sais pas encore", value: members.filter((m) => !m.ministry_id).length, fallbackIcon: "🤔", href: membersHref("sens=non_renseignee") }];
+  const ministryData: BarDatum[] = [...ministries.map((m) => ({ label: m.name, value: members.filter((member) => member.ministry_id === m.id).length, slug: m.slug, href: membersHref(`sens=${m.slug}`) })), { label: "Ne sais pas encore", value: members.filter((m) => !m.ministry_id).length, fallbackIcon: "🤔", color: "#27302f", href: membersHref("sens=non_renseignee") }];
   const rolesData: BarDatum[] = [
     { label: "Étudiants", value: members.filter((m) => m.role === "student").length, href: membersHref("role=etudiant") },
     { label: "Formateurs", value: members.filter((m) => m.is_teacher || m.role === "teacher").length, href: membersHref("role=enseignant") },

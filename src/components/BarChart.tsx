@@ -9,6 +9,8 @@ export type BarDatum = {
   slug?: string;
   /** Picto de repli pour une catégorie qui n'est pas encore rattachée à un ministère */
   fallbackIcon?: string;
+  /** Couleur explicite pour les graphiques qui ne correspondent pas à un ministère */
+  color?: string;
   href?: string;
 };
 
@@ -45,7 +47,7 @@ export default function BarChart({
       ) : (
         <ul className="mt-5 space-y-4 sm:space-y-3">
           {data.map((d) => {
-            const color = getMinistry(d.slug)?.color ?? INK;
+            const color = d.color ?? getMinistry(d.slug)?.color ?? INK;
             const content = <>
                 {hasPictos && (
                   <span className="flex items-center justify-center text-[21px] leading-none" aria-hidden="true">
