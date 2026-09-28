@@ -1,4 +1,5 @@
-import { Search } from "lucide-react";
+import { ChevronRight, Search } from "lucide-react";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getMinistries } from "@/lib/data/admin";
 import { getServices } from "@/lib/data/opportunities";
@@ -181,7 +182,7 @@ export default async function MembersTab({
               return (
                 <li key={m.id} className="px-5 py-3.5">
                   <div className="grid items-center gap-2 md:grid-cols-[1.4fr_1fr_1.6fr_110px_90px] md:gap-4">
-                    <div className="flex min-w-0 items-center gap-3">
+                    <Link href={`/gestion/admin/membres/${m.id}`} className="group flex min-w-0 items-center gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-foreground">
                       {m.avatar_path && avatarUrls.get(m.avatar_path) ? (
                         // eslint-disable-next-line @next/next/no-img-element -- adresse temporaire signée
                         <img src={avatarUrls.get(m.avatar_path)} alt="" className="h-9 w-9 shrink-0 rounded-full object-cover" />
@@ -204,7 +205,8 @@ export default async function MembersTab({
                         </div>
                         <p className="truncate text-xs text-muted">{m.email}</p>
                       </div>
-                    </div>
+                      <ChevronRight size={16} className="ml-auto shrink-0 text-muted transition group-hover:translate-x-0.5 group-hover:text-foreground" aria-hidden="true" />
+                    </Link>
                     <span className="flex items-center gap-2 text-[15px] text-foreground">
                       {mi ? (
                         <>
