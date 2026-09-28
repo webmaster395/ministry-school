@@ -8,6 +8,7 @@ import { getMinistry } from "@/lib/ministry";
 import MinistryPicto from "@/components/MinistryPicto";
 import MemberAccessEditor from "@/components/admin/MemberAccessEditor";
 import { addDelegate, removeDelegate } from "@/app/gestion/admin/actions";
+import { parseMlkEngagement } from "@/lib/mlk-engagement";
 
 const field = "rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground";
 
@@ -36,12 +37,14 @@ export default async function MembersTab({
   sens,
   statut,
   tri,
+  implication,
 }: {
   q: string;
   role: string;
   sens: string;
   statut: string;
   tri: string;
+  implication: string;
 }) {
   const supabase = await createClient();
   const [members, ministries, services, { data: delegates }] = await Promise.all([
@@ -70,6 +73,16 @@ export default async function MembersTab({
     })
     .filter((m) => sens === "toutes" || ministryById.get(m.ministry_id ?? "")?.slug === sens)
     .filter((m) => statut === "tous" || memberStatus(m) === statut)
+    .filter((m) => {
+      if (implication === "toutes") return true;
+      const item = parseMlkEngagement(m.notification_prefs);
+      if (implication === "aucun") return item.completed && item.none;
+      if (implication === "equipier") return item.completed && item.equipier;
+      if (implication === "manager") return item.completed && item.manager;
+      if (implication === "collaborateur") return item.completed && item.collaborator;
+      if (implication === "non_renseigne") return !item.completed;
+      return true;
+    })
     .sort((a, b) =>
       tri === "creation" ? b.created_at.localeCompare(a.created_at) : a.full_name.localeCompare(b.full_name, "fr")
     );
@@ -109,6 +122,14 @@ export default async function MembersTab({
           <option value="actif">Actif</option>
           <option value="a_confirmer">À confirmer</option>
           <option value="desactive">Désactivé</option>
+        </select>
+        <select name="implication" defaultValue={implication} className={field}>
+          <option value="toutes">Toutes les implications</option>
+          <option value="aucun">Aucun engagement</option>
+          <option value="equipier">Équipiers MLK</option>
+          <option value="manager">Managers et managers adjoints</option>
+          <option value="collaborateur">Collaborateurs salariés</option>
+          <option value="non_renseigne">Non renseigné</option>
         </select>
         <select name="tri" defaultValue={tri} className={field}>
           <option value="nom">Tri par nom</option>

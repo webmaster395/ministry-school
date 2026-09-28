@@ -158,42 +158,45 @@ export default async function OverviewTab({
         </ul>
       </section>
 
-      <section className="rounded-lg border border-border bg-background p-6">
-        <div>
-          <h3 className="font-title text-[22px] text-foreground">Implication à MLK</h3>
-          <p className="mt-1 text-sm text-muted">Une personne peut cumuler plusieurs statuts.</p>
-        </div>
-        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-          {[
-            ["Aucun", breakdown.engagement.none],
-            ["Équipiers", breakdown.engagement.equipiers],
-            ["Managers et adjoints", breakdown.engagement.managers],
-            ["Collaborateurs", breakdown.engagement.collaborators],
-            ["Non renseigné", breakdown.engagement.unassigned],
-          ].map(([label, value]) => (
-            <div key={label} className="rounded-xl bg-surface px-4 py-4">
-              <p className="text-2xl font-semibold text-foreground">{value}</p>
-              <p className="mt-1 text-xs font-medium text-muted">{label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      <div className="grid items-start gap-6 lg:grid-cols-2">
+        <section className="rounded-lg border border-border bg-background p-4 sm:p-6">
+          <h2 className="label text-xs tracking-[0.18em] text-muted">Implication à MLK</h2>
+          <p className="mt-1 text-sm text-muted">Clique sur une ligne pour afficher les personnes. Plusieurs statuts peuvent se cumuler.</p>
+          <ul className="mt-5 divide-y divide-border-soft">
+            {[
+              ["Aucun", breakdown.engagement.none, "aucun"],
+              ["Équipiers", breakdown.engagement.equipiers, "equipier"],
+              ["Managers et adjoints", breakdown.engagement.managers, "manager"],
+              ["Collaborateurs", breakdown.engagement.collaborators, "collaborateur"],
+              ["Non renseigné", breakdown.engagement.unassigned, "non_renseigne"],
+            ].map(([label, value, filter]) => (
+              <li key={label as string}>
+                <Link href={`/gestion/admin?onglet=membres&implication=${filter}`} className="group flex items-center justify-between gap-4 py-3 text-sm transition hover:pl-1">
+                  <span className="text-foreground group-hover:underline group-hover:underline-offset-4">{label}</span>
+                  <span className="font-title text-[19px] tabular-nums text-foreground">{value}<span className="ml-2 text-sm font-sans text-muted" aria-hidden="true">→</span></span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <BarChart
+          title="Répartition par genre"
+          subtitle="Nombre d'hommes et de femmes inscrits."
+          data={[
+            { label: "Hommes", value: breakdown.byGender.men },
+            { label: "Femmes", value: breakdown.byGender.women },
+            ...(breakdown.byGender.unassigned > 0
+              ? [{ label: "Non renseigné", value: breakdown.byGender.unassigned }]
+              : []),
+          ]}
+        />
+      </div>
 
       <BarChart
         title="Inscrits par ministère"
         subtitle="Nombre d'étudiants ayant choisi chaque ministère."
         data={breakdown.byMinistry.map((m) => ({ label: m.name, value: m.count, slug: m.slug }))}
-      />
-      <BarChart
-        title="Répartition par genre"
-        subtitle="Nombre d'hommes et de femmes inscrits."
-        data={[
-          { label: "Hommes", value: breakdown.byGender.men },
-          { label: "Femmes", value: breakdown.byGender.women },
-          ...(breakdown.byGender.unassigned > 0
-            ? [{ label: "Non renseigné", value: breakdown.byGender.unassigned }]
-            : []),
-        ]}
       />
     </div>
   );
