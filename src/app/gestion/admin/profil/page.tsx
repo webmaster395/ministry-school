@@ -10,7 +10,7 @@ export default async function AdminProfilePage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name")
+    .select("full_name, ministries!profiles_ministry_id_fkey(name)")
     .eq("id", user!.id)
     .single();
 
@@ -20,7 +20,14 @@ export default async function AdminProfilePage() {
       avatarUrl={(await getViewer())?.avatarUrl ?? null}
       fullName={profile?.full_name ?? ""}
       email={user?.email ?? ""}
-      roleLabel="Admin"
+      phone={
+        (user?.user_metadata?.profile_phone as string | undefined) ??
+        (user?.user_metadata?.phone as string | undefined) ??
+        user?.phone ??
+        ""
+      }
+      roleLabel="Administrateur"
+      ministryName={(profile?.ministries as unknown as { name: string } | null)?.name}
     />
   );
 }

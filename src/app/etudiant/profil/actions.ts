@@ -4,6 +4,35 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { parseNotificationPrefs, type NotificationPrefs } from "@/lib/notification-prefs";
 
+export async function updateProfileDetails(formData: FormData) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Non authentifié");
+
+  const clean = (key: string, max: number) =>
+    ((formData.get(key) as string | null) ?? "").trim().replace(/\s+/g, " ").slice(0, max);
+  const firstName = clean("first_name", 80);
+  const lastName = clean("last_name", 80);
+  const phone = clean("phone", 30);
+  if (!firstName || !lastName) throw new Error("Le prénom et le nom sont obligatoires.");
+
+  const fullName = `${firstName} ${lastName}`;
+  const [{ error: profileError }, { error: authError }] = await Promise.all([
+    supabase.from("profiles").update({ full_name: fullName }).eq("id", user.id),
+    supabase.auth.updateUser({ data: { full_name: fullName, profile_phone: phone } }),
+  ]);
+  if (profileError || authError) {
+    throw new Error("Impossible d’enregistrer les informations du profil.");
+  }
+
+  revalidatePath("/etudiant", "layout");
+  revalidatePath("/etudiant/profil");
+  revalidatePath("/enseignant/profil");
+  revalidatePath("/gestion/admin/profil");
+}
+
 export async function updateNotificationPrefs(key: Exclude<keyof NotificationPrefs, "rappel_jours">, enabled: boolean) {
   const supabase = await createClient();
   const {

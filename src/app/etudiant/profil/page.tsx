@@ -44,9 +44,15 @@ export default async function StudentProfilePage() {
       avatarUrl={viewer?.avatarUrl ?? null}
       fullName={profile?.full_name ?? ""}
       email={user?.email ?? ""}
+      phone={
+        (user?.user_metadata?.profile_phone as string | undefined) ??
+        (user?.user_metadata?.phone as string | undefined) ??
+        user?.phone ??
+        ""
+      }
       roleLabel={functions.length ? functions.join(" · ") : "Étudiant"}
+      ministryName={ministryName}
       fields={[
-        { label: "Ministère", value: ministryName },
         ...(genderLabel ? [{ label: "Genre", value: genderLabel }] : []),
       ]}
     />
