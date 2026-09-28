@@ -1022,7 +1022,7 @@ html body #price.pricing-section{background-color:#fff!important;background-imag
 .ministry-choice__grid{clear:both;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .ministry-choice__grid label{position:relative;min-width:0;cursor:pointer}
 .ministry-choice__grid input{position:absolute;width:1px;height:1px;overflow:hidden;opacity:0}
-.ministry-choice__grid span{position:relative;display:flex;min-height:44px;align-items:center;justify-content:flex-start;border:1px solid #dcdfdc;border-radius:999px;padding:9px 12px 9px 32px;background:#fff;color:#4b524f;font-size:13px;font-weight:500;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;transition:border-color .2s ease,background .2s ease,color .2s ease,transform .2s var(--ease),box-shadow .2s ease}
+.ministry-choice__grid span{position:relative;display:flex;min-height:44px;align-items:center;justify-content:flex-start;border:1px solid #dcdfdc;border-radius:999px;padding:9px 12px 9px 32px;background:#fff;color:#4b524f;font-size:13px;font-weight:500;line-height:1.2;white-space:normal;overflow:visible;transition:border-color .2s ease,background .2s ease,color .2s ease,transform .2s var(--ease),box-shadow .2s ease}
 .ministry-choice__grid span::before{position:absolute;left:12px;top:50%;width:9px;height:9px;transform:translateY(-50%);border-radius:50%;background:var(--choice,#7094b8);content:"";transition:transform .2s ease}
 .ministry-choice__grid label:hover span{border-color:#adb3af;transform:translateY(-1px)}
 .ministry-choice__grid input:focus-visible+span{outline:2px solid var(--ink);outline-offset:2px}
