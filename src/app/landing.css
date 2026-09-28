@@ -1017,19 +1017,19 @@ html body #price.pricing-section{background-color:#fff!important;background-imag
 .signup-engagement__services label{display:grid;gap:6px;color:var(--ink);font-size:13px;font-weight:500;line-height:1.35}
 .signup-engagement__services input{width:100%;min-width:0;min-height:44px;border:1px solid #d9dcda;border-radius:10px;background:#fff;padding:10px 12px;color:var(--ink);font:inherit;font-size:14px;outline:none}
 .signup-engagement__services input:focus{border-color:var(--ink);box-shadow:0 0 0 3px rgba(35,44,41,.08)}
-.ministry-choice{min-width:0;margin:0;border:1px solid #e7eae8;border-radius:16px;padding:12px 14px;background:#fafaf8}
-.ministry-choice legend{float:left;width:100%;margin:0 0 8px;padding:0;font-size:12px;font-weight:600;color:var(--ink)}
-.ministry-choice__grid{clear:both;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.ministry-choice{min-width:0;margin:3px 0;border:1px solid #e7eae8;border-radius:16px;padding:17px 18px;background:#fafaf8}
+.ministry-choice legend{float:left;width:100%;margin:0 0 14px;padding:0;font-size:14px;font-weight:600;color:var(--ink)}
+.ministry-choice__grid{clear:both;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .ministry-choice__grid label{position:relative;min-width:0;cursor:pointer}
 .ministry-choice__grid input{position:absolute;width:1px;height:1px;overflow:hidden;opacity:0}
-.ministry-choice__grid span{position:relative;display:flex;min-height:35px;align-items:center;justify-content:flex-start;border:1px solid #dcdfdc;border-radius:999px;padding:6px 10px 6px 27px;background:#fff;color:#4b524f;font-size:11px;font-weight:500;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;transition:border-color .2s ease,background .2s ease,color .2s ease,transform .2s var(--ease),box-shadow .2s ease}
-.ministry-choice__grid span::before{position:absolute;left:10px;top:50%;width:8px;height:8px;transform:translateY(-50%);border-radius:50%;background:var(--choice,#7094b8);content:"";transition:transform .2s ease}
+.ministry-choice__grid span{position:relative;display:flex;min-height:44px;align-items:center;justify-content:flex-start;border:1px solid #dcdfdc;border-radius:999px;padding:9px 12px 9px 32px;background:#fff;color:#4b524f;font-size:13px;font-weight:500;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;transition:border-color .2s ease,background .2s ease,color .2s ease,transform .2s var(--ease),box-shadow .2s ease}
+.ministry-choice__grid span::before{position:absolute;left:12px;top:50%;width:9px;height:9px;transform:translateY(-50%);border-radius:50%;background:var(--choice,#7094b8);content:"";transition:transform .2s ease}
 .ministry-choice__grid label:hover span{border-color:#adb3af;transform:translateY(-1px)}
 .ministry-choice__grid input:focus-visible+span{outline:2px solid var(--ink);outline-offset:2px}
 .ministry-choice__grid input:checked+span{border-color:var(--choice,var(--ink));background:color-mix(in srgb,var(--choice,var(--ink)) 16%,#fff);color:var(--ink);font-weight:600;box-shadow:0 2px 6px rgba(35,44,41,.06)}
 .ministry-choice__grid input:checked+span::before{transform:translateY(-50%) scale(1.15)}
 .choice-apo{--choice:#9db52c}.choice-pro{--choice:#2fa3a5}.choice-eva{--choice:#e46b6e}.choice-pas{--choice:#e68d00}.choice-doc{--choice:#d74012}.choice-unknown{--choice:#7094b8}
-.ministry-choice>p{clear:both;margin:7px 2px 0;color:#79807d;font-size:11px;line-height:1.35}
+.ministry-choice>p{clear:both;margin:13px 2px 0;color:#68706d;font-size:12.5px;line-height:1.4}
 .signup-submit{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:46px;margin-top:2px;border:0;border-radius:999px;background:var(--ink);padding:12px 20px;color:#fff;font:600 14px/1 var(--font-geist-sans),Inter,Arial,sans-serif;cursor:pointer;transition:transform .2s ease,background .2s ease}
 .signup-submit:hover{transform:translateY(-2px);background:#111715}
 .signup-form-wrap>.account-switch{margin:12px 0 0;font-size:13px}
@@ -1053,8 +1053,8 @@ html body #price.pricing-section{background-color:#fff!important;background-imag
   .signup-fields{grid-template-columns:1fr;gap:10px}
   .ministry-choice__grid{grid-template-columns:1fr 1fr;gap:6px}
   .signup-engagement__grid,.signup-engagement__services{grid-template-columns:1fr}
-  .ministry-choice__grid span{min-height:36px;padding:6px 8px 6px 26px;font-size:10.5px}
-  .ministry-choice__grid span::before{left:9px}
+  .ministry-choice__grid span{min-height:44px;padding:8px 9px 8px 29px;font-size:12px}
+  .ministry-choice__grid span::before{left:10px}
 }
 
 @supports not (background:color-mix(in srgb,red 10%,white)){
