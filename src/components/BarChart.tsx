@@ -7,6 +7,8 @@ export type BarDatum = {
   value: number;
   /** Slug d'un ministère : la barre prend sa couleur et affiche son picto */
   slug?: string;
+  /** Picto de repli pour une catégorie qui n'est pas encore rattachée à un ministère */
+  fallbackIcon?: string;
   href?: string;
 };
 
@@ -46,8 +48,8 @@ export default function BarChart({
             const color = getMinistry(d.slug)?.color ?? INK;
             const content = <>
                 {hasPictos && (
-                  <span className="flex items-center justify-center">
-                    <MinistryPicto slug={d.slug} size={22} />
+                  <span className="flex items-center justify-center text-[21px] leading-none" aria-hidden="true">
+                    {d.slug ? <MinistryPicto slug={d.slug} size={22} /> : d.fallbackIcon}
                   </span>
                 )}
 

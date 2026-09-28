@@ -200,6 +200,7 @@ export default async function OverviewTab({
           label: m.name,
           value: m.count,
           slug: m.slug,
+          fallbackIcon: m.slug ? undefined : "🤔",
           href: m.slug ? `/gestion/admin?onglet=membres&sens=${m.slug}` : "/gestion/admin?onglet=membres&sens=non_renseignee",
         }))}
       />
