@@ -1630,3 +1630,27 @@ html body #price.pricing-section{background-color:#fff!important;background-imag
 /* Onglets de période plus aérés sur ordinateur et tablette */
 @media(min-width:901px){.phase-switch{display:grid;grid-template-columns:1fr 1fr;width:min(100%,480px);padding:6px;gap:6px}.phase-switch button{min-height:52px;padding:0 28px;font-size:.92rem;white-space:nowrap}}
 @media(min-width:621px) and (max-width:900px){.phase-switch{width:min(100%,420px)}.phase-switch button{min-height:46px;font-size:.85rem;padding:0 18px}}
+
+/* Landing mobile — encoche/Dynamic Island, navigation accessible et hero moins démesurée. */
+@media(max-width:760px){
+  .landing .hero{padding-top:max(8px,env(safe-area-inset-top,0px));padding-right:max(8px,env(safe-area-inset-right,0px));padding-bottom:8px;padding-left:max(8px,env(safe-area-inset-left,0px))}
+  .landing .hero-frame{min-height:min(780px,calc(100dvh - max(16px,env(safe-area-inset-top,0px)) - env(safe-area-inset-bottom,0px)))}
+  .landing .hero-nav{padding-top:calc(12px + env(safe-area-inset-top,0px));padding-right:18px;padding-left:18px;align-items:flex-start}
+  .landing .hero-nav nav{top:calc(62px + env(safe-area-inset-top,0px));right:12px;width:calc(100% - 24px)}
+  .landing .hero-copy{justify-content:center;padding:calc(116px + env(safe-area-inset-top,0px)) 0 max(56px,env(safe-area-inset-bottom,0px))}
+  .landing .hero h1{max-width:620px;font-size:clamp(3.2rem,13.5vw,4.15rem);line-height:.94}
+  .landing .hero-copy>p:not(.over){max-width:330px;font-size:1rem;line-height:1.55}
+  .landing .hero-copy .btn{width:min(100%,330px);padding-right:18px;padding-left:18px;text-align:center}
+}
+@media(max-width:380px){
+  .landing .hero-nav{padding-right:14px;padding-left:14px}
+  .landing .hero-brand .ministry-marks{width:58px;height:20px}
+  .landing .hero-brand__name{font-size:.84rem}
+  .landing .hero h1{font-size:clamp(2.9rem,13vw,3.45rem)}
+  .landing .hero-copy>p:not(.over){font-size:.93rem}
+}
+@media(max-width:760px) and (orientation:landscape){
+  .landing .hero-frame{min-height:max(520px,calc(100dvh - 16px))}
+  .landing .hero-copy{padding-top:calc(100px + env(safe-area-inset-top,0px));padding-bottom:44px}
+  .landing .hero h1{font-size:clamp(2.8rem,8vw,4rem)}
+}
