@@ -158,6 +158,27 @@ export default async function OverviewTab({
         </ul>
       </section>
 
+      <section className="rounded-lg border border-border bg-background p-6">
+        <div>
+          <h3 className="font-title text-[22px] text-foreground">Implication à MLK</h3>
+          <p className="mt-1 text-sm text-muted">Une personne peut cumuler plusieurs statuts.</p>
+        </div>
+        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          {[
+            ["Aucun", breakdown.engagement.none],
+            ["Équipiers", breakdown.engagement.equipiers],
+            ["Managers", breakdown.engagement.managers],
+            ["Collaborateurs", breakdown.engagement.collaborators],
+            ["Non renseigné", breakdown.engagement.unassigned],
+          ].map(([label, value]) => (
+            <div key={label} className="rounded-xl bg-surface px-4 py-4">
+              <p className="text-2xl font-semibold text-foreground">{value}</p>
+              <p className="mt-1 text-xs font-medium text-muted">{label}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <BarChart
         title="Inscrits par ministère"
         subtitle="Nombre d'étudiants ayant choisi chaque ministère."

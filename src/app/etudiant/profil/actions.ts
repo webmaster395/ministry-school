@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { parseNotificationPrefs, type NotificationPrefs } from "@/lib/notification-prefs";
+import type { NotificationPrefs } from "@/lib/notification-prefs";
 
 export async function updateProfileDetails(formData: FormData) {
   const supabase = await createClient();
@@ -46,7 +46,7 @@ export async function updateNotificationPrefs(key: Exclude<keyof NotificationPre
     .eq("id", user.id)
     .single();
 
-  const current = parseNotificationPrefs(profile?.notification_prefs);
+  const current = (profile?.notification_prefs ?? {}) as Record<string, unknown>;
   const next = { ...current, [key]: enabled };
 
   const { error } = await supabase.from("profiles").update({ notification_prefs: next }).eq("id", user.id);
@@ -65,7 +65,7 @@ export async function updateReminderDays(days: 1 | 3 | 7) {
   if (!user) throw new Error("Non authentifié");
 
   const { data: profile } = await supabase.from("profiles").select("notification_prefs").eq("id", user.id).single();
-  const next = { ...parseNotificationPrefs(profile?.notification_prefs), rappel_jours: days };
+  const next = { ...((profile?.notification_prefs ?? {}) as Record<string, unknown>), rappel_jours: days };
   const { error } = await supabase.from("profiles").update({ notification_prefs: next }).eq("id", user.id);
   if (error) throw new Error("Impossible d'enregistrer cette préférence : " + error.message);
 

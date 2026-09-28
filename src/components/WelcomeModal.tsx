@@ -32,15 +32,16 @@ export default function WelcomeModal({
   const [open, setOpen] = useState(true);
   const [step, setStep] = useState<1 | 2 | 3>(1);
 
-  function handleDismiss() {
+  async function handleDismiss() {
     setOpen(false);
-    void markWelcomeSeen();
+    await markWelcomeSeen();
+    window.location.reload();
   }
 
   useEffect(() => {
     if (!open) return;
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") handleDismiss();
+      if (e.key === "Escape") void handleDismiss();
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
@@ -53,7 +54,7 @@ export default function WelcomeModal({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-[#27302f]/70 p-3 sm:p-5 backdrop-blur-xs transition-opacity duration-200"
-      onClick={handleDismiss}
+      onClick={() => void handleDismiss()}
       aria-modal="true"
       role="dialog"
     >
@@ -64,7 +65,7 @@ export default function WelcomeModal({
         {/* Bouton Fermer [X] */}
         <button
           type="button"
-          onClick={handleDismiss}
+          onClick={() => void handleDismiss()}
           aria-label="Fermer"
           className="absolute right-3.5 top-3.5 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-[#fbeeda] backdrop-blur-xs transition hover:bg-white/25 active:scale-95 cursor-pointer"
         >
@@ -231,7 +232,7 @@ export default function WelcomeModal({
             {step === 1 ? (
               <button
                 type="button"
-                onClick={handleDismiss}
+                onClick={() => void handleDismiss()}
                 className="py-2.5 px-3 text-xs font-medium text-muted hover:text-foreground transition cursor-pointer"
               >
                 Passer
@@ -257,7 +258,7 @@ export default function WelcomeModal({
             ) : (
               <button
                 type="button"
-                onClick={handleDismiss}
+                onClick={() => void handleDismiss()}
                 className="flex-1 rounded-full bg-[#27302f] py-3 px-4 text-center font-label text-[12px] font-bold uppercase tracking-[0.14em] text-[#fbeeda] shadow-sm transition hover:bg-[#1b2221] active:scale-[0.99] cursor-pointer"
               >
                 C&apos;est parti

@@ -1,11 +1,19 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { isDemoAdminEmail } from "@/lib/demo-admin";
+import { parseMlkEngagement } from "@/lib/mlk-engagement";
 
 export type EnrollmentBreakdown = {
   byMinistry: { name: string; slug?: string; count: number }[];
   byGender: {
     men: number;
     women: number;
+    unassigned: number;
+  };
+  engagement: {
+    none: number;
+    equipiers: number;
+    managers: number;
+    collaborators: number;
     unassigned: number;
   };
 };
@@ -17,16 +25,16 @@ export async function getEnrollmentBreakdown(
 
   // Tout le monde est compté (administrateurs, formateurs, étudiants) : pas de distinction pour le moment.
   // Requête tolérante sur profiles : si la colonne gender existe, on la récupère, sinon fallback
-  let rows: { id: string; ministry_id: string | null; gender?: string | null }[] = [];
+  let rows: { id: string; ministry_id: string | null; gender?: string | null; notification_prefs?: unknown }[] = [];
   const [{ data: studentsWithGender, error }, { data: emails }] = await Promise.all([
-    supabase.from("profiles").select("id, ministry_id, gender"),
+    supabase.from("profiles").select("id, ministry_id, gender, notification_prefs"),
     supabase.rpc("admin_user_emails"),
   ]);
 
   if (error) {
     const { data: fallbackStudents } = await supabase
       .from("profiles")
-      .select("id, ministry_id");
+      .select("id, ministry_id, notification_prefs");
     rows = (fallbackStudents as typeof rows) ?? [];
   } else {
     rows = (studentsWithGender as typeof rows) ?? [];
@@ -41,7 +49,7 @@ export async function getEnrollmentBreakdown(
     );
   }
 
-  const byMinistry: EnrollmentBreakdown["byMinistry"] = (ministries ?? []).map((m) => ({
+  const byMinistry: EnrollmentBreakdown["byMinistry"] = (ministries ?? []).map((m: { id: string; name: string; slug: string }) => ({
     name: m.name as string,
     slug: m.slug as string,
     count: rows.filter((s) => s.ministry_id === m.id).length,
@@ -55,6 +63,7 @@ export async function getEnrollmentBreakdown(
   const men = rows.filter((s) => s.gender === "homme").length;
   const women = rows.filter((s) => s.gender === "femme").length;
   const unassignedGender = rows.filter((s) => s.gender !== "homme" && s.gender !== "femme").length;
+  const engagement = rows.map((row) => parseMlkEngagement(row.notification_prefs));
 
   return {
     byMinistry,
@@ -62,6 +71,13 @@ export async function getEnrollmentBreakdown(
       men,
       women,
       unassigned: unassignedGender,
+    },
+    engagement: {
+      none: engagement.filter((item) => item.completed && item.none).length,
+      equipiers: engagement.filter((item) => item.completed && item.equipier).length,
+      managers: engagement.filter((item) => item.completed && item.manager).length,
+      collaborators: engagement.filter((item) => item.completed && item.collaborator).length,
+      unassigned: engagement.filter((item) => !item.completed).length,
     },
   };
 }

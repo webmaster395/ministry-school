@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { ViewerRoles } from "@/lib/roles";
 import { signedAvatarUrls } from "@/lib/avatars";
 import { isDemoAdminEmail } from "@/lib/demo-admin";
+import { parseMlkEngagement, type MlkEngagement } from "@/lib/mlk-engagement";
 
 export type { ViewerRoles };
 export { isPlainStudent } from "@/lib/roles";
@@ -21,6 +22,7 @@ export type Viewer = {
   unreadMessages: number;
   /** Le message de bienvenue a déjà été vu (les nouveaux inscrits ne l'ont pas encore vu) */
   welcomeSeen: boolean;
+  mlkEngagement: MlkEngagement;
 };
 
 /**
@@ -40,7 +42,7 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
   const [{ data }, { data: steering }] = await Promise.all([
     supabase
       .from("profiles")
-      .select("full_name, role, is_teacher, deactivated, avatar_path, notifications_seen_at, welcome_seen_at, is_service_lead, is_project_lead, ministries!profiles_ministry_id_fkey(slug, name)")
+      .select("full_name, role, is_teacher, deactivated, avatar_path, notifications_seen_at, notification_prefs, welcome_seen_at, is_service_lead, is_project_lead, ministries!profiles_ministry_id_fkey(slug, name)")
       .eq("id", user.id)
       .single(),
     supabase.rpc("steering_ministries"),
@@ -64,6 +66,7 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
     id: user.id,
     unreadMessages: unread ?? 0,
     welcomeSeen: !!data?.welcome_seen_at,
+    mlkEngagement: parseMlkEngagement(data?.notification_prefs),
     fullName: (data?.full_name as string | undefined) ?? "",
     role,
     ministrySlug: ministry?.slug ?? null,

@@ -2,6 +2,9 @@ import { createClient } from "@/lib/supabase/server";
 import ProfileCard from "@/components/ProfileCard";
 import { getViewer } from "@/lib/data/viewer";
 import { getTeacherSessions } from "@/lib/data/teacher";
+import { getServices } from "@/lib/data/opportunities";
+import { parseMlkEngagement } from "@/lib/mlk-engagement";
+import MlkEngagementForm from "@/components/MlkEngagementForm";
 
 export default async function TeacherProfilePage() {
   const supabase = await createClient();
@@ -9,17 +12,18 @@ export default async function TeacherProfilePage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const [{ data: profile }, sessions] = await Promise.all([
-    supabase.from("profiles").select("full_name, ministries!profiles_ministry_id_fkey(name)").eq("id", user!.id).single(),
+  const [{ data: profile }, sessions, services] = await Promise.all([
+    supabase.from("profiles").select("full_name, notification_prefs, ministries!profiles_ministry_id_fkey(name)").eq("id", user!.id).single(),
     getTeacherSessions(supabase, user!.id),
+    getServices(supabase),
   ]);
 
   const ministryName = (profile?.ministries as unknown as { name: string } | null)?.name;
   const today = new Date().toISOString().slice(0, 10);
-  const upcoming = sessions.filter((s) => s.session_date >= today).length;
+  const upcoming = sessions.filter((s: { session_date: string }) => s.session_date >= today).length;
 
   return (
-    <ProfileCard
+    <div className="space-y-5"><ProfileCard
       userId={user?.id}
       avatarUrl={(await getViewer())?.avatarUrl ?? null}
       fullName={profile?.full_name ?? ""}
@@ -37,5 +41,8 @@ export default async function TeacherProfilePage() {
         { label: "Séances à venir", value: String(upcoming) },
       ]}
     />
+    <section className="rounded-lg border border-border bg-background p-5 sm:p-7">
+      <MlkEngagementForm services={services} initial={parseMlkEngagement(profile?.notification_prefs)} />
+    </section></div>
   );
 }
