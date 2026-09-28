@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import ProfileCard from "@/components/ProfileCard";
 import { getViewer } from "@/lib/data/viewer";
-import { getServices } from "@/lib/data/opportunities";
 import { parseMlkEngagement } from "@/lib/mlk-engagement";
 import MlkEngagementForm from "@/components/MlkEngagementForm";
 
@@ -11,10 +10,7 @@ export default async function AdminProfilePage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const [{ data: profile }, services] = await Promise.all([
-    supabase.from("profiles").select("full_name, notification_prefs, ministries!profiles_ministry_id_fkey(name)").eq("id", user!.id).single(),
-    getServices(supabase),
-  ]);
+  const { data: profile } = await supabase.from("profiles").select("full_name, notification_prefs, ministries!profiles_ministry_id_fkey(name)").eq("id", user!.id).single();
 
   return (
     <div className="space-y-5"><ProfileCard
@@ -32,7 +28,7 @@ export default async function AdminProfilePage() {
       ministryName={(profile?.ministries as unknown as { name: string } | null)?.name}
     />
     <section className="rounded-lg border border-border bg-background p-5 sm:p-7">
-      <MlkEngagementForm services={services} initial={parseMlkEngagement(profile?.notification_prefs)} />
+      <MlkEngagementForm initial={parseMlkEngagement(profile?.notification_prefs)} />
     </section></div>
   );
 }

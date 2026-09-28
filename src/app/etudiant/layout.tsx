@@ -8,15 +8,10 @@ import { getViewer } from "@/lib/data/viewer";
 
 import WelcomeModal from "@/components/WelcomeModal";
 import MlkEngagementModal from "@/components/MlkEngagementModal";
-import { createClient } from "@/lib/supabase/server";
-import { getServices } from "@/lib/data/opportunities";
 
 export default async function StudentLayout({ children }: { children: React.ReactNode }) {
   const viewer = await getViewer();
   if (viewer?.deactivated) redirect("/auth/desactive");
-  const services = viewer && viewer.welcomeSeen && !viewer.mlkEngagement.completed
-    ? await getServices(await createClient())
-    : [];
 
   return (
     <SpaceProvider roles={viewer!.roles} unread={viewer!.unreadMessages}>
@@ -39,7 +34,7 @@ export default async function StudentLayout({ children }: { children: React.Reac
       />
     )}
     {viewer?.welcomeSeen && !viewer.mlkEngagement.completed && (
-      <MlkEngagementModal services={services} initial={viewer.mlkEngagement} />
+      <MlkEngagementModal initial={viewer.mlkEngagement} />
     )}
     </SpaceProvider>
   );

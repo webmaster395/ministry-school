@@ -24,10 +24,12 @@ export async function saveMlkEngagement(
     return { error: "Sélectionne au moins une réponse." };
   }
 
-  const { data: serviceRows } = await supabase.from("services").select("id");
-  const allowed = new Set((serviceRows ?? []).map((service: { id: string }) => service.id));
-  const serviceIds = (key: string) =>
-    formData.getAll(key).filter((id): id is string => typeof id === "string" && allowed.has(id));
+  const cleanServices = (key: string) =>
+    String(formData.get(key) ?? "").trim().replace(/\s+/g, " ").slice(0, 500);
+  const equipierServices = equipier ? cleanServices("equipier_services") : "";
+  const managerServices = manager ? cleanServices("manager_services") : "";
+  if (equipier && !equipierServices) return { error: "Indique ton ou tes services en tant qu’Équipier MLK." };
+  if (manager && !managerServices) return { error: "Indique le ou les services dont tu es responsable." };
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -43,8 +45,8 @@ export async function saveMlkEngagement(
         equipier,
         manager,
         collaborator,
-        equipierServiceIds: equipier ? serviceIds("equipier_services") : [],
-        managerServiceIds: manager ? serviceIds("manager_services") : [],
+        equipierServices,
+        managerServices,
       };
 
   const { error } = await supabase

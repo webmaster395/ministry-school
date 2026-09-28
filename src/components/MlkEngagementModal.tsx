@@ -6,10 +6,8 @@ import MlkEngagementForm from "@/components/MlkEngagementForm";
 import type { MlkEngagement } from "@/lib/mlk-engagement";
 
 export default function MlkEngagementModal({
-  services,
   initial,
 }: {
-  services: { id: string; name: string }[];
   initial: MlkEngagement;
 }) {
   const [open, setOpen] = useState(true);
@@ -27,7 +25,7 @@ export default function MlkEngagementModal({
           Ces informations nous aident à mieux comprendre les étudiants de Ministry School. Tu pourras les modifier depuis ton profil.
         </p>
         <div className="mt-6">
-          <MlkEngagementForm services={services} initial={initial} onSaved={() => setOpen(false)} />
+          <MlkEngagementForm initial={initial} onSaved={() => setOpen(false)} />
         </div>
         <button type="button" onClick={() => setOpen(false)} className="mt-3 w-full py-2 text-center text-xs text-muted hover:text-foreground">
           Je compléterai plus tard

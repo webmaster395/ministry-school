@@ -4,8 +4,8 @@ export type MlkEngagement = {
   equipier: boolean;
   manager: boolean;
   collaborator: boolean;
-  equipierServiceIds: string[];
-  managerServiceIds: string[];
+  equipierServices: string;
+  managerServices: string;
 };
 
 export const EMPTY_MLK_ENGAGEMENT: MlkEngagement = {
@@ -14,8 +14,8 @@ export const EMPTY_MLK_ENGAGEMENT: MlkEngagement = {
   equipier: false,
   manager: false,
   collaborator: false,
-  equipierServiceIds: [],
-  managerServiceIds: [],
+  equipierServices: "",
+  managerServices: "",
 };
 
 export function parseMlkEngagement(value: unknown): MlkEngagement {
@@ -27,7 +27,7 @@ export function parseMlkEngagement(value: unknown): MlkEngagement {
     equipier: data.equipier === true,
     manager: data.manager === true,
     collaborator: data.collaborator === true,
-    equipierServiceIds: Array.isArray(data.equipierServiceIds) ? data.equipierServiceIds.filter((id): id is string => typeof id === "string") : [],
-    managerServiceIds: Array.isArray(data.managerServiceIds) ? data.managerServiceIds.filter((id): id is string => typeof id === "string") : [],
+    equipierServices: typeof data.equipierServices === "string" ? data.equipierServices : "",
+    managerServices: typeof data.managerServices === "string" ? data.managerServices : "",
   };
 }

@@ -5,14 +5,10 @@ import { Check, Loader2 } from "lucide-react";
 import { saveMlkEngagement, type EngagementState } from "@/app/etudiant/actions";
 import type { MlkEngagement } from "@/lib/mlk-engagement";
 
-type Service = { id: string; name: string };
-
 export default function MlkEngagementForm({
-  services,
   initial,
   onSaved,
 }: {
-  services: Service[];
   initial: MlkEngagement;
   onSaved?: () => void;
 }) {
@@ -71,8 +67,8 @@ export default function MlkEngagementForm({
 
       {(equipier || manager) && (
         <div className="grid gap-3 sm:grid-cols-2">
-          {equipier && <ServiceChoices title="Dans quel(s) service(s) es-tu équipier&nbsp;?" name="equipier_services" services={services} selected={initial.equipierServiceIds} />}
-          {manager && <ServiceChoices title="Quel(s) service(s) manages-tu&nbsp;?" name="manager_services" services={services} selected={initial.managerServiceIds} />}
+          {equipier && <ServiceField title="Dans quel(s) service(s) es-tu équipier ?" name="equipier_services" defaultValue={initial.equipierServices} />}
+          {manager && <ServiceField title="De quel(s) service(s) es-tu manager ou responsable ?" name="manager_services" defaultValue={initial.managerServices} />}
         </div>
       )}
 
@@ -85,18 +81,12 @@ export default function MlkEngagementForm({
   );
 }
 
-function ServiceChoices({ title, name, services, selected }: { title: string; name: string; services: Service[]; selected: string[] }) {
+function ServiceField({ title, name, defaultValue }: { title: string; name: string; defaultValue: string }) {
   return (
-    <fieldset className="rounded-xl bg-surface p-3.5">
-      <legend className="px-1 text-[13px] font-semibold text-foreground">{title}</legend>
-      <div className="mt-2 max-h-36 space-y-1.5 overflow-y-auto">
-        {services.map((service) => (
-          <label key={service.id} className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-[13px] text-foreground hover:bg-background">
-            <input type="checkbox" name={name} value={service.id} defaultChecked={selected.includes(service.id)} className="h-4 w-4 accent-[#27302f]" />
-            {service.name}
-          </label>
-        ))}
-      </div>
-    </fieldset>
+    <label className="block rounded-xl bg-surface p-3.5">
+      <span className="text-[13px] font-semibold text-foreground">{title}</span>
+      <input name={name} type="text" required defaultValue={defaultValue} placeholder="Écris le nom du ou des services" className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-foreground outline-none transition placeholder:text-muted focus:border-foreground" />
+      <span className="mt-1.5 block text-xs text-muted">Tu peux séparer plusieurs services par une virgule.</span>
+    </label>
   );
 }

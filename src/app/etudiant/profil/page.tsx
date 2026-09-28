@@ -3,7 +3,6 @@ import ProfileCard from "@/components/ProfileCard";
 import ProfileTabs from "@/components/ProfileTabs";
 import { getViewer } from "@/lib/data/viewer";
 import { isDemoAdminEmail } from "@/lib/demo-admin";
-import { getServices } from "@/lib/data/opportunities";
 import { parseMlkEngagement } from "@/lib/mlk-engagement";
 import MlkEngagementForm from "@/components/MlkEngagementForm";
 
@@ -13,14 +12,11 @@ export default async function StudentProfilePage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const [{ data: profile }, services] = await Promise.all([
-    supabase
+  const { data: profile } = await supabase
       .from("profiles")
       .select("full_name, notification_prefs, ministries!profiles_ministry_id_fkey(name)")
       .eq("id", user!.id)
-      .single(),
-    getServices(supabase),
-  ]);
+      .single();
 
   const { data: genderRow } = await supabase.from("profiles").select("gender").eq("id", user!.id).single();
 
@@ -64,7 +60,7 @@ export default async function StudentProfilePage() {
     />
     <section className="rounded-lg border border-border bg-background p-5 sm:p-7">
       <p className="mb-4 text-sm text-muted">Mets à jour les informations utilisées dans les statistiques de la plateforme.</p>
-      <MlkEngagementForm services={services} initial={parseMlkEngagement(profile?.notification_prefs)} />
+      <MlkEngagementForm initial={parseMlkEngagement(profile?.notification_prefs)} />
     </section>
     </div>
   );
