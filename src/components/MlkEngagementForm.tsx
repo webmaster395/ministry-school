@@ -57,7 +57,7 @@ export default function MlkEngagementForm({
         </label>
         <label className={`${option} ${manager ? "border-foreground bg-accent/15" : "border-border bg-background"}`}>
           <input type="checkbox" name="manager" checked={manager} onChange={() => choose(setManager, manager)} className="h-4 w-4 accent-[#27302f]" />
-          <span className="text-sm font-medium text-foreground">Manager ou responsable MLK</span>
+          <span className="text-sm font-medium text-foreground">Manager ou manager adjoint MLK</span>
         </label>
         <label className={`${option} ${collaborator ? "border-foreground bg-accent/15" : "border-border bg-background"}`}>
           <input type="checkbox" name="collaborator" checked={collaborator} onChange={() => choose(setCollaborator, collaborator)} className="h-4 w-4 accent-[#27302f]" />
@@ -68,7 +68,7 @@ export default function MlkEngagementForm({
       {(equipier || manager) && (
         <div className="grid gap-3 sm:grid-cols-2">
           {equipier && <ServiceField title="Dans quel(s) service(s) es-tu équipier ?" name="equipier_services" defaultValue={initial.equipierServices} />}
-          {manager && <ServiceField title="De quel(s) service(s) es-tu manager ou responsable ?" name="manager_services" defaultValue={initial.managerServices} />}
+          {manager && <ServiceField title="De quel(s) service(s) es-tu manager ou manager adjoint ?" name="manager_services" defaultValue={initial.managerServices} />}
         </div>
       )}
 

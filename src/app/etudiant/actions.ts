@@ -29,7 +29,7 @@ export async function saveMlkEngagement(
   const equipierServices = equipier ? cleanServices("equipier_services") : "";
   const managerServices = manager ? cleanServices("manager_services") : "";
   if (equipier && !equipierServices) return { error: "Indique ton ou tes services en tant qu’Équipier MLK." };
-  if (manager && !managerServices) return { error: "Indique le ou les services dont tu es responsable." };
+  if (manager && !managerServices) return { error: "Indique le ou les services dont tu es manager ou manager adjoint." };
 
   const { data: profile } = await supabase
     .from("profiles")

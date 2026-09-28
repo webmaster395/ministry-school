@@ -167,7 +167,7 @@ export default async function OverviewTab({
           {[
             ["Aucun", breakdown.engagement.none],
             ["Équipiers", breakdown.engagement.equipiers],
-            ["Managers", breakdown.engagement.managers],
+            ["Managers et adjoints", breakdown.engagement.managers],
             ["Collaborateurs", breakdown.engagement.collaborators],
             ["Non renseigné", breakdown.engagement.unassigned],
           ].map(([label, value]) => (
