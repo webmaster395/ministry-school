@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 
 import type { ViewerRoles } from "@/lib/roles";
 import { signedAvatarUrls } from "@/lib/avatars";
+import { isDemoAdminEmail } from "@/lib/demo-admin";
 
 export type { ViewerRoles };
 export { isPlainStudent } from "@/lib/roles";
@@ -45,7 +46,9 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
     supabase.rpc("steering_ministries"),
   ]);
 
-  const ministry = data?.ministries as unknown as { slug: string; name: string } | null;
+  const ministry = isDemoAdminEmail(user.email)
+    ? null
+    : (data?.ministries as unknown as { slug: string; name: string } | null);
   const role = (data?.role as Viewer["role"] | undefined) ?? "student";
   const avatarPath = (data?.avatar_path as string | null | undefined) ?? null;
   const avatarUrl = avatarPath ? ((await signedAvatarUrls(supabase, [avatarPath])).get(avatarPath) ?? null) : null;

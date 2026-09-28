@@ -1,4 +1,5 @@
 import { SupabaseClient } from "@supabase/supabase-js";
+import { isDemoAdminEmail } from "@/lib/demo-admin";
 
 export type EnrollmentBreakdown = {
   byMinistry: { name: string; slug?: string; count: number }[];
@@ -17,18 +18,28 @@ export async function getEnrollmentBreakdown(
 
   // Tout le monde est compté (administrateurs, formateurs, étudiants) : pas de distinction pour le moment.
   // Requête tolérante sur profiles : si la colonne gender existe, on la récupère, sinon fallback
-  let rows: { ministry_id: string | null; preferred_day: string | null; gender?: string | null }[] = [];
-  const { data: studentsWithGender, error } = await supabase
-    .from("profiles")
-    .select("ministry_id, preferred_day, gender");
+  let rows: { id: string; ministry_id: string | null; preferred_day: string | null; gender?: string | null }[] = [];
+  const [{ data: studentsWithGender, error }, { data: emails }] = await Promise.all([
+    supabase.from("profiles").select("id, ministry_id, preferred_day, gender"),
+    supabase.rpc("admin_user_emails"),
+  ]);
 
   if (error) {
     const { data: fallbackStudents } = await supabase
       .from("profiles")
-      .select("ministry_id, preferred_day");
+      .select("id, ministry_id, preferred_day");
     rows = (fallbackStudents as typeof rows) ?? [];
   } else {
     rows = (studentsWithGender as typeof rows) ?? [];
+  }
+
+  const demoAdminId = ((emails ?? []) as { id: string; email: string }[]).find((entry) =>
+    isDemoAdminEmail(entry.email)
+  )?.id;
+  if (demoAdminId) {
+    rows = rows.map((row) =>
+      row.id === demoAdminId ? { ...row, ministry_id: null } : row
+    );
   }
 
   const byMinistry: EnrollmentBreakdown["byMinistry"] = (ministries ?? []).map((m) => ({

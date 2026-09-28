@@ -1,5 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import type { OpportunityKind } from "@/lib/data/opportunities";
+import { isDemoAdminEmail } from "@/lib/demo-admin";
 
 export type Member = {
   id: string;
@@ -49,7 +50,14 @@ export async function getMembers(supabase: SupabaseClient) {
   }
 
   const emailOf = new Map(((emails ?? []) as { id: string; email: string }[]).map((e) => [e.id, e.email]));
-  return ((profiles ?? []) as Omit<Member, "email">[]).map((p) => ({ ...p, email: emailOf.get(p.id) ?? "" }));
+  return ((profiles ?? []) as Omit<Member, "email">[]).map((p) => {
+    const email = emailOf.get(p.id) ?? "";
+    return {
+      ...p,
+      email,
+      ministry_id: isDemoAdminEmail(email) ? null : p.ministry_id,
+    };
+  });
 }
 
 export type OppRow = {

@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import ProfileCard from "@/components/ProfileCard";
 import ProfileTabs from "@/components/ProfileTabs";
 import { getViewer } from "@/lib/data/viewer";
+import { isDemoAdminEmail } from "@/lib/demo-admin";
 
 export default async function StudentProfilePage() {
   const supabase = await createClient();
@@ -20,7 +21,9 @@ export default async function StudentProfilePage() {
   const rawGender = (genderRow?.gender as string | undefined) ?? (user?.user_metadata?.gender as string | undefined);
   const genderLabel = rawGender === "homme" ? "Homme" : rawGender === "femme" ? "Femme" : null;
 
-  const ministryName = (profile?.ministries as unknown as { name: string } | null)?.name;
+  const ministryName = isDemoAdminEmail(user?.email)
+    ? undefined
+    : (profile?.ministries as unknown as { name: string } | null)?.name;
 
   const viewer = await getViewer();
   const r = viewer?.roles;
