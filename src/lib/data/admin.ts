@@ -57,7 +57,7 @@ export async function getEnrollmentBreakdown(
 
   const unassigned = rows.filter((s) => !s.ministry_id).length;
   if (unassigned > 0) {
-    byMinistry.push({ name: "Non renseigné", count: unassigned });
+    byMinistry.push({ name: "Ne sais pas encore", count: unassigned });
   }
 
   const men = rows.filter((s) => s.gender === "homme").length;
