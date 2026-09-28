@@ -20,6 +20,13 @@ export async function GET(request: NextRequest) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
+      const { data: { user } } = await supabase.auth.getUser();
+      const engagement = user?.user_metadata?.mlk_engagement;
+      if (user && engagement?.completed === true) {
+        const { data: profile } = await supabase.from("profiles").select("notification_prefs").eq("id", user.id).single();
+        const current = (profile?.notification_prefs ?? {}) as Record<string, unknown>;
+        await supabase.from("profiles").update({ notification_prefs: { ...current, mlk_engagement: engagement } }).eq("id", user.id);
+      }
       // La session est ouverte : /app oriente selon le rôle (l'accueil « / » est la landing)
       return NextResponse.redirect(`${origin}${next}`);
     }

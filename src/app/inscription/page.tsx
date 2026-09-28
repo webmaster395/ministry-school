@@ -33,6 +33,9 @@ export default function InscriptionPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [ministrySlug, setMinistrySlug] = useState("");
   const [gender, setGender] = useState<"homme" | "femme" | "">("");
+  const [engagement, setEngagement] = useState({ none: false, equipier: false, manager: false, collaborator: false });
+  const [equipierServices, setEquipierServices] = useState("");
+  const [managerServices, setManagerServices] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const [error, setError] = useState<string | null>(null);
@@ -48,6 +51,19 @@ export default function InscriptionPage() {
       return;
     }
 
+    if (!Object.values(engagement).some(Boolean)) {
+      setError("Merci d’indiquer ton implication actuelle à MLK.");
+      return;
+    }
+    if (engagement.equipier && !equipierServices.trim()) {
+      setError("Merci d’indiquer ton ou tes services en tant qu’Équipier MLK.");
+      return;
+    }
+    if (engagement.manager && !managerServices.trim()) {
+      setError("Merci d’indiquer le ou les services dont tu es manager ou manager adjoint.");
+      return;
+    }
+
     if (password.length < 8) {
       setError("Le mot de passe doit contenir au moins 8 caractères.");
       return;
@@ -60,6 +76,16 @@ export default function InscriptionPage() {
 
     setLoading(true);
 
+    const mlkEngagement = {
+      completed: true,
+      none: engagement.none,
+      equipier: engagement.equipier,
+      manager: engagement.manager,
+      collaborator: engagement.collaborator,
+      equipierServices: engagement.equipier ? equipierServices.trim() : "",
+      managerServices: engagement.manager ? managerServices.trim() : "",
+    };
+
     const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
@@ -70,6 +96,7 @@ export default function InscriptionPage() {
           full_name: `${firstName.trim()} ${lastName.trim()}`.trim(),
           ministry_slug: ministrySlug,
           gender,
+          mlk_engagement: mlkEngagement,
         },
       },
     });
@@ -103,7 +130,7 @@ export default function InscriptionPage() {
     if (data.session) {
       if (data.session.user?.id) {
         try {
-          await supabase.from("profiles").update({ gender }).eq("id", data.session.user.id);
+          await supabase.from("profiles").update({ gender, notification_prefs: { mlk_engagement: mlkEngagement } }).eq("id", data.session.user.id);
         } catch {
           // Si la colonne n'est pas encore créée en base, la navigation continue sans blocage
         }
@@ -265,6 +292,50 @@ export default function InscriptionPage() {
                       />
                     </label>
                   </div>
+
+                  <fieldset className="signup-engagement">
+                    <legend>Quelle est ton implication actuelle à MLK&nbsp;?</legend>
+                    <p>Tu peux sélectionner plusieurs réponses.</p>
+                    <div className="signup-engagement__grid">
+                      {[
+                        ["none", "Aucun engagement actuellement"],
+                        ["equipier", "Équipier MLK"],
+                        ["manager", "Manager ou manager adjoint MLK"],
+                        ["collaborator", "Collaborateur salarié MLK"],
+                      ].map(([key, label]) => {
+                        const name = key as keyof typeof engagement;
+                        return (
+                          <label key={key}>
+                            <input
+                              type="checkbox"
+                              checked={engagement[name]}
+                              onChange={() => setEngagement((current) => {
+                                if (name === "none") return { none: !current.none, equipier: false, manager: false, collaborator: false };
+                                return { ...current, none: false, [name]: !current[name] };
+                              })}
+                            />
+                            <span>{label}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                    {(engagement.equipier || engagement.manager) && (
+                      <div className="signup-engagement__services">
+                        {engagement.equipier && (
+                          <label>
+                            <span>Dans quel(s) service(s) es-tu équipier&nbsp;?</span>
+                            <input required value={equipierServices} onChange={(e) => setEquipierServices(e.target.value)} placeholder="Écris le nom du ou des services" />
+                          </label>
+                        )}
+                        {engagement.manager && (
+                          <label>
+                            <span>De quel(s) service(s) es-tu manager ou manager adjoint&nbsp;?</span>
+                            <input required value={managerServices} onChange={(e) => setManagerServices(e.target.value)} placeholder="Écris le nom du ou des services" />
+                          </label>
+                        )}
+                      </div>
+                    )}
+                  </fieldset>
 
                   <fieldset className="ministry-choice">
                     <legend>As-tu une idée de ta sensibilité ministérielle&nbsp;?</legend>

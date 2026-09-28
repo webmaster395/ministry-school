@@ -1002,6 +1002,21 @@ html body #price.pricing-section{background-color:#fff!important;background-imag
 .signup-fields label.signup-radio{display:inline-flex;align-items:center;gap:9px;cursor:pointer;font-size:14px;font-weight:500}
 .signup-radio input{width:18px;height:18px;min-height:0;margin:0;padding:0;accent-color:var(--ink);cursor:pointer;flex:0 0 auto}
 .signup-radio input:focus-visible{outline:2px solid var(--ink);outline-offset:3px;box-shadow:none}
+.signup-engagement{min-width:0;margin:0;border:1px solid #e7eae8;border-radius:16px;padding:12px 14px;background:#fafaf8}
+.signup-engagement legend{float:left;width:100%;margin:0;padding:0;font-size:12px;font-weight:600;color:var(--ink)}
+.signup-engagement>p{clear:both;margin:4px 0 9px;color:#79807d;font-size:11px;line-height:1.35}
+.signup-engagement__grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.signup-engagement__grid label{position:relative;min-width:0;cursor:pointer}
+.signup-engagement__grid input{position:absolute;width:1px;height:1px;overflow:hidden;opacity:0}
+.signup-engagement__grid span{display:flex;min-height:38px;align-items:center;border:1px solid #dcdfdc;border-radius:12px;padding:7px 10px 7px 31px;background:#fff;color:#4b524f;font-size:11px;font-weight:500;line-height:1.2;transition:border-color .2s ease,background .2s ease}
+.signup-engagement__grid span::before{position:absolute;left:11px;top:50%;width:11px;height:11px;transform:translateY(-50%);border:1px solid #9ba19e;border-radius:3px;background:#fff;content:""}
+.signup-engagement__grid input:checked+span{border-color:var(--ink);background:#edf0e5;color:var(--ink);font-weight:600}
+.signup-engagement__grid input:checked+span::before{border-color:var(--ink);background:var(--ink);box-shadow:inset 0 0 0 2px #fff}
+.signup-engagement__grid input:focus-visible+span{outline:2px solid var(--ink);outline-offset:2px}
+.signup-engagement__services{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
+.signup-engagement__services label{display:grid;gap:5px;color:var(--ink);font-size:11px;font-weight:500}
+.signup-engagement__services input{width:100%;min-width:0;min-height:40px;border:1px solid #d9dcda;border-radius:10px;background:#fff;padding:9px 11px;color:var(--ink);font:inherit;font-size:12px;outline:none}
+.signup-engagement__services input:focus{border-color:var(--ink);box-shadow:0 0 0 3px rgba(35,44,41,.08)}
 .ministry-choice{min-width:0;margin:0;border:1px solid #e7eae8;border-radius:16px;padding:12px 14px;background:#fafaf8}
 .ministry-choice legend{float:left;width:100%;margin:0 0 8px;padding:0;font-size:12px;font-weight:600;color:var(--ink)}
 .ministry-choice__grid{clear:both;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
@@ -1037,6 +1052,7 @@ html body #price.pricing-section{background-color:#fff!important;background-imag
   .signup-form-wrap h1{font-size:32px}
   .signup-fields{grid-template-columns:1fr;gap:10px}
   .ministry-choice__grid{grid-template-columns:1fr 1fr;gap:6px}
+  .signup-engagement__grid,.signup-engagement__services{grid-template-columns:1fr}
   .ministry-choice__grid span{min-height:36px;padding:6px 8px 6px 26px;font-size:10.5px}
   .ministry-choice__grid span::before{left:9px}
 }
