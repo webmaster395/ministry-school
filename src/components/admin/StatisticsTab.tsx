@@ -109,20 +109,6 @@ export default function StatisticsTab({ members, ministries }: { members: Member
     { label: "Non renseigné", value: members.filter((m) => m.gender !== "femme" && m.gender !== "homme").length, href: membersHref("genre=non_renseigne") },
   ];
   const ministryData: BarDatum[] = [...ministries.map((m) => ({ label: m.name, value: members.filter((member) => member.ministry_id === m.id).length, slug: m.slug, href: membersHref(`sens=${m.slug}`) })), { label: "Ne sais pas encore", value: members.filter((m) => !m.ministry_id).length, fallbackIcon: "🤔", color: "#27302f", href: membersHref("sens=non_renseignee") }];
-  const rolesData: BarDatum[] = [
-    { label: "Étudiants", value: members.filter((m) => m.role === "student").length, href: membersHref("role=etudiant") },
-    { label: "Formateurs", value: members.filter((m) => m.is_teacher || m.role === "teacher").length, href: membersHref("role=enseignant") },
-    { label: "Responsables de service", value: members.filter((m) => m.is_service_lead).length, href: membersHref("role=responsable") },
-    { label: "Chefs de projet", value: members.filter((m) => m.is_project_lead).length, href: membersHref("role=chef") },
-    { label: "Pilotage ministériel", value: members.filter((m) => Boolean(m.ministry_lead_of)).length, href: membersHref("role=pilotage") },
-    { label: "Administrateurs", value: members.filter((m) => m.role === "admin").length, href: membersHref("role=admin") },
-  ];
-  const completenessData: BarDatum[] = [
-    { label: "Genre renseigné", value: members.filter((m) => m.gender === "femme" || m.gender === "homme").length },
-    { label: "Sensibilité identifiée", value: members.filter((m) => Boolean(m.ministry_id)).length },
-    { label: "Implication renseignée", value: engagement.filter((i) => i.completed).length },
-    { label: "Photo ajoutée", value: members.filter((m) => Boolean(m.avatar_path)).length },
-  ];
   const months = new Map<string, number>();
   members.forEach((member) => { const month = member.created_at.slice(0, 7); if (month) months.set(month, (months.get(month) ?? 0) + 1); });
   const monthlyData: BarDatum[] = [...months.entries()].sort(([a], [b]) => a.localeCompare(b)).slice(-12).map(([month, value]) => ({ label: new Intl.DateTimeFormat("fr-FR", { month: "short", year: "numeric", timeZone: "UTC" }).format(new Date(`${month}-01T00:00:00Z`)), value }));
@@ -131,8 +117,6 @@ export default function StatisticsTab({ members, ministries }: { members: Member
     { title: "Implication à MLK", subtitle: "Un seul statut d'implication par membre.", data: engagementData },
     { title: "Répartition par genre", subtitle: "Selon les informations déclarées par les membres.", data: genderData },
     { title: "Sensibilités ministérielles", subtitle: "Sensibilité choisie par chaque membre.", data: ministryData },
-    { title: "Rôles et accès", subtitle: "Certains accès peuvent se cumuler pour une même personne.", data: rolesData },
-    { title: "Complétude des profils", subtitle: "Nombre de membres ayant renseigné chaque information.", data: completenessData },
     { title: "Évolution des inscriptions", subtitle: "Nouveaux comptes créés par mois.", data: monthlyData },
   ];
 
