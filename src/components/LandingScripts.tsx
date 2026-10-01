@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { getMemberRegistrationUrl, getNextMemberRegistrationSwitch } from "@/lib/member-registration-url.mjs";
 
-const MEMBER_REGISTRATION_URL = "https://www.billetweb.fr/mlk-ministry-school&quick=7261552";
 const GENERAL_REGISTRATION_URL = "https://www.billetweb.fr/mlk-ministry-school";
 const MEMBER_REQUEST_URL = "https://eglisemlk.fr/devenir-membre-actif-mlk/";
 const MEMBER_DISCOVERY_URL = "https://eglisemlk.fr/devenir-membre/";
@@ -16,12 +16,23 @@ function ExternalLink({ href, children, secondary = false }: { href: string; chi
 }
 
 function PricingJourney() {
+  const [memberRegistrationUrl, setMemberRegistrationUrl] = useState(() => getMemberRegistrationUrl());
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [member, setMember] = useState<Answer>(null);
   const [teammate, setTeammate] = useState<Answer>(null);
   const [donor, setDonor] = useState<Answer>(null);
   const [result, setResult] = useState<Result>(null);
   const [showInfo, setShowInfo] = useState(false);
+
+  useEffect(() => {
+    const nextSwitch = getNextMemberRegistrationSwitch();
+    if (!nextSwitch) return;
+    const timeout = window.setTimeout(
+      () => setMemberRegistrationUrl(getMemberRegistrationUrl()),
+      Math.max(0, nextSwitch.getTime() - Date.now() + 50)
+    );
+    return () => window.clearTimeout(timeout);
+  }, [memberRegistrationUrl]);
 
   const showQuestion = (nextStep: 1 | 2 | 3) => {
     setResult(null);
@@ -60,7 +71,7 @@ function PricingJourney() {
           {result === "member" && <div className="pricing-result pricing-result--member">
             <p className="pricing-result__eyebrow">Tarif membre actif MLK</p><div className="pricing-result__price"><strong>9&nbsp;€</strong><span>/ mois</span></div>
             <h3>Tu bénéficies du tarif membre actif</h3><p>Ton statut de membre actif te permet de bénéficier du tarif préférentiel Ministry School de <strong>9&nbsp;€/mois</strong>.</p>
-            <ExternalLink href={MEMBER_REGISTRATION_URL}>M’inscrire à 9 €/mois</ExternalLink>
+            <ExternalLink href={memberRegistrationUrl}>M’inscrire à 9 €/mois</ExternalLink>
           </div>}
           {result === "eligible" && <div className="pricing-result pricing-result--eligible">
             <p className="pricing-result__eyebrow">Prochaine étape</p><div className="pricing-result__price"><strong>9&nbsp;€</strong><span>/ mois après validation</span></div>
@@ -69,7 +80,7 @@ function PricingJourney() {
             <p>Pour bénéficier du tarif préférentiel Ministry School, fais ta demande de membre actif, puis <strong>reviens ici après l’avoir effectuée</strong> pour poursuivre ton inscription. <strong>Les équipes MLK vérifieront ensuite ton éligibilité et te confirmeront ton statut.</strong></p>
             <p>Il vous sera proposé un RDV pastoral pour valider la demande d’intégration.</p>
             <ExternalLink href={MEMBER_REQUEST_URL}>Faire ma demande de membre actif</ExternalLink>
-            <div className="pricing-result__next"><h4>Tu as déjà effectué ta demande&nbsp;?</h4><p>Une fois ta demande effectuée, reviens ici pour poursuivre ton inscription à Ministry School au tarif membre actif.</p><ExternalLink href={MEMBER_REGISTRATION_URL} secondary>J’ai fait ma demande — m’inscrire à 9 €/mois</ExternalLink></div>
+            <div className="pricing-result__next"><h4>Tu as déjà effectué ta demande&nbsp;?</h4><p>Une fois ta demande effectuée, reviens ici pour poursuivre ton inscription à Ministry School au tarif membre actif.</p><ExternalLink href={memberRegistrationUrl} secondary>J’ai fait ma demande — m’inscrire à 9 €/mois</ExternalLink></div>
           </div>}
           {result === "general" && <div className="pricing-result pricing-result--general">
             <p className="pricing-result__eyebrow">Tarif général</p><div className="pricing-result__price"><strong>90&nbsp;€</strong><span>/ mois</span></div>
