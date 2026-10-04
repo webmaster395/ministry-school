@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { DRAFTS_ENABLED } from "@/lib/drafts";
 import { TYPES_ENABLED } from "@/lib/material-types";
+import { getViewer } from "@/lib/data/viewer";
 
 /** Ajoute un support (lien ou fichier déposé) à une séance. La base vérifie le droit d'écriture. */
 export async function addSupport(formData: FormData) {
@@ -37,6 +38,9 @@ export async function addSupport(formData: FormData) {
     ...(TYPES_ENABLED && text("resource_type") ? { resource_type: text("resource_type") } : {}),
   });
   if (error) throw new Error("L'ajout du support a échoué : " + error.message);
+
+  // Prévenir les étudiants dans leur messagerie (sans jamais bloquer l'ajout du support)
+  await notifyNewSupport(supabase, sessionId, text("title"), visibility === "start" || visibility === "end" ? visibility : "now");
 
   revalidatePath(`/gestion/enseignement/preparation/${sessionId}`);
   revalidatePath("/gestion/pilotage", "layout");
@@ -251,4 +255,45 @@ export async function updateObjective(formData: FormData) {
   if (error) throw new Error("La modification a échoué : " + error.message);
   if (!data?.length) throw new Error("Vous n'avez pas le droit de modifier ce cours.");
   refreshPrep(sessionId);
+}
+
+/**
+ * Message automatique dans la messagerie des étudiants concernés quand un support est déposé.
+ * Admin et formateur du cours écrivent à la séance ; le pilotage écrit à son ministère.
+ * Une erreur ici ne doit jamais empêcher l'ajout du support : on l'ignore.
+ */
+async function notifyNewSupport(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  sessionId: string,
+  title: string,
+  when: "now" | "start" | "end"
+) {
+  try {
+    const viewer = await getViewer();
+    if (!viewer) return;
+    const { data: s } = await supabase
+      .from("sessions")
+      .select("description, session_date, ministry_id, teacher_id")
+      .eq("id", sessionId)
+      .single();
+    if (!s) return;
+
+    const date = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long" }).format(new Date(`${s.session_date}T00:00:00`));
+    const course = s.description ?? "votre cours";
+    const availability =
+      when === "start" ? "Il sera disponible au début du cours." : when === "end" ? "Il sera disponible à la fin du cours." : "Il est disponible dès maintenant.";
+    const message = {
+      title: `Nouveau support : ${title || "document"}`,
+      body: `Un nouveau support a été ajouté pour le cours « ${course} » du ${date}.\n\n${availability}\n\nRetrouvez-le dans la fiche du cours, depuis « Mes cours ».`,
+      author_id: viewer.id,
+    };
+
+    if (viewer.roles.admin || s.teacher_id === viewer.id) {
+      await supabase.from("announcements").insert({ ...message, session_id: sessionId, sent_as: viewer.roles.admin ? "admin" : "teacher" });
+    } else if (s.ministry_id && viewer.roles.steeringMinistryIds.includes(s.ministry_id)) {
+      await supabase.from("announcements").insert({ ...message, ministry_id: s.ministry_id, sent_as: "steering" });
+    }
+  } catch (e) {
+    console.error("Message automatique de nouveau support non envoyé :", e);
+  }
 }

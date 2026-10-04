@@ -40,7 +40,9 @@ export async function getStudentMessages(supabase: SupabaseClient, since: string
   )
     .map((m) => {
       const at = m.is_welcome && arrival ? arrival : m.created_at;
-      return { id: m.id, title: m.title, body: m.body, by: m.is_welcome ? null : (m.author?.full_name ?? null), at, isNew: at > since };
+      // Le message de bienvenue est daté de la création du compte, qui est aussi l'instant « dernier message vu » d'un nouveau compte : égalité = pas encore lu
+      const isNew = m.is_welcome ? at >= since : at > since;
+      return { id: m.id, title: m.title, body: m.body, by: m.is_welcome ? null : (m.author?.full_name ?? null), at, isNew };
     })
     .sort((a, b) => (a.at < b.at ? 1 : -1));
 }

@@ -42,7 +42,7 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
   const [{ data }, { data: steering }] = await Promise.all([
     supabase
       .from("profiles")
-      .select("full_name, role, is_teacher, deactivated, avatar_path, notifications_seen_at, notification_prefs, welcome_seen_at, is_service_lead, is_project_lead, ministries!profiles_ministry_id_fkey(slug, name)")
+      .select("full_name, role, is_teacher, deactivated, avatar_path, created_at, notifications_seen_at, notification_prefs, welcome_seen_at, is_service_lead, is_project_lead, ministries!profiles_ministry_id_fkey(slug, name)")
       .eq("id", user.id)
       .single(),
     supabase.rpc("steering_ministries"),
@@ -61,10 +61,16 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
     .from("announcements")
     .select("id", { count: "exact", head: true })
     .gt("created_at", seenAt);
+  // Le message de bienvenue (daté de la création du compte) compte comme non lu tant que la personne n'a pas tout marqué comme lu
+  const createdAt = (data?.created_at as string | undefined) ?? null;
+  const { count: welcome } =
+    createdAt && createdAt >= seenAt
+      ? await supabase.from("announcements").select("id", { count: "exact", head: true }).eq("is_welcome", true)
+      : { count: 0 };
 
   return {
     id: user.id,
-    unreadMessages: unread ?? 0,
+    unreadMessages: (unread ?? 0) + (welcome ?? 0),
     welcomeSeen: !!data?.welcome_seen_at,
     mlkEngagement: parseMlkEngagement(data?.notification_prefs),
     fullName: (data?.full_name as string | undefined) ?? "",

@@ -40,6 +40,8 @@ export default async function MembersTab({
   tri,
   implication,
   genre,
+  page,
+  par,
 }: {
   q: string;
   role: string;
@@ -48,6 +50,8 @@ export default async function MembersTab({
   tri: string;
   implication: string;
   genre: string;
+  page: string;
+  par: string;
 }) {
   const supabase = await createClient();
   const [members, ministries, services, { data: delegates }] = await Promise.all([
@@ -57,7 +61,6 @@ export default async function MembersTab({
     supabase.from("ministry_delegates").select("id, email, user_id, ministry_id").order("created_at"),
   ]);
 
-  const avatarUrls = await signedAvatarUrls(supabase, members.map((m) => m.avatar_path));
   const serviceName = new Map(services.map((s) => [s.id, s.name]));
   const ministryName = new Map(ministries.map((m) => [m.id, m.name]));
   const ministryById = new Map(ministries.map((m) => [m.id, m]));
@@ -94,6 +97,49 @@ export default async function MembersTab({
     .sort((a, b) =>
       tri === "creation" ? b.created_at.localeCompare(a.created_at) : a.full_name.localeCompare(b.full_name, "fr")
     );
+
+  // Pagination : 25, 50 ou 100 membres par page (50 par défaut)
+  const perPage = [25, 50, 100].includes(Number(par)) ? Number(par) : 50;
+  const pageCount = Math.max(1, Math.ceil(filtered.length / perPage));
+  const current = Math.min(Math.max(1, parseInt(page, 10) || 1), pageCount);
+  const shown = filtered.slice((current - 1) * perPage, current * perPage);
+  const avatarUrls = await signedAvatarUrls(supabase, shown.map((m) => m.avatar_path));
+
+  /** Lien vers une autre page, en gardant la recherche et les filtres. */
+  const pageHref = (n: number) => {
+    const qs = new URLSearchParams({ onglet: "membres", q, role, sens, statut, tri, implication, genre, par: String(perPage), page: String(n) });
+    return `/gestion/admin?${qs.toString()}`;
+  };
+  const pager = (
+    <nav aria-label="Pages de membres" className="flex flex-wrap items-center justify-between gap-3 text-sm text-muted">
+      <span>
+        {filtered.length ? (
+          <>
+            {(current - 1) * perPage + 1}–{Math.min(current * perPage, filtered.length)} sur {filtered.length} membre{filtered.length > 1 ? "s" : ""}
+          </>
+        ) : null}
+      </span>
+      {pageCount > 1 && (
+        <span className="flex items-center gap-2">
+          {current > 1 ? (
+            <Link href={pageHref(current - 1)} className="rounded-md border border-border px-3 py-1.5 text-foreground transition hover:border-foreground">
+              ← Précédent
+            </Link>
+          ) : (
+            <span className="rounded-md border border-border-soft px-3 py-1.5 opacity-50">← Précédent</span>
+          )}
+          <span className="px-1 tabular-nums">Page {current} sur {pageCount}</span>
+          {current < pageCount ? (
+            <Link href={pageHref(current + 1)} className="rounded-md border border-border px-3 py-1.5 text-foreground transition hover:border-foreground">
+              Suivant →
+            </Link>
+          ) : (
+            <span className="rounded-md border border-border-soft px-3 py-1.5 opacity-50">Suivant →</span>
+          )}
+        </span>
+      )}
+    </nav>
+  );
 
   return (
     <div className="space-y-5">
@@ -146,6 +192,11 @@ export default async function MembersTab({
           <option value="femme">Femmes</option>
           <option value="non_renseigne">Genre non renseigné</option>
         </select>
+        <select name="par" defaultValue={String(perPage)} className={field} aria-label="Membres par page">
+          <option value="25">25 par page</option>
+          <option value="50">50 par page</option>
+          <option value="100">100 par page</option>
+        </select>
         <select name="tri" defaultValue={tri} className={field}>
           <option value="nom">Tri par nom</option>
           <option value="creation">Plus récents</option>
@@ -164,6 +215,8 @@ export default async function MembersTab({
         </a>
       </form>
 
+      {pager}
+
       <section suppressHydrationWarning className="overflow-hidden rounded-lg border border-border bg-background">
         <div className="label hidden grid-cols-[1.4fr_1fr_1.6fr_110px_90px] gap-4 border-b border-border px-5 py-3 text-[11px] tracking-[0.14em] text-muted md:grid">
           <span>Membre</span>
@@ -175,7 +228,7 @@ export default async function MembersTab({
 
         {filtered.length ? (
           <ul className="divide-y divide-border-soft">
-            {filtered.map((m) => {
+            {shown.map((m) => {
               const mi = getMinistry(ministryById.get(m.ministry_id ?? "")?.slug);
               const status = memberStatus(m);
               const roles = rolesOf(m, serviceName, ministryName);
@@ -240,6 +293,8 @@ export default async function MembersTab({
           <p className="px-5 py-6 text-sm text-muted">Aucun membre ne correspond à ces critères.</p>
         )}
       </section>
+
+      {pager}
 
       <section suppressHydrationWarning className="rounded-lg border border-border bg-background p-6">
         <h3 className="font-title text-[22px] text-foreground">Secrétaires de pilotage</h3>
