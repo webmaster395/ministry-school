@@ -28,7 +28,8 @@ export default async function StudentDashboardPage() {
   const newCount = messages.filter((m) => m.isNew).length;
   const preview = messages.slice(0, 2);
 
-  const today = new Date().toISOString().slice(0, 10);
+  // Date du jour à Paris (et non en UTC), pour que le décompte change bien à minuit heure de Paris
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris" }).format(new Date());
   const nextSession = allSessions.find((s) => s.session_date >= today);
 
   const ministryColor = getMinistry(ministrySlug)?.color ?? INK;

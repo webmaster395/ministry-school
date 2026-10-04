@@ -108,7 +108,7 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
         <BackButton fallbackHref={backHref} fallbackLabel={backLabel} />
       </div>
 
-      <div className="grid items-start gap-6 lg:grid-cols-[1fr_340px]">
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
         {/* ── Colonne principale ── */}
         <div className="space-y-6">
           {/* ── Carte d'en-tête de la séance ── */}

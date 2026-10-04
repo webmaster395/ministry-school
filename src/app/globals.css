@@ -412,3 +412,6 @@ html,body{max-width:100%;overflow-x:clip}
     break-inside: avoid;
   }
 }
+
+/* Les éléments d'une grille ne doivent jamais forcer la colonne à s'élargir (un titre ou un nom de fichier long ne doit pas faire déborder la page sur mobile) */
+.grid > * { min-width: 0; }
