@@ -133,42 +133,10 @@ function sortByDateThenTime(a: StudentSession, b: StudentSession) {
   );
 }
 
-/**
- * Présentation commune des après-midi du premier trimestre de la promotion.
- * La normalisation est faite ici pour garder l'Accueil, le Calendrier, Mes cours,
- * À faire et les fiches de séance parfaitement cohérents.
- */
-function normalizeAutumnPracticeSession(
-  session: StudentSession,
-): StudentSession {
-  const isAutumnAfternoon =
-    session.session_date >= "2026-10-01" &&
-    session.session_date <= "2026-12-31" &&
-    session.start_time.slice(0, 5) >= "14:00" &&
-    session.end_time.slice(0, 5) === "17:00";
-
-  if (!isAutumnAfternoon) return session;
-
-  const normalized = {
-    ...session,
-    start_time: "14:30:00",
-    track: "MISE EN PRATIQUE",
-  };
-  if (session.session_date !== "2026-10-03") return normalized;
-
-  return {
-    ...normalized,
-    description: "De la formation à l’action",
-    speaker_name: "Nathalie Boudehent",
-    courses: session.courses
-      ? { ...session.courses, title: "De la formation à l’action" }
-      : session.courses,
-    teacher: { full_name: "Nathalie Boudehent" },
-  };
-}
-
 function normalizeStudentSessions(sessions: StudentSession[]) {
-  return sessions.map(normalizeAutumnPracticeSession).sort(sortByDateThenTime);
+  // Aucune donnée éditoriale n'est réécrite ici : Supabase reste l'unique source
+  // de vérité pour l'Accueil, le Calendrier et les pages de cours.
+  return sessions.sort(sortByDateThenTime);
 }
 
 async function attachCentralizedTrainers(
@@ -435,16 +403,9 @@ export async function getStudentCourses(
     const courseSessions = withCourse
       .filter((s) => s.course_id === c.id)
       .sort(sortByDateThenTime);
-    const isFirstPracticeCourse = courseSessions.some(
-      (s) =>
-        s.session_date === "2026-10-03" && s.start_time.slice(0, 5) === "14:30",
-    );
-
     return {
       id: c.id as string,
-      title: isFirstPracticeCourse
-        ? "De la formation à l’action"
-        : (c.title as string),
+      title: c.title as string,
       description: c.description as string | null,
       objectives: c.objectives as string | null,
       sessions: courseSessions,

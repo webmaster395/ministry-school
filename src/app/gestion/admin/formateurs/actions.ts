@@ -53,6 +53,7 @@ export async function saveTrainer(formData: FormData) {
 
   revalidatePath("/gestion/admin");
   revalidatePath("/etudiant/seances", "layout");
+  revalidatePath("/etudiant", "layout");
 }
 
 export async function setTrainerActive(formData: FormData) {
@@ -61,4 +62,5 @@ export async function setTrainerActive(formData: FormData) {
   const { error } = await supabase.from("trainers").update({ is_active: formData.get("active") === "1", updated_at: new Date().toISOString() }).eq("id", id);
   if (error) throw new Error(error.message);
   revalidatePath("/gestion/admin");
+  revalidatePath("/etudiant", "layout");
 }

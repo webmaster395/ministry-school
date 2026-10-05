@@ -8,21 +8,6 @@ import { getMinistry, sessionColor } from "@/lib/ministry";
 import { createCalendarToken } from "@/lib/calendar-token";
 import MonthCalendar, { type MonthSession } from "@/components/MonthCalendar";
 
-const AFTERNOON_SESSIONS: MonthSession[] = ["2026-11-07", "2026-12-05"].map((date) => ({
-  id: `services-projets-${date}`,
-  date,
-  start: "14:30:00",
-  end: "17:00:00",
-  title: "Services & Projets",
-  description:
-    "Découvre les formations proposées par ton service ou les projets de l’Église MLK auxquels tu souhaites contribuer.",
-  label: "MISE EN PRATIQUE",
-  location: null,
-  teacher: null,
-  color: "var(--f-projet)",
-  informational: true,
-}));
-
 export default async function StudentCalendarPage({
   searchParams,
 }: {
@@ -64,16 +49,6 @@ export default async function StudentCalendarPage({
     color: sessionColor(s.track, s.session_type, ministryColor),
     informational: false,
   }));
-
-  for (const afternoon of AFTERNOON_SESSIONS) {
-    const alreadyPresent = calendarSessions.some(
-      (session) =>
-        session.date === afternoon.date &&
-        session.start.slice(0, 5) === afternoon.start.slice(0, 5) &&
-        session.end.slice(0, 5) === afternoon.end.slice(0, 5)
-    );
-    if (!alreadyPresent) calendarSessions.push(afternoon);
-  }
 
   calendarSessions.sort((a, b) => a.date.localeCompare(b.date) || a.start.localeCompare(b.start));
 

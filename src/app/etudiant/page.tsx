@@ -12,7 +12,6 @@ import { formatSessionDate, formatTimeRange } from "@/lib/format";
 import SessionTypeBadge from "@/components/SessionTypeBadge";
 import { getStudentMessages, shortDate } from "@/lib/data/messages";
 import { getMinistry, INK, sessionColor } from "@/lib/ministry";
-import { FIRST_DAY } from "@/lib/promotion";
 import { markNotificationsSeen } from "./actions";
 
 export default async function StudentDashboardPage() {
@@ -41,7 +40,6 @@ export default async function StudentDashboardPage() {
   const daySessions = nextSession
     ? allSessions.filter((s) => s.session_date === nextSession.session_date)
     : [];
-  const startsAtHalfPast = daySessions[0]?.start_time.startsWith("09:30") ?? false;
   const showParkingNotice = daySessions.some((session) => session.show_parking_notice);
   const daysLeft = nextSession
     ? Math.max(
@@ -58,10 +56,8 @@ export default async function StudentDashboardPage() {
     ),
     getStudentCompletedIds(supabase, user!.id),
   ]);
-  // Première journée : aucun devoir, une carte d'information pratique à la place
-  const isFirstDay = nextSession?.session_date === FIRST_DAY;
   const work = getStudentWorkItems(assignments, allSessions);
-  const todo = isFirstDay || !nextSession
+  const todo = !nextSession
     ? []
     : work.filter(
         ({ assignment, targetDate }) =>
@@ -111,56 +107,27 @@ export default async function StudentDashboardPage() {
             )}
 
             <ol className="mt-5">
-              {startsAtHalfPast && (
-                <>
-                  <li className="grid grid-cols-[22px_1fr] gap-x-3 lg:grid-cols-[150px_22px_1fr] lg:gap-x-4">
+              {daySessions.map((s, i) => (
+                <li key={s.id}>
+                  <Link
+                    href={`/etudiant/seances/${s.id}`}
+                    aria-label={`Ouvrir le cours ${s.courses?.title ?? s.description ?? "Séance"}`}
+                    className="group grid grid-cols-[22px_1fr] gap-x-3 rounded-md transition hover:bg-surface/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground lg:grid-cols-[150px_22px_1fr] lg:gap-x-4"
+                  >
                     <p className="col-start-2 row-start-1 text-[14px] font-semibold text-foreground lg:col-start-1 lg:pt-1">
-                      09:10 – 09:30
+                      {formatTimeRange(s.start_time, s.end_time)}
                     </p>
                     <div className="col-start-1 row-span-2 row-start-1 flex flex-col items-center lg:col-start-2 lg:row-span-1">
-                      <span className="mt-1.5 h-3.5 w-3.5 shrink-0 rounded-full border-[3px] border-background bg-foreground" style={{ boxShadow: "0 0 0 2px var(--foreground)" }} />
-                      <span className="w-px flex-1 bg-border" />
+                      <span
+                        className="mt-1.5 h-3.5 w-3.5 shrink-0 rounded-full border-[3px] border-background transition group-hover:scale-110"
+                        style={{
+                          background: colorFor(s.session_type, s.track),
+                          boxShadow: `0 0 0 2px ${colorFor(s.session_type, s.track)}`,
+                        }}
+                      />
+                      {i < daySessions.length - 1 && <span className="w-px flex-1 bg-border" />}
                     </div>
                     <div className="col-start-2 row-start-2 pb-4 pt-1 lg:col-start-3 lg:row-start-1 lg:pb-5 lg:pt-0">
-                      <span className="label inline-block rounded-2xl bg-surface px-3 py-1 text-[11px] leading-snug tracking-[0.1em] text-foreground">
-                        Accueil
-                      </span>
-                      <p className="mt-1.5 text-[16px] font-semibold text-foreground">Accueil</p>
-                    </div>
-                  </li>
-                  <li className="grid grid-cols-[22px_1fr] gap-x-3 lg:grid-cols-[150px_22px_1fr] lg:gap-x-4">
-                    <p className="col-start-2 row-start-1 text-[14px] font-semibold text-foreground lg:col-start-1 lg:pt-1">09:30</p>
-                    <div className="col-start-1 row-span-2 row-start-1 flex flex-col items-center lg:col-start-2 lg:row-span-1">
-                      <span className="mt-1.5 h-3.5 w-3.5 shrink-0 rounded-full border-[3px] border-background bg-foreground" style={{ boxShadow: "0 0 0 2px var(--foreground)" }} />
-                      <span className="w-px flex-1 bg-border" />
-                    </div>
-                    <div className="col-start-2 row-start-2 pb-4 pt-1 lg:col-start-3 lg:row-start-1 lg:pb-5 lg:pt-0">
-                      <p className="text-[16px] font-semibold text-foreground">Début de la formation</p>
-                    </div>
-                  </li>
-                </>
-              )}
-              {daySessions.map((s, i) => (
-                // L'horaire passe au-dessus du titre tant que la place manque. Le seuil est
-                // « lg » et non « sm » : entre les deux, la barre latérale réduit déjà le contenu.
-                <li
-                  key={s.id}
-                  className="grid grid-cols-[22px_1fr] gap-x-3 lg:grid-cols-[150px_22px_1fr] lg:gap-x-4"
-                >
-                  <p className="col-start-2 row-start-1 text-[14px] font-semibold text-foreground lg:col-start-1 lg:pt-1">
-                    {formatTimeRange(s.start_time, s.end_time)}
-                  </p>
-                  <div className="col-start-1 row-span-2 row-start-1 flex flex-col items-center lg:col-start-2 lg:row-span-1">
-                    <span
-                      className="mt-1.5 h-3.5 w-3.5 shrink-0 rounded-full border-[3px] border-background"
-                      style={{
-                        background: colorFor(s.session_type, s.track),
-                        boxShadow: `0 0 0 2px ${colorFor(s.session_type, s.track)}`,
-                      }}
-                    />
-                    {i < daySessions.length - 1 && <span className="w-px flex-1 bg-border" />}
-                  </div>
-                  <div className="col-start-2 row-start-2 pb-4 pt-1 lg:col-start-3 lg:row-start-1 lg:pb-5 lg:pt-0">
                     {s.track ? (
                       <span
                         className="label inline-block rounded-2xl px-3 py-1 text-[11px] leading-snug tracking-[0.1em] text-foreground"
@@ -173,7 +140,7 @@ export default async function StudentDashboardPage() {
                     ) : (
                       <SessionTypeBadge type={s.session_type} />
                     )}
-                    <p className="mt-1.5 text-[16px] font-semibold text-foreground">
+                    <p className="mt-1.5 text-[16px] font-semibold text-foreground transition group-hover:text-link">
                       {s.courses?.title ?? s.description ?? "Séance"}
                     </p>
                     {s.trainers?.length ? (
@@ -206,7 +173,8 @@ export default async function StudentDashboardPage() {
                     ) : s.teacher ? (
                       <p className="mt-0.5 text-sm text-muted">Avec {s.teacher.full_name}</p>
                     ) : null}
-                  </div>
+                    </div>
+                  </Link>
                 </li>
               ))}
             </ol>
@@ -304,11 +272,9 @@ export default async function StudentDashboardPage() {
                 </p>
               )}
             </div>
-            {!isFirstDay && (
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface text-sm font-semibold text-foreground">
-                {todoCount}
-              </span>
-            )}
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface text-sm font-semibold text-foreground">
+              {todoCount}
+            </span>
           </div>
 
           {toPrepare.length ? (
@@ -338,14 +304,6 @@ export default async function StudentDashboardPage() {
                 );
               })}
             </ul>
-          ) : isFirstDay ? (
-            <div className="mt-3 text-[15px] leading-relaxed text-foreground">
-              <p>Pour profiter pleinement de cette première journée Ministry School, pensez à :</p>
-              <ul className="mt-2 list-disc space-y-1 pl-5">
-                <li>apporter de quoi prendre des notes ;</li>
-                <li>prévoir une bouteille d&apos;eau ;</li>
-              </ul>
-            </div>
           ) : (
             <p className="mt-4 text-sm text-muted">Rien à préparer pour cette journée.</p>
           )}

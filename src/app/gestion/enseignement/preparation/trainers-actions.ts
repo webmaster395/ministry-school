@@ -23,4 +23,5 @@ export async function updateSessionTrainers(formData: FormData) {
 
   revalidatePath(`/gestion/enseignement/preparation/${sessionId}`);
   revalidatePath(`/etudiant/seances/${sessionId}`);
+  revalidatePath("/etudiant", "layout");
 }
