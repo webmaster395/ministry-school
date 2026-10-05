@@ -46,7 +46,12 @@ function formatSessionDateWithYear(dateStr: string) {
 }
 
 function formatHours(start: string, end: string) {
-  const f = (t: string) => t.slice(0, 5).replace(/^0/, "").replace(":", " h ").replace(/ h 00$/, " h");
+  const f = (t: string) =>
+    t
+      .slice(0, 5)
+      .replace(/^0/, "")
+      .replace(":", " h ")
+      .replace(/ h 00$/, " h");
   return `${f(start)}–${f(end)}`;
 }
 
@@ -61,7 +66,11 @@ function formatDue(dateStr: string) {
   });
 }
 
-export default async function SessionDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function SessionDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   const supabase = await createClient();
   const {
@@ -71,7 +80,11 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
   const [sessions, doneIds, { data: me }] = await Promise.all([
     getStudentAllSessions(supabase, user!.id),
     getStudentCompletedIds(supabase, user!.id),
-    supabase.from("profiles").select("role, is_teacher").eq("id", user!.id).single(),
+    supabase
+      .from("profiles")
+      .select("role, is_teacher")
+      .eq("id", user!.id)
+      .single(),
   ]);
 
   const s = sessions.find((x) => x.id === id);
@@ -86,7 +99,8 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
   const past = s.session_date < today;
 
   const parcoursSlug = parcoursSlugOf(s.track);
-  const isPractice = s.track?.toLowerCase().includes("mise en pratique") ?? false;
+  const isPractice =
+    s.track?.toLowerCase().includes("mise en pratique") ?? false;
   const trackColor = isPractice
     ? "var(--f-projet)"
     : parcoursSlug
@@ -100,7 +114,9 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
   const teacher = s.speaker_name ?? s.teacher?.full_name ?? null;
   const canManage = me?.role === "admin" || me?.is_teacher;
 
-  const backHref = parcoursSlug ? `/etudiant/cours/parcours/${parcoursSlug}` : `/etudiant/cours`;
+  const backHref = parcoursSlug
+    ? `/etudiant/cours/parcours/${parcoursSlug}`
+    : `/etudiant/cours`;
   const backLabel = parcoursSlug ? "Retour au parcours" : "Retour aux cours";
 
   const experience = await courseExperienceAccess(supabase, user!.id);
@@ -112,36 +128,148 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
       .maybeSingle();
     const { data: trainerLinks } = await supabase
       .from("session_trainers")
-      .select("position, trainer:trainers(id, first_name, last_name, title, bio, photo_path)")
+      .select(
+        "position, trainer:trainers(id, first_name, last_name, title, bio, photo_path)",
+      )
       .eq("session_id", s.id)
       .order("position");
     const trainers = (trainerLinks ?? []).flatMap((link) => {
-      const trainer = link.trainer as unknown as { id: string; first_name: string; last_name: string; title: string | null; bio: string | null; photo_path: string | null } | null;
+      const trainer = link.trainer as unknown as {
+        id: string;
+        first_name: string;
+        last_name: string;
+        title: string | null;
+        bio: string | null;
+        photo_path: string | null;
+      } | null;
       if (!trainer) return [];
-      return [{ id: trainer.id, name: `${trainer.first_name} ${trainer.last_name}`.trim(), title: trainer.title, bio: trainer.bio, photoUrl: trainer.photo_path ? supabase.storage.from("trainer-photos").getPublicUrl(trainer.photo_path).data.publicUrl : null }];
+      return [
+        {
+          id: trainer.id,
+          name: `${trainer.first_name} ${trainer.last_name}`.trim(),
+          title: trainer.title,
+          bio: trainer.bio,
+          photoUrl: trainer.photo_path
+            ? supabase.storage
+                .from("trainer-photos")
+                .getPublicUrl(trainer.photo_path).data.publicUrl
+            : null,
+        },
+      ];
     });
-    if (!trainers.length && teacher) trainers.push({ id: "legacy", name: teacher, title: null, bio: null, photoUrl: null });
+    if (!trainers.length && teacher)
+      trainers.push({
+        id: "legacy",
+        name: teacher,
+        title: null,
+        bio: null,
+        photoUrl: null,
+      });
     const currentIndex = sessions.findIndex((session) => session.id === s.id);
-    const navItem = (session: typeof s | undefined) => session ? { id: session.id, title: session.courses?.title ?? session.description ?? "Séance" } : null;
-    const previewDemo = experience.preview && s.id === "d7e9aebb-8514-458c-94d5-49ea65b4a2b4";
-    const firstResourceUrl = materials.find((material) => material.link_url || material.file_url)?.link_url ?? materials.find((material) => material.file_url)?.file_url ?? null;
-    const previewAssignments = previewDemo && assignments.length === 0 ? [
-      { id: "preview-before", title: "Préparer le cours", description: "Exemple de préparation affiché uniquement dans la preview. Remplace-le depuis l’interface de préparation du cours.", instructions: "Consulte le support disponible avant la session.", content_type: "Lecture", resource_url: firstResourceUrl, file_url: null, phase: "before", due_at: null, kind: null, duration_min: 10, demo: true },
-      { id: "preview-after", title: "Prolonger la réflexion", description: "Exemple de mise en pratique affiché uniquement dans la preview. Remplace-le depuis l’interface de préparation du cours.", instructions: "Note une idée clé du cours et la manière dont tu souhaites la mettre en pratique.", content_type: "Question de réflexion", resource_url: null, file_url: null, phase: "after", due_at: null, kind: null, duration_min: 10, demo: true },
-    ] : assignments;
+    const navItem = (session: typeof s | undefined) =>
+      session
+        ? {
+            id: session.id,
+            title: session.courses?.title ?? session.description ?? "Séance",
+          }
+        : null;
+    const previewDemo =
+      experience.preview && s.id === "d7e9aebb-8514-458c-94d5-49ea65b4a2b4";
+    const firstResourceUrl =
+      materials.find((material) => material.link_url || material.file_url)
+        ?.link_url ??
+      materials.find((material) => material.file_url)?.file_url ??
+      null;
+    const previewAssignments =
+      previewDemo && assignments.length === 0
+        ? [
+            {
+              id: "preview-before",
+              title: "Préparer le cours",
+              description:
+                "Exemple de préparation affiché uniquement dans la preview. Remplace-le depuis l’interface de préparation du cours.",
+              instructions: "Consulte le support disponible avant la session.",
+              content_type: "Lecture",
+              resource_url: firstResourceUrl,
+              file_url: null,
+              phase: "before",
+              due_at: null,
+              kind: null,
+              duration_min: 10,
+              demo: true,
+            },
+            {
+              id: "preview-after",
+              title: "Prolonger la réflexion",
+              description:
+                "Exemple de mise en pratique affiché uniquement dans la preview. Remplace-le depuis l’interface de préparation du cours.",
+              instructions:
+                "Note une idée clé du cours et la manière dont tu souhaites la mettre en pratique.",
+              content_type: "Question de réflexion",
+              resource_url: null,
+              file_url: null,
+              phase: "after",
+              due_at: null,
+              kind: null,
+              duration_min: 10,
+              demo: true,
+            },
+          ]
+        : assignments;
+    const assignmentIds = previewAssignments
+      .filter((assignment) => !("demo" in assignment && assignment.demo))
+      .map((assignment) => assignment.id);
+    const [{ data: assignmentSteps }, { data: stepCompletions }] =
+      assignmentIds.length
+        ? await Promise.all([
+            supabase
+              .from("assignment_steps")
+              .select("id, assignment_id, title, instructions, sort_order")
+              .in("assignment_id", assignmentIds)
+              .order("sort_order"),
+            supabase
+              .from("assignment_step_completions")
+              .select("step_id")
+              .eq("user_id", user!.id)
+              .in("assignment_id", assignmentIds),
+          ])
+        : [{ data: [] }, { data: [] }];
 
-    return <CourseExperience
-      session={{ id: s.id, title, track: s.track ?? null, summary: aboutText ?? null, description: s.description, objectives, videoUrl: enrichment?.video_url ?? (previewDemo ? "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" : null), videoDemo: previewDemo && !enrichment?.video_url, date: formatSessionDateWithYear(s.session_date), dateIso: s.session_date, hours: formatHours(s.start_time, s.end_time), place, past, accent: trackColor }}
-      trainers={trainers}
-      materials={materials}
-      assignments={previewAssignments}
-      completedIds={doneIds}
-      previewDemo={previewDemo}
-      backHref={backHref}
-      backLabel={backLabel}
-      previous={navItem(sessions[currentIndex - 1])}
-      next={navItem(sessions[currentIndex + 1])}
-    />;
+    return (
+      <CourseExperience
+        session={{
+          id: s.id,
+          title,
+          track: s.track ?? null,
+          summary: aboutText ?? null,
+          description: s.description,
+          objectives,
+          videoUrl:
+            enrichment?.video_url ??
+            (previewDemo
+              ? "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+              : null),
+          videoDemo: previewDemo && !enrichment?.video_url,
+          date: formatSessionDateWithYear(s.session_date),
+          dateIso: s.session_date,
+          hours: formatHours(s.start_time, s.end_time),
+          place,
+          past,
+          accent: trackColor,
+        }}
+        trainers={trainers}
+        materials={materials}
+        assignments={previewAssignments}
+        assignmentSteps={assignmentSteps ?? []}
+        completedIds={doneIds}
+        completedStepIds={(stepCompletions ?? []).map((row) => row.step_id)}
+        previewDemo={previewDemo}
+        backHref={backHref}
+        backLabel={backLabel}
+        previous={navItem(sessions[currentIndex - 1])}
+        next={navItem(sessions[currentIndex + 1])}
+      />
+    );
   }
 
   return (
@@ -202,14 +330,20 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
           {/* ── Section À propos de ce cours ── */}
           {(aboutText || objectives.length > 0) && (
             <section className="rounded-3xl border border-border bg-background p-7">
-              <h2 className="font-title text-[22px] font-bold text-foreground">À propos de ce cours</h2>
+              <h2 className="font-title text-[22px] font-bold text-foreground">
+                À propos de ce cours
+              </h2>
               {aboutText && (
-                <p className="mt-2 text-[15px] leading-relaxed text-muted">{aboutText}</p>
+                <p className="mt-2 text-[15px] leading-relaxed text-muted">
+                  {aboutText}
+                </p>
               )}
 
               {objectives.length > 0 && (
                 <div className="mt-6">
-                  <h3 className="font-title text-[17px] font-bold text-foreground">Objectifs</h3>
+                  <h3 className="font-title text-[17px] font-bold text-foreground">
+                    Objectifs
+                  </h3>
                   <ul className="mt-3 space-y-2 text-[15px] text-foreground">
                     {objectives.map((obj, i) => (
                       <li key={i} className="pl-1">
@@ -225,7 +359,9 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
           {/* ── Section Références bibliques ── */}
           {refs.length > 0 && (
             <section className="rounded-3xl border border-border bg-background p-7">
-              <h2 className="font-title text-[22px] font-bold text-foreground">Références bibliques</h2>
+              <h2 className="font-title text-[22px] font-bold text-foreground">
+                Références bibliques
+              </h2>
               <div className="mt-4 flex flex-wrap gap-2.5">
                 {refs.map((r) => (
                   <a
@@ -245,11 +381,14 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
 
           {/* ── Section Ressources ── */}
           <section className="rounded-3xl border border-border bg-background p-7">
-            <h2 className="font-title text-[22px] font-bold text-foreground">Ressources</h2>
+            <h2 className="font-title text-[22px] font-bold text-foreground">
+              Ressources
+            </h2>
             {materials.length ? (
               <>
                 <p className="mt-1 text-[13px] text-muted">
-                  {materials.length} élément{materials.length > 1 ? "s" : ""} disponible{materials.length > 1 ? "s" : ""}
+                  {materials.length} élément{materials.length > 1 ? "s" : ""}{" "}
+                  disponible{materials.length > 1 ? "s" : ""}
                 </p>
                 <ul className="mt-5 divide-y divide-border-soft">
                   {materials.map((m) => {
@@ -259,11 +398,24 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
                       m.link_url?.includes("vimeo");
                     const isAudio = m.file_url?.match(/\.(mp3|wav|m4a)$/i);
                     const isPdf = m.file_url?.endsWith(".pdf");
-                    const typeLabel = isVideo ? "Vidéo" : isAudio ? "Audio" : isPdf ? "PDF" : "Document";
-                    const actionLabel = isVideo ? "Regarder" : isAudio ? "Écouter" : "Télécharger";
+                    const typeLabel = isVideo
+                      ? "Vidéo"
+                      : isAudio
+                        ? "Audio"
+                        : isPdf
+                          ? "PDF"
+                          : "Document";
+                    const actionLabel = isVideo
+                      ? "Regarder"
+                      : isAudio
+                        ? "Écouter"
+                        : "Télécharger";
 
                     return (
-                      <li key={m.id} className="flex items-center justify-between gap-4 py-4 first:pt-2">
+                      <li
+                        key={m.id}
+                        className="flex items-center justify-between gap-4 py-4 first:pt-2"
+                      >
                         <div className="flex items-center gap-3.5 min-w-0">
                           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-surface">
                             {isVideo ? (
@@ -275,8 +427,12 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
                             )}
                           </div>
                           <div className="min-w-0">
-                            <p className="truncate font-semibold text-[15px] text-foreground">{m.title}</p>
-                            <p className="text-[12px] text-muted">{typeLabel}</p>
+                            <p className="truncate font-semibold text-[15px] text-foreground">
+                              {m.title}
+                            </p>
+                            <p className="text-[12px] text-muted">
+                              {typeLabel}
+                            </p>
                           </div>
                         </div>
                         {m.file_url || m.link_url ? (
@@ -296,7 +452,8 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
               </>
             ) : (
               <p className="mt-2 text-sm text-muted">
-                Les supports apparaîtront ici quand le formateur les aura publiés.
+                Les supports apparaîtront ici quand le formateur les aura
+                publiés.
               </p>
             )}
           </section>
@@ -305,10 +462,13 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
           <section className="rounded-3xl border border-border bg-background p-7">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h2 className="font-title text-[22px] font-bold text-foreground">Travail associé à ce cours</h2>
+                <h2 className="font-title text-[22px] font-bold text-foreground">
+                  Travail associé à ce cours
+                </h2>
                 {assignments.length > 0 && (
                   <p className="mt-1 text-[13px] text-muted">
-                    {assignments.length} élément{assignments.length > 1 ? "s" : ""}
+                    {assignments.length} élément
+                    {assignments.length > 1 ? "s" : ""}
                   </p>
                 )}
               </div>
@@ -341,9 +501,13 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
                             style={{ backgroundColor: trackColor }}
                           />
                           <div className="min-w-0">
-                            <p className="font-semibold text-[15px] text-foreground">{a.instructions}</p>
+                            <p className="font-semibold text-[15px] text-foreground">
+                              {a.instructions}
+                            </p>
                             {meta.length > 0 && (
-                              <p className="mt-0.5 text-[12px] text-muted">{meta.join(" · ")}</p>
+                              <p className="mt-0.5 text-[12px] text-muted">
+                                {meta.join(" · ")}
+                              </p>
                             )}
                           </div>
                         </div>
@@ -353,13 +517,23 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
                             {done ? "Terminé" : "À préparer"}
                           </span>
                           <form action={toggleAssignment}>
-                            <input type="hidden" name="assignment_id" value={a.id} />
-                            <input type="hidden" name="done" value={done ? "1" : "0"} />
+                            <input
+                              type="hidden"
+                              name="assignment_id"
+                              value={a.id}
+                            />
+                            <input
+                              type="hidden"
+                              name="done"
+                              value={done ? "1" : "0"}
+                            />
                             <button
                               type="submit"
                               className="text-[13px] font-medium text-foreground underline underline-offset-2 hover:text-muted transition"
                             >
-                              {done ? "Marquer comme non terminé" : "Marquer comme terminé"}
+                              {done
+                                ? "Marquer comme non terminé"
+                                : "Marquer comme terminé"}
                             </button>
                           </form>
                         </div>
@@ -369,14 +543,18 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
                 })}
               </ul>
             ) : (
-              <p className="mt-3 text-sm text-muted">Aucun travail pour ce cours.</p>
+              <p className="mt-3 text-sm text-muted">
+                Aucun travail pour ce cours.
+              </p>
             )}
           </section>
         </div>
 
         {/* ── Volet latéral : Informations pratiques ── */}
         <aside className="rounded-3xl border border-border bg-background p-6">
-          <h2 className="font-title text-[20px] font-bold text-foreground">Informations pratiques</h2>
+          <h2 className="font-title text-[20px] font-bold text-foreground">
+            Informations pratiques
+          </h2>
           <dl className="mt-4 divide-y divide-border-soft">
             <div className="py-3.5 first:pt-0">
               <dt className="text-[12px] text-muted">Date</dt>
@@ -393,12 +571,16 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
             {teacher && (
               <div className="py-3.5">
                 <dt className="text-[12px] text-muted">Intervenant</dt>
-                <dd className="mt-1 text-[14px] font-semibold text-foreground">{teacher}</dd>
+                <dd className="mt-1 text-[14px] font-semibold text-foreground">
+                  {teacher}
+                </dd>
               </div>
             )}
             <div className="py-3.5">
               <dt className="text-[12px] text-muted">Lieu</dt>
-              <dd className="mt-1 text-[14px] font-semibold text-foreground">{place}</dd>
+              <dd className="mt-1 text-[14px] font-semibold text-foreground">
+                {place}
+              </dd>
             </div>
           </dl>
         </aside>

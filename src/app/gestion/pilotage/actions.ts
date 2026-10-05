@@ -502,3 +502,82 @@ export async function moveSupport(formData: FormData) {
 export async function moveAssignment(formData: FormData) {
   await moveOrderedRow("assignments", formData);
 }
+
+export async function addAssignmentStep(formData: FormData) {
+  const supabase = await createClient();
+  const assignmentId = str(formData, "assignment_id");
+  const sessionId = str(formData, "session_id");
+  const title = str(formData, "title");
+  const instructions = str(formData, "instructions");
+  if (!assignmentId || !title || !instructions)
+    throw new Error("Le titre et la consigne sont obligatoires.");
+  const { data: existing } = await supabase
+    .from("assignment_steps")
+    .select("sort_order")
+    .eq("assignment_id", assignmentId)
+    .order("sort_order", { ascending: false })
+    .limit(1);
+  const { error } = await supabase.from("assignment_steps").insert({
+    assignment_id: assignmentId,
+    title,
+    instructions,
+    sort_order: (existing?.[0]?.sort_order ?? -1) + 1,
+  });
+  if (error)
+    throw new Error("L'ajout de la sous-consigne a échoué : " + error.message);
+  refreshPrep(sessionId);
+}
+
+export async function updateAssignmentStep(formData: FormData) {
+  const supabase = await createClient();
+  const title = str(formData, "title");
+  const instructions = str(formData, "instructions");
+  if (!title || !instructions)
+    throw new Error("Le titre et la consigne sont obligatoires.");
+  const { error } = await supabase
+    .from("assignment_steps")
+    .update({ title, instructions })
+    .eq("id", str(formData, "id"));
+  if (error) throw new Error("La modification a échoué : " + error.message);
+  refreshPrep(str(formData, "session_id"));
+}
+
+export async function deleteAssignmentStep(formData: FormData) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("assignment_steps")
+    .delete()
+    .eq("id", str(formData, "id"));
+  if (error) throw new Error("La suppression a échoué : " + error.message);
+  refreshPrep(str(formData, "session_id"));
+}
+
+export async function moveAssignmentStep(formData: FormData) {
+  const supabase = await createClient();
+  const assignmentId = str(formData, "assignment_id");
+  const id = str(formData, "id");
+  const direction = str(formData, "direction") === "up" ? -1 : 1;
+  const { data } = await supabase
+    .from("assignment_steps")
+    .select("id, sort_order")
+    .eq("assignment_id", assignmentId)
+    .order("sort_order");
+  const rows = data ?? [];
+  const index = rows.findIndex((row) => row.id === id);
+  const target = index + direction;
+  if (index < 0 || target < 0 || target >= rows.length) return;
+  const temporary = -Date.now();
+  await supabase
+    .from("assignment_steps")
+    .update({ sort_order: temporary })
+    .eq("id", rows[index].id);
+  await supabase
+    .from("assignment_steps")
+    .update({ sort_order: rows[index].sort_order })
+    .eq("id", rows[target].id);
+  await supabase
+    .from("assignment_steps")
+    .update({ sort_order: rows[target].sort_order })
+    .eq("id", rows[index].id);
+  refreshPrep(str(formData, "session_id"));
+}

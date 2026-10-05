@@ -27,6 +27,10 @@ import {
   moveObjective,
   moveSupport,
   moveAssignment,
+  addAssignmentStep,
+  updateAssignmentStep,
+  deleteAssignmentStep,
+  moveAssignmentStep,
   updateSupport,
 } from "@/app/gestion/pilotage/actions";
 import { isAfterClass, type PilotSession } from "@/lib/data/pilotage";
@@ -61,6 +65,13 @@ type Material = {
   file_url: string | null;
   visible_at?: string | null;
   resource_type?: string | null;
+};
+type AssignmentStep = {
+  id: string;
+  assignment_id: string;
+  title: string;
+  instructions: string;
+  sort_order: number;
 };
 
 /** Bouton « Supprimer » discret, en formulaire (fonctionne sans JavaScript). */
@@ -116,6 +127,7 @@ export function teacherPanels(
   s: PilotSession,
   assignments: Assignment[],
   materialRows: readonly unknown[],
+  assignmentSteps: AssignmentStep[] = [],
 ): Record<string, ReactNode> {
   const materials = materialRows as Material[];
   const before = assignments.filter((a) =>
@@ -205,6 +217,131 @@ export function teacherPanels(
                     </span>
                   )}
                 </div>
+                {assignmentSteps.some(
+                  (step) => step.assignment_id === a.id,
+                ) && (
+                  <div className="mt-4 border-t border-border-soft pt-3">
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-[0.08em] text-muted">
+                      Sous-consignes
+                    </p>
+                    <ol className="divide-y divide-border-soft">
+                      {assignmentSteps
+                        .filter((step) => step.assignment_id === a.id)
+                        .sort(
+                          (left, right) => left.sort_order - right.sort_order,
+                        )
+                        .map((step, stepIndex, steps) => (
+                          <li key={step.id} className="py-2.5">
+                            <div className="flex items-start gap-2.5">
+                              <span className="pt-0.5 text-xs font-semibold text-muted">
+                                {String(stepIndex + 1).padStart(2, "0")}
+                              </span>
+                              <div className="min-w-0 flex-1">
+                                <p className="text-sm font-medium text-foreground">
+                                  {step.title}
+                                </p>
+                                <p className="mt-0.5 line-clamp-2 text-xs leading-5 text-muted">
+                                  {step.instructions
+                                    .replace(/\*\*/g, "")
+                                    .replace(/<\/?u>/g, "")}
+                                </p>
+                              </div>
+                              <form
+                                action={moveAssignmentStep}
+                                className="flex shrink-0"
+                              >
+                                <input
+                                  type="hidden"
+                                  name="id"
+                                  value={step.id}
+                                />
+                                <input
+                                  type="hidden"
+                                  name="assignment_id"
+                                  value={a.id}
+                                />
+                                <input
+                                  type="hidden"
+                                  name="session_id"
+                                  value={s.id}
+                                />
+                                <button
+                                  name="direction"
+                                  value="up"
+                                  disabled={stepIndex === 0}
+                                  aria-label="Monter la sous-consigne"
+                                  className="p-1 text-muted disabled:opacity-25"
+                                >
+                                  <ChevronUp size={14} />
+                                </button>
+                                <button
+                                  name="direction"
+                                  value="down"
+                                  disabled={stepIndex === steps.length - 1}
+                                  aria-label="Descendre la sous-consigne"
+                                  className="p-1 text-muted disabled:opacity-25"
+                                >
+                                  <ChevronDown size={14} />
+                                </button>
+                              </form>
+                            </div>
+                            <div className="mt-2 ml-7 flex items-center gap-3">
+                              <details>
+                                <summary className="cursor-pointer list-none text-xs font-medium text-link">
+                                  Modifier
+                                </summary>
+                                <form
+                                  action={updateAssignmentStep}
+                                  className="mt-2 grid gap-2 rounded-lg bg-surface p-3"
+                                >
+                                  <input
+                                    type="hidden"
+                                    name="id"
+                                    value={step.id}
+                                  />
+                                  <input
+                                    type="hidden"
+                                    name="session_id"
+                                    value={s.id}
+                                  />
+                                  <input
+                                    name="title"
+                                    required
+                                    defaultValue={step.title}
+                                    className={field}
+                                  />
+                                  <RichTextEditor
+                                    name="instructions"
+                                    rows={5}
+                                    defaultValue={step.instructions}
+                                    placeholder="Consigne de cette partie"
+                                  />
+                                  <FormSubmitButton
+                                    className={`${save} justify-self-start`}
+                                  />
+                                </form>
+                              </details>
+                              <form action={deleteAssignmentStep}>
+                                <input
+                                  type="hidden"
+                                  name="id"
+                                  value={step.id}
+                                />
+                                <input
+                                  type="hidden"
+                                  name="session_id"
+                                  value={s.id}
+                                />
+                                <button className="text-xs text-muted hover:text-red-700">
+                                  Supprimer
+                                </button>
+                              </form>
+                            </div>
+                          </li>
+                        ))}
+                    </ol>
+                  </div>
+                )}
               </div>
               <div className="flex shrink-0 items-center gap-1">
                 <form action={moveAssignment} className="flex">
@@ -232,6 +369,35 @@ export function teacherPanels(
               </div>
             </div>
             <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border-soft pt-3">
+              <details className="group">
+                <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium text-foreground hover:bg-surface">
+                  ＋ Sous-consigne
+                </summary>
+                <form
+                  action={addAssignmentStep}
+                  className="mt-3 grid gap-2.5 rounded-xl bg-surface p-3 sm:grid-cols-2"
+                >
+                  <input type="hidden" name="assignment_id" value={a.id} />
+                  <input type="hidden" name="session_id" value={s.id} />
+                  <input
+                    name="title"
+                    required
+                    placeholder="Titre de la sous-consigne"
+                    className={`${field} sm:col-span-2`}
+                  />
+                  <RichTextEditor
+                    name="instructions"
+                    rows={5}
+                    placeholder="Consigne de cette partie"
+                  />
+                  <button
+                    type="submit"
+                    className={`${save} sm:col-span-2 sm:justify-self-start`}
+                  >
+                    Ajouter la sous-consigne
+                  </button>
+                </form>
+              </details>
               <details className="group flex-1">
                 <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium text-foreground hover:bg-surface">
                   <Pencil size={14} />

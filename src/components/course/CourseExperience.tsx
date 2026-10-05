@@ -16,6 +16,7 @@ import {
   Video,
 } from "lucide-react";
 import BackButton from "@/components/BackButton";
+import AssignmentStepper from "@/components/course/AssignmentStepper";
 import { toggleAssignment } from "@/app/etudiant/travail/actions";
 
 type Trainer = {
@@ -46,6 +47,13 @@ type Assignment = {
   kind: string | null;
   duration_min: number | null;
   demo?: boolean;
+};
+type AssignmentStep = {
+  id: string;
+  assignment_id: string;
+  title: string;
+  instructions: string;
+  sort_order: number;
 };
 type CourseSession = {
   id: string;
@@ -260,10 +268,14 @@ function TaskSection({
                   )}
                 </div>
                 {item.title && item.instructions && (
-                  <div className="mt-2"><FormattedAssignmentText value={item.instructions} /></div>
+                  <div className="mt-2">
+                    <FormattedAssignmentText value={item.instructions} />
+                  </div>
                 )}
                 {item.description && (
-                  <div className="mt-2"><FormattedAssignmentText value={item.description} /></div>
+                  <div className="mt-2">
+                    <FormattedAssignmentText value={item.description} />
+                  </div>
                 )}
                 {deadline && (
                   <p className="mt-2 text-xs font-medium text-foreground">
@@ -309,7 +321,9 @@ export default function CourseExperience({
   trainers,
   materials,
   assignments,
+  assignmentSteps = [],
   completedIds,
+  completedStepIds = [],
   backHref,
   backLabel,
   previous,
@@ -320,7 +334,9 @@ export default function CourseExperience({
   trainers: Trainer[];
   materials: Material[];
   assignments: Assignment[];
+  assignmentSteps?: AssignmentStep[];
   completedIds: Set<string>;
+  completedStepIds?: string[];
   backHref: string;
   backLabel: string;
   previous?: { id: string; title: string } | null;
@@ -339,6 +355,12 @@ export default function CourseExperience({
       : !!item.due_at && new Date(item.due_at) > courseEnd,
   );
   const embed = session.videoUrl ? videoEmbed(session.videoUrl) : null;
+  const structuredAfter = after.filter((assignment) =>
+    assignmentSteps.some((step) => step.assignment_id === assignment.id),
+  );
+  const simpleAfter = after.filter(
+    (assignment) => !structuredAfter.some((item) => item.id === assignment.id),
+  );
 
   return (
     <div
@@ -534,12 +556,32 @@ export default function CourseExperience({
             </section>
           )}
           <div id="after-course" className="scroll-mt-24">
-            <TaskSection
-              title="À faire après le cours"
-              eyebrow="Mettre en pratique"
-              items={after}
-              completedIds={completedIds}
-            />
+            {structuredAfter.map((assignment) => (
+              <AssignmentStepper
+                key={assignment.id}
+                assignmentId={assignment.id}
+                title={assignment.title || "Travail personnel"}
+                intro={assignment.instructions || assignment.description || ""}
+                steps={assignmentSteps
+                  .filter((step) => step.assignment_id === assignment.id)
+                  .sort((a, b) => a.sort_order - b.sort_order)
+                  .map((step) => ({
+                    id: step.id,
+                    title: step.title,
+                    body: step.instructions,
+                  }))}
+                completedIds={completedStepIds}
+                accent={session.accent}
+              />
+            ))}
+            {simpleAfter.length > 0 && (
+              <TaskSection
+                title="À faire après le cours"
+                eyebrow="Mettre en pratique"
+                items={simpleAfter}
+                completedIds={completedIds}
+              />
+            )}
           </div>
         </main>
         <aside className="lg:sticky lg:top-24 lg:self-start">
