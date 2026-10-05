@@ -104,6 +104,11 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
   const backLabel = parcoursSlug ? "Retour au parcours" : "Retour aux cours";
 
   if (await newCourseExperienceEnabled(supabase, user!.id)) {
+    const { data: enrichment } = await supabase
+      .from("sessions")
+      .select("video_url")
+      .eq("id", s.id)
+      .maybeSingle();
     const { data: trainerLinks } = await supabase
       .from("session_trainers")
       .select("position, trainer:trainers(id, first_name, last_name, title, bio, photo_path)")
@@ -119,7 +124,7 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
     const navItem = (session: typeof s | undefined) => session ? { id: session.id, title: session.courses?.title ?? session.description ?? "Séance" } : null;
 
     return <CourseExperience
-      session={{ id: s.id, title, track: s.track ?? null, summary: aboutText ?? null, description: s.description, objectives, videoUrl: s.video_url ?? null, date: formatSessionDateWithYear(s.session_date), dateIso: s.session_date, hours: formatHours(s.start_time, s.end_time), place, past, accent: trackColor }}
+      session={{ id: s.id, title, track: s.track ?? null, summary: aboutText ?? null, description: s.description, objectives, videoUrl: enrichment?.video_url ?? null, date: formatSessionDateWithYear(s.session_date), dateIso: s.session_date, hours: formatHours(s.start_time, s.end_time), place, past, accent: trackColor }}
       trainers={trainers}
       materials={materials}
       assignments={assignments}

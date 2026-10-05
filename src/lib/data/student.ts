@@ -24,7 +24,7 @@ export type StudentSession = {
 };
 
 const SESSION_FIELDS =
-  "id, session_date, start_time, end_time, location, room, day, session_type, description, objectives, speaker_name, track, summary, bible_refs, video_url, cover_image_path, course_id, courses(id, title), teacher:profiles!sessions_teacher_id_fkey(full_name)";
+  "id, session_date, start_time, end_time, location, room, day, session_type, description, objectives, speaker_name, track, summary, bible_refs, course_id, courses(id, title), teacher:profiles!sessions_teacher_id_fkey(full_name)";
 
 export async function getStudentProfile(supabase: SupabaseClient, userId: string) {
   const { data } = await supabase
@@ -163,7 +163,7 @@ export async function getStudentAllSessions(supabase: SupabaseClient, userId: st
 export async function getStudentMaterials(supabase: SupabaseClient, sessionIds: string[]) {
   if (!sessionIds.length) return [];
 
-  const { data } = await supabase
+  const enriched = await supabase
     .from("materials")
     .select("id, title, description, resource_type, link_url, file_url, visible_at, session_id, sort_order")
     .in("session_id", sessionIds)
@@ -171,20 +171,41 @@ export async function getStudentMaterials(supabase: SupabaseClient, sessionIds: 
     .order("sort_order")
     .order("visible_at", { ascending: false });
 
-  return data ?? [];
+  if (!enriched.error) return enriched.data ?? [];
+
+  // Compatibilité pendant le déploiement : les supports existants restent visibles même si
+  // la migration pédagogique enrichie n'est pas encore appliquée à la base.
+  const legacy = await supabase
+    .from("materials")
+    .select("id, title, link_url, file_url, visible_at, session_id")
+    .in("session_id", sessionIds)
+    .lte("visible_at", new Date().toISOString())
+    .order("visible_at", { ascending: false });
+
+  return legacy.data ?? [];
 }
 
 export async function getStudentAssignments(supabase: SupabaseClient, sessionIds: string[]) {
   if (!sessionIds.length) return [];
 
-  const { data } = await supabase
+  const enriched = await supabase
     .from("assignments")
     .select("id, title, description, instructions, content_type, resource_url, file_url, phase, sort_order, session_id, created_at, kind, duration_min, due_at")
     .in("session_id", sessionIds)
     .order("sort_order")
     .order("created_at", { ascending: false });
 
-  return data ?? [];
+  if (!enriched.error) return enriched.data ?? [];
+
+  // Même principe pour les travaux historiques : aucune colonne facultative ne doit pouvoir
+  // rendre un ancien cours ou ses consignes invisibles.
+  const legacy = await supabase
+    .from("assignments")
+    .select("id, instructions, session_id, created_at, kind, duration_min, due_at")
+    .in("session_id", sessionIds)
+    .order("created_at", { ascending: false });
+
+  return legacy.data ?? [];
 }
 
 /** Identifiants des travaux que l'étudiant a déjà cochés. */
