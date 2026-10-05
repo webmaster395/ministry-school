@@ -87,7 +87,6 @@ export function teacherPanels(s: PilotSession, assignments: Assignment[], materi
       <input type="hidden" name="end_time" value={s.end_time.slice(0, 5)} />
       <input type="hidden" name="location" value={s.location} />
       <input type="hidden" name="room" value={s.room ?? ""} />
-      <input type="hidden" name="video_url" value={s.video_url ?? ""} />
     </>
   );
 

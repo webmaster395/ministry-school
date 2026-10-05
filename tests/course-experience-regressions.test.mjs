@@ -5,6 +5,7 @@ import test from "node:test";
 const experience = readFileSync(new URL("../src/components/course/CourseExperience.tsx", import.meta.url), "utf8");
 const selector = readFileSync(new URL("../src/components/gestion/TrainerMultiSelect.tsx", import.meta.url), "utf8");
 const studentData = readFileSync(new URL("../src/lib/data/student.ts", import.meta.url), "utf8");
+const teacherPanels = readFileSync(new URL("../src/components/gestion/TeacherPanels.tsx", import.meta.url), "utf8");
 
 test("classe les anciennes tâches avec la date ISO de la séance", () => {
   assert.match(experience, /dateIso: string/);
@@ -28,4 +29,9 @@ test("la liste des cours ne dépend pas des colonnes de la migration de preview"
 test("les ressources et travaux enrichis ont un fallback vers le schéma historique", () => {
   assert.match(studentData, /const legacy = await supabase[\s\S]*?from\("materials"\)/);
   assert.match(studentData, /const legacy = await supabase[\s\S]*?from\("assignments"\)/);
+});
+
+test("le formulaire vidéo n'envoie pas une ancienne URL cachée avant la nouvelle valeur", () => {
+  assert.equal([...teacherPanels.matchAll(/name="video_url"/g)].length, 1);
+  assert.doesNotMatch(teacherPanels, /type="hidden" name="video_url"/);
 });
