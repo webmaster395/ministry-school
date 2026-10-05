@@ -1,4 +1,7 @@
-import type { StudentSession } from "@/lib/data/student";
+import {
+  studentSessionTrainerNames,
+  type StudentSession,
+} from "@/lib/data/student";
 
 const esc = (s: string) =>
   s
@@ -12,7 +15,9 @@ const stamp = (date: string, time: string) =>
 export function buildIcs(sessions: StudentSession[]) {
   const now = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");
 
-  const events = sessions.flatMap((s) => [
+  const events = sessions.flatMap((s) => {
+    const trainers = studentSessionTrainerNames(s);
+    return [
     "BEGIN:VEVENT",
     `UID:${s.id}@ministry-school`,
     `DTSTAMP:${now}`,
@@ -20,9 +25,10 @@ export function buildIcs(sessions: StudentSession[]) {
     `DTEND:${stamp(s.session_date, s.end_time)}`,
     `SUMMARY:${esc(`Ministry School — ${s.courses?.title ?? s.description ?? "Séance"}`)}`,
     `LOCATION:${esc(s.room ? `${s.location}, ${s.room}` : s.location)}`,
-    ...(s.teacher ? [`DESCRIPTION:${esc(`Avec ${s.teacher.full_name}`)}`] : []),
+    ...(trainers ? [`DESCRIPTION:${esc(`Avec ${trainers}`)}`] : []),
     "END:VEVENT",
-  ]);
+    ];
+  });
 
   return [
     "BEGIN:VCALENDAR",

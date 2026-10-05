@@ -1,5 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
-import { getStudentProfile, getStudentSessions } from "@/lib/data/student";
+import {
+  getStudentProfile,
+  getStudentSessions,
+  studentSessionTrainerNames,
+} from "@/lib/data/student";
 import { getMinistry, sessionColor } from "@/lib/ministry";
 import { createCalendarToken } from "@/lib/calendar-token";
 import MonthCalendar, { type MonthSession } from "@/components/MonthCalendar";
@@ -56,7 +60,7 @@ export default async function StudentCalendarPage({
       s.track?.replace(/^Votre parcours\s*:\s*/i, "") ??
       (s.session_type === "commun" ? "Tronc commun" : (ministryName ?? "Ministère")),
     location: s.room ? `${s.location} · ${s.room}` : s.location,
-    teacher: s.teacher?.full_name ?? null,
+    teacher: studentSessionTrainerNames(s),
     color: sessionColor(s.track, s.session_type, ministryColor),
     informational: false,
   }));

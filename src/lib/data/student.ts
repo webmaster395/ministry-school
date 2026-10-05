@@ -33,6 +33,13 @@ export type StudentSession = {
 const SESSION_FIELDS =
   "id, session_date, start_time, end_time, location, room, day, session_type, description, objectives, speaker_name, track, summary, bible_refs, show_parking_notice, course_id, courses(id, title), teacher:profiles!sessions_teacher_id_fkey(full_name)";
 
+export function studentSessionTrainerNames(session: StudentSession) {
+  if (session.trainers?.length) {
+    return session.trainers.map((trainer) => trainer.name).join(" · ");
+  }
+  return session.speaker_name ?? session.teacher?.full_name ?? null;
+}
+
 export async function getStudentProfile(
   supabase: SupabaseClient,
   userId: string,

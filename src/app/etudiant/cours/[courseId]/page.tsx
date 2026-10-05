@@ -6,6 +6,7 @@ import {
   getStudentAssignments,
   getStudentCourse,
   getStudentMaterials,
+  studentSessionTrainerNames,
 } from "@/lib/data/student";
 import { formatSessionDate, formatTimeRange } from "@/lib/format";
 import MaterialLink from "@/components/MaterialLink";
@@ -90,8 +91,10 @@ export default async function StudentCourseDetailPage({
                     {s.room ? ` · ${s.room}` : ""}
                   </p>
                 </div>
-                {s.teacher && (
-                  <p className="mt-1 text-sm text-muted">Intervenant : {s.teacher.full_name}</p>
+                {studentSessionTrainerNames(s) && (
+                  <p className="mt-1 text-sm text-muted">
+                    Intervenant : {studentSessionTrainerNames(s)}
+                  </p>
                 )}
 
                 {sessionObjectives.length > 0 && (

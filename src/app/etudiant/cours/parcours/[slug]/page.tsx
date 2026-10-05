@@ -8,6 +8,7 @@ import {
   getStudentProfile,
   getStudentAssignments,
   getStudentCompletedIds,
+  studentSessionTrainerNames,
 } from "@/lib/data/student";
 import { getParcours, parcoursSlugOf } from "@/lib/data/parcours";
 import { COURSES_VISIBLE_UNTIL, PROMOTION } from "@/lib/promotion";
@@ -190,7 +191,7 @@ export default async function ParcoursPage({ params, searchParams }: Props) {
             const hasAssignment = sessionAssignments.length > 0;
             const isCompleted = hasAssignment && sessionAssignments.every((a) => completedIds.has(a.id));
             const isPast = s.session_date < today;
-            const teacherName = s.speaker_name ?? s.teacher?.full_name;
+            const teacherName = studentSessionTrainerNames(s);
 
             return (
               <li key={s.id}>
