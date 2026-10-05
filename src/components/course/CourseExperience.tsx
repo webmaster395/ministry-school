@@ -370,6 +370,19 @@ export default function CourseExperience({
   const simpleAfter = after.filter(
     (assignment) => !structuredAfter.some((item) => item.id === assignment.id),
   );
+  const hasCourseContent = Boolean(
+    session.summary ||
+      session.objectives.length ||
+      session.bibleRefs.length ||
+      session.videoUrl ||
+      materials.length,
+  );
+  const quickLinks = [
+    ...(before.length ? [["before-course", "À préparer"]] : []),
+    ...(hasCourseContent ? [["course-content", "Suivre le cours"]] : []),
+    ...(after.length ? [["after-course", "Mettre en pratique"]] : []),
+    ...(notes?.enabled ? [["course-notes", "Mes notes"]] : []),
+  ];
 
   return (
     <div
@@ -451,12 +464,7 @@ export default function CourseExperience({
           <span className="label mr-1 hidden shrink-0 text-[10px] tracking-[0.14em] text-muted md:inline">
             Ton parcours
           </span>
-          {[
-            ["before-course", "À préparer"],
-            ["course-content", "Suivre le cours"],
-            ["after-course", "Mettre en pratique"],
-            ...(notes?.enabled ? [["course-notes", "Mes notes"]] : []),
-          ].map(([anchor, label]) => (
+          {quickLinks.map(([anchor, label]) => (
             <a
               key={anchor}
               href={`#${anchor}`}
