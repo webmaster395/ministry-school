@@ -5,37 +5,54 @@ import AppHeader from "@/components/AppHeader";
 import AppFooter from "@/components/AppFooter";
 import SpaceTabs from "@/components/SpaceTabs";
 import { getViewer } from "@/lib/data/viewer";
+import { createClient } from "@/lib/supabase/server";
+import { courseNotesEnabled } from "@/lib/features/course-notes";
 
 import WelcomeModal from "@/components/WelcomeModal";
 import MlkEngagementModal from "@/components/MlkEngagementModal";
 
-export default async function StudentLayout({ children }: { children: React.ReactNode }) {
+export default async function StudentLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const viewer = await getViewer();
   if (viewer?.deactivated) redirect("/auth/desactive");
+  const notesEnabled = viewer
+    ? await courseNotesEnabled(await createClient(), viewer.id)
+    : false;
 
   return (
-    <SpaceProvider roles={viewer!.roles} unread={viewer!.unreadMessages}>
-    <div className="app-shell flex min-h-screen w-full">
-      <Sidebar fullName={viewer!.fullName} avatarUrl={viewer!.avatarUrl} ministrySlug={viewer?.ministrySlug} />
-      <div className="flex min-h-screen min-w-0 flex-1 flex-col bg-surface">
-        <AppHeader />
-        <main className="app-main mx-auto w-full max-w-[1280px] flex-1 px-4 py-5 sm:px-7 sm:py-7">
-          <SpaceTabs />
-          {children}
-        </main>
-        <AppFooter />
+    <SpaceProvider
+      roles={viewer!.roles}
+      unread={viewer!.unreadMessages}
+      notesEnabled={notesEnabled}
+    >
+      <div className="app-shell flex min-h-screen w-full">
+        <Sidebar
+          fullName={viewer!.fullName}
+          avatarUrl={viewer!.avatarUrl}
+          ministrySlug={viewer?.ministrySlug}
+        />
+        <div className="flex min-h-screen min-w-0 flex-1 flex-col bg-surface">
+          <AppHeader />
+          <main className="app-main mx-auto w-full max-w-[1280px] flex-1 px-4 py-5 sm:px-7 sm:py-7">
+            <SpaceTabs />
+            {children}
+          </main>
+          <AppFooter />
+        </div>
       </div>
-    </div>
-    {viewer && !viewer.welcomeSeen && (
-      <WelcomeModal
-        fullName={viewer.fullName}
-        ministrySlug={viewer.ministrySlug}
-        ministryName={viewer.ministryName}
-      />
-    )}
-    {viewer?.welcomeSeen && !viewer.mlkEngagement.completed && (
-      <MlkEngagementModal initial={viewer.mlkEngagement} />
-    )}
+      {viewer && !viewer.welcomeSeen && (
+        <WelcomeModal
+          fullName={viewer.fullName}
+          ministrySlug={viewer.ministrySlug}
+          ministryName={viewer.ministryName}
+        />
+      )}
+      {viewer?.welcomeSeen && !viewer.mlkEngagement.completed && (
+        <MlkEngagementModal initial={viewer.mlkEngagement} />
+      )}
     </SpaceProvider>
   );
 }

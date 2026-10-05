@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import AssignmentStepper from "@/components/course/AssignmentStepper";
+import CourseNotesEditor from "@/components/course/CourseNotesEditor";
 import { toggleAssignment } from "@/app/etudiant/travail/actions";
 
 type Trainer = {
@@ -330,6 +331,7 @@ export default function CourseExperience({
   assignmentSteps = [],
   completedIds,
   completedStepIds = [],
+  notes,
   backHref,
   backLabel,
   previous,
@@ -343,6 +345,7 @@ export default function CourseExperience({
   assignmentSteps?: AssignmentStep[];
   completedIds: Set<string>;
   completedStepIds?: string[];
+  notes?: { enabled: boolean; initialHtml: string };
   backHref: string;
   backLabel: string;
   previous?: { id: string; title: string } | null;
@@ -440,7 +443,9 @@ export default function CourseExperience({
         </div>
       </section>
 
-      <div className="mx-auto grid max-w-6xl gap-10 py-10 lg:grid-cols-[minmax(0,1fr)_280px] lg:py-14">
+      <div
+        className={`mx-auto grid max-w-6xl gap-10 py-10 lg:py-14 ${notes?.enabled ? "lg:grid-cols-[minmax(0,1fr)_360px]" : "lg:grid-cols-[minmax(0,1fr)_280px]"}`}
+      >
         <main id="course-content" className="scroll-mt-24">
           {(session.summary ||
             session.objectives.length > 0 ||
@@ -630,7 +635,13 @@ export default function CourseExperience({
             )}
           </div>
         </main>
-        <aside className="lg:sticky lg:top-24 lg:self-start">
+        <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+          {notes?.enabled && (
+            <CourseNotesEditor
+              sessionId={session.id}
+              initialHtml={notes.initialHtml}
+            />
+          )}
           <nav
             aria-label="Navigation dans le cours"
             className="rounded-2xl bg-surface p-6"

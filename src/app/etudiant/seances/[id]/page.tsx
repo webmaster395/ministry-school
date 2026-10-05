@@ -21,6 +21,7 @@ import { parcoursSlugOf } from "@/lib/data/parcours";
 import { toggleAssignment } from "../../travail/actions";
 import CourseExperience from "@/components/course/CourseExperience";
 import { courseExperienceAccess } from "@/lib/features/course-experience";
+import { courseNotesEnabled } from "@/lib/features/course-notes";
 
 const TRACK_COLORS: Record<string, string> = {
   coeur: "#8b6fc0",
@@ -136,6 +137,15 @@ export default async function SessionDetailPage({
 
   const experience = await courseExperienceAccess(supabase, user!.id);
   if (experience.enabled) {
+    const notesEnabled = await courseNotesEnabled(supabase, user!.id);
+    const { data: note } = notesEnabled
+      ? await supabase
+          .from("course_notes")
+          .select("content_html")
+          .eq("user_id", user!.id)
+          .eq("session_id", s.id)
+          .maybeSingle()
+      : { data: null };
     const { data: enrichment } = await supabase
       .from("sessions")
       .select("video_url")
@@ -279,6 +289,7 @@ export default async function SessionDetailPage({
         assignmentSteps={assignmentSteps ?? []}
         completedIds={doneIds}
         completedStepIds={(stepCompletions ?? []).map((row) => row.step_id)}
+        notes={{ enabled: notesEnabled, initialHtml: note?.content_html ?? "" }}
         previewDemo={previewDemo}
         backHref={backHref}
         backLabel={backLabel}

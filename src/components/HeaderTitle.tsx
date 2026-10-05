@@ -7,6 +7,7 @@ import { useSpace } from "@/components/SpaceProvider";
 const TITLES: Record<string, string> = {
   "/etudiant/cours": "Mes cours",
   "/etudiant/travail": "Travail à faire",
+  "/etudiant/notes": "Mes notes",
   "/etudiant/services": "Services et projets",
   "/etudiant/aide": "Une question ?",
   "/gestion/enseignement": "Préparer mes cours",
@@ -39,15 +40,31 @@ export default function HeaderTitle({ greeting }: { greeting: string }) {
   if (current) {
     return (
       <div className="min-w-0">
-        <h1 className="font-title truncate text-[20px] leading-tight text-foreground">{current.title}</h1>
-        <p className="hidden truncate text-[13px] leading-tight text-muted sm:block">{current.subtitle}</p>
+        <h1 className="font-title truncate text-[20px] leading-tight text-foreground">
+          {current.title}
+        </h1>
+        <p className="hidden truncate text-[13px] leading-tight text-muted sm:block">
+          {current.subtitle}
+        </p>
       </div>
     );
   }
 
   // /etudiant/cours/<id> reste dans « Mes cours »
   const title =
-    TITLES[pathname] ?? (pathname.startsWith("/etudiant/cours/") ? "Mes cours" : pathname.startsWith("/etudiant/services/") ? "Services et projets" : (pathname.startsWith("/gestion/enseignement/preparation/") || pathname.startsWith("/gestion/pilotage/preparation/")) ? "Préparer le cours" : greeting);
+    TITLES[pathname] ??
+    (pathname.startsWith("/etudiant/cours/")
+      ? "Mes cours"
+      : pathname.startsWith("/etudiant/services/")
+        ? "Services et projets"
+        : pathname.startsWith("/gestion/enseignement/preparation/") ||
+            pathname.startsWith("/gestion/pilotage/preparation/")
+          ? "Préparer le cours"
+          : greeting);
 
-  return <h1 className="font-title text-[20px] leading-tight text-foreground">{title}</h1>;
+  return (
+    <h1 className="font-title text-[20px] leading-tight text-foreground">
+      {title}
+    </h1>
+  );
 }

@@ -2,13 +2,20 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { navSpaces, spaceHome, spacesForPath, type Space, type SpaceKey } from "@/lib/nav";
+import {
+  navSpaces,
+  spaceHome,
+  spacesForPath,
+  type Space,
+  type SpaceKey,
+} from "@/lib/nav";
 import type { ViewerRoles } from "@/lib/roles";
 
 type SpaceContext = {
   roles: ViewerRoles;
   /** Messages non lus, pour les pastilles du menu et l'onglet Messagerie */
   unread: number;
+  notesEnabled: boolean;
   /** Les espaces de gestion de la personne ; vide pour un étudiant simple */
   spaces: Space[];
   /** L'espace de gestion de la page ouverte ; null sur les pages étudiant */
@@ -29,10 +36,12 @@ const STORAGE_KEY = "space";
 export function SpaceProvider({
   roles,
   unread = 0,
+  notesEnabled = false,
   children,
 }: {
   roles: ViewerRoles;
   unread?: number;
+  notesEnabled?: boolean;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -56,9 +65,12 @@ export function SpaceProvider({
 
   // Le détail d'un cours à préparer n'est dans aucun menu : il appartient à l'espace de gestion
   // qui y a mené (enseignant, pilotage ou administration).
-  const inPreparation = !current && pathname.startsWith("/gestion/enseignement/preparation/");
+  const inPreparation =
+    !current && pathname.startsWith("/gestion/enseignement/preparation/");
   const fallback = inPreparation
-    ? (spaces.find((s) => s.key === stored) ?? spaces.find((s) => ["teacher", "steering", "admin"].includes(s.key)) ?? null)
+    ? (spaces.find((s) => s.key === stored) ??
+      spaces.find((s) => ["teacher", "steering", "admin"].includes(s.key)) ??
+      null)
     : null;
   const shown = current ?? fallback;
 
@@ -88,11 +100,26 @@ export function SpaceProvider({
     router.push(spaceHome(space));
   }
 
-  return <Ctx.Provider value={{ roles, unread, spaces, current: shown, home, select }}>{children}</Ctx.Provider>;
+  return (
+    <Ctx.Provider
+      value={{
+        roles,
+        unread,
+        notesEnabled,
+        spaces,
+        current: shown,
+        home,
+        select,
+      }}
+    >
+      {children}
+    </Ctx.Provider>
+  );
 }
 
 export function useSpace(): SpaceContext {
   const value = useContext(Ctx);
-  if (!value) throw new Error("useSpace doit être utilisé dans un SpaceProvider");
+  if (!value)
+    throw new Error("useSpace doit être utilisé dans un SpaceProvider");
   return value;
 }

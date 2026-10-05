@@ -16,6 +16,7 @@ import {
   MessageSquare,
   Presentation,
   Briefcase,
+  NotebookPen,
 } from "lucide-react";
 import { isPlainStudent, type ViewerRoles } from "@/lib/roles";
 import { QUESTIONS_ENABLED } from "@/lib/questions";
@@ -39,6 +40,7 @@ const icons = {
   calendar: <CalendarDays {...iconProps} />,
   book: <BookOpen {...iconProps} />,
   task: <FileText {...iconProps} />,
+  notes: <NotebookPen {...iconProps} />,
   ministries: <Church {...iconProps} />,
   services: <HandHeart {...iconProps} />,
   messages: <MessageSquare {...iconProps} />,
@@ -60,7 +62,11 @@ export const studentSections: NavSection[] = [
     title: "Principal",
     items: [
       { label: "Accueil", href: "/etudiant", icon: icons.home },
-      { label: "Calendrier", href: "/etudiant/calendrier", icon: icons.calendar },
+      {
+        label: "Calendrier",
+        href: "/etudiant/calendrier",
+        icon: icons.calendar,
+      },
     ],
   },
   {
@@ -74,6 +80,12 @@ export const studentSections: NavSection[] = [
     ],
   },
 ];
+
+export const notesNavItem: NavItem = {
+  label: "Mes notes",
+  href: "/etudiant/notes",
+  icon: icons.notes,
+};
 
 /** L'entrée « Mes fonctions » du bloc « Mes espaces », en bas du menu. */
 export const functionsIcon = icons.functions;
@@ -90,11 +102,13 @@ export function profileTabs(roles: ViewerRoles): ProfileTab[] {
     { label: "Messagerie", href: "/etudiant/messages" },
     { label: "Préférences", href: "/etudiant/preferences" },
   ];
-  if (QUESTIONS_ENABLED && isPlainStudent(roles)) tabs.push({ label: "Une question ?", href: "/etudiant/aide" });
+  if (QUESTIONS_ENABLED && isPlainStudent(roles))
+    tabs.push({ label: "Une question ?", href: "/etudiant/aide" });
   return tabs;
 }
 
-export type SpaceKey = "admin" | "teacher" | "steering" | "services" | "project";
+export type SpaceKey =
+  "admin" | "teacher" | "steering" | "services" | "project";
 
 /** Une « casquette » : un ensemble d'entrées de menu que la personne choisit d'afficher. */
 export type Space = {
@@ -123,8 +137,16 @@ export function navSpaces(roles: ViewerRoles): Space[] {
         {
           title: "Administration",
           items: [
-            { label: "Vue d'ensemble", href: "/gestion/admin", icon: icons.adminHome },
-            { label: "Communication", href: "/gestion/communication", icon: icons.announce },
+            {
+              label: "Vue d'ensemble",
+              href: "/gestion/admin",
+              icon: icons.adminHome,
+            },
+            {
+              label: "Communication",
+              href: "/gestion/communication",
+              icon: icons.announce,
+            },
           ],
         },
       ],
@@ -141,8 +163,16 @@ export function navSpaces(roles: ViewerRoles): Space[] {
         {
           title: "Enseignement",
           items: [
-            { label: "Préparer mes cours", href: "/gestion/enseignement", icon: icons.prep },
-            { label: "Communication", href: "/gestion/communication", icon: icons.announce },
+            {
+              label: "Préparer mes cours",
+              href: "/gestion/enseignement",
+              icon: icons.prep,
+            },
+            {
+              label: "Communication",
+              href: "/gestion/communication",
+              icon: icons.announce,
+            },
           ],
         },
       ],
@@ -160,7 +190,11 @@ export function navSpaces(roles: ViewerRoles): Space[] {
           title: "Pilotage",
           items: [
             { label: "Pilotage", href: "/gestion/pilotage", icon: icons.steer },
-            { label: "Communication", href: "/gestion/communication", icon: icons.announce },
+            {
+              label: "Communication",
+              href: "/gestion/communication",
+              icon: icons.announce,
+            },
           ],
         },
       ],
@@ -179,8 +213,16 @@ export function navSpaces(roles: ViewerRoles): Space[] {
         {
           title: "Services",
           items: [
-            { label: "Mes formations", href: "/gestion/services", icon: icons.propose },
-            { label: "Communication", href: "/gestion/communication", icon: icons.announce },
+            {
+              label: "Mes formations",
+              href: "/gestion/services",
+              icon: icons.propose,
+            },
+            {
+              label: "Communication",
+              href: "/gestion/communication",
+              icon: icons.announce,
+            },
           ],
         },
       ],
@@ -197,8 +239,16 @@ export function navSpaces(roles: ViewerRoles): Space[] {
         {
           title: "Projets",
           items: [
-            { label: "Mes projets", href: "/gestion/projets", icon: icons.projectPropose },
-            { label: "Communication", href: "/gestion/communication", icon: icons.announce },
+            {
+              label: "Mes projets",
+              href: "/gestion/projets",
+              icon: icons.projectPropose,
+            },
+            {
+              label: "Communication",
+              href: "/gestion/communication",
+              icon: icons.announce,
+            },
           ],
         },
       ],
