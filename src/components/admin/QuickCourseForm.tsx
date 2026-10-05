@@ -12,16 +12,12 @@ const field =
 export default function QuickCourseForm({
   date,
   dateLabel,
-  location,
-  defaultRoom,
   parking,
   trainers,
   ministries,
 }: {
   date: string;
   dateLabel: string;
-  location: string;
-  defaultRoom: string;
   parking: boolean;
   trainers: Choice[];
   ministries: Choice[];
@@ -47,7 +43,7 @@ export default function QuickCourseForm({
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">{dateLabel}</p>
             <h2 className="font-title mt-1 text-[24px]">Ajouter un cours</h2>
-            <p className="mt-1 text-sm text-muted">{location}</p>
+            <p className="mt-1 text-sm text-muted">Informations essentielles uniquement</p>
           </div>
           <button type="button" onClick={() => dialogRef.current?.close()} aria-label="Fermer" className="rounded-full p-2 text-muted hover:bg-surface hover:text-foreground">
             <X size={19} />
@@ -56,7 +52,6 @@ export default function QuickCourseForm({
 
         <form action={createQuickCourse} className="space-y-4 px-5 py-5 sm:px-6">
           <input type="hidden" name="session_date" value={date} />
-          <input type="hidden" name="location" value={location} />
           <input type="hidden" name="show_parking_notice" value={parking ? "1" : "0"} />
 
           <label className="block text-sm font-medium">
@@ -99,17 +94,27 @@ export default function QuickCourseForm({
           </label>
 
           <label className="block text-sm font-medium">
+            Lieu et adresse
+            <input name="location" required placeholder="Ex. MLK Studio · 2 rue Tirard, Créteil" className={field} />
+          </label>
+
+          <label className="block text-sm font-medium">
             Salle
-            <select name="room" defaultValue={defaultRoom || "Giroud"} className={field}>
+            <select name="room" required defaultValue="" className={field}>
+              <option value="" disabled>Choisir une salle</option>
               <option>Giroud</option>
               <option>Rosa Parks</option>
               <option>Denis</option>
             </select>
           </label>
 
+          <p className="rounded-md bg-surface px-3.5 py-3 text-xs leading-relaxed text-muted">
+            Après la création, vous accéderez à la fiche complète pour ajouter la présentation, les objectifs, la vidéo, les supports et les travaux avant/après.
+          </p>
+
           <div className="flex items-center justify-end gap-3 border-t border-border-soft pt-4">
             <button type="button" onClick={() => dialogRef.current?.close()} className="px-3 py-2 text-sm text-muted hover:text-foreground">Annuler</button>
-            <button type="submit" className="rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent">Créer le cours</button>
+            <button type="submit" className="rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent">Créer et enrichir →</button>
           </div>
         </form>
       </dialog>

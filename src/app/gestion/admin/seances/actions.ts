@@ -16,7 +16,9 @@ export async function createQuickCourse(formData: FormData) {
   const end = text("end_time");
   const track = text("track");
   const trainerId = text("trainer_id");
-  if (!title || !date || !start || !end || !track || !trainerId) throw new Error("Complétez les informations obligatoires.");
+  const location = text("location");
+  const room = text("room");
+  if (!title || !date || !start || !end || !track || !trainerId || !location || !room) throw new Error("Complétez les informations obligatoires.");
   if (end <= start) throw new Error("L’heure de fin doit être après l’heure de début.");
 
   const [{ data: course, error: courseError }, { data: trainer }] = await Promise.all([
@@ -34,8 +36,8 @@ export async function createQuickCourse(formData: FormData) {
     session_date: date,
     start_time: start,
     end_time: end,
-    location: text("location") || "Espace Martin Luther King",
-    room: text("room") || "Giroud",
+    location,
+    room,
     day: new Date(`${date}T12:00:00`).getDay() === 0 ? "dimanche" : "samedi",
     description: title,
     track,
