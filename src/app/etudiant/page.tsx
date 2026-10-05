@@ -65,6 +65,18 @@ export default async function StudentDashboardPage() {
 
   return (
     <div className="grid items-start gap-5 lg:grid-cols-[1fr_360px]">
+      <aside
+        aria-label="Information parking"
+        className="flex items-start gap-2.5 rounded-xl border border-[#d8aa42]/35 bg-[#d8aa42]/[0.09] px-4 py-3 text-[13px] leading-5 text-foreground sm:items-center sm:text-sm lg:col-span-2"
+      >
+        <span aria-hidden="true" className="shrink-0">
+          ⚠️🅿️
+        </span>
+        <p className="font-semibold">
+          Les places de parking sont limitées. Pensez à arriver 15 minutes plus
+          tôt.
+        </p>
+      </aside>
       <section className="rounded-lg border border-border bg-background p-5 sm:p-7">
         {nextSession ? (
           <>
@@ -108,7 +120,7 @@ export default async function StudentDashboardPage() {
                       <span className="label inline-block rounded-2xl bg-surface px-3 py-1 text-[11px] leading-snug tracking-[0.1em] text-foreground">
                         Accueil
                       </span>
-                      <p className="mt-1.5 text-[16px] font-semibold text-foreground">Accueil des étudiants</p>
+                      <p className="mt-1.5 text-[16px] font-semibold text-foreground">Accueil</p>
                     </div>
                   </li>
                   <li className="grid grid-cols-[22px_1fr] gap-x-3 lg:grid-cols-[150px_22px_1fr] lg:gap-x-4">
