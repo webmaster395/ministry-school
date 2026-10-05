@@ -142,13 +142,14 @@ export default async function AdminSessionsPage() {
 
           <div>
             <label className="mb-1 block text-xs text-muted">
-              Salle <span className="text-link">(par défaut : Giroud)</span>
+              Salle <span className="text-muted">(facultatif)</span>
             </label>
             <select
               name="room"
-              defaultValue="Giroud"
+              defaultValue=""
               className="w-full rounded-md border border-border px-3 py-2 text-sm"
             >
+              <option value="">Aucune salle</option>
               <option value="Giroud">Giroud</option>
               <option value="Rosa Parks">Rosa Parks</option>
               <option value="Denis">Denis</option>

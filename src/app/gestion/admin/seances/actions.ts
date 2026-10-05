@@ -19,7 +19,7 @@ export async function createQuickCourse(formData: FormData) {
   const location = text("location");
   const room = text("room");
   const trainerRequired = track !== "Services & Projets";
-  if (!title || !date || !start || !end || !track || (trainerRequired && !trainerId) || !location || !room) throw new Error("Complétez les informations obligatoires.");
+  if (!title || !date || !start || !end || !track || (trainerRequired && !trainerId) || !location) throw new Error("Complétez les informations obligatoires.");
   if (end <= start) throw new Error("L’heure de fin doit être après l’heure de début.");
 
   const { data: course, error: courseError } = await supabase.from("courses").insert({ title }).select("id").single();
@@ -39,7 +39,7 @@ export async function createQuickCourse(formData: FormData) {
     start_time: start,
     end_time: end,
     location,
-    room,
+    room: room || null,
     day: new Date(`${date}T12:00:00`).getDay() === 0 ? "dimanche" : "samedi",
     description: title,
     track,

@@ -111,8 +111,8 @@ export default function QuickCourseForm({
           </label>
 
           <label className="block text-sm font-medium">
-            Salle
-            <input name="room" required placeholder="Saisir le nom de la salle" className={field} />
+            Salle <span className="font-normal text-muted">(facultatif)</span>
+            <input name="room" placeholder="Ex. Giroud" className={field} />
           </label>
 
           <p className="rounded-md bg-surface px-3.5 py-3 text-xs leading-relaxed text-muted">
