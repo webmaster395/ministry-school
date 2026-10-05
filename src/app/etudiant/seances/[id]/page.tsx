@@ -20,7 +20,7 @@ import {
 import { parcoursSlugOf } from "@/lib/data/parcours";
 import { toggleAssignment } from "../../travail/actions";
 import CourseExperience from "@/components/course/CourseExperience";
-import { newCourseExperienceEnabled } from "@/lib/features/course-experience";
+import { courseExperienceAccess } from "@/lib/features/course-experience";
 
 const TRACK_COLORS: Record<string, string> = {
   coeur: "#8b6fc0",
@@ -103,7 +103,8 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
   const backHref = parcoursSlug ? `/etudiant/cours/parcours/${parcoursSlug}` : `/etudiant/cours`;
   const backLabel = parcoursSlug ? "Retour au parcours" : "Retour aux cours";
 
-  if (await newCourseExperienceEnabled(supabase, user!.id)) {
+  const experience = await courseExperienceAccess(supabase, user!.id);
+  if (experience.enabled) {
     const { data: enrichment } = await supabase
       .from("sessions")
       .select("video_url")
@@ -122,13 +123,20 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
     if (!trainers.length && teacher) trainers.push({ id: "legacy", name: teacher, title: null, bio: null, photoUrl: null });
     const currentIndex = sessions.findIndex((session) => session.id === s.id);
     const navItem = (session: typeof s | undefined) => session ? { id: session.id, title: session.courses?.title ?? session.description ?? "Séance" } : null;
+    const previewDemo = experience.preview && s.id === "d7e9aebb-8514-458c-94d5-49ea65b4a2b4";
+    const firstResourceUrl = materials.find((material) => material.link_url || material.file_url)?.link_url ?? materials.find((material) => material.file_url)?.file_url ?? null;
+    const previewAssignments = previewDemo && assignments.length === 0 ? [
+      { id: "preview-before", title: "Préparer le cours", description: "Exemple de préparation affiché uniquement dans la preview. Remplace-le depuis l’interface de préparation du cours.", instructions: "Consulte le support disponible avant la session.", content_type: "Lecture", resource_url: firstResourceUrl, file_url: null, phase: "before", due_at: null, kind: null, duration_min: 10, demo: true },
+      { id: "preview-after", title: "Prolonger la réflexion", description: "Exemple de mise en pratique affiché uniquement dans la preview. Remplace-le depuis l’interface de préparation du cours.", instructions: "Note une idée clé du cours et la manière dont tu souhaites la mettre en pratique.", content_type: "Question de réflexion", resource_url: null, file_url: null, phase: "after", due_at: null, kind: null, duration_min: 10, demo: true },
+    ] : assignments;
 
     return <CourseExperience
-      session={{ id: s.id, title, track: s.track ?? null, summary: aboutText ?? null, description: s.description, objectives, videoUrl: enrichment?.video_url ?? null, date: formatSessionDateWithYear(s.session_date), dateIso: s.session_date, hours: formatHours(s.start_time, s.end_time), place, past, accent: trackColor }}
+      session={{ id: s.id, title, track: s.track ?? null, summary: aboutText ?? null, description: s.description, objectives, videoUrl: enrichment?.video_url ?? (previewDemo ? "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" : null), videoDemo: previewDemo && !enrichment?.video_url, date: formatSessionDateWithYear(s.session_date), dateIso: s.session_date, hours: formatHours(s.start_time, s.end_time), place, past, accent: trackColor }}
       trainers={trainers}
       materials={materials}
-      assignments={assignments}
+      assignments={previewAssignments}
       completedIds={doneIds}
+      previewDemo={previewDemo}
       backHref={backHref}
       backLabel={backLabel}
       previous={navItem(sessions[currentIndex - 1])}
