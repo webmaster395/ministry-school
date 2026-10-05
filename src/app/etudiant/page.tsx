@@ -40,6 +40,7 @@ export default async function StudentDashboardPage() {
   const daySessions = nextSession
     ? allSessions.filter((s) => s.session_date === nextSession.session_date)
     : [];
+  const showWelcomeSlot = daySessions[0]?.start_time.startsWith("09:30") ?? false;
   const showParkingNotice = daySessions.some((session) => session.show_parking_notice);
   const daysLeft = nextSession
     ? Math.max(
@@ -97,16 +98,35 @@ export default async function StudentDashboardPage() {
               {nextSession.room ? ` · ${nextSession.room}` : ""}
             </p>
             {showParkingNotice && (
-              <div className="mt-3 flex items-start gap-2 rounded-lg bg-[#1f2927] px-3.5 py-2.5 text-[12px] leading-5 text-white shadow-[0_6px_18px_rgba(31,43,40,0.12)] sm:text-[13px]">
-                <span aria-hidden="true" className="shrink-0">⚠️🅿️</span>
+              <div className="mt-3 inline-flex max-w-full items-start gap-2 rounded-md bg-[#1f2927] px-3 py-2 text-[12px] leading-[1.35] text-white sm:text-[13px]">
+                <span aria-hidden="true" className="shrink-0 pt-px">⚠️🅿️</span>
                 <p>
-                  <strong className="block font-semibold">Les places de parking sont très limitées.</strong>
-                  <strong className="block font-semibold">Pensez à arriver suffisamment en avance.</strong>
+                  <span className="block font-semibold">Les places de parking sont très limitées.</span>
+                  <span className="block text-white/80">Pensez à arriver suffisamment en avance.</span>
                 </p>
               </div>
             )}
 
             <ol className="mt-5">
+              {showWelcomeSlot && (
+                <li className="grid grid-cols-[22px_1fr] gap-x-3 lg:grid-cols-[150px_22px_1fr] lg:gap-x-4">
+                  <p className="col-start-2 row-start-1 text-[14px] font-semibold text-foreground lg:col-start-1 lg:pt-1">
+                    09:10 – 09:30
+                  </p>
+                  <div className="col-start-1 row-span-2 row-start-1 flex flex-col items-center lg:col-start-2 lg:row-span-1">
+                    <span
+                      className="mt-1.5 h-3.5 w-3.5 shrink-0 rounded-full border-[3px] border-background bg-foreground"
+                      style={{ boxShadow: "0 0 0 2px var(--foreground)" }}
+                    />
+                    <span className="w-px flex-1 bg-border" />
+                  </div>
+                  <div className="col-start-2 row-start-2 pb-4 pt-1 lg:col-start-3 lg:row-start-1 lg:pb-5 lg:pt-0">
+                    <span className="label inline-block rounded-full bg-surface px-3 py-1 text-[11px] tracking-[0.1em] text-foreground">
+                      Accueil
+                    </span>
+                  </div>
+                </li>
+              )}
               {daySessions.map((s, i) => (
                 <li key={s.id}>
                   <Link
