@@ -22,9 +22,15 @@ export async function addSupport(formData: FormData) {
   const visibility = text("visibility");
   let visibleAt = new Date().toISOString();
   if (visibility === "start" || visibility === "end") {
-    const { data: s } = await supabase.from("sessions").select("session_date, start_time, end_time").eq("id", sessionId).single();
+    const { data: s } = await supabase
+      .from("sessions")
+      .select("session_date, start_time, end_time")
+      .eq("id", sessionId)
+      .single();
     if (s) {
-      const at = new Date(`${s.session_date}T${(visibility === "start" ? s.start_time : s.end_time).slice(0, 5)}:00`);
+      const at = new Date(
+        `${s.session_date}T${(visibility === "start" ? s.start_time : s.end_time).slice(0, 5)}:00`,
+      );
       if (!Number.isNaN(at.getTime())) visibleAt = at.toISOString();
     }
   }
@@ -36,12 +42,19 @@ export async function addSupport(formData: FormData) {
     visible_at: visibleAt,
     created_by: user.id,
     description: text("description") || null,
-    ...(TYPES_ENABLED && text("resource_type") ? { resource_type: text("resource_type") } : {}),
+    ...(TYPES_ENABLED && text("resource_type")
+      ? { resource_type: text("resource_type") }
+      : {}),
   });
   if (error) throw new Error("L'ajout du support a échoué : " + error.message);
 
   // Prévenir les étudiants dans leur messagerie (sans jamais bloquer l'ajout du support)
-  await notifyNewSupport(supabase, sessionId, text("title"), visibility === "start" || visibility === "end" ? visibility : "now");
+  await notifyNewSupport(
+    supabase,
+    sessionId,
+    text("title"),
+    visibility === "start" || visibility === "end" ? visibility : "now",
+  );
 
   revalidatePath(`/gestion/enseignement/preparation/${sessionId}`);
   revalidatePath("/gestion/pilotage", "layout");
@@ -76,7 +89,8 @@ export async function addPilotAssignment(formData: FormData) {
     duration_min: Number.isFinite(duration) && duration > 0 ? duration : null,
     due_at: due ? new Date(due).toISOString() : null,
   });
-  if (error) throw new Error("L'ajout de la consigne a échoué : " + error.message);
+  if (error)
+    throw new Error("L'ajout de la consigne a échoué : " + error.message);
 
   revalidatePath(`/gestion/enseignement/preparation/${sessionId}`);
   revalidatePath("/gestion/pilotage", "layout");
@@ -87,7 +101,10 @@ export async function addPilotAssignment(formData: FormData) {
 export type CourseFormState = { error?: string };
 
 /** Ajoute un cours au programme d'un ministère piloté. La base vérifie le droit d'écriture. */
-export async function createCourse(_prev: CourseFormState, formData: FormData): Promise<CourseFormState> {
+export async function createCourse(
+  _prev: CourseFormState,
+  formData: FormData,
+): Promise<CourseFormState> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -104,7 +121,8 @@ export async function createCourse(_prev: CourseFormState, formData: FormData): 
   if (!ministryId || !title || !date || !start || !end || !location) {
     return { error: "Renseignez le titre, la date, les heures et le lieu." };
   }
-  if (end <= start) return { error: "L'heure de fin doit être après l'heure de début." };
+  if (end <= start)
+    return { error: "L'heure de fin doit être après l'heure de début." };
   const draft = DRAFTS_ENABLED && text("intent") === "draft";
 
   const { error } = await supabase.from("sessions").insert({
@@ -122,7 +140,8 @@ export async function createCourse(_prev: CourseFormState, formData: FormData): 
     objectives: text("objectives") || null,
     ...(DRAFTS_ENABLED && { is_draft: draft }),
   });
-  if (error) return { error: "Le cours n'a pas pu être créé : " + error.message };
+  if (error)
+    return { error: "Le cours n'a pas pu être créé : " + error.message };
 
   revalidatePath("/gestion/pilotage");
   revalidatePath("/etudiant", "layout");
@@ -135,9 +154,14 @@ export async function publishCourse(formData: FormData) {
   const supabase = await createClient();
   const sessionId = ((formData.get("session_id") as string) ?? "").trim();
 
-  const { data, error } = await supabase.from("sessions").update({ is_draft: false }).eq("id", sessionId).select("id");
+  const { data, error } = await supabase
+    .from("sessions")
+    .update({ is_draft: false })
+    .eq("id", sessionId)
+    .select("id");
   if (error) throw new Error("La publication a échoué : " + error.message);
-  if (!data?.length) throw new Error("Vous n'avez pas le droit de publier ce cours.");
+  if (!data?.length)
+    throw new Error("Vous n'avez pas le droit de publier ce cours.");
 
   revalidatePath(`/gestion/enseignement/preparation/${sessionId}`);
   revalidatePath("/gestion/pilotage", "layout");
@@ -161,15 +185,21 @@ export async function addObjective(formData: FormData) {
   const objective = ((formData.get("objective") as string) ?? "").trim();
   if (!objective) return;
 
-  const { data: current } = await supabase.from("sessions").select("objectives").eq("id", sessionId).single();
+  const { data: current } = await supabase
+    .from("sessions")
+    .select("objectives")
+    .eq("id", sessionId)
+    .single();
   const existing = (current?.objectives ?? "").trim();
   const { data, error } = await supabase
     .from("sessions")
     .update({ objectives: existing ? `${existing}\n${objective}` : objective })
     .eq("id", sessionId)
     .select("id");
-  if (error) throw new Error("L'ajout de l'objectif a échoué : " + error.message);
-  if (!data?.length) throw new Error("Vous n'avez pas le droit de modifier ce cours.");
+  if (error)
+    throw new Error("L'ajout de l'objectif a échoué : " + error.message);
+  if (!data?.length)
+    throw new Error("Vous n'avez pas le droit de modifier ce cours.");
   refreshPrep(sessionId);
 }
 
@@ -179,8 +209,15 @@ export async function removeObjective(formData: FormData) {
   const sessionId = ((formData.get("session_id") as string) ?? "").trim();
   const index = parseInt((formData.get("index") as string) ?? "", 10);
 
-  const { data: current } = await supabase.from("sessions").select("objectives").eq("id", sessionId).single();
-  const lines = (current?.objectives ?? "").split("\n").map((l: string) => l.trim()).filter(Boolean);
+  const { data: current } = await supabase
+    .from("sessions")
+    .select("objectives")
+    .eq("id", sessionId)
+    .single();
+  const lines = (current?.objectives ?? "")
+    .split("\n")
+    .map((l: string) => l.trim())
+    .filter(Boolean);
   if (!Number.isInteger(index) || index < 0 || index >= lines.length) return;
   lines.splice(index, 1);
   const { data, error } = await supabase
@@ -189,7 +226,8 @@ export async function removeObjective(formData: FormData) {
     .eq("id", sessionId)
     .select("id");
   if (error) throw new Error("La suppression a échoué : " + error.message);
-  if (!data?.length) throw new Error("Vous n'avez pas le droit de modifier ce cours.");
+  if (!data?.length)
+    throw new Error("Vous n'avez pas le droit de modifier ce cours.");
   refreshPrep(sessionId);
 }
 
@@ -198,9 +236,14 @@ export async function deleteAssignment(formData: FormData) {
   const supabase = await createClient();
   const id = ((formData.get("id") as string) ?? "").trim();
   const sessionId = ((formData.get("session_id") as string) ?? "").trim();
-  const { data, error } = await supabase.from("assignments").delete().eq("id", id).select("id");
+  const { data, error } = await supabase
+    .from("assignments")
+    .delete()
+    .eq("id", id)
+    .select("id");
   if (error) throw new Error("La suppression a échoué : " + error.message);
-  if (!data?.length) throw new Error("Vous n'avez pas le droit de supprimer cet élément.");
+  if (!data?.length)
+    throw new Error("Vous n'avez pas le droit de supprimer cet élément.");
   refreshPrep(sessionId);
 }
 
@@ -209,9 +252,14 @@ export async function deleteSupport(formData: FormData) {
   const supabase = await createClient();
   const id = ((formData.get("id") as string) ?? "").trim();
   const sessionId = ((formData.get("session_id") as string) ?? "").trim();
-  const { data, error } = await supabase.from("materials").delete().eq("id", id).select("id");
+  const { data, error } = await supabase
+    .from("materials")
+    .delete()
+    .eq("id", id)
+    .select("id");
   if (error) throw new Error("La suppression a échoué : " + error.message);
-  if (!data?.length) throw new Error("Vous n'avez pas le droit de supprimer ce support.");
+  if (!data?.length)
+    throw new Error("Vous n'avez pas le droit de supprimer ce support.");
   refreshPrep(sessionId);
 }
 
@@ -236,7 +284,8 @@ export async function updateAssignment(formData: FormData) {
     .eq("id", str(formData, "id"))
     .select("id");
   if (error) throw new Error("La modification a échoué : " + error.message);
-  if (!data?.length) throw new Error("Vous n'avez pas le droit de modifier cet élément.");
+  if (!data?.length)
+    throw new Error("Vous n'avez pas le droit de modifier cet élément.");
   refreshPrep(str(formData, "session_id"));
 }
 
@@ -251,10 +300,13 @@ export async function duplicateAssignment(formData: FormData) {
   const sessionId = str(formData, "session_id");
   const { data: source, error: readError } = await supabase
     .from("assignments")
-    .select("title,description,instructions,content_type,resource_url,file_url,phase,sort_order,kind,duration_min,due_at")
+    .select(
+      "title,description,instructions,content_type,resource_url,file_url,phase,sort_order,kind,duration_min,due_at",
+    )
     .eq("id", id)
     .single();
-  if (readError || !source) throw new Error("Le travail à dupliquer est introuvable.");
+  if (readError || !source)
+    throw new Error("Le travail à dupliquer est introuvable.");
   const { error } = await supabase.from("assignments").insert({
     ...source,
     session_id: sessionId,
@@ -271,15 +323,26 @@ export async function updateSupport(formData: FormData) {
   const supabase = await createClient();
   const title = str(formData, "title");
   if (!title) throw new Error("Le titre ne peut pas être vide.");
-  const changes: { title: string; description?: string | null; resource_type?: string | null; link_url?: string | null } = {
+  const changes: {
+    title: string;
+    description?: string | null;
+    resource_type?: string | null;
+    link_url?: string | null;
+  } = {
     title,
     description: str(formData, "description") || null,
     resource_type: str(formData, "resource_type") || null,
   };
-  if (formData.has("link_url")) changes.link_url = str(formData, "link_url") || null;
-  const { data, error } = await supabase.from("materials").update(changes).eq("id", str(formData, "id")).select("id");
+  if (formData.has("link_url"))
+    changes.link_url = str(formData, "link_url") || null;
+  const { data, error } = await supabase
+    .from("materials")
+    .update(changes)
+    .eq("id", str(formData, "id"))
+    .select("id");
   if (error) throw new Error("La modification a échoué : " + error.message);
-  if (!data?.length) throw new Error("Vous n'avez pas le droit de modifier ce support.");
+  if (!data?.length)
+    throw new Error("Vous n'avez pas le droit de modifier ce support.");
   refreshPrep(str(formData, "session_id"));
 }
 
@@ -290,13 +353,25 @@ export async function updateObjective(formData: FormData) {
   const index = parseInt(str(formData, "index"), 10);
   const text = str(formData, "objective");
   if (!text) throw new Error("L'objectif ne peut pas être vide.");
-  const { data: current } = await supabase.from("sessions").select("objectives").eq("id", sessionId).single();
-  const lines = (current?.objectives ?? "").split("\n").map((l: string) => l.trim()).filter(Boolean);
+  const { data: current } = await supabase
+    .from("sessions")
+    .select("objectives")
+    .eq("id", sessionId)
+    .single();
+  const lines = (current?.objectives ?? "")
+    .split("\n")
+    .map((l: string) => l.trim())
+    .filter(Boolean);
   if (!(index >= 0 && index < lines.length)) return;
   lines[index] = text;
-  const { data, error } = await supabase.from("sessions").update({ objectives: lines.join("\n") }).eq("id", sessionId).select("id");
+  const { data, error } = await supabase
+    .from("sessions")
+    .update({ objectives: lines.join("\n") })
+    .eq("id", sessionId)
+    .select("id");
   if (error) throw new Error("La modification a échoué : " + error.message);
-  if (!data?.length) throw new Error("Vous n'avez pas le droit de modifier ce cours.");
+  if (!data?.length)
+    throw new Error("Vous n'avez pas le droit de modifier ce cours.");
   refreshPrep(sessionId);
 }
 
@@ -309,7 +384,7 @@ async function notifyNewSupport(
   supabase: Awaited<ReturnType<typeof createClient>>,
   sessionId: string,
   title: string,
-  when: "now" | "start" | "end"
+  when: "now" | "start" | "end",
 ) {
   try {
     const viewer = await getViewer();
@@ -321,10 +396,17 @@ async function notifyNewSupport(
       .single();
     if (!s) return;
 
-    const date = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long" }).format(new Date(`${s.session_date}T00:00:00`));
+    const date = new Intl.DateTimeFormat("fr-FR", {
+      day: "numeric",
+      month: "long",
+    }).format(new Date(`${s.session_date}T00:00:00`));
     const course = s.description ?? "votre cours";
     const availability =
-      when === "start" ? "Il sera disponible au début du cours." : when === "end" ? "Il sera disponible à la fin du cours." : "Il est disponible dès maintenant.";
+      when === "start"
+        ? "Il sera disponible au début du cours."
+        : when === "end"
+          ? "Il sera disponible à la fin du cours."
+          : "Il est disponible dès maintenant.";
     const message = {
       title: `Nouveau support : ${title || "document"}`,
       body: `Un nouveau support a été ajouté pour le cours « ${course} » du ${date}.\n\n${availability}\n\nRetrouvez-le dans la fiche du cours, depuis « Mes cours ».`,
@@ -332,9 +414,16 @@ async function notifyNewSupport(
     };
 
     if (viewer.roles.admin || s.teacher_id === viewer.id) {
-      await supabase.from("announcements").insert({ ...message, session_id: sessionId });
-    } else if (s.ministry_id && viewer.roles.steeringMinistryIds.includes(s.ministry_id)) {
-      await supabase.from("announcements").insert({ ...message, ministry_id: s.ministry_id });
+      await supabase
+        .from("announcements")
+        .insert({ ...message, session_id: sessionId });
+    } else if (
+      s.ministry_id &&
+      viewer.roles.steeringMinistryIds.includes(s.ministry_id)
+    ) {
+      await supabase
+        .from("announcements")
+        .insert({ ...message, ministry_id: s.ministry_id });
     }
   } catch (e) {
     console.error("Message automatique de nouveau support non envoyé :", e);
@@ -347,33 +436,69 @@ export async function moveObjective(formData: FormData) {
   const sessionId = str(formData, "session_id");
   const index = parseInt(str(formData, "index"), 10);
   const direction = str(formData, "direction") === "up" ? -1 : 1;
-  const { data: current } = await supabase.from("sessions").select("objectives").eq("id", sessionId).single();
-  const lines = (current?.objectives ?? "").split("\n").map((line: string) => line.trim()).filter(Boolean);
+  const { data: current } = await supabase
+    .from("sessions")
+    .select("objectives")
+    .eq("id", sessionId)
+    .single();
+  const lines = (current?.objectives ?? "")
+    .split("\n")
+    .map((line: string) => line.trim())
+    .filter(Boolean);
   const target = index + direction;
-  if (index < 0 || target < 0 || index >= lines.length || target >= lines.length) return;
+  if (
+    index < 0 ||
+    target < 0 ||
+    index >= lines.length ||
+    target >= lines.length
+  )
+    return;
   [lines[index], lines[target]] = [lines[target], lines[index]];
-  const { data, error } = await supabase.from("sessions").update({ objectives: lines.join("\n") }).eq("id", sessionId).select("id");
+  const { data, error } = await supabase
+    .from("sessions")
+    .update({ objectives: lines.join("\n") })
+    .eq("id", sessionId)
+    .select("id");
   if (error) throw new Error("Le déplacement a échoué : " + error.message);
-  if (!data?.length) throw new Error("Vous n'avez pas le droit de modifier ce cours.");
+  if (!data?.length)
+    throw new Error("Vous n'avez pas le droit de modifier ce cours.");
   refreshPrep(sessionId);
 }
 
-async function moveOrderedRow(table: "materials" | "assignments", formData: FormData) {
+async function moveOrderedRow(
+  table: "materials" | "assignments",
+  formData: FormData,
+) {
   const supabase = await createClient();
   const sessionId = str(formData, "session_id");
   const id = str(formData, "id");
   const direction = str(formData, "direction") === "up" ? -1 : 1;
-  const { data } = await supabase.from(table).select("id, sort_order, created_at").eq("session_id", sessionId).order("sort_order").order("created_at");
+  const { data } = await supabase
+    .from(table)
+    .select("id, sort_order, created_at")
+    .eq("session_id", sessionId)
+    .order("sort_order")
+    .order("created_at");
   const rows = data ?? [];
   const index = rows.findIndex((row) => row.id === id);
   const target = index + direction;
   if (index < 0 || target < 0 || target >= rows.length) return;
   const firstOrder = rows[index].sort_order ?? index;
   const secondOrder = rows[target].sort_order ?? target;
-  await supabase.from(table).update({ sort_order: secondOrder === firstOrder ? target : secondOrder }).eq("id", rows[index].id);
-  await supabase.from(table).update({ sort_order: secondOrder === firstOrder ? index : firstOrder }).eq("id", rows[target].id);
+  await supabase
+    .from(table)
+    .update({ sort_order: secondOrder === firstOrder ? target : secondOrder })
+    .eq("id", rows[index].id);
+  await supabase
+    .from(table)
+    .update({ sort_order: secondOrder === firstOrder ? index : firstOrder })
+    .eq("id", rows[target].id);
   refreshPrep(sessionId);
 }
 
-export async function moveSupport(formData: FormData) { await moveOrderedRow("materials", formData); }
-export async function moveAssignment(formData: FormData) { await moveOrderedRow("assignments", formData); }
+export async function moveSupport(formData: FormData) {
+  await moveOrderedRow("materials", formData);
+}
+export async function moveAssignment(formData: FormData) {
+  await moveOrderedRow("assignments", formData);
+}
