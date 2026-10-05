@@ -148,7 +148,7 @@ export function navSpaces(roles: ViewerRoles): Space[] {
               icon: icons.adminSessions,
             },
             {
-              label: "Personnes",
+              label: "Membres",
               href: "/gestion/admin?onglet=personnes",
               icon: icons.profile,
             },
