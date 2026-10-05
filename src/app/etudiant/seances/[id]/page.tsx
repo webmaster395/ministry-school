@@ -22,6 +22,7 @@ import { toggleAssignment } from "../../travail/actions";
 import CourseExperience from "@/components/course/CourseExperience";
 import { courseExperienceAccess } from "@/lib/features/course-experience";
 import { courseNotesEnabled } from "@/lib/features/course-notes";
+import { sessionColor } from "@/lib/ministry";
 
 const TRACK_COLORS: Record<string, string> = {
   coeur: "#8b6fc0",
@@ -114,13 +115,11 @@ export default async function SessionDetailPage({
   const past = s.session_date < today;
 
   const parcoursSlug = parcoursSlugOf(s.track);
-  const isPractice =
-    s.track?.toLowerCase().includes("mise en pratique") ?? false;
-  const trackColor = isPractice
-    ? "var(--f-projet)"
-    : parcoursSlug
-      ? (TRACK_COLORS[parcoursSlug] ?? "#27302f")
-      : "#27302f";
+  const trackColor = sessionColor(
+    s.track,
+    s.session_type,
+    parcoursSlug ? (TRACK_COLORS[parcoursSlug] ?? "#27302f") : "#27302f",
+  );
   const title = s.courses?.title ?? s.description ?? "Séance";
   const aboutText = s.summary || s.description;
   const objectives = lines(s.objectives);

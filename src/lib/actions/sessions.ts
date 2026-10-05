@@ -61,13 +61,16 @@ export async function updateSession(formData: FormData) {
       ...optional,
     })
     .eq("id", id)
-    .select("id");
+    .select("id, track");
 
   if (error) {
     throw new Error("La modification de la séance a échoué : " + error.message);
   }
   if (!data?.length) {
     throw new Error("Vous n'avez pas le droit de modifier cette séance.");
+  }
+  if ((data[0].track ?? "") !== (text("track") || "")) {
+    throw new Error("La catégorie n’a pas été enregistrée. Rechargez la page puis réessayez.");
   }
 
   const courseId = text("course_id");
@@ -87,6 +90,9 @@ export async function updateSession(formData: FormData) {
   });
 
   revalidatePath("/gestion/admin/seances");
+  revalidatePath(`/gestion/admin/seances/${id}`);
+  revalidatePath(`/etudiant/seances/${id}`);
+  revalidatePath("/etudiant/cours", "layout");
   revalidatePath("/enseignant/seances");
   revalidatePath("/enseignant");
   revalidatePath("/gestion/enseignement/preparation", "layout");
