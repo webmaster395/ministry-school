@@ -3,6 +3,8 @@ import ProfileTabs from "@/components/ProfileTabs";
 import { getStudentProfile } from "@/lib/data/student";
 import { getStudentMessages } from "@/lib/data/messages";
 import { markNotificationsSeen } from "../actions";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 const fmt = (v: string) =>
   new Intl.DateTimeFormat("fr-FR", { dateStyle: "long", timeStyle: "short" }).format(new Date(v));
@@ -57,6 +59,15 @@ export default async function StudentMessagesPage() {
               </div>
               <h2 className="font-title mt-2 text-[22px] leading-tight text-foreground">{m.title}</h2>
               <p className="mt-2 whitespace-pre-line text-[15px] leading-relaxed text-foreground">{m.body}</p>
+              {m.targetUrl && (
+                <Link
+                  href={m.targetUrl}
+                  className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-foreground px-5 text-sm font-semibold text-background transition hover:opacity-85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+                >
+                  {m.ctaLabel || "Voir le contenu"}
+                  <ArrowRight size={16} aria-hidden="true" />
+                </Link>
+              )}
             </li>
           ))}
         </ul>

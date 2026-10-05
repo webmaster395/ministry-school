@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { notifyCourseContent } from "@/lib/course-notifications";
 
 /**
  * Modifie une séance existante (date, horaire, lieu, titre, intervenant, parcours).
@@ -11,6 +12,10 @@ import { createClient } from "@/lib/supabase/server";
  */
 export async function updateSession(formData: FormData) {
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Non authentifié");
 
   const id = formData.get("session_id") as string;
   const text = (key: string) => ((formData.get(key) as string) ?? "").trim();
@@ -55,6 +60,13 @@ export async function updateSession(formData: FormData) {
   if (!data?.length) {
     throw new Error("Vous n'avez pas le droit de modifier cette séance.");
   }
+
+  await notifyCourseContent({
+    supabase,
+    actorId: user.id,
+    sessionId: id,
+    targetType: "course",
+  });
 
   revalidatePath("/gestion/admin/seances");
   revalidatePath("/enseignant/seances");

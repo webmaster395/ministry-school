@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { notifyCourseContent } from "@/lib/course-notifications";
 
 export async function addMaterial(formData: FormData) {
   const supabase = await createClient();
@@ -15,12 +16,21 @@ export async function addMaterial(formData: FormData) {
   const linkUrl = formData.get("link_url") as string;
   const visibleAtRaw = formData.get("visible_at") as string;
 
-  await supabase.from("materials").insert({
+  const { data: material, error } = await supabase.from("materials").insert({
     session_id: sessionId,
     title,
     link_url: linkUrl || null,
     visible_at: visibleAtRaw ? new Date(visibleAtRaw).toISOString() : new Date().toISOString(),
     created_by: user.id,
+  }).select("id").single();
+  if (error) throw new Error("L'ajout du support a échoué : " + error.message);
+  await notifyCourseContent({
+    supabase,
+    actorId: user.id,
+    sessionId,
+    targetType: "resource",
+    targetId: material?.id,
+    contentTitle: title,
   });
 
   revalidatePath("/enseignant/supports");
@@ -38,12 +48,21 @@ export async function shareNow(formData: FormData) {
   const title = formData.get("title") as string;
   const linkUrl = formData.get("link_url") as string;
 
-  await supabase.from("materials").insert({
+  const { data: material, error } = await supabase.from("materials").insert({
     session_id: sessionId,
     title,
     link_url: linkUrl || null,
     visible_at: new Date().toISOString(),
     created_by: user.id,
+  }).select("id").single();
+  if (error) throw new Error("L'ajout du support a échoué : " + error.message);
+  await notifyCourseContent({
+    supabase,
+    actorId: user.id,
+    sessionId,
+    targetType: "resource",
+    targetId: material?.id,
+    contentTitle: title,
   });
 
   revalidatePath("/enseignant/supports");
@@ -64,13 +83,23 @@ export async function addAssignment(formData: FormData) {
   const duration = parseInt((formData.get("duration_min") as string) ?? "", 10);
   const due = (formData.get("due_at") as string) ?? "";
 
-  await supabase.from("assignments").insert({
+  const { data: assignment, error } = await supabase.from("assignments").insert({
     session_id: sessionId,
     instructions,
     created_by: user.id,
     kind: kind || null,
     duration_min: Number.isFinite(duration) && duration > 0 ? duration : null,
     due_at: due ? new Date(due).toISOString() : null,
+  }).select("id").single();
+  if (error) throw new Error("L'ajout du travail a échoué : " + error.message);
+  await notifyCourseContent({
+    supabase,
+    actorId: user.id,
+    sessionId,
+    targetType: "assignment",
+    targetId: assignment?.id,
+    contentTitle: instructions,
+    assignmentPhase: "before",
   });
 
   revalidatePath("/enseignant/supports");

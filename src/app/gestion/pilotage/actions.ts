@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { DRAFTS_ENABLED } from "@/lib/drafts";
 import { TYPES_ENABLED } from "@/lib/material-types";
 import { getViewer } from "@/lib/data/viewer";
+import { notifyCourseContent } from "@/lib/course-notifications";
 
 /** Ajoute un support (lien ou fichier déposé) à une séance. La base vérifie le droit d'écriture. */
 export async function addSupport(formData: FormData) {
@@ -35,7 +36,7 @@ export async function addSupport(formData: FormData) {
     }
   }
 
-  const { error } = await supabase.from("materials").insert({
+  const { data: material, error } = await supabase.from("materials").insert({
     session_id: sessionId,
     title: text("title"),
     link_url: text("link_url") || null,
@@ -45,7 +46,7 @@ export async function addSupport(formData: FormData) {
     ...(TYPES_ENABLED && text("resource_type")
       ? { resource_type: text("resource_type") }
       : {}),
-  });
+  }).select("id").single();
   if (error) throw new Error("L'ajout du support a échoué : " + error.message);
 
   // Prévenir les étudiants dans leur messagerie (sans jamais bloquer l'ajout du support)
@@ -54,6 +55,7 @@ export async function addSupport(formData: FormData) {
     sessionId,
     text("title"),
     visibility === "start" || visibility === "end" ? visibility : "now",
+    material?.id,
   );
 
   revalidatePath(`/gestion/enseignement/preparation/${sessionId}`);
@@ -76,21 +78,32 @@ export async function addPilotAssignment(formData: FormData) {
   const duration = parseInt(text("duration_min"), 10);
   const due = text("due_at");
 
-  const { error } = await supabase.from("assignments").insert({
+  const phase = text("phase") === "after" ? "after" : "before";
+  const { data: assignment, error } = await supabase.from("assignments").insert({
     session_id: sessionId,
     instructions: text("instructions"),
     title: text("title") || text("instructions"),
     description: text("description") || null,
     content_type: text("content_type") || null,
     resource_url: text("resource_url") || null,
-    phase: text("phase") === "after" ? "after" : "before",
+    phase,
     created_by: user.id,
     kind: text("kind") || null,
     duration_min: Number.isFinite(duration) && duration > 0 ? duration : null,
     due_at: due ? new Date(due).toISOString() : null,
-  });
+  }).select("id").single();
   if (error)
     throw new Error("L'ajout de la consigne a échoué : " + error.message);
+
+  await notifyCourseContent({
+    supabase,
+    actorId: user.id,
+    sessionId,
+    targetType: "assignment",
+    targetId: assignment?.id,
+    contentTitle: text("title") || text("instructions"),
+    assignmentPhase: phase,
+  });
 
   revalidatePath(`/gestion/enseignement/preparation/${sessionId}`);
   revalidatePath("/gestion/pilotage", "layout");
@@ -385,6 +398,7 @@ async function notifyNewSupport(
   sessionId: string,
   title: string,
   when: "now" | "start" | "end",
+  targetId?: string,
 ) {
   try {
     const viewer = await getViewer();
@@ -396,34 +410,30 @@ async function notifyNewSupport(
       .single();
     if (!s) return;
 
-    const date = new Intl.DateTimeFormat("fr-FR", {
-      day: "numeric",
-      month: "long",
-    }).format(new Date(`${s.session_date}T00:00:00`));
-    const course = s.description ?? "votre cours";
-    const availability =
-      when === "start"
-        ? "Il sera disponible au début du cours."
-        : when === "end"
-          ? "Il sera disponible à la fin du cours."
-          : "Il est disponible dès maintenant.";
-    const message = {
-      title: `Nouveau support : ${title || "document"}`,
-      body: `Un nouveau support a été ajouté pour le cours « ${course} » du ${date}.\n\n${availability}\n\nRetrouvez-le dans la fiche du cours, depuis « Mes cours ».`,
-      author_id: viewer.id,
-    };
-
     if (viewer.roles.admin || s.teacher_id === viewer.id) {
-      await supabase
-        .from("announcements")
-        .insert({ ...message, session_id: sessionId });
+      await notifyCourseContent({
+        supabase,
+        actorId: viewer.id,
+        sessionId,
+        targetType: "resource",
+        targetId,
+        contentTitle: title,
+        availability: when,
+      });
     } else if (
       s.ministry_id &&
       viewer.roles.steeringMinistryIds.includes(s.ministry_id)
     ) {
-      await supabase
-        .from("announcements")
-        .insert({ ...message, ministry_id: s.ministry_id });
+      await notifyCourseContent({
+        supabase,
+        actorId: viewer.id,
+        sessionId,
+        targetType: "resource",
+        targetId,
+        contentTitle: title,
+        availability: when,
+        scope: { ministry_id: s.ministry_id },
+      });
     }
   } catch (e) {
     console.error("Message automatique de nouveau support non envoyé :", e);

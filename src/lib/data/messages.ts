@@ -8,6 +8,10 @@ export type Message = {
   at: string;
   isNew: boolean;
   system: boolean;
+  targetUrl: string | null;
+  targetType: string | null;
+  targetId: string | null;
+  ctaLabel: string | null;
 };
 
 /**
@@ -35,7 +39,7 @@ export async function getStudentMessages(supabase: SupabaseClient, since: string
 
   const { data } = await supabase
     .from("announcements")
-    .select("id, title, body, created_at, is_welcome, is_system, sent_as, author:profiles!announcements_author_id_fkey(full_name)")
+    .select("id, title, body, created_at, is_welcome, is_system, sent_as, target_url, target_type, target_id, cta_label, author:profiles!announcements_author_id_fkey(full_name)")
     .order("created_at", { ascending: false })
     .limit(50);
 
@@ -49,6 +53,10 @@ export async function getStudentMessages(supabase: SupabaseClient, since: string
       is_system: boolean;
       sent_as: string | null;
       author: { full_name: string } | null;
+      target_url: string | null;
+      target_type: string | null;
+      target_id: string | null;
+      cta_label: string | null;
     }[]
   )
     .map((m) => {
@@ -56,7 +64,19 @@ export async function getStudentMessages(supabase: SupabaseClient, since: string
       // Le message de bienvenue est daté de la création du compte, qui est aussi l'instant « dernier message vu » d'un nouveau compte : égalité = pas encore lu
       const isNew = m.is_welcome ? at >= since : at > since;
       const sender = studentFacingSender(m);
-      return { id: m.id, title: m.title, body: m.body, ...sender, at, isNew };
+      const targetUrl = m.target_url?.startsWith("/") ? m.target_url : null;
+      return {
+        id: m.id,
+        title: m.title,
+        body: m.body,
+        ...sender,
+        at,
+        isNew,
+        targetUrl,
+        targetType: m.target_type,
+        targetId: m.target_id,
+        ctaLabel: targetUrl ? m.cta_label : null,
+      };
     })
     .sort((a, b) => (a.at < b.at ? 1 : -1));
 }

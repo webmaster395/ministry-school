@@ -443,6 +443,31 @@ export default function CourseExperience({
         </div>
       </section>
 
+      <nav
+        aria-label="Accès rapide au contenu du cours"
+        className="sticky top-[calc(3.75rem+env(safe-area-inset-top))] z-30 -mx-4 border-b border-border bg-background/95 px-4 py-2.5 shadow-[0_8px_24px_rgba(31,43,40,0.06)] backdrop-blur sm:mx-0 sm:rounded-b-2xl sm:border-x"
+      >
+        <div className="mx-auto flex max-w-6xl items-center gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <span className="label mr-1 hidden shrink-0 text-[10px] tracking-[0.14em] text-muted md:inline">
+            Ton parcours
+          </span>
+          {[
+            ["before-course", "À préparer"],
+            ["course-content", "Suivre le cours"],
+            ["after-course", "Mettre en pratique"],
+          ].map(([anchor, label]) => (
+            <a
+              key={anchor}
+              href={`#${anchor}`}
+              className="inline-flex min-h-10 shrink-0 items-center gap-2 rounded-full border border-border bg-background px-3.5 text-xs font-semibold text-foreground transition hover:border-[var(--course-accent)] hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--course-accent)] sm:text-sm"
+            >
+              <span className="h-2 w-2 rounded-full bg-[var(--course-accent)]" />
+              {label}
+            </a>
+          ))}
+        </div>
+      </nav>
+
       <div
         className={`mx-auto grid max-w-6xl gap-10 py-10 lg:py-14 ${notes?.enabled ? "lg:grid-cols-[minmax(0,1fr)_360px]" : "lg:grid-cols-[minmax(0,1fr)_280px]"}`}
       >
@@ -519,7 +544,7 @@ export default function CourseExperience({
             />
           </div>
           {(session.videoUrl || materials.length > 0) && (
-            <section className="border-t border-border py-9 sm:py-11">
+            <section id="course-resources" className="scroll-mt-32 border-t border-border py-9 sm:py-11">
               <p className="label text-xs tracking-[0.18em] text-muted">
                 Bibliothèque
               </p>
@@ -648,37 +673,6 @@ export default function CourseExperience({
               initialHtml={notes.initialHtml}
             />
           )}
-          <nav
-            aria-label="Navigation dans le cours"
-            className="rounded-2xl bg-surface p-6"
-          >
-            <p className="label text-xs tracking-[0.15em] text-muted">
-              Ton parcours
-            </p>
-            <div className="mt-4 space-y-1 text-sm">
-              <a
-                href="#before-course"
-                className="flex min-h-11 items-center gap-3 rounded-xl px-2 transition hover:bg-background"
-              >
-                <span className="h-2.5 w-2.5 rounded-full bg-[var(--course-accent)]" />
-                À préparer
-              </a>
-              <a
-                href="#course-content"
-                className="flex min-h-11 items-center gap-3 rounded-xl px-2 transition hover:bg-background"
-              >
-                <span className="h-2.5 w-2.5 rounded-full bg-[var(--course-accent)]" />
-                Suivre le cours
-              </a>
-              <a
-                href="#after-course"
-                className="flex min-h-11 items-center gap-3 rounded-xl px-2 transition hover:bg-background"
-              >
-                <span className="h-2.5 w-2.5 rounded-full bg-[var(--course-accent)]" />
-                Mettre en pratique
-              </a>
-            </div>
-          </nav>
           {trainers.map(
             (trainer) =>
               trainer.bio && (
