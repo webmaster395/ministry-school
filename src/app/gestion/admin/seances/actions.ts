@@ -18,19 +18,21 @@ export async function createQuickCourse(formData: FormData) {
   const trainerId = text("trainer_id");
   const location = text("location");
   const room = text("room");
-  if (!title || !date || !start || !end || !track || !trainerId || !location || !room) throw new Error("Complétez les informations obligatoires.");
+  const trainerRequired = track !== "Services & Projets";
+  if (!title || !date || !start || !end || !track || (trainerRequired && !trainerId) || !location || !room) throw new Error("Complétez les informations obligatoires.");
   if (end <= start) throw new Error("L’heure de fin doit être après l’heure de début.");
 
-  const [{ data: course, error: courseError }, { data: trainer }] = await Promise.all([
-    supabase.from("courses").insert({ title }).select("id").single(),
-    supabase.from("trainers").select("id, profile_id").eq("id", trainerId).single(),
-  ]);
+  const { data: course, error: courseError } = await supabase.from("courses").insert({ title }).select("id").single();
   if (courseError || !course) throw new Error(courseError?.message ?? "Création du cours impossible.");
+  const { data: trainer } = trainerId
+    ? await supabase.from("trainers").select("id, profile_id").eq("id", trainerId).single()
+    : { data: null };
 
   const ministryId = track === "Sensibilité ministérielle" ? text("ministry_id") || null : null;
   const { data: session, error: sessionError } = await supabase.from("sessions").insert({
     session_type: ministryId ? "ministere" : "commun",
     ministry_id: ministryId,
+    service_id: track === "Services & Projets" ? text("service_id") || null : null,
     course_id: course.id,
     teacher_id: trainer?.profile_id ?? null,
     session_date: date,
@@ -48,8 +50,10 @@ export async function createQuickCourse(formData: FormData) {
     await supabase.from("courses").delete().eq("id", course.id);
     throw new Error(sessionError?.message ?? "Création de la séance impossible.");
   }
-  const { error: linkError } = await supabase.from("session_trainers").insert({ session_id: session.id, trainer_id: trainerId, position: 0 });
-  if (linkError) throw new Error(linkError.message);
+  if (trainerId) {
+    const { error: linkError } = await supabase.from("session_trainers").insert({ session_id: session.id, trainer_id: trainerId, position: 0 });
+    if (linkError) throw new Error(linkError.message);
+  }
 
   revalidatePath("/gestion/admin", "layout");
   revalidatePath("/etudiant", "layout");

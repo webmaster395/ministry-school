@@ -153,7 +153,7 @@ export async function getProgramEntries(supabase: SupabaseClient, opps: OppRow[]
   const { data } = await supabase
     .from("sessions")
     .select(
-      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, show_parking_notice, courses(title), teacher:profiles!sessions_teacher_id_fkey(full_name)"
+      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, show_parking_notice, courses(title), services(name), teacher:profiles!sessions_teacher_id_fkey(full_name)"
     )
     .order("session_date")
     .order("start_time");
@@ -161,7 +161,7 @@ export async function getProgramEntries(supabase: SupabaseClient, opps: OppRow[]
   type Row = {
     id: string; session_date: string; start_time: string; end_time: string; location: string;
     room: string | null; description: string | null; track: string | null; speaker_name: string | null;
-    summary: string | null; objectives: string | null; show_parking_notice: boolean; courses: { title: string } | null; teacher: { full_name: string } | null;
+    summary: string | null; objectives: string | null; show_parking_notice: boolean; courses: { title: string } | null; services: { name: string } | null; teacher: { full_name: string } | null;
   };
 
   const rows = (data ?? []) as unknown as Row[];
@@ -187,7 +187,7 @@ export async function getProgramEntries(supabase: SupabaseClient, opps: OppRow[]
       start: s.start_time,
       end: s.end_time,
       title: s.courses?.title ?? s.description ?? "À définir",
-      sub: [s.track, trainerNames].filter(Boolean).join(" · "),
+      sub: [s.track, s.services?.name, trainerNames].filter(Boolean).join(" · "),
       badge: ready ? "Prêt" : "À compléter",
       attention: !ready,
       href: `/gestion/admin/seances/${s.id}`,

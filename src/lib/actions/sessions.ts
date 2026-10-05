@@ -35,6 +35,7 @@ export async function updateSession(formData: FormData) {
     admin.ministry_id = type === "commun" ? null : text("ministry_id") || null;
     admin.course_id = text("course_id") || null;
     admin.day = text("day") || "samedi";
+    admin.service_id = formData.has("service_id") ? text("service_id") || null : null;
   }
 
   const optional = {

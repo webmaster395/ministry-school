@@ -34,12 +34,13 @@ function monthLabel(month: string) {
   return label.charAt(0).toUpperCase() + label.slice(1);
 }
 
-export default function ProgramTab({ entries, month, today, trainers, ministries }: {
+export default function ProgramTab({ entries, month, today, trainers, ministries, services }: {
   entries: ProgramEntry[];
   month?: string;
   today: string;
   trainers: Choice[];
   ministries: Choice[];
+  services: Choice[];
 }) {
   const nextDate = entries.find((entry) => entry.date >= today)?.date ?? today;
   const selectedMonth = /^\d{4}-\d{2}$/.test(month ?? "") ? month! : nextDate.slice(0, 7);
@@ -74,7 +75,7 @@ export default function ProgramTab({ entries, month, today, trainers, ministries
               <p className="mt-0.5 text-sm text-muted">{reference.location}{reference.room ? ` · ${reference.room}` : ""} · {courseEntries.length} cours</p>
             </div>
             <DayList entries={list} />
-            <QuickCourseForm date={date} dateLabel={`${formatSessionDate(date)} ${date.slice(0, 4)}`} parking={courseEntries.some((entry) => entry.parking)} trainers={trainers} ministries={ministries} />
+            <QuickCourseForm date={date} dateLabel={`${formatSessionDate(date)} ${date.slice(0, 4)}`} parking={courseEntries.some((entry) => entry.parking)} trainers={trainers} ministries={ministries} services={services} />
           </section>
         );
       }) : (

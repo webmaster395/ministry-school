@@ -22,11 +22,13 @@ export type EditableSession = {
   course_id?: string | null;
   day?: string | null;
   show_parking_notice?: boolean;
+  service_id?: string | null;
 };
 
 export type AdminOptions = {
   courses: { id: string; title: string }[];
   ministries: { id: string; name: string }[];
+  services: { id: string; name: string }[];
 };
 
 const field =
@@ -79,6 +81,13 @@ export default function SessionEditForm({
                 {admin.ministries.map((m) => (
                   <option key={m.id} value={m.id}>{m.name}</option>
                 ))}
+              </select>
+            </div>}
+            {category === "Services & Projets" && <div>
+              <label className="mb-1 block text-sm font-medium text-foreground">Service (facultatif)</label>
+              <select name="service_id" defaultValue={s.service_id ?? ""} className={field}>
+                <option value="">Aucun service associé</option>
+                {admin.services.map((service) => <option key={service.id} value={service.id}>{service.name}</option>)}
               </select>
             </div>}
           </>

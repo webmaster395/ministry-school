@@ -24,6 +24,7 @@ import TrainerMultiSelect, {
 type FullSession = PilotSession & {
   teacher_id: string | null;
   ministry_id: string | null;
+  service_id: string | null;
 };
 
 const SECTIONS = [
@@ -56,7 +57,7 @@ export default async function PreparationPage({
   const { data } = await supabase
     .from("sessions")
     .select(
-      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, video_url, show_parking_notice, session_type, course_id, day, teacher_id, ministry_id, teacher:profiles!sessions_teacher_id_fkey(full_name)" +
+      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, video_url, show_parking_notice, session_type, course_id, day, teacher_id, ministry_id, service_id, teacher:profiles!sessions_teacher_id_fkey(full_name)" +
         DRAFT_COLUMN,
     )
     .eq("id", id)
@@ -122,6 +123,7 @@ export default async function PreparationPage({
         ministries: ((
           await supabase.from("ministries").select("id, name").order("name")
         ).data ?? []) as { id: string; name: string }[],
+        services: ((await supabase.from("services").select("id, name").order("name")).data ?? []) as { id: string; name: string }[],
       }
     : undefined;
   const isPilot =

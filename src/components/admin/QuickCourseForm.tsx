@@ -15,12 +15,14 @@ export default function QuickCourseForm({
   parking,
   trainers,
   ministries,
+  services,
 }: {
   date: string;
   dateLabel: string;
   parking: boolean;
   trainers: Choice[];
   ministries: Choice[];
+  services: Choice[];
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [category, setCategory] = useState("Formation du cœur");
@@ -86,12 +88,22 @@ export default function QuickCourseForm({
           )}
 
           <label className="block text-sm font-medium">
-            Formateur
-            <select name="trainer_id" required className={field}>
-              <option value="">Choisir un formateur</option>
+            Formateur{category === "Services & Projets" ? " (facultatif)" : ""}
+            <select name="trainer_id" required={category !== "Services & Projets"} className={field}>
+              <option value="">{category === "Services & Projets" ? "Aucun formateur" : "Choisir un formateur"}</option>
               {trainers.map((trainer) => <option key={trainer.id} value={trainer.id}>{trainer.name}</option>)}
             </select>
           </label>
+
+          {category === "Services & Projets" && (
+            <label className="block text-sm font-medium">
+              Service (facultatif)
+              <select name="service_id" defaultValue="" className={field}>
+                <option value="">Aucun service associé</option>
+                {services.map((service) => <option key={service.id} value={service.id}>{service.name}</option>)}
+              </select>
+            </label>
+          )}
 
           <label className="block text-sm font-medium">
             Lieu et adresse
