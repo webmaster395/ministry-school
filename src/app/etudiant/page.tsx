@@ -65,122 +65,83 @@ export default async function StudentDashboardPage() {
 
   return (
     <div className="grid items-start gap-5 lg:grid-cols-[1fr_360px]">
-      <section className="rounded-lg border border-border bg-background p-5 sm:p-7">
+      <section className="rounded-lg border border-border bg-background px-5 py-4 sm:px-6 sm:py-5">
         {nextSession ? (
           <>
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-sm text-muted">Prochaine journée</p>
-                <h2 className="font-title mt-1 text-[21px] leading-tight text-foreground sm:text-[23px]">
-                  Votre prochaine journée de formation
+            <div className="flex items-start justify-between gap-4 border-b border-border-soft pb-4">
+              <div className="min-w-0">
+                <p className="label text-[11px] tracking-[0.14em] text-muted">
+                  Prochaine journée
+                </p>
+                <h2 className="font-title mt-1.5 text-[20px] leading-tight text-foreground sm:text-[22px]">
+                  {formatSessionDate(nextSession.session_date)}
+                  <span className="mx-2 font-sans text-base font-normal text-muted">·</span>
+                  <span className="font-sans text-[15px] font-semibold sm:text-base">
+                    {formatTimeRange(
+                      daySessions[0].start_time,
+                      daySessions[daySessions.length - 1].end_time
+                    )}
+                  </span>
                 </h2>
+                <p className="mt-1 text-[13px] text-muted">
+                  {nextSession.location}
+                  {nextSession.room ? ` · ${nextSession.room}` : ""}
+                </p>
               </div>
-              <span className="label shrink-0 rounded-full bg-surface px-3.5 py-2 text-xs tracking-[0.08em] text-foreground">
+              <span className="label shrink-0 pt-0.5 text-[10px] tracking-[0.08em] text-muted">
                 J-{daysLeft}
               </span>
             </div>
 
-            <p className="mt-3 text-[15px] font-semibold text-foreground">
-              {formatSessionDate(nextSession.session_date)}
-              <span className="mx-2 text-muted">·</span>
-              {formatTimeRange(
-                daySessions[0].start_time,
-                daySessions[daySessions.length - 1].end_time
-              )}
-            </p>
-            <p className="mt-0.5 text-[13px] text-muted">
-              {nextSession.location}
-              {nextSession.room ? ` · ${nextSession.room}` : ""}
-            </p>
-            <p className="mt-3 flex items-start gap-2 rounded-lg bg-[#d8aa42]/[0.09] px-3 py-2 text-[12px] font-semibold leading-5 text-foreground sm:text-[13px]">
-              <span aria-hidden="true" className="shrink-0">
-                ⚠️🅿️
-              </span>
-              <span>
-                Les places de parking sont très limitées. Pensez à arriver
-                suffisamment en avance.
-              </span>
-            </p>
-
-            <ol className="mt-5">
+            <ol className="divide-y divide-border-soft">
               {startsAtHalfPast && (
-                <>
-                  <li className="grid grid-cols-[22px_1fr] gap-x-3 lg:grid-cols-[150px_22px_1fr] lg:gap-x-4">
-                    <p className="col-start-2 row-start-1 text-[14px] font-semibold text-foreground lg:col-start-1 lg:pt-1">
-                      09:10 – 09:30
-                    </p>
-                    <div className="col-start-1 row-span-2 row-start-1 flex flex-col items-center lg:col-start-2 lg:row-span-1">
-                      <span className="mt-1.5 h-3.5 w-3.5 shrink-0 rounded-full border-[3px] border-background bg-foreground" style={{ boxShadow: "0 0 0 2px var(--foreground)" }} />
-                      <span className="w-px flex-1 bg-border" />
-                    </div>
-                    <div className="col-start-2 row-start-2 pb-4 pt-1 lg:col-start-3 lg:row-start-1 lg:pb-5 lg:pt-0">
-                      <span className="label inline-block rounded-2xl bg-surface px-3 py-1 text-[11px] leading-snug tracking-[0.1em] text-foreground">
-                        Accueil
-                      </span>
-                      <p className="mt-1.5 text-[16px] font-semibold text-foreground">Accueil</p>
-                    </div>
-                  </li>
-                  <li className="grid grid-cols-[22px_1fr] gap-x-3 lg:grid-cols-[150px_22px_1fr] lg:gap-x-4">
-                    <p className="col-start-2 row-start-1 text-[14px] font-semibold text-foreground lg:col-start-1 lg:pt-1">09:30</p>
-                    <div className="col-start-1 row-span-2 row-start-1 flex flex-col items-center lg:col-start-2 lg:row-span-1">
-                      <span className="mt-1.5 h-3.5 w-3.5 shrink-0 rounded-full border-[3px] border-background bg-foreground" style={{ boxShadow: "0 0 0 2px var(--foreground)" }} />
-                      <span className="w-px flex-1 bg-border" />
-                    </div>
-                    <div className="col-start-2 row-start-2 pb-4 pt-1 lg:col-start-3 lg:row-start-1 lg:pb-5 lg:pt-0">
-                      <p className="text-[16px] font-semibold text-foreground">Début de la formation</p>
-                    </div>
-                  </li>
-                </>
+                <li className="grid grid-cols-[92px_minmax(0,1fr)] items-center gap-3 py-3 sm:grid-cols-[112px_minmax(0,1fr)]">
+                  <p className="text-[12px] font-semibold tabular-nums text-muted sm:text-[13px]">
+                    09:10 – 09:30
+                  </p>
+                  <p className="text-sm font-semibold text-foreground">Accueil</p>
+                </li>
               )}
-              {daySessions.map((s, i) => (
-                // L'horaire passe au-dessus du titre tant que la place manque. Le seuil est
-                // « lg » et non « sm » : entre les deux, la barre latérale réduit déjà le contenu.
+              {daySessions.map((s) => (
                 <li
                   key={s.id}
-                  className="grid grid-cols-[22px_1fr] gap-x-3 lg:grid-cols-[150px_22px_1fr] lg:gap-x-4"
+                  className="grid grid-cols-[92px_minmax(0,1fr)] gap-3 py-3 sm:grid-cols-[112px_minmax(0,1fr)]"
                 >
-                  <p className="col-start-2 row-start-1 text-[14px] font-semibold text-foreground lg:col-start-1 lg:pt-1">
+                  <p className="pt-0.5 text-[12px] font-semibold tabular-nums text-muted sm:text-[13px]">
                     {formatTimeRange(s.start_time, s.end_time)}
                   </p>
-                  <div className="col-start-1 row-span-2 row-start-1 flex flex-col items-center lg:col-start-2 lg:row-span-1">
-                    <span
-                      className="mt-1.5 h-3.5 w-3.5 shrink-0 rounded-full border-[3px] border-background"
-                      style={{
-                        background: colorFor(s.session_type, s.track),
-                        boxShadow: `0 0 0 2px ${colorFor(s.session_type, s.track)}`,
-                      }}
-                    />
-                    {i < daySessions.length - 1 && <span className="w-px flex-1 bg-border" />}
-                  </div>
-                  <div className="col-start-2 row-start-2 pb-4 pt-1 lg:col-start-3 lg:row-start-1 lg:pb-5 lg:pt-0">
+                  <div className="min-w-0 border-l-2 pl-3" style={{ borderColor: colorFor(s.session_type, s.track) }}>
                     {s.track ? (
                       <span
-                        className="label inline-block rounded-2xl px-3 py-1 text-[11px] leading-snug tracking-[0.1em] text-foreground"
-                        style={{
-                          background: `color-mix(in srgb, ${colorFor(s.session_type, s.track)} 28%, transparent)`,
-                        }}
+                        className="label block text-[9px] leading-snug tracking-[0.11em]"
+                        style={{ color: colorFor(s.session_type, s.track) }}
                       >
                         {s.track}
                       </span>
                     ) : (
                       <SessionTypeBadge type={s.session_type} />
                     )}
-                    <p className="mt-1.5 text-[16px] font-semibold text-foreground">
+                    <p className="mt-1 text-[14px] font-semibold leading-snug text-foreground sm:text-[15px]">
                       {s.courses?.title ?? s.description ?? "Séance"}
+                      {s.teacher && (
+                        <span className="font-normal text-muted"> · {s.teacher.full_name}</span>
+                      )}
                     </p>
-                    {s.teacher && (
-                      <p className="mt-0.5 text-sm text-muted">Avec {s.teacher.full_name}</p>
-                    )}
                   </div>
                 </li>
               ))}
             </ol>
 
+            <p className="mt-1 flex items-start gap-2 border-l-2 border-[#d8aa42] py-1 pl-3 text-[11px] font-semibold leading-5 text-foreground sm:text-xs">
+              <span aria-hidden="true" className="shrink-0">⚠️🅿️</span>
+              <span>Les places de parking sont limitées. Pensez à arriver 15 minutes plus tôt.</span>
+            </p>
+
             <Link
               href="/etudiant/calendrier"
-              className="label mt-1 flex w-full items-center justify-center gap-2 rounded-full bg-accent px-4 py-3 text-center text-[11px] tracking-[0.08em] text-on-accent hover:bg-[#1b2221] sm:inline-flex sm:w-auto sm:px-6 sm:text-xs sm:tracking-[0.12em]"
+              className="mt-4 inline-flex min-h-9 items-center text-sm font-semibold text-foreground transition hover:underline"
             >
-              Voir le programme de la journée →
+              Voir le programme →
             </Link>
           </>
         ) : (
