@@ -98,11 +98,11 @@ export default async function StudentDashboardPage() {
               {nextSession.room ? ` · ${nextSession.room}` : ""}
             </p>
             {showParkingNotice && (
-              <div className="mt-3 inline-flex max-w-full items-start gap-2 rounded-md bg-[#1f2927] px-3 py-2 text-[12px] leading-[1.35] text-white sm:text-[13px]">
-                <span aria-hidden="true" className="shrink-0 pt-px">⚠️🅿️</span>
-                <p>
-                  <span className="block font-semibold">Les places de parking sont très limitées.</span>
-                  <span className="block text-white/80">Pensez à arriver suffisamment en avance.</span>
+              <div className="mt-3 inline-flex max-w-full items-center gap-2.5 rounded-full bg-[#1f2927] px-3.5 py-2 text-[12px] leading-snug text-white sm:text-[13px]">
+                <span aria-hidden="true" className="shrink-0">⚠️🅿️</span>
+                <p className="font-normal text-white/85">
+                  <span className="font-semibold text-white">Les places de parking sont très limitées.</span>{" "}
+                  Pensez à arriver suffisamment en avance.
                 </p>
               </div>
             )}
