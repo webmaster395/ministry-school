@@ -130,6 +130,18 @@ export default async function PreparationPage({ params }: { params: Promise<{ id
         </p>
       </section>
 
+      <nav aria-label="Sections de préparation du cours" className="flex gap-2 overflow-x-auto rounded-2xl border border-border bg-background p-3">
+        {SECTIONS.map((section) => (
+          <a
+            key={section}
+            href={`#${section}`}
+            className={`min-h-11 shrink-0 rounded-full px-4 py-3 text-sm font-medium transition hover:bg-surface ${section === "video" ? "bg-accent text-on-accent hover:bg-[#1b2221]" : "text-foreground"}`}
+          >
+            {SECTION_LABELS[section]}
+          </a>
+        ))}
+      </nav>
+
       {isPilot && (
         <section className="rounded-2xl border border-border bg-background">
           <div className="border-b border-border-soft px-6 py-5">
