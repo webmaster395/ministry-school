@@ -5,26 +5,22 @@ import {
   getStudentAllSessions,
   getStudentAssignments,
   getStudentCompletedIds,
+  getNextRelevantSession,
   getStudentProfile,
   type StudentSession,
 } from "@/lib/data/student";
 import { formatSessionDate } from "@/lib/format";
 import { getMinistry, INK, sessionColor } from "@/lib/ministry";
 import TravailTabs from "@/components/TravailTabs";
-import FirstDayCard from "@/components/FirstDayCard";
-import { FIRST_DAY } from "@/lib/promotion";
 import { toggleAssignment } from "./actions";
 
 type Tab = "prochaine" | "plus-tard" | "termines";
 
 type Assignment = Awaited<ReturnType<typeof getStudentAssignments>>[number];
 
-function dueLabel(due: string | null) {
-  if (!due) return null;
-  const d = new Date(due);
-  const day = d.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
-  const time = d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
-  return `Échéance ${day}, ${time}`;
+function dueLabel(date: string | null) {
+  if (!date) return "Échéance à venir";
+  return `À faire pour le ${formatSessionDate(date).toLowerCase()}`;
 }
 
 export default async function StudentWorkPage({
@@ -33,7 +29,8 @@ export default async function StudentWorkPage({
   searchParams: Promise<{ onglet?: string }>;
 }) {
   const { onglet } = await searchParams;
-  const tab: Tab = onglet === "plus-tard" || onglet === "termines" ? onglet : "prochaine";
+  const tab: Tab =
+    onglet === "plus-tard" || onglet === "termines" ? onglet : "prochaine";
 
   const supabase = await createClient();
   const {
@@ -45,51 +42,90 @@ export default async function StudentWorkPage({
     getStudentProfile(supabase, user!.id),
     getStudentCompletedIds(supabase, user!.id),
   ]);
-  // La première journée n'a aucun devoir : une carte d'information pratique la remplace
-  const firstDaySessionIds = new Set(sessions.filter((s) => s.session_date === FIRST_DAY).map((s) => s.id));
-  const assignments = (
-    await getStudentAssignments(
-      supabase,
-      sessions.map((s) => s.id)
-    )
-  ).filter((a) => !firstDaySessionIds.has(a.session_id));
+  const assignments = await getStudentAssignments(
+    supabase,
+    sessions.map((s) => s.id),
+  );
 
-  const today = new Date().toISOString().slice(0, 10);
-  const nextDate = sessions.find((s) => s.session_date >= today)?.session_date ?? null;
   const ministryColor = getMinistry(ministrySlug)?.color ?? INK;
   const sessionById = new Map(sessions.map((s) => [s.id, s]));
-
-  const dateOf = (a: Assignment) => sessionById.get(a.session_id)?.session_date ?? "";
   const isDone = (a: Assignment) => doneIds.has(a.id);
-
-  const nextDay = nextDate ? assignments.filter((a) => dateOf(a) === nextDate) : [];
-  const nextDayTodo = nextDay.filter((a) => !isDone(a));
-  const later = nextDate ? assignments.filter((a) => dateOf(a) > nextDate && !isDone(a)) : [];
-  const finished = assignments.filter(isDone);
-
-  const shown = tab === "prochaine" ? nextDayTodo : tab === "plus-tard" ? later : finished;
+  const work = assignments.flatMap((assignment) => {
+    const origin = sessionById.get(assignment.session_id);
+    if (!origin) return [];
+    const phase = "phase" in assignment ? assignment.phase : null;
+    const after = phase
+      ? phase === "after"
+      : !!assignment.due_at &&
+        new Date(assignment.due_at) >
+          new Date(`${origin.session_date}T${origin.end_time}`);
+    const target = after ? getNextRelevantSession(origin, sessions) : origin;
+    return [
+      { assignment, origin, targetDate: target?.session_date ?? null, after },
+    ];
+  });
+  const open = work.filter(({ assignment }) => !isDone(assignment));
+  const knownDates = open
+    .map((item) => item.targetDate)
+    .filter((date): date is string => !!date)
+    .sort();
+  const nextDate = knownDates[0] ?? null;
+  const nextDayTodo = open.filter(
+    (item) => item.targetDate === nextDate || item.targetDate === null,
+  );
+  const later = open.filter(
+    (item) => item.targetDate !== null && item.targetDate !== nextDate,
+  );
+  const finished = work.filter(({ assignment }) => isDone(assignment));
+  const shown =
+    tab === "prochaine" ? nextDayTodo : tab === "plus-tard" ? later : finished;
 
   // Regroupement par séance, dans l'ordre chronologique
-  const groups = new Map<string, Assignment[]>();
-  for (const a of shown) groups.set(a.session_id, [...(groups.get(a.session_id) ?? []), a]);
+  const groups = new Map<string, typeof shown>();
+  for (const item of shown)
+    groups.set(item.origin.id, [...(groups.get(item.origin.id) ?? []), item]);
   const orderedGroups = [...groups.entries()]
-    .map(([id, items]) => ({ session: sessionById.get(id) as StudentSession, items }))
+    .map(([id, items]) => ({
+      session: sessionById.get(id) as StudentSession,
+      items,
+    }))
     .filter((g) => g.session)
     .sort(
       (a, b) =>
         a.session.session_date.localeCompare(b.session.session_date) ||
-        a.session.start_time.localeCompare(b.session.start_time)
+        a.session.start_time.localeCompare(b.session.start_time),
     );
 
-  const doneOnNextDay = nextDay.filter(isDone).length;
-  const percent = nextDay.length ? (doneOnNextDay / nextDay.length) * 100 : 0;
-  const nextSession = nextDate ? sessions.find((s) => s.session_date === nextDate) : null;
-  const isFirstDay = nextDate === FIRST_DAY;
+  const nextItems = work.filter((item) => item.targetDate === nextDate);
+  const doneOnNextDay = nextItems.filter(({ assignment }) =>
+    isDone(assignment),
+  ).length;
+  const percent = nextItems.length
+    ? (doneOnNextDay / nextItems.length) * 100
+    : 0;
+  const nextSession = nextDate
+    ? sessions.find((s) => s.session_date === nextDate)
+    : null;
 
   const tabs: { key: Tab; label: string; count: number; href: string }[] = [
-    { key: "prochaine", label: "Prochaine session", count: nextDayTodo.length, href: "/etudiant/travail" },
-    { key: "plus-tard", label: "Plus tard", count: later.length, href: "/etudiant/travail?onglet=plus-tard" },
-    { key: "termines", label: "Terminés", count: finished.length, href: "/etudiant/travail?onglet=termines" },
+    {
+      key: "prochaine",
+      label: "Prochaine session",
+      count: nextDayTodo.length,
+      href: "/etudiant/travail",
+    },
+    {
+      key: "plus-tard",
+      label: "Plus tard",
+      count: later.length,
+      href: "/etudiant/travail?onglet=plus-tard",
+    },
+    {
+      key: "termines",
+      label: "Terminés",
+      count: finished.length,
+      href: "/etudiant/travail?onglet=termines",
+    },
   ];
 
   return (
@@ -100,9 +136,7 @@ export default async function StudentWorkPage({
 
       <TravailTabs tabs={tabs} active={tab} />
 
-      {tab === "prochaine" && isFirstDay && <FirstDayCard />}
-
-      {tab === "prochaine" && nextSession && !isFirstDay && (
+      {tab === "prochaine" && nextSession && (
         <section className="flex flex-wrap items-end justify-between gap-6 rounded-lg border border-border bg-background p-6">
           <div>
             <p className="text-sm text-muted">Prochaine journée</p>
@@ -116,10 +150,14 @@ export default async function StudentWorkPage({
           </div>
           <div className="w-full max-w-[240px]">
             <p className="text-sm font-semibold text-foreground">
-              {doneOnNextDay} sur {nextDay.length} terminé{doneOnNextDay > 1 ? "s" : ""}
+              {doneOnNextDay} sur {nextItems.length} terminé
+              {doneOnNextDay > 1 ? "s" : ""}
             </p>
             <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-surface">
-              <div className="h-full rounded-full bg-accent" style={{ width: `${percent}%` }} />
+              <div
+                className="h-full rounded-full bg-accent"
+                style={{ width: `${percent}%` }}
+              />
             </div>
           </div>
         </section>
@@ -130,7 +168,10 @@ export default async function StudentWorkPage({
           const color = sessionColor(s.track, s.session_type, ministryColor);
           const detailHref = `/etudiant/seances/${s.id}`;
           return (
-            <section key={s.id} className="rounded-lg border border-border bg-background p-6">
+            <section
+              key={s.id}
+              className="rounded-lg border border-border bg-background p-6"
+            >
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border-soft pb-4">
                 <Link
                   href={detailHref}
@@ -139,7 +180,9 @@ export default async function StudentWorkPage({
                   {s.track && (
                     <span
                       className="label rounded-full px-3 py-1 text-[11px] tracking-[0.1em] text-foreground"
-                      style={{ background: `color-mix(in srgb, ${color} 28%, transparent)` }}
+                      style={{
+                        background: `color-mix(in srgb, ${color} 28%, transparent)`,
+                      }}
                     >
                       {s.track}
                     </span>
@@ -154,26 +197,43 @@ export default async function StudentWorkPage({
                 </Link>
 
                 {tab !== "prochaine" && (
-                  <span className="text-sm text-muted">{formatSessionDate(s.session_date)}</span>
+                  <span className="text-sm text-muted">
+                    {formatSessionDate(s.session_date)}
+                  </span>
                 )}
               </div>
 
               <ul className="divide-y divide-border-soft">
-                {items.map((a) => {
+                {items.map(({ assignment: a, targetDate, after }) => {
                   const done = isDone(a);
                   const meta = [
                     a.kind,
                     a.duration_min ? `${a.duration_min} min` : null,
-                    dueLabel(a.due_at),
+                    dueLabel(targetDate),
                   ].filter(Boolean);
                   return (
                     <li key={a.id}>
-                      <form action={toggleAssignment} className="flex items-center gap-4 py-4">
-                        <input type="hidden" name="assignment_id" value={a.id} />
-                        <input type="hidden" name="done" value={done ? "1" : "0"} />
+                      <form
+                        action={toggleAssignment}
+                        className="flex items-center gap-4 py-4"
+                      >
+                        <input
+                          type="hidden"
+                          name="assignment_id"
+                          value={a.id}
+                        />
+                        <input
+                          type="hidden"
+                          name="done"
+                          value={done ? "1" : "0"}
+                        />
                         <button
                           type="submit"
-                          aria-label={done ? "Marquer comme à faire" : "Marquer comme fait"}
+                          aria-label={
+                            done
+                              ? "Marquer comme à faire"
+                              : "Marquer comme fait"
+                          }
                           className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md border transition ${
                             done
                               ? "border-foreground bg-accent text-on-accent"
@@ -183,17 +243,31 @@ export default async function StudentWorkPage({
                           {done && <Check size={15} strokeWidth={2.4} />}
                         </button>
                         <div className="min-w-0">
-                          <p
-                            className={`text-[16px] font-semibold ${
-                              done ? "text-muted line-through" : "text-foreground"
+                          <Link
+                            href={`${detailHref}#${after ? "after-course" : "before-course"}`}
+                            className={`text-[16px] font-semibold hover:underline ${
+                              done
+                                ? "text-muted line-through"
+                                : "text-foreground"
                             }`}
                           >
-                            {a.instructions}
+                            {("title" in a ? a.title : null) || a.instructions}
+                          </Link>
+                          <p className="mt-0.5 text-sm text-muted">
+                            {s.courses?.title ?? s.description ?? "Cours"}
+                            {s.track ? ` · ${s.track}` : ""}
                           </p>
                           {meta.length > 0 && (
-                            <p className="mt-0.5 text-sm text-muted">{meta.join(" · ")}</p>
+                            <p className="mt-0.5 text-sm text-muted">
+                              {meta.join(" · ")}
+                            </p>
                           )}
                         </div>
+                        <span
+                          className={`ml-auto shrink-0 rounded-full px-3 py-1 text-xs font-medium ${done ? "bg-emerald-50 text-emerald-800" : "bg-surface text-foreground"}`}
+                        >
+                          {done ? "Terminé" : "À faire"}
+                        </span>
                       </form>
                     </li>
                   );
@@ -203,7 +277,6 @@ export default async function StudentWorkPage({
           );
         })
       ) : (
-        !(tab === "prochaine" && isFirstDay) && (
         <section className="rounded-lg border border-border bg-background p-6">
           <p className="text-[15px] text-muted">
             {tab === "termines"
@@ -213,7 +286,6 @@ export default async function StudentWorkPage({
                 : "Rien à préparer pour la prochaine session."}
           </p>
         </section>
-        )
       )}
     </div>
   );

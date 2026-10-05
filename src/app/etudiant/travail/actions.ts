@@ -15,15 +15,34 @@ export async function toggleAssignment(formData: FormData) {
   const isDone = formData.get("done") === "1";
 
   if (isDone) {
-    await supabase
-      .from("assignment_completions")
-      .delete()
-      .eq("assignment_id", assignmentId)
-      .eq("user_id", user.id);
+    await Promise.all([
+      supabase
+        .from("assignment_completions")
+        .delete()
+        .eq("assignment_id", assignmentId)
+        .eq("user_id", user.id),
+      supabase
+        .from("assignment_step_completions")
+        .delete()
+        .eq("assignment_id", assignmentId)
+        .eq("user_id", user.id),
+    ]);
   } else {
     await supabase
       .from("assignment_completions")
       .upsert({ assignment_id: assignmentId, user_id: user.id });
+    const { data: steps } = await supabase
+      .from("assignment_steps")
+      .select("id")
+      .eq("assignment_id", assignmentId);
+    if (steps?.length)
+      await supabase.from("assignment_step_completions").upsert(
+        steps.map((step) => ({
+          assignment_id: assignmentId,
+          step_id: step.id,
+          user_id: user.id,
+        })),
+      );
   }
 
   revalidatePath("/etudiant/travail");

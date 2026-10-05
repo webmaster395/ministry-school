@@ -621,7 +621,13 @@ export default function CourseExperience({
                     title: step.title,
                     body: step.instructions,
                   }))}
-                completedIds={completedStepIds}
+                completedIds={
+                  completedIds.has(assignment.id)
+                    ? assignmentSteps
+                        .filter((step) => step.assignment_id === assignment.id)
+                        .map((step) => step.id)
+                    : completedStepIds
+                }
                 accent={session.accent}
               />
             ))}
