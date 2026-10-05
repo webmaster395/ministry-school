@@ -240,6 +240,32 @@ export async function updateAssignment(formData: FormData) {
   refreshPrep(str(formData, "session_id"));
 }
 
+/** Duplique une étape pour accélérer la création d'un parcours en plusieurs parties. */
+export async function duplicateAssignment(formData: FormData) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Non authentifié");
+  const id = str(formData, "id");
+  const sessionId = str(formData, "session_id");
+  const { data: source, error: readError } = await supabase
+    .from("assignments")
+    .select("title,description,instructions,content_type,resource_url,file_url,phase,sort_order,kind,duration_min,due_at")
+    .eq("id", id)
+    .single();
+  if (readError || !source) throw new Error("Le travail à dupliquer est introuvable.");
+  const { error } = await supabase.from("assignments").insert({
+    ...source,
+    session_id: sessionId,
+    title: `${source.title ?? "Travail"} — copie`,
+    sort_order: (source.sort_order ?? 0) + 1,
+    created_by: user.id,
+  });
+  if (error) throw new Error("La duplication a échoué : " + error.message);
+  refreshPrep(sessionId);
+}
+
 /** Corrige le titre et le lien d'un support (le fichier déposé reste tel quel). */
 export async function updateSupport(formData: FormData) {
   const supabase = await createClient();

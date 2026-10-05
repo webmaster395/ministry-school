@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { FileText, X } from "lucide-react";
+import { ChevronDown, ChevronUp, Clock3, Copy, ExternalLink, FileText, Pencil, Trash2, X } from "lucide-react";
 import ResourceDialog from "@/components/ResourceDialog";
 import MaterialLink from "@/components/MaterialLink";
 import FormSubmitButton from "@/components/FormSubmitButton";
@@ -8,6 +8,7 @@ import {
   addObjective,
   addPilotAssignment,
   deleteAssignment,
+  duplicateAssignment,
   deleteSupport,
   removeObjective,
   updateAssignment,
@@ -100,32 +101,43 @@ export function teacherPanels(s: PilotSession, assignments: Assignment[], materi
 
   const assignmentList = (rows: Assignment[]) =>
     rows.length > 0 && (
-      <ul className="mb-4 divide-y divide-border-soft">
+      <ul className="mb-5 space-y-3">
         {rows.map((a, rowIndex) => (
-          <li key={a.id} className="flex flex-wrap items-start gap-3 py-3">
-            <FileText size={20} className="shrink-0 text-foreground" strokeWidth={1.6} />
-            <span className="min-w-0 flex-1">
-              <span className="block text-[16px] font-semibold text-foreground">{a.title || a.instructions}</span>
-              {a.title && a.instructions !== a.title && <span className="mt-1 block text-[14px] text-muted">{a.instructions}</span>}
-              {a.description && <span className="mt-1 block text-[14px] text-muted">{a.description}</span>}
-              {(a.content_type || a.kind || a.duration_min) && (
-                <span className="block text-[14px] text-muted">
-                  {[a.content_type, a.kind, a.duration_min ? `${a.duration_min} min` : null].filter(Boolean).join(" · ")}
-                </span>
-              )}
-            </span>
-            <div className="flex shrink-0 flex-col items-end gap-1">
-              <form action={moveAssignment} className="flex gap-1"><input type="hidden" name="id" value={a.id} /><input type="hidden" name="session_id" value={s.id} /><button name="direction" value="up" disabled={rowIndex === 0} className="px-1 text-muted disabled:opacity-25">↑</button><button name="direction" value="down" disabled={rowIndex === rows.length - 1} className="px-1 text-muted disabled:opacity-25">↓</button></form>
-              <Remove action={deleteAssignment} fields={{ id: a.id, session_id: s.id }} />
-              <Edit action={updateAssignment}>
+          <li key={a.id} className="rounded-xl border border-border bg-background p-4">
+            <div className="flex items-start gap-3">
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-surface text-xs font-semibold text-muted">{rowIndex + 1}</span>
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="rounded-full bg-surface px-2.5 py-1 text-[11px] font-medium text-muted">{a.content_type || "Travail"}</span>
+                  <h5 className="font-semibold text-foreground">{a.title || a.instructions}</h5>
+                </div>
+                {a.instructions && a.instructions !== a.title && <p className="mt-2 line-clamp-2 whitespace-pre-line text-sm leading-6 text-muted">{a.instructions.replace(/^#{1,6}\s+/gm, "").replace(/\*\*/g, "")}</p>}
+                <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
+                  {a.duration_min && <span className="inline-flex items-center gap-1"><Clock3 size={13} />{a.duration_min} min</span>}
+                  {(a.resource_url || a.file_url) && <span className="inline-flex items-center gap-1"><ExternalLink size={13} />Ressource jointe</span>}
+                </div>
+              </div>
+              <div className="flex shrink-0 items-center gap-1">
+                <form action={moveAssignment} className="flex"><input type="hidden" name="id" value={a.id} /><input type="hidden" name="session_id" value={s.id} /><button name="direction" value="up" disabled={rowIndex === 0} aria-label="Monter" className="rounded-lg p-2 text-muted hover:bg-surface disabled:opacity-25"><ChevronUp size={16} /></button><button name="direction" value="down" disabled={rowIndex === rows.length - 1} aria-label="Descendre" className="rounded-lg p-2 text-muted hover:bg-surface disabled:opacity-25"><ChevronDown size={16} /></button></form>
+              </div>
+            </div>
+            <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border-soft pt-3">
+              <details className="group flex-1">
+                <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium text-foreground hover:bg-surface"><Pencil size={14} />Modifier</summary>
+                <form action={updateAssignment} className="mt-3 grid gap-2.5 rounded-xl bg-surface p-3 sm:grid-cols-2">
                 <input type="hidden" name="id" value={a.id} />
                 <input type="hidden" name="session_id" value={s.id} />
-                <input name="title" required defaultValue={a.title ?? a.instructions} className={`${field} min-w-[200px] flex-1`} />
-                <input name="instructions" required defaultValue={a.instructions} className={`${field} min-w-[220px] flex-1`} />
-                <input name="description" defaultValue={a.description ?? ""} placeholder="Description" className={`${field} min-w-[220px] flex-1`} />
-                <input name="resource_url" type="url" defaultValue={a.resource_url ?? ""} placeholder="Lien facultatif" className={`${field} min-w-[220px] flex-1`} />
-                <input name="duration_min" type="number" min={1} placeholder="min" defaultValue={a.duration_min ?? ""} className={`${field} w-[88px]`} />
-              </Edit>
+                <input name="title" required defaultValue={a.title ?? a.instructions} placeholder="Titre" className={field} />
+                <select name="content_type" defaultValue={a.content_type ?? "Travail personnel"} className={field}><option>Travail personnel</option><option>Consigne</option><option>Lecture</option><option>Vidéo</option><option>PDF</option><option>Lien</option><option>Question de réflexion</option><option>Exercice</option><option>Devoir</option></select>
+                <textarea name="instructions" required rows={4} defaultValue={a.instructions} placeholder="Consigne" className={`${field} sm:col-span-2`} />
+                <textarea name="description" rows={2} defaultValue={a.description ?? ""} placeholder="Description facultative" className={`${field} sm:col-span-2`} />
+                <input name="resource_url" type="url" defaultValue={a.resource_url ?? ""} placeholder="Lien facultatif" className={field} />
+                <input name="duration_min" type="number" min={1} placeholder="Durée estimée (min)" defaultValue={a.duration_min ?? ""} className={field} />
+                <FormSubmitButton className={`${save} sm:col-span-2 sm:justify-self-start`} />
+                </form>
+              </details>
+              <form action={duplicateAssignment}><input type="hidden" name="id" value={a.id} /><input type="hidden" name="session_id" value={s.id} /><button type="submit" className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium text-muted hover:bg-surface hover:text-foreground"><Copy size={14} />Dupliquer</button></form>
+              <form action={deleteAssignment}><input type="hidden" name="id" value={a.id} /><input type="hidden" name="session_id" value={s.id} /><button type="submit" className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium text-muted hover:bg-red-50 hover:text-red-700"><Trash2 size={14} />Supprimer</button></form>
             </div>
           </li>
         ))}
@@ -133,17 +145,20 @@ export function teacherPanels(s: PilotSession, assignments: Assignment[], materi
     );
 
   const quickAdd = (placeholder: string, button: string, phase: "before" | "after", due?: string) => (
-    <form action={addPilotAssignment} className="grid gap-3 rounded-xl bg-surface p-4 sm:grid-cols-2">
+    <details className="group rounded-xl border border-dashed border-border bg-background">
+      <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-foreground transition hover:bg-surface">＋ {button}</summary>
+      <form action={addPilotAssignment} className="grid gap-2.5 border-t border-border-soft p-4 sm:grid-cols-2">
       <input type="hidden" name="session_id" value={s.id} />
       {due && <input type="hidden" name="due_at" value={due} />}
       <input type="hidden" name="phase" value={phase} />
       <input name="title" required placeholder={placeholder} className={field} />
-      <select name="content_type" defaultValue="Consigne" className={field}><option>Consigne</option><option>Lecture</option><option>Vidéo</option><option>PDF</option><option>Lien</option><option>Question de réflexion</option><option>Exercice</option><option>Devoir</option></select>
+      <select name="content_type" defaultValue={phase === "after" ? "Travail personnel" : "Consigne"} className={field}><option>Travail personnel</option><option>Consigne</option><option>Lecture</option><option>Vidéo</option><option>PDF</option><option>Lien</option><option>Question de réflexion</option><option>Exercice</option><option>Devoir</option></select>
       <textarea name="instructions" required rows={3} placeholder="Consigne donnée à l’étudiant" className={`${field} sm:col-span-2`} />
       <input name="resource_url" type="url" placeholder="Lien facultatif" className={field} />
       <input name="duration_min" type="number" min={1} placeholder="Durée estimée (min)" className={field} />
-      <button type="submit" className={`${soft} sm:col-span-2 sm:justify-self-start`}>{button}</button>
-    </form>
+      <button type="submit" className={`${save} sm:col-span-2 sm:justify-self-start`}>Ajouter</button>
+      </form>
+    </details>
   );
 
   return {

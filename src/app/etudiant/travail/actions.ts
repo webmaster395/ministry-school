@@ -28,4 +28,5 @@ export async function toggleAssignment(formData: FormData) {
 
   revalidatePath("/etudiant/travail");
   revalidatePath("/etudiant");
+  revalidatePath("/etudiant/seances", "layout");
 }
