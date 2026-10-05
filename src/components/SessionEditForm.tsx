@@ -65,7 +65,7 @@ export default function SessionEditForm({
         </div>
 
         <input type="hidden" name="location" value={s.location} />
-        <div className="grid gap-3 sm:grid-cols-2"><div><p className="text-sm font-medium text-foreground">Lieu</p><p className="mt-1.5 rounded-md bg-surface px-3 py-2.5 text-sm text-muted">{s.location}</p></div><label className="block text-sm font-medium text-foreground">Salle<select name="room" defaultValue={s.room ?? "Giroud"} className={`${field} mt-1.5`}><option>Giroud</option><option>Rosa Parks</option><option>Denis</option></select></label></div>
+        <div className="grid gap-3 sm:grid-cols-2"><div><p className="text-sm font-medium text-foreground">Lieu</p><p className="mt-1.5 rounded-md bg-surface px-3 py-2.5 text-sm text-muted">{s.location}</p></div><label className="block text-sm font-medium text-foreground">Salle<input name="room" defaultValue={s.room ?? ""} placeholder="Saisir le nom de la salle" className={`${field} mt-1.5`} /></label></div>
 
         {admin && (
           <>
