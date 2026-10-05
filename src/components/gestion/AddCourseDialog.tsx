@@ -116,6 +116,15 @@ export default function AddCourseDialog({ ministryId, drafts = false }: { minist
               <textarea id="course-objectives" name="objectives" rows={3} className={field} />
             </div>
 
+            <label className="flex items-start gap-3 rounded-lg border border-border bg-background px-3.5 py-3 text-sm text-foreground">
+              <input type="hidden" name="show_parking_notice" value="0" />
+              <input type="checkbox" name="show_parking_notice" value="1" defaultChecked className="mt-0.5 h-4 w-4 accent-foreground" />
+              <span>
+                <strong className="block font-semibold">Afficher l’information parking</strong>
+                <span className="mt-0.5 block text-xs text-muted">Visible sur l’accueil étudiant pour cette journée.</span>
+              </span>
+            </label>
+
             </div>
 
             <div className="sticky bottom-0 z-10 space-y-3 rounded-b-2xl border-t border-border bg-surface px-5 py-4 sm:px-7">

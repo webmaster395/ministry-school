@@ -56,7 +56,7 @@ export default async function PreparationPage({
   const { data } = await supabase
     .from("sessions")
     .select(
-      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, video_url, session_type, course_id, day, teacher_id, ministry_id, teacher:profiles!sessions_teacher_id_fkey(full_name)" +
+      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, video_url, show_parking_notice, session_type, course_id, day, teacher_id, ministry_id, teacher:profiles!sessions_teacher_id_fkey(full_name)" +
         DRAFT_COLUMN,
     )
     .eq("id", id)

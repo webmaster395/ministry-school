@@ -195,6 +195,21 @@ export default async function AdminSessionsPage() {
             <textarea name="bible_refs" rows={4} className="w-full rounded-md border border-border px-3 py-2 text-sm" />
           </div>
 
+          <label className="flex items-start gap-3 rounded-md border border-border bg-surface px-3 py-3 text-sm text-foreground sm:col-span-2">
+            <input type="hidden" name="show_parking_notice" value="0" />
+            <input
+              type="checkbox"
+              name="show_parking_notice"
+              value="1"
+              defaultChecked
+              className="mt-0.5 h-4 w-4 accent-foreground"
+            />
+            <span>
+              <strong className="block font-semibold">Afficher l’information parking</strong>
+              <span className="mt-0.5 block text-xs text-muted">Elle apparaîtra sur l’accueil étudiant avec la prochaine journée.</span>
+            </span>
+          </label>
+
           <button
             type="submit"
             className="rounded-md label bg-accent px-4 py-2.5 text-xs tracking-[0.12em] text-on-accent transition hover:bg-[#1b2221] sm:col-span-2 sm:w-fit"

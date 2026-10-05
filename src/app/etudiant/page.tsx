@@ -41,6 +41,7 @@ export default async function StudentDashboardPage() {
     ? allSessions.filter((s) => s.session_date === nextSession.session_date)
     : [];
   const startsAtHalfPast = daySessions[0]?.start_time.startsWith("09:30") ?? false;
+  const showParkingNotice = daySessions.some((session) => session.show_parking_notice);
   const daysLeft = nextSession
     ? Math.max(
         0,
@@ -92,15 +93,15 @@ export default async function StudentDashboardPage() {
               {nextSession.location}
               {nextSession.room ? ` · ${nextSession.room}` : ""}
             </p>
-            <p className="mt-3 flex items-start gap-2 rounded-lg bg-[#1f2927] px-3.5 py-2.5 text-[12px] font-medium leading-5 text-white shadow-[0_6px_18px_rgba(31,43,40,0.12)] sm:items-center sm:text-[13px]">
-              <span aria-hidden="true" className="shrink-0">
-                ⚠️🅿️
-              </span>
-              <span>
-                Les places de parking sont très limitées. Pensez à arriver
-                suffisamment en avance.
-              </span>
-            </p>
+            {showParkingNotice && (
+              <div className="mt-3 flex items-start gap-2 rounded-lg bg-[#1f2927] px-3.5 py-2.5 text-[12px] leading-5 text-white shadow-[0_6px_18px_rgba(31,43,40,0.12)] sm:text-[13px]">
+                <span aria-hidden="true" className="shrink-0">⚠️🅿️</span>
+                <p>
+                  <strong className="block font-semibold">Les places de parking sont très limitées.</strong>
+                  <strong className="block font-semibold">Pensez à arriver suffisamment en avance.</strong>
+                </p>
+              </div>
+            )}
 
             <ol className="mt-5">
               {startsAtHalfPast && (

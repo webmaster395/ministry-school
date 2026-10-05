@@ -151,6 +151,7 @@ export async function createCourse(
     speaker_name: text("speaker_name") || null,
     summary: text("summary") || null,
     objectives: text("objectives") || null,
+    show_parking_notice: formData.getAll("show_parking_notice").includes("1"),
     ...(DRAFTS_ENABLED && { is_draft: draft }),
   });
   if (error)

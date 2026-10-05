@@ -99,13 +99,14 @@ export type AdminSession = {
   summary: string | null;
   objectives: string | null;
   bible_refs: string | null;
+  show_parking_notice: boolean;
 };
 
 export async function getAllSessions(supabase: SupabaseClient) {
   const { data } = await supabase
     .from("sessions")
     .select(
-      "id, session_date, start_time, end_time, location, room, session_type, description, track, speaker_name, summary, objectives, bible_refs, ministries(name), courses(title), teacher:profiles!sessions_teacher_id_fkey(full_name)"
+      "id, session_date, start_time, end_time, location, room, session_type, description, track, speaker_name, summary, objectives, bible_refs, show_parking_notice, ministries(name), courses(title), teacher:profiles!sessions_teacher_id_fkey(full_name)"
     )
     .order("session_date", { ascending: true })
     .order("start_time", { ascending: true });

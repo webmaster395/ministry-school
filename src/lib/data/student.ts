@@ -21,10 +21,11 @@ export type StudentSession = {
   bible_refs?: string | null;
   video_url?: string | null;
   cover_image_path?: string | null;
+  show_parking_notice?: boolean;
 };
 
 const SESSION_FIELDS =
-  "id, session_date, start_time, end_time, location, room, day, session_type, description, objectives, speaker_name, track, summary, bible_refs, course_id, courses(id, title), teacher:profiles!sessions_teacher_id_fkey(full_name)";
+  "id, session_date, start_time, end_time, location, room, day, session_type, description, objectives, speaker_name, track, summary, bible_refs, show_parking_notice, course_id, courses(id, title), teacher:profiles!sessions_teacher_id_fkey(full_name)";
 
 export async function getStudentProfile(
   supabase: SupabaseClient,

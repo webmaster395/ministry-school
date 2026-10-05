@@ -36,6 +36,7 @@ export async function createSession(formData: FormData) {
     summary: text("summary"),
     objectives: text("objectives"),
     bible_refs: text("bible_refs"),
+    show_parking_notice: formData.getAll("show_parking_notice").includes("1"),
   });
 
   if (error) {

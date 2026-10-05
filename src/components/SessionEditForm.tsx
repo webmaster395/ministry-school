@@ -21,6 +21,7 @@ export type EditableSession = {
   ministry_id?: string | null;
   course_id?: string | null;
   day?: string | null;
+  show_parking_notice?: boolean;
 };
 
 export type AdminOptions = {
@@ -153,6 +154,21 @@ export default function SessionEditForm({
           <label className="mb-1 block text-xs text-muted">Références bibliques (une par ligne, ex : Jean 15:1-8)</label>
           <textarea name="bible_refs" rows={3} defaultValue={s.bible_refs ?? ""} className={field} />
         </div>
+
+        <label className="flex items-start gap-3 rounded-md border border-border bg-background px-3 py-3 text-sm text-foreground sm:col-span-2">
+          <input type="hidden" name="show_parking_notice" value="0" />
+          <input
+            type="checkbox"
+            name="show_parking_notice"
+            value="1"
+            defaultChecked={s.show_parking_notice !== false}
+            className="mt-0.5 h-4 w-4 accent-foreground"
+          />
+          <span>
+            <strong className="block font-semibold">Afficher l’information parking</strong>
+            <span className="mt-0.5 block text-xs text-muted">Visible sur l’accueil étudiant lorsque cette journée est la prochaine.</span>
+          </span>
+        </label>
 
         <button
           type="submit"
