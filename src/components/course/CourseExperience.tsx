@@ -551,11 +551,9 @@ export default function CourseExperience({
               <h2 className="font-title mt-2 text-2xl text-foreground sm:text-[28px]">
                 Ressources du cours
               </h2>
-              <div
-                className={`mt-6 grid items-start gap-4 ${session.videoUrl && materials.length > 0 ? "sm:grid-cols-2" : ""}`}
-              >
+              <div className="mt-6 space-y-5">
                 {session.videoUrl && (
-                  <article className="max-w-sm overflow-hidden rounded-xl border border-border bg-background">
+                  <article className="w-full max-w-2xl overflow-hidden rounded-xl border border-border bg-background">
                     <div className="aspect-video bg-black">
                       {embed ? (
                         <iframe
@@ -586,7 +584,7 @@ export default function CourseExperience({
                   </article>
                 )}
                 {materials.length > 0 && (
-                  <div className="space-y-3">
+                  <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                     {materials.map((material) => {
                       const Icon = resourceIcon(material.resource_type);
                       const url = material.link_url || material.file_url;

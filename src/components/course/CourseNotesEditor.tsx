@@ -1,7 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Bold, Check, Copy, Highlighter, Mail, Underline } from "lucide-react";
+import Link from "next/link";
+import {
+  Bold,
+  Check,
+  ChevronDown,
+  Copy,
+  Highlighter,
+  Mail,
+  Underline,
+} from "lucide-react";
 import { emailCourseNote, saveCourseNote } from "@/app/etudiant/notes/actions";
 
 type SaveState = "idle" | "saving" | "saved" | "error";
@@ -22,6 +31,7 @@ export default function CourseNotesEditor({
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [state, setState] = useState<SaveState>("idle");
   const [message, setMessage] = useState("");
+  const [open, setOpen] = useState(true);
 
   useEffect(() => {
     if (initialized.current || !editor.current) return;
@@ -85,9 +95,16 @@ export default function CourseNotesEditor({
 
   return (
     <section className="overflow-hidden rounded-2xl border border-border bg-background shadow-[0_10px_35px_rgba(39,48,47,0.06)]">
-      <header className="flex flex-wrap items-center justify-between gap-2 border-b border-border-soft px-4 py-3">
-        <div>
-          <h2 className="font-title text-lg text-foreground">{heading}</h2>
+      <header className={`flex items-center justify-between gap-2 px-4 py-3 ${open ? "border-b border-border-soft" : ""}`}>
+        <button
+          type="button"
+          onClick={() => setOpen((value) => !value)}
+          aria-expanded={open}
+          aria-controls={`course-notes-${sessionId}`}
+          className="flex min-h-10 min-w-0 flex-1 items-center justify-between gap-3 rounded-lg text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+        >
+          <span className="min-w-0">
+            <span className="font-title block text-lg text-foreground">{heading}</span>
           <p className="mt-0.5 text-[11px] text-muted">
             {state === "saving" && "Enregistrement…"}
             {state === "saved" && (
@@ -98,20 +115,27 @@ export default function CourseNotesEditor({
             {state === "error" && "Échec de l’enregistrement — réessaie"}
             {state === "idle" && "Sauvegarde automatique"}
           </p>
-        </div>
+          </span>
+          <ChevronDown
+            size={18}
+            aria-hidden="true"
+            className={`shrink-0 text-muted transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          />
+        </button>
         {showLibraryLink && (
-          <a
+          <Link
             href="/etudiant/notes"
             className="text-xs font-semibold text-foreground hover:underline"
           >
             Toutes mes notes
-          </a>
+          </Link>
         )}
       </header>
-      <div
-        className="flex flex-wrap gap-0.5 border-b border-border-soft px-3 py-2"
-        aria-label="Mise en forme des notes"
-      >
+      <div id={`course-notes-${sessionId}`} hidden={!open}>
+        <div
+          className="flex flex-wrap gap-0.5 border-b border-border-soft px-3 py-2"
+          aria-label="Mise en forme des notes"
+        >
         <button
           type="button"
           onClick={() => run("formatBlock", "h2")}
@@ -152,19 +176,19 @@ export default function CourseNotesEditor({
         >
           <Highlighter size={16} />
         </button>
-      </div>
-      <div
-        ref={editor}
-        contentEditable
-        suppressContentEditableWarning
-        role="textbox"
-        aria-multiline="true"
-        aria-label="Notes personnelles du cours"
-        data-placeholder="Écris librement pendant le cours…"
-        onInput={scheduleSave}
-        className="course-notes-editor min-h-[270px] max-h-[56vh] overflow-y-auto px-5 py-4 text-[15px] leading-7 text-foreground outline-none empty:before:pointer-events-none empty:before:text-muted/70 empty:before:content-[attr(data-placeholder)] [&_h2]:mb-2 [&_h2]:mt-5 [&_h2]:text-xl [&_h2]:font-semibold [&_h3]:mb-1 [&_h3]:mt-4 [&_h3]:text-base [&_h3]:font-semibold [&_mark]:rounded-sm [&_mark]:bg-[#f4df89] [&_mark]:px-0.5 [&_p]:my-2"
-      />
-      <div className="border-t border-border-soft px-4 py-3">
+        </div>
+        <div
+          ref={editor}
+          contentEditable
+          suppressContentEditableWarning
+          role="textbox"
+          aria-multiline="true"
+          aria-label="Notes personnelles du cours"
+          data-placeholder="Écris librement pendant le cours…"
+          onInput={scheduleSave}
+          className="course-notes-editor min-h-[270px] max-h-[56vh] overflow-y-auto px-5 py-4 text-[15px] leading-7 text-foreground outline-none empty:before:pointer-events-none empty:before:text-muted/70 empty:before:content-[attr(data-placeholder)] [&_h2]:mb-2 [&_h2]:mt-5 [&_h2]:text-xl [&_h2]:font-semibold [&_h3]:mb-1 [&_h3]:mt-4 [&_h3]:text-base [&_h3]:font-semibold [&_mark]:rounded-sm [&_mark]:bg-[#f4df89] [&_mark]:px-0.5 [&_p]:my-2"
+        />
+        <div className="border-t border-border-soft px-4 py-3">
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
@@ -191,6 +215,7 @@ export default function CourseNotesEditor({
           que par vous. Pensez à conserver une copie en vous les envoyant par
           e-mail ou en les copiant dans l’outil de votre choix.
         </p>
+        </div>
       </div>
     </section>
   );
