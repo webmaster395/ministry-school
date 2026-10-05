@@ -15,11 +15,10 @@ const courseSource = readFileSync(
   "utf8",
 );
 
-test("chaque notification pédagogique cible directement la bonne section", () => {
+test("seuls les supports créent une notification automatique ciblée", () => {
   assert.match(notificationSource, /course-resources/);
-  assert.match(notificationSource, /before-course/);
-  assert.match(notificationSource, /after-course/);
-  assert.match(notificationSource, /course-content/);
+  assert.doesNotMatch(notificationSource, /Cours mis à jour/);
+  assert.doesNotMatch(notificationSource, /Nouveau travail/);
 });
 
 test("les ressources rapprochées sont regroupées dans une seule notification", () => {

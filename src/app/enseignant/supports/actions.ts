@@ -28,7 +28,6 @@ export async function addMaterial(formData: FormData) {
     supabase,
     actorId: user.id,
     sessionId,
-    targetType: "resource",
     targetId: material?.id,
     contentTitle: title,
   });
@@ -60,7 +59,6 @@ export async function shareNow(formData: FormData) {
     supabase,
     actorId: user.id,
     sessionId,
-    targetType: "resource",
     targetId: material?.id,
     contentTitle: title,
   });
@@ -83,24 +81,15 @@ export async function addAssignment(formData: FormData) {
   const duration = parseInt((formData.get("duration_min") as string) ?? "", 10);
   const due = (formData.get("due_at") as string) ?? "";
 
-  const { data: assignment, error } = await supabase.from("assignments").insert({
+  const { error } = await supabase.from("assignments").insert({
     session_id: sessionId,
     instructions,
     created_by: user.id,
     kind: kind || null,
     duration_min: Number.isFinite(duration) && duration > 0 ? duration : null,
     due_at: due ? new Date(due).toISOString() : null,
-  }).select("id").single();
-  if (error) throw new Error("L'ajout du travail a échoué : " + error.message);
-  await notifyCourseContent({
-    supabase,
-    actorId: user.id,
-    sessionId,
-    targetType: "assignment",
-    targetId: assignment?.id,
-    contentTitle: instructions,
-    assignmentPhase: "before",
   });
+  if (error) throw new Error("L'ajout du travail a échoué : " + error.message);
 
   revalidatePath("/enseignant/supports");
   revalidatePath("/etudiant", "layout");

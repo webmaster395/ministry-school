@@ -3,7 +3,6 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { notifyCourseContent } from "@/lib/course-notifications";
 
 /**
  * Modifie une séance existante (date, horaire, lieu, titre, intervenant, parcours).
@@ -81,13 +80,6 @@ export async function updateSession(formData: FormData) {
       .eq("id", courseId);
     if (courseError) throw new Error("Le titre du cours n’a pas pu être synchronisé : " + courseError.message);
   }
-
-  await notifyCourseContent({
-    supabase,
-    actorId: user.id,
-    sessionId: id,
-    targetType: "course",
-  });
 
   revalidatePath("/gestion/admin/seances");
   revalidatePath(`/gestion/admin/seances/${id}`);

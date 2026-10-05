@@ -79,7 +79,7 @@ export async function addPilotAssignment(formData: FormData) {
   const due = text("due_at");
 
   const phase = text("phase") === "after" ? "after" : "before";
-  const { data: assignment, error } = await supabase.from("assignments").insert({
+  const { error } = await supabase.from("assignments").insert({
     session_id: sessionId,
     instructions: text("instructions"),
     title: text("title") || text("instructions"),
@@ -91,19 +91,9 @@ export async function addPilotAssignment(formData: FormData) {
     kind: text("kind") || null,
     duration_min: Number.isFinite(duration) && duration > 0 ? duration : null,
     due_at: due ? new Date(due).toISOString() : null,
-  }).select("id").single();
+  });
   if (error)
     throw new Error("L'ajout de la consigne a échoué : " + error.message);
-
-  await notifyCourseContent({
-    supabase,
-    actorId: user.id,
-    sessionId,
-    targetType: "assignment",
-    targetId: assignment?.id,
-    contentTitle: text("title") || text("instructions"),
-    assignmentPhase: phase,
-  });
 
   revalidatePath(`/gestion/enseignement/preparation/${sessionId}`);
   revalidatePath("/gestion/pilotage", "layout");
@@ -416,7 +406,6 @@ async function notifyNewSupport(
         supabase,
         actorId: viewer.id,
         sessionId,
-        targetType: "resource",
         targetId,
         contentTitle: title,
         availability: when,
@@ -429,7 +418,6 @@ async function notifyNewSupport(
         supabase,
         actorId: viewer.id,
         sessionId,
-        targetType: "resource",
         targetId,
         contentTitle: title,
         availability: when,
