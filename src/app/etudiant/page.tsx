@@ -65,18 +65,6 @@ export default async function StudentDashboardPage() {
 
   return (
     <div className="grid items-start gap-5 lg:grid-cols-[1fr_360px]">
-      <aside
-        aria-label="Information parking"
-        className="flex items-start gap-2.5 rounded-xl border border-[#d8aa42]/35 bg-[#d8aa42]/[0.09] px-4 py-3 text-[13px] leading-5 text-foreground sm:items-center sm:text-sm lg:col-span-2"
-      >
-        <span aria-hidden="true" className="shrink-0">
-          ⚠️🅿️
-        </span>
-        <p className="font-semibold">
-          Les places de parking sont limitées. Pensez à arriver 15 minutes plus
-          tôt.
-        </p>
-      </aside>
       <section className="rounded-lg border border-border bg-background p-5 sm:p-7">
         {nextSession ? (
           <>
@@ -103,6 +91,15 @@ export default async function StudentDashboardPage() {
             <p className="mt-0.5 text-[13px] text-muted">
               {nextSession.location}
               {nextSession.room ? ` · ${nextSession.room}` : ""}
+            </p>
+            <p className="mt-3 flex items-start gap-2 rounded-lg bg-[#d8aa42]/[0.09] px-3 py-2 text-[12px] font-semibold leading-5 text-foreground sm:text-[13px]">
+              <span aria-hidden="true" className="shrink-0">
+                ⚠️🅿️
+              </span>
+              <span>
+                Les places de parking sont très limitées. Pensez à arriver
+                suffisamment en avance.
+              </span>
             </p>
 
             <ol className="mt-5">
