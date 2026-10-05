@@ -39,15 +39,24 @@ export default async function StudentCoursesPage() {
         aria-label="Accès rapide aux parcours"
         className="flex max-w-5xl gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {parcours.map((p) => (
-          <a
-            key={p.id}
-            href={`#parcours-${p.slug}`}
-            className="inline-flex min-h-10 shrink-0 items-center rounded-full border border-border bg-background px-4 text-sm font-semibold text-foreground transition hover:border-foreground hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
-          >
-            {p.title}
-          </a>
-        ))}
+        {parcours.map((p) => {
+          const color = COLORS[p.slug] ?? ministryColor;
+
+          return (
+            <a
+              key={p.id}
+              href={`#parcours-${p.slug}`}
+              className="inline-flex min-h-10 shrink-0 items-center rounded-full border px-4 text-sm font-semibold text-foreground transition hover:-translate-y-0.5 hover:shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2"
+              style={{
+                borderColor: `color-mix(in srgb, ${color} 65%, transparent)`,
+                background: `color-mix(in srgb, ${color} 24%, white)`,
+                outlineColor: color,
+              }}
+            >
+              {p.title}
+            </a>
+          );
+        })}
       </nav>
 
       <ul className="grid max-w-5xl gap-[22px] md:grid-cols-2">
