@@ -16,7 +16,7 @@ import TrainerMultiSelect, { type TrainerChoice } from "@/components/gestion/Tra
 
 type FullSession = PilotSession & { teacher_id: string | null; ministry_id: string | null };
 
-const SECTIONS = ["presentation", "objectifs", "video", "consignes", "supports", "apres"] as const;
+const SECTIONS = ["presentation", "objectifs", "consignes", "video", "supports", "apres"] as const;
 const SECTION_LABELS = { presentation: "À propos", objectifs: "Objectifs", video: "Vidéo", consignes: "À faire avant", supports: "Ressources", apres: "À faire après" } as const;
 
 export default async function PreparationPage({ params }: { params: Promise<{ id: string }> }) {
@@ -130,18 +130,6 @@ export default async function PreparationPage({ params }: { params: Promise<{ id
         </p>
       </section>
 
-      <nav aria-label="Sections de préparation du cours" className="flex gap-2 overflow-x-auto rounded-2xl border border-border bg-background p-3">
-        {SECTIONS.map((section) => (
-          <a
-            key={section}
-            href={`#${section}`}
-            className={`min-h-11 shrink-0 rounded-full px-4 py-3 text-sm font-medium transition hover:bg-surface ${section === "video" ? "bg-accent text-on-accent hover:bg-[#1b2221]" : "text-foreground"}`}
-          >
-            {SECTION_LABELS[section]}
-          </a>
-        ))}
-      </nav>
-
       {isPilot && (
         <section className="rounded-2xl border border-border bg-background">
           <div className="border-b border-border-soft px-6 py-5">
@@ -161,24 +149,34 @@ export default async function PreparationPage({ params }: { params: Promise<{ id
         </section>
       )}
 
-      {SECTIONS.map((key) => {
-        const it = items.find((i) => i.key === key) ?? {
-          key,
-          label: SECTION_LABELS[key],
-          detail: s.video_url ? "Vidéo renseignée" : "Facultatif",
-          done: !!s.video_url,
-          required: false,
-        };
-        return (
-          <section key={key} id={key} className="scroll-mt-24 overflow-hidden rounded-2xl border border-border bg-background">
-            <div className="border-b border-border-soft px-6 py-5">
-              <h3 className="font-title text-[20px] text-foreground">{SECTION_LABELS[key]}</h3>
-              <p className="text-sm text-muted">{it.done ? it.detail : it.required ? "À compléter" : it.detail}</p>
-            </div>
-            <div className="px-6 py-5">{panels[key]}</div>
-          </section>
-        );
-      })}
+      <section className="overflow-hidden rounded-2xl border border-border bg-background">
+        <div className="border-b border-border px-5 py-5 sm:px-6">
+          <h3 className="font-title text-[22px] text-foreground">Contenu pédagogique</h3>
+          <p className="mt-1 text-sm text-muted">Construis le parcours dans l’ordre où l’étudiant le découvrira.</p>
+          <nav aria-label="Sections de préparation du cours" className="mt-4 flex gap-2 overflow-x-auto pb-1">
+            {SECTIONS.map((section, index) => (
+              <a key={section} href={`#${section}`} className="min-h-10 shrink-0 rounded-full border border-border px-3.5 py-2.5 text-sm text-foreground transition hover:border-foreground hover:bg-surface">
+                <span className="mr-1.5 text-xs text-muted">{index + 1}.</span>{SECTION_LABELS[section]}
+              </a>
+            ))}
+          </nav>
+        </div>
+        {SECTIONS.map((key, index) => {
+          const it = items.find((i) => i.key === key) ?? { key, label: SECTION_LABELS[key], detail: "", done: !!s.video_url, required: false };
+          return (
+            <article key={key} id={key} className={`scroll-mt-24 px-5 py-7 sm:px-6 sm:py-8 ${index > 0 ? "border-t border-border-soft" : ""}`}>
+              <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-baseline gap-3">
+                  <span className="text-xs font-semibold text-muted">{String(index + 1).padStart(2, "0")}</span>
+                  <h4 className="font-title text-[20px] text-foreground">{SECTION_LABELS[key]}</h4>
+                </div>
+                {(it.done || it.required) && <span className={`rounded-full px-3 py-1 text-xs ${it.done ? "bg-surface text-muted" : "bg-amber-100 text-amber-900"}`}>{it.done ? "Renseigné" : "À compléter"}</span>}
+              </div>
+              {panels[key]}
+            </article>
+          );
+        })}
+      </section>
 
       <div className="app-sticky-action sticky bottom-3 z-30 rounded-2xl border border-border bg-background/95 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur">
         <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-3">
