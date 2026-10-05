@@ -65,9 +65,23 @@ export default function CourseExperience({ session, trainers, materials, assignm
   return <div className="course-experience" style={{ "--course-accent": session.accent, "--course-hero": "#202927" } as CSSProperties}>
     <BackButton fallbackHref={backHref} fallbackLabel={backLabel} />
     {previewDemo && <div className="mt-5 rounded-2xl border border-amber-300 bg-amber-50 px-5 py-4 text-sm leading-relaxed text-amber-950"><strong>Preview de la nouvelle page.</strong> La vidéo et les tâches signalées « Démonstration » servent uniquement à tester l’interface sur ton compte. Elles seront remplacées automatiquement par les contenus renseignés dans l’administration.</div>}
-    <section className="relative mt-5 overflow-hidden rounded-[26px] bg-[var(--course-hero)] px-6 py-7 text-white sm:px-9 sm:py-9 lg:px-12 lg:py-10">
-      <span className="absolute inset-y-0 left-0 w-2 bg-[var(--course-accent)]" />
-      <div className="relative max-w-4xl"><div className="flex flex-wrap items-center gap-3"><span className="label rounded-full px-3 py-1.5 text-xs tracking-[0.13em] text-white" style={{ backgroundColor: session.accent }}>{session.track || "COURS"}</span><span className="text-xs uppercase tracking-[0.14em] text-white/55">{session.past ? "Disponible" : "À venir"}</span></div><h1 className="font-title mt-4 max-w-3xl text-[clamp(2.2rem,5vw,4.25rem)] leading-[0.98] tracking-[-0.035em]">{session.title}</h1><div className="mt-6 grid gap-3 text-sm text-white/80 sm:grid-cols-3"><span className="flex items-center gap-2"><CalendarDays size={17} />{session.date}</span><span className="flex items-center gap-2"><Clock size={17} />{session.hours}</span><span className="flex items-center gap-2"><MapPin size={17} />{session.place}</span></div>{trainers.length > 0 && <div className="mt-6 border-t border-white/15 pt-5"><TrainerAvatars trainers={trainers} /></div>}</div>
+    <section className="relative mt-5 overflow-hidden rounded-[22px] bg-[var(--course-hero)] px-6 py-6 text-white sm:px-8 sm:py-7 lg:px-10 lg:py-8">
+      <span className="absolute inset-y-0 left-0 w-1.5 bg-[var(--course-accent)]" />
+      <div className="relative grid gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(340px,0.8fr)] lg:items-end lg:gap-12">
+        <div>
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="label rounded-full px-3 py-1.5 text-[11px] tracking-[0.12em] text-white" style={{ backgroundColor: session.accent }}>{session.track || "COURS"}</span>
+            <span className="text-[11px] uppercase tracking-[0.14em] text-white/55">{session.past ? "Disponible" : "À venir"}</span>
+          </div>
+          <h1 className="font-title mt-4 max-w-3xl text-[clamp(2.15rem,4vw,3.65rem)] leading-none tracking-[-0.035em]">{session.title}</h1>
+          {trainers.length > 0 && <div className="mt-5"><TrainerAvatars trainers={trainers} /></div>}
+        </div>
+        <div className="grid gap-3 border-t border-white/15 pt-5 text-sm text-white/80 sm:grid-cols-2 lg:grid-cols-1 lg:border-l lg:border-t-0 lg:py-1 lg:pl-8">
+          <span className="flex items-center gap-2"><CalendarDays size={17} />{session.date}</span>
+          <span className="flex items-center gap-2"><Clock size={17} />{session.hours}</span>
+          <span className="flex items-start gap-2 sm:col-span-2 lg:col-span-1"><MapPin className="mt-0.5 shrink-0" size={17} /><span>{session.place}</span></span>
+        </div>
+      </div>
     </section>
 
     <div className="mx-auto grid max-w-6xl gap-10 py-10 lg:grid-cols-[minmax(0,1fr)_280px] lg:py-14">
