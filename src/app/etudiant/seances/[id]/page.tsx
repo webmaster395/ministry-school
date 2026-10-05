@@ -259,6 +259,7 @@ export default async function SessionDetailPage({
           summary: aboutText ?? null,
           description: s.description,
           objectives,
+          bibleRefs: refs,
           videoUrl:
             enrichment?.video_url ??
             (previewDemo

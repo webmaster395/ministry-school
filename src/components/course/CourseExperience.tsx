@@ -3,6 +3,7 @@ import type { CSSProperties, ReactNode } from "react";
 import Link from "next/link";
 import {
   CalendarDays,
+  BookOpen,
   Check,
   ChevronLeft,
   ChevronRight,
@@ -62,6 +63,7 @@ type CourseSession = {
   summary: string | null;
   description: string | null;
   objectives: string[];
+  bibleRefs: string[];
   videoUrl: string | null;
   videoDemo: boolean;
   date: string;
@@ -440,7 +442,9 @@ export default function CourseExperience({
 
       <div className="mx-auto grid max-w-6xl gap-10 py-10 lg:grid-cols-[minmax(0,1fr)_280px] lg:py-14">
         <main id="course-content" className="scroll-mt-24">
-          {(session.summary || session.objectives.length > 0) && (
+          {(session.summary ||
+            session.objectives.length > 0 ||
+            session.bibleRefs.length > 0) && (
             <section className="pb-9 sm:pb-11">
               <p className="label text-xs tracking-[0.18em] text-muted">
                 Le cours
@@ -471,6 +475,32 @@ export default function CourseExperience({
                       </li>
                     ))}
                   </ol>
+                </div>
+              )}
+              {session.bibleRefs.length > 0 && (
+                <div className="mt-7 border-t border-border-soft pt-5">
+                  <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                    <BookOpen
+                      size={16}
+                      className="text-[var(--course-accent)]"
+                    />
+                    {session.bibleRefs.length > 1
+                      ? "Versets de référence"
+                      : "Verset de référence"}
+                  </h3>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {session.bibleRefs.map((reference) => (
+                      <a
+                        key={reference}
+                        href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(reference)}&version=LSG`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex min-h-10 items-center rounded-full border border-border px-4 text-sm font-medium text-foreground transition hover:border-[var(--course-accent)] hover:bg-surface"
+                      >
+                        {reference}
+                      </a>
+                    ))}
+                  </div>
                 </div>
               )}
             </section>
