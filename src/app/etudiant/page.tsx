@@ -176,9 +176,36 @@ export default async function StudentDashboardPage() {
                     <p className="mt-1.5 text-[16px] font-semibold text-foreground">
                       {s.courses?.title ?? s.description ?? "Séance"}
                     </p>
-                    {s.teacher && (
+                    {s.trainers?.length ? (
+                      <div className="mt-2 flex items-center gap-2.5 text-sm text-muted">
+                        <span className="flex shrink-0 -space-x-2" aria-hidden="true">
+                          {s.trainers.map((trainer) => (
+                            <span
+                              key={trainer.id}
+                              className="grid h-8 w-8 place-items-center overflow-hidden rounded-full border-2 border-background bg-surface text-[10px] font-semibold text-foreground"
+                            >
+                              {trainer.photoUrl ? (
+                                <img
+                                  src={trainer.photoUrl}
+                                  alt=""
+                                  className="h-full w-full object-cover"
+                                />
+                              ) : (
+                                trainer.name
+                                  .split(/\s+/)
+                                  .map((part) => part[0])
+                                  .slice(0, 2)
+                                  .join("")
+                                  .toUpperCase()
+                              )}
+                            </span>
+                          ))}
+                        </span>
+                        <span>{s.trainers.map((trainer) => trainer.name).join(" · ")}</span>
+                      </div>
+                    ) : s.teacher ? (
                       <p className="mt-0.5 text-sm text-muted">Avec {s.teacher.full_name}</p>
-                    )}
+                    ) : null}
                   </div>
                 </li>
               ))}

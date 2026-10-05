@@ -22,6 +22,12 @@ export type StudentSession = {
   video_url?: string | null;
   cover_image_path?: string | null;
   show_parking_notice?: boolean;
+  trainers?: Array<{
+    id: string;
+    name: string;
+    title: string | null;
+    photoUrl: string | null;
+  }>;
 };
 
 const SESSION_FIELDS =
@@ -158,6 +164,49 @@ function normalizeStudentSessions(sessions: StudentSession[]) {
   return sessions.map(normalizeAutumnPracticeSession).sort(sortByDateThenTime);
 }
 
+async function attachCentralizedTrainers(
+  supabase: SupabaseClient,
+  sessions: StudentSession[],
+) {
+  if (!sessions.length) return sessions;
+
+  const { data: links } = await supabase
+    .from("session_trainers")
+    .select(
+      "session_id, position, trainer:trainers(id, first_name, last_name, title, photo_path)",
+    )
+    .in("session_id", sessions.map((session) => session.id))
+    .order("position");
+
+  const bySession = new Map<string, NonNullable<StudentSession["trainers"]>>();
+  for (const link of links ?? []) {
+    const trainer = link.trainer as unknown as {
+      id: string;
+      first_name: string;
+      last_name: string;
+      title: string | null;
+      photo_path: string | null;
+    } | null;
+    if (!trainer) continue;
+    const list = bySession.get(link.session_id) ?? [];
+    list.push({
+      id: trainer.id,
+      name: `${trainer.first_name} ${trainer.last_name}`.trim(),
+      title: trainer.title,
+      photoUrl: trainer.photo_path
+        ? supabase.storage.from("trainer-photos").getPublicUrl(trainer.photo_path)
+            .data.publicUrl
+        : null,
+    });
+    bySession.set(link.session_id, list);
+  }
+
+  return sessions.map((session) => ({
+    ...session,
+    trainers: bySession.get(session.id) ?? [],
+  }));
+}
+
 export async function getStudentSessions(
   supabase: SupabaseClient,
   userId: string,
@@ -169,7 +218,10 @@ export async function getStudentSessions(
 
   // Le calendrier est aussi l'archive pédagogique de l'étudiant : une séance accessible
   // ne disparaît jamais après sa date. Les règles de ministère/jour restent inchangées.
-  return normalizeStudentSessions([...ministrySessions, ...commonSessions]);
+  return attachCentralizedTrainers(
+    supabase,
+    normalizeStudentSessions([...ministrySessions, ...commonSessions]),
+  );
 }
 
 export async function getStudentAllSessions(
@@ -181,7 +233,10 @@ export async function getStudentAllSessions(
     getCommonSessions(supabase),
   ]);
 
-  return normalizeStudentSessions([...ministrySessions, ...commonSessions]);
+  return attachCentralizedTrainers(
+    supabase,
+    normalizeStudentSessions([...ministrySessions, ...commonSessions]),
+  );
 }
 
 /**
