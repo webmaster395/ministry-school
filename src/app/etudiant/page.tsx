@@ -120,7 +120,7 @@ export default async function StudentDashboardPage() {
                     />
                     <span className="w-px flex-1 bg-border" />
                   </div>
-                  <div className="col-start-2 row-start-2 pb-4 pt-1 lg:col-start-3 lg:row-start-1 lg:pb-5 lg:pt-0">
+                  <div className="col-start-2 row-start-2 pb-7 pt-2 lg:col-start-3 lg:row-start-1 lg:pb-7 lg:pt-0">
                     <span className="label inline-block rounded-full bg-surface px-3 py-1 text-[11px] tracking-[0.1em] text-foreground">
                       Accueil
                     </span>
@@ -147,7 +147,7 @@ export default async function StudentDashboardPage() {
                       />
                       {i < daySessions.length - 1 && <span className="w-px flex-1 bg-border" />}
                     </div>
-                    <div className="col-start-2 row-start-2 pb-4 pt-1 lg:col-start-3 lg:row-start-1 lg:pb-5 lg:pt-0">
+                    <div className="col-start-2 row-start-2 pb-8 pt-2 lg:col-start-3 lg:row-start-1 lg:pb-8 lg:pt-0">
                     {s.track ? (
                       <span
                         className="label inline-block rounded-2xl px-3 py-1 text-[11px] leading-snug tracking-[0.1em] text-foreground"
@@ -160,11 +160,11 @@ export default async function StudentDashboardPage() {
                     ) : (
                       <SessionTypeBadge type={s.session_type} />
                     )}
-                    <p className="mt-1.5 text-[16px] font-semibold text-foreground transition group-hover:text-link">
+                    <p className="mt-3 text-[16px] font-semibold leading-snug text-foreground transition group-hover:text-link">
                       {s.courses?.title ?? s.description ?? "Séance"}
                     </p>
                     {s.trainers?.length ? (
-                      <div className="mt-2 flex items-center gap-2.5 text-sm text-muted">
+                      <div className="mt-3 flex items-center gap-3 text-sm text-muted">
                         <span className="flex shrink-0 -space-x-2" aria-hidden="true">
                           {s.trainers.map((trainer) => (
                             <span
@@ -191,7 +191,7 @@ export default async function StudentDashboardPage() {
                         <span>{s.trainers.map((trainer) => trainer.name).join(" · ")}</span>
                       </div>
                     ) : s.teacher ? (
-                      <p className="mt-0.5 text-sm text-muted">Avec {s.teacher.full_name}</p>
+                      <p className="mt-3 text-sm text-muted">Avec {s.teacher.full_name}</p>
                     ) : null}
                     </div>
                   </Link>
@@ -201,7 +201,7 @@ export default async function StudentDashboardPage() {
 
             <Link
               href="/etudiant/calendrier"
-              className="label mt-1 flex w-full items-center justify-center gap-2 rounded-full bg-accent px-4 py-3 text-center text-[11px] tracking-[0.08em] text-on-accent hover:bg-[#1b2221] sm:inline-flex sm:w-auto sm:px-6 sm:text-xs sm:tracking-[0.12em]"
+              className="label mt-3 flex w-full items-center justify-center gap-2 rounded-full bg-accent px-4 py-3 text-center text-[11px] tracking-[0.08em] text-on-accent hover:bg-[#1b2221] sm:inline-flex sm:w-auto sm:px-6 sm:text-xs sm:tracking-[0.12em]"
             >
               Voir le programme de la journée →
             </Link>
