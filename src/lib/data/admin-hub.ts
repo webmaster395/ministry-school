@@ -140,6 +140,10 @@ export type ProgramEntry = {
   badge: string;
   attention: boolean;
   href: string;
+  kind: "course" | "opportunity";
+  location: string;
+  room: string | null;
+  parking: boolean;
 };
 
 const KIND_TEXT: Record<OpportunityKind, string> = { formation: "Formation de service", projet: "Projet" };
@@ -149,7 +153,7 @@ export async function getProgramEntries(supabase: SupabaseClient, opps: OppRow[]
   const { data } = await supabase
     .from("sessions")
     .select(
-      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, teacher:profiles!sessions_teacher_id_fkey(full_name)"
+      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, show_parking_notice, courses(title), teacher:profiles!sessions_teacher_id_fkey(full_name)"
     )
     .order("session_date")
     .order("start_time");
@@ -157,21 +161,40 @@ export async function getProgramEntries(supabase: SupabaseClient, opps: OppRow[]
   type Row = {
     id: string; session_date: string; start_time: string; end_time: string; location: string;
     room: string | null; description: string | null; track: string | null; speaker_name: string | null;
-    summary: string | null; objectives: string | null; teacher: { full_name: string } | null;
+    summary: string | null; objectives: string | null; show_parking_notice: boolean; courses: { title: string } | null; teacher: { full_name: string } | null;
   };
 
-  const sessions: ProgramEntry[] = ((data ?? []) as unknown as Row[]).map((s) => {
+  const rows = (data ?? []) as unknown as Row[];
+  const sessionIds = rows.map((session) => session.id);
+  const { data: trainerLinks } = sessionIds.length
+    ? await supabase.from("session_trainers").select("session_id, position, trainer:trainers(first_name, last_name)").in("session_id", sessionIds).order("position")
+    : { data: [] };
+  const trainersBySession = new Map<string, string[]>();
+  for (const link of trainerLinks ?? []) {
+    const trainer = link.trainer as unknown as { first_name: string; last_name: string } | null;
+    if (!trainer) continue;
+    const names = trainersBySession.get(link.session_id) ?? [];
+    names.push(`${trainer.first_name} ${trainer.last_name}`.trim());
+    trainersBySession.set(link.session_id, names);
+  }
+
+  const sessions: ProgramEntry[] = rows.map((s) => {
     const ready = !!(s.summary?.trim() && s.objectives?.trim());
+    const trainerNames = trainersBySession.get(s.id)?.join(" · ") ?? s.speaker_name ?? s.teacher?.full_name;
     return {
       key: `s-${s.id}`,
       date: s.session_date,
       start: s.start_time,
       end: s.end_time,
-      title: s.description ?? "À définir",
-      sub: [s.track, s.speaker_name ?? s.teacher?.full_name, s.location, s.room].filter(Boolean).join(" · "),
+      title: s.courses?.title ?? s.description ?? "À définir",
+      sub: [s.track, trainerNames].filter(Boolean).join(" · "),
       badge: ready ? "Prêt" : "À compléter",
       attention: !ready,
       href: `/gestion/admin/seances/${s.id}`,
+      kind: "course",
+      location: s.location,
+      room: s.room,
+      parking: s.show_parking_notice,
     };
   });
 
@@ -186,6 +209,10 @@ export async function getProgramEntries(supabase: SupabaseClient, opps: OppRow[]
       badge: o.registration_open ? "Publié" : "Inscriptions à venir",
       attention: false,
       href: `/etudiant/services/${o.id}`,
+      kind: "opportunity" as const,
+      location: "Espace Martin Luther King",
+      room: d.room,
+      parking: false,
     }))
   );
 

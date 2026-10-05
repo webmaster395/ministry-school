@@ -1,34 +1,20 @@
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { formatSessionDate, formatTimeRange } from "@/lib/format";
 import type { ProgramEntry } from "@/lib/data/admin-hub";
+import QuickCourseForm from "@/components/admin/QuickCourseForm";
 
-const ATTENTION = "bg-m-doctoral/[0.12] text-link";
+type Choice = { id: string; name: string };
 
 export function DayList({ entries }: { entries: ProgramEntry[] }) {
   return (
-    <ul className="divide-y divide-border-soft overflow-hidden rounded-lg border border-border bg-background">
-      {entries.map((e) => (
-        <li key={e.key}>
-          <Link
-            href={e.href}
-            className="flex flex-col gap-1 px-4 py-4 transition hover:bg-surface sm:flex-row sm:items-center sm:gap-4 sm:px-5"
-          >
-            <span className="text-sm text-muted sm:w-[110px] sm:shrink-0 sm:text-[15px] sm:text-foreground">
-              {formatTimeRange(e.start, e.end)}
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block text-[16px] font-semibold text-foreground">{e.title}</span>
-              <span className="block truncate text-sm text-muted">{e.sub}</span>
-            </span>
-            <span
-              className={`label shrink-0 rounded-full px-3 py-1 text-[10px] tracking-[0.1em] ${
-                e.attention ? ATTENTION : "bg-surface text-foreground"
-              }`}
-            >
-              {e.badge}
-            </span>
-            <ChevronRight size={16} className="shrink-0 text-muted" />
+    <ul className="divide-y divide-border-soft border-y border-border-soft">
+      {entries.map((entry) => (
+        <li key={entry.key}>
+          <Link href={entry.href} className="group grid gap-1 py-3.5 transition hover:pl-2 sm:grid-cols-[130px_1fr_auto] sm:items-center sm:gap-4">
+            <span className="text-sm font-semibold text-foreground">{formatTimeRange(entry.start, entry.end)}</span>
+            <span className="min-w-0"><span className="block text-[16px] font-semibold text-foreground group-hover:text-link">{entry.title}</span><span className="mt-0.5 block truncate text-sm text-muted">{entry.sub}</span></span>
+            <ChevronRight size={17} className="hidden text-muted sm:block" />
           </Link>
         </li>
       ))}
@@ -36,62 +22,67 @@ export function DayList({ entries }: { entries: ProgramEntry[] }) {
   );
 }
 
-export default function ProgramTab({ entries, view, today }: { entries: ProgramEntry[]; view: string; today: string }) {
-  const upcoming = entries.filter((e) => e.date >= today);
-  const past = entries.filter((e) => e.date < today);
-  const nextDate = upcoming[0]?.date;
+function shiftMonth(month: string, amount: number) {
+  const [year, value] = month.split("-").map(Number);
+  const date = new Date(year, value - 1 + amount, 1);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+}
 
-  const groups = (list: ProgramEntry[]) => {
-    const map = new Map<string, ProgramEntry[]>();
-    for (const e of list) map.set(e.date, [...(map.get(e.date) ?? []), e]);
-    return [...map.entries()];
-  };
+function monthLabel(month: string) {
+  const [year, value] = month.split("-").map(Number);
+  const label = new Intl.DateTimeFormat("fr-FR", { month: "long", year: "numeric" }).format(new Date(year, value - 1, 1));
+  return label.charAt(0).toUpperCase() + label.slice(1);
+}
 
-  const shown =
-    view === "avenir"
-      ? groups(upcoming.filter((e) => e.date !== nextDate))
-      : view === "passees"
-        ? groups(past).reverse()
-        : groups(upcoming.filter((e) => e.date === nextDate));
-
-  const tabs = [
-    { key: "journee", label: "Prochaine journée", href: "/gestion/admin?onglet=programme" },
-    { key: "avenir", label: "Journées à venir", href: "/gestion/admin?onglet=programme&vue=avenir" },
-    { key: "passees", label: "Journées passées", href: "/gestion/admin?onglet=programme&vue=passees" },
-  ];
+export default function ProgramTab({ entries, month, today, trainers, ministries }: {
+  entries: ProgramEntry[];
+  month?: string;
+  today: string;
+  trainers: Choice[];
+  ministries: Choice[];
+}) {
+  const nextDate = entries.find((entry) => entry.date >= today)?.date ?? today;
+  const selectedMonth = /^\d{4}-\d{2}$/.test(month ?? "") ? month! : nextDate.slice(0, 7);
+  const grouped = new Map<string, ProgramEntry[]>();
+  for (const entry of entries.filter((item) => item.date.startsWith(selectedMonth))) {
+    grouped.set(entry.date, [...(grouped.get(entry.date) ?? []), entry]);
+  }
+  const pastCount = entries.filter((entry) => entry.date < today).length;
 
   return (
-    <div className="space-y-5">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <nav className="tabbar inline-flex gap-1 rounded-lg border border-border bg-background p-1">
-          {tabs.map((t) => (
-            <Link
-              key={t.key}
-              href={t.href}
-              className={`rounded-md px-4 py-2 text-sm transition ${
-                (view || "journee") === t.key ? "bg-accent font-medium text-on-accent" : "text-muted hover:text-foreground"
-              }`}
-            >
-              {t.label}
-            </Link>
-          ))}
+    <div className="mx-auto max-w-5xl space-y-6">
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-sm text-muted">Programme Ministry School</p>
+          <h1 className="font-title mt-1 text-[30px] leading-tight text-foreground">Journées et cours</h1>
+          <p className="mt-1 text-sm text-muted">Clique sur un cours pour modifier sa fiche et son contenu.</p>
+        </div>
+        <nav aria-label="Changer de mois" className="flex items-center gap-2">
+          <Link href={`/gestion/admin?onglet=programme&mois=${shiftMonth(selectedMonth, -1)}`} aria-label="Mois précédent" className="rounded-full border border-border p-2 text-muted hover:text-foreground"><ChevronLeft size={18} /></Link>
+          <span className="min-w-[150px] text-center text-sm font-semibold text-foreground">{monthLabel(selectedMonth)}</span>
+          <Link href={`/gestion/admin?onglet=programme&mois=${shiftMonth(selectedMonth, 1)}`} aria-label="Mois suivant" className="rounded-full border border-border p-2 text-muted hover:text-foreground"><ChevronRight size={18} /></Link>
         </nav>
-        <Link href="/gestion/admin/seances" className="text-sm font-medium text-foreground underline underline-offset-2">
-          Gérer les séances
-        </Link>
-      </div>
+      </header>
 
-      {shown.length ? (
-        shown.map(([date, list]) => (
-          <section key={date} className="space-y-3">
-            <h3 className="font-title text-[22px] text-foreground">{formatSessionDate(date)}</h3>
+      {[...grouped.entries()].length ? [...grouped.entries()].map(([date, list]) => {
+        const courseEntries = list.filter((entry) => entry.kind === "course");
+        const reference = courseEntries[0] ?? list[0];
+        return (
+          <section key={date} className="border-t border-border pt-5 first:border-t-0 first:pt-0">
+            <div className="mb-3">
+              <h2 className="font-title text-[22px] text-foreground">{formatSessionDate(date)} {date.slice(0, 4)}</h2>
+              <p className="mt-0.5 text-sm text-muted">{reference.location}{reference.room ? ` · ${reference.room}` : ""} · {courseEntries.length} cours</p>
+            </div>
             <DayList entries={list} />
+            <QuickCourseForm date={date} dateLabel={`${formatSessionDate(date)} ${date.slice(0, 4)}`} location={reference.location || "Espace Martin Luther King"} defaultRoom={reference.room ?? "Giroud"} parking={courseEntries.some((entry) => entry.parking)} trainers={trainers} ministries={ministries} />
           </section>
-        ))
-      ) : (
-        <section className="rounded-lg border border-border bg-background p-6">
-          <p className="text-[15px] text-muted">Aucune journée à afficher.</p>
-        </section>
+        );
+      }) : (
+        <section className="rounded-lg bg-surface px-5 py-8 text-center"><p className="text-sm text-muted">Aucune journée programmée en {monthLabel(selectedMonth).toLowerCase()}.</p></section>
+      )}
+
+      {pastCount > 0 && selectedMonth >= today.slice(0, 7) && (
+        <Link href={`/gestion/admin?onglet=programme&mois=${shiftMonth(today.slice(0, 7), -1)}`} className="inline-block text-sm font-medium text-muted hover:text-foreground hover:underline">Voir les journées passées →</Link>
       )}
     </div>
   );

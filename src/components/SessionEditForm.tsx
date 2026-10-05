@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { deleteSessionFromCard, updateSessionWithFeedback } from "@/lib/actions/sessions";
 
 export type EditableSession = {
@@ -43,137 +43,53 @@ export default function SessionEditForm({
   admin?: AdminOptions;
 }) {
   const [state, formAction, pending] = useActionState(updateSessionWithFeedback, null);
+  const [category, setCategory] = useState(s.track ?? "Formation du cœur");
+  const standardCategories = ["Formation du cœur", "Formation du caractère", "Sensibilité ministérielle", "Mise en pratique", "Services & Projets"];
   return (
     <details className="group mt-2" open={defaultOpen}>
       <summary className="cursor-pointer list-none text-xs font-medium text-link hover:underline">
         Modifier
       </summary>
 
-      <form action={formAction} className="mt-3 grid gap-3 rounded-lg bg-surface p-4 sm:grid-cols-2">
+      <form action={formAction} className="mt-3 max-w-2xl space-y-4">
         <input type="hidden" name="session_id" value={s.id} />
 
-        <div className="sm:col-span-2">
-          <label className="mb-1 block text-xs text-muted">Titre</label>
-          <input name="description" defaultValue={s.description ?? ""} className={field} />
+        <label className="block text-sm font-medium text-foreground">Titre du cours<input name="description" defaultValue={s.description ?? ""} className={`${field} mt-1.5`} /></label>
+
+        <label className="block text-sm font-medium text-foreground">Catégorie<select name="track" value={category} onChange={(event) => setCategory(event.target.value)} className={`${field} mt-1.5`}>{s.track && !standardCategories.includes(s.track) && <option value={s.track}>{s.track}</option>}{standardCategories.map((item) => <option key={item}>{item}</option>)}</select></label>
+
+        <div className="grid gap-3 sm:grid-cols-[1fr_1fr_1fr]">
+          <label className="block text-sm font-medium text-foreground">Date<input type="date" name="session_date" required defaultValue={s.session_date} className={`${field} mt-1.5`} /></label>
+          <label className="block text-sm font-medium text-foreground">Début<input type="time" name="start_time" required defaultValue={s.start_time.slice(0, 5)} className={`${field} mt-1.5`} /></label>
+          <label className="block text-sm font-medium text-foreground">Fin<input type="time" name="end_time" required defaultValue={s.end_time.slice(0, 5)} className={`${field} mt-1.5`} /></label>
         </div>
 
-        <div>
-          <label className="mb-1 block text-xs text-muted">Parcours (pastille)</label>
-          <input
-            name="track"
-            defaultValue={s.track ?? ""}
-            placeholder="ex : Formation du cœur"
-            className={field}
-          />
-        </div>
-
-        <div>
-          <label className="mb-1 block text-xs text-muted">Intervenant</label>
-          <input
-            name="speaker_name"
-            defaultValue={s.speaker_name ?? s.teacherName ?? ""}
-            placeholder="Nom de l'intervenant"
-            className={field}
-          />
-        </div>
-
-        <div>
-          <label className="mb-1 block text-xs text-muted">Date</label>
-          <input type="date" name="session_date" required defaultValue={s.session_date} className={field} />
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="mb-1 block text-xs text-muted">Début</label>
-            <input type="time" name="start_time" required defaultValue={s.start_time.slice(0, 5)} className={field} />
-          </div>
-          <div>
-            <label className="mb-1 block text-xs text-muted">Fin</label>
-            <input type="time" name="end_time" required defaultValue={s.end_time.slice(0, 5)} className={field} />
-          </div>
-        </div>
-
-        <div>
-          <label className="mb-1 block text-xs text-muted">Lieu</label>
-          <input name="location" required defaultValue={s.location} className={field} />
-        </div>
-
-        <div>
-          <label className="mb-1 block text-xs text-muted">Salle</label>
-          <input name="room" defaultValue={s.room ?? ""} className={field} />
-        </div>
-
-        <div className="sm:col-span-2">
-          <label className="mb-1 block text-xs text-muted">À propos de ce cours</label>
-          <textarea name="summary" rows={2} defaultValue={s.summary ?? ""} className={field} />
-        </div>
-
-        <div>
-          <label className="mb-1 block text-xs text-muted">Objectifs (un par ligne)</label>
-          <textarea name="objectives" rows={3} defaultValue={s.objectives ?? ""} className={field} />
-        </div>
+        <input type="hidden" name="location" value={s.location} />
+        <div className="grid gap-3 sm:grid-cols-2"><div><p className="text-sm font-medium text-foreground">Lieu</p><p className="mt-1.5 rounded-md bg-surface px-3 py-2.5 text-sm text-muted">{s.location}</p></div><label className="block text-sm font-medium text-foreground">Salle<select name="room" defaultValue={s.room ?? "Giroud"} className={`${field} mt-1.5`}><option>Giroud</option><option>Rosa Parks</option><option>Denis</option></select></label></div>
 
         {admin && (
           <>
-            <div>
-              <label className="mb-1 block text-xs text-muted">Type de séance</label>
-              <select name="session_type" defaultValue={s.session_type ?? "commun"} className={field}>
-                <option value="commun">Tronc commun</option>
-                <option value="ministere">Par ministère</option>
-              </select>
-            </div>
-            <div>
-              <label className="mb-1 block text-xs text-muted">Ministère (si par ministère)</label>
+            <input type="hidden" name="session_type" value={category === "Sensibilité ministérielle" ? "ministere" : "commun"} />
+            <input type="hidden" name="course_id" value={s.course_id ?? ""} />
+            <input type="hidden" name="day" value={s.day ?? "samedi"} />
+            {category === "Sensibilité ministérielle" && <div>
+              <label className="mb-1 block text-sm font-medium text-foreground">Sensibilité ministérielle</label>
               <select name="ministry_id" defaultValue={s.ministry_id ?? ""} className={field}>
-                <option value="">— Aucun —</option>
+                <option value="">Choisir une sensibilité</option>
                 {admin.ministries.map((m) => (
                   <option key={m.id} value={m.id}>{m.name}</option>
                 ))}
               </select>
-            </div>
-            <div>
-              <label className="mb-1 block text-xs text-muted">Cours rattaché</label>
-              <select name="course_id" defaultValue={s.course_id ?? ""} className={field}>
-                <option value="">— Aucun cours rattaché —</option>
-                {admin.courses.map((c) => (
-                  <option key={c.id} value={c.id}>{c.title}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="mb-1 block text-xs text-muted">Jour</label>
-              <select name="day" defaultValue={s.day ?? "samedi"} className={field}>
-                <option value="samedi">Samedi</option>
-                <option value="dimanche">Dimanche</option>
-              </select>
-            </div>
+            </div>}
           </>
         )}
 
-        <div>
-          <label className="mb-1 block text-xs text-muted">Références bibliques (une par ligne, ex : Jean 15:1-8)</label>
-          <textarea name="bible_refs" rows={3} defaultValue={s.bible_refs ?? ""} className={field} />
-        </div>
-
-        <label className="flex items-start gap-3 rounded-md border border-border bg-background px-3 py-3 text-sm text-foreground sm:col-span-2">
-          <input type="hidden" name="show_parking_notice" value="0" />
-          <input
-            type="checkbox"
-            name="show_parking_notice"
-            value="1"
-            defaultChecked={s.show_parking_notice !== false}
-            className="mt-0.5 h-4 w-4 accent-foreground"
-          />
-          <span>
-            <strong className="block font-semibold">Afficher l’information parking</strong>
-            <span className="mt-0.5 block text-xs text-muted">Visible sur l’accueil étudiant lorsque cette journée est la prochaine.</span>
-          </span>
-        </label>
+        <details className="rounded-md bg-surface px-4 py-3"><summary className="cursor-pointer text-sm font-medium text-foreground">Paramètres complémentaires</summary><div className="mt-4 space-y-4"><label className="block text-sm font-medium text-foreground">Références bibliques<textarea name="bible_refs" rows={3} defaultValue={s.bible_refs ?? ""} className={`${field} mt-1.5`} /></label><label className="flex items-start gap-3 text-sm text-foreground"><input type="hidden" name="show_parking_notice" value="0" /><input type="checkbox" name="show_parking_notice" value="1" defaultChecked={s.show_parking_notice !== false} className="mt-0.5 h-4 w-4 accent-foreground" /><span><strong className="block font-semibold">Afficher l’information parking</strong><span className="text-xs text-muted">Visible sur l’accueil étudiant.</span></span></label></div></details>
 
         <button
           type="submit"
           disabled={pending}
-          className="label rounded-md bg-accent px-4 py-2.5 disabled:opacity-60 text-xs tracking-[0.12em] text-on-accent transition hover:bg-[#1b2221] sm:col-span-2 sm:w-fit"
+          className="label rounded-full bg-accent px-5 py-2.5 disabled:opacity-60 text-xs tracking-[0.12em] text-on-accent transition hover:bg-[#1b2221]"
         >
           {pending ? "Enregistrement…" : "Enregistrer"}
         </button>

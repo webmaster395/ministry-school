@@ -198,15 +198,12 @@ export default async function PreparationPage({
           ) : (
             <span />
           )}
-          <span
-            className={`label rounded-full px-3.5 py-1.5 text-[11px] tracking-[0.1em] ${
-              progress.ready
-                ? "bg-surface text-foreground"
-                : "bg-m-doctoral/[0.12] text-link"
-            }`}
-          >
-            {isDraft ? "Brouillon" : progress.ready ? "Prêt" : "À compléter"}
-          </span>
+          <div className="flex items-center gap-2">
+            <Link href={`/etudiant/seances/${s.id}`} className="rounded-full border border-border px-4 py-2 text-sm font-medium text-foreground transition hover:border-foreground">Aperçu étudiant</Link>
+            <span className={`label rounded-full px-3.5 py-1.5 text-[11px] tracking-[0.1em] ${progress.ready ? "bg-surface text-foreground" : "bg-m-doctoral/[0.12] text-link"}`}>
+              {isDraft ? "Brouillon" : progress.ready ? "Prêt" : "À compléter"}
+            </span>
+          </div>
         </div>
         <h2
           className="font-title mt-4 text-[30px] leading-tight"

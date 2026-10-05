@@ -37,6 +37,12 @@ export async function updateSession(formData: FormData) {
     admin.day = text("day") || "samedi";
   }
 
+  const optional = {
+    ...(formData.has("speaker_name") ? { speaker_name: text("speaker_name") || null } : {}),
+    ...(formData.has("summary") ? { summary: text("summary") || null } : {}),
+    ...(formData.has("objectives") ? { objectives: text("objectives") || null } : {}),
+  };
+
   const { error, data } = await supabase
     .from("sessions")
     .update({
@@ -51,9 +57,7 @@ export async function updateSession(formData: FormData) {
       room: text("room") || null,
       description: text("description") || null,
       track: text("track") || null,
-      speaker_name: text("speaker_name") || null,
-      summary: text("summary") || null,
-      objectives: text("objectives") || null,
+      ...optional,
     })
     .eq("id", id)
     .select("id");
@@ -63,6 +67,15 @@ export async function updateSession(formData: FormData) {
   }
   if (!data?.length) {
     throw new Error("Vous n'avez pas le droit de modifier cette séance.");
+  }
+
+  const courseId = text("course_id");
+  if (courseId && text("description")) {
+    const { error: courseError } = await supabase
+      .from("courses")
+      .update({ title: text("description") })
+      .eq("id", courseId);
+    if (courseError) throw new Error("Le titre du cours n’a pas pu être synchronisé : " + courseError.message);
   }
 
   await notifyCourseContent({

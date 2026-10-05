@@ -11,15 +11,7 @@ import { QUESTIONS_ENABLED } from "@/lib/questions";
 import { getMinistries } from "@/lib/data/admin";
 import TrainersTab, { type TrainerAdminRow } from "@/components/admin/TrainersTab";
 
-const TABS = [
-  { key: "vue", label: "Vue d'ensemble" },
-  { key: "statistiques", label: "Statistiques" },
-  { key: "membres", label: "Membres et accès" },
-  { key: "formateurs", label: "Formateurs" },
-  { key: "programme", label: "Programme" },
-  { key: "projets", label: "Projets et formations" },
-  { key: "questions", label: "Questions" },
-].filter((t) => QUESTIONS_ENABLED || t.key !== "questions");
+const VALID_TABS = ["vue", "statistiques", "personnes", "membres", "formateurs", "programme", "projets", "questions"];
 
 type Params = {
   onglet?: string;
@@ -36,18 +28,22 @@ type Params = {
   genre?: string;
   page?: string;
   par?: string;
+  mois?: string;
+  personnes?: string;
 };
 
 export default async function AdminPage({ searchParams }: { searchParams: Promise<Params> }) {
   const p = await searchParams;
-  const tab = p.onglet === "comptes-rendus" ? "projets" : TABS.some((t) => t.key === p.onglet) ? (p.onglet as string) : "vue";
+  const requestedTab = p.onglet === "comptes-rendus" ? "projets" : p.onglet;
+  const tab = VALID_TABS.includes(requestedTab ?? "") ? requestedTab! : "vue";
+  const peopleView = p.personnes === "formateurs" || tab === "formateurs" ? "formateurs" : "membres";
 
   const supabase = await createClient();
   const today = new Date().toISOString().slice(0, 10);
 
   const opps = await getOpportunitiesWithDates(supabase);
   let trainers: TrainerAdminRow[] = [];
-  if (tab === "formateurs") {
+  if (tab === "formateurs" || tab === "personnes" || tab === "programme") {
     const { data } = await supabase
       .from("trainers")
       .select("id, first_name, last_name, title, bio, photo_path, is_active")
@@ -64,20 +60,6 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
 
   return (
     <div className="space-y-6">
-      <nav className="tabbar grid grid-cols-2 gap-1 rounded-lg border border-border bg-background p-1 md:auto-cols-fr md:grid-flow-col md:grid-cols-none [&>*:last-child:nth-child(odd)]:col-span-2 md:[&>*:last-child:nth-child(odd)]:col-span-1">
-        {TABS.map((t) => (
-          <Link
-            key={t.key}
-            href={t.key === "vue" ? "/gestion/admin" : `/gestion/admin?onglet=${t.key}`}
-            className={`rounded-md py-3 text-center text-[15px] transition ${
-              tab === t.key ? "bg-accent font-medium text-on-accent" : "text-muted hover:text-foreground"
-            }`}
-          >
-            {t.label}
-          </Link>
-        ))}
-      </nav>
-
       {tab === "vue" && (
         <OverviewTab
           members={await getMembers(supabase)}
@@ -90,12 +72,27 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
         <StatisticsTab members={await getMembers(supabase)} ministries={await getMinistries(supabase)} />
       )}
       {tab === "programme" && (
-        <ProgramTab entries={await getProgramEntries(supabase, opps)} view={p.vue ?? ""} today={today} />
+        <ProgramTab
+          entries={await getProgramEntries(supabase, opps)}
+          month={p.mois}
+          today={today}
+          trainers={trainers.filter((trainer) => trainer.is_active).map((trainer) => ({ id: trainer.id, name: `${trainer.first_name} ${trainer.last_name}`.trim() }))}
+          ministries={(await getMinistries(supabase)).map((ministry) => ({ id: ministry.id, name: ministry.name }))}
+        />
       )}
       {tab === "projets" && <ProjectsTab opps={opps} type={p.onglet === "comptes-rendus" ? "comptes-rendus" : p.type ?? "projet"} phase={p.phase ?? "actuel"} reportFilter={p.filtre ?? "a_recevoir"} today={today} />}
       {QUESTIONS_ENABLED && tab === "questions" && <QuestionsTab filter={p.filtre ?? "a_traiter"} />}
-      {tab === "membres" && (
-        <MembersTab
+      {(tab === "personnes" || tab === "membres" || tab === "formateurs") && (
+        <div className="space-y-6">
+          <header>
+            <p className="text-sm text-muted">Administration</p>
+            <h1 className="font-title mt-1 text-[30px] text-foreground">Personnes</h1>
+            <div className="mt-4 flex gap-2">
+              <Link href="/gestion/admin?onglet=personnes" className={`rounded-full px-4 py-2 text-sm ${peopleView === "membres" ? "bg-accent text-on-accent" : "bg-surface text-muted"}`}>Étudiants et accès</Link>
+              <Link href="/gestion/admin?onglet=personnes&personnes=formateurs" className={`rounded-full px-4 py-2 text-sm ${peopleView === "formateurs" ? "bg-accent text-on-accent" : "bg-surface text-muted"}`}>Formateurs</Link>
+            </div>
+          </header>
+          {peopleView === "membres" ? <MembersTab
           q={p.q ?? ""}
           role={p.role ?? "tous"}
           sens={p.sens ?? "toutes"}
@@ -105,9 +102,9 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           genre={p.genre ?? "tous"}
           page={p.page ?? "1"}
           par={p.par ?? "50"}
-        />
+          /> : <TrainersTab trainers={trainers} />}
+        </div>
       )}
-      {tab === "formateurs" && <TrainersTab trainers={trainers} />}
     </div>
   );
 }

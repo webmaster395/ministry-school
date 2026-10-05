@@ -1,7 +1,58 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getViewer } from "@/lib/data/viewer";
+
+export async function createQuickCourse(formData: FormData) {
+  const viewer = await getViewer();
+  if (!viewer?.roles.admin) throw new Error("Accès réservé aux administrateurs.");
+  const supabase = await createClient();
+  const text = (key: string) => String(formData.get(key) ?? "").trim();
+  const title = text("title");
+  const date = text("session_date");
+  const start = text("start_time");
+  const end = text("end_time");
+  const track = text("track");
+  const trainerId = text("trainer_id");
+  if (!title || !date || !start || !end || !track || !trainerId) throw new Error("Complétez les informations obligatoires.");
+  if (end <= start) throw new Error("L’heure de fin doit être après l’heure de début.");
+
+  const [{ data: course, error: courseError }, { data: trainer }] = await Promise.all([
+    supabase.from("courses").insert({ title }).select("id").single(),
+    supabase.from("trainers").select("id, profile_id").eq("id", trainerId).single(),
+  ]);
+  if (courseError || !course) throw new Error(courseError?.message ?? "Création du cours impossible.");
+
+  const ministryId = track === "Sensibilité ministérielle" ? text("ministry_id") || null : null;
+  const { data: session, error: sessionError } = await supabase.from("sessions").insert({
+    session_type: ministryId ? "ministere" : "commun",
+    ministry_id: ministryId,
+    course_id: course.id,
+    teacher_id: trainer?.profile_id ?? null,
+    session_date: date,
+    start_time: start,
+    end_time: end,
+    location: text("location") || "Espace Martin Luther King",
+    room: text("room") || "Giroud",
+    day: new Date(`${date}T12:00:00`).getDay() === 0 ? "dimanche" : "samedi",
+    description: title,
+    track,
+    speaker_name: null,
+    show_parking_notice: text("show_parking_notice") === "1",
+  }).select("id").single();
+  if (sessionError || !session) {
+    await supabase.from("courses").delete().eq("id", course.id);
+    throw new Error(sessionError?.message ?? "Création de la séance impossible.");
+  }
+  const { error: linkError } = await supabase.from("session_trainers").insert({ session_id: session.id, trainer_id: trainerId, position: 0 });
+  if (linkError) throw new Error(linkError.message);
+
+  revalidatePath("/gestion/admin", "layout");
+  revalidatePath("/etudiant", "layout");
+  redirect(`/gestion/admin/seances/${session.id}`);
+}
 
 export async function createSession(formData: FormData) {
   const supabase = await createClient();

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useSpace } from "@/components/SpaceProvider";
 
 /**
@@ -10,6 +10,7 @@ import { useSpace } from "@/components/SpaceProvider";
  */
 export default function SpaceTabs() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { current } = useSpace();
   const items = current?.sections.flatMap((section) => section.items) ?? [];
   if (!current || items.length < 2) return null;
@@ -21,7 +22,10 @@ export default function SpaceTabs() {
       style={{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` }}
     >
       {items.map((item) => {
-        const active = pathname === item.href.split("?")[0];
+        const [itemPath, query] = item.href.split("?");
+        const expectedTab = query ? new URLSearchParams(query).get("onglet") : null;
+        const currentTab = searchParams.get("onglet");
+        const active = pathname === itemPath && (expectedTab ? currentTab === expectedTab : !currentTab);
         return (
           <Link
             key={item.href}

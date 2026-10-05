@@ -138,9 +138,24 @@ export function navSpaces(roles: ViewerRoles): Space[] {
           title: "Administration",
           items: [
             {
-              label: "Vue d'ensemble",
+              label: "Tableau de bord",
               href: "/gestion/admin",
               icon: icons.adminHome,
+            },
+            {
+              label: "Programme",
+              href: "/gestion/admin?onglet=programme",
+              icon: icons.adminSessions,
+            },
+            {
+              label: "Personnes",
+              href: "/gestion/admin?onglet=personnes",
+              icon: icons.profile,
+            },
+            {
+              label: "Projets & services",
+              href: "/gestion/admin?onglet=projets",
+              icon: icons.functions,
             },
             {
               label: "Communication",
