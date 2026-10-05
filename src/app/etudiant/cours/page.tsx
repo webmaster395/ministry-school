@@ -35,7 +35,7 @@ export default async function StudentCoursesPage() {
         </h2>
       </div>
 
-      <ul className="grid max-w-5xl gap-[22px]">
+      <ul className="grid max-w-5xl gap-[22px] md:grid-cols-2">
         {parcours.map((p) => {
           const color = COLORS[p.slug] ?? ministryColor;
           const mine = sessions.filter((s) => parcoursSlugOf(s.track) === p.slug);
