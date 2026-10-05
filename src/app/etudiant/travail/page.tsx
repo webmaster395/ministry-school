@@ -5,8 +5,8 @@ import {
   getStudentAllSessions,
   getStudentAssignments,
   getStudentCompletedIds,
-  getNextRelevantSession,
   getStudentProfile,
+  getStudentWorkItems,
   type StudentSession,
 } from "@/lib/data/student";
 import { formatSessionDate } from "@/lib/format";
@@ -50,20 +50,7 @@ export default async function StudentWorkPage({
   const ministryColor = getMinistry(ministrySlug)?.color ?? INK;
   const sessionById = new Map(sessions.map((s) => [s.id, s]));
   const isDone = (a: Assignment) => doneIds.has(a.id);
-  const work = assignments.flatMap((assignment) => {
-    const origin = sessionById.get(assignment.session_id);
-    if (!origin) return [];
-    const phase = "phase" in assignment ? assignment.phase : null;
-    const after = phase
-      ? phase === "after"
-      : !!assignment.due_at &&
-        new Date(assignment.due_at) >
-          new Date(`${origin.session_date}T${origin.end_time}`);
-    const target = after ? getNextRelevantSession(origin, sessions) : origin;
-    return [
-      { assignment, origin, targetDate: target?.session_date ?? null, after },
-    ];
-  });
+  const work = getStudentWorkItems(assignments, sessions);
   const open = work.filter(({ assignment }) => !isDone(assignment));
   const knownDates = open
     .map((item) => item.targetDate)
@@ -251,7 +238,7 @@ export default async function StudentWorkPage({
                                 : "text-foreground"
                             }`}
                           >
-                            {("title" in a ? a.title : null) || a.instructions}
+                          {a.title || a.instructions}
                           </Link>
                           <p className="mt-0.5 text-sm text-muted">
                             {s.courses?.title ?? s.description ?? "Cours"}

@@ -6,6 +6,7 @@ import {
   getStudentAssignments,
   getStudentCompletedIds,
   getStudentProfile,
+  getStudentWorkItems,
 } from "@/lib/data/student";
 import { formatSessionDate, formatTimeRange } from "@/lib/format";
 import SessionTypeBadge from "@/components/SessionTypeBadge";
@@ -50,19 +51,25 @@ export default async function StudentDashboardPage() {
         )
       )
     : 0;
-  const [dayAssignments, doneIds] = await Promise.all([
+  const [assignments, doneIds] = await Promise.all([
     getStudentAssignments(
       supabase,
-      daySessions.map((s) => s.id)
+      allSessions.map((s) => s.id)
     ),
     getStudentCompletedIds(supabase, user!.id),
   ]);
   // Première journée : aucun devoir, une carte d'information pratique à la place
   const isFirstDay = nextSession?.session_date === FIRST_DAY;
-  const todo = isFirstDay ? [] : dayAssignments.filter((a) => !doneIds.has(a.id));
+  const work = getStudentWorkItems(assignments, allSessions);
+  const todo = isFirstDay || !nextSession
+    ? []
+    : work.filter(
+        ({ assignment, targetDate }) =>
+          targetDate === nextSession.session_date && !doneIds.has(assignment.id),
+      );
   // L'accueil ne montre que les deux premiers travaux ; « Voir tout » ouvre la liste complète
   const toPrepare = todo.slice(0, 2);
-  const todoCount = toPrepare.length;
+  const todoCount = todo.length;
 
   return (
     <div className="grid items-start gap-5 lg:grid-cols-[1fr_360px]">
@@ -279,18 +286,21 @@ export default async function StudentDashboardPage() {
 
           {toPrepare.length ? (
             <ul className="mt-3 divide-y divide-border-soft">
-              {toPrepare.map((a) => {
+              {toPrepare.map(({ assignment: a, origin, after }) => {
                 const Icon = /vid[ée]o/i.test(a.kind ?? "") ? Video : FileText;
+                const title = a.title || a.instructions;
+                const course = origin.courses?.title ?? origin.description ?? "Cours";
                 return (
                   <li key={a.id}>
                     <Link
-                      href="/etudiant/travail"
+                      href={`/etudiant/seances/${origin.id}#${after ? "after-course" : "before-course"}`}
                       className="group flex items-center gap-3 py-3 text-[15px] text-foreground"
                     >
                       <span className="h-6 w-6 shrink-0 rounded-full border border-border" />
                       <Icon size={18} strokeWidth={1.6} className="shrink-0 text-muted" />
                       <span className="min-w-0 flex-1">
-                        <span className="line-clamp-2 group-hover:underline">{a.instructions}</span>
+                        <span className="line-clamp-1 font-medium group-hover:underline">{title}</span>
+                        <span className="mt-0.5 block truncate text-xs text-muted">{course}</span>
                         {a.duration_min && (
                           <span className="block text-xs text-muted">{a.duration_min} min</span>
                         )}
@@ -313,7 +323,7 @@ export default async function StudentDashboardPage() {
             <p className="mt-4 text-sm text-muted">Rien à préparer pour cette journée.</p>
           )}
           <Link
-            href="/etudiant/travail"
+            href="/etudiant/travail?onglet=prochaine"
             className="mt-3 inline-block text-sm font-medium text-foreground hover:underline"
           >
             Voir tout →

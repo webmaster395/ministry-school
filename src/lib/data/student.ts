@@ -245,10 +245,27 @@ export async function getStudentMaterials(
   return legacy.data ?? [];
 }
 
+export type StudentAssignment = {
+  id: string;
+  title: string | null;
+  description: string | null;
+  instructions: string;
+  content_type: string | null;
+  resource_url: string | null;
+  file_url: string | null;
+  phase: string | null;
+  sort_order: number | null;
+  session_id: string;
+  created_at: string;
+  kind: string | null;
+  duration_min: number | null;
+  due_at: string | null;
+};
+
 export async function getStudentAssignments(
   supabase: SupabaseClient,
   sessionIds: string[],
-) {
+): Promise<StudentAssignment[]> {
   if (!sessionIds.length) return [];
 
   const enriched = await supabase
@@ -260,7 +277,7 @@ export async function getStudentAssignments(
     .order("sort_order")
     .order("created_at", { ascending: false });
 
-  if (!enriched.error) return enriched.data ?? [];
+  if (!enriched.error) return (enriched.data ?? []) as StudentAssignment[];
 
   // Même principe pour les travaux historiques : aucune colonne facultative ne doit pouvoir
   // rendre un ancien cours ou ses consignes invisibles.
@@ -272,7 +289,46 @@ export async function getStudentAssignments(
     .in("session_id", sessionIds)
     .order("created_at", { ascending: false });
 
-  return legacy.data ?? [];
+  return (legacy.data ?? []).map((assignment) => ({
+    ...assignment,
+    title: null,
+    description: null,
+    content_type: null,
+    resource_url: null,
+    file_url: null,
+    phase: null,
+    sort_order: null,
+  })) as StudentAssignment[];
+}
+
+export type StudentWorkItem = {
+  assignment: StudentAssignment;
+  origin: StudentSession;
+  targetDate: string | null;
+  after: boolean;
+};
+
+/**
+ * Source unique de synchronisation entre la Home, la fiche cours et « Travail à faire ».
+ * Un travail après le cours est rattaché à la prochaine séance réellement pertinente ;
+ * un travail avant le cours reste rattaché à sa propre séance.
+ */
+export function getStudentWorkItems(
+  assignments: StudentAssignment[],
+  sessions: StudentSession[],
+): StudentWorkItem[] {
+  const sessionById = new Map(sessions.map((session) => [session.id, session]));
+  return assignments.flatMap((assignment) => {
+    const origin = sessionById.get(assignment.session_id);
+    if (!origin) return [];
+    const after = assignment.phase
+      ? assignment.phase === "after"
+      : !!assignment.due_at &&
+        new Date(assignment.due_at) >
+          new Date(`${origin.session_date}T${origin.end_time}`);
+    const target = after ? getNextRelevantSession(origin, sessions) : origin;
+    return [{ assignment, origin, targetDate: target?.session_date ?? null, after }];
+  });
 }
 
 /** Identifiants des travaux que l'étudiant a déjà cochés. */
