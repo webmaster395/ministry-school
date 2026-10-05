@@ -9,9 +9,13 @@ type SaveState = "idle" | "saving" | "saved" | "error";
 export default function CourseNotesEditor({
   sessionId,
   initialHtml,
+  heading = "Mes notes",
+  showLibraryLink = true,
 }: {
   sessionId: string;
   initialHtml: string;
+  heading?: string;
+  showLibraryLink?: boolean;
 }) {
   const editor = useRef<HTMLDivElement>(null);
   const initialized = useRef(false);
@@ -83,7 +87,7 @@ export default function CourseNotesEditor({
     <section className="overflow-hidden rounded-2xl border border-border bg-background shadow-[0_10px_35px_rgba(39,48,47,0.06)]">
       <header className="flex flex-wrap items-center justify-between gap-2 border-b border-border-soft px-4 py-3">
         <div>
-          <h2 className="font-title text-lg text-foreground">Mes notes</h2>
+          <h2 className="font-title text-lg text-foreground">{heading}</h2>
           <p className="mt-0.5 text-[11px] text-muted">
             {state === "saving" && "Enregistrement…"}
             {state === "saved" && (
@@ -95,12 +99,14 @@ export default function CourseNotesEditor({
             {state === "idle" && "Sauvegarde automatique"}
           </p>
         </div>
-        <a
-          href="/etudiant/notes"
-          className="text-xs font-semibold text-foreground hover:underline"
-        >
-          Toutes mes notes
-        </a>
+        {showLibraryLink && (
+          <a
+            href="/etudiant/notes"
+            className="text-xs font-semibold text-foreground hover:underline"
+          >
+            Toutes mes notes
+          </a>
+        )}
       </header>
       <div
         className="flex flex-wrap gap-0.5 border-b border-border-soft px-3 py-2"

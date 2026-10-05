@@ -55,12 +55,14 @@ export default function HeaderTitle({ greeting }: { greeting: string }) {
     TITLES[pathname] ??
     (pathname.startsWith("/etudiant/cours/")
       ? "Mes cours"
-      : pathname.startsWith("/etudiant/services/")
-        ? "Services et projets"
-        : pathname.startsWith("/gestion/enseignement/preparation/") ||
-            pathname.startsWith("/gestion/pilotage/preparation/")
-          ? "Préparer le cours"
-          : greeting);
+      : pathname.startsWith("/etudiant/notes/")
+        ? "Mes notes"
+        : pathname.startsWith("/etudiant/services/")
+          ? "Services et projets"
+          : pathname.startsWith("/gestion/enseignement/preparation/") ||
+              pathname.startsWith("/gestion/pilotage/preparation/")
+            ? "Préparer le cours"
+            : greeting);
 
   return (
     <h1 className="font-title text-[20px] leading-tight text-foreground">
