@@ -455,6 +455,7 @@ export default function CourseExperience({
             ["before-course", "À préparer"],
             ["course-content", "Suivre le cours"],
             ["after-course", "Mettre en pratique"],
+            ...(notes?.enabled ? [["course-notes", "Mes notes"]] : []),
           ].map(([anchor, label]) => (
             <a
               key={anchor}
@@ -666,10 +667,12 @@ export default function CourseExperience({
         </main>
         <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
           {notes?.enabled && (
-            <CourseNotesEditor
-              sessionId={session.id}
-              initialHtml={notes.initialHtml}
-            />
+            <div id="course-notes" className="scroll-mt-32">
+              <CourseNotesEditor
+                sessionId={session.id}
+                initialHtml={notes.initialHtml}
+              />
+            </div>
           )}
           {trainers.map(
             (trainer) =>
