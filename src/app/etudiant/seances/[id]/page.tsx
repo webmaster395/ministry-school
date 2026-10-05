@@ -66,6 +66,20 @@ function formatDue(dateStr: string) {
   });
 }
 
+function coursePlace(location: string, room: string | null) {
+  const parts = location
+    .split(/\s*[·|]\s*/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+  const name = parts[0] || location;
+  const address =
+    parts.slice(1).join(" · ") ||
+    (/espace martin luther king/i.test(name)
+      ? "1 rue Martin Luther King, 94000 Créteil"
+      : null);
+  return { name, address, room };
+}
+
 export default async function SessionDetailPage({
   params,
 }: {
@@ -110,6 +124,7 @@ export default async function SessionDetailPage({
   const aboutText = s.summary || s.description;
   const objectives = lines(s.objectives);
   const refs = lines(s.bible_refs);
+  const structuredPlace = coursePlace(s.location, s.room);
   const place = s.room ? `${s.location} · ${s.room}` : s.location;
   const teacher = s.speaker_name ?? s.teacher?.full_name ?? null;
   const canManage = me?.role === "admin" || me?.is_teacher;
@@ -253,7 +268,7 @@ export default async function SessionDetailPage({
           date: formatSessionDateWithYear(s.session_date),
           dateIso: s.session_date,
           hours: formatHours(s.start_time, s.end_time),
-          place,
+          place: structuredPlace,
           past,
           accent: trackColor,
         }}

@@ -67,7 +67,11 @@ type CourseSession = {
   date: string;
   dateIso: string;
   hours: string;
-  place: string;
+  place: {
+    name: string;
+    address: string | null;
+    room: string | null;
+  };
   past: boolean;
   accent: string;
 };
@@ -416,7 +420,19 @@ export default function CourseExperience({
             </span>
             <span className="flex items-start gap-2 sm:col-span-2 lg:col-span-1">
               <MapPin className="mt-0.5 shrink-0" size={17} />
-              <span>{session.place}</span>
+              <span className="grid gap-0.5">
+                <strong className="font-medium text-white">
+                  {session.place.name}
+                </strong>
+                {session.place.address && (
+                  <span className="text-white/65">{session.place.address}</span>
+                )}
+                {session.place.room && (
+                  <span className="text-white/80">
+                    Salle : {session.place.room.replace(/^salle\s+/i, "")}
+                  </span>
+                )}
+              </span>
             </span>
           </div>
         </div>
