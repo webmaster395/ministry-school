@@ -1,4 +1,4 @@
-import { ChevronRight, Search } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getMinistries } from "@/lib/data/admin";
@@ -8,6 +8,7 @@ import { signedAvatarUrls } from "@/lib/avatars";
 import { getMinistry } from "@/lib/ministry";
 import MinistryPicto from "@/components/MinistryPicto";
 import MemberAccessEditor from "@/components/admin/MemberAccessEditor";
+import MemberFilters from "@/components/admin/MemberFilters";
 import { addDelegate, removeDelegate } from "@/app/gestion/admin/actions";
 import { parseMlkEngagement } from "@/lib/mlk-engagement";
 
@@ -29,6 +30,9 @@ const rolesOf = (m: Member, services: Map<string, string>, ministries: Map<strin
     m.ministry_lead_of ? `Pilotage · ${ministries.get(m.ministry_lead_of) ?? ""}` : null,
   ].filter(Boolean) as string[];
 };
+
+/** Minuscules et sans accents : « Stéphie » se trouve en tapant « stephie ». */
+const plain = (v: string) => v.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 
 const fmt = (d: string) => new Intl.DateTimeFormat("fr-FR", { dateStyle: "short" }).format(new Date(d));
 
@@ -65,9 +69,14 @@ export default async function MembersTab({
   const ministryName = new Map(ministries.map((m) => [m.id, m.name]));
   const ministryById = new Map(ministries.map((m) => [m.id, m]));
 
-  const needle = q.trim().toLowerCase();
+  // Chaque mot tapé doit se retrouver dans le nom ou l'e-mail, dans n'importe quel ordre
+  const words = plain(q).split(/\s+/).filter(Boolean);
   const filtered = members
-    .filter((m) => !needle || m.full_name.toLowerCase().includes(needle) || m.email.toLowerCase().includes(needle))
+    .filter((m) => {
+      if (!words.length) return true;
+      const haystack = plain(`${m.full_name} ${m.email}`);
+      return words.every((w) => haystack.includes(w));
+    })
     .filter((m) => {
       if (role === "tous") return true;
       if (role === "admin") return m.role === "admin";
@@ -143,77 +152,10 @@ export default async function MembersTab({
 
   return (
     <div className="space-y-5">
-      <form method="get" className="flex flex-wrap items-center gap-3">
-        <input type="hidden" name="onglet" value="membres" />
-        <label className="relative min-w-[240px] flex-1">
-          <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-          <input
-            name="q"
-            defaultValue={q}
-            placeholder="Rechercher par nom ou e-mail"
-            className={`${field} w-full pl-9`}
-          />
-        </label>
-        <select name="role" defaultValue={role} className={field}>
-          <option value="tous">Tous les rôles</option>
-          <option value="etudiant">Étudiant seulement</option>
-          <option value="enseignant">Formateur</option>
-          <option value="chef">Chef de projet</option>
-          <option value="responsable">Responsable de service</option>
-          <option value="pilotage">Pilotage ministériel</option>
-          <option value="admin">Admin</option>
-        </select>
-        <select name="sens" defaultValue={sens} className={field}>
-          <option value="toutes">Toutes les sensibilités</option>
-          <option value="non_renseignee">Sensibilité non renseignée</option>
-          {ministries.map((m) => (
-            <option key={m.id} value={m.slug}>
-              {m.name}
-            </option>
-          ))}
-        </select>
-        <select name="statut" defaultValue={statut} className={field}>
-          <option value="tous">Tous les statuts</option>
-          <option value="actif">Actif</option>
-          <option value="a_confirmer">À confirmer</option>
-          <option value="desactive">Désactivé</option>
-        </select>
-        <select name="implication" defaultValue={implication} className={field}>
-          <option value="toutes">Toutes les implications</option>
-          <option value="aucun">Aucun engagement</option>
-          <option value="equipier">Équipiers MLK</option>
-          <option value="manager">Managers et managers adjoints</option>
-          <option value="collaborateur">Collaborateurs salariés</option>
-          <option value="non_renseigne">Non renseigné</option>
-        </select>
-        <select name="genre" defaultValue={genre} className={field}>
-          <option value="tous">Tous les genres</option>
-          <option value="homme">Hommes</option>
-          <option value="femme">Femmes</option>
-          <option value="non_renseigne">Genre non renseigné</option>
-        </select>
-        <select name="par" defaultValue={String(perPage)} className={field} aria-label="Membres par page">
-          <option value="25">25 par page</option>
-          <option value="50">50 par page</option>
-          <option value="100">100 par page</option>
-        </select>
-        <select name="tri" defaultValue={tri} className={field}>
-          <option value="nom">Tri par nom</option>
-          <option value="creation">Plus récents</option>
-        </select>
-        <button
-          type="submit"
-          className="label rounded-md bg-accent px-4 py-2.5 text-xs tracking-[0.12em] text-on-accent hover:bg-[#1b2221]"
-        >
-          Filtrer
-        </button>
-        <a
-          href="/gestion/admin/utilisateurs/export"
-          className="label rounded-md border border-foreground px-4 py-2.5 text-xs tracking-[0.12em] text-foreground hover:bg-foreground/[0.04]"
-        >
-          Télécharger (CSV)
-        </a>
-      </form>
+      <MemberFilters
+        initial={{ q, role, sens, statut, implication, genre, par: String(perPage), tri }}
+        ministries={ministries.map((m) => ({ id: m.id, name: m.name, slug: m.slug }))}
+      />
 
       {pager}
 
