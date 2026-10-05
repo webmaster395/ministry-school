@@ -45,6 +45,7 @@ export default async function StudentMessagesPage() {
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <span className="flex items-center gap-2 text-sm text-muted">
+                  {m.system && <span aria-hidden="true" className="grid h-8 w-8 place-items-center rounded-full bg-accent text-[10px] font-bold text-on-accent">MS</span>}
                   {m.by ? `De ${m.by}` : "L'équipe Ministry School"}
                   {m.isNew && (
                     <span className="label rounded-full bg-m-doctoral/[0.12] px-2.5 py-0.5 text-[10px] tracking-[0.1em] text-link">

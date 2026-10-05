@@ -12,10 +12,12 @@ import { sessionColor } from "@/lib/ministry";
 import SessionEditForm from "@/components/SessionEditForm";
 import { teacherPanels } from "@/components/gestion/TeacherPanels";
 import { publishCourse } from "@/app/gestion/pilotage/actions";
+import TrainerMultiSelect, { type TrainerChoice } from "@/components/gestion/TrainerMultiSelect";
 
 type FullSession = PilotSession & { teacher_id: string | null; ministry_id: string | null };
 
-const SECTIONS = ["presentation", "objectifs", "consignes", "supports", "apres"] as const;
+const SECTIONS = ["presentation", "objectifs", "video", "consignes", "supports", "apres"] as const;
+const SECTION_LABELS = { presentation: "À propos", objectifs: "Objectifs", video: "Vidéo", consignes: "À faire avant", supports: "Ressources", apres: "À faire après" } as const;
 
 export default async function PreparationPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -26,24 +28,31 @@ export default async function PreparationPage({ params }: { params: Promise<{ id
   const { data } = await supabase
     .from("sessions")
     .select(
-      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, session_type, course_id, day, teacher_id, ministry_id, teacher:profiles!sessions_teacher_id_fkey(full_name)" + DRAFT_COLUMN
+      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, video_url, session_type, course_id, day, teacher_id, ministry_id, teacher:profiles!sessions_teacher_id_fkey(full_name)" + DRAFT_COLUMN
     )
     .eq("id", id)
     .single();
   const s = data as unknown as FullSession | null;
   if (!s) notFound();
 
+  const { data: trainerLinks } = await supabase
+    .from("session_trainers")
+    .select("trainer_id, position, trainer:trainers(id, profile_id, first_name, last_name, title, photo_path)")
+    .eq("session_id", id)
+    .order("position");
+  const linkedProfiles = (trainerLinks ?? []).map((link) => (link.trainer as unknown as { profile_id: string | null } | null)?.profile_id).filter(Boolean);
   const canEdit =
     viewer.roles.admin ||
     s.teacher_id === viewer.id ||
+    linkedProfiles.includes(viewer.id) ||
     (!!s.ministry_id && viewer.roles.steeringMinistryIds.includes(s.ministry_id));
   if (!canEdit) redirect("/etudiant");
 
   const [{ data: materials }, { data: assignments }] = await Promise.all([
-    supabase.from("materials").select("id, title, link_url, file_url, visible_at" + TYPE_COLUMN).eq("session_id", id).order("created_at"),
+    supabase.from("materials").select("id, title, description, sort_order, link_url, file_url, visible_at" + TYPE_COLUMN).eq("session_id", id).order("sort_order").order("created_at"),
     supabase
       .from("assignments")
-      .select("id, instructions, kind, duration_min, due_at")
+      .select("id, title, description, instructions, content_type, resource_url, file_url, phase, sort_order, kind, duration_min, due_at")
       .eq("session_id", id)
       .order("created_at"),
   ]);
@@ -66,6 +75,14 @@ export default async function PreparationPage({ params }: { params: Promise<{ id
   const color = sessionColor(s.track, "commun", "#1d2625");
   const teacher = s.speaker_name ?? s.teacher?.full_name;
   const isDraft = DRAFTS_ENABLED && !!s.is_draft;
+  const { data: trainerRows } = await supabase.from("trainers").select("id, first_name, last_name, title, photo_path").eq("is_active", true).order("last_name");
+  const trainers: TrainerChoice[] = (trainerRows ?? []).map((trainer) => ({
+    id: trainer.id,
+    name: `${trainer.first_name} ${trainer.last_name}`.trim(),
+    title: trainer.title,
+    photoUrl: trainer.photo_path ? supabase.storage.from("trainer-photos").getPublicUrl(trainer.photo_path).data.publicUrl : null,
+  }));
+  const selectedTrainerIds = (trainerLinks ?? []).map((link) => link.trainer_id as string);
 
   return (
     <div className="space-y-4">
@@ -125,12 +142,25 @@ export default async function PreparationPage({ params }: { params: Promise<{ id
         </section>
       )}
 
+      {isPilot && (
+        <section className="rounded-2xl border border-border bg-background">
+          <div className="border-b border-border-soft px-6 py-5"><h3 className="font-title text-[20px] text-foreground">Formateurs de la séance</h3><p className="text-sm text-muted">Sélectionne une ou plusieurs personnes depuis l’annuaire centralisé.</p></div>
+          <div className="px-6 py-5"><TrainerMultiSelect sessionId={s.id} trainers={trainers} selectedIds={selectedTrainerIds} /></div>
+        </section>
+      )}
+
       {SECTIONS.map((key) => {
-        const it = items.find((i) => i.key === key)!;
+        const it = items.find((i) => i.key === key) ?? {
+          key,
+          label: SECTION_LABELS[key],
+          detail: s.video_url ? "Vidéo renseignée" : "Facultatif",
+          done: !!s.video_url,
+          required: false,
+        };
         return (
           <section key={key} id={key} className="scroll-mt-24 overflow-hidden rounded-2xl border border-border bg-background">
             <div className="border-b border-border-soft px-6 py-5">
-              <h3 className="font-title text-[20px] text-foreground">{it.label}</h3>
+              <h3 className="font-title text-[20px] text-foreground">{SECTION_LABELS[key]}</h3>
               <p className="text-sm text-muted">{it.done ? it.detail : it.required ? "À compléter" : it.detail}</p>
             </div>
             <div className="px-6 py-5">{panels[key]}</div>

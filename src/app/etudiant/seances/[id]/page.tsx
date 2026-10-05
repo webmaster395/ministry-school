@@ -19,6 +19,8 @@ import {
 } from "@/lib/data/student";
 import { parcoursSlugOf } from "@/lib/data/parcours";
 import { toggleAssignment } from "../../travail/actions";
+import CourseExperience from "@/components/course/CourseExperience";
+import { newCourseExperienceEnabled } from "@/lib/features/course-experience";
 
 const TRACK_COLORS: Record<string, string> = {
   coeur: "#8b6fc0",
@@ -100,6 +102,34 @@ export default async function SessionDetailPage({ params }: { params: Promise<{ 
 
   const backHref = parcoursSlug ? `/etudiant/cours/parcours/${parcoursSlug}` : `/etudiant/cours`;
   const backLabel = parcoursSlug ? "Retour au parcours" : "Retour aux cours";
+
+  if (await newCourseExperienceEnabled(supabase, user!.id)) {
+    const { data: trainerLinks } = await supabase
+      .from("session_trainers")
+      .select("position, trainer:trainers(id, first_name, last_name, title, bio, photo_path)")
+      .eq("session_id", s.id)
+      .order("position");
+    const trainers = (trainerLinks ?? []).flatMap((link) => {
+      const trainer = link.trainer as unknown as { id: string; first_name: string; last_name: string; title: string | null; bio: string | null; photo_path: string | null } | null;
+      if (!trainer) return [];
+      return [{ id: trainer.id, name: `${trainer.first_name} ${trainer.last_name}`.trim(), title: trainer.title, bio: trainer.bio, photoUrl: trainer.photo_path ? supabase.storage.from("trainer-photos").getPublicUrl(trainer.photo_path).data.publicUrl : null }];
+    });
+    if (!trainers.length && teacher) trainers.push({ id: "legacy", name: teacher, title: null, bio: null, photoUrl: null });
+    const currentIndex = sessions.findIndex((session) => session.id === s.id);
+    const navItem = (session: typeof s | undefined) => session ? { id: session.id, title: session.courses?.title ?? session.description ?? "Séance" } : null;
+
+    return <CourseExperience
+      session={{ id: s.id, title, track: s.track ?? null, summary: aboutText ?? null, description: s.description, objectives, videoUrl: s.video_url ?? null, date: formatSessionDateWithYear(s.session_date), dateIso: s.session_date, hours: formatHours(s.start_time, s.end_time), place, past, accent: trackColor }}
+      trainers={trainers}
+      materials={materials}
+      assignments={assignments}
+      completedIds={doneIds}
+      backHref={backHref}
+      backLabel={backLabel}
+      previous={navItem(sessions[currentIndex - 1])}
+      next={navItem(sessions[currentIndex + 1])}
+    />;
+  }
 
   return (
     <div className="space-y-6">

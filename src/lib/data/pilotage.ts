@@ -15,6 +15,7 @@ export type PilotSession = {
   summary: string | null;
   objectives: string | null;
   bible_refs: string | null;
+  video_url?: string | null;
   teacher: { full_name: string } | null;
   /** Cours pas encore publié : invisible des étudiants (si les brouillons sont activés) */
   is_draft?: boolean;
@@ -47,7 +48,7 @@ export async function getMinistrySessions(supabase: SupabaseClient, ministryId: 
   const { data } = await supabase
     .from("sessions")
     .select(
-      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, teacher:profiles!sessions_teacher_id_fkey(full_name)" + DRAFT_COLUMN
+      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, video_url, teacher:profiles!sessions_teacher_id_fkey(full_name)" + DRAFT_COLUMN
     )
     .eq("ministry_id", ministryId)
     .order("session_date", { ascending: true })

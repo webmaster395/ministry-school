@@ -115,6 +115,11 @@ export default function ResourceDialog({ sessionId, withTypes }: { sessionId: st
             </div>
 
             <div>
+              <label className={label} htmlFor="r-description">Courte description <span className="text-muted">(facultatif)</span></label>
+              <textarea id="r-description" name="description" rows={3} className={field} />
+            </div>
+
+            <div>
               <label className={label} htmlFor="r-url">Lien ou fichier</label>
               <input id="r-url" name="link_url" type="url" placeholder="https://…" disabled={!!file} className={`${field} disabled:opacity-50`} />
               <input

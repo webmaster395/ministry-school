@@ -9,11 +9,13 @@ import QuestionsTab from "@/components/admin/QuestionsTab";
 import StatisticsTab from "@/components/admin/StatisticsTab";
 import { QUESTIONS_ENABLED } from "@/lib/questions";
 import { getMinistries } from "@/lib/data/admin";
+import TrainersTab, { type TrainerAdminRow } from "@/components/admin/TrainersTab";
 
 const TABS = [
   { key: "vue", label: "Vue d'ensemble" },
   { key: "statistiques", label: "Statistiques" },
   { key: "membres", label: "Membres et accès" },
+  { key: "formateurs", label: "Formateurs" },
   { key: "programme", label: "Programme" },
   { key: "projets", label: "Projets et formations" },
   { key: "questions", label: "Questions" },
@@ -44,6 +46,21 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
   const today = new Date().toISOString().slice(0, 10);
 
   const opps = await getOpportunitiesWithDates(supabase);
+  let trainers: TrainerAdminRow[] = [];
+  if (tab === "formateurs") {
+    const { data } = await supabase
+      .from("trainers")
+      .select("id, first_name, last_name, title, bio, photo_path, is_active")
+      .order("is_active", { ascending: false })
+      .order("last_name")
+      .order("first_name");
+    trainers = ((data ?? []) as Omit<TrainerAdminRow, "photoUrl">[]).map((trainer) => ({
+      ...trainer,
+      photoUrl: trainer.photo_path
+        ? supabase.storage.from("trainer-photos").getPublicUrl(trainer.photo_path).data.publicUrl
+        : null,
+    }));
+  }
 
   return (
     <div className="space-y-6">
@@ -90,6 +107,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           par={p.par ?? "50"}
         />
       )}
+      {tab === "formateurs" && <TrainersTab trainers={trainers} />}
     </div>
   );
 }

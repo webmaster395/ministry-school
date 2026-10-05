@@ -17,6 +17,7 @@ export async function updateSession(formData: FormData) {
 
   // Les références bibliques ne sont modifiées que si le formulaire les propose
   const refs = formData.has("bible_refs") ? { bible_refs: text("bible_refs") || null } : {};
+  const video = formData.has("video_url") ? { video_url: text("video_url") || null } : {};
 
   // Type, ministère, cours et jour : seulement quand le formulaire les propose (administrateur)
   const admin: Record<string, string | null> = {};
@@ -32,6 +33,7 @@ export async function updateSession(formData: FormData) {
     .from("sessions")
     .update({
       ...refs,
+      ...video,
       ...admin,
       session_date: text("session_date"),
       start_time: text("start_time"),

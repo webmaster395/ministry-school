@@ -7,7 +7,18 @@ export type Message = {
   by: string | null;
   at: string;
   isNew: boolean;
+  system: boolean;
 };
+
+/**
+ * Les communications humaines passent par l'écran Communication et ont toujours `sent_as`.
+ * Les annonces créées automatiquement par la plateforme n'en ont pas : leur auteur réel reste
+ * dans author_id pour l'audit, mais n'est jamais exposé comme expéditeur à l'étudiant.
+ */
+function studentFacingSender(message: { is_welcome: boolean; is_system: boolean; sent_as: string | null; author: { full_name: string } | null }) {
+  const system = message.is_system || message.is_welcome || !message.sent_as;
+  return { by: system ? null : (message.author?.full_name ?? null), system };
+}
 
 /**
  * Les messages envoyés par les enseignants et l'équipe (annonces). Seulement des messages :
@@ -24,7 +35,7 @@ export async function getStudentMessages(supabase: SupabaseClient, since: string
 
   const { data } = await supabase
     .from("announcements")
-    .select("id, title, body, created_at, is_welcome, author:profiles!announcements_author_id_fkey(full_name)")
+    .select("id, title, body, created_at, is_welcome, is_system, sent_as, author:profiles!announcements_author_id_fkey(full_name)")
     .order("created_at", { ascending: false })
     .limit(50);
 
@@ -35,6 +46,8 @@ export async function getStudentMessages(supabase: SupabaseClient, since: string
       body: string;
       created_at: string;
       is_welcome: boolean;
+      is_system: boolean;
+      sent_as: string | null;
       author: { full_name: string } | null;
     }[]
   )
@@ -42,7 +55,8 @@ export async function getStudentMessages(supabase: SupabaseClient, since: string
       const at = m.is_welcome && arrival ? arrival : m.created_at;
       // Le message de bienvenue est daté de la création du compte, qui est aussi l'instant « dernier message vu » d'un nouveau compte : égalité = pas encore lu
       const isNew = m.is_welcome ? at >= since : at > since;
-      return { id: m.id, title: m.title, body: m.body, by: m.is_welcome ? null : (m.author?.full_name ?? null), at, isNew };
+      const sender = studentFacingSender(m);
+      return { id: m.id, title: m.title, body: m.body, ...sender, at, isNew };
     })
     .sort((a, b) => (a.at < b.at ? 1 : -1));
 }

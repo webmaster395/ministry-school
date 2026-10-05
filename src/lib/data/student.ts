@@ -19,10 +19,12 @@ export type StudentSession = {
   track?: string | null;
   summary?: string | null;
   bible_refs?: string | null;
+  video_url?: string | null;
+  cover_image_path?: string | null;
 };
 
 const SESSION_FIELDS =
-  "id, session_date, start_time, end_time, location, room, day, session_type, description, objectives, speaker_name, track, summary, bible_refs, course_id, courses(id, title), teacher:profiles!sessions_teacher_id_fkey(full_name)";
+  "id, session_date, start_time, end_time, location, room, day, session_type, description, objectives, speaker_name, track, summary, bible_refs, video_url, cover_image_path, course_id, courses(id, title), teacher:profiles!sessions_teacher_id_fkey(full_name)";
 
 export async function getStudentProfile(supabase: SupabaseClient, userId: string) {
   const { data } = await supabase
@@ -144,11 +146,9 @@ export async function getStudentSessions(supabase: SupabaseClient, userId: strin
     getCommonSessions(supabase),
   ]);
 
-  const today = new Date().toISOString().slice(0, 10);
-
-  return normalizeStudentSessions(
-    [...ministrySessions, ...commonSessions].filter((s) => s.session_date >= today)
-  );
+  // Le calendrier est aussi l'archive pédagogique de l'étudiant : une séance accessible
+  // ne disparaît jamais après sa date. Les règles de ministère/jour restent inchangées.
+  return normalizeStudentSessions([...ministrySessions, ...commonSessions]);
 }
 
 export async function getStudentAllSessions(supabase: SupabaseClient, userId: string) {
@@ -165,9 +165,10 @@ export async function getStudentMaterials(supabase: SupabaseClient, sessionIds: 
 
   const { data } = await supabase
     .from("materials")
-    .select("id, title, link_url, file_url, visible_at, session_id")
+    .select("id, title, description, resource_type, link_url, file_url, visible_at, session_id, sort_order")
     .in("session_id", sessionIds)
     .lte("visible_at", new Date().toISOString())
+    .order("sort_order")
     .order("visible_at", { ascending: false });
 
   return data ?? [];
@@ -178,8 +179,9 @@ export async function getStudentAssignments(supabase: SupabaseClient, sessionIds
 
   const { data } = await supabase
     .from("assignments")
-    .select("id, instructions, session_id, created_at, kind, duration_min, due_at")
+    .select("id, title, description, instructions, content_type, resource_url, file_url, phase, sort_order, session_id, created_at, kind, duration_min, due_at")
     .in("session_id", sessionIds)
+    .order("sort_order")
     .order("created_at", { ascending: false });
 
   return data ?? [];

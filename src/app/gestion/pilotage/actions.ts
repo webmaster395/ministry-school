@@ -35,6 +35,7 @@ export async function addSupport(formData: FormData) {
     link_url: text("link_url") || null,
     visible_at: visibleAt,
     created_by: user.id,
+    description: text("description") || null,
     ...(TYPES_ENABLED && text("resource_type") ? { resource_type: text("resource_type") } : {}),
   });
   if (error) throw new Error("L'ajout du support a échoué : " + error.message);
@@ -65,6 +66,11 @@ export async function addPilotAssignment(formData: FormData) {
   const { error } = await supabase.from("assignments").insert({
     session_id: sessionId,
     instructions: text("instructions"),
+    title: text("title") || text("instructions"),
+    description: text("description") || null,
+    content_type: text("content_type") || null,
+    resource_url: text("resource_url") || null,
+    phase: text("phase") === "after" ? "after" : "before",
     created_by: user.id,
     kind: text("kind") || null,
     duration_min: Number.isFinite(duration) && duration > 0 ? duration : null,
@@ -219,7 +225,14 @@ export async function updateAssignment(formData: FormData) {
   const duration = parseInt(str(formData, "duration_min"), 10);
   const { data, error } = await supabase
     .from("assignments")
-    .update({ instructions, duration_min: Number.isFinite(duration) && duration > 0 ? duration : null })
+    .update({
+      title: str(formData, "title") || instructions,
+      instructions,
+      description: str(formData, "description") || null,
+      content_type: str(formData, "content_type") || null,
+      resource_url: str(formData, "resource_url") || null,
+      duration_min: Number.isFinite(duration) && duration > 0 ? duration : null,
+    })
     .eq("id", str(formData, "id"))
     .select("id");
   if (error) throw new Error("La modification a échoué : " + error.message);
@@ -232,7 +245,11 @@ export async function updateSupport(formData: FormData) {
   const supabase = await createClient();
   const title = str(formData, "title");
   if (!title) throw new Error("Le titre ne peut pas être vide.");
-  const changes: { title: string; link_url?: string | null } = { title };
+  const changes: { title: string; description?: string | null; resource_type?: string | null; link_url?: string | null } = {
+    title,
+    description: str(formData, "description") || null,
+    resource_type: str(formData, "resource_type") || null,
+  };
   if (formData.has("link_url")) changes.link_url = str(formData, "link_url") || null;
   const { data, error } = await supabase.from("materials").update(changes).eq("id", str(formData, "id")).select("id");
   if (error) throw new Error("La modification a échoué : " + error.message);
@@ -289,11 +306,48 @@ async function notifyNewSupport(
     };
 
     if (viewer.roles.admin || s.teacher_id === viewer.id) {
-      await supabase.from("announcements").insert({ ...message, session_id: sessionId, sent_as: viewer.roles.admin ? "admin" : "teacher" });
+      await supabase.from("announcements").insert({ ...message, session_id: sessionId });
     } else if (s.ministry_id && viewer.roles.steeringMinistryIds.includes(s.ministry_id)) {
-      await supabase.from("announcements").insert({ ...message, ministry_id: s.ministry_id, sent_as: "steering" });
+      await supabase.from("announcements").insert({ ...message, ministry_id: s.ministry_id });
     }
   } catch (e) {
     console.error("Message automatique de nouveau support non envoyé :", e);
   }
 }
+
+/** Déplace un objectif sans créer un second modèle de données. */
+export async function moveObjective(formData: FormData) {
+  const supabase = await createClient();
+  const sessionId = str(formData, "session_id");
+  const index = parseInt(str(formData, "index"), 10);
+  const direction = str(formData, "direction") === "up" ? -1 : 1;
+  const { data: current } = await supabase.from("sessions").select("objectives").eq("id", sessionId).single();
+  const lines = (current?.objectives ?? "").split("\n").map((line: string) => line.trim()).filter(Boolean);
+  const target = index + direction;
+  if (index < 0 || target < 0 || index >= lines.length || target >= lines.length) return;
+  [lines[index], lines[target]] = [lines[target], lines[index]];
+  const { data, error } = await supabase.from("sessions").update({ objectives: lines.join("\n") }).eq("id", sessionId).select("id");
+  if (error) throw new Error("Le déplacement a échoué : " + error.message);
+  if (!data?.length) throw new Error("Vous n'avez pas le droit de modifier ce cours.");
+  refreshPrep(sessionId);
+}
+
+async function moveOrderedRow(table: "materials" | "assignments", formData: FormData) {
+  const supabase = await createClient();
+  const sessionId = str(formData, "session_id");
+  const id = str(formData, "id");
+  const direction = str(formData, "direction") === "up" ? -1 : 1;
+  const { data } = await supabase.from(table).select("id, sort_order, created_at").eq("session_id", sessionId).order("sort_order").order("created_at");
+  const rows = data ?? [];
+  const index = rows.findIndex((row) => row.id === id);
+  const target = index + direction;
+  if (index < 0 || target < 0 || target >= rows.length) return;
+  const firstOrder = rows[index].sort_order ?? index;
+  const secondOrder = rows[target].sort_order ?? target;
+  await supabase.from(table).update({ sort_order: secondOrder === firstOrder ? target : secondOrder }).eq("id", rows[index].id);
+  await supabase.from(table).update({ sort_order: secondOrder === firstOrder ? index : firstOrder }).eq("id", rows[target].id);
+  refreshPrep(sessionId);
+}
+
+export async function moveSupport(formData: FormData) { await moveOrderedRow("materials", formData); }
+export async function moveAssignment(formData: FormData) { await moveOrderedRow("assignments", formData); }
