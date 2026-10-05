@@ -92,7 +92,7 @@ export default async function StudentDashboardPage() {
               {nextSession.location}
               {nextSession.room ? ` · ${nextSession.room}` : ""}
             </p>
-            <p className="mt-3 flex items-start gap-2 rounded-lg bg-[#d8aa42]/[0.09] px-3 py-2 text-[12px] font-semibold leading-5 text-foreground sm:text-[13px]">
+            <p className="mt-3 flex items-start gap-2 rounded-lg bg-foreground px-3.5 py-2.5 text-[12px] font-medium leading-5 text-background shadow-[0_6px_18px_rgba(31,43,40,0.12)] sm:items-center sm:text-[13px]">
               <span aria-hidden="true" className="shrink-0">
                 ⚠️🅿️
               </span>
