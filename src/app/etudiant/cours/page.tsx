@@ -35,6 +35,21 @@ export default async function StudentCoursesPage() {
         </h2>
       </div>
 
+      <nav
+        aria-label="Accès rapide aux parcours"
+        className="flex max-w-5xl gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {parcours.map((p) => (
+          <a
+            key={p.id}
+            href={`#parcours-${p.slug}`}
+            className="inline-flex min-h-10 shrink-0 items-center rounded-full border border-border bg-background px-4 text-sm font-semibold text-foreground transition hover:border-foreground hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground"
+          >
+            {p.title}
+          </a>
+        ))}
+      </nav>
+
       <ul className="grid max-w-5xl gap-[22px] md:grid-cols-2">
         {parcours.map((p) => {
           const color = COLORS[p.slug] ?? ministryColor;
@@ -48,9 +63,10 @@ export default async function StudentCoursesPage() {
           return (
             <li
               key={p.id}
+              id={`parcours-${p.slug}`}
               suppressHydrationWarning
               data-locked={locked || undefined}
-              className={`flex flex-col rounded-lg border border-border border-t-[3px] bg-background p-6 ${
+              className={`scroll-mt-28 flex flex-col rounded-lg border border-border border-t-[3px] bg-background p-6 ${
                 locked ? "pointer-events-none select-none opacity-55 grayscale" : ""
               }`}
               style={{ borderTopColor: color }}
