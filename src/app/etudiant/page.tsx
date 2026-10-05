@@ -26,7 +26,7 @@ export default async function StudentDashboardPage() {
   // Messages des enseignants uniquement : le travail à faire a sa propre carte et sa propre page
   const messages = await getStudentMessages(supabase, notificationsSeenAt);
   const newCount = messages.filter((m) => m.isNew).length;
-  const preview = messages.slice(0, 2);
+  const preview = messages.slice(0, 1);
 
   // Date du jour à Paris (et non en UTC), pour que le décompte change bien à minuit heure de Paris
   const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris" }).format(new Date());
@@ -92,7 +92,7 @@ export default async function StudentDashboardPage() {
               {nextSession.location}
               {nextSession.room ? ` · ${nextSession.room}` : ""}
             </p>
-            <p className="mt-3 flex items-start gap-2 rounded-lg bg-foreground px-3.5 py-2.5 text-[12px] font-medium leading-5 text-background shadow-[0_6px_18px_rgba(31,43,40,0.12)] sm:items-center sm:text-[13px]">
+            <p className="mt-3 flex items-start gap-2 rounded-lg bg-[#1f2927] px-3.5 py-2.5 text-[12px] font-medium leading-5 text-white shadow-[0_6px_18px_rgba(31,43,40,0.12)] sm:items-center sm:text-[13px]">
               <span aria-hidden="true" className="shrink-0">
                 ⚠️🅿️
               </span>
