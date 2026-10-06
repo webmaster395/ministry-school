@@ -5,12 +5,11 @@ import { CalendarDays, Check, Copy, X } from "lucide-react";
 import { markCalendarSynced } from "@/app/etudiant/actions";
 import Portal from "@/components/Portal";
 
-type Service = "apple" | "google" | "outlook";
+type Service = "apple" | "google";
 
 const SERVICES: { key: Service; label: string }[] = [
   { key: "apple", label: "Apple Calendrier" },
   { key: "google", label: "Google Agenda" },
-  { key: "outlook", label: "Outlook" },
 ];
 
 const primaryButton =
@@ -20,7 +19,7 @@ const outlineButton =
 
 /**
  * Fenêtre « Synchroniser avec mon calendrier » : on choisit son application (Apple, Google,
- * Outlook) et on suit les étapes, avec le lien personnel à copier. C'est un abonnement : le
+ *  les étapes, avec le lien personnel à copier. C'est un abonnement : le
  * calendrier de la personne se met à jour tout seul quand un horaire ou une salle change.
  * « C'est fait » (ou la première lecture du lien par l'agenda) fait disparaître le bouton.
  */
@@ -46,7 +45,7 @@ export default function CalendarSyncDialog({
     const ua = navigator.userAgent;
     /* eslint-disable react-hooks/set-state-in-effect -- lus après le montage */
     setIsIos(/iPhone|iPad|iPod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1));
-    setService(/Android/i.test(ua) ? "google" : /Windows/i.test(ua) ? "outlook" : "apple");
+    setService(/Android/i.test(ua) || /Windows/i.test(ua) ? "google" : "apple");
     setOrigin(window.location.origin);
     /* eslint-enable react-hooks/set-state-in-effect */
   }, [subscribeUrl]);
@@ -61,7 +60,9 @@ export default function CalendarSyncDialog({
   if (!open) return null;
 
   const httpUrl = subscribeUrl ? `${origin}${subscribeUrl}` : "";
-  const webcalUrl = httpUrl.replace(/^https?:\/\//, "webcal://");
+  // webcals:// = abonnement en connexion sécurisée (https). Avec webcal://, Apple tente d'abord http,
+  // que le site refuse (il redirige vers https) : « connexion non sécurisée », puis échec.
+  const webcalUrl = httpUrl.replace(/^https:\/\//, "webcals://").replace(/^http:\/\//, "webcal://");
   const services = SERVICES;
 
   async function copyUrl() {
@@ -191,32 +192,11 @@ export default function CalendarSyncDialog({
               </a>
             </>
           )}
-
-          {service === "outlook" && (
-            <>
-              {steps([
-                "Copiez votre lien personnel avec le bouton ci-dessous.",
-                "Dans Outlook (calendrier), choisissez « Ajouter un calendrier », puis « S'abonner à partir du web ».",
-                "Collez le lien, donnez-lui le nom « Ministry School », puis « Importer ».",
-              ])}
-              {personalLink}
-              <a
-                href="https://outlook.live.com/calendar/0/addcalendar"
-                target="_blank"
-                rel="noreferrer"
-                className={`${outlineButton} w-full`}
-              >
-                <CalendarDays size={16} /> Ouvrir Outlook
-              </a>
-            </>
-          )}
-
         </div>
 
         <small className="block text-xs text-muted">
           Le lien reste personnel et sécurisé : ne le partagez pas. Ensuite, un changement d&apos;horaire ou de salle
-          est repris automatiquement par votre agenda (Google : sous 24 h environ, Apple et Outlook : souvent en
-          quelques heures).
+          est repris automatiquement par votre agenda (Google : sous 24 h environ, Apple : souvent en quelques heures).
         </small>
 
         {onDone && (
