@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { CalendarClock, ChevronLeft, ChevronRight, MapPin, RefreshCw, UserRound } from "lucide-react";
@@ -40,18 +41,20 @@ function longDate(d: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-/** Synchronisation avec un agenda : masquée pour l'instant (lien ICS et tutoriel à finaliser). À passer à true pour la réactiver. */
-const SYNC_ENABLED = false;
-
 export default function MonthCalendar({
   sessions,
   initialDate,
   subscribeUrl,
+  synced = false,
 }: {
   sessions: MonthSession[];
   initialDate?: string;
   subscribeUrl?: string | null;
+  /** Déjà synchronisé : le bouton n'est plus proposé (voir « Préférences » pour recommencer). */
+  synced?: boolean;
 }) {
+  const SYNC_ENABLED = !!subscribeUrl && !synced;
+  const router = useRouter();
   const [syncOpen, setSyncOpen] = useState(false);
   const firstDate = sessions.find((s) => s.date >= new Date().toISOString().slice(0, 10))?.date;
   const start =
@@ -124,7 +127,7 @@ export default function MonthCalendar({
           Aujourd&apos;hui
         </button>
       </div>
-      {SYNC_ENABLED && <CalendarSyncDialog open={syncOpen} onClose={() => setSyncOpen(false)} subscribeUrl={subscribeUrl ?? null} />}
+      {SYNC_ENABLED && <CalendarSyncDialog open={syncOpen} onClose={() => setSyncOpen(false)} subscribeUrl={subscribeUrl ?? null} onDone={() => { setSyncOpen(false); router.refresh(); }} />}
 
       <div className="grid items-start gap-[22px] lg:grid-cols-[1fr_400px]">
         <section className="rounded-lg border border-border bg-background p-4 sm:p-6">

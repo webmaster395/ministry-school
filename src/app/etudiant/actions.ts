@@ -85,3 +85,20 @@ export async function markNotificationsSeen() {
   revalidatePath("/etudiant");
   revalidatePath("/etudiant/messages");
 }
+
+/** « C'est fait » : la personne confirme avoir ajouté son calendrier, le bouton Synchroniser disparaît. */
+export async function markCalendarSynced() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return;
+
+  await supabase
+    .from("profiles")
+    .update({ calendar_synced_at: new Date().toISOString() })
+    .eq("id", user.id)
+    .is("calendar_synced_at", null);
+
+  revalidatePath("/etudiant/calendrier");
+}

@@ -1,15 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CalendarDays, Copy, Download, X } from "lucide-react";
+import { CalendarDays, Check, Copy, X } from "lucide-react";
+import { markCalendarSynced } from "@/app/etudiant/actions";
+import Portal from "@/components/Portal";
 
-type Service = "apple" | "google" | "outlook" | "ics";
+type Service = "apple" | "google" | "outlook";
 
 const SERVICES: { key: Service; label: string }[] = [
   { key: "apple", label: "Apple Calendrier" },
   { key: "google", label: "Google Agenda" },
   { key: "outlook", label: "Outlook" },
-  { key: "ics", label: "Télécharger le fichier ICS" },
 ];
 
 const primaryButton =
@@ -19,17 +20,21 @@ const outlineButton =
 
 /**
  * Fenêtre « Synchroniser avec mon calendrier » : on choisit son application (Apple, Google,
- * Outlook) et on suit trois étapes, avec le lien personnel à copier. Sans lien d'abonnement
- * (variables serveur absentes), seul le fichier ICS ponctuel est proposé.
+ * Outlook) et on suit les étapes, avec le lien personnel à copier. C'est un abonnement : le
+ * calendrier de la personne se met à jour tout seul quand un horaire ou une salle change.
+ * « C'est fait » (ou la première lecture du lien par l'agenda) fait disparaître le bouton.
  */
 export default function CalendarSyncDialog({
   open,
   onClose,
   subscribeUrl,
+  onDone,
 }: {
   open: boolean;
   onClose: () => void;
   subscribeUrl: string | null;
+  /** Appelé quand la personne confirme « C'est fait » (le bouton Synchroniser disparaît ensuite). */
+  onDone?: () => void;
 }) {
   const [service, setService] = useState<Service>("apple");
   const [copied, setCopied] = useState(false);
@@ -41,7 +46,7 @@ export default function CalendarSyncDialog({
     const ua = navigator.userAgent;
     /* eslint-disable react-hooks/set-state-in-effect -- lus après le montage */
     setIsIos(/iPhone|iPad|iPod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1));
-    setService(!subscribeUrl ? "ics" : /Android/i.test(ua) ? "google" : /Windows/i.test(ua) ? "outlook" : "apple");
+    setService(/Android/i.test(ua) ? "google" : /Windows/i.test(ua) ? "outlook" : "apple");
     setOrigin(window.location.origin);
     /* eslint-enable react-hooks/set-state-in-effect */
   }, [subscribeUrl]);
@@ -57,7 +62,7 @@ export default function CalendarSyncDialog({
 
   const httpUrl = subscribeUrl ? `${origin}${subscribeUrl}` : "";
   const webcalUrl = httpUrl.replace(/^https?:\/\//, "webcal://");
-  const services = subscribeUrl ? SERVICES : SERVICES.filter((s) => s.key === "ics");
+  const services = SERVICES;
 
   async function copyUrl() {
     try {
@@ -90,6 +95,7 @@ export default function CalendarSyncDialog({
   );
 
   return (
+    <Portal>
     <div
       className="app-modal-layer fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-0 sm:items-center sm:p-4"
       onClick={onClose}
@@ -146,8 +152,8 @@ export default function CalendarSyncDialog({
                 isIos
                   ? [
                       "Appuyez sur le bouton ci-dessous.",
-                      "Confirmez l'ajout du calendrier.",
-                      "Les formations apparaîtront dans l'application Calendrier.",
+                      "Une fenêtre s'ouvre : appuyez sur « S'abonner », puis sur « Ajouter ».",
+                      "Les formations apparaissent dans l'application Calendrier, sous « Ministry School ».",
                     ]
                   : [
                       "Cliquez sur le bouton ci-dessous.",
@@ -165,11 +171,15 @@ export default function CalendarSyncDialog({
           {service === "google" && (
             <>
               {steps([
-                "Copiez votre lien personnel.",
-                "Ouvrez Google Agenda puis choisissez « À partir de l'URL ».",
-                "Collez le lien et ajoutez l'agenda.",
+                "Copiez votre lien personnel avec le bouton ci-dessous.",
+                "Sur un ordinateur, ouvrez Google Agenda : « Autres agendas » (à gauche), puis le « + », puis « À partir de l'URL ».",
+                "Collez le lien, puis cliquez sur « Ajouter l'agenda ».",
+                "Sur votre téléphone Android, l'agenda apparaît tout seul dans l'application Google Agenda (même compte Google), parfois après quelques minutes.",
               ])}
-              <p className="text-xs text-muted">L&apos;ajout par URL est plus simple depuis un ordinateur.</p>
+              <p className="text-xs text-muted">
+                L&apos;application Google Agenda du téléphone ne permet pas d&apos;ajouter un lien : il faut passer par un
+                ordinateur, une seule fois.
+              </p>
               {personalLink}
               <a
                 href="https://calendar.google.com/calendar/u/0/r/settings/addbyurl"
@@ -185,9 +195,9 @@ export default function CalendarSyncDialog({
           {service === "outlook" && (
             <>
               {steps([
-                "Copiez votre lien personnel.",
-                "Dans Outlook, choisissez « Ajouter un calendrier ».",
-                "Sélectionnez l'abonnement web et collez le lien.",
+                "Copiez votre lien personnel avec le bouton ci-dessous.",
+                "Dans Outlook (calendrier), choisissez « Ajouter un calendrier », puis « S'abonner à partir du web ».",
+                "Collez le lien, donnez-lui le nom « Ministry School », puis « Importer ».",
               ])}
               {personalLink}
               <a
@@ -201,29 +211,28 @@ export default function CalendarSyncDialog({
             </>
           )}
 
-          {service === "ics" && (
-            <>
-              <p className="rounded-lg border border-border bg-surface px-4 py-3 text-sm text-muted">
-                Téléchargez une copie des formations. Attention : les futures modifications ne seront pas
-                mises à jour automatiquement.
-              </p>
-              <a
-                href="/etudiant/calendrier/ics"
-                download="ministry-school.ics"
-                className={`${primaryButton} w-full`}
-              >
-                <Download size={16} /> Télécharger le fichier ICS
-              </a>
-            </>
-          )}
         </div>
 
-        {service !== "ics" && (
-          <small className="block text-xs text-muted">
-            Le lien reste personnel et sécurisé. Ne le partagez pas.
-          </small>
+        <small className="block text-xs text-muted">
+          Le lien reste personnel et sécurisé : ne le partagez pas. Ensuite, un changement d&apos;horaire ou de salle
+          est repris automatiquement par votre agenda (Google : sous 24 h environ, Apple et Outlook : souvent en
+          quelques heures).
+        </small>
+
+        {onDone && (
+          <button
+            type="button"
+            onClick={async () => {
+              await markCalendarSynced();
+              onDone();
+            }}
+            className={`${outlineButton} w-full`}
+          >
+            <Check size={16} /> C&apos;est fait, je l&apos;ai ajouté
+          </button>
         )}
       </div>
     </div>
+    </Portal>
   );
 }

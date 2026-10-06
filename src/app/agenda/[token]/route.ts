@@ -17,6 +17,17 @@ export async function GET(_req: Request, { params }: { params: Promise<{ token: 
   const supabase = createServiceClient();
   const sessions = await getStudentSessions(supabase, userId);
 
+  // Première lecture du lien par un agenda : la personne est synchronisée, le bouton disparaît de son calendrier
+  try {
+    await supabase
+      .from("profiles")
+      .update({ calendar_synced_at: new Date().toISOString() })
+      .eq("id", userId)
+      .is("calendar_synced_at", null);
+  } catch {
+    // Sans importance : la personne pourra confirmer elle-même avec « C'est fait »
+  }
+
   return new Response(buildIcs(sessions), {
     headers: {
       "Content-Type": "text/calendar; charset=utf-8",

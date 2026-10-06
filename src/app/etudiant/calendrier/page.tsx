@@ -24,9 +24,10 @@ export default async function StudentCalendarPage({
     getStudentProfile(supabase, user!.id),
   ]);
   const ministryColor = getMinistry(ministrySlug)?.color ?? "var(--foreground)";
+  const { data: syncRow } = await supabase.from("profiles").select("calendar_synced_at").eq("id", user!.id).single();
+  const synced = !!syncRow?.calendar_synced_at;
 
-  // Sans le secret CALENDAR_TOKEN_SECRET côté serveur, pas de lien d'abonnement automatique
-  // (seul le téléchargement ponctuel reste proposé).
+  // Sans le secret CALENDAR_TOKEN_SECRET côté serveur, pas de lien d'abonnement : le bouton reste masqué.
   let subscribeUrl: string | null = null;
   try {
     subscribeUrl = `/agenda/${createCalendarToken(user!.id)}`;
@@ -55,6 +56,7 @@ export default async function StudentCalendarPage({
   return (
     <MonthCalendar
       subscribeUrl={subscribeUrl}
+      synced={synced}
       initialDate={jour && /^\d{4}-\d{2}-\d{2}$/.test(jour) ? jour : undefined}
       sessions={calendarSessions}
     />
