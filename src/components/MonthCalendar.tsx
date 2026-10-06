@@ -6,6 +6,7 @@ import Link from "next/link";
 import { CalendarClock, ChevronLeft, ChevronRight, MapPin, RefreshCw, UserRound } from "lucide-react";
 import CalendarSyncDialog from "@/components/CalendarSyncDialog";
 import { COURSES_VISIBLE_UNTIL } from "@/lib/promotion";
+import { CALENDAR_SYNC_ENABLED } from "@/lib/calendar-sync";
 
 export type MonthSession = {
   id: string;
@@ -53,7 +54,7 @@ export default function MonthCalendar({
   /** Déjà synchronisé : le bouton n'est plus proposé (voir « Préférences » pour recommencer). */
   synced?: boolean;
 }) {
-  const SYNC_ENABLED = !!subscribeUrl && !synced;
+  const SYNC_ENABLED = CALENDAR_SYNC_ENABLED && !!subscribeUrl && !synced;
   const router = useRouter();
   const [syncOpen, setSyncOpen] = useState(false);
   const firstDate = sessions.find((s) => s.date >= new Date().toISOString().slice(0, 10))?.date;

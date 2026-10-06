@@ -3,6 +3,7 @@ import ProfileTabs from "@/components/ProfileTabs";
 import NotificationPrefs from "@/components/NotificationPrefs";
 import EnableNotifications from "@/components/EnableNotifications";
 import CalendarResync from "@/components/CalendarResync";
+import { CALENDAR_SYNC_ENABLED } from "@/lib/calendar-sync";
 import { createCalendarToken } from "@/lib/calendar-token";
 import { parseNotificationPrefs } from "@/lib/notification-prefs";
 
@@ -17,7 +18,7 @@ export default async function StudentPreferencesPage() {
 
   // Calendrier déjà synchronisé : on propose ici de recommencer (le bouton a disparu de la page Calendrier)
   let resyncUrl: string | null = null;
-  if (row?.calendar_synced_at) {
+  if (CALENDAR_SYNC_ENABLED && row?.calendar_synced_at) {
     try {
       resyncUrl = `/agenda/${createCalendarToken(user!.id)}`;
     } catch {
