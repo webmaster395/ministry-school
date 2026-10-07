@@ -553,7 +553,7 @@ export default function CourseExperience({
         <main id="course-content" className="scroll-mt-24">
           <div
             className={
-              session.videoUrl
+              session.videoUrl && session.summary
                 ? "lg:grid lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start lg:gap-10"
                 : undefined
             }
@@ -580,9 +580,7 @@ export default function CourseExperience({
               {session.videoDemo && <p className="mt-2 flex items-center gap-1.5 text-xs text-amber-800"><Play size={14} /> Vidéo de démonstration</p>}
             </section>
           )}
-          {(session.summary ||
-            session.objectives.length > 0 ||
-            session.bibleRefs.length > 0) && (
+          {session.summary && (
             <section className="pb-9 sm:pb-11 lg:order-1">
               <p className="label text-xs tracking-[0.18em] text-muted">
                 Le cours
@@ -590,23 +588,29 @@ export default function CourseExperience({
               <h2 className="font-title mt-2 text-3xl text-foreground sm:text-[34px]">
                 À propos de ce cours
               </h2>
-              {session.summary && (
-                <p className="mt-4 max-w-3xl text-base leading-7 text-muted">
-                  {session.summary}
-                </p>
-              )}
+              <p className="mt-4 max-w-3xl text-base leading-7 text-muted">
+                {session.summary}
+              </p>
+            </section>
+          )}
+          </div>
+          {(session.objectives.length > 0 || session.bibleRefs.length > 0) && (
+            <section className="border-t border-border py-8 sm:py-10">
               {session.objectives.length > 0 && (
-                <div className="mt-7">
-                  <h3 className="text-sm font-semibold text-foreground">
+                <div>
+                  <p className="label text-xs tracking-[0.18em] text-muted">
+                    Le cours
+                  </p>
+                  <h2 className="font-title mt-2 text-2xl text-foreground sm:text-[28px]">
                     Objectifs à l’issue de ce cours
-                  </h3>
-                  <ol className="mt-3 border-t border-border-soft">
+                  </h2>
+                  <ol className="mt-5 grid gap-x-8 border-t border-border-soft md:grid-cols-2">
                     {session.objectives.map((objective, index) => (
                       <li
                         key={objective}
-                        className="flex items-center gap-3 border-b border-border-soft py-3.5 text-sm leading-6 text-foreground"
+                        className="flex items-start gap-3 border-b border-border-soft py-4 text-sm leading-6 text-foreground"
                       >
-                        <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[var(--course-accent)] text-[11px] font-semibold leading-none text-white">
+                        <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[var(--course-accent)] text-[11px] font-semibold leading-none text-white">
                           {index + 1}
                         </span>
                         <span>{objective}</span>
@@ -616,12 +620,9 @@ export default function CourseExperience({
                 </div>
               )}
               {session.bibleRefs.length > 0 && (
-                <div className="mt-7 border-t border-border-soft pt-5">
+                <div className={session.objectives.length ? "mt-7" : undefined}>
                   <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                    <BookOpen
-                      size={16}
-                      className="text-[var(--course-accent)]"
-                    />
+                    <BookOpen size={16} className="text-[var(--course-accent)]" />
                     {session.bibleRefs.length > 1
                       ? "Versets de référence"
                       : "Verset de référence"}
@@ -643,7 +644,6 @@ export default function CourseExperience({
               )}
             </section>
           )}
-          </div>
           <div id="before-course" className="scroll-mt-24">
             <TaskSection
               title="À faire avant le cours"

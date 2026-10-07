@@ -20,6 +20,8 @@ test("sur desktop la présentation est à gauche et la vidéo à droite", async 
   assert.match(code, /aria-label="Vidéo du cours"/);
   assert.match(code, /lg:order-2/);
   assert.match(code, /lg:order-1/);
+  assert.match(code, /session\.videoUrl && session\.summary/);
+  assert.match(code, /md:grid-cols-2/);
 });
 
 test("la navigation mobile du cours reste compacte et contextuelle", async () => {
