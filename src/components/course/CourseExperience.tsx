@@ -378,10 +378,13 @@ export default function CourseExperience({
       materials.length,
   );
   const quickLinks = [
-    ...(hasCourseContent ? [["course-content", "Cours"]] : []),
-    ...(session.videoUrl || materials.length ? [["course-resources", "Ressources"]] : []),
-    ...(before.length || after.length ? [[before.length ? "before-course" : "after-course", "Travail"]] : []),
-    ...(notes?.enabled ? [["course-notes", "Notes"]] : []),
+    ...(before.length ? [["before-course", "À préparer"]] : []),
+    ...(hasCourseContent ? [["course-content", "Suivre le cours"]] : []),
+    ...(session.videoUrl || materials.length
+      ? [["course-resources", "Ressources"]]
+      : []),
+    ...(after.length ? [["after-course", "Mettre en pratique"]] : []),
+    ...(notes?.enabled ? [["course-notes", "Mes notes"]] : []),
   ];
 
   return (

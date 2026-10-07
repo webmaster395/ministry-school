@@ -37,8 +37,8 @@ test("Ton parcours est placé avant le contenu et les ancres existent", () => {
   const content = courseSource.indexOf('id="course-content"');
   assert.ok(navigation > -1 && content > -1 && navigation < content);
   assert.match(courseSource, /id="course-resources"/);
-  assert.match(courseSource, /notes\?\.enabled \? \[\["course-notes", "Notes"\]\]/);
+  assert.match(courseSource, /notes\?\.enabled \? \[\["course-notes", "Mes notes"\]\]/);
   assert.match(courseSource, /id="course-notes"/);
-  assert.match(courseSource, /before\.length \|\| after\.length/);
-  assert.match(courseSource, /"Travail"/);
+  assert.match(courseSource, /before\.length \? \[\["before-course", "À préparer"\]\]/);
+  assert.match(courseSource, /after\.length \? \[\["after-course", "Mettre en pratique"\]\]/);
 });

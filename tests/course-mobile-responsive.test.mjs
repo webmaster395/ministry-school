@@ -16,7 +16,13 @@ test("la vidéo réserve son espace et précède le contenu secondaire", async (
 
 test("la navigation mobile du cours reste compacte et contextuelle", async () => {
   const code = await source("src/components/course/CourseExperience.tsx");
-  for (const label of ["Cours", "Ressources", "Travail", "Notes"])
+  for (const label of [
+    "À préparer",
+    "Suivre le cours",
+    "Ressources",
+    "Mettre en pratique",
+    "Mes notes",
+  ])
     assert.match(code, new RegExp(`"${label}"`));
   assert.match(code, /sticky top-/);
 });
