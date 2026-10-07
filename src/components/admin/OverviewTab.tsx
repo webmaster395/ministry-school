@@ -58,6 +58,10 @@ export default async function OverviewTab({
   );
 
   const toValidate = opps.filter((o) => !o.registration_open && phaseOf(o, today) !== "termine").length;
+  const currentProjects = count("projet", false);
+  const finishedProjects = count("projet", true);
+  const currentServiceTrainings = count("formation", false);
+  const finishedServiceTrainings = count("formation", true);
 
   const genderSub =
     breakdown.byGender.men > 0 || breakdown.byGender.women > 0
@@ -66,20 +70,20 @@ export default async function OverviewTab({
 
   const cards: { value: number | string; label: string; attention?: boolean; sub?: string }[] = [
     { value: students.length, label: "Membres inscrits", sub: genderSub },
-    { value: currentCycle?.value ?? 0, label: currentCycle ? `Nouveaux comptes · ${currentCycle.label}` : "Nouveaux comptes" },
-    { value: pending, label: "En attente de confirmation", attention: pending > 0 },
+    ...((currentCycle?.value ?? 0) > 0 ? [{ value: currentCycle!.value, label: `Nouveaux comptes · ${currentCycle!.label}` }] : []),
+    ...(pending > 0 ? [{ value: pending, label: "En attente de confirmation", attention: true }] : []),
     {
       value: nextDate ? formatSessionDate(nextDate).replace(/^\w+ /, "") : "—",
       label: "Prochaine journée",
     },
-    { value: count("projet", false), label: "Projets actuels", sub: `${count("projet", true)} terminés` },
-    {
-      value: count("formation", false),
+    ...(currentProjects > 0 || finishedProjects > 0 ? [{ value: currentProjects, label: "Projets actuels", sub: `${finishedProjects} terminés` }] : []),
+    ...(currentServiceTrainings > 0 || finishedServiceTrainings > 0 ? [{
+      value: currentServiceTrainings,
       label: "Formations de service actuelles",
-      sub: `${count("formation", true)} terminées`,
-    },
-    { value: toValidate, label: "Propositions à valider", attention: toValidate > 0 },
-    { value: expected, label: "Comptes rendus attendus", attention: expected > 0 },
+      sub: `${finishedServiceTrainings} terminées`,
+    }] : []),
+    ...(toValidate > 0 ? [{ value: toValidate, label: "Propositions à valider", attention: true }] : []),
+    ...(expected > 0 ? [{ value: expected, label: "Comptes rendus attendus", attention: true }] : []),
   ];
 
   return (
@@ -106,11 +110,11 @@ export default async function OverviewTab({
         </div>
       )}
 
-      <section className="grid overflow-hidden rounded-lg border border-border bg-background sm:grid-cols-2 lg:grid-cols-4">
-        {cards.map((c, i) => (
+      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {cards.map((c) => (
           <div
             key={c.label}
-            className={`border-border-soft p-6 ${i % 4 !== 3 ? "lg:border-r" : ""} ${i < 4 ? "border-b" : ""} ${
+            className={`rounded-lg border border-border bg-background p-6 ${
               c.attention ? "bg-m-doctoral/[0.05]" : ""
             }`}
           >
