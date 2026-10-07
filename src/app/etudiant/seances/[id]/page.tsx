@@ -24,6 +24,7 @@ import { courseExperienceAccess } from "@/lib/features/course-experience";
 import { courseNotesEnabled } from "@/lib/features/course-notes";
 import { sessionColor } from "@/lib/ministry";
 import { getViewer } from "@/lib/data/viewer";
+import { createDiagnosticContext, traceServerStage } from "@/lib/server-render-diagnostics";
 
 const TRACK_COLORS: Record<string, string> = {
   coeur: "#8b6fc0",
@@ -89,70 +90,87 @@ export default async function SessionDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const diagnostic = createDiagnosticContext(`/etudiant/seances/${id}`);
   const supabase = await createClient();
-  const viewer = await getViewer();
+  const viewer = await traceServerStage(diagnostic, "viewer", getViewer);
   if (!viewer) notFound();
 
   const [sessions, doneIds] = await Promise.all([
-    getStudentAllSessions(supabase, viewer.id),
-    getStudentCompletedIds(supabase, viewer.id),
+    traceServerStage(diagnostic, "sessions-and-courses", () => getStudentAllSessions(supabase, viewer.id)),
+    traceServerStage(diagnostic, "assignment-completions", () => getStudentCompletedIds(supabase, viewer.id)),
   ]);
 
   const s = sessions.find((x) => x.id === id);
   if (!s) notFound();
 
   const [materials, assignments] = await Promise.all([
-    getStudentMaterials(supabase, [s.id]),
-    getStudentAssignments(supabase, [s.id]),
+    traceServerStage(diagnostic, "materials", () => getStudentMaterials(supabase, [s.id])),
+    traceServerStage(diagnostic, "assignments", () => getStudentAssignments(supabase, [s.id])),
   ]);
 
-  const today = new Date().toISOString().slice(0, 10);
-  const past = s.session_date < today;
+  const derived = await traceServerStage(diagnostic, "session-shape", async () => {
+    const today = new Date().toISOString().slice(0, 10);
+    const parcoursSlug = parcoursSlugOf(s.track);
+    return {
+      past: s.session_date < today,
+      trackColor: sessionColor(
+        s.track,
+        s.session_type,
+        parcoursSlug ? (TRACK_COLORS[parcoursSlug] ?? "#27302f") : "#27302f",
+      ),
+      title: s.courses?.title ?? s.description ?? "Séance",
+      aboutText: s.summary || s.description,
+      objectives: lines(s.objectives),
+      refs: lines(s.bible_refs),
+      structuredPlace: coursePlace(s.location, s.room),
+      place: s.room ? `${s.location} · ${s.room}` : s.location,
+      teacher: s.speaker_name ?? s.teacher?.full_name ?? null,
+      canManage: viewer.roles.admin || viewer.roles.teacher,
+      backHref: parcoursSlug
+        ? `/etudiant/cours/parcours/${parcoursSlug}`
+        : `/etudiant/cours`,
+      backLabel: parcoursSlug ? "Retour au parcours" : "Retour aux cours",
+    };
+  });
+  const {
+    past,
+    trackColor,
+    title,
+    aboutText,
+    objectives,
+    refs,
+    structuredPlace,
+    place,
+    teacher,
+    canManage,
+    backHref,
+    backLabel,
+  } = derived;
 
-  const parcoursSlug = parcoursSlugOf(s.track);
-  const trackColor = sessionColor(
-    s.track,
-    s.session_type,
-    parcoursSlug ? (TRACK_COLORS[parcoursSlug] ?? "#27302f") : "#27302f",
-  );
-  const title = s.courses?.title ?? s.description ?? "Séance";
-  const aboutText = s.summary || s.description;
-  const objectives = lines(s.objectives);
-  const refs = lines(s.bible_refs);
-  const structuredPlace = coursePlace(s.location, s.room);
-  const place = s.room ? `${s.location} · ${s.room}` : s.location;
-  const teacher = s.speaker_name ?? s.teacher?.full_name ?? null;
-  const canManage = viewer.roles.admin || viewer.roles.teacher;
-
-  const backHref = parcoursSlug
-    ? `/etudiant/cours/parcours/${parcoursSlug}`
-    : `/etudiant/cours`;
-  const backLabel = parcoursSlug ? "Retour au parcours" : "Retour aux cours";
-
-  const experience = await courseExperienceAccess(supabase, viewer.id);
+  const experience = await traceServerStage(diagnostic, "permissions", () => courseExperienceAccess(supabase, viewer.id));
   if (experience.enabled) {
-    const notesEnabled = await courseNotesEnabled(supabase, viewer.id);
+    const notesEnabled = await traceServerStage(diagnostic, "notes-permission", () => courseNotesEnabled(supabase, viewer.id));
     const { data: note } = notesEnabled
-      ? await supabase
+      ? await traceServerStage(diagnostic, "notes", () => supabase
           .from("course_notes")
           .select("content_html")
           .eq("user_id", viewer.id)
           .eq("session_id", s.id)
-          .maybeSingle()
+          .maybeSingle())
       : { data: null };
-    const { data: enrichment } = await supabase
+    const { data: enrichment } = await traceServerStage(diagnostic, "video", () => supabase
       .from("sessions")
       .select("video_url")
       .eq("id", s.id)
-      .maybeSingle();
-    const { data: trainerLinks } = await supabase
+      .maybeSingle());
+    const { data: trainerLinks } = await traceServerStage(diagnostic, "trainers", () => supabase
       .from("session_trainers")
       .select(
         "position, trainer:trainers(id, first_name, last_name, title, bio, photo_path)",
       )
       .eq("session_id", s.id)
-      .order("position");
-    const trainers = (trainerLinks ?? []).flatMap((link) => {
+      .order("position"));
+    const trainers = await traceServerStage(diagnostic, "trainer-shape", async () => (trainerLinks ?? []).flatMap((link) => {
       const trainer = link.trainer as unknown as {
         id: string;
         first_name: string;
@@ -175,7 +193,7 @@ export default async function SessionDetailPage({
             : null,
         },
       ];
-    });
+    }));
     if (!trainers.length && teacher)
       trainers.push({
         id: "legacy",
@@ -184,7 +202,7 @@ export default async function SessionDetailPage({
         bio: null,
         photoUrl: null,
       });
-    const currentIndex = sessions.findIndex((session) => session.id === s.id);
+    const currentIndex = await traceServerStage(diagnostic, "previous-next", async () => sessions.findIndex((session) => session.id === s.id));
     const navItem = (session: typeof s | undefined) =>
       session
         ? {
@@ -241,16 +259,16 @@ export default async function SessionDetailPage({
     const [{ data: assignmentSteps }, { data: stepCompletions }] =
       assignmentIds.length
         ? await Promise.all([
-            supabase
+            traceServerStage(diagnostic, "assignment-steps", () => supabase
               .from("assignment_steps")
               .select("id, assignment_id, title, instructions, sort_order")
               .in("assignment_id", assignmentIds)
-              .order("sort_order"),
-            supabase
+              .order("sort_order")),
+            traceServerStage(diagnostic, "assignment-step-completions", () => supabase
               .from("assignment_step_completions")
               .select("step_id")
               .eq("user_id", viewer.id)
-              .in("assignment_id", assignmentIds),
+              .in("assignment_id", assignmentIds)),
           ])
         : [{ data: [] }, { data: [] }];
 
