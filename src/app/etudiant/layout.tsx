@@ -16,20 +16,21 @@ export default async function StudentLayout({
   children: React.ReactNode;
 }) {
   const viewer = await getViewer();
+  if (!viewer) redirect("/login");
   if (viewer?.deactivated) redirect("/auth/desactive");
   const notesEnabled = viewer?.courseNotesEnabled ?? false;
 
   return (
     <SpaceProvider
-      roles={viewer!.roles}
-      unread={viewer!.unreadMessages}
+      roles={viewer.roles}
+      unread={viewer.unreadMessages}
       notesEnabled={notesEnabled}
     >
       <StudentUsageTracker />
       <div className="app-shell flex min-h-screen w-full">
         <Sidebar
-          fullName={viewer!.fullName}
-          avatarUrl={viewer!.avatarUrl}
+          fullName={viewer.fullName}
+          avatarUrl={viewer.avatarUrl}
           ministrySlug={viewer?.ministrySlug}
         />
         <div className="flex min-h-screen min-w-0 flex-1 flex-col bg-surface">

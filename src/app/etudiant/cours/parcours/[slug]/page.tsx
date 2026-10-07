@@ -13,6 +13,7 @@ import {
 import { getParcours, parcoursSlugOf } from "@/lib/data/parcours";
 import { COURSES_VISIBLE_UNTIL, PROMOTION } from "@/lib/promotion";
 import { INK } from "@/lib/ministry";
+import { getViewer } from "@/lib/data/viewer";
 
 const TRACK_COLORS: Record<string, string> = {
   coeur: "#8b6fc0",
@@ -49,14 +50,13 @@ export default async function ParcoursPage({ params, searchParams }: Props) {
   const tab = onglet === "passes" ? "passes" : "a_venir";
 
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const viewer = await getViewer();
+  if (!viewer) redirect("/login");
 
   const [parcours, sessions, { ministryName }] = await Promise.all([
     getParcours(supabase),
-    getStudentAllSessions(supabase, user!.id),
-    getStudentProfile(supabase, user!.id),
+    getStudentAllSessions(supabase, viewer.id),
+    getStudentProfile(supabase, viewer.id),
   ]);
 
   const p = parcours.find((x) => x.slug === slug);
@@ -71,7 +71,7 @@ export default async function ParcoursPage({ params, searchParams }: Props) {
 
   const [assignments, completedIds] = await Promise.all([
     getStudentAssignments(supabase, sessionIds),
-    getStudentCompletedIds(supabase, user!.id),
+    getStudentCompletedIds(supabase, viewer.id),
   ]);
 
   const today = new Date().toISOString().slice(0, 10);

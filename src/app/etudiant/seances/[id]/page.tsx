@@ -23,6 +23,7 @@ import CourseExperience from "@/components/course/CourseExperience";
 import { courseExperienceAccess } from "@/lib/features/course-experience";
 import { courseNotesEnabled } from "@/lib/features/course-notes";
 import { sessionColor } from "@/lib/ministry";
+import { getViewer } from "@/lib/data/viewer";
 
 const TRACK_COLORS: Record<string, string> = {
   coeur: "#8b6fc0",
@@ -89,18 +90,12 @@ export default async function SessionDetailPage({
 }) {
   const { id } = await params;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const viewer = await getViewer();
+  if (!viewer) notFound();
 
-  const [sessions, doneIds, { data: me }] = await Promise.all([
-    getStudentAllSessions(supabase, user!.id),
-    getStudentCompletedIds(supabase, user!.id),
-    supabase
-      .from("profiles")
-      .select("role, is_teacher")
-      .eq("id", user!.id)
-      .single(),
+  const [sessions, doneIds] = await Promise.all([
+    getStudentAllSessions(supabase, viewer.id),
+    getStudentCompletedIds(supabase, viewer.id),
   ]);
 
   const s = sessions.find((x) => x.id === id);
@@ -127,21 +122,21 @@ export default async function SessionDetailPage({
   const structuredPlace = coursePlace(s.location, s.room);
   const place = s.room ? `${s.location} · ${s.room}` : s.location;
   const teacher = s.speaker_name ?? s.teacher?.full_name ?? null;
-  const canManage = me?.role === "admin" || me?.is_teacher;
+  const canManage = viewer.roles.admin || viewer.roles.teacher;
 
   const backHref = parcoursSlug
     ? `/etudiant/cours/parcours/${parcoursSlug}`
     : `/etudiant/cours`;
   const backLabel = parcoursSlug ? "Retour au parcours" : "Retour aux cours";
 
-  const experience = await courseExperienceAccess(supabase, user!.id);
+  const experience = await courseExperienceAccess(supabase, viewer.id);
   if (experience.enabled) {
-    const notesEnabled = await courseNotesEnabled(supabase, user!.id);
+    const notesEnabled = await courseNotesEnabled(supabase, viewer.id);
     const { data: note } = notesEnabled
       ? await supabase
           .from("course_notes")
           .select("content_html")
-          .eq("user_id", user!.id)
+          .eq("user_id", viewer.id)
           .eq("session_id", s.id)
           .maybeSingle()
       : { data: null };
@@ -254,7 +249,7 @@ export default async function SessionDetailPage({
             supabase
               .from("assignment_step_completions")
               .select("step_id")
-              .eq("user_id", user!.id)
+              .eq("user_id", viewer.id)
               .in("assignment_id", assignmentIds),
           ])
         : [{ data: [] }, { data: [] }];

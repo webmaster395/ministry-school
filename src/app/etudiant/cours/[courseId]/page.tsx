@@ -10,6 +10,7 @@ import {
 } from "@/lib/data/student";
 import { formatSessionDate, formatTimeRange } from "@/lib/format";
 import MaterialLink from "@/components/MaterialLink";
+import { getViewer } from "@/lib/data/viewer";
 
 function isRecentlyShared(visibleAt: string) {
   const diffMs = Date.now() - new Date(visibleAt).getTime();
@@ -23,11 +24,10 @@ export default async function StudentCourseDetailPage({
 }) {
   const { courseId } = await params;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const viewer = await getViewer();
+  if (!viewer) redirect("/login");
 
-  const course = await getStudentCourse(supabase, user!.id, courseId);
+  const course = await getStudentCourse(supabase, viewer.id, courseId);
   if (!course) redirect("/etudiant/cours");
 
   const sessionIds = course.sessions.map((s) => s.id);

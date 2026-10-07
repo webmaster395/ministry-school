@@ -5,6 +5,8 @@ import { getParcours, parcoursSlugOf } from "@/lib/data/parcours";
 import { formatSessionDate } from "@/lib/format";
 import { getMinistry, INK } from "@/lib/ministry";
 import { PROMOTION } from "@/lib/promotion";
+import { getViewer } from "@/lib/data/viewer";
+import { redirect } from "next/navigation";
 
 const COLORS: Record<string, string> = {
   coeur: "var(--f-coeur)",
@@ -14,14 +16,13 @@ const COLORS: Record<string, string> = {
 
 export default async function StudentCoursesPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const viewer = await getViewer();
+  if (!viewer) redirect("/login");
 
   const [parcours, sessions, { ministrySlug }] = await Promise.all([
     getParcours(supabase),
-    getStudentAllSessions(supabase, user!.id),
-    getStudentProfile(supabase, user!.id),
+    getStudentAllSessions(supabase, viewer.id),
+    getStudentProfile(supabase, viewer.id),
   ]);
   const today = new Date().toISOString().slice(0, 10);
   const ministryColor = getMinistry(ministrySlug)?.color ?? INK;
