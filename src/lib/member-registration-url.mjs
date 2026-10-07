@@ -3,7 +3,7 @@ export const MEMBER_REGISTRATION_TIME_ZONE = "Europe/Paris";
 export const MEMBER_REGISTRATION_URLS = {
   october: "https://www.billetweb.fr/mlk-ministry-school&ticket=7261552-7274673",
   november: "https://www.billetweb.fr/mlk-ministry-school&ticket=7264929-7274747",
-  december: "https://www.billetweb.fr/mlk-ministry-school&ticket=7264930-7274764",
+  december: "https://www.billetweb.fr/mlk-ministry-school&ticket=7264929-7274747",
 };
 
 // En octobre 2026, Europe/Paris est en heure d'été (UTC+02:00).
