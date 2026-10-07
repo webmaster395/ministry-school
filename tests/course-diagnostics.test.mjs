@@ -25,6 +25,13 @@ test("le rendu du cours journalise chaque source de données sans avaler l'excep
   assert.doesNotMatch(diagnostics, /cookie|token|content_html|notes/i);
 });
 
+test("le layout étudiant trace les erreurs qui surviennent avant la page du cours", async () => {
+  const layout = await source("src/app/etudiant/layout.tsx");
+  assert.match(layout, /"student-layout-viewer"/);
+  assert.match(layout, /"student-layout-shape"/);
+  assert.match(layout, /traceServerStage/);
+});
+
 test("l'error boundary enregistre le contexte PWA sans donnée personnelle", async () => {
   const boundary = await source("src/app/etudiant/error.tsx");
   assert.match(boundary, /serviceWorkerControlled/);
