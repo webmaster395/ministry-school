@@ -190,20 +190,27 @@ export async function getStudentSessions(
   return getStudentAllSessions(supabase, userId);
 }
 
+async function loadProgram(
+  client: SupabaseClient,
+  ministryId: string | null,
+  preferredDay: string | null,
+) {
+  const [ministrySessions, commonSessions] = await Promise.all([
+    getMinistrySessionsForProfile(client, ministryId, preferredDay),
+    getCommonSessions(client),
+  ]);
+  return attachCentralizedTrainers(
+    client,
+    normalizeStudentSessions([...ministrySessions, ...commonSessions]),
+  );
+}
+
 const getCachedProgramForProfile = unstable_cache(
   async (ministryId: string | null, preferredDay: string | null) => {
     // Cette fonction contourne la RLS uniquement pour mutualiser le programme, qui est
     // identique pour tous les étudiants d'un même parcours. Sa signature et ses champs
     // sont volontairement fermés : aucune donnée personnelle n'entre dans ce cache.
-    const service = createServiceClient();
-    const [ministrySessions, commonSessions] = await Promise.all([
-      getMinistrySessionsForProfile(service, ministryId, preferredDay),
-      getCommonSessions(service),
-    ]);
-    return attachCentralizedTrainers(
-      service,
-      normalizeStudentSessions([...ministrySessions, ...commonSessions]),
-    );
+    return loadProgram(createServiceClient(), ministryId, preferredDay);
   },
   ["student-program-v1"],
   { tags: [STUDENT_PROGRAM_CACHE_TAG], revalidate: 300 },
@@ -214,6 +221,12 @@ export async function getStudentProgram(
   ministryId: string | null,
   preferredDay: string | null,
 ) {
+  // Développement local sans clé service_role : pas de cache partagé, on lit avec la session de la
+  // personne connectée (jamais en production, où la clé est exigée au déploiement).
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.NODE_ENV !== "production") {
+    const { createClient } = await import("@/lib/supabase/server");
+    return loadProgram(await createClient(), ministryId, preferredDay);
+  }
   return getCachedProgramForProfile(ministryId, preferredDay);
 }
 
