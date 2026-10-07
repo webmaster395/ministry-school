@@ -32,6 +32,14 @@ test("les notes utilisent une toolbar mobile sans débordement", async () => {
   assert.match(code, /grid grid-cols-5/);
   assert.match(code, /max-h-\[58dvh\]/);
   assert.match(code, /grid grid-cols-2 gap-2/);
+  assert.match(code, /useState\(false\)/);
+});
+
+test("le contenu du cours utilise la largeur disponible sans colonne latérale vide", async () => {
+  const code = await source("src/components/course/CourseExperience.tsx");
+  assert.match(code, /max-w-\[92ch\]/);
+  assert.doesNotMatch(code, /grid-cols-\[minmax\(0,1fr\)_360px\]/);
+  assert.doesNotMatch(code, /lg:sticky lg:top-24/);
 });
 
 test("les états vides pédagogiques ne sont pas empilés", async () => {

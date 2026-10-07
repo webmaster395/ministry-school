@@ -259,7 +259,7 @@ function FormattedAssignmentText({ value }: { value: string }) {
   return (
     <div className="text-sm leading-6 text-muted">
       {intro.some((line) => line.trim()) && (
-        <div className="mb-5 max-w-[68ch]">
+        <div className="mb-5 max-w-[92ch]">
           <AssignmentTextBlocks lines={intro} />
         </div>
       )}
@@ -275,7 +275,7 @@ function FormattedAssignmentText({ value }: { value: string }) {
             <h4 className="text-base font-semibold leading-snug text-foreground sm:text-[17px]">
               {inlineFormatting(section.title)}
             </h4>
-            <div className="mt-3 max-w-[68ch]">
+            <div className="mt-3 max-w-[92ch]">
               <AssignmentTextBlocks lines={section.lines} />
             </div>
           </section>
@@ -549,9 +549,7 @@ export default function CourseExperience({
         </div>
       </nav>
 
-      <div
-        className={`mx-auto grid max-w-6xl gap-8 py-7 sm:py-10 lg:gap-10 lg:py-14 ${notes?.enabled ? "lg:grid-cols-[minmax(0,1fr)_360px]" : "lg:grid-cols-[minmax(0,1fr)_280px]"}`}
-      >
+      <div className="mx-auto grid max-w-6xl gap-7 py-7 sm:py-10 lg:py-14">
         <main id="course-content" className="scroll-mt-24">
           {session.videoUrl && (
             <section className="pb-7 sm:pb-10" aria-label="Vidéo du cours">
@@ -736,7 +734,7 @@ export default function CourseExperience({
             )}
           </div>
         </main>
-        <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+        <aside className="space-y-4">
           {notes?.enabled && (
             <div id="course-notes" className="scroll-mt-32">
               <CourseNotesEditor

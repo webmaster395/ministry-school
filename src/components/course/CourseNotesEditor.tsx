@@ -31,7 +31,7 @@ export default function CourseNotesEditor({
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [state, setState] = useState<SaveState>("idle");
   const [message, setMessage] = useState("");
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (initialized.current || !editor.current) return;
