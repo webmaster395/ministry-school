@@ -27,7 +27,7 @@ export default async function NewOpportunity({
   const [rights, services, { data: profiles }, { data: me }] = await Promise.all([
     getProposalRights(supabase, user!.id),
     getServices(supabase),
-    supabase.from("profiles").select("id, full_name").order("full_name"),
+    supabase.from("profiles").select("id, full_name").eq("is_test_account", false).order("full_name"),
     supabase.from("profiles").select("full_name, role").eq("id", user!.id).single(),
   ]);
   if (!rights[type]) redirect(back);

@@ -5,8 +5,6 @@ import AppHeader from "@/components/AppHeader";
 import AppFooter from "@/components/AppFooter";
 import SpaceTabs from "@/components/SpaceTabs";
 import { getViewer } from "@/lib/data/viewer";
-import { createClient } from "@/lib/supabase/server";
-import { courseNotesEnabled } from "@/lib/features/course-notes";
 
 import WelcomeModal from "@/components/WelcomeModal";
 import MlkEngagementModal from "@/components/MlkEngagementModal";
@@ -18,9 +16,7 @@ export default async function StudentLayout({
 }) {
   const viewer = await getViewer();
   if (viewer?.deactivated) redirect("/auth/desactive");
-  const notesEnabled = viewer
-    ? await courseNotesEnabled(await createClient(), viewer.id)
-    : false;
+  const notesEnabled = viewer?.courseNotesEnabled ?? false;
 
   return (
     <SpaceProvider

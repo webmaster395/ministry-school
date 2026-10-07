@@ -9,6 +9,7 @@ import { parseMlkEngagement } from "@/lib/mlk-engagement";
 import { getMinistry } from "@/lib/ministry";
 import { memberStatus, type Member } from "@/lib/data/admin-hub";
 import type { Ministry } from "@/lib/data/admin";
+import { accountsByTrainingCycle } from "@/lib/training-cycle-stats";
 
 type ViewMode = "pie" | "bar" | "list";
 type Dataset = { title: string; subtitle: string; data: BarDatum[] };
@@ -85,7 +86,7 @@ function DataSection({ dataset, view }: { dataset: Dataset; view: ViewMode }) {
   return <section className="rounded-lg border border-border bg-background p-4 sm:p-6"><h2 className="label text-xs tracking-[0.18em] text-muted">{dataset.title}</h2><p className="mt-1 text-sm text-muted">{dataset.subtitle}</p>{view === "pie" ? <PieView data={dataset.data} /> : <ListView data={dataset.data} />}</section>;
 }
 
-export default function StatisticsTab({ members, ministries }: { members: Member[]; ministries: Ministry[] }) {
+export default function StatisticsTab({ members, ministries, trainingDates }: { members: Member[]; ministries: Ministry[]; trainingDates: string[] }) {
   const [view, setView] = useState<ViewMode>("bar");
   const total = members.length;
   const statuses = { active: members.filter((m) => memberStatus(m) === "actif").length, pending: members.filter((m) => memberStatus(m) === "a_confirmer").length, disabled: members.filter((m) => memberStatus(m) === "desactive").length };
@@ -109,15 +110,13 @@ export default function StatisticsTab({ members, ministries }: { members: Member
     { label: "Non renseigné", value: members.filter((m) => m.gender !== "femme" && m.gender !== "homme").length, href: membersHref("genre=non_renseigne") },
   ];
   const ministryData: BarDatum[] = [...ministries.map((m) => ({ label: m.name, value: members.filter((member) => member.ministry_id === m.id).length, slug: m.slug, href: membersHref(`sens=${m.slug}`) })), { label: "Ne sais pas encore", value: members.filter((m) => !m.ministry_id).length, fallbackIcon: "🤔", color: "#27302f", href: membersHref("sens=non_renseignee") }];
-  const months = new Map<string, number>();
-  members.forEach((member) => { const month = member.created_at.slice(0, 7); if (month) months.set(month, (months.get(month) ?? 0) + 1); });
-  const monthlyData: BarDatum[] = [...months.entries()].sort(([a], [b]) => a.localeCompare(b)).slice(-12).map(([month, value]) => ({ label: new Intl.DateTimeFormat("fr-FR", { month: "short", year: "numeric", timeZone: "UTC" }).format(new Date(`${month}-01T00:00:00Z`)), value }));
+  const cycleData: BarDatum[] = accountsByTrainingCycle(members, trainingDates).map(({ label, value }) => ({ label, value }));
   const datasets: Dataset[] = [
     { title: "État des comptes", subtitle: "Situation actuelle des accès à la plateforme.", data: accountData },
     { title: "Implication à MLK", subtitle: "Un seul statut d'implication par membre.", data: engagementData },
     { title: "Répartition par genre", subtitle: "Selon les informations déclarées par les membres.", data: genderData },
     { title: "Sensibilités ministérielles", subtitle: "Sensibilité choisie par chaque membre.", data: ministryData },
-    { title: "Évolution des inscriptions", subtitle: "Nouveaux comptes créés par mois.", data: monthlyData },
+    { title: "Nouveaux comptes par journée de formation", subtitle: "Chaque période se termine le jour de la formation inclus.", data: cycleData },
   ];
 
   const reportText = [`Statistiques Ministry School — ${total} membres`, "", ...datasets.flatMap((set) => [set.title, ...set.data.map((d) => `• ${d.label} : ${d.value}`), ""])].join("\n");

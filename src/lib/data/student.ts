@@ -1,5 +1,8 @@
 import { SupabaseClient } from "@supabase/supabase-js";
+import { unstable_cache } from "next/cache";
 import { DRAFTS_ENABLED } from "@/lib/drafts";
+import { createServiceClient } from "@/lib/supabase/service";
+import { STUDENT_PROGRAM_CACHE_TAG } from "@/lib/cache/program";
 
 export type StudentSession = {
   id: string;
@@ -71,24 +74,22 @@ export async function getStudentProfile(
  * Le rattachement est déduit de son profil : il n'y a pas d'inscription
  * séance par séance à effectuer.
  */
-async function getMinistrySessions(supabase: SupabaseClient, userId: string) {
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("ministry_id, preferred_day")
-    .eq("id", userId)
-    .single();
-
-  if (!profile?.ministry_id) return [];
+async function getMinistrySessionsForProfile(
+  supabase: SupabaseClient,
+  ministryId: string | null,
+  preferredDay: string | null,
+) {
+  if (!ministryId) return [];
 
   let query = supabase
     .from("sessions")
     .select(SESSION_FIELDS)
     .eq("session_type", "ministere")
-    .eq("ministry_id", profile.ministry_id);
+    .eq("ministry_id", ministryId);
   if (DRAFTS_ENABLED) query = query.eq("is_draft", false);
 
-  if (profile.preferred_day) {
-    query = query.eq("day", profile.preferred_day);
+  if (preferredDay) {
+    query = query.eq("day", preferredDay);
   }
 
   const { data } = await query;
@@ -186,31 +187,48 @@ export async function getStudentSessions(
   supabase: SupabaseClient,
   userId: string,
 ) {
-  const [ministrySessions, commonSessions] = await Promise.all([
-    getMinistrySessions(supabase, userId),
-    getCommonSessions(supabase),
-  ]);
+  return getStudentAllSessions(supabase, userId);
+}
 
-  // Le calendrier est aussi l'archive pédagogique de l'étudiant : une séance accessible
-  // ne disparaît jamais après sa date. Les règles de ministère/jour restent inchangées.
-  return attachCentralizedTrainers(
-    supabase,
-    normalizeStudentSessions([...ministrySessions, ...commonSessions]),
-  );
+const getCachedProgramForProfile = unstable_cache(
+  async (ministryId: string | null, preferredDay: string | null) => {
+    // Cette fonction contourne la RLS uniquement pour mutualiser le programme, qui est
+    // identique pour tous les étudiants d'un même parcours. Sa signature et ses champs
+    // sont volontairement fermés : aucune donnée personnelle n'entre dans ce cache.
+    const service = createServiceClient();
+    const [ministrySessions, commonSessions] = await Promise.all([
+      getMinistrySessionsForProfile(service, ministryId, preferredDay),
+      getCommonSessions(service),
+    ]);
+    return attachCentralizedTrainers(
+      service,
+      normalizeStudentSessions([...ministrySessions, ...commonSessions]),
+    );
+  },
+  ["student-program-v1"],
+  { tags: [STUDENT_PROGRAM_CACHE_TAG], revalidate: 300 },
+);
+
+/** Programme partagé, déjà résolu à partir du profil authentifié. */
+export async function getStudentProgram(
+  ministryId: string | null,
+  preferredDay: string | null,
+) {
+  return getCachedProgramForProfile(ministryId, preferredDay);
 }
 
 export async function getStudentAllSessions(
   supabase: SupabaseClient,
   userId: string,
 ) {
-  const [ministrySessions, commonSessions] = await Promise.all([
-    getMinistrySessions(supabase, userId),
-    getCommonSessions(supabase),
-  ]);
-
-  return attachCentralizedTrainers(
-    supabase,
-    normalizeStudentSessions([...ministrySessions, ...commonSessions]),
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("ministry_id, preferred_day")
+    .eq("id", userId)
+    .single();
+  return getStudentProgram(
+    (profile?.ministry_id as string | null | undefined) ?? null,
+    (profile?.preferred_day as string | null | undefined) ?? null,
   );
 }
 

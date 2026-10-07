@@ -23,6 +23,11 @@ export type Viewer = {
   /** Le message de bienvenue a déjà été vu (les nouveaux inscrits ne l'ont pas encore vu) */
   welcomeSeen: boolean;
   mlkEngagement: MlkEngagement;
+  preferredDay: string | null;
+  ministryId: string | null;
+  notificationsSeenAt: string;
+  profileCreatedAt: string | null;
+  courseNotesEnabled: boolean;
 };
 
 /**
@@ -31,60 +36,67 @@ export type Viewer = {
  */
 export const getViewer = cache(async (): Promise<Viewer | null> => {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return null;
+  // Le projet utilise une clé de signature ES256 publiée via JWKS. getClaims()
+  // vérifie cryptographiquement le JWT, avec clés mises en cache, sans appel
+  // distant à /auth/v1/user pendant le rendu.
+  const { data: auth, error: authError } = await supabase.auth.getClaims();
+  if (authError || !auth?.claims?.sub) return null;
+  const userId = auth.claims.sub;
+  const userEmail = typeof auth.claims.email === "string" ? auth.claims.email : undefined;
 
-  // Rattache d'éventuels accès saisis par e-mail avant cette première connexion
-  await supabase.rpc("claim_delegations");
+  const { data: raw, error } = await supabase.rpc("student_viewer_context");
+  if (error) throw new Error(`Chargement du contexte utilisateur impossible : ${error.message}`);
+  if (!raw) return null;
+  const data = raw as unknown as {
+    full_name?: string;
+    role?: Viewer["role"];
+    is_teacher?: boolean;
+    deactivated?: boolean;
+    avatar_path?: string | null;
+    created_at?: string | null;
+    preferred_day?: string | null;
+    ministry_id?: string | null;
+    notifications_seen_at?: string | null;
+    notification_prefs?: unknown;
+    welcome_seen_at?: string | null;
+    is_service_lead?: boolean;
+    is_project_lead?: boolean;
+    ministry_slug?: string | null;
+    ministry_name?: string | null;
+    steering_ministry_ids?: string[];
+    course_notes_enabled?: boolean;
+    unread_messages?: number;
+  };
 
-  const [{ data }, { data: steering }] = await Promise.all([
-    supabase
-      .from("profiles")
-      .select("full_name, role, is_teacher, deactivated, avatar_path, created_at, notifications_seen_at, notification_prefs, welcome_seen_at, is_service_lead, is_project_lead, ministries!profiles_ministry_id_fkey(slug, name)")
-      .eq("id", user.id)
-      .single(),
-    supabase.rpc("steering_ministries"),
-  ]);
-
-  const ministry = isDemoAdminEmail(user.email)
-    ? null
-    : (data?.ministries as unknown as { slug: string; name: string } | null);
-  const role = (data?.role as Viewer["role"] | undefined) ?? "student";
-  const avatarPath = (data?.avatar_path as string | null | undefined) ?? null;
+  const demoAdmin = isDemoAdminEmail(userEmail);
+  const role = data.role ?? "student";
+  const avatarPath = data.avatar_path ?? null;
   const avatarUrl = avatarPath ? ((await signedAvatarUrls(supabase, [avatarPath])).get(avatarPath) ?? null) : null;
-
-  // Sert au compteur du menu et de l'onglet Messagerie
-  const seenAt = (data?.notifications_seen_at as string | undefined) ?? "1970-01-01T00:00:00Z";
-  const { count: unread } = await supabase
-    .from("announcements")
-    .select("id", { count: "exact", head: true })
-    .gt("created_at", seenAt);
-  // Le message de bienvenue (daté de la création du compte) compte comme non lu tant que la personne n'a pas tout marqué comme lu
-  const createdAt = (data?.created_at as string | undefined) ?? null;
-  const { count: welcome } =
-    createdAt && createdAt >= seenAt
-      ? await supabase.from("announcements").select("id", { count: "exact", head: true }).eq("is_welcome", true)
-      : { count: 0 };
+  const seenAt = data.notifications_seen_at ?? "1970-01-01T00:00:00Z";
+  const createdAt = data.created_at ?? null;
 
   return {
-    id: user.id,
-    unreadMessages: (unread ?? 0) + (welcome ?? 0),
-    welcomeSeen: !!data?.welcome_seen_at,
-    mlkEngagement: parseMlkEngagement(data?.notification_prefs),
-    fullName: (data?.full_name as string | undefined) ?? "",
+    id: userId,
+    unreadMessages: Number(data.unread_messages ?? 0),
+    welcomeSeen: !!data.welcome_seen_at,
+    mlkEngagement: parseMlkEngagement(data.notification_prefs),
+    preferredDay: data.preferred_day ?? null,
+    ministryId: data.ministry_id ?? null,
+    notificationsSeenAt: seenAt,
+    profileCreatedAt: createdAt,
+    courseNotesEnabled: process.env.COURSE_NOTES_ENABLED === "1" || !!data.course_notes_enabled,
+    fullName: data.full_name ?? "",
     role,
-    ministrySlug: ministry?.slug ?? null,
-    ministryName: ministry?.name ?? null,
-    deactivated: !!data?.deactivated,
+    ministrySlug: demoAdmin ? null : (data.ministry_slug ?? null),
+    ministryName: demoAdmin ? null : (data.ministry_name ?? null),
+    deactivated: !!data.deactivated,
     avatarUrl,
     roles: {
-      teacher: role === "teacher" || !!data?.is_teacher,
+      teacher: role === "teacher" || !!data.is_teacher,
       admin: role === "admin",
-      serviceLead: !!data?.is_service_lead,
-      projectLead: !!data?.is_project_lead,
-      steeringMinistryIds: (steering ?? []) as string[],
+      serviceLead: !!data.is_service_lead,
+      projectLead: !!data.is_project_lead,
+      steeringMinistryIds: data.steering_ministry_ids ?? [],
     },
   };
 });

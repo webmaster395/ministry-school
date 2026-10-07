@@ -23,9 +23,10 @@ export async function proxy(request: NextRequest) {
     }
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Vérifie la signature du JWT localement avec les clés JWKS mises en cache.
+  // Le layout résout ensuite l'utilisateur complet une seule fois pour le rendu.
+  const { data: auth } = await supabase.auth.getClaims();
+  const isAuthenticated = !!auth?.claims?.sub;
 
   // La création de compte n'est pas publique : son lien n'est communiqué qu'après le paiement.
   // « /inscription » lui-même reste fermé à tous ; seule l'adresse secrète INSCRIPTION_CHEMIN
@@ -56,15 +57,15 @@ export async function proxy(request: NextRequest) {
   // ils doivent passer pour être échangés.
   const isAuthCallback = request.nextUrl.pathname.startsWith("/auth/");
 
-  if (!user && !isAuthRoute && !isAuthCallback && !isPublicPage) {
+  if (!isAuthenticated && !isAuthRoute && !isAuthCallback && !isPublicPage) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 
-  if (user && isAuthRoute) {
+  if (isAuthenticated && isAuthRoute) {
     const url = request.nextUrl.clone();
-    url.pathname = "/app";
+    url.pathname = "/etudiant";
     return NextResponse.redirect(url);
   }
 

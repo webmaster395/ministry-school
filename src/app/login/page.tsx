@@ -51,8 +51,10 @@ function LoginForm() {
       return;
     }
 
-    router.push("/app");
-    router.refresh();
+    // Les délégations saisies avant la première connexion ne doivent être rattachées
+    // qu'au moment où l'utilisateur s'authentifie, jamais à chaque page consultée.
+    await supabase.rpc("claim_delegations");
+    router.replace("/etudiant");
   }
 
   return (

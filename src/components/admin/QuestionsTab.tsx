@@ -18,7 +18,7 @@ export default async function QuestionsTab({ filter }: { filter: string }) {
       .select("id, user_id, category, subject, body, status, created_at")
       .eq("status", active === "traitees" ? "traitee" : "nouvelle")
       .order("created_at", { ascending: active === "traitees" ? false : true }),
-    supabase.from("profiles").select("id, full_name"),
+    supabase.from("profiles").select("id, full_name").eq("is_test_account", false),
   ]);
   const nameOf = new Map((profiles ?? []).map((p) => [p.id as string, p.full_name as string]));
 

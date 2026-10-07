@@ -2,10 +2,9 @@ import Link from "next/link";
 import { Bell, ChevronRight, FileText, Video } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import {
-  getStudentAllSessions,
   getStudentAssignments,
   getStudentCompletedIds,
-  getStudentProfile,
+  getStudentProgram,
   getStudentWorkItems,
 } from "@/lib/data/student";
 import { formatSessionDate, formatTimeRange } from "@/lib/format";
@@ -13,18 +12,23 @@ import SessionTypeBadge from "@/components/SessionTypeBadge";
 import { getStudentMessages, shortDate } from "@/lib/data/messages";
 import { getMinistry, INK, sessionColor } from "@/lib/ministry";
 import { markNotificationsSeen } from "./actions";
+import { getViewer } from "@/lib/data/viewer";
 
 export default async function StudentDashboardPage() {
+  const viewer = await getViewer();
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const { ministrySlug, notificationsSeenAt } = await getStudentProfile(supabase, user!.id);
-  const allSessions = await getStudentAllSessions(supabase, user!.id);
+  const allSessions = await getStudentProgram(
+    viewer!.ministryId,
+    viewer!.preferredDay,
+  );
 
   // Messages des enseignants uniquement : le travail à faire a sa propre carte et sa propre page
-  const messages = await getStudentMessages(supabase, notificationsSeenAt);
+  const messages = await getStudentMessages(supabase, viewer!.notificationsSeenAt, {
+    arrival: viewer!.profileCreatedAt,
+    // La Home n'affiche qu'un aperçu. Une petite marge conserve le message de bienvenue
+    // personnalisé sans charger toute la messagerie.
+    limit: 10,
+  });
   const newCount = messages.filter((m) => m.isNew).length;
   const preview = messages.slice(0, 1);
 
@@ -32,7 +36,7 @@ export default async function StudentDashboardPage() {
   const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris" }).format(new Date());
   const nextSession = allSessions.find((s) => s.session_date >= today);
 
-  const ministryColor = getMinistry(ministrySlug)?.color ?? INK;
+  const ministryColor = getMinistry(viewer!.ministrySlug)?.color ?? INK;
   const colorFor = (type: "commun" | "ministere", track?: string | null) =>
     sessionColor(track, type, ministryColor);
 
@@ -55,7 +59,7 @@ export default async function StudentDashboardPage() {
       supabase,
       allSessions.map((s) => s.id)
     ),
-    getStudentCompletedIds(supabase, user!.id),
+    getStudentCompletedIds(supabase, viewer!.id),
   ]);
   const work = getStudentWorkItems(assignments, allSessions);
   const todo = !nextSession

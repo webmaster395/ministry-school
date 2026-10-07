@@ -6,6 +6,7 @@ import { getMinistries } from "@/lib/data/admin";
 import { buildRows, getMinistrySessions } from "@/lib/data/pilotage";
 import { phaseOf, reportState, type Member, type OppRow, type ProgramEntry } from "@/lib/data/admin-hub";
 import { formatSessionDate } from "@/lib/format";
+import { accountsByTrainingCycle } from "@/lib/training-cycle-stats";
 import BarChart from "@/components/BarChart";
 import { DayList } from "@/components/admin/ProgramTab";
 
@@ -25,8 +26,9 @@ export default async function OverviewTab({
 
   // Pour le moment, aucune distinction : administrateurs, formateurs et étudiants sont comptés ensemble
   const students = members;
-  const monthStart = today.slice(0, 7);
-  const newThisMonth = members.filter((m) => m.created_at.slice(0, 7) === monthStart).length;
+  const trainingDates = [...new Set(program.filter((entry) => entry.kind === "course").map((entry) => entry.date))].sort();
+  const cycles = accountsByTrainingCycle(members, trainingDates);
+  const currentCycle = cycles.find((cycle) => cycle.date >= today) ?? cycles.at(-1);
   const pending = students.filter((m) => !m.email_confirmed && !m.deactivated).length;
 
   const nextDate = program.find((e) => e.date >= today)?.date;
@@ -64,7 +66,7 @@ export default async function OverviewTab({
 
   const cards: { value: number | string; label: string; attention?: boolean; sub?: string }[] = [
     { value: students.length, label: "Membres inscrits", sub: genderSub },
-    { value: newThisMonth, label: "Nouveaux comptes ce mois" },
+    { value: currentCycle?.value ?? 0, label: currentCycle ? `Nouveaux comptes · ${currentCycle.label}` : "Nouveaux comptes" },
     { value: pending, label: "En attente de confirmation", attention: pending > 0 },
     {
       value: nextDate ? formatSessionDate(nextDate).replace(/^\w+ /, "") : "—",

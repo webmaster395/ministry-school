@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getViewer } from "@/lib/data/viewer";
+import { invalidateStudentProgram } from "@/lib/cache/program";
 
 export async function updateSessionTrainers(formData: FormData) {
   const viewer = await getViewer();
@@ -20,6 +21,7 @@ export async function updateSessionTrainers(formData: FormData) {
     const { error } = await supabase.from("session_trainers").insert(trainerIds.map((trainerId, position) => ({ session_id: sessionId, trainer_id: trainerId, position })));
     if (error) throw new Error(error.message);
   }
+  invalidateStudentProgram();
 
   revalidatePath(`/gestion/enseignement/preparation/${sessionId}`);
   revalidatePath(`/etudiant/seances/${sessionId}`);

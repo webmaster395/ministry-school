@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { invalidateStudentProgram } from "@/lib/cache/program";
 
 export async function createCourse(formData: FormData) {
   const supabase = await createClient();
@@ -22,6 +23,7 @@ export async function createCourse(formData: FormData) {
     throw new Error("La création du cours a échoué : " + error.message);
   }
 
+  invalidateStudentProgram();
   revalidatePath("/gestion/admin/cours");
   revalidatePath("/gestion/admin/seances");
 }
@@ -32,6 +34,7 @@ export async function deleteCourse(formData: FormData) {
 
   await supabase.from("courses").delete().eq("id", courseId);
 
+  invalidateStudentProgram();
   revalidatePath("/gestion/admin/cours");
   revalidatePath("/gestion/admin/seances");
 }
@@ -51,6 +54,7 @@ export async function renameCourse(formData: FormData) {
   if (error) throw new Error("La modification du cours a échoué : " + error.message);
   if (!data?.length) throw new Error("Vous n'avez pas le droit de modifier ce cours.");
 
+  invalidateStudentProgram();
   revalidatePath("/gestion/admin/cours");
   revalidatePath("/gestion/admin/seances");
   revalidatePath("/etudiant", "layout");

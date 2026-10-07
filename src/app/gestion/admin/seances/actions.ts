@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getViewer } from "@/lib/data/viewer";
+import { invalidateStudentProgram } from "@/lib/cache/program";
 
 export async function createQuickCourse(formData: FormData) {
   const viewer = await getViewer();
@@ -55,6 +56,8 @@ export async function createQuickCourse(formData: FormData) {
     if (linkError) throw new Error(linkError.message);
   }
 
+  invalidateStudentProgram();
+
   revalidatePath("/gestion/admin", "layout");
   revalidatePath("/etudiant", "layout");
   redirect(`/gestion/admin/seances/${session.id}`);
@@ -100,6 +103,8 @@ export async function createSession(formData: FormData) {
     throw new Error("La création de la séance a échoué : " + error.message);
   }
 
+  invalidateStudentProgram();
+
   revalidatePath("/gestion/admin/seances");
   revalidatePath("/enseignant");
   revalidatePath("/etudiant");
@@ -110,6 +115,8 @@ export async function deleteSession(formData: FormData) {
   const sessionId = formData.get("session_id") as string;
 
   await supabase.from("sessions").delete().eq("id", sessionId);
+
+  invalidateStudentProgram();
 
   revalidatePath("/gestion/admin/seances");
   revalidatePath("/enseignant");

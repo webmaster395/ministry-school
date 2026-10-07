@@ -150,12 +150,25 @@ export default async function MembersTab({
     </nav>
   );
 
+  const listParams = new URLSearchParams({ onglet: "membres", q, role, sens, statut, tri, implication, genre, par: String(perPage), page: String(current) });
+  const returnTo = `/gestion/admin?${listParams.toString()}`;
+
   return (
     <div className="space-y-5">
-      <MemberFilters
-        initial={{ q, role, sens, statut, implication, genre, par: String(perPage), tri }}
-        ministries={ministries.map((m) => ({ id: m.id, name: m.name, slug: m.slug }))}
-      />
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+        <div className="min-w-0 flex-1">
+          <MemberFilters
+            initial={{ q, role, sens, statut, implication, genre, tri, par: String(perPage) }}
+            ministries={ministries.map((m) => ({ id: m.id, name: m.name, slug: m.slug }))}
+          />
+        </div>
+        <a
+          href="/gestion/admin/utilisateurs/export"
+          className="label inline-flex min-h-10 shrink-0 items-center justify-center rounded-md border border-border bg-background px-4 text-xs tracking-[0.12em] text-foreground hover:border-foreground/40"
+        >
+          Télécharger (CSV)
+        </a>
+      </div>
 
       {pager}
 
@@ -177,7 +190,7 @@ export default async function MembersTab({
               return (
                 <li key={m.id} className="px-5 py-3.5">
                   <div className="grid items-center gap-2 md:grid-cols-[1.4fr_1fr_1.6fr_110px_90px] md:gap-4">
-                    <Link href={`/gestion/admin/membres/${m.id}`} className="group flex min-w-0 items-center gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-foreground">
+                    <Link href={`/gestion/admin/membres/${m.id}?returnTo=${encodeURIComponent(returnTo)}`} className="group flex min-w-0 items-center gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-foreground">
                       {m.avatar_path && avatarUrls.get(m.avatar_path) ? (
                         // eslint-disable-next-line @next/next/no-img-element -- adresse temporaire signée
                         <img src={avatarUrls.get(m.avatar_path)} alt="" className="h-9 w-9 shrink-0 rounded-full object-cover" />

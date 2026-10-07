@@ -34,6 +34,7 @@ export async function getMembers(supabase: SupabaseClient) {
       .select(
         "id, full_name, role, gender, is_teacher, is_service_lead, is_project_lead, service_id, ministry_lead_of, ministry_id, email_confirmed, deactivated, created_at, avatar_path, notification_prefs"
       )
+      .eq("is_test_account", false)
       .order("full_name"),
     supabase.rpc("admin_user_emails"),
   ]);
@@ -44,6 +45,7 @@ export async function getMembers(supabase: SupabaseClient) {
       .select(
         "id, full_name, role, is_teacher, is_service_lead, is_project_lead, service_id, ministry_lead_of, ministry_id, email_confirmed, deactivated, created_at, avatar_path, notification_prefs"
       )
+      .eq("is_test_account", false)
       .order("full_name");
     profiles = fallback ?? [];
   } else {

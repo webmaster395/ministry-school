@@ -8,7 +8,7 @@ import MembersTab from "@/components/admin/MembersTab";
 import QuestionsTab from "@/components/admin/QuestionsTab";
 import StatisticsTab from "@/components/admin/StatisticsTab";
 import { QUESTIONS_ENABLED } from "@/lib/questions";
-import { getMinistries } from "@/lib/data/admin";
+import { getMinistries, getTrainingDayDates } from "@/lib/data/admin";
 import TrainersTab, { type TrainerAdminRow } from "@/components/admin/TrainersTab";
 import { getServices } from "@/lib/data/opportunities";
 
@@ -70,7 +70,11 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
         />
       )}
       {tab === "statistiques" && (
-        <StatisticsTab members={await getMembers(supabase)} ministries={await getMinistries(supabase)} />
+        <StatisticsTab
+          members={await getMembers(supabase)}
+          ministries={await getMinistries(supabase)}
+          trainingDates={await getTrainingDayDates(supabase)}
+        />
       )}
       {tab === "programme" && (
         <ProgramTab

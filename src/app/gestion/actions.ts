@@ -18,6 +18,7 @@ export async function searchProfiles(query: string): Promise<{ id: string; full_
   const { data } = await supabase
     .from("profiles")
     .select("id, full_name")
+    .eq("is_test_account", false)
     .ilike("full_name", `%${query.trim()}%`)
     .limit(8);
   return (data ?? []) as { id: string; full_name: string }[];

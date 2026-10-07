@@ -30,6 +30,9 @@ npm-debug.log*
 # Outils locaux
 .claude/
 supabase/.temp/
+load-tests/k6/accounts.csv
+load-tests/k6/*.secrets.csv
+load-tests/manifests/
 
 # Document de travail interne — reste en local
 CAHIER_DES_CHARGES.md

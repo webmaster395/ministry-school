@@ -29,19 +29,19 @@ function studentFacingSender(message: { is_welcome: boolean; is_system: boolean;
  * les consignes sont dans « Travail à faire », les documents dans la fiche de chaque séance.
  * « Nouveau » = reçu depuis la dernière fois que la personne a tout marqué comme lu.
  */
-export async function getStudentMessages(supabase: SupabaseClient, since: string): Promise<Message[]> {
+export async function getStudentMessages(
+  supabase: SupabaseClient,
+  since: string,
+  options?: { arrival?: string | null; limit?: number },
+): Promise<Message[]> {
   // Le message de bienvenue arrive « à l'instant » de l'inscription de chacun : on affiche sa date d'arrivée
-  const { data: auth } = await supabase.auth.getUser();
-  const { data: me } = auth.user
-    ? await supabase.from("profiles").select("created_at").eq("id", auth.user.id).single()
-    : { data: null };
-  const arrival = (me?.created_at as string | undefined) ?? null;
+  const arrival = options?.arrival ?? null;
 
   const { data } = await supabase
     .from("announcements")
     .select("id, title, body, created_at, is_welcome, is_system, sent_as, target_url, target_type, target_id, cta_label, author:profiles!announcements_author_id_fkey(full_name)")
     .order("created_at", { ascending: false })
-    .limit(50);
+    .limit(options?.limit ?? 50);
 
   return (
     (data ?? []) as unknown as {

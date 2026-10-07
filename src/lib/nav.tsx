@@ -17,6 +17,7 @@ import {
   Presentation,
   Briefcase,
   NotebookPen,
+  ChartNoAxesColumnIncreasing,
 } from "lucide-react";
 import { isPlainStudent, type ViewerRoles } from "@/lib/roles";
 import { QUESTIONS_ENABLED } from "@/lib/questions";
@@ -52,6 +53,7 @@ const icons = {
   propose: <Lightbulb {...iconProps} />,
   projectPropose: <Rocket {...iconProps} />,
   adminHome: <LayoutDashboard {...iconProps} />,
+  adminStats: <ChartNoAxesColumnIncreasing {...iconProps} />,
   adminSessions: <CalendarClock {...iconProps} />,
   functions: <Briefcase {...iconProps} />,
 };
@@ -141,6 +143,11 @@ export function navSpaces(roles: ViewerRoles): Space[] {
               label: "Tableau de bord",
               href: "/gestion/admin",
               icon: icons.adminHome,
+            },
+            {
+              label: "Statistiques",
+              href: "/gestion/admin?onglet=statistiques",
+              icon: icons.adminStats,
             },
             {
               label: "Programme",

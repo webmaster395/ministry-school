@@ -27,14 +27,15 @@ export async function getEnrollmentBreakdown(
   // Requête tolérante sur profiles : si la colonne gender existe, on la récupère, sinon fallback
   let rows: { id: string; ministry_id: string | null; gender?: string | null; notification_prefs?: unknown }[] = [];
   const [{ data: studentsWithGender, error }, { data: emails }] = await Promise.all([
-    supabase.from("profiles").select("id, ministry_id, gender, notification_prefs"),
+    supabase.from("profiles").select("id, ministry_id, gender, notification_prefs").eq("is_test_account", false),
     supabase.rpc("admin_user_emails"),
   ]);
 
   if (error) {
     const { data: fallbackStudents } = await supabase
       .from("profiles")
-      .select("id, ministry_id, notification_prefs");
+      .select("id, ministry_id, notification_prefs")
+      .eq("is_test_account", false);
     rows = (fallbackStudents as typeof rows) ?? [];
   } else {
     rows = (studentsWithGender as typeof rows) ?? [];
@@ -131,6 +132,7 @@ export async function getStudents(supabase: SupabaseClient) {
     .from("profiles")
     .select("id, full_name, role, gender, preferred_day, email_confirmed, created_at, ministries!profiles_ministry_id_fkey(name, slug)")
     .eq("role", "student")
+    .eq("is_test_account", false)
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -138,6 +140,7 @@ export async function getStudents(supabase: SupabaseClient) {
       .from("profiles")
       .select("id, full_name, role, preferred_day, email_confirmed, created_at, ministries!profiles_ministry_id_fkey(name, slug)")
       .eq("role", "student")
+      .eq("is_test_account", false)
       .order("created_at", { ascending: false });
     list = fallback ?? [];
   } else {
@@ -152,6 +155,15 @@ export type Ministry = { id: string; slug: string; name: string };
 export async function getMinistries(supabase: SupabaseClient) {
   const { data } = await supabase.from("ministries").select("id, slug, name").order("name");
   return (data ?? []) as Ministry[];
+}
+
+/** Dates réelles des journées ayant au moins un cours dans le programme. */
+export async function getTrainingDayDates(supabase: SupabaseClient) {
+  const { data } = await supabase
+    .from("sessions")
+    .select("session_date")
+    .order("session_date");
+  return [...new Set((data ?? []).map((session) => session.session_date as string))];
 }
 
 export type Course = {

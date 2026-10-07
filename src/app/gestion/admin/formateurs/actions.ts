@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { invalidateStudentProgram } from "@/lib/cache/program";
 
 async function adminClient() {
   const supabase = await createClient();
@@ -51,6 +52,7 @@ export async function saveTrainer(formData: FormData) {
   const photoPath = await uploadPhoto(supabase, trainerId, formData.get("photo") as File | null);
   if (photoPath) await supabase.from("trainers").update({ photo_path: photoPath, updated_at: new Date().toISOString() }).eq("id", trainerId);
 
+  invalidateStudentProgram();
   revalidatePath("/gestion/admin");
   revalidatePath("/etudiant/seances", "layout");
   revalidatePath("/etudiant", "layout");
@@ -61,6 +63,7 @@ export async function setTrainerActive(formData: FormData) {
   const id = String(formData.get("id") ?? "");
   const { error } = await supabase.from("trainers").update({ is_active: formData.get("active") === "1", updated_at: new Date().toISOString() }).eq("id", id);
   if (error) throw new Error(error.message);
+  invalidateStudentProgram();
   revalidatePath("/gestion/admin");
   revalidatePath("/etudiant", "layout");
 }

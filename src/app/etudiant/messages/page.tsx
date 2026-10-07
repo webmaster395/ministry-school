@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import ProfileTabs from "@/components/ProfileTabs";
-import { getStudentProfile } from "@/lib/data/student";
 import { getStudentMessages } from "@/lib/data/messages";
+import { getViewer } from "@/lib/data/viewer";
 import { markNotificationsSeen } from "../actions";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -10,13 +10,11 @@ const fmt = (v: string) =>
   new Intl.DateTimeFormat("fr-FR", { dateStyle: "long", timeStyle: "short" }).format(new Date(v));
 
 export default async function StudentMessagesPage() {
+  const viewer = await getViewer();
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const { notificationsSeenAt } = await getStudentProfile(supabase, user!.id);
-  const messages = await getStudentMessages(supabase, notificationsSeenAt);
+  const messages = await getStudentMessages(supabase, viewer!.notificationsSeenAt, {
+    arrival: viewer!.profileCreatedAt,
+  });
   const newCount = messages.filter((m) => m.isNew).length;
 
   return (

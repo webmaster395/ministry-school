@@ -7,6 +7,7 @@ import { DRAFTS_ENABLED } from "@/lib/drafts";
 import { TYPES_ENABLED } from "@/lib/material-types";
 import { getViewer } from "@/lib/data/viewer";
 import { notifyCourseContent } from "@/lib/course-notifications";
+import { invalidateStudentProgram } from "@/lib/cache/program";
 
 /** Ajoute un support (lien ou fichier déposé) à une séance. La base vérifie le droit d'écriture. */
 export async function addSupport(formData: FormData) {
@@ -147,6 +148,7 @@ export async function createCourse(
   if (error)
     return { error: "Le cours n'a pas pu être créé : " + error.message };
 
+  invalidateStudentProgram();
   revalidatePath("/gestion/pilotage");
   revalidatePath("/etudiant", "layout");
   redirect("/gestion/pilotage?onglet=avenir");
@@ -167,6 +169,7 @@ export async function publishCourse(formData: FormData) {
   if (!data?.length)
     throw new Error("Vous n'avez pas le droit de publier ce cours.");
 
+  invalidateStudentProgram();
   revalidatePath(`/gestion/enseignement/preparation/${sessionId}`);
   revalidatePath("/gestion/pilotage", "layout");
   revalidatePath("/gestion/pilotage");
@@ -174,6 +177,7 @@ export async function publishCourse(formData: FormData) {
 }
 
 function refreshPrep(sessionId: string) {
+  invalidateStudentProgram();
   revalidatePath(`/gestion/enseignement/preparation/${sessionId}`);
   revalidatePath("/gestion/pilotage", "layout");
   revalidatePath("/gestion/enseignement", "layout");

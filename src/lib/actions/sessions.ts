@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { invalidateStudentProgram } from "@/lib/cache/program";
 
 /**
  * Modifie une séance existante (date, horaire, lieu, titre, intervenant, parcours).
@@ -81,6 +82,8 @@ export async function updateSession(formData: FormData) {
     if (courseError) throw new Error("Le titre du cours n’a pas pu être synchronisé : " + courseError.message);
   }
 
+  invalidateStudentProgram();
+
   revalidatePath("/gestion/admin/seances");
   revalidatePath(`/gestion/admin/seances/${id}`);
   revalidatePath(`/etudiant/seances/${id}`);
@@ -112,6 +115,7 @@ export async function deleteSessionFromCard(formData: FormData) {
   const { data, error } = await supabase.from("sessions").delete().eq("id", id).select("id");
   if (error) throw new Error("La suppression a échoué : " + error.message);
   if (!data?.length) throw new Error("Vous n'avez pas le droit de supprimer cette séance.");
+  invalidateStudentProgram();
   revalidatePath("/gestion/admin", "layout");
   revalidatePath("/etudiant", "layout");
   redirect("/gestion/admin?onglet=programme");

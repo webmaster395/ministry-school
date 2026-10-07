@@ -9,8 +9,10 @@ import MinistryPicto from "@/components/MinistryPicto";
 
 const date = (value: string) => new Intl.DateTimeFormat("fr-FR", { dateStyle: "long" }).format(new Date(value));
 
-export default async function AdminMemberProfilePage({ params }: { params: Promise<{ id: string }> }) {
+export default async function AdminMemberProfilePage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ returnTo?: string }> }) {
   const { id } = await params;
+  const requestedReturn = (await searchParams).returnTo;
+  const returnTo = requestedReturn?.startsWith("/gestion/admin?") ? requestedReturn : "/gestion/admin?onglet=membres";
   const supabase = await createClient();
   const { data: profile } = await supabase
     .from("profiles")
@@ -46,7 +48,7 @@ export default async function AdminMemberProfilePage({ params }: { params: Promi
 
   return (
     <div className="mx-auto max-w-[900px] space-y-5">
-      <Link href="/gestion/admin?onglet=membres" className="inline-flex items-center gap-2 text-sm text-muted transition hover:text-foreground">
+      <Link href={returnTo} className="inline-flex items-center gap-2 text-sm text-muted transition hover:text-foreground">
         <ArrowLeft size={17} /> Retour aux membres
       </Link>
 
