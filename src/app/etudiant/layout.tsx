@@ -9,41 +9,29 @@ import { getViewer } from "@/lib/data/viewer";
 import WelcomeModal from "@/components/WelcomeModal";
 import MlkEngagementModal from "@/components/MlkEngagementModal";
 import StudentUsageTracker from "@/components/StudentUsageTracker";
-import { createDiagnosticContext, traceServerStage } from "@/lib/server-render-diagnostics";
 
 export default async function StudentLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const diagnostic = createDiagnosticContext("/etudiant/*");
-  const viewer = await traceServerStage(diagnostic, "student-layout-viewer", getViewer);
+  const viewer = await getViewer();
   if (!viewer) redirect("/login");
   if (viewer?.deactivated) redirect("/auth/desactive");
-  const layoutContext = await traceServerStage(diagnostic, "student-layout-shape", async () => ({
-    notesEnabled: viewer.courseNotesEnabled ?? false,
-    roles: viewer.roles,
-    unreadMessages: viewer.unreadMessages,
-    fullName: viewer.fullName,
-    avatarUrl: viewer.avatarUrl,
-    ministrySlug: viewer.ministrySlug,
-    ministryName: viewer.ministryName,
-    welcomeSeen: viewer.welcomeSeen,
-    mlkEngagement: viewer.mlkEngagement,
-  }));
+  const notesEnabled = viewer?.courseNotesEnabled ?? false;
 
   return (
     <SpaceProvider
-      roles={layoutContext.roles}
-      unread={layoutContext.unreadMessages}
-      notesEnabled={layoutContext.notesEnabled}
+      roles={viewer.roles}
+      unread={viewer.unreadMessages}
+      notesEnabled={notesEnabled}
     >
       <StudentUsageTracker />
       <div className="app-shell flex min-h-screen w-full">
         <Sidebar
-          fullName={layoutContext.fullName}
-          avatarUrl={layoutContext.avatarUrl}
-          ministrySlug={layoutContext.ministrySlug}
+          fullName={viewer.fullName}
+          avatarUrl={viewer.avatarUrl}
+          ministrySlug={viewer?.ministrySlug}
         />
         <div className="flex min-h-screen min-w-0 flex-1 flex-col bg-surface">
           <AppHeader />
@@ -54,15 +42,15 @@ export default async function StudentLayout({
           <AppFooter />
         </div>
       </div>
-      {!layoutContext.welcomeSeen && (
+      {viewer && !viewer.welcomeSeen && (
         <WelcomeModal
-          fullName={layoutContext.fullName}
-          ministrySlug={layoutContext.ministrySlug}
-          ministryName={layoutContext.ministryName}
+          fullName={viewer.fullName}
+          ministrySlug={viewer.ministrySlug}
+          ministryName={viewer.ministryName}
         />
       )}
-      {layoutContext.welcomeSeen && !layoutContext.mlkEngagement.completed && (
-        <MlkEngagementModal initial={layoutContext.mlkEngagement} />
+      {viewer?.welcomeSeen && !viewer.mlkEngagement.completed && (
+        <MlkEngagementModal initial={viewer.mlkEngagement} />
       )}
     </SpaceProvider>
   );

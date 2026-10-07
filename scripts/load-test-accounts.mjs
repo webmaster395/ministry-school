@@ -8,6 +8,7 @@ const PROJECT_REF = process.env.SUPABASE_PROJECT_REF || "jrdjqkvagnqpchygxrkz";
 const SUPABASE_URL = process.env.SUPABASE_URL || `https://${PROJECT_REF}.supabase.co`;
 const APP_URL = (process.env.APP_URL || "https://www.ministryschool.fr").replace(/\/$/, "");
 const EMAIL_DOMAIN = process.env.LOAD_TEST_EMAIL_DOMAIN || "loadtest.invalid";
+const SMOKE_USER_AGENT = process.env.SMOKE_USER_AGENT || "MinistrySchool-Smoke-Test/1.0";
 const command = process.argv[2];
 const batchArg = process.argv.find((arg) => arg.startsWith("--batch="))?.slice(8);
 const batchId = batchArg || randomUUID();
@@ -154,7 +155,10 @@ function cookieHeader(session) {
 }
 
 async function requestPage(path, cookie) {
-  const response = await fetch(`${APP_URL}${path}`, { headers: { cookie }, redirect: "manual" });
+  const response = await fetch(`${APP_URL}${path}`, {
+    headers: { cookie, "user-agent": SMOKE_USER_AGENT },
+    redirect: "manual",
+  });
   return { path, status: response.status, location: response.headers.get("location"), body: await response.text() };
 }
 
@@ -181,6 +185,8 @@ async function smoke() {
     { path: "/login", status: loginPage.status },
     await requestPage("/etudiant", cookie),
     await requestPage("/etudiant/cours", cookie),
+    await requestPage("/etudiant/calendrier", cookie),
+    await requestPage("/etudiant/travail", cookie),
     await requestPage(`/etudiant/seances/${manifest.session.id}`, cookie),
   ];
   for (const page of pages) {
@@ -188,7 +194,7 @@ async function smoke() {
       throw new Error(`${page.path} inaccessible : HTTP ${page.status}${page.location ? ` → ${page.location}` : ""}`);
     }
   }
-  const courseBody = pages[3].body || "";
+  const courseBody = pages.at(-1).body || "";
   const material = manifest.session.material;
   const resourceVisible = !material || courseBody.includes(material.title) || courseBody.includes(material.link_url || "__absent__") || courseBody.includes(material.file_url || "__absent__");
   if (!resourceVisible) throw new Error("La ressource choisie n’apparaît pas dans la page du cours.");

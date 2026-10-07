@@ -19,7 +19,7 @@ test("les pages de cours réutilisent le viewer vérifié sans second appel Auth
   ];
   for (const file of files) {
     const code = await source(file);
-    assert.match(code, /getViewer(?:\(\))?/, file);
+    assert.match(code, /getViewer\(\)/, file);
     assert.doesNotMatch(code, /auth\.getUser\(\)/, file);
     assert.doesNotMatch(code, /user!\.id/, file);
   }
