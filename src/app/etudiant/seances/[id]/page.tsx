@@ -16,6 +16,7 @@ import {
   getStudentAssignments,
   getStudentCompletedIds,
   getStudentMaterials,
+  getNextRelevantSession,
 } from "@/lib/data/student";
 import { parcoursSlugOf } from "@/lib/data/parcours";
 import { toggleAssignment } from "../../travail/actions";
@@ -56,17 +57,6 @@ function formatHours(start: string, end: string) {
       .replace(":", " h ")
       .replace(/ h 00$/, " h");
   return `${f(start)}–${f(end)}`;
-}
-
-function formatDue(dateStr: string) {
-  const d = new Date(dateStr);
-  return d.toLocaleDateString("fr-FR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
 }
 
 function coursePlace(location: string, room: string | null) {
@@ -185,6 +175,7 @@ export default async function SessionDetailPage({
         photoUrl: null,
       });
     const currentIndex = sessions.findIndex((session) => session.id === s.id);
+    const nextRelevantSession = getNextRelevantSession(s, sessions);
     const navItem = (session: typeof s | undefined) =>
       session
         ? {
@@ -289,6 +280,7 @@ export default async function SessionDetailPage({
         backLabel={backLabel}
         previous={navItem(sessions[currentIndex - 1])}
         next={navItem(sessions[currentIndex + 1])}
+        nextCourseDate={nextRelevantSession?.session_date ?? null}
       />
     );
   }
@@ -507,10 +499,23 @@ export default async function SessionDetailPage({
               <ul className="mt-5 divide-y divide-border-soft">
                 {assignments.map((a) => {
                   const done = doneIds.has(a.id);
+                  const after = a.phase
+                    ? a.phase === "after"
+                    : !!a.due_at &&
+                      new Date(a.due_at) >
+                        new Date(`${s.session_date}T${s.end_time}`);
+                  const nextRelevantSession = after
+                    ? getNextRelevantSession(s, sessions)
+                    : null;
                   const meta = [
                     a.kind,
                     a.duration_min ? `${a.duration_min} min` : null,
-                    a.due_at ? formatDue(a.due_at) : null,
+                    after
+                      ? "À terminer avant le prochain cours"
+                      : "À terminer avant le cours concerné",
+                    nextRelevantSession
+                      ? `Prochain cours : ${formatSessionDateWithYear(nextRelevantSession.session_date)}`
+                      : null,
                   ].filter(Boolean);
 
                   return (

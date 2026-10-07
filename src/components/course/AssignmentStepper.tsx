@@ -64,6 +64,7 @@ export default function AssignmentStepper({
   steps,
   completedIds,
   accent,
+  deadlineDate,
 }: {
   assignmentId: string;
   title: string;
@@ -71,6 +72,7 @@ export default function AssignmentStepper({
   steps: Step[];
   completedIds: string[];
   accent: string;
+  deadlineDate?: string | null;
 }) {
   const done = new Set(completedIds);
   const [open, setOpen] = useState(
@@ -109,6 +111,21 @@ export default function AssignmentStepper({
           />
         </div>
         <p className="mt-5 text-xs font-medium text-muted">{title}</p>
+        <div className="mt-3 text-xs">
+          <p className="font-semibold text-foreground">
+            À terminer avant le prochain cours
+          </p>
+          {deadlineDate && (
+            <p className="mt-0.5 text-muted">
+              Prochain cours :{" "}
+              {new Intl.DateTimeFormat("fr-FR", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              }).format(new Date(`${deadlineDate}T00:00:00`))}
+            </p>
+          )}
+        </div>
       </div>
       <div className="mt-4 max-w-3xl border-t border-border">
         {steps.map((step, index) => {

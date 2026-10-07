@@ -141,6 +141,7 @@ export default async function TeacherSupportsPage() {
       <section className="rounded-lg border border-border bg-background p-4 sm:p-6">
         <h2 className="mb-4 label text-xs tracking-[0.18em] text-muted">DONNER UNE CONSIGNE</h2>
         <form action={addAssignment} className="grid gap-3">
+          <input type="hidden" name="phase" value="before" />
           <select
             name="session_id"
             required
@@ -160,7 +161,7 @@ export default async function TeacherSupportsPage() {
             placeholder="Consigne pour la prochaine séance..."
             className="rounded-md border border-border px-3 py-2 text-sm"
           />
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             <input
               name="kind"
               placeholder="Type (lecture, vidéo, document…)"
@@ -171,12 +172,6 @@ export default async function TeacherSupportsPage() {
               min={1}
               name="duration_min"
               placeholder="Durée (min)"
-              className="rounded-md border border-border px-3 py-2 text-sm"
-            />
-            <input
-              type="datetime-local"
-              name="due_at"
-              aria-label="Échéance"
               className="rounded-md border border-border px-3 py-2 text-sm"
             />
           </div>

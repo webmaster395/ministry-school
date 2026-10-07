@@ -14,6 +14,18 @@ const studentData = await readFile(
   new URL("../src/lib/data/student.ts", import.meta.url),
   "utf8",
 );
+const assignmentStepper = await readFile(
+  new URL("../src/components/course/AssignmentStepper.tsx", import.meta.url),
+  "utf8",
+);
+const teacherPanels = await readFile(
+  new URL("../src/components/gestion/TeacherPanels.tsx", import.meta.url),
+  "utf8",
+);
+const teacherSupports = await readFile(
+  new URL("../src/app/enseignant/supports/page.tsx", import.meta.url),
+  "utf8",
+);
 
 test("la fiche cours conserve toutes les sections métier", () => {
   for (const marker of [
@@ -50,4 +62,15 @@ test("un devoir long retrouve le rendu structuré des sous-consignes", () => {
   assert.match(courseExperience, /divide-y divide-border/);
   assert.match(courseExperience, /emphasizedQuestion/);
   assert.match(courseExperience, /rounded-lg bg-surface/);
+});
+
+test("les échéances pédagogiques suivent les cours réels et jamais un délai arbitraire", () => {
+  assert.match(courseExperience, /À terminer avant le cours concerné/);
+  assert.match(courseExperience, /À terminer avant le prochain cours/);
+  assert.match(courseExperience, /nextCourseDate/);
+  assert.match(assignmentStepper, /Prochain cours/);
+  assert.match(studentWork, /dueLabels\(after, targetDate\)/);
+  assert.doesNotMatch(teacherPanels, /setDate\(/);
+  assert.doesNotMatch(teacherPanels, /afterDue/);
+  assert.doesNotMatch(teacherSupports, /name="due_at"/);
 });

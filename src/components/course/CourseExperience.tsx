@@ -151,15 +151,13 @@ function actionLabel(type?: string | null, downloadable = false) {
   return "Consulter";
 }
 
-function formatDeadline(value: string | null) {
+function formatCourseDate(value: string | null) {
   if (!value) return null;
   return new Intl.DateTimeFormat("fr-FR", {
     day: "numeric",
     month: "long",
     year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(value));
+  }).format(new Date(`${value}T00:00:00`));
 }
 
 function cleanMarkdown(value: string) {
@@ -292,11 +290,15 @@ function TaskSection({
   eyebrow,
   items,
   completedIds,
+  phase,
+  courseDate,
 }: {
   title: string;
   eyebrow: string;
   items: Assignment[];
   completedIds: Set<string>;
+  phase: "before" | "after";
+  courseDate: string | null;
 }) {
   if (!items.length) return null;
   return (
@@ -307,7 +309,7 @@ function TaskSection({
         {items.map((item, index) => {
           const done = completedIds.has(item.id);
           const url = item.resource_url || item.file_url;
-          const deadline = formatDeadline(item.due_at);
+          const deadline = formatCourseDate(courseDate);
           return (
             <article
               key={item.id}
@@ -342,11 +344,18 @@ function TaskSection({
                     <FormattedAssignmentText value={item.description} />
                   </div>
                 )}
-                {deadline && (
-                  <p className="mt-2 text-xs font-medium text-foreground">
-                    À terminer avant le {deadline}
+                <div className="mt-3 text-xs">
+                  <p className="font-semibold text-foreground">
+                    {phase === "after"
+                      ? "À terminer avant le prochain cours"
+                      : "À terminer avant le cours concerné"}
                   </p>
-                )}
+                  {deadline && (
+                    <p className="mt-0.5 text-muted">
+                      {phase === "after" ? "Prochain cours" : "Cours"} : {deadline}
+                    </p>
+                  )}
+                </div>
                 {url && (
                   <a
                     href={url}
@@ -394,6 +403,7 @@ export default function CourseExperience({
   backLabel,
   previous,
   next,
+  nextCourseDate = null,
   previewDemo = false,
 }: {
   session: CourseSession;
@@ -408,6 +418,7 @@ export default function CourseExperience({
   backLabel: string;
   previous?: { id: string; title: string } | null;
   next?: { id: string; title: string } | null;
+  nextCourseDate?: string | null;
   previewDemo?: boolean;
 }) {
   const courseEnd = new Date(`${session.dateIso}T23:59:59`);
@@ -630,6 +641,8 @@ export default function CourseExperience({
               eyebrow="Se préparer"
               items={before}
               completedIds={completedIds}
+              phase="before"
+              courseDate={session.dateIso}
             />
           </div>
           {materials.length > 0 && (
@@ -708,6 +721,7 @@ export default function CourseExperience({
                     : completedStepIds
                 }
                 accent={session.accent}
+                deadlineDate={nextCourseDate}
               />
             ))}
             {simpleAfter.length > 0 && (
@@ -716,6 +730,8 @@ export default function CourseExperience({
                 eyebrow="Mettre en pratique"
                 items={simpleAfter}
                 completedIds={completedIds}
+                phase="after"
+                courseDate={nextCourseDate}
               />
             )}
           </div>

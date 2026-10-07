@@ -167,14 +167,6 @@ export function teacherPanels(
     </>
   );
 
-  /** Après le cours : échéance une semaine plus tard, à l'heure du cours (nécessaire pour les distinguer des consignes d'avant). */
-  const afterDue = (() => {
-    const d = new Date(`${s.session_date}T${s.start_time.slice(0, 5)}:00`);
-    d.setDate(d.getDate() + 7);
-    const p = (n: number) => String(n).padStart(2, "0");
-    return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
-  })();
-
   const assignmentList = (rows: Assignment[]) =>
     rows.length > 0 && (
       <ul className="mb-5 space-y-3">
@@ -496,7 +488,6 @@ export function teacherPanels(
     placeholder: string,
     button: string,
     phase: "before" | "after",
-    due?: string,
   ) => (
     <details className="group rounded-xl border border-dashed border-border bg-background">
       <summary className="cursor-pointer list-none px-4 py-3 text-sm font-semibold text-foreground transition hover:bg-surface">
@@ -507,7 +498,6 @@ export function teacherPanels(
         className="grid gap-2.5 border-t border-border-soft p-4 sm:grid-cols-2"
       >
         <input type="hidden" name="session_id" value={s.id} />
-        {due && <input type="hidden" name="due_at" value={due} />}
         <input type="hidden" name="phase" value={phase} />
         <input
           name="title"
@@ -780,7 +770,7 @@ export function teacherPanels(
           retrouvent dans « Travail à faire ».
         </p>
         {assignmentList(after)}
-        {quickAdd("Titre du travail", "Ajouter un travail", "after", afterDue)}
+        {quickAdd("Titre du travail", "Ajouter un travail", "after")}
       </div>
     ),
   };

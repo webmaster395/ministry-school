@@ -79,15 +79,14 @@ export async function addAssignment(formData: FormData) {
 
   const kind = ((formData.get("kind") as string) ?? "").trim();
   const duration = parseInt((formData.get("duration_min") as string) ?? "", 10);
-  const due = (formData.get("due_at") as string) ?? "";
-
   const { error } = await supabase.from("assignments").insert({
     session_id: sessionId,
     instructions,
     created_by: user.id,
     kind: kind || null,
     duration_min: Number.isFinite(duration) && duration > 0 ? duration : null,
-    due_at: due ? new Date(due).toISOString() : null,
+    phase: "before",
+    due_at: null,
   });
   if (error) throw new Error("L'ajout du travail a échoué : " + error.message);
 

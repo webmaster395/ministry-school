@@ -18,9 +18,13 @@ type Tab = "prochaine" | "plus-tard" | "termines";
 
 type Assignment = Awaited<ReturnType<typeof getStudentAssignments>>[number];
 
-function dueLabel(date: string | null) {
-  if (!date) return "Échéance à venir";
-  return `À faire pour le ${formatSessionDate(date).toLowerCase()}`;
+function dueLabels(after: boolean, date: string | null) {
+  const primary = after
+    ? "À terminer avant le prochain cours"
+    : "À terminer avant le cours concerné";
+  if (!date) return [primary];
+  const prefix = after ? "Prochain cours" : "Cours";
+  return [primary, `${prefix} : ${formatSessionDate(date).toLowerCase()}`];
 }
 
 export default async function StudentWorkPage({
@@ -196,7 +200,7 @@ export default async function StudentWorkPage({
                   const meta = [
                     a.kind,
                     a.duration_min ? `${a.duration_min} min` : null,
-                    dueLabel(targetDate),
+                    ...dueLabels(after, targetDate),
                   ].filter(Boolean);
                   return (
                     <li key={a.id}>
