@@ -24,7 +24,7 @@ export default async function QuestionsTab({ filter }: { filter: string }) {
 
   return (
     <div className="space-y-5">
-      <nav className="tabbar inline-flex gap-1 rounded-lg border border-border bg-background p-1">
+      <nav className="tabbar grid w-full grid-cols-2 gap-1 rounded-lg border border-border bg-background p-1 sm:inline-grid sm:w-auto">
         {[
           { key: "a_traiter", label: "À traiter" },
           { key: "traitees", label: "Traitées" },
@@ -47,8 +47,8 @@ export default async function QuestionsTab({ filter }: { filter: string }) {
             const c = QUESTION_CATEGORIES[q.category as QuestionCategory];
             return (
               <li key={q.id} className="px-5 py-4">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <span className="label rounded-full bg-surface px-3 py-1 text-[10px] tracking-[0.1em] text-foreground">
+                <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+                  <span className="label w-fit max-w-full rounded-lg bg-surface px-3 py-1 text-[10px] leading-relaxed tracking-[0.1em] text-foreground">
                     {c?.label} · à transmettre à {c?.handler}
                   </span>
                   <span className="text-xs text-muted">

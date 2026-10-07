@@ -98,9 +98,9 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           <header>
             <p className="text-sm text-muted">Administration</p>
             <h1 className="font-title mt-1 text-[30px] text-foreground">Membres</h1>
-            <div className="mt-4 flex gap-2">
-              <Link href="/gestion/admin?onglet=personnes" className={`rounded-full px-4 py-2 text-sm ${peopleView === "membres" ? "bg-accent text-on-accent" : "bg-surface text-muted"}`}>Étudiants et accès</Link>
-              <Link href="/gestion/admin?onglet=personnes&personnes=formateurs" className={`rounded-full px-4 py-2 text-sm ${peopleView === "formateurs" ? "bg-accent text-on-accent" : "bg-surface text-muted"}`}>Formateurs</Link>
+            <div className="mt-4 grid grid-cols-2 gap-2 sm:flex">
+              <Link href="/gestion/admin?onglet=personnes" className={`rounded-full px-3 py-2.5 text-center text-xs sm:px-4 sm:py-2 sm:text-sm ${peopleView === "membres" ? "bg-accent text-on-accent" : "bg-surface text-muted"}`}>Étudiants et accès</Link>
+              <Link href="/gestion/admin?onglet=personnes&personnes=formateurs" className={`rounded-full px-3 py-2.5 text-center text-xs sm:px-4 sm:py-2 sm:text-sm ${peopleView === "formateurs" ? "bg-accent text-on-accent" : "bg-surface text-muted"}`}>Formateurs</Link>
             </div>
           </header>
           {peopleView === "membres" ? <MembersTab

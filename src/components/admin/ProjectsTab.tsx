@@ -42,7 +42,7 @@ export default async function ProjectsTab({
   const href = (k: string, p: string) => `/gestion/admin?onglet=projets&type=${k}&phase=${p}`;
 
   const sectionNav = (
-    <nav className="tabbar grid w-full grid-cols-1 gap-1 rounded-lg border border-border bg-background p-1 sm:inline-grid sm:w-auto sm:grid-cols-3">
+    <nav className="tabbar grid w-full grid-cols-3 gap-1 rounded-lg border border-border bg-background p-1 sm:inline-grid sm:w-auto">
       {[
         { key: "projet", label: "Projets" },
         { key: "formation", label: "Formations de service" },
@@ -51,7 +51,7 @@ export default async function ProjectsTab({
         <Link
           key={tab.key}
           href={tab.key === "comptes-rendus" ? "/gestion/admin?onglet=projets&type=comptes-rendus" : href(tab.key, current)}
-          className={`rounded-md px-4 py-2 text-center text-sm transition ${
+          className={`min-w-0 rounded-md px-1.5 py-2 text-center text-[11px] leading-tight transition min-[375px]:text-xs sm:px-4 sm:text-sm ${
             section === tab.key ? "bg-accent font-medium text-on-accent" : "text-muted hover:text-foreground"
           }`}
         >
@@ -67,14 +67,14 @@ export default async function ProjectsTab({
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
         {sectionNav}
-        <nav className="tabbar inline-flex gap-1 rounded-lg border border-border bg-background p-1">
+        <nav className="tabbar grid w-full grid-cols-2 gap-1 rounded-lg border border-border bg-background p-1 min-[390px]:grid-cols-4 sm:inline-flex sm:w-auto">
           {PHASES.map((p) => (
             <Link
               key={p.key}
               href={href(kind, p.key)}
-              className={`rounded-md px-4 py-2 text-sm transition ${
+              className={`rounded-md px-2 py-2 text-center text-xs transition sm:px-4 sm:text-sm ${
                 current === p.key ? "bg-surface font-medium text-foreground" : "text-muted hover:text-foreground"
               }`}
             >
@@ -104,7 +104,7 @@ export default async function ProjectsTab({
             const received = past.filter((d) => reportState(o, d.session_date, today) === "recu").length;
             const manageHref = `/gestion/${o.kind === "projet" ? "projets" : "services"}/${o.id}`;
             return (
-              <li key={o.id} className="flex flex-wrap items-center justify-between gap-4 px-5 py-4 transition hover:bg-surface">
+              <li key={o.id} className="flex flex-col gap-4 px-4 py-4 transition hover:bg-surface sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:px-5">
                 <Link
                   href={manageHref}
                   className="min-w-0 flex-1"
@@ -126,7 +126,7 @@ export default async function ProjectsTab({
                   </span>
                 </Link>
 
-                <div className="flex items-center gap-2">
+                <div className="flex w-full flex-wrap items-center justify-between gap-2 sm:w-auto sm:justify-start">
                   {!o.registration_open ? (
                     <>
                       <RejectOpportunityDialog id={o.id} title={o.title} kind={o.kind} />

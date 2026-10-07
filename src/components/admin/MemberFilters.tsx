@@ -83,13 +83,13 @@ export default function MemberFilters({ initial, ministries }: { initial: Member
           <input name="q" value={values.q} onChange={(event) => change("q", event.target.value)} placeholder="Rechercher par nom ou e-mail" autoComplete="off" className={`${field} w-full pl-9 pr-9`} />
           {pending && <Loader2 size={16} className="absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-muted" aria-label="Recherche en cours" />}
         </label>
-        <select name="role" value={values.role} onChange={(event) => change("role", event.target.value)} className={`${field} min-w-[150px]`} aria-label="Rôle">
+        <select name="role" value={values.role} onChange={(event) => change("role", event.target.value)} className={`${field} hidden min-w-[150px] sm:block`} aria-label="Rôle">
           <option value="tous">Tous les rôles</option><option value="etudiant">Étudiant seulement</option><option value="enseignant">Formateur</option><option value="chef">Chef de projet</option><option value="responsable">Responsable de service</option><option value="pilotage">Pilotage ministériel</option><option value="admin">Admin</option>
         </select>
-        <select name="statut" value={values.statut} onChange={(event) => change("statut", event.target.value)} className={`${field} min-w-[145px]`} aria-label="Statut">
+        <select name="statut" value={values.statut} onChange={(event) => change("statut", event.target.value)} className={`${field} hidden min-w-[145px] sm:block`} aria-label="Statut">
           <option value="tous">Tous les statuts</option><option value="actif">Actif</option><option value="a_confirmer">À confirmer</option><option value="desactive">Désactivé</option>
         </select>
-        <button type="button" onClick={() => setOpen(true)} className="inline-flex min-h-10 items-center gap-2 rounded-md border border-border bg-background px-3.5 text-sm font-medium text-foreground transition hover:border-foreground/40">
+        <button type="button" onClick={() => setOpen(true)} className="inline-flex min-h-10 shrink-0 items-center gap-2 rounded-md border border-border bg-background px-3.5 text-sm font-medium text-foreground transition hover:border-foreground/40">
           <SlidersHorizontal size={16} /> Filtres{active.length ? ` · ${active.length}` : ""}
         </button>
       </div>
@@ -107,6 +107,11 @@ export default function MemberFilters({ initial, ministries }: { initial: Member
             <button type="button" onClick={() => setOpen(false)} aria-label="Fermer" className="grid h-10 w-10 place-items-center rounded-full text-muted hover:bg-surface hover:text-foreground"><X size={20} /></button>
           </header>
           <div className="flex-1 space-y-7 overflow-y-auto px-5 py-6 sm:px-6">
+            <fieldset className="space-y-4 sm:hidden">
+              <legend className="label mb-3 text-[11px] tracking-[0.14em] text-muted">ACCÈS</legend>
+              <label className="block space-y-1.5 text-sm">Rôle<select value={values.role} onChange={(event) => change("role", event.target.value, false)} className={`${field} w-full`}><option value="tous">Tous les rôles</option><option value="etudiant">Étudiant seulement</option><option value="enseignant">Formateur</option><option value="chef">Chef de projet</option><option value="responsable">Responsable de service</option><option value="pilotage">Pilotage ministériel</option><option value="admin">Admin</option></select></label>
+              <label className="block space-y-1.5 text-sm">Statut<select value={values.statut} onChange={(event) => change("statut", event.target.value, false)} className={`${field} w-full`}><option value="tous">Tous les statuts</option><option value="actif">Actif</option><option value="a_confirmer">À confirmer</option><option value="desactive">Désactivé</option></select></label>
+            </fieldset>
             <fieldset className="space-y-4">
               <legend className="label mb-3 text-[11px] tracking-[0.14em] text-muted">PROFIL ÉTUDIANT</legend>
               <label className="block space-y-1.5 text-sm">Sensibilité<select name="sens" value={values.sens} onChange={(event) => change("sens", event.target.value, false)} className={`${field} w-full`}><option value="toutes">Toutes les sensibilités</option><option value="non_renseignee">Non renseignée</option>{ministries.map((item) => <option key={item.id} value={item.slug}>{item.name}</option>)}</select></label>

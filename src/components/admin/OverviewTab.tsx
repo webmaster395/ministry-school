@@ -103,23 +103,23 @@ export default async function OverviewTab({
           </div>
           <Link
             href="/gestion/admin?onglet=projets&phase=a_valider"
-            className="rounded-lg bg-accent px-4 py-2 text-xs font-semibold text-on-accent transition hover:bg-[#1b2221]"
+            className="w-full rounded-lg bg-accent px-4 py-2.5 text-center text-xs font-semibold text-on-accent transition hover:bg-[#1b2221] sm:w-auto"
           >
             Examiner et valider →
           </Link>
         </div>
       )}
 
-      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="grid grid-cols-2 gap-2.5 sm:gap-3 lg:grid-cols-4">
         {cards.map((c) => (
           <div
             key={c.label}
-            className={`rounded-lg border border-border bg-background p-6 ${
+            className={`min-w-0 rounded-lg border border-border bg-background p-3.5 sm:p-6 ${
               c.attention ? "bg-m-doctoral/[0.05]" : ""
             }`}
           >
-            <p className="font-title text-[30px] leading-none text-foreground">{c.value}</p>
-            <p className={`mt-3 text-sm ${c.attention ? "text-link" : "text-muted"}`}>
+            <p className="font-title break-words text-[25px] leading-none text-foreground sm:text-[30px]">{c.value}</p>
+            <p className={`mt-2 text-[12px] leading-snug sm:mt-3 sm:text-sm ${c.attention ? "text-link" : "text-muted"}`}>
               {c.label}
               {c.sub ? ` · ${c.sub}` : ""}
             </p>

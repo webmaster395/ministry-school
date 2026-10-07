@@ -11,7 +11,7 @@ export function DayList({ entries }: { entries: ProgramEntry[] }) {
     <ul className="divide-y divide-border-soft border-y border-border-soft">
       {entries.map((entry) => (
         <li key={entry.key}>
-          <Link href={entry.href} className="group grid gap-1 py-3.5 transition hover:pl-2 sm:grid-cols-[130px_1fr_auto] sm:items-center sm:gap-4">
+          <Link href={entry.href} className="group grid min-h-14 gap-1 py-3.5 transition sm:grid-cols-[130px_1fr_auto] sm:items-center sm:gap-4 sm:hover:pl-2">
             <span className="text-sm font-semibold text-foreground">{formatTimeRange(entry.start, entry.end)}</span>
             <span className="min-w-0"><span className="block text-[16px] font-semibold text-foreground group-hover:text-link">{entry.title}</span><span className="mt-0.5 block truncate text-sm text-muted">{entry.sub}</span></span>
             <ChevronRight size={17} className="hidden text-muted sm:block" />
@@ -58,9 +58,9 @@ export default function ProgramTab({ entries, month, today, trainers, ministries
           <h1 className="font-title mt-1 text-[30px] leading-tight text-foreground">Journées et cours</h1>
           <p className="mt-1 text-sm text-muted">Clique sur un cours pour modifier sa fiche et son contenu.</p>
         </div>
-        <nav aria-label="Changer de mois" className="flex items-center gap-2">
+        <nav aria-label="Changer de mois" className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-start">
           <Link href={`/gestion/admin?onglet=programme&mois=${shiftMonth(selectedMonth, -1)}`} aria-label="Mois précédent" className="rounded-full border border-border p-2 text-muted hover:text-foreground"><ChevronLeft size={18} /></Link>
-          <span className="min-w-[150px] text-center text-sm font-semibold text-foreground">{monthLabel(selectedMonth)}</span>
+          <span className="min-w-0 flex-1 text-center text-sm font-semibold text-foreground sm:min-w-[150px]">{monthLabel(selectedMonth)}</span>
           <Link href={`/gestion/admin?onglet=programme&mois=${shiftMonth(selectedMonth, 1)}`} aria-label="Mois suivant" className="rounded-full border border-border p-2 text-muted hover:text-foreground"><ChevronRight size={18} /></Link>
         </nav>
       </header>

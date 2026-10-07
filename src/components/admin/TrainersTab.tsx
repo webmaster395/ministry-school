@@ -45,20 +45,20 @@ export default function TrainersTab({ trainers }: { trainers: TrainerAdminRow[] 
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">Une seule fiche par intervenant. Sa photo et ses informations se mettent ensuite à jour sur tous ses cours.</p>
       </header>
 
-      <details className="rounded-2xl border border-border bg-background p-5 sm:p-7">
+      <details className="rounded-xl border border-border bg-background p-4 sm:rounded-2xl sm:p-7">
         <summary className="cursor-pointer list-none font-title text-xl text-foreground">+ Ajouter un formateur</summary>
         <div className="mt-6 border-t border-border-soft pt-6"><TrainerForm /></div>
       </details>
 
       <div className="grid gap-4 xl:grid-cols-2">
         {trainers.map((trainer) => (
-          <details key={trainer.id} className={`rounded-2xl border border-border bg-background p-5 ${trainer.is_active ? "" : "opacity-65"}`}>
+          <details key={trainer.id} className={`rounded-xl border border-border bg-background p-4 sm:rounded-2xl sm:p-5 ${trainer.is_active ? "" : "opacity-65"}`}>
             <summary className="flex cursor-pointer list-none items-center gap-4">
               <span className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-full bg-surface font-semibold text-muted">
                 {trainer.photoUrl ? <img src={trainer.photoUrl} alt="" className="h-full w-full object-cover" /> : `${trainer.first_name[0] ?? ""}${trainer.last_name[0] ?? ""}`.toUpperCase()}
               </span>
               <span className="min-w-0 flex-1"><strong className="block truncate text-base text-foreground">{trainer.first_name} {trainer.last_name}</strong><span className="block truncate text-sm text-muted">{trainer.title || (trainer.is_active ? "Formateur" : "Désactivé")}</span></span>
-              <span className="text-sm text-link">Modifier</span>
+              <span className="hidden text-sm text-link min-[360px]:inline">Modifier</span>
             </summary>
             <div className="mt-6 border-t border-border-soft pt-6"><TrainerForm trainer={trainer} /></div>
             <form action={setTrainerActive} className="mt-5 border-t border-border-soft pt-4">

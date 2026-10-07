@@ -39,7 +39,7 @@ export default function QuickCourseForm({
 
       <dialog
         ref={dialogRef}
-        className="m-auto w-[min(94vw,560px)] rounded-2xl border border-border bg-background p-0 text-foreground shadow-2xl backdrop:bg-black/35"
+        className="m-0 h-dvh w-full max-w-none rounded-none border-0 bg-background p-0 text-foreground shadow-2xl backdrop:bg-black/35 sm:m-auto sm:h-auto sm:max-h-[92dvh] sm:w-[min(94vw,560px)] sm:max-w-[560px] sm:rounded-2xl sm:border"
       >
         <div className="flex items-start justify-between border-b border-border-soft px-5 py-4 sm:px-6">
           <div>
@@ -52,7 +52,7 @@ export default function QuickCourseForm({
           </button>
         </div>
 
-        <form action={createQuickCourse} className="space-y-4 px-5 py-5 sm:px-6">
+        <form action={createQuickCourse} className="space-y-4 overflow-y-auto px-4 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:max-h-[calc(92dvh-104px)] sm:px-6">
           <input type="hidden" name="session_date" value={date} />
           <input type="hidden" name="show_parking_notice" value={parking ? "1" : "0"} />
 
@@ -61,7 +61,7 @@ export default function QuickCourseForm({
             <input name="title" required autoFocus placeholder="Ex. Vivre la libération dans mes finances" className={field} />
           </label>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-3 min-[350px]:grid-cols-2">
             <label className="block text-sm font-medium">Début<input type="time" name="start_time" required className={field} /></label>
             <label className="block text-sm font-medium">Fin<input type="time" name="end_time" required className={field} /></label>
           </div>
@@ -119,9 +119,9 @@ export default function QuickCourseForm({
             Après la création, vous accéderez à la fiche complète pour ajouter la présentation, les objectifs, la vidéo, les supports et les travaux avant/après.
           </p>
 
-          <div className="flex items-center justify-end gap-3 border-t border-border-soft pt-4">
+          <div className="sticky bottom-0 -mx-4 flex items-center justify-end gap-2 border-t border-border-soft bg-background px-4 pb-1 pt-4 sm:static sm:mx-0 sm:gap-3 sm:px-0">
             <button type="button" onClick={() => dialogRef.current?.close()} className="px-3 py-2 text-sm text-muted hover:text-foreground">Annuler</button>
-            <button type="submit" className="rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent">Créer et enrichir →</button>
+            <button type="submit" className="min-h-11 rounded-full bg-accent px-4 py-2.5 text-sm font-semibold text-on-accent sm:px-5">Créer et enrichir →</button>
           </div>
         </form>
       </dialog>

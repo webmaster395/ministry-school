@@ -120,7 +120,7 @@ export default async function MembersTab({
     return `/gestion/admin?${qs.toString()}`;
   };
   const pager = (
-    <nav aria-label="Pages de membres" className="flex flex-wrap items-center justify-between gap-3 text-sm text-muted">
+    <nav aria-label="Pages de membres" className="flex flex-col gap-3 text-sm text-muted sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
       <span>
         {filtered.length ? (
           <>
@@ -129,9 +129,9 @@ export default async function MembersTab({
         ) : null}
       </span>
       {pageCount > 1 && (
-        <span className="flex items-center gap-2">
+        <span className="grid w-full grid-cols-[1fr_auto_1fr] items-center gap-1.5 sm:flex sm:w-auto sm:gap-2">
           {current > 1 ? (
-            <Link href={pageHref(current - 1)} className="rounded-md border border-border px-3 py-1.5 text-foreground transition hover:border-foreground">
+            <Link href={pageHref(current - 1)} className="rounded-md border border-border px-2 py-2 text-center text-foreground transition hover:border-foreground sm:px-3 sm:py-1.5">
               ← Précédent
             </Link>
           ) : (
@@ -139,7 +139,7 @@ export default async function MembersTab({
           )}
           <span className="px-1 tabular-nums">Page {current} sur {pageCount}</span>
           {current < pageCount ? (
-            <Link href={pageHref(current + 1)} className="rounded-md border border-border px-3 py-1.5 text-foreground transition hover:border-foreground">
+            <Link href={pageHref(current + 1)} className="rounded-md border border-border px-2 py-2 text-center text-foreground transition hover:border-foreground sm:px-3 sm:py-1.5">
               Suivant →
             </Link>
           ) : (
@@ -164,7 +164,7 @@ export default async function MembersTab({
         </div>
         <a
           href="/gestion/admin/utilisateurs/export"
-          className="label inline-flex min-h-10 shrink-0 items-center justify-center rounded-md border border-border bg-background px-4 text-xs tracking-[0.12em] text-foreground hover:border-foreground/40"
+          className="label inline-flex min-h-10 w-full shrink-0 items-center justify-center rounded-md border border-border bg-background px-4 text-xs tracking-[0.12em] text-foreground hover:border-foreground/40 lg:w-auto"
         >
           Télécharger (CSV)
         </a>
@@ -188,7 +188,7 @@ export default async function MembersTab({
               const status = memberStatus(m);
               const roles = rolesOf(m, serviceName, ministryName);
               return (
-                <li key={m.id} className="px-5 py-3.5">
+                <li key={m.id} className="px-4 py-3.5 sm:px-5">
                   <div className="grid items-center gap-2 md:grid-cols-[1.4fr_1fr_1.6fr_110px_90px] md:gap-4">
                     <Link href={`/gestion/admin/membres/${m.id}?returnTo=${encodeURIComponent(returnTo)}`} className="group flex min-w-0 items-center gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-foreground">
                       {m.avatar_path && avatarUrls.get(m.avatar_path) ? (
@@ -251,14 +251,14 @@ export default async function MembersTab({
 
       {pager}
 
-      <section suppressHydrationWarning className="rounded-lg border border-border bg-background p-6">
+      <section suppressHydrationWarning className="rounded-lg border border-border bg-background p-4 sm:p-6">
         <h3 className="font-title text-[22px] text-foreground">Secrétaires de pilotage</h3>
         <p className="mt-1 text-sm text-muted">
           Une adresse e-mail ajoutée ici donne la même vue que le pasteur du ministère. Si la personne n&apos;a pas
           encore de compte, l&apos;accès s&apos;active à sa première connexion.
         </p>
 
-        <form action={addDelegate} className="mt-4 flex flex-wrap items-end gap-3">
+        <form action={addDelegate} className="mt-4 grid gap-3 sm:grid-cols-[auto_1fr_auto] sm:items-end">
           <select name="ministry_id" required defaultValue="" className={field}>
             <option value="" disabled>
               Ministère…
@@ -274,7 +274,7 @@ export default async function MembersTab({
             name="email"
             required
             placeholder="secretaire@exemple.fr"
-            className={`${field} min-w-[240px] flex-1`}
+            className={`${field} min-w-0 w-full`}
           />
           <button
             type="submit"
