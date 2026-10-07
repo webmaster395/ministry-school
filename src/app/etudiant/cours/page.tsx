@@ -27,7 +27,7 @@ export default async function StudentCoursesPage() {
   const ministryColor = getMinistry(ministrySlug)?.color ?? INK;
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4 sm:space-y-5">
       <div>
         <p className="text-sm text-muted">Promotion {PROMOTION}</p>
         <h2 className="font-title text-[24px] leading-tight text-foreground">
@@ -37,7 +37,7 @@ export default async function StudentCoursesPage() {
 
       <nav
         aria-label="Accès rapide aux parcours"
-        className="flex max-w-5xl gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="-mx-4 flex max-w-5xl gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:px-0"
       >
         {parcours.map((p) => {
           const color = COLORS[p.slug] ?? ministryColor;
@@ -59,7 +59,7 @@ export default async function StudentCoursesPage() {
         })}
       </nav>
 
-      <ul className="grid max-w-5xl gap-[22px] md:grid-cols-2">
+      <ul className="grid max-w-5xl gap-4 sm:gap-[22px] md:grid-cols-2">
         {parcours.map((p) => {
           const color = COLORS[p.slug] ?? ministryColor;
           const mine = sessions.filter((s) => parcoursSlugOf(s.track) === p.slug);
@@ -75,7 +75,7 @@ export default async function StudentCoursesPage() {
               id={`parcours-${p.slug}`}
               suppressHydrationWarning
               data-locked={locked || undefined}
-              className={`scroll-mt-28 flex flex-col rounded-lg border border-border border-t-[3px] bg-background p-6 ${
+              className={`scroll-mt-28 flex flex-col rounded-lg border border-border border-t-[3px] bg-background p-4 sm:p-6 ${
                 locked ? "pointer-events-none select-none opacity-55 grayscale" : ""
               }`}
               style={{ borderTopColor: color }}
@@ -90,13 +90,13 @@ export default async function StudentCoursesPage() {
                 <span className="text-[13px] text-muted">{p.planned_sessions} sessions</span>
               </div>
 
-              <h3 className="font-title mt-5 text-[22px] leading-tight text-foreground">
+              <h3 className="font-title mt-4 text-[21px] leading-tight text-foreground sm:mt-5 sm:text-[22px]">
                 {p.title}
               </h3>
-              <p className="mt-2 text-[15px] leading-relaxed text-muted">{p.description}</p>
+              <p className="mt-2 text-[14px] leading-relaxed text-muted sm:text-[15px]">{p.description}</p>
 
               {!locked && (
-              <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-4 border-t border-border-soft pt-5">
+              <dl className="mt-4 grid grid-cols-2 gap-x-3 gap-y-3 border-t border-border-soft pt-4 sm:mt-5 sm:gap-x-4 sm:gap-y-4 sm:pt-5">
                 <Info label="Période" value={p.period_label} />
                 <Info label="Horaire habituel" value={p.schedule_label} />
                 <Info
@@ -112,7 +112,7 @@ export default async function StudentCoursesPage() {
 
               {p.note && <p className="mt-5 text-[15px] text-muted">{p.note}</p>}
 
-              <div className="mt-auto pt-5">
+              <div className="mt-auto pt-4 sm:pt-5">
                 {locked ? (
                   <p className="rounded-md bg-surface px-4 py-3 text-center text-[15px] font-semibold text-foreground">
                     Votre parcours ministère sera bientôt disponible.

@@ -82,7 +82,7 @@ export default function AssignmentStepper({
   const progress = steps.length ? (done.size / steps.length) * 100 : 0;
   return (
     <section
-      className="border-t border-border py-10 sm:py-14"
+      className="border-t border-border py-8 sm:py-14"
       style={{ "--work-accent": accent } as CSSProperties}
     >
       <div className="max-w-3xl">
@@ -91,7 +91,7 @@ export default function AssignmentStepper({
         </p>
         <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
           <div>
-            <h2 className="font-title text-3xl text-foreground">
+            <h2 className="font-title text-[26px] text-foreground sm:text-3xl">
               À faire après le cours
             </h2>
             <p className="mt-2 max-w-[62ch] text-sm leading-6 text-muted">
@@ -119,7 +119,7 @@ export default function AssignmentStepper({
               <button
                 type="button"
                 onClick={() => setOpen(active ? -1 : index)}
-                className="flex min-h-[70px] w-full items-center gap-4 py-4 text-left"
+                className="flex min-h-16 w-full items-center gap-3 py-3.5 text-left sm:min-h-[70px] sm:gap-4 sm:py-4"
                 aria-expanded={active}
               >
                 <span
@@ -148,7 +148,7 @@ export default function AssignmentStepper({
                 className={`grid transition-[grid-template-rows,opacity] duration-200 ${active ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
               >
                 <div className="overflow-hidden">
-                  <div className="pb-6 pl-11">
+                  <div className="pb-6 pl-10 sm:pl-11">
                     <StepBody value={step.body} />
                     <form action={toggleAssignmentStep} className="mt-4">
                       <input
@@ -169,7 +169,7 @@ export default function AssignmentStepper({
                       />
                       <button
                         type="submit"
-                        className={`inline-flex min-h-9 items-center gap-1.5 rounded-full px-3.5 text-xs font-semibold transition ${complete ? "bg-surface text-foreground" : "bg-[var(--work-accent)] text-white"}`}
+                        className={`inline-flex min-h-10 items-center gap-1.5 rounded-full px-3.5 text-xs font-semibold transition ${complete ? "bg-surface text-foreground" : "bg-[var(--work-accent)] text-white"}`}
                       >
                         <Check size={14} />
                         {complete

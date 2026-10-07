@@ -91,11 +91,11 @@ export default function CourseNotesEditor({
   }
 
   const tool =
-    "grid h-9 min-w-9 place-items-center rounded-lg px-2 text-xs font-semibold text-muted transition hover:bg-surface hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground";
+    "grid h-10 min-w-0 place-items-center rounded-lg px-1 text-xs font-semibold text-muted transition hover:bg-surface hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground sm:h-9 sm:min-w-9 sm:px-2";
 
   return (
     <section className="overflow-hidden rounded-2xl border border-border bg-background shadow-[0_10px_35px_rgba(39,48,47,0.06)]">
-      <header className={`flex items-center justify-between gap-2 px-4 py-3 ${open ? "border-b border-border-soft" : ""}`}>
+      <header className={`flex items-center justify-between gap-2 px-3.5 py-3 sm:px-4 ${open ? "border-b border-border-soft" : ""}`}>
         <button
           type="button"
           onClick={() => setOpen((value) => !value)}
@@ -125,7 +125,7 @@ export default function CourseNotesEditor({
         {showLibraryLink && (
           <Link
             href="/etudiant/notes"
-            className="text-xs font-semibold text-foreground hover:underline"
+            className="hidden text-xs font-semibold text-foreground hover:underline min-[390px]:block"
           >
             Toutes mes notes
           </Link>
@@ -133,7 +133,7 @@ export default function CourseNotesEditor({
       </header>
       <div id={`course-notes-${sessionId}`} hidden={!open}>
         <div
-          className="flex flex-wrap gap-0.5 border-b border-border-soft px-3 py-2"
+          className="grid grid-cols-5 gap-1 border-b border-border-soft px-2.5 py-2 sm:flex sm:flex-wrap sm:px-3"
           aria-label="Mise en forme des notes"
         >
         <button
@@ -186,23 +186,23 @@ export default function CourseNotesEditor({
           aria-label="Notes personnelles du cours"
           data-placeholder="Écris librement pendant le cours…"
           onInput={scheduleSave}
-          className="course-notes-editor min-h-[270px] max-h-[56vh] overflow-y-auto px-5 py-4 text-[15px] leading-7 text-foreground outline-none empty:before:pointer-events-none empty:before:text-muted/70 empty:before:content-[attr(data-placeholder)] [&_h2]:mb-2 [&_h2]:mt-5 [&_h2]:text-xl [&_h2]:font-semibold [&_h3]:mb-1 [&_h3]:mt-4 [&_h3]:text-base [&_h3]:font-semibold [&_mark]:rounded-sm [&_mark]:bg-[#f4df89] [&_mark]:px-0.5 [&_p]:my-2"
+          className="course-notes-editor min-h-[240px] max-h-[58dvh] scroll-pb-24 overflow-y-auto px-4 py-4 text-[16px] leading-7 text-foreground outline-none empty:before:pointer-events-none empty:before:text-muted/70 empty:before:content-[attr(data-placeholder)] sm:min-h-[270px] sm:px-5 sm:text-[15px] [&_h2]:mb-2 [&_h2]:mt-5 [&_h2]:text-xl [&_h2]:font-semibold [&_h3]:mb-1 [&_h3]:mt-4 [&_h3]:text-base [&_h3]:font-semibold [&_mark]:rounded-sm [&_mark]:bg-[#f4df89] [&_mark]:px-0.5 [&_p]:my-2"
         />
         <div className="border-t border-border-soft px-4 py-3">
-        <div className="flex flex-wrap gap-2">
+        <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
             onClick={copyNotes}
-            className="inline-flex min-h-9 items-center gap-1.5 rounded-full border border-border px-3 text-xs font-semibold text-foreground hover:bg-surface"
+            className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-border px-3 text-xs font-semibold text-foreground hover:bg-surface"
           >
-            <Copy size={14} /> Copier toutes mes notes
+            <Copy size={14} /> Copier
           </button>
           <button
             type="button"
             onClick={sendNotes}
-            className="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-foreground px-3 text-xs font-semibold text-white hover:opacity-90"
+            className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full bg-foreground px-3 text-xs font-semibold text-white hover:opacity-90"
           >
-            <Mail size={14} /> M’envoyer mes notes par e-mail
+            <Mail size={14} /> Envoyer par e-mail
           </button>
         </div>
         {message && (
@@ -210,10 +210,8 @@ export default function CourseNotesEditor({
             {message}
           </p>
         )}
-        <p className="mt-3 text-[11px] leading-5 text-muted">
-          Vos notes sont personnelles et confidentielles. Elles ne sont visibles
-          que par vous. Pensez à conserver une copie en vous les envoyant par
-          e-mail ou en les copiant dans l’outil de votre choix.
+        <p className="mt-2 text-[10px] leading-4 text-muted">
+          Notes personnelles, visibles uniquement par vous. Conservez une copie par e-mail si nécessaire.
         </p>
         </div>
       </div>

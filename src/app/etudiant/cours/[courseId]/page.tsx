@@ -47,7 +47,7 @@ export default async function StudentCourseDetailPage({
         <BackButton fallbackHref="/etudiant/cours" fallbackLabel="Mes cours" />
       </div>
 
-      <section className="rounded-lg border border-border bg-background p-6">
+      <section className="rounded-lg border border-border bg-background p-4 sm:p-6">
         <h1 className="font-title text-[24px] leading-tight text-foreground">{course.title}</h1>
         {course.description && <p className="mt-2 text-sm text-muted">{course.description}</p>}
 
@@ -66,7 +66,7 @@ export default async function StudentCourseDetailPage({
         )}
       </section>
 
-      <section className="rounded-lg border border-border bg-background p-6">
+      <section className="rounded-lg border border-border bg-background p-4 sm:p-6">
         <h2 className="mb-4 label text-xs tracking-[0.18em] text-muted">SÉANCES</h2>
         <ul className="space-y-5">
           {course.sessions.map((s) => {
@@ -80,7 +80,7 @@ export default async function StudentCourseDetailPage({
             return (
               <li
                 key={s.id}
-                className="rounded-md border border-border p-4 last:mb-0"
+                className="rounded-md border border-border p-3.5 last:mb-0 sm:p-4"
               >
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
                   <p className="font-medium text-foreground">
@@ -113,11 +113,10 @@ export default async function StudentCourseDetailPage({
                   </div>
                 )}
 
-                <div className="mt-3">
+                {sessionMaterials.length > 0 && <div className="mt-3">
                   <p className="mb-1 label text-[11px] tracking-[0.14em] text-muted">
                     Supports
                   </p>
-                  {sessionMaterials.length ? (
                     <ul className="space-y-2">
                       {sessionMaterials.map((m) => (
                         <li key={m.id} className="flex flex-wrap items-center gap-2 text-sm">
@@ -131,12 +130,7 @@ export default async function StudentCourseDetailPage({
                         </li>
                       ))}
                     </ul>
-                  ) : (
-                    <p className="text-sm text-muted">
-                      Disponibles après la séance.
-                    </p>
-                  )}
-                </div>
+                </div>}
 
                 {sessionAssignments.length > 0 && (
                   <div className="mt-3">

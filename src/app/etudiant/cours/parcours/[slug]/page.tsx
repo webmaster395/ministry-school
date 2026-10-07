@@ -80,7 +80,7 @@ export default async function ParcoursPage({ params, searchParams }: Props) {
   const displayedSessions = tab === "passes" ? past : upcoming;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 sm:space-y-6">
       {/* ── Titre de page ── */}
       <div>
         <p className="text-sm text-muted">Promotion {PROMOTION}</p>
@@ -95,7 +95,7 @@ export default async function ParcoursPage({ params, searchParams }: Props) {
       </div>
 
       {/* ── Hero Card du parcours ── */}
-      <section className="rounded-2xl border border-border bg-background p-5 sm:rounded-3xl sm:p-8">
+      <section className="rounded-2xl border border-border bg-background p-4 sm:rounded-3xl sm:p-8">
         <span
           className="inline-flex items-center rounded-full px-3.5 py-1 text-[12px] font-semibold"
           style={{
@@ -107,17 +107,17 @@ export default async function ParcoursPage({ params, searchParams }: Props) {
         </span>
 
         <h2
-          className="font-title mt-4 text-[26px] sm:text-[38px] font-bold leading-tight"
+          className="font-title mt-3 text-[25px] font-bold leading-tight sm:mt-4 sm:text-[38px]"
           style={{ color: trackColor }}
         >
           {p.title}
         </h2>
 
-        <p className="mt-3 max-w-3xl text-[16px] leading-relaxed text-muted">
+        <p className="mt-2 max-w-3xl text-[14px] leading-relaxed text-muted sm:mt-3 sm:text-[16px]">
           {p.description}
         </p>
 
-        <div className="mt-6 flex flex-wrap items-center gap-2.5">
+        <div className="mt-4 flex flex-wrap items-center gap-2 sm:mt-6 sm:gap-2.5">
           {slug === "sensibilite" && ministryName && (
             <span className="rounded-full border border-border bg-surface px-4 py-1.5 text-[13px] font-semibold text-foreground">
               Orientation : {ministryName}
@@ -197,7 +197,7 @@ export default async function ParcoursPage({ params, searchParams }: Props) {
               <li key={s.id}>
                 <Link
                   href={`/etudiant/seances/${s.id}`}
-                  className="group flex flex-col justify-between gap-4 rounded-2xl border border-border bg-background p-6 transition hover:border-foreground/30 hover:shadow-sm sm:flex-row sm:items-center"
+                  className="group flex flex-col justify-between gap-3 rounded-xl border border-border bg-background p-4 transition hover:border-foreground/30 hover:shadow-sm sm:flex-row sm:items-center sm:gap-4 sm:rounded-2xl sm:p-6"
                 >
                   {/* Colonne gauche : Date et Horaire */}
                   <div className="shrink-0 sm:w-[210px]">
@@ -223,11 +223,11 @@ export default async function ParcoursPage({ params, searchParams }: Props) {
                       </span>
                     </div>
 
-                    <h3 className="font-title text-[20px] font-bold leading-snug text-foreground">
+                    <h3 className="font-title text-[19px] font-bold leading-snug text-foreground sm:text-[20px]">
                       {s.courses?.title ?? s.description ?? "Séance"}
                     </h3>
 
-                    <div className="flex flex-wrap items-center gap-4 text-[13px] text-muted">
+                    <div className="grid gap-1.5 text-[13px] text-muted sm:flex sm:flex-wrap sm:items-center sm:gap-4">
                       {teacherName && (
                         <span className="inline-flex items-center gap-1.5">
                           <CircleUser size={15} className="shrink-0 text-muted" />

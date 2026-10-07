@@ -105,12 +105,12 @@ function videoEmbed(url: string) {
 
 function TrainerAvatars({ trainers }: { trainers: Trainer[] }) {
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex min-w-0 items-center gap-3 sm:gap-4">
       <div className="flex -space-x-3">
         {trainers.map((trainer) => (
           <span
             key={trainer.id}
-            className="grid h-12 w-12 place-items-center overflow-hidden rounded-full border-[3px] border-[var(--course-hero)] bg-white/15 text-xs font-bold text-white"
+            className="grid h-10 w-10 place-items-center overflow-hidden rounded-full border-[3px] border-[var(--course-hero)] bg-white/15 text-[11px] font-bold text-white sm:h-12 sm:w-12 sm:text-xs"
           >
             {trainer.photoUrl ? (
               <img
@@ -124,7 +124,7 @@ function TrainerAvatars({ trainers }: { trainers: Trainer[] }) {
           </span>
         ))}
       </div>
-      <p className="text-sm leading-relaxed text-white/80">
+      <p className="min-w-0 text-[13px] leading-snug text-white/80 sm:text-sm sm:leading-relaxed">
         {trainers.map((trainer) => trainer.name).join(" · ")}
       </p>
     </div>
@@ -242,10 +242,10 @@ function TaskSection({
 }) {
   if (!items.length) return null;
   return (
-    <section className="border-t border-border py-10 sm:py-14">
+    <section className="border-t border-border py-8 sm:py-14">
       <p className="label text-xs tracking-[0.18em] text-muted">{eyebrow}</p>
-      <h2 className="font-title mt-2 text-3xl text-foreground">{title}</h2>
-      <div className="mt-7 space-y-3">
+      <h2 className="font-title mt-2 text-[26px] text-foreground sm:text-3xl">{title}</h2>
+      <div className="mt-5 space-y-3 sm:mt-7">
         {items.map((item, index) => {
           const done = completedIds.has(item.id);
           const url = item.resource_url || item.file_url;
@@ -253,9 +253,9 @@ function TaskSection({
           return (
             <article
               key={item.id}
-              className={`group grid gap-4 rounded-2xl border p-5 sm:grid-cols-[42px_1fr_auto] sm:items-start ${done ? "border-emerald-200 bg-emerald-50/40" : "border-border bg-background"}`}
+              className={`group grid gap-3 rounded-xl border p-4 sm:grid-cols-[42px_1fr_auto] sm:items-start sm:gap-4 sm:rounded-2xl sm:p-5 ${done ? "border-emerald-200 bg-emerald-50/40" : "border-border bg-background"}`}
             >
-              <span className="grid h-10 w-10 place-items-center rounded-full bg-surface text-sm font-semibold text-muted">
+              <span className="hidden h-10 w-10 place-items-center rounded-full bg-surface text-sm font-semibold text-muted sm:grid">
                 {String(index + 1).padStart(2, "0")}
               </span>
               <div>
@@ -303,12 +303,12 @@ function TaskSection({
               {item.demo ? (
                 <span className="text-xs text-muted">Aperçu uniquement</span>
               ) : (
-                <form action={toggleAssignment}>
+                <form action={toggleAssignment} className="w-full sm:w-auto">
                   <input type="hidden" name="assignment_id" value={item.id} />
                   <input type="hidden" name="done" value={done ? "1" : "0"} />
                   <button
                     type="submit"
-                    className={`inline-flex min-h-11 items-center gap-2 rounded-full border px-4 text-sm font-medium transition ${done ? "border-transparent bg-emerald-700 text-white" : "border-border bg-surface text-foreground hover:border-foreground"}`}
+                    className={`inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border px-4 text-sm font-medium transition sm:w-auto ${done ? "border-transparent bg-emerald-700 text-white" : "border-border bg-surface text-foreground hover:border-foreground"}`}
                   >
                     <Check size={15} />
                     {done ? "Terminé" : "Marquer terminé"}
@@ -378,10 +378,10 @@ export default function CourseExperience({
       materials.length,
   );
   const quickLinks = [
-    ...(before.length ? [["before-course", "À préparer"]] : []),
-    ...(hasCourseContent ? [["course-content", "Suivre le cours"]] : []),
-    ...(after.length ? [["after-course", "Mettre en pratique"]] : []),
-    ...(notes?.enabled ? [["course-notes", "Mes notes"]] : []),
+    ...(hasCourseContent ? [["course-content", "Cours"]] : []),
+    ...(session.videoUrl || materials.length ? [["course-resources", "Ressources"]] : []),
+    ...(before.length || after.length ? [[before.length ? "before-course" : "after-course", "Travail"]] : []),
+    ...(notes?.enabled ? [["course-notes", "Notes"]] : []),
   ];
 
   return (
@@ -403,9 +403,9 @@ export default function CourseExperience({
           contenus renseignés dans l’administration.
         </div>
       )}
-      <section className="relative mt-5 overflow-hidden rounded-[22px] bg-[var(--course-hero)] px-6 py-6 text-white sm:px-8 sm:py-7 lg:px-10 lg:py-8">
+      <section className="relative mt-4 overflow-hidden rounded-2xl bg-[var(--course-hero)] px-4 py-5 text-white sm:mt-5 sm:rounded-[22px] sm:px-8 sm:py-7 lg:px-10 lg:py-8">
         <span className="absolute inset-y-0 left-0 w-1.5 bg-[var(--course-accent)]" />
-        <div className="relative grid gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(340px,0.8fr)] lg:items-end lg:gap-12">
+        <div className="relative grid gap-5 sm:gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(340px,0.8fr)] lg:items-end lg:gap-12">
           <div>
             <div className="flex flex-wrap items-center gap-3">
               <span
@@ -418,16 +418,16 @@ export default function CourseExperience({
                 {session.past ? "Disponible" : "À venir"}
               </span>
             </div>
-            <h1 className="font-title mt-4 max-w-3xl text-[clamp(2.15rem,4vw,3.65rem)] leading-none tracking-[-0.035em]">
+            <h1 className="font-title mt-3 max-w-3xl break-words text-[clamp(1.85rem,8vw,3.65rem)] leading-[1.02] tracking-[-0.025em] sm:mt-4 sm:tracking-[-0.035em]">
               {session.title}
             </h1>
             {trainers.length > 0 && (
-              <div className="mt-5">
+              <div className="mt-4 sm:mt-5">
                 <TrainerAvatars trainers={trainers} />
               </div>
             )}
           </div>
-          <div className="grid gap-3 border-t border-white/15 pt-5 text-sm text-white/80 sm:grid-cols-2 lg:grid-cols-1 lg:border-l lg:border-t-0 lg:py-1 lg:pl-8">
+          <div className="grid gap-2.5 border-t border-white/15 pt-4 text-[13px] text-white/80 sm:grid-cols-2 sm:gap-3 sm:pt-5 sm:text-sm lg:grid-cols-1 lg:border-l lg:border-t-0 lg:py-1 lg:pl-8">
             <span className="flex items-center gap-2">
               <CalendarDays size={17} />
               {session.date}
@@ -458,7 +458,7 @@ export default function CourseExperience({
 
       <nav
         aria-label="Accès rapide au contenu du cours"
-        className="sticky top-[calc(3.75rem+env(safe-area-inset-top))] z-30 -mx-4 border-b border-border bg-background/95 px-4 py-2.5 shadow-[0_8px_24px_rgba(31,43,40,0.06)] backdrop-blur sm:mx-0 sm:rounded-b-2xl sm:border-x"
+        className="sticky top-[calc(3.75rem+env(safe-area-inset-top))] z-30 -mx-4 border-b border-border bg-background/95 px-4 py-2 shadow-[0_8px_24px_rgba(31,43,40,0.06)] backdrop-blur sm:mx-0 sm:rounded-b-2xl sm:border-x sm:py-2.5"
       >
         <div className="mx-auto flex max-w-6xl items-center gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <span className="label mr-1 hidden shrink-0 text-[10px] tracking-[0.14em] text-muted md:inline">
@@ -468,7 +468,7 @@ export default function CourseExperience({
             <a
               key={anchor}
               href={`#${anchor}`}
-              className="inline-flex min-h-10 shrink-0 items-center gap-2 rounded-full border border-border bg-background px-3.5 text-xs font-semibold text-foreground transition hover:border-[var(--course-accent)] hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--course-accent)] sm:text-sm"
+              className="inline-flex min-h-10 shrink-0 items-center gap-1.5 rounded-full border border-border bg-background px-3 text-xs font-semibold text-foreground transition hover:border-[var(--course-accent)] hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--course-accent)] sm:px-3.5 sm:text-sm"
             >
               <span className="h-2 w-2 rounded-full bg-[var(--course-accent)]" />
               {label}
@@ -478,9 +478,28 @@ export default function CourseExperience({
       </nav>
 
       <div
-        className={`mx-auto grid max-w-6xl gap-10 py-10 lg:py-14 ${notes?.enabled ? "lg:grid-cols-[minmax(0,1fr)_360px]" : "lg:grid-cols-[minmax(0,1fr)_280px]"}`}
+        className={`mx-auto grid max-w-6xl gap-8 py-7 sm:py-10 lg:gap-10 lg:py-14 ${notes?.enabled ? "lg:grid-cols-[minmax(0,1fr)_360px]" : "lg:grid-cols-[minmax(0,1fr)_280px]"}`}
       >
         <main id="course-content" className="scroll-mt-24">
+          {session.videoUrl && (
+            <section className="pb-7 sm:pb-10" aria-label="Vidéo du cours">
+              <div className="aspect-video w-full overflow-hidden rounded-xl bg-black shadow-sm">
+                {embed ? (
+                  <iframe
+                    src={embed}
+                    title={`Vidéo — ${session.title}`}
+                    className="h-full w-full"
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                ) : (
+                  <video src={session.videoUrl} controls preload="metadata" playsInline className="h-full w-full" />
+                )}
+              </div>
+              {session.videoDemo && <p className="mt-2 flex items-center gap-1.5 text-xs text-amber-800"><Play size={14} /> Vidéo de démonstration</p>}
+            </section>
+          )}
           {(session.summary ||
             session.objectives.length > 0 ||
             session.bibleRefs.length > 0) && (
@@ -552,7 +571,7 @@ export default function CourseExperience({
               completedIds={completedIds}
             />
           </div>
-          {(session.videoUrl || materials.length > 0) && (
+          {materials.length > 0 && (
             <section id="course-resources" className="scroll-mt-32 border-t border-border py-9 sm:py-11">
               <p className="label text-xs tracking-[0.18em] text-muted">
                 Bibliothèque
@@ -560,39 +579,7 @@ export default function CourseExperience({
               <h2 className="font-title mt-2 text-2xl text-foreground sm:text-[28px]">
                 Ressources du cours
               </h2>
-              <div className="mt-6 space-y-5">
-                {session.videoUrl && (
-                  <article className="w-full max-w-2xl overflow-hidden rounded-xl border border-border bg-background">
-                    <div className="aspect-video bg-black">
-                      {embed ? (
-                        <iframe
-                          src={embed}
-                          title={`Vidéo — ${session.title}`}
-                          className="h-full w-full"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                        />
-                      ) : (
-                        <video
-                          src={session.videoUrl}
-                          controls
-                          preload="metadata"
-                          className="h-full w-full"
-                        />
-                      )}
-                    </div>
-                    {session.videoDemo && (
-                      <div className="flex items-center gap-2 p-3 text-xs text-amber-800">
-                        <Play
-                          size={15}
-                          className="shrink-0 text-[var(--course-accent)]"
-                        />
-                        Vidéo de démonstration
-                      </div>
-                    )}
-                  </article>
-                )}
-                {materials.length > 0 && (
+              <div className="mt-5 sm:mt-6">
                   <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                     {materials.map((material) => {
                       const Icon = resourceIcon(material.resource_type);
@@ -600,7 +587,7 @@ export default function CourseExperience({
                       return (
                         <article
                           key={material.id}
-                          className="flex min-h-[84px] items-start gap-3 rounded-xl border border-border bg-background p-3.5"
+                          className="flex min-h-[76px] items-start gap-3 rounded-xl border border-border bg-background p-3.5"
                         >
                           <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-surface">
                             <Icon size={17} className="text-muted" />
@@ -620,7 +607,7 @@ export default function CourseExperience({
                                 target="_blank"
                                 rel="noreferrer"
                                 download={!!material.file_url || undefined}
-                                className="mt-1.5 inline-flex items-center gap-1 text-xs font-semibold text-foreground hover:underline"
+                                className="mt-2 inline-flex min-h-9 items-center gap-1 rounded-full border border-border px-3 text-xs font-semibold text-foreground transition hover:border-foreground hover:bg-surface"
                               >
                                 {actionLabel(
                                   material.resource_type,
@@ -634,7 +621,6 @@ export default function CourseExperience({
                       );
                     })}
                   </div>
-                )}
               </div>
             </section>
           )}
@@ -685,52 +671,50 @@ export default function CourseExperience({
           {trainers.map(
             (trainer) =>
               trainer.bio && (
-                <div
+                <details
                   key={trainer.id}
-                  className="mt-5 border-t border-border pt-5"
+                  className="group mt-4 border-t border-border pt-4"
                 >
-                  <p className="text-sm font-semibold text-foreground">
-                    {trainer.name}
-                  </p>
-                  {trainer.title && (
-                    <p className="text-xs text-muted">{trainer.title}</p>
-                  )}
-                  <p className="mt-2 text-sm leading-relaxed text-muted">
-                    {trainer.bio}
-                  </p>
-                </div>
+                  <summary className="flex min-h-12 cursor-pointer list-none items-center gap-3 rounded-lg [&::-webkit-details-marker]:hidden">
+                    <span className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-full bg-surface text-[11px] font-bold text-muted">{trainer.photoUrl ? <img src={trainer.photoUrl} alt="" loading="lazy" className="h-full w-full object-cover" /> : initials(trainer.name)}</span>
+                    <span className="min-w-0 flex-1"><strong className="block truncate text-sm text-foreground">{trainer.name}</strong><span className="block truncate text-xs text-muted">{trainer.title || "Formateur"}</span></span>
+                    <span className="text-xs font-semibold text-muted group-open:hidden">En savoir plus</span>
+                    <ChevronRight size={16} className="shrink-0 text-muted transition group-open:rotate-90" />
+                  </summary>
+                  <p className="pb-1 pl-[52px] pr-2 text-sm leading-relaxed text-muted">{trainer.bio}</p>
+                </details>
               ),
           )}
         </aside>
       </div>
       {(previous || next) && (
-        <nav className="grid gap-3 border-t border-border pt-7 sm:grid-cols-2">
+        <nav className="grid grid-cols-2 gap-2 border-t border-border pt-6 sm:gap-3 sm:pt-7">
           {previous ? (
             <Link
               href={`/etudiant/seances/${previous.id}`}
-              className="rounded-2xl border border-border p-5 transition hover:border-foreground"
+              className="min-w-0 rounded-xl border border-border p-3 transition hover:border-foreground sm:rounded-2xl sm:p-5"
             >
               <span className="flex items-center gap-2 text-xs uppercase tracking-wider text-muted">
                 <ChevronLeft size={14} />
                 Cours précédent
               </span>
-              <strong className="mt-2 block text-foreground">
+              <strong className="mt-1.5 line-clamp-2 block text-[13px] leading-snug text-foreground sm:mt-2 sm:text-base">
                 {previous.title}
               </strong>
             </Link>
           ) : (
-            <span />
+            <span aria-hidden="true" />
           )}
           {next && (
             <Link
               href={`/etudiant/seances/${next.id}`}
-              className="rounded-2xl border border-border p-5 text-right transition hover:border-foreground"
+              className="min-w-0 rounded-xl border border-border p-3 text-right transition hover:border-foreground sm:rounded-2xl sm:p-5"
             >
               <span className="flex items-center justify-end gap-2 text-xs uppercase tracking-wider text-muted">
                 Cours suivant
                 <ChevronRight size={14} />
               </span>
-              <strong className="mt-2 block text-foreground">
+              <strong className="mt-1.5 line-clamp-2 block text-[13px] leading-snug text-foreground sm:mt-2 sm:text-base">
                 {next.title}
               </strong>
             </Link>
