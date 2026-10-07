@@ -551,8 +551,18 @@ export default function CourseExperience({
 
       <div className="mx-auto grid max-w-6xl gap-7 py-7 sm:py-10 lg:py-14">
         <main id="course-content" className="scroll-mt-24">
+          <div
+            className={
+              session.videoUrl
+                ? "lg:grid lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start lg:gap-10"
+                : undefined
+            }
+          >
           {session.videoUrl && (
-            <section className="pb-7 sm:pb-10" aria-label="Vidéo du cours">
+            <section
+              className="pb-7 sm:pb-10 lg:order-2"
+              aria-label="Vidéo du cours"
+            >
               <div className="aspect-video w-full overflow-hidden rounded-xl bg-black shadow-sm">
                 {embed ? (
                   <iframe
@@ -573,7 +583,7 @@ export default function CourseExperience({
           {(session.summary ||
             session.objectives.length > 0 ||
             session.bibleRefs.length > 0) && (
-            <section className="pb-9 sm:pb-11">
+            <section className="pb-9 sm:pb-11 lg:order-1">
               <p className="label text-xs tracking-[0.18em] text-muted">
                 Le cours
               </p>
@@ -633,6 +643,7 @@ export default function CourseExperience({
               )}
             </section>
           )}
+          </div>
           <div id="before-course" className="scroll-mt-24">
             <TaskSection
               title="À faire avant le cours"

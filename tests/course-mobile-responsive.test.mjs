@@ -14,6 +14,14 @@ test("la vidéo réserve son espace et précède le contenu secondaire", async (
   assert.match(code, /playsInline/);
 });
 
+test("sur desktop la présentation est à gauche et la vidéo à droite", async () => {
+  const code = await source("src/components/course/CourseExperience.tsx");
+  assert.match(code, /lg:grid-cols-\[minmax\(0,0\.9fr\)_minmax\(0,1\.1fr\)\]/);
+  assert.match(code, /aria-label="Vidéo du cours"/);
+  assert.match(code, /lg:order-2/);
+  assert.match(code, /lg:order-1/);
+});
+
 test("la navigation mobile du cours reste compacte et contextuelle", async () => {
   const code = await source("src/components/course/CourseExperience.tsx");
   for (const label of [
