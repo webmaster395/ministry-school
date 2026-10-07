@@ -41,3 +41,13 @@ test("la navigation du cours distingue explicitement avant et après", () => {
   assert.match(courseExperience, /\["before-course", "À préparer"\]/);
   assert.match(courseExperience, /\["after-course", "Mettre en pratique"\]/);
 });
+
+test("un devoir long retrouve le rendu structuré des sous-consignes", () => {
+  assert.match(courseExperience, /match\(\/\^#\{1,6\}/);
+  assert.match(courseExperience, /sections\.length < 2/);
+  assert.match(courseExperience, /section\.number\.padStart\(2, "0"\)/);
+  assert.match(courseExperience, /bg-\[var\(--course-accent\)\]/);
+  assert.match(courseExperience, /divide-y divide-border/);
+  assert.match(courseExperience, /emphasizedQuestion/);
+  assert.match(courseExperience, /rounded-lg bg-surface/);
+});

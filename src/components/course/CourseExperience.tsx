@@ -183,8 +183,7 @@ function inlineFormatting(value: string): ReactNode[] {
     });
 }
 
-function FormattedAssignmentText({ value }: { value: string }) {
-  const lines = value.trim().split("\n");
+function AssignmentTextBlocks({ lines }: { lines: string[] }) {
   const blocks: ReactNode[] = [];
   let bullets: string[] = [];
   const flushBullets = () => {
@@ -192,10 +191,13 @@ function FormattedAssignmentText({ value }: { value: string }) {
     blocks.push(
       <ul
         key={`list-${blocks.length}`}
-        className="my-3 list-disc space-y-1 pl-5"
+        className="my-3 space-y-1.5 rounded-lg bg-surface px-4 py-3 text-[13px] leading-6 text-muted"
       >
         {bullets.map((line, index) => (
-          <li key={index}>{inlineFormatting(line)}</li>
+          <li key={index} className="flex gap-2">
+            <span aria-hidden="true" className="mt-[9px] h-1 w-1 shrink-0 rounded-full bg-current opacity-50" />
+            <span>{inlineFormatting(line)}</span>
+          </li>
         ))}
       </ul>,
     );
@@ -212,21 +214,77 @@ function FormattedAssignmentText({ value }: { value: string }) {
       return;
     }
     flushBullets();
-    if (/^#{1,6}\s+/.test(line))
-      blocks.push(
-        <h4 key={index} className="mb-1 mt-4 font-semibold text-foreground">
-          {inlineFormatting(line.replace(/^#{1,6}\s+/, ""))}
-        </h4>,
-      );
-    else
-      blocks.push(
-        <p key={index} className="my-2">
-          {inlineFormatting(line)}
-        </p>,
-      );
+    const emphasizedQuestion = /^\*\*.*[?»]\*\*$/.test(line);
+    blocks.push(
+      <p
+        key={index}
+        className={
+          emphasizedQuestion
+            ? "my-4 border-l-2 border-[var(--course-accent)] bg-surface px-3 py-2.5 font-medium leading-6 text-foreground sm:px-4"
+            : "my-2.5"
+        }
+      >
+        {inlineFormatting(line)}
+      </p>,
+    );
   });
   flushBullets();
-  return <div className="text-sm leading-6 text-muted">{blocks}</div>;
+  return <>{blocks}</>;
+}
+
+function FormattedAssignmentText({ value }: { value: string }) {
+  const lines = value.trim().split("\n");
+  const sections: { number: string; title: string; lines: string[] }[] = [];
+  const intro: string[] = [];
+  let current: (typeof sections)[number] | null = null;
+
+  for (const raw of lines) {
+    const heading = raw.trim().match(/^#{1,6}\s+(?:(\d+)\.\s*)?(.+)$/);
+    if (heading) {
+      current = {
+        number: heading[1] ?? String(sections.length + 1),
+        title: heading[2],
+        lines: [],
+      };
+      sections.push(current);
+    } else if (current) current.lines.push(raw);
+    else intro.push(raw);
+  }
+
+  if (sections.length < 2)
+    return (
+      <div className="text-sm leading-6 text-muted">
+        <AssignmentTextBlocks lines={lines} />
+      </div>
+    );
+
+  return (
+    <div className="text-sm leading-6 text-muted">
+      {intro.some((line) => line.trim()) && (
+        <div className="mb-5 max-w-[68ch]">
+          <AssignmentTextBlocks lines={intro} />
+        </div>
+      )}
+      <div className="divide-y divide-border border-y border-border">
+        {sections.map((section) => (
+          <section
+            key={`${section.number}-${section.title}`}
+            className="relative py-5 pl-11 pr-1 sm:py-6 sm:pl-14 sm:pr-3"
+          >
+            <span className="absolute left-0 top-5 grid h-8 w-8 place-items-center rounded-full bg-[var(--course-accent)] text-xs font-semibold text-white sm:top-6 sm:h-9 sm:w-9">
+              {section.number.padStart(2, "0")}
+            </span>
+            <h4 className="text-base font-semibold leading-snug text-foreground sm:text-[17px]">
+              {inlineFormatting(section.title)}
+            </h4>
+            <div className="mt-3 max-w-[68ch]">
+              <AssignmentTextBlocks lines={section.lines} />
+            </div>
+          </section>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 function TaskSection({
