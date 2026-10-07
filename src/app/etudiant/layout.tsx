@@ -8,6 +8,7 @@ import { getViewer } from "@/lib/data/viewer";
 
 import WelcomeModal from "@/components/WelcomeModal";
 import MlkEngagementModal from "@/components/MlkEngagementModal";
+import StudentUsageTracker from "@/components/StudentUsageTracker";
 
 export default async function StudentLayout({
   children,
@@ -24,6 +25,7 @@ export default async function StudentLayout({
       unread={viewer!.unreadMessages}
       notesEnabled={notesEnabled}
     >
+      <StudentUsageTracker />
       <div className="app-shell flex min-h-screen w-full">
         <Sidebar
           fullName={viewer!.fullName}

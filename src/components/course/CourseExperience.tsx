@@ -616,7 +616,7 @@ export default function CourseExperience({
                             </p>
                             {url && (
                               <a
-                                href={url}
+                                href={`/etudiant/ressources/${material.id}/ouvrir`}
                                 target="_blank"
                                 rel="noreferrer"
                                 download={!!material.file_url || undefined}

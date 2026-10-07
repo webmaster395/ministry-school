@@ -181,6 +181,80 @@ export async function getMonthlyActiveUsers(supabase: SupabaseClient): Promise<M
   }));
 }
 
+export type UsageAnalytics = {
+  weekly: { week_start: string; active_users: number }[];
+  pages: { page_key: string; views: number; unique_users: number }[];
+  downloads: { material_id: string; document_title: string; course_title: string; downloads: number; unique_users: number }[];
+  accounts: { never_signed_in: number; disabled_accounts: number; observed_since_tracking: number };
+};
+
+export async function getUsageAnalytics(supabase: SupabaseClient): Promise<UsageAnalytics> {
+  const [weeklyResult, pagesResult, downloadsResult, accountsResult] = await Promise.all([
+    supabase.rpc("admin_weekly_active_users"),
+    supabase.rpc("admin_page_usage"),
+    supabase.rpc("admin_material_downloads"),
+    supabase.rpc("admin_account_usage_state"),
+  ]);
+  const error = weeklyResult.error ?? pagesResult.error ?? downloadsResult.error ?? accountsResult.error;
+  if (error) throw error;
+  const number = (value: number | string) => Number(value);
+  return {
+    weekly: ((weeklyResult.data ?? []) as { week_start: string; active_users: number | string }[]).map((row) => ({ ...row, active_users: number(row.active_users) })),
+    pages: ((pagesResult.data ?? []) as { page_key: string; views: number | string; unique_users: number | string }[]).map((row) => ({ ...row, views: number(row.views), unique_users: number(row.unique_users) })),
+    downloads: ((downloadsResult.data ?? []) as { material_id: string; document_title: string; course_title: string; downloads: number | string; unique_users: number | string }[]).map((row) => ({ ...row, downloads: number(row.downloads), unique_users: number(row.unique_users) })),
+    accounts: (() => {
+      const row = (accountsResult.data?.[0] ?? {}) as Record<string, number | string>;
+      return { never_signed_in: number(row.never_signed_in ?? 0), disabled_accounts: number(row.disabled_accounts ?? 0), observed_since_tracking: number(row.observed_since_tracking ?? 0) };
+    })(),
+  };
+}
+
+export type ProgramAnalytics = {
+  courseCount: number;
+  trainerCount: number;
+  hours: number;
+  resourceCount: number;
+  totalDownloads: number;
+  tracks: { label: string; courses: number; trainers: number; hours: number; resources: number }[];
+};
+
+const timeMinutes = (value: string) => {
+  const [hours, minutes] = value.split(":").map(Number);
+  return hours * 60 + minutes;
+};
+
+export async function getProgramAnalytics(supabase: SupabaseClient, downloads: UsageAnalytics["downloads"]): Promise<ProgramAnalytics> {
+  const [sessionsResult, trainersResult, materialsResult] = await Promise.all([
+    supabase.from("sessions").select("id, start_time, end_time, track").or("is_draft.eq.false,is_draft.is.null"),
+    supabase.from("session_trainers").select("session_id, trainer_id"),
+    supabase.from("materials").select("id, session_id"),
+  ]);
+  const sessions = (sessionsResult.data ?? []) as { id: string; start_time: string; end_time: string; track: string | null }[];
+  const trainers = (trainersResult.data ?? []) as { session_id: string; trainer_id: string }[];
+  const materials = (materialsResult.data ?? []) as { id: string; session_id: string }[];
+  const sessionById = new Map(sessions.map((session) => [session.id, session]));
+  const trackLabels = [...new Set(sessions.map((session) => session.track?.trim() || "Autres"))];
+  const duration = (session: (typeof sessions)[number]) => Math.max(0, timeMinutes(session.end_time) - timeMinutes(session.start_time)) / 60;
+  return {
+    courseCount: sessions.length,
+    trainerCount: new Set(trainers.filter((row) => sessionById.has(row.session_id)).map((row) => row.trainer_id)).size,
+    hours: sessions.reduce((sum, session) => sum + duration(session), 0),
+    resourceCount: materials.filter((material) => sessionById.has(material.session_id)).length,
+    totalDownloads: downloads.reduce((sum, item) => sum + item.downloads, 0),
+    tracks: trackLabels.map((label) => {
+      const trackSessions = sessions.filter((session) => (session.track?.trim() || "Autres") === label);
+      const ids = new Set(trackSessions.map((session) => session.id));
+      return {
+        label,
+        courses: trackSessions.length,
+        trainers: new Set(trainers.filter((row) => ids.has(row.session_id)).map((row) => row.trainer_id)).size,
+        hours: trackSessions.reduce((sum, session) => sum + duration(session), 0),
+        resources: materials.filter((material) => ids.has(material.session_id)).length,
+      };
+    }).sort((a, b) => b.hours - a.hours),
+  };
+}
+
 export type Course = {
   id: string;
   title: string;

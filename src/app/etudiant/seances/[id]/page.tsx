@@ -463,7 +463,7 @@ export default async function SessionDetailPage({
                         </div>
                         {m.file_url || m.link_url ? (
                           <a
-                            href={m.file_url ?? m.link_url}
+                            href={`/etudiant/ressources/${m.id}/ouvrir`}
                             target="_blank"
                             rel="noreferrer"
                             className="shrink-0 text-[13px] font-semibold text-foreground hover:underline"

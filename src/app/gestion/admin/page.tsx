@@ -8,7 +8,7 @@ import MembersTab from "@/components/admin/MembersTab";
 import QuestionsTab from "@/components/admin/QuestionsTab";
 import StatisticsTab from "@/components/admin/StatisticsTab";
 import { QUESTIONS_ENABLED } from "@/lib/questions";
-import { getMinistries, getMonthlyActiveUsers, getTrainingDayDates } from "@/lib/data/admin";
+import { getMinistries, getMonthlyActiveUsers, getProgramAnalytics, getTrainingDayDates, getUsageAnalytics } from "@/lib/data/admin";
 import TrainersTab, { type TrainerAdminRow } from "@/components/admin/TrainersTab";
 import { getServices } from "@/lib/data/opportunities";
 
@@ -31,6 +31,7 @@ type Params = {
   par?: string;
   mois?: string;
   personnes?: string;
+  statistiques?: string;
 };
 
 export default async function AdminPage({ searchParams }: { searchParams: Promise<Params> }) {
@@ -70,13 +71,15 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
         />
       )}
       {tab === "statistiques" && await (async () => {
-        const [members, ministries, trainingDates, monthlyActivity] = await Promise.all([
+        const [members, ministries, trainingDates, monthlyActivity, usage] = await Promise.all([
           getMembers(supabase),
           getMinistries(supabase),
           getTrainingDayDates(supabase),
           getMonthlyActiveUsers(supabase),
+          getUsageAnalytics(supabase),
         ]);
-        return <StatisticsTab members={members} ministries={ministries} trainingDates={trainingDates} monthlyActivity={monthlyActivity} />;
+        const program = await getProgramAnalytics(supabase, usage.downloads);
+        return <StatisticsTab members={members} ministries={ministries} trainingDates={trainingDates} monthlyActivity={monthlyActivity} usage={usage} program={program} section={p.statistiques ?? "utilisation"} />;
       })()}
       {tab === "programme" && (
         <ProgramTab

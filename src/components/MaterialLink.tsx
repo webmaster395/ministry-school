@@ -82,7 +82,7 @@ function KindIcon({ kind }: { kind: FileKind }) {
   );
 }
 
-export default function MaterialLink({ title, url }: { title: string; url: string | null }) {
+export default function MaterialLink({ title, url, materialId }: { title: string; url: string | null; materialId?: string }) {
   if (!url) {
     return (
       <span className="flex items-center gap-2 text-foreground">
@@ -98,7 +98,7 @@ export default function MaterialLink({ title, url }: { title: string; url: strin
 
   return (
     <a
-      href={url}
+      href={materialId ? `/etudiant/ressources/${materialId}/ouvrir` : url}
       target="_blank"
       rel="noreferrer"
       className="group flex items-center gap-2 text-link"

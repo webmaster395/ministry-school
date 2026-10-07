@@ -121,7 +121,7 @@ export default async function StudentCourseDetailPage({
                     <ul className="space-y-2">
                       {sessionMaterials.map((m) => (
                         <li key={m.id} className="flex flex-wrap items-center gap-2 text-sm">
-                          <MaterialLink title={m.title} url={m.link_url ?? m.file_url ?? null} />
+                          <MaterialLink materialId={m.id} title={m.title} url={m.link_url ?? m.file_url ?? null} />
                           {isRecentlyShared(m.visible_at) && (
                             <span className="flex items-center gap-1.5 rounded-full border border-foreground/20 bg-foreground/[0.06] px-2 py-0.5 text-xs text-foreground">
                               <span className="h-1.5 w-1.5 rounded-full bg-m-doctoral" />

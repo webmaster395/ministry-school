@@ -1,178 +1,132 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
-import { BarChart3, Download, FileDown, List, Mail, PieChart } from "lucide-react";
+import { ChevronDown, Download, SlidersHorizontal, X } from "lucide-react";
 import BarChart, { type BarDatum } from "@/components/BarChart";
-import MinistryPicto from "@/components/MinistryPicto";
 import { parseMlkEngagement } from "@/lib/mlk-engagement";
-import { getMinistry } from "@/lib/ministry";
+import { getMinistry, sessionColor } from "@/lib/ministry";
 import { memberStatus, type Member } from "@/lib/data/admin-hub";
-import type { Ministry, MonthlyActiveUsers } from "@/lib/data/admin";
-import { accountsByTrainingCycle } from "@/lib/training-cycle-stats";
+import type { Ministry, MonthlyActiveUsers, ProgramAnalytics, UsageAnalytics } from "@/lib/data/admin";
+import { accountsByTrainingCycle, parisDateKey } from "@/lib/training-cycle-stats";
 
-type ViewMode = "pie" | "bar" | "list";
-type Dataset = { title: string; subtitle: string; data: BarDatum[] };
+type Section = "utilisation" | "membres" | "programmes";
+const TRACKING_START = "7 octobre 2026";
+const pageLabels: Record<string, string> = { home: "Accueil", courses: "Mes cours", course_detail: "Détail d’un cours", assignments: "À faire", profile: "Profil", notes: "Notes", services_projects: "Services & Projets" };
+const sensitivityLabels: Record<string, string> = { apotre: "Apostolique", prophete: "Prophétique", evangeliste: "Évangéliste", pasteur: "Pastorale", docteur: "Doctorale" };
 
-const membersHref = (filter = "") => `/gestion/admin?onglet=membres${filter ? `&${filter}` : ""}`;
-const COLORS = ["#21302e", "#00a6a6", "#f2a900", "#df4b57", "#88a61b", "#e44a18", "#6657a5", "#147fba", "#a85d12", "#c74286", "#526a78", "#c09a00"];
-
-function StatCard({ value, label, detail, href, featured = false }: { value: number; label: string; detail?: string; href?: string; featured?: boolean }) {
-  const cardClass = `rounded-lg border bg-background p-5 ${featured ? "border-foreground/45 shadow-sm" : "border-border"}`;
-  const content = <><p className="font-title text-[32px] leading-none text-foreground tabular-nums">{value}</p><p className="mt-3 text-sm font-medium text-foreground">{label}</p>{detail && <p className="mt-1 text-xs leading-relaxed text-muted">{detail}</p>}</>;
-  return href ? <Link href={href} className={`${cardClass} transition hover:-translate-y-0.5 hover:border-foreground/30 hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground`}>{content}</Link> : <div className={cardClass}>{content}</div>;
+function Kpi({ value, label, detail }: { value: string | number; label: string; detail?: string }) {
+  return <article className="min-h-[132px] rounded-xl border border-border bg-background p-5"><p className="font-title text-[34px] leading-none text-foreground tabular-nums">{value}</p><p className="mt-3 text-sm font-semibold text-foreground">{label}</p>{detail && <p className="mt-1 text-xs leading-relaxed text-muted">{detail}</p>}</article>;
 }
 
-function datumColor(datum: BarDatum, index: number) {
-  return datum.color ?? getMinistry(datum.slug)?.color ?? COLORS[index % COLORS.length];
+function Panel({ title, subtitle, children, className = "" }: { title: string; subtitle?: string; children: React.ReactNode; className?: string }) {
+  return <section className={`rounded-xl border border-border bg-background p-5 sm:p-6 ${className}`}><h2 className="font-title text-[22px] text-foreground">{title}</h2>{subtitle && <p className="mt-1 text-sm leading-relaxed text-muted">{subtitle}</p>}<div className="mt-5">{children}</div></section>;
 }
 
-function datumTextColor(datum: BarDatum, index: number) {
-  if (datum.slug) return datum.slug === "docteur" ? "#fff" : "#27302f";
-  if (datum.fallbackIcon || datum.color === "#27302f") return "#fff";
-  return [2, 4, 7, 9, 11].includes(index % COLORS.length) ? "#27302f" : "#fff";
-}
-
-function DataLink({ datum, children, className = "" }: { datum: BarDatum; children: React.ReactNode; className?: string }) {
-  return datum.href ? <Link href={datum.href} className={className}>{children}</Link> : <div className={className}>{children}</div>;
-}
-
-function ListView({ data }: { data: BarDatum[] }) {
-  const total = data.reduce((sum, datum) => sum + datum.value, 0);
-  return <ul className="mt-5 divide-y divide-border-soft">{data.map((datum, index) => (
-    <li key={datum.label}>
-      <DataLink datum={datum} className="grid grid-cols-[1fr_auto] items-center gap-4 rounded-md py-3 text-sm transition hover:bg-surface/70 sm:px-2">
-        <span className="flex min-w-0 items-center gap-3 text-foreground">
-          <span className="flex h-7 w-7 shrink-0 items-center justify-center text-lg" aria-hidden="true">{datum.slug ? <MinistryPicto slug={datum.slug} size={22} /> : datum.fallbackIcon ?? <i className="block h-3 w-3 rounded-full" style={{ background: datumColor(datum, index) }} />}</span>
-          <span>{datum.label}</span>
-        </span>
-        <span className="flex items-baseline gap-3"><strong className="font-title text-xl tabular-nums text-foreground">{datum.value}</strong><small className="w-10 text-right text-muted">{total ? Math.round((datum.value / total) * 100) : 0} %</small></span>
-      </DataLink>
-    </li>
-  ))}</ul>;
-}
-
-function PieView({ data }: { data: BarDatum[] }) {
-  const [activeSlice, setActiveSlice] = useState<number | null>(null);
-  const total = data.reduce((sum, datum) => sum + datum.value, 0);
-  const slices = data.map((datum, index) => {
-    const percent = total ? (datum.value / total) * 100 : 0;
-    const previous = data.slice(0, index).reduce((sum, item) => sum + item.value, 0);
-    const start = -90 + (total ? (previous / total) * 360 : 0);
-    const end = start + percent * 3.6;
-    const point = (angle: number, radius: number) => ({ x: 120 + radius * Math.cos((angle * Math.PI) / 180), y: 120 + radius * Math.sin((angle * Math.PI) / 180) });
-    const from = point(start, 100);
-    const to = point(percent >= 100 ? end - 0.01 : end, 100);
-    const middle = point(start + (percent * 3.6) / 2, percent < 6 ? 91 : 68);
-    const path = percent > 0 ? `M 120 120 L ${from.x} ${from.y} A 100 100 0 ${percent > 50 ? 1 : 0} 1 ${to.x} ${to.y} Z` : "";
-    return { datum, index, percent, path, middle };
-  });
-  return <div className="mt-6 grid items-center gap-7 md:grid-cols-[minmax(180px,240px)_1fr]">
-    <div className="relative mx-auto w-full max-w-[240px]">
-    <svg viewBox="0 0 240 240" className="aspect-square w-full overflow-visible" role="img" aria-label={`Répartition de ${total} membres`}>
-      {total === 0 && <circle cx="120" cy="120" r="100" fill="#ece8df" />}
-      {slices.map(({ datum, index, percent, path, middle }) => path && <g key={datum.label} className="group cursor-help" onMouseEnter={() => setActiveSlice(index)} onMouseLeave={() => setActiveSlice(null)} onFocus={() => setActiveSlice(index)} onBlur={() => setActiveSlice(null)} tabIndex={0}><path d={path} fill={datumColor(datum, index)} stroke="#fffdf9" strokeWidth="3" className="origin-center transition duration-200 group-hover:opacity-80"><title>{datum.label} : {datum.value} — {Math.round(percent)} %</title></path><text x={middle.x} y={middle.y} textAnchor="middle" dominantBaseline="central" fill={datumTextColor(datum, index)} className="pointer-events-none text-[10px] font-bold" style={{ filter: datumTextColor(datum, index) === "#fff" ? "drop-shadow(0 1px 1px rgba(0,0,0,.35))" : "none" }}>{Math.round(percent)}%</text></g>)}
-      <circle cx="120" cy="120" r="43" fill="var(--background)" />
-      <text x="120" y="116" textAnchor="middle" className="fill-foreground font-title text-[28px]">{total}</text>
-      <text x="120" y="136" textAnchor="middle" className="fill-muted text-[10px] uppercase tracking-wider">total</text>
-    </svg>
-    {activeSlice !== null && <div className="pointer-events-none absolute left-1/2 top-1 -translate-x-1/2 whitespace-nowrap rounded-md bg-foreground px-3 py-2 text-xs font-medium text-background shadow-lg">{slices[activeSlice].datum.label} · {slices[activeSlice].datum.value} · {Math.round(slices[activeSlice].percent)} %</div>}
-    </div>
-    <ListView data={data} />
-  </div>;
-}
-
-function DataSection({ dataset, view }: { dataset: Dataset; view: ViewMode }) {
-  if (view === "bar") return <BarChart title={dataset.title} subtitle={dataset.subtitle} data={dataset.data} />;
-  return <section className="rounded-lg border border-border bg-background p-4 sm:p-6"><h2 className="label text-xs tracking-[0.18em] text-muted">{dataset.title}</h2><p className="mt-1 text-sm text-muted">{dataset.subtitle}</p>{view === "pie" ? <PieView data={dataset.data} /> : <ListView data={dataset.data} />}</section>;
-}
-
-function monthLabel(month: string) {
-  const label = new Intl.DateTimeFormat("fr-FR", { month: "long", year: "numeric", timeZone: "Europe/Paris" })
-    .format(new Date(`${month}T12:00:00Z`));
-  return label.charAt(0).toUpperCase() + label.slice(1);
+function ProportionRows({ rows, total }: { rows: { label: string; value: number; color?: string }[]; total: number }) {
+  return <div className="space-y-5">{rows.map((row) => { const percent = total ? Math.round(row.value / total * 100) : 0; return <div key={row.label}><div className="mb-2 flex items-baseline justify-between gap-4"><span className="text-sm font-medium text-foreground">{row.label}</span><span className="text-sm text-muted"><strong className="text-foreground tabular-nums">{row.value}</strong> · {percent} %</span></div><div className="h-2 overflow-hidden rounded-full bg-surface"><div className="h-full rounded-full" style={{ width: `${percent}%`, background: row.color ?? "var(--foreground)" }} /></div></div>; })}</div>;
 }
 
 function currentParisMonth() {
   const parts = new Intl.DateTimeFormat("fr-FR", { year: "numeric", month: "2-digit", timeZone: "Europe/Paris" }).formatToParts(new Date());
-  const year = parts.find((part) => part.type === "year")?.value;
-  const month = parts.find((part) => part.type === "month")?.value;
-  return `${year}-${month}-01`;
+  return `${parts.find((p) => p.type === "year")?.value}-${parts.find((p) => p.type === "month")?.value}-01`;
 }
 
-export default function StatisticsTab({ members, ministries, trainingDates, monthlyActivity }: { members: Member[]; ministries: Ministry[]; trainingDates: string[]; monthlyActivity: MonthlyActiveUsers[] }) {
-  const [view, setView] = useState<ViewMode>("bar");
+function weekLabel(date: string) {
+  const text = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "short", timeZone: "UTC" }).format(new Date(`${date}T12:00:00Z`));
+  return `Sem. ${text}`;
+}
+
+function sectionHref(section: Section) { return `/gestion/admin?onglet=statistiques&statistiques=${section}`; }
+
+function StatisticsNav({ section }: { section: Section }) {
+  return <nav aria-label="Sections des statistiques" className="inline-flex w-full gap-1 overflow-x-auto rounded-xl border border-border bg-background p-1 sm:w-auto">{([['utilisation', 'Utilisation'], ['membres', 'Membres'], ['programmes', 'Programmes']] as const).map(([key, label]) => <Link key={key} href={sectionHref(key)} aria-current={section === key ? "page" : undefined} className={`min-w-max rounded-lg px-5 py-2.5 text-sm font-semibold transition ${section === key ? "bg-accent text-on-accent" : "text-muted hover:bg-surface hover:text-foreground"}`}>{label}</Link>)}</nav>;
+}
+
+function UsageSection({ members, trainingDates, monthlyActivity, usage }: { members: Member[]; trainingDates: string[]; monthlyActivity: MonthlyActiveUsers[]; usage: UsageAnalytics }) {
   const total = members.length;
-  const statuses = { active: members.filter((m) => memberStatus(m) === "actif").length, pending: members.filter((m) => memberStatus(m) === "a_confirmer").length, disabled: members.filter((m) => memberStatus(m) === "desactive").length };
-  const engagement = members.map((member) => parseMlkEngagement(member.notification_prefs));
-
-  const accountData: BarDatum[] = [
-    { label: "Comptes actifs", value: statuses.active, href: membersHref("statut=actif") },
-    { label: "À confirmer", value: statuses.pending, href: membersHref("statut=a_confirmer") },
-    { label: "Désactivés", value: statuses.disabled, href: membersHref("statut=desactive") },
-  ];
-  const engagementData: BarDatum[] = [
-    { label: "Aucun engagement", value: engagement.filter((i) => i.completed && i.none).length, href: membersHref("implication=aucun") },
-    { label: "Équipiers MLK", value: engagement.filter((i) => i.completed && i.equipier).length, href: membersHref("implication=equipier") },
-    { label: "Managers et adjoints", value: engagement.filter((i) => i.completed && i.manager).length, href: membersHref("implication=manager") },
-    { label: "Collaborateurs salariés", value: engagement.filter((i) => i.completed && i.collaborator).length, href: membersHref("implication=collaborateur") },
-    { label: "Non renseigné", value: engagement.filter((i) => !i.completed).length, href: membersHref("implication=non_renseigne") },
-  ];
-  const genderData: BarDatum[] = [
-    { label: "Femmes", value: members.filter((m) => m.gender === "femme").length, href: membersHref("genre=femme") },
-    { label: "Hommes", value: members.filter((m) => m.gender === "homme").length, href: membersHref("genre=homme") },
-    { label: "Non renseigné", value: members.filter((m) => m.gender !== "femme" && m.gender !== "homme").length, href: membersHref("genre=non_renseigne") },
-  ];
-  const ministryData: BarDatum[] = [...ministries.map((m) => ({ label: m.name, value: members.filter((member) => member.ministry_id === m.id).length, slug: m.slug, href: membersHref(`sens=${m.slug}`) })), { label: "Ne sais pas encore", value: members.filter((m) => !m.ministry_id).length, fallbackIcon: "🤔", color: "#27302f", href: membersHref("sens=non_renseignee") }];
-  const cycleData: BarDatum[] = accountsByTrainingCycle(members, trainingDates).map(({ label, value }) => ({ label, value }));
-  const activityData: BarDatum[] = monthlyActivity.map((row) => ({ label: monthLabel(row.activity_month), value: row.active_users, color: "#00a6a6" }));
   const activeThisMonth = monthlyActivity.find((row) => row.activity_month === currentParisMonth())?.active_users ?? 0;
-  const activeShare = total ? Math.round((activeThisMonth / total) * 100) : 0;
-  const datasets: Dataset[] = [
-    { title: "État des comptes", subtitle: "Situation actuelle des accès à la plateforme.", data: accountData },
-    { title: "Implication à MLK", subtitle: "Un seul statut d'implication par membre.", data: engagementData },
-    { title: "Répartition par genre", subtitle: "Selon les informations déclarées par les membres.", data: genderData },
-    { title: "Sensibilités ministérielles", subtitle: "Sensibilité choisie par chaque membre.", data: ministryData },
-    { title: "Nouveaux comptes par journée de formation", subtitle: "Chaque période se termine le jour de la formation inclus.", data: cycleData },
-  ];
+  const activityRate = total ? Math.round(activeThisMonth / total * 100) : 0;
+  const cycles = accountsByTrainingCycle(members, trainingDates);
+  const today = parisDateKey(new Date().toISOString());
+  const currentCycle = cycles.find((cycle) => cycle.date >= today) ?? cycles.at(-1);
+  const weekly: BarDatum[] = usage.weekly.map((row) => ({ label: weekLabel(row.week_start), value: row.active_users, color: "#00a6a6" }));
+  const cycleBars: BarDatum[] = cycles.map((cycle) => ({ label: cycle.label.charAt(0).toUpperCase() + cycle.label.slice(1), value: cycle.value }));
+  const pages = [...usage.pages].sort((a, b) => b.views - a.views);
+  const downloads = [...usage.downloads].sort((a, b) => b.downloads - a.downloads);
 
-  const exportDatasets = [{ title: "Utilisateurs actifs par mois", subtitle: "", data: activityData }, ...datasets];
-  const reportText = [`Statistiques Ministry School — ${total} membres`, "", ...exportDatasets.flatMap((set) => [set.title, ...set.data.map((d) => `• ${d.label} : ${d.value}`), ""])].join("\n");
-  const mailHref = `mailto:?subject=${encodeURIComponent("Statistiques des membres — Ministry School")}&body=${encodeURIComponent(reportText)}`;
+  return <div className="space-y-6">
+    <header><p className="label text-xs tracking-[0.18em] text-muted">UTILISATION</p><h1 className="font-title mt-2 text-[30px] leading-tight text-foreground sm:text-[38px]">Est-ce que les membres utilisent réellement la plateforme&nbsp;?</h1></header>
+    <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"><Kpi value={total} label="Comptes" detail="Comptes réels, hors comptes de test" /><Kpi value={currentCycle?.value ?? 0} label="Nouveaux comptes du cycle" detail={currentCycle ? `Cycle se terminant en ${currentCycle.label}` : undefined} /><Kpi value={activeThisMonth} label="Utilisateurs actifs ce mois-ci" detail="Personnes uniques" /><Kpi value={`${activityRate} %`} label="Taux d’activité" detail={`${activeThisMonth} utilisateurs sur ${total} comptes`} /></section>
+    <BarChart title="Utilisateurs actifs par semaine" subtitle={`Personnes uniques ayant utilisé la plateforme. Données disponibles depuis le ${TRACKING_START}.`} data={weekly} />
+    <div className="grid items-start gap-6 xl:grid-cols-2">
+      <BarChart title="Création de comptes" subtitle="Nouveaux comptes par cycle, selon les dates réelles des journées Ministry School." data={cycleBars} />
+      <Panel title="Pages les plus consultées" subtitle={`Classement depuis le ${TRACKING_START}. Les pages techniques sont exclues.`}>{pages.length ? <ol className="divide-y divide-border-soft">{pages.map((page, index) => <li key={page.page_key} className="grid grid-cols-[28px_1fr_auto] items-center gap-3 py-3 first:pt-0"><span className="font-title text-lg text-muted">{index + 1}</span><span className="text-sm font-medium text-foreground">{pageLabels[page.page_key] ?? page.page_key}</span><span className="text-right text-sm tabular-nums text-foreground"><strong>{page.views}</strong> vues<span className="block text-xs font-normal text-muted">{page.unique_users} personnes</span></span></li>)}</ol> : <p className="text-sm text-muted">La collecte vient de commencer. Les premières consultations apparaîtront ici.</p>}</Panel>
+      <Panel title="État des comptes" subtitle="Les libellés distinguent les accès administratifs de l’utilisation réelle."><ProportionRows total={total} rows={[{ label: "Jamais connectés", value: usage.accounts.never_signed_in, color: "#df4b57" }, { label: `Utilisateurs observés depuis le ${TRACKING_START}`, value: usage.accounts.observed_since_tracking, color: "#00a6a6" }, { label: "Comptes désactivés", value: usage.accounts.disabled_accounts, color: "#6f7774" }]} /></Panel>
+      <Panel title="Documents les plus téléchargés" subtitle={`Demandes d’ouverture comptabilisées depuis le ${TRACKING_START}.`}><DownloadTable downloads={downloads} /></Panel>
+    </div>
+  </div>;
+}
+
+function DownloadTable({ downloads }: { downloads: UsageAnalytics["downloads"] }) {
+  const [expanded, setExpanded] = useState(false);
+  const downloaded = downloads.filter((item) => item.downloads > 0);
+  const shown = expanded ? downloaded : downloaded.slice(0, 5);
+  return <>{shown.length ? <div className="overflow-x-auto"><table className="w-full min-w-[480px] text-left text-sm"><thead className="border-b border-border text-xs uppercase tracking-wider text-muted"><tr><th className="pb-3 font-medium">Document</th><th className="pb-3 font-medium">Cours</th><th className="pb-3 text-right font-medium">Téléchargements</th></tr></thead><tbody className="divide-y divide-border-soft">{shown.map((item) => <tr key={item.material_id}><td className="py-3 pr-4 font-medium text-foreground">{item.document_title}</td><td className="py-3 pr-4 text-muted">{item.course_title}</td><td className="py-3 text-right font-semibold tabular-nums text-foreground">{item.downloads}</td></tr>)}</tbody></table></div> : <p className="text-sm text-muted">Aucun téléchargement enregistré depuis le début du suivi.</p>}{downloaded.length > 5 && <button type="button" onClick={() => setExpanded((value) => !value)} className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-foreground">{expanded ? "Réduire" : "Voir plus"}<ChevronDown size={15} className={expanded ? "rotate-180" : ""} /></button>}</>;
+}
+
+type MemberFilters = { sens: string; gender: string; implication: string; status: string; role: string };
+const DEFAULT_FILTERS: MemberFilters = { sens: "toutes", gender: "tous", implication: "toutes", status: "tous", role: "tous" };
+
+function MembersSection({ members, ministries }: { members: Member[]; ministries: Ministry[] }) {
+  const [filters, setFilters] = useState(DEFAULT_FILTERS);
+  const [advanced, setAdvanced] = useState(false);
+  const ministryById = useMemo(() => new Map(ministries.map((item) => [item.id, item])), [ministries]);
+  const filtered = members.filter((member) => {
+    const engagement = parseMlkEngagement(member.notification_prefs);
+    const ministry = ministryById.get(member.ministry_id ?? "");
+    if (filters.sens !== "toutes" && (filters.sens === "a_decouvrir" ? !!member.ministry_id : ministry?.slug !== filters.sens)) return false;
+    if (filters.gender !== "tous" && member.gender !== filters.gender) return false;
+    if (filters.status !== "tous" && memberStatus(member) !== filters.status) return false;
+    if (filters.role !== "tous" && (filters.role === "student" ? member.role !== "student" : filters.role === "teacher" ? !(member.is_teacher || member.role === "teacher") : member.role !== filters.role)) return false;
+    if (filters.implication !== "toutes") {
+      const key = engagement.manager ? "manager" : engagement.collaborator ? "collaborator" : engagement.equipier ? "equipier" : engagement.none ? "none" : "unknown";
+      if (key !== filters.implication) return false;
+    }
+    return true;
+  });
+  const total = filtered.length;
+  const women = filtered.filter((member) => member.gender === "femme").length;
+  const men = filtered.filter((member) => member.gender === "homme").length;
+  const filled = filtered.filter((member) => member.ministry_id).length;
+  const undiscovered = total - filled;
+  const sensitivityRows = ministries.map((ministry) => ({ label: sensitivityLabels[ministry.slug] ?? ministry.name, value: filtered.filter((member) => member.ministry_id === ministry.id).length, color: getMinistry(ministry.slug)?.color }));
+  const engagements = filtered.map((member) => parseMlkEngagement(member.notification_prefs));
+  const involvementRows = [{ label: "Managers et responsables adjoints", value: engagements.filter((item) => item.manager).length }, { label: "Collaborateurs salariés", value: engagements.filter((item) => item.collaborator).length }, { label: "Équipiers MLK", value: engagements.filter((item) => item.equipier).length }, { label: "Pas encore engagé dans une équipe", value: engagements.filter((item) => item.none).length }, { label: "Implication à renseigner", value: engagements.filter((item) => !item.completed).length }];
+  const activeFilters = Object.entries(filters).filter(([key, value]) => value !== DEFAULT_FILTERS[key as keyof MemberFilters]);
+  const set = (key: keyof MemberFilters, value: string) => setFilters((current) => ({ ...current, [key]: value }));
+
+  return <div className="space-y-6">
+    <header><p className="label text-xs tracking-[0.18em] text-muted">MEMBRES</p><h1 className="font-title mt-2 text-[30px] leading-tight text-foreground sm:text-[38px]">Qui compose Ministry School&nbsp;?</h1></header>
+    <div className="rounded-xl border border-border bg-background p-3"><div className="flex flex-wrap gap-2"><select value={filters.sens} onChange={(event) => set("sens", event.target.value)} className="min-h-10 rounded-lg border border-border bg-background px-3 text-sm"><option value="toutes">Toutes les sensibilités</option>{ministries.map((item) => <option key={item.id} value={item.slug}>{item.name}</option>)}<option value="a_decouvrir">Sensibilité à découvrir</option></select><select value={filters.gender} onChange={(event) => set("gender", event.target.value)} className="min-h-10 rounded-lg border border-border bg-background px-3 text-sm"><option value="tous">Tous les genres</option><option value="femme">Femmes</option><option value="homme">Hommes</option></select><button type="button" onClick={() => setAdvanced((value) => !value)} className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-border px-3 text-sm font-medium"><SlidersHorizontal size={15} /> Filtres{activeFilters.length ? ` · ${activeFilters.length}` : ""}</button></div>{advanced && <div className="mt-3 grid gap-2 border-t border-border-soft pt-3 sm:grid-cols-3"><select value={filters.implication} onChange={(event) => set("implication", event.target.value)} className="min-h-10 rounded-lg border border-border bg-background px-3 text-sm"><option value="toutes">Toutes les implications</option><option value="manager">Managers</option><option value="collaborator">Collaborateurs</option><option value="equipier">Équipiers MLK</option><option value="none">Pas encore engagé</option><option value="unknown">À renseigner</option></select><select value={filters.status} onChange={(event) => set("status", event.target.value)} className="min-h-10 rounded-lg border border-border bg-background px-3 text-sm"><option value="tous">Tous les statuts</option><option value="actif">Accès validé</option><option value="a_confirmer">À confirmer</option><option value="desactive">Désactivé</option></select><select value={filters.role} onChange={(event) => set("role", event.target.value)} className="min-h-10 rounded-lg border border-border bg-background px-3 text-sm"><option value="tous">Tous les rôles</option><option value="student">Étudiants</option><option value="teacher">Formateurs</option><option value="admin">Admins</option></select></div>}{activeFilters.length > 0 && <div className="mt-3 flex flex-wrap gap-2">{activeFilters.map(([key, value]) => <button key={key} type="button" onClick={() => set(key as keyof MemberFilters, DEFAULT_FILTERS[key as keyof MemberFilters])} className="inline-flex items-center gap-1 rounded-full bg-surface px-3 py-1.5 text-xs text-foreground">{value.replaceAll("_", " ")}<X size={12} /></button>)}<button type="button" onClick={() => setFilters(DEFAULT_FILTERS)} className="text-xs text-muted underline">Tout effacer</button></div>}</div>
+    <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"><Kpi value={total} label="Membres" detail={activeFilters.length ? "Selon les filtres actifs" : undefined} /><Kpi value={`${women} / ${men}`} label="Femmes / Hommes" /><Kpi value={filled} label="Sensibilités renseignées" /><Kpi value={undiscovered} label="Sensibilité à découvrir" /></section>
+    <Panel title="Sensibilités ministérielles" subtitle={`Répartition parmi les ${filled} membres ayant renseigné une sensibilité. Les ${undiscovered} sensibilités à découvrir sont présentées séparément.`}><ProportionRows rows={sensitivityRows} total={filled} /></Panel>
+    <div className="grid items-start gap-6 xl:grid-cols-2"><Panel title="Genre"><ProportionRows total={total} rows={[{ label: "Femmes", value: women, color: "#6657a5" }, { label: "Hommes", value: men, color: "#147fba" }]} /></Panel><Panel title="Implication" subtitle="Formes d’engagement déclarées dans les profils."><ProportionRows total={total} rows={involvementRows} /></Panel></div>
+  </div>;
+}
+
+function ProgramSection({ program, downloads }: { program: ProgramAnalytics; downloads: UsageAnalytics["downloads"] }) {
+  const hours: BarDatum[] = program.tracks.map((track) => ({ label: track.label, value: Number(track.hours.toFixed(1)), color: sessionColor(track.label, "commun", "var(--foreground)") }));
+  return <div className="space-y-6"><header><p className="label text-xs tracking-[0.18em] text-muted">PROGRAMMES</p><h1 className="font-title mt-2 text-[30px] leading-tight text-foreground sm:text-[38px]">Qu’est-ce que Ministry School délivre concrètement&nbsp;?</h1></header><section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"><Kpi value={program.courseCount} label="Cours" /><Kpi value={program.trainerCount} label="Formateurs" detail="Personnes uniques" /><Kpi value={`${Number(program.hours.toFixed(1))} h`} label="Formation proposée" /><Kpi value={program.resourceCount} label="Ressources pédagogiques" /></section><BarChart title="Heures de formation par parcours" subtitle="Volume programmé à partir des horaires réels des cours." data={hours} unit=" h" /><Panel title="Détail par parcours"><div className="overflow-x-auto"><table className="w-full min-w-[640px] text-left text-sm"><thead className="border-b border-border text-xs uppercase tracking-wider text-muted"><tr><th className="pb-3 font-medium">Parcours</th><th className="pb-3 text-right font-medium">Cours</th><th className="pb-3 text-right font-medium">Formateurs</th><th className="pb-3 text-right font-medium">Heures</th><th className="pb-3 text-right font-medium">Ressources</th></tr></thead><tbody className="divide-y divide-border-soft">{program.tracks.map((track) => <tr key={track.label}><td className="py-3 font-medium text-foreground">{track.label}</td><td className="py-3 text-right tabular-nums">{track.courses}</td><td className="py-3 text-right tabular-nums">{track.trainers}</td><td className="py-3 text-right tabular-nums">{Number(track.hours.toFixed(1))} h</td><td className="py-3 text-right tabular-nums">{track.resources}</td></tr>)}</tbody></table></div></Panel><div className="grid items-start gap-6 xl:grid-cols-[1fr_2fr]"><Panel title="Ressources"><div className="grid grid-cols-2 gap-4"><div><p className="font-title text-3xl">{program.resourceCount}</p><p className="mt-1 text-xs text-muted">ressources proposées</p></div><div><p className="font-title text-3xl">{program.totalDownloads}</p><p className="mt-1 text-xs text-muted">téléchargements suivis</p></div></div><p className="mt-5 text-xs text-muted">Collecte disponible depuis le {TRACKING_START}.</p></Panel><Panel title="Ressources les plus téléchargées"><DownloadTable downloads={downloads} /></Panel></div></div>;
+}
+
+export default function StatisticsTab({ members, ministries, trainingDates, monthlyActivity, usage, program, section: requestedSection }: { members: Member[]; ministries: Ministry[]; trainingDates: string[]; monthlyActivity: MonthlyActiveUsers[]; usage: UsageAnalytics; program: ProgramAnalytics; section: string }) {
+  const section: Section = requestedSection === "membres" || requestedSection === "programmes" ? requestedSection : "utilisation";
   function downloadCsv() {
-    const rows = [["Section", "Catégorie", "Nombre", "Pourcentage"]];
-    exportDatasets.forEach((set) => { const sum = set.data.reduce((n, d) => n + d.value, 0); set.data.forEach((d) => rows.push([set.title, d.label, String(d.value), `${sum ? Math.round((d.value / sum) * 100) : 0} %`])); });
+    const rows = [["Indicateur", "Valeur"], ["Comptes", String(members.length)], ["Utilisateurs actifs ce mois", String(monthlyActivity.find((item) => item.activity_month === currentParisMonth())?.active_users ?? 0)], ["Cours", String(program.courseCount)], ["Formateurs", String(program.trainerCount)], ["Heures", String(program.hours)], ["Ressources", String(program.resourceCount)]];
     const csv = `\ufeff${rows.map((row) => row.map((cell) => `"${cell.replaceAll('"', '""')}"`).join(";")).join("\n")}`;
     const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
     const anchor = document.createElement("a"); anchor.href = url; anchor.download = `statistiques-ministry-school-${new Date().toISOString().slice(0, 10)}.csv`; anchor.click(); URL.revokeObjectURL(url);
   }
-  function generatePdf() {
-    document.body.classList.add("statistics-printing");
-    const cleanup = () => document.body.classList.remove("statistics-printing");
-    window.addEventListener("afterprint", cleanup, { once: true });
-    window.print();
-    window.setTimeout(cleanup, 1000);
-  }
-
-  return <div className="statistics-report space-y-6">
-    <div className="space-y-6">
-      <header className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-        <div><p className="label text-xs tracking-[0.18em] text-muted">Statistiques des membres</p><h1 className="font-title mt-2 text-[28px] leading-tight text-foreground sm:text-[34px]">Comprendre la communauté Ministry School</h1><p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted">Vue complète et actualisée des membres. Clique sur une catégorie pour ouvrir la liste correspondante.</p></div>
-        <div className="statistics-report__actions flex flex-wrap gap-2">
-          <a href={mailHref} className="inline-flex min-h-10 items-center gap-2 rounded-md border border-border bg-background px-3.5 text-sm text-foreground hover:border-foreground/40"><Mail size={16} /> Envoyer par e-mail</a>
-          <button type="button" onClick={downloadCsv} className="inline-flex min-h-10 items-center gap-2 rounded-md border border-border bg-background px-3.5 text-sm text-foreground hover:border-foreground/40"><Download size={16} /> Télécharger le CSV</button>
-          <button type="button" onClick={generatePdf} className="inline-flex min-h-10 items-center gap-2 rounded-md bg-accent px-3.5 text-sm text-on-accent"><FileDown size={16} /> Générer le PDF</button>
-        </div>
-      </header>
-
-      <div className="statistics-report__controls flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-background p-2">
-        <span className="px-2 text-xs font-medium uppercase tracking-wider text-muted">Présentation des données</span>
-        <div className="grid w-full grid-cols-3 gap-1 sm:w-auto" role="group" aria-label="Choisir la présentation des statistiques">{([['pie', PieChart, 'Camembert'], ['bar', BarChart3, 'Graphique'], ['list', List, 'Liste']] as const).map(([key, Icon, label]) => <button key={key} type="button" onClick={() => setView(key)} aria-pressed={view === key} className={`inline-flex min-h-10 items-center justify-center gap-2 rounded-md px-3 text-sm transition ${view === key ? "bg-accent text-on-accent" : "text-muted hover:bg-surface hover:text-foreground"}`}><Icon size={16} /> {label}</button>)}</div>
-      </div>
-
-      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5"><StatCard value={activeThisMonth} label="Utilisateurs actifs ce mois-ci" detail={`${activeThisMonth} utilisateurs actifs sur ${total} comptes — ${activeShare} %`} featured /><StatCard value={total} label="Membres au total" href={membersHref()} /><StatCard value={statuses.active} label="Comptes actifs" detail={total ? `${Math.round((statuses.active / total) * 100)} % des membres` : undefined} href={membersHref("statut=actif")} /><StatCard value={statuses.pending} label="À confirmer" detail="Adresse e-mail non confirmée" href={membersHref("statut=a_confirmer")} /><StatCard value={statuses.disabled} label="Comptes désactivés" href={membersHref("statut=desactive")} /></section>
-      <BarChart title="Utilisateurs actifs par mois" subtitle="Personnes uniques ayant réussi au moins une connexion pendant le mois. Le suivi fiable commence en octobre 2026." data={activityData} />
-      <div className="statistics-report__grid grid items-start gap-6 xl:grid-cols-2">{datasets.map((dataset) => <DataSection key={dataset.title} dataset={dataset} view={view} />)}</div>
-    </div>
-  </div>;
+  return <div className="space-y-7"><div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><StatisticsNav section={section} /><button type="button" onClick={downloadCsv} className="inline-flex items-center gap-2 self-start px-2 py-2 text-xs font-medium text-muted hover:text-foreground"><Download size={14} /> Exporter</button></div>{section === "utilisation" && <UsageSection members={members} trainingDates={trainingDates} monthlyActivity={monthlyActivity} usage={usage} />}{section === "membres" && <MembersSection members={members} ministries={ministries} />}{section === "programmes" && <ProgramSection program={program} downloads={usage.downloads} />}</div>;
 }
