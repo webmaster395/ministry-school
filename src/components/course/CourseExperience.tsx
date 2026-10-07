@@ -554,13 +554,13 @@ export default function CourseExperience({
           <div
             className={
               session.videoUrl && session.summary
-                ? "lg:grid lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start lg:gap-10"
+                ? "lg:grid lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] lg:items-center lg:gap-10"
                 : undefined
             }
           >
           {session.videoUrl && (
             <section
-              className="pb-7 sm:pb-10 lg:order-2"
+              className={`pb-7 sm:pb-10 lg:order-2 ${session.summary ? "lg:w-full lg:max-w-[480px] lg:justify-self-end" : ""}`}
               aria-label="Vidéo du cours"
             >
               <div className="aspect-video w-full overflow-hidden rounded-xl bg-black shadow-sm">
@@ -604,19 +604,38 @@ export default function CourseExperience({
                   <h2 className="font-title mt-2 text-2xl text-foreground sm:text-[28px]">
                     Objectifs à l’issue de ce cours
                   </h2>
-                  <ol className="mt-5 grid gap-x-8 border-t border-border-soft md:grid-cols-2">
-                    {session.objectives.map((objective, index) => (
-                      <li
-                        key={objective}
-                        className="flex items-start gap-3 border-b border-border-soft py-4 text-sm leading-6 text-foreground"
-                      >
-                        <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[var(--course-accent)] text-[11px] font-semibold leading-none text-white">
-                          {index + 1}
-                        </span>
-                        <span>{objective}</span>
-                      </li>
-                    ))}
-                  </ol>
+                  <div className="mt-5 grid gap-x-8 md:grid-cols-2">
+                    {[
+                      session.objectives.slice(
+                        0,
+                        Math.ceil(session.objectives.length / 2),
+                      ),
+                      session.objectives.slice(
+                        Math.ceil(session.objectives.length / 2),
+                      ),
+                    ].map((column, columnIndex) => {
+                      const offset =
+                        columnIndex * Math.ceil(session.objectives.length / 2);
+                      return (
+                        <ol
+                          key={columnIndex}
+                          className={`${columnIndex === 1 ? "border-t border-border-soft md:border-t-0" : "border-t border-border-soft"}`}
+                        >
+                          {column.map((objective, index) => (
+                            <li
+                              key={objective}
+                              className="flex items-start gap-3 border-b border-border-soft py-4 text-sm leading-6 text-foreground"
+                            >
+                              <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[var(--course-accent)] text-[11px] font-semibold leading-none text-white">
+                                {offset + index + 1}
+                              </span>
+                              <span>{objective}</span>
+                            </li>
+                          ))}
+                        </ol>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
               {session.bibleRefs.length > 0 && (
