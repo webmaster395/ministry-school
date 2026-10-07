@@ -8,7 +8,7 @@ import MinistryPicto from "@/components/MinistryPicto";
 import { parseMlkEngagement } from "@/lib/mlk-engagement";
 import { getMinistry } from "@/lib/ministry";
 import { memberStatus, type Member } from "@/lib/data/admin-hub";
-import type { Ministry } from "@/lib/data/admin";
+import type { Ministry, MonthlyActiveUsers } from "@/lib/data/admin";
 import { accountsByTrainingCycle } from "@/lib/training-cycle-stats";
 
 type ViewMode = "pie" | "bar" | "list";
@@ -17,9 +17,10 @@ type Dataset = { title: string; subtitle: string; data: BarDatum[] };
 const membersHref = (filter = "") => `/gestion/admin?onglet=membres${filter ? `&${filter}` : ""}`;
 const COLORS = ["#21302e", "#00a6a6", "#f2a900", "#df4b57", "#88a61b", "#e44a18", "#6657a5", "#147fba", "#a85d12", "#c74286", "#526a78", "#c09a00"];
 
-function StatCard({ value, label, detail, href }: { value: number; label: string; detail?: string; href?: string }) {
+function StatCard({ value, label, detail, href, featured = false }: { value: number; label: string; detail?: string; href?: string; featured?: boolean }) {
+  const cardClass = `rounded-lg border bg-background p-5 ${featured ? "border-foreground/45 shadow-sm" : "border-border"}`;
   const content = <><p className="font-title text-[32px] leading-none text-foreground tabular-nums">{value}</p><p className="mt-3 text-sm font-medium text-foreground">{label}</p>{detail && <p className="mt-1 text-xs leading-relaxed text-muted">{detail}</p>}</>;
-  return href ? <Link href={href} className="rounded-lg border border-border bg-background p-5 transition hover:-translate-y-0.5 hover:border-foreground/30 hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground">{content}</Link> : <div className="rounded-lg border border-border bg-background p-5">{content}</div>;
+  return href ? <Link href={href} className={`${cardClass} transition hover:-translate-y-0.5 hover:border-foreground/30 hover:shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground`}>{content}</Link> : <div className={cardClass}>{content}</div>;
 }
 
 function datumColor(datum: BarDatum, index: number) {
@@ -86,7 +87,20 @@ function DataSection({ dataset, view }: { dataset: Dataset; view: ViewMode }) {
   return <section className="rounded-lg border border-border bg-background p-4 sm:p-6"><h2 className="label text-xs tracking-[0.18em] text-muted">{dataset.title}</h2><p className="mt-1 text-sm text-muted">{dataset.subtitle}</p>{view === "pie" ? <PieView data={dataset.data} /> : <ListView data={dataset.data} />}</section>;
 }
 
-export default function StatisticsTab({ members, ministries, trainingDates }: { members: Member[]; ministries: Ministry[]; trainingDates: string[] }) {
+function monthLabel(month: string) {
+  const label = new Intl.DateTimeFormat("fr-FR", { month: "long", year: "numeric", timeZone: "Europe/Paris" })
+    .format(new Date(`${month}T12:00:00Z`));
+  return label.charAt(0).toUpperCase() + label.slice(1);
+}
+
+function currentParisMonth() {
+  const parts = new Intl.DateTimeFormat("fr-FR", { year: "numeric", month: "2-digit", timeZone: "Europe/Paris" }).formatToParts(new Date());
+  const year = parts.find((part) => part.type === "year")?.value;
+  const month = parts.find((part) => part.type === "month")?.value;
+  return `${year}-${month}-01`;
+}
+
+export default function StatisticsTab({ members, ministries, trainingDates, monthlyActivity }: { members: Member[]; ministries: Ministry[]; trainingDates: string[]; monthlyActivity: MonthlyActiveUsers[] }) {
   const [view, setView] = useState<ViewMode>("bar");
   const total = members.length;
   const statuses = { active: members.filter((m) => memberStatus(m) === "actif").length, pending: members.filter((m) => memberStatus(m) === "a_confirmer").length, disabled: members.filter((m) => memberStatus(m) === "desactive").length };
@@ -111,6 +125,9 @@ export default function StatisticsTab({ members, ministries, trainingDates }: { 
   ];
   const ministryData: BarDatum[] = [...ministries.map((m) => ({ label: m.name, value: members.filter((member) => member.ministry_id === m.id).length, slug: m.slug, href: membersHref(`sens=${m.slug}`) })), { label: "Ne sais pas encore", value: members.filter((m) => !m.ministry_id).length, fallbackIcon: "🤔", color: "#27302f", href: membersHref("sens=non_renseignee") }];
   const cycleData: BarDatum[] = accountsByTrainingCycle(members, trainingDates).map(({ label, value }) => ({ label, value }));
+  const activityData: BarDatum[] = monthlyActivity.map((row) => ({ label: monthLabel(row.activity_month), value: row.active_users, color: "#00a6a6" }));
+  const activeThisMonth = monthlyActivity.find((row) => row.activity_month === currentParisMonth())?.active_users ?? 0;
+  const activeShare = total ? Math.round((activeThisMonth / total) * 100) : 0;
   const datasets: Dataset[] = [
     { title: "État des comptes", subtitle: "Situation actuelle des accès à la plateforme.", data: accountData },
     { title: "Implication à MLK", subtitle: "Un seul statut d'implication par membre.", data: engagementData },
@@ -119,11 +136,12 @@ export default function StatisticsTab({ members, ministries, trainingDates }: { 
     { title: "Nouveaux comptes par journée de formation", subtitle: "Chaque période se termine le jour de la formation inclus.", data: cycleData },
   ];
 
-  const reportText = [`Statistiques Ministry School — ${total} membres`, "", ...datasets.flatMap((set) => [set.title, ...set.data.map((d) => `• ${d.label} : ${d.value}`), ""])].join("\n");
+  const exportDatasets = [{ title: "Utilisateurs actifs par mois", subtitle: "", data: activityData }, ...datasets];
+  const reportText = [`Statistiques Ministry School — ${total} membres`, "", ...exportDatasets.flatMap((set) => [set.title, ...set.data.map((d) => `• ${d.label} : ${d.value}`), ""])].join("\n");
   const mailHref = `mailto:?subject=${encodeURIComponent("Statistiques des membres — Ministry School")}&body=${encodeURIComponent(reportText)}`;
   function downloadCsv() {
     const rows = [["Section", "Catégorie", "Nombre", "Pourcentage"]];
-    datasets.forEach((set) => { const sum = set.data.reduce((n, d) => n + d.value, 0); set.data.forEach((d) => rows.push([set.title, d.label, String(d.value), `${sum ? Math.round((d.value / sum) * 100) : 0} %`])); });
+    exportDatasets.forEach((set) => { const sum = set.data.reduce((n, d) => n + d.value, 0); set.data.forEach((d) => rows.push([set.title, d.label, String(d.value), `${sum ? Math.round((d.value / sum) * 100) : 0} %`])); });
     const csv = `\ufeff${rows.map((row) => row.map((cell) => `"${cell.replaceAll('"', '""')}"`).join(";")).join("\n")}`;
     const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
     const anchor = document.createElement("a"); anchor.href = url; anchor.download = `statistiques-ministry-school-${new Date().toISOString().slice(0, 10)}.csv`; anchor.click(); URL.revokeObjectURL(url);
@@ -152,7 +170,8 @@ export default function StatisticsTab({ members, ministries, trainingDates }: { 
         <div className="grid w-full grid-cols-3 gap-1 sm:w-auto" role="group" aria-label="Choisir la présentation des statistiques">{([['pie', PieChart, 'Camembert'], ['bar', BarChart3, 'Graphique'], ['list', List, 'Liste']] as const).map(([key, Icon, label]) => <button key={key} type="button" onClick={() => setView(key)} aria-pressed={view === key} className={`inline-flex min-h-10 items-center justify-center gap-2 rounded-md px-3 text-sm transition ${view === key ? "bg-accent text-on-accent" : "text-muted hover:bg-surface hover:text-foreground"}`}><Icon size={16} /> {label}</button>)}</div>
       </div>
 
-      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4"><StatCard value={total} label="Membres au total" href={membersHref()} /><StatCard value={statuses.active} label="Comptes actifs" detail={total ? `${Math.round((statuses.active / total) * 100)} % des membres` : undefined} href={membersHref("statut=actif")} /><StatCard value={statuses.pending} label="À confirmer" detail="Adresse e-mail non confirmée" href={membersHref("statut=a_confirmer")} /><StatCard value={statuses.disabled} label="Comptes désactivés" href={membersHref("statut=desactive")} /></section>
+      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5"><StatCard value={activeThisMonth} label="Utilisateurs actifs ce mois-ci" detail={`${activeThisMonth} utilisateurs actifs sur ${total} comptes — ${activeShare} %`} featured /><StatCard value={total} label="Membres au total" href={membersHref()} /><StatCard value={statuses.active} label="Comptes actifs" detail={total ? `${Math.round((statuses.active / total) * 100)} % des membres` : undefined} href={membersHref("statut=actif")} /><StatCard value={statuses.pending} label="À confirmer" detail="Adresse e-mail non confirmée" href={membersHref("statut=a_confirmer")} /><StatCard value={statuses.disabled} label="Comptes désactivés" href={membersHref("statut=desactive")} /></section>
+      <BarChart title="Utilisateurs actifs par mois" subtitle="Personnes uniques ayant réussi au moins une connexion pendant le mois. Le suivi fiable commence en octobre 2026." data={activityData} />
       <div className="statistics-report__grid grid items-start gap-6 xl:grid-cols-2">{datasets.map((dataset) => <DataSection key={dataset.title} dataset={dataset} view={view} />)}</div>
     </div>
   </div>;

@@ -166,6 +166,21 @@ export async function getTrainingDayDates(supabase: SupabaseClient) {
   return [...new Set((data ?? []).map((session) => session.session_date as string))];
 }
 
+export type MonthlyActiveUsers = {
+  activity_month: string;
+  active_users: number;
+};
+
+/** Utilisateurs réels distincts ayant réussi au moins une connexion pendant le mois. */
+export async function getMonthlyActiveUsers(supabase: SupabaseClient): Promise<MonthlyActiveUsers[]> {
+  const { data, error } = await supabase.rpc("admin_monthly_active_users");
+  if (error) throw error;
+  return ((data ?? []) as { activity_month: string; active_users: number | string }[]).map((row) => ({
+    activity_month: row.activity_month,
+    active_users: Number(row.active_users),
+  }));
+}
+
 export type Course = {
   id: string;
   title: string;
