@@ -43,10 +43,15 @@ function LoginForm() {
     setLoading(false);
 
     if (signInError) {
+      const message = signInError.message.toLowerCase();
+      // Supabase ne renvoie « e-mail non confirmé » qu'avec le bon mot de passe : on peut donc le dire sans risque
+      const notConfirmed = signInError.code === "email_not_confirmed" || message.includes("email not confirmed");
       setError(
-        signInError.message.toLowerCase().includes("banned")
+        message.includes("banned")
           ? "Ce compte est désactivé. Rapprochez-vous de l'équipe Ministry School."
-          : "Identifiants incorrects. Vérifiez votre e-mail et votre mot de passe."
+          : notConfirmed
+            ? "Validez votre adresse e-mail pour pouvoir vous connecter. Un lien vous a été envoyé par e-mail : pensez à vérifier vos courriers indésirables."
+            : "Identifiants incorrects. Vérifiez votre e-mail et votre mot de passe."
       );
       return;
     }
