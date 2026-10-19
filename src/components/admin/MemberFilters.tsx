@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Loader2, Search, SlidersHorizontal, X } from "lucide-react";
+import Portal from "@/components/Portal";
 
 type MinistryChoice = { id: string; slug: string; name: string };
 export type MemberFilterValues = {
@@ -99,7 +100,10 @@ export default function MemberFilters({ initial, ministries }: { initial: Member
         <button type="button" onClick={clearAll} className="ml-1 text-xs font-medium text-muted underline underline-offset-4 hover:text-foreground">Tout effacer</button>
       </div>}
 
-      <div className={open ? "fixed inset-0 z-50" : "hidden"}>
+      {/* Posé à la racine de la page (Portal) : sinon un bloc animé le rend aussi haut que la page et « Appliquer » reste tout en bas */}
+      {open && (
+        <Portal>
+      <div className="fixed inset-0 z-50">
         <button type="button" aria-label="Fermer les filtres" onClick={() => setOpen(false)} className="absolute inset-0 bg-foreground/35 backdrop-blur-[1px]" />
         <aside role="dialog" aria-modal="true" aria-labelledby="member-filter-title" className="absolute inset-y-0 right-0 flex w-full flex-col bg-background shadow-2xl sm:w-[430px]">
           <header className="flex items-center justify-between border-b border-border px-5 py-4 sm:px-6">
@@ -130,6 +134,8 @@ export default function MemberFilters({ initial, ministries }: { initial: Member
           </footer>
         </aside>
       </div>
+        </Portal>
+      )}
     </div>
   );
 }

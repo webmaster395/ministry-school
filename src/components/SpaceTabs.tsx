@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -13,6 +14,27 @@ export default function SpaceTabs() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { current } = useSpace();
+  const menu = useRef<HTMLDetailsElement>(null);
+  const location = `${pathname}?${searchParams.toString()}`;
+
+  // Le menu déroulant du mobile se replie dès qu'on a choisi une page (la navigation ne recharge pas le bloc),
+  // ainsi qu'au toucher en dehors du menu et à la touche Échap.
+  useEffect(() => {
+    menu.current?.removeAttribute("open");
+  }, [location]);
+  useEffect(() => {
+    const close = (event: Event) => {
+      const el = menu.current;
+      if (!el?.open) return;
+      if (event instanceof KeyboardEvent ? event.key === "Escape" : !el.contains(event.target as Node)) el.removeAttribute("open");
+    };
+    document.addEventListener("pointerdown", close);
+    document.addEventListener("keydown", close);
+    return () => {
+      document.removeEventListener("pointerdown", close);
+      document.removeEventListener("keydown", close);
+    };
+  }, []);
   const items = current?.sections.flatMap((section) => section.items) ?? [];
   if (!current || items.length < 2) return null;
 
@@ -24,7 +46,7 @@ export default function SpaceTabs() {
 
   return (
     <>
-      <details className="group relative z-30 mb-5 sm:hidden">
+      <details ref={menu} className="group relative z-30 mb-5 sm:hidden">
         <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between rounded-xl border border-border bg-background px-4 text-sm font-semibold text-foreground shadow-sm [&::-webkit-details-marker]:hidden">
           <span><span className="mr-2 text-xs font-medium uppercase tracking-[0.12em] text-muted">Admin</span>{activeItem?.label ?? current.label}</span>
           <ChevronDown size={18} className="text-muted transition group-open:rotate-180" />
@@ -35,7 +57,7 @@ export default function SpaceTabs() {
             const expectedTab = query ? new URLSearchParams(query).get("onglet") : null;
             const currentTab = searchParams.get("onglet");
             const active = pathname === itemPath && (expectedTab ? currentTab === expectedTab : !currentTab);
-            return <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} className={`block min-h-11 rounded-lg px-3.5 py-3 text-sm font-medium ${active ? "bg-accent text-on-accent" : "text-foreground hover:bg-surface"}`}>{item.label}</Link>;
+            return <Link key={item.href} href={item.href} onClick={() => menu.current?.removeAttribute("open")} aria-current={active ? "page" : undefined} className={`block min-h-11 rounded-lg px-3.5 py-3 text-sm font-medium ${active ? "bg-accent text-on-accent" : "text-foreground hover:bg-surface"}`}>{item.label}</Link>;
           })}
         </nav>
       </details>
