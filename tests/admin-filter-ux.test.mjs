@@ -21,6 +21,13 @@ test("les filtres essentiels restent visibles et tous les filtres historiques so
   assert.match(filters, /Tout effacer/);
 });
 
+test("la fenêtre de filtres reste compacte sur mobile et ordinateur", () => {
+  assert.match(filters, /bottom-0 flex max-h-\[calc\(100dvh-1rem\)\]/);
+  assert.match(filters, /sm:top-1\/2 sm:max-h-\[calc\(100dvh-3rem\)\]/);
+  assert.match(filters, /sm:-translate-y-1\/2 sm:rounded-2xl/);
+  assert.match(filters, /<footer className="flex shrink-0/);
+});
+
 test("le retour d’une fiche membre conserve l’URL filtrée", () => {
   assert.match(members, /returnTo=\$\{encodeURIComponent\(returnTo\)\}/);
 });

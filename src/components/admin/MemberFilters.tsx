@@ -105,30 +105,30 @@ export default function MemberFilters({ initial, ministries }: { initial: Member
         <Portal>
       <div className="fixed inset-0 z-50">
         <button type="button" aria-label="Fermer les filtres" onClick={() => setOpen(false)} className="absolute inset-0 bg-foreground/35 backdrop-blur-[1px]" />
-        <aside role="dialog" aria-modal="true" aria-labelledby="member-filter-title" className="absolute inset-y-0 right-0 flex w-full flex-col bg-background shadow-2xl sm:w-[430px]">
-          <header className="flex items-center justify-between border-b border-border px-5 py-4 sm:px-6">
+        <aside role="dialog" aria-modal="true" aria-labelledby="member-filter-title" className="absolute inset-x-0 bottom-0 flex max-h-[calc(100dvh-1rem)] w-full flex-col overflow-hidden rounded-t-2xl bg-background shadow-2xl sm:inset-x-auto sm:bottom-auto sm:right-6 sm:top-1/2 sm:max-h-[calc(100dvh-3rem)] sm:w-[430px] sm:-translate-y-1/2 sm:rounded-2xl">
+          <header className="flex shrink-0 items-center justify-between border-b border-border px-5 py-3.5 sm:px-6">
             <div><p className="label text-[10px] tracking-[0.16em] text-muted">MEMBRES</p><h2 id="member-filter-title" className="font-title mt-1 text-[24px] text-foreground">Tous les filtres</h2></div>
             <button type="button" onClick={() => setOpen(false)} aria-label="Fermer" className="grid h-10 w-10 place-items-center rounded-full text-muted hover:bg-surface hover:text-foreground"><X size={20} /></button>
           </header>
-          <div className="flex-1 space-y-7 overflow-y-auto px-5 py-6 sm:px-6">
-            <fieldset className="space-y-4 sm:hidden">
+          <div className="space-y-5 overflow-y-auto px-5 py-4 sm:px-6 sm:py-5">
+            <fieldset className="space-y-3 sm:hidden">
               <legend className="label mb-3 text-[11px] tracking-[0.14em] text-muted">ACCÈS</legend>
               <label className="block space-y-1.5 text-sm">Rôle<select value={values.role} onChange={(event) => change("role", event.target.value, false)} className={`${field} w-full`}><option value="tous">Tous les rôles</option><option value="etudiant">Étudiant seulement</option><option value="enseignant">Formateur</option><option value="chef">Chef de projet</option><option value="responsable">Responsable de service</option><option value="pilotage">Pilotage ministériel</option><option value="admin">Admin</option></select></label>
               <label className="block space-y-1.5 text-sm">Statut<select value={values.statut} onChange={(event) => change("statut", event.target.value, false)} className={`${field} w-full`}><option value="tous">Tous les statuts</option><option value="actif">Actif</option><option value="a_confirmer">À confirmer</option><option value="desactive">Désactivé</option></select></label>
             </fieldset>
-            <fieldset className="space-y-4">
+            <fieldset className="space-y-3">
               <legend className="label mb-3 text-[11px] tracking-[0.14em] text-muted">PROFIL ÉTUDIANT</legend>
               <label className="block space-y-1.5 text-sm">Sensibilité<select name="sens" value={values.sens} onChange={(event) => change("sens", event.target.value, false)} className={`${field} w-full`}><option value="toutes">Toutes les sensibilités</option><option value="non_renseignee">Non renseignée</option>{ministries.map((item) => <option key={item.id} value={item.slug}>{item.name}</option>)}</select></label>
               <label className="block space-y-1.5 text-sm">Implication à MLK<select name="implication" value={values.implication} onChange={(event) => change("implication", event.target.value, false)} className={`${field} w-full`}><option value="toutes">Toutes les implications</option><option value="aucun">Aucun engagement</option><option value="equipier">Équipiers MLK</option><option value="manager">Managers et adjoints</option><option value="collaborateur">Collaborateurs salariés</option><option value="non_renseigne">Non renseignée</option></select></label>
               <label className="block space-y-1.5 text-sm">Genre<select name="genre" value={values.genre} onChange={(event) => change("genre", event.target.value, false)} className={`${field} w-full`}><option value="tous">Tous les genres</option><option value="homme">Hommes</option><option value="femme">Femmes</option><option value="non_renseigne">Non renseigné</option></select></label>
             </fieldset>
-            <fieldset className="grid gap-4 border-t border-border-soft pt-6 sm:grid-cols-2">
+            <fieldset className="grid gap-3 border-t border-border-soft pt-5 sm:grid-cols-2">
               <legend className="label mb-3 text-[11px] tracking-[0.14em] text-muted sm:col-span-2">AFFICHAGE</legend>
               <label className="block space-y-1.5 text-sm">Trier<select name="tri" value={values.tri} onChange={(event) => change("tri", event.target.value, false)} className={`${field} w-full`}><option value="nom">Par nom</option><option value="creation">Plus récents</option></select></label>
               <label className="block space-y-1.5 text-sm">Par page<select name="par" value={values.par} onChange={(event) => change("par", event.target.value, false)} className={`${field} w-full`}><option value="25">25 membres</option><option value="50">50 membres</option><option value="100">100 membres</option></select></label>
             </fieldset>
           </div>
-          <footer className="flex items-center justify-between gap-3 border-t border-border bg-background px-5 py-4 sm:px-6">
+          <footer className="flex shrink-0 items-center justify-between gap-3 border-t border-border bg-background px-5 py-3.5 sm:px-6">
             {active.length ? <button type="button" onClick={clearAll} className="text-sm text-muted underline underline-offset-4">Tout effacer</button> : <span />}
             <button type="button" onClick={() => { apply(values); setOpen(false); }} className="rounded-md bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent">Appliquer les filtres</button>
           </footer>
