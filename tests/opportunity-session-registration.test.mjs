@@ -49,7 +49,9 @@ test("la bannière reprend le style des cours avec un accent jaune-orange et un 
   assert.match(banner, /#FFD45A/);
   assert.match(banner, /#F28A24/);
   assert.match(banner, /Apple Color Emoji/);
+  assert.match(picker, /type="text"/);
   assert.match(picker, /name="banner_emoji"/);
+  assert.doesNotMatch(picker, /role="radiogroup"/);
   assert.match(migration, /add column if not exists banner_emoji/);
   assert.match(backfill, /row_number\(\) over/);
 });
