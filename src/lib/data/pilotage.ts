@@ -20,6 +20,9 @@ export type PilotSession = {
   teacher: { full_name: string } | null;
   /** Cours pas encore publié : invisible des étudiants (si les brouillons sont activés) */
   is_draft?: boolean;
+  editorial_status?: "draft" | "pending" | "changes_requested" | "scheduled" | "published" | "superseded";
+  publication_at?: string | null;
+  revision_of?: string | null;
 };
 
 export type ChecklistItem = {
@@ -49,9 +52,10 @@ export async function getMinistrySessions(supabase: SupabaseClient, ministryId: 
   const { data } = await supabase
     .from("sessions")
     .select(
-      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, teacher:profiles!sessions_teacher_id_fkey(full_name)" + DRAFT_COLUMN
+      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, editorial_status, publication_at, revision_of, teacher:profiles!sessions_teacher_id_fkey(full_name)" + DRAFT_COLUMN
     )
     .eq("ministry_id", ministryId)
+    .eq("session_type", "ministere")
     .order("session_date", { ascending: true })
     .order("start_time", { ascending: true });
   return attachVideos(supabase, (data ?? []) as unknown as PilotSession[]);
@@ -197,7 +201,7 @@ export async function getTeacherPrepSessions(supabase: SupabaseClient, teacherId
   let query = supabase
     .from("sessions")
     .select(
-      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, teacher:profiles!sessions_teacher_id_fkey(full_name)" + DRAFT_COLUMN
+      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, editorial_status, publication_at, revision_of, teacher:profiles!sessions_teacher_id_fkey(full_name)" + DRAFT_COLUMN
     )
     .order("session_date", { ascending: true })
     .order("start_time", { ascending: true });

@@ -2,7 +2,7 @@ import { TYPE_COLUMN } from "@/lib/material-types";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getViewer } from "@/lib/data/viewer";
-import { buildRows, getMinistrySessions, getTeacherPrepSessions } from "@/lib/data/pilotage";
+import { buildRows, getMinistrySessions } from "@/lib/data/pilotage";
 import { getMinistry, INK } from "@/lib/ministry";
 import PrepBoard, { type PrepTab } from "@/components/PrepBoard";
 import { teacherPanels } from "@/components/gestion/TeacherPanels";
@@ -17,12 +17,12 @@ export default async function TeachingPage({
   const tab: PrepTab = onglet === "avenir" || onglet === "passes" ? onglet : "prochain";
 
   const viewer = await getViewer();
-  if (!viewer || (!viewer.roles.admin && !viewer.roles.steeringMinistryIds.length)) redirect("/etudiant");
+  if (!viewer || !viewer.roles.steeringMinistryIds.length) redirect("/etudiant");
 
   const supabase = await createClient();
-  const sessions = viewer.roles.admin
-    ? await getTeacherPrepSessions(supabase, null)
-    : (await Promise.all(viewer.roles.steeringMinistryIds.map((id) => getMinistrySessions(supabase, id)))).flat();
+  const sessions = (await Promise.all(
+    viewer.roles.steeringMinistryIds.map((id) => getMinistrySessions(supabase, id)),
+  )).flat();
   const rows = await buildRows(supabase, sessions, "pilotage");
 
   const today = new Date().toISOString().slice(0, 10);

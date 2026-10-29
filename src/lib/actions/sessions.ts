@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { invalidateStudentProgram } from "@/lib/cache/program";
 import { parseAvailability } from "@/lib/availability";
+import { assertPilotageRequestScope } from "@/lib/pilotage-scope";
 
 /**
  * Modifie une séance existante (date, horaire, lieu, titre, intervenant, parcours).
@@ -19,6 +20,7 @@ export async function updateSession(formData: FormData) {
   if (!user) throw new Error("Non authentifié");
 
   const id = formData.get("session_id") as string;
+  const pilotageRequest = await assertPilotageRequestScope(supabase, id);
   const text = (key: string) => ((formData.get(key) as string) ?? "").trim();
 
   // Les références bibliques ne sont modifiées que si le formulaire les propose
@@ -51,8 +53,8 @@ export async function updateSession(formData: FormData) {
       ...parking,
       ...admin,
       session_date: text("session_date"),
-      start_time: text("start_time"),
-      end_time: text("end_time"),
+      start_time: pilotageRequest ? "10:30" : text("start_time"),
+      end_time: pilotageRequest ? "13:00" : text("end_time"),
       location: text("location"),
       room: text("room") || null,
       description: text("description") || null,

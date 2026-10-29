@@ -2,7 +2,6 @@
 
 import Portal from "@/components/Portal";
 import { useActionState, useEffect, useState } from "react";
-import FormSubmitButton from "@/components/FormSubmitButton";
 import { Plus, X } from "lucide-react";
 import { createCourse, type CourseFormState } from "@/app/gestion/pilotage/actions";
 
@@ -10,7 +9,7 @@ const field = "w-full rounded-lg border border-border bg-background px-3 py-2.5 
 const label = "mb-1.5 block text-[14px] text-muted";
 
 /** « Ajouter un cours » : les informations indispensables ; le contenu pédagogique se complète ensuite sur la fiche du cours. */
-export default function AddCourseDialog({ ministryId, drafts = false }: { ministryId: string; drafts?: boolean }) {
+export default function AddCourseDialog({ ministryId }: { ministryId: string; drafts?: boolean }) {
   const [open, setOpen] = useState(false);
   const [state, action, pending] = useActionState<CourseFormState, FormData>(createCourse, {});
 
@@ -69,20 +68,17 @@ export default function AddCourseDialog({ ministryId, drafts = false }: { minist
               <input id="course-title" name="title" required className={field} />
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-[1.4fr_1fr_1fr]">
+            <div className="grid gap-4 sm:grid-cols-[1.4fr_1fr]">
               <div>
                 <label className={label} htmlFor="course-date">Date *</label>
-                <input id="course-date" name="session_date" type="date" required className={field} />
+                <input id="course-date" name="session_date" type="date" min="2027-01-01" required className={field} />
               </div>
-              <div>
-                <label className={label} htmlFor="course-start">Heure de début *</label>
-                <input id="course-start" name="start_time" type="time" required defaultValue="11:30" className={field} />
-              </div>
-              <div>
-                <label className={label} htmlFor="course-end">Heure de fin *</label>
-                <input id="course-end" name="end_time" type="time" required defaultValue="13:00" className={field} />
+              <div className="rounded-xl border border-border bg-surface px-4 py-3">
+                <span className="block text-xs font-medium text-muted">Horaire commun aux cinq sensibilités</span>
+                <strong className="mt-1 block text-[16px] text-foreground">10 h 30 – 13 h</strong>
               </div>
             </div>
+            <p className="-mt-3 text-xs text-muted">Les cours ministériels commencent en janvier et se tiennent le samedi.</p>
 
             <div className="grid gap-4 sm:grid-cols-[1.4fr_1fr]">
               <div>
@@ -142,24 +138,12 @@ export default function AddCourseDialog({ ministryId, drafts = false }: { minist
               >
                 Annuler
               </button>
-              {drafts && (
-                <FormSubmitButton
-                  name="intent"
-                  value="draft"
-                  disabled={pending}
-                  label="Enregistrer comme brouillon"
-                  successLabel="Brouillon enregistré"
-                  className="rounded-full border border-border bg-background px-5 py-2.5 text-[15px] text-foreground transition hover:border-foreground"
-                />
-              )}
               <button
                 type="submit"
-                name="intent"
-                value="publish"
                 disabled={pending}
                 className="rounded-full bg-accent px-5 py-2.5 text-[15px] font-medium text-on-accent transition hover:bg-[#1b2221] disabled:opacity-60"
               >
-                {pending ? "Création…" : "Créer le cours"}
+                {pending ? "Création…" : "Créer le brouillon"}
               </button>
             </div>
             </div>

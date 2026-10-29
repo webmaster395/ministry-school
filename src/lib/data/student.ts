@@ -26,6 +26,8 @@ export type StudentSession = {
   video_url?: string | null;
   cover_image_path?: string | null;
   show_parking_notice?: boolean;
+  editorial_status?: "draft" | "pending" | "changes_requested" | "scheduled" | "published" | "superseded";
+  publication_at?: string | null;
   trainers?: Array<{
     id: string;
     name: string;
@@ -35,7 +37,7 @@ export type StudentSession = {
 };
 
 const SESSION_FIELDS =
-  "id, session_date, start_time, end_time, location, room, day, session_type, ministry_id, description, objectives, speaker_name, track, summary, bible_refs, show_parking_notice, course_id, courses(id, title), teacher:profiles!sessions_teacher_id_fkey(full_name)";
+  "id, session_date, start_time, end_time, location, room, day, session_type, ministry_id, description, objectives, speaker_name, track, summary, bible_refs, show_parking_notice, editorial_status, publication_at, course_id, courses(id, title), teacher:profiles!sessions_teacher_id_fkey(full_name)";
 
 export function studentSessionTrainerNames(session: StudentSession) {
   if (session.trainers?.length) {
@@ -226,9 +228,19 @@ export async function getStudentProgram(
   // personne connectée (jamais en production, où la clé est exigée au déploiement).
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.NODE_ENV !== "production") {
     const { createClient } = await import("@/lib/supabase/server");
-    return loadProgram(await createClient(), ministryId, preferredDay);
+    return onlyCurrentlyPublished(await loadProgram(await createClient(), ministryId, preferredDay));
   }
-  return getCachedProgramForProfile(ministryId, preferredDay);
+  return onlyCurrentlyPublished(await getCachedProgramForProfile(ministryId, preferredDay));
+}
+
+/** Le cache conserve les séances programmées ; la date est réévaluée à chaque requête. */
+function onlyCurrentlyPublished(sessions: StudentSession[]) {
+  const now = Date.now();
+  return sessions.filter((session) =>
+    session.session_type === "commun" ||
+    session.editorial_status === "published" ||
+    (session.editorial_status === "scheduled" && !!session.publication_at && new Date(session.publication_at).getTime() <= now),
+  );
 }
 
 export async function getStudentAllSessions(

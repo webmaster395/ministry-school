@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getViewer } from "@/lib/data/viewer";
 import { invalidateStudentProgram } from "@/lib/cache/program";
+import { assertPilotageRequestScope } from "@/lib/pilotage-scope";
 
 export async function updateSessionTrainers(formData: FormData) {
   const viewer = await getViewer();
@@ -11,6 +12,7 @@ export async function updateSessionTrainers(formData: FormData) {
   const sessionId = String(formData.get("session_id") ?? "");
   const trainerIds = formData.getAll("trainer_ids").map(String);
   const supabase = await createClient();
+  await assertPilotageRequestScope(supabase, sessionId);
   const { data: session } = await supabase.from("sessions").select("session_type, ministry_id").eq("id", sessionId).single();
   const canEdit = viewer.roles.admin || (session?.session_type === "ministere" && !!session.ministry_id && viewer.roles.steeringMinistryIds.includes(session.ministry_id));
   if (!canEdit) throw new Error("Tu ne peux pas modifier les intervenants de cette séance.");

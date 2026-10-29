@@ -18,6 +18,7 @@ import {
   Briefcase,
   NotebookPen,
   ChartNoAxesColumnIncreasing,
+  BadgeCheck,
 } from "lucide-react";
 import { isPlainStudent, type ViewerRoles } from "@/lib/roles";
 import { QUESTIONS_ENABLED } from "@/lib/questions";
@@ -56,6 +57,7 @@ const icons = {
   adminStats: <ChartNoAxesColumnIncreasing {...iconProps} />,
   adminSessions: <CalendarClock {...iconProps} />,
   functions: <Briefcase {...iconProps} />,
+  validate: <BadgeCheck {...iconProps} />,
 };
 
 /** Le menu étudiant, toujours affiché : celui de la maquette de Rose Alice. */
@@ -91,6 +93,12 @@ export const notesNavItem: NavItem = {
 
 /** L'entrée « Mes fonctions » du bloc « Mes espaces », en bas du menu. */
 export const functionsIcon = icons.functions;
+
+export const validationNavItem: NavItem = {
+  label: "À valider",
+  href: "/gestion/a-valider",
+  icon: icons.validate,
+};
 
 export type ProfileTab = { label: string; href: string };
 
@@ -169,7 +177,7 @@ export function navSpaces(roles: ViewerRoles): Space[] {
     });
   }
 
-  if (roles.admin || roles.steeringMinistryIds.length > 0) {
+  if (roles.steeringMinistryIds.length > 0) {
     spaces.push({
       key: "steering",
       label: "Pilotage ministériel",

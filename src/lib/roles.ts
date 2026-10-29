@@ -7,6 +7,8 @@
 export type ViewerRoles = {
   admin: boolean;
   projectsTraining: boolean;
+  /** Validation éditoriale nominative (Flora ou Nathalie), indépendante du rôle admin. */
+  editorialReviewer: boolean;
   /** Ministères pilotés (en propre ou par délégation), par identifiant */
   steeringMinistryIds: string[];
 };
@@ -16,6 +18,7 @@ export function isPlainStudent(roles: ViewerRoles) {
   return (
     !roles.admin &&
     !roles.projectsTraining &&
+    !roles.editorialReviewer &&
     roles.steeringMinistryIds.length === 0
   );
 }

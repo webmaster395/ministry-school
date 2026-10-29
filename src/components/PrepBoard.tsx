@@ -298,7 +298,13 @@ const FILTERS: { key: UpcomingFilter; label: string }[] = [
 
 /** « Brouillon » : cours pas encore publié ; sinon « À compléter » puis « Prêt » quand tout l'est. */
 function stateOf(r: PrepRow) {
-  if (r.s.is_draft) return { label: "Brouillon", cls: "bg-surface text-muted" };
+  const editorial = r.s.editorial_status;
+  if (editorial === "pending") return { label: "En attente", cls: "bg-[#FFF0CC] text-[#78520A]" };
+  if (editorial === "changes_requested") return { label: "À corriger", cls: "bg-amber-100 text-amber-900" };
+  if (editorial === "scheduled") return { label: "Programmé", cls: "bg-sky-100 text-sky-900" };
+  if (editorial === "published") return { label: "Publié", cls: "bg-emerald-100 text-emerald-900" };
+  if (editorial === "superseded") return { label: "Remplacé", cls: "bg-surface text-muted" };
+  if (r.s.is_draft || editorial === "draft") return { label: "Brouillon", cls: "bg-surface text-muted" };
   if (r.progress.ready) return { label: "Prêt", cls: "bg-m-apostolique/25 text-foreground" };
   return { label: "À compléter", cls: ATTENTION };
 }

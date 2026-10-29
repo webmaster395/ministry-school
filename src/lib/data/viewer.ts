@@ -65,6 +65,7 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
     ministry_slug?: string | null;
     ministry_name?: string | null;
     steering_ministry_ids?: string[];
+    editorial_reviewer?: boolean;
     course_notes_enabled?: boolean;
     unread_messages?: number;
   };
@@ -101,6 +102,7 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
     roles: {
       admin: role === "admin",
       projectsTraining: !!access?.is_projects_training_member,
+      editorialReviewer: !!data.editorial_reviewer,
       steeringMinistryIds: data.steering_ministry_ids ?? [],
     },
   };

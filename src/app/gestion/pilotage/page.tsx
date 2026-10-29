@@ -17,13 +17,12 @@ export default async function PilotagePage({
   const tab: PrepTab = onglet === "avenir" || onglet === "passes" ? onglet : "prochain";
 
   const viewer = await getViewer();
-  if (!viewer || (!viewer.roles.admin && viewer.roles.steeringMinistryIds.length === 0)) redirect("/etudiant");
+  if (!viewer || viewer.roles.steeringMinistryIds.length === 0) redirect("/etudiant");
 
   const supabase = await createClient();
-  // L'administrateur pilote tous les ministères ; les autres, ceux qui leur sont confiés.
-  const ministryIds = viewer.roles.admin
-    ? ((await supabase.from("ministries").select("id")).data ?? []).map((m) => m.id as string)
-    : viewer.roles.steeringMinistryIds;
+  // La casquette Pilotage reste strictement limitée aux responsabilités explicites,
+  // même lorsque la personne possède aussi le rôle Administrateur.
+  const ministryIds = viewer.roles.steeringMinistryIds;
   const steered = await getSteeredMinistries(supabase, ministryIds);
   const ministry = steered.find((x) => x.slug === m) ?? steered[0];
   if (!ministry) redirect("/etudiant");

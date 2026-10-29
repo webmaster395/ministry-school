@@ -3,10 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { DRAFTS_ENABLED } from "@/lib/drafts";
 import { TYPES_ENABLED } from "@/lib/material-types";
 import { invalidateStudentProgram } from "@/lib/cache/program";
 import { parseAvailability } from "@/lib/availability";
+import { assertPilotageRequestScope } from "@/lib/pilotage-scope";
 
 /** Ajoute un support (lien ou fichier déposé) à une séance. La base vérifie le droit d'écriture. */
 export async function addSupport(formData: FormData) {
@@ -18,6 +18,7 @@ export async function addSupport(formData: FormData) {
 
   const text = (key: string) => ((formData.get(key) as string) ?? "").trim();
   const sessionId = text("session_id");
+  await assertPilotageRequestScope(supabase, sessionId);
 
   const visibleAt = parseAvailability(formData);
 
@@ -51,6 +52,7 @@ export async function addPilotAssignment(formData: FormData) {
 
   const text = (key: string) => ((formData.get(key) as string) ?? "").trim();
   const sessionId = text("session_id");
+  await assertPilotageRequestScope(supabase, sessionId);
   const duration = parseInt(text("duration_min"), 10);
   const due = text("due_at");
 
@@ -95,61 +97,32 @@ export async function createCourse(
   const ministryId = text("ministry_id");
   const title = text("title");
   const date = text("session_date");
-  const start = text("start_time");
-  const end = text("end_time");
   const location = text("location");
-  if (!ministryId || !title || !date || !start || !end || !location) {
-    return { error: "Renseignez le titre, la date, les heures et le lieu." };
+  if (!ministryId || !title || !date || !location) {
+    return { error: "Renseignez le titre, la date et le lieu." };
   }
-  if (end <= start)
-    return { error: "L'heure de fin doit être après l'heure de début." };
-  const draft = DRAFTS_ENABLED && text("intent") === "draft";
-
-  const { error } = await supabase.from("sessions").insert({
-    session_type: "ministere",
-    ministry_id: ministryId,
-    session_date: date,
-    start_time: start,
-    end_time: end,
-    location,
-    room: text("room") || null,
-    day: new Date(`${date}T12:00:00`).getDay() === 0 ? "dimanche" : "samedi",
-    description: title,
-    speaker_name: text("speaker_name") || null,
-    summary: text("summary") || null,
-    objectives: text("objectives") || null,
-    show_parking_notice: formData.getAll("show_parking_notice").includes("1"),
-    ...(DRAFTS_ENABLED && { is_draft: draft }),
+  const { data: createdId, error } = await supabase.rpc("create_ministry_course", {
+    p_ministry: ministryId,
+    p_title: title,
+    p_session_date: date,
+    p_location: location,
+    p_room: text("room") || null,
+    p_speaker: text("speaker_name") || null,
+    p_summary: text("summary") || null,
+    p_objectives: text("objectives") || null,
+    p_show_parking: formData.getAll("show_parking_notice").includes("1"),
   });
-  if (error)
-    return { error: "Le cours n'a pas pu être créé : " + error.message };
+  if (error) {
+    const message = error.message.includes("INVALID_MINISTRY_TRAINING_DAY")
+      ? "Choisissez un samedi à partir de janvier 2027."
+      : "Le cours n'a pas pu être créé : " + error.message;
+    return { error: message };
+  }
 
   invalidateStudentProgram();
   revalidatePath("/gestion/pilotage");
   revalidatePath("/etudiant", "layout");
-  redirect("/gestion/pilotage?onglet=avenir");
-}
-
-/** Publie un brouillon : le cours devient visible des étudiants. */
-export async function publishCourse(formData: FormData) {
-  if (!DRAFTS_ENABLED) return;
-  const supabase = await createClient();
-  const sessionId = ((formData.get("session_id") as string) ?? "").trim();
-
-  const { data, error } = await supabase
-    .from("sessions")
-    .update({ is_draft: false })
-    .eq("id", sessionId)
-    .select("id");
-  if (error) throw new Error("La publication a échoué : " + error.message);
-  if (!data?.length)
-    throw new Error("Vous n'avez pas le droit de publier ce cours.");
-
-  invalidateStudentProgram();
-  revalidatePath(`/gestion/enseignement/preparation/${sessionId}`);
-  revalidatePath("/gestion/pilotage", "layout");
-  revalidatePath("/gestion/pilotage");
-  revalidatePath("/etudiant", "layout");
+  redirect(`/gestion/pilotage/preparation/${createdId}`);
 }
 
 function refreshPrep(sessionId: string) {
@@ -166,6 +139,7 @@ function refreshPrep(sessionId: string) {
 export async function addObjective(formData: FormData) {
   const supabase = await createClient();
   const sessionId = ((formData.get("session_id") as string) ?? "").trim();
+  await assertPilotageRequestScope(supabase, sessionId);
   const objective = ((formData.get("objective") as string) ?? "").trim();
   if (!objective) return;
 
@@ -191,6 +165,7 @@ export async function addObjective(formData: FormData) {
 export async function removeObjective(formData: FormData) {
   const supabase = await createClient();
   const sessionId = ((formData.get("session_id") as string) ?? "").trim();
+  await assertPilotageRequestScope(supabase, sessionId);
   const index = parseInt((formData.get("index") as string) ?? "", 10);
 
   const { data: current } = await supabase
@@ -220,6 +195,7 @@ export async function deleteAssignment(formData: FormData) {
   const supabase = await createClient();
   const id = ((formData.get("id") as string) ?? "").trim();
   const sessionId = ((formData.get("session_id") as string) ?? "").trim();
+  await assertPilotageRequestScope(supabase, sessionId);
   const { data, error } = await supabase
     .from("assignments")
     .delete()
@@ -236,6 +212,7 @@ export async function deleteSupport(formData: FormData) {
   const supabase = await createClient();
   const id = ((formData.get("id") as string) ?? "").trim();
   const sessionId = ((formData.get("session_id") as string) ?? "").trim();
+  await assertPilotageRequestScope(supabase, sessionId);
   const { data, error } = await supabase
     .from("materials")
     .delete()
@@ -252,6 +229,7 @@ const str = (f: FormData, k: string) => ((f.get(k) as string) ?? "").trim();
 /** Corrige le texte (et la durée) d'une consigne. */
 export async function updateAssignment(formData: FormData) {
   const supabase = await createClient();
+  await assertPilotageRequestScope(supabase, str(formData, "session_id"));
   const instructions = str(formData, "instructions");
   if (!instructions) throw new Error("Le texte ne peut pas être vide.");
   const duration = parseInt(str(formData, "duration_min"), 10);
@@ -283,6 +261,7 @@ export async function duplicateAssignment(formData: FormData) {
   if (!user) throw new Error("Non authentifié");
   const id = str(formData, "id");
   const sessionId = str(formData, "session_id");
+  await assertPilotageRequestScope(supabase, sessionId);
   const { data: source, error: readError } = await supabase
     .from("assignments")
     .select(
@@ -306,6 +285,7 @@ export async function duplicateAssignment(formData: FormData) {
 /** Corrige le titre et le lien d'un support (le fichier déposé reste tel quel). */
 export async function updateSupport(formData: FormData) {
   const supabase = await createClient();
+  await assertPilotageRequestScope(supabase, str(formData, "session_id"));
   const title = str(formData, "title");
   if (!title) throw new Error("Le titre ne peut pas être vide.");
   const changes: {
@@ -337,6 +317,7 @@ export async function updateSupport(formData: FormData) {
 export async function updateObjective(formData: FormData) {
   const supabase = await createClient();
   const sessionId = str(formData, "session_id");
+  await assertPilotageRequestScope(supabase, sessionId);
   const index = parseInt(str(formData, "index"), 10);
   const text = str(formData, "objective");
   if (!text) throw new Error("L'objectif ne peut pas être vide.");
@@ -366,6 +347,7 @@ export async function updateObjective(formData: FormData) {
 export async function moveObjective(formData: FormData) {
   const supabase = await createClient();
   const sessionId = str(formData, "session_id");
+  await assertPilotageRequestScope(supabase, sessionId);
   const index = parseInt(str(formData, "index"), 10);
   const direction = str(formData, "direction") === "up" ? -1 : 1;
   const { data: current } = await supabase
@@ -403,6 +385,7 @@ async function moveOrderedRow(
 ) {
   const supabase = await createClient();
   const sessionId = str(formData, "session_id");
+  await assertPilotageRequestScope(supabase, sessionId);
   const id = str(formData, "id");
   const direction = str(formData, "direction") === "up" ? -1 : 1;
   const { data } = await supabase
@@ -439,6 +422,7 @@ export async function addAssignmentStep(formData: FormData) {
   const supabase = await createClient();
   const assignmentId = str(formData, "assignment_id");
   const sessionId = str(formData, "session_id");
+  await assertPilotageRequestScope(supabase, sessionId);
   const title = str(formData, "title");
   const instructions = str(formData, "instructions");
   if (!assignmentId || !title || !instructions)
@@ -462,6 +446,7 @@ export async function addAssignmentStep(formData: FormData) {
 
 export async function updateAssignmentStep(formData: FormData) {
   const supabase = await createClient();
+  await assertPilotageRequestScope(supabase, str(formData, "session_id"));
   const title = str(formData, "title");
   const instructions = str(formData, "instructions");
   if (!title || !instructions)
@@ -476,6 +461,7 @@ export async function updateAssignmentStep(formData: FormData) {
 
 export async function deleteAssignmentStep(formData: FormData) {
   const supabase = await createClient();
+  await assertPilotageRequestScope(supabase, str(formData, "session_id"));
   const { error } = await supabase
     .from("assignment_steps")
     .delete()
@@ -488,6 +474,7 @@ export async function moveAssignmentStep(formData: FormData) {
   const supabase = await createClient();
   const assignmentId = str(formData, "assignment_id");
   const id = str(formData, "id");
+  await assertPilotageRequestScope(supabase, str(formData, "session_id"));
   const direction = str(formData, "direction") === "up" ? -1 : 1;
   const { data } = await supabase
     .from("assignment_steps")

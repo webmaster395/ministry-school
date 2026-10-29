@@ -9,6 +9,7 @@ import {
   notesNavItem,
   profileTabs,
   studentSections,
+  validationNavItem,
 } from "@/lib/nav";
 import { getMinistry } from "@/lib/ministry";
 
@@ -64,7 +65,7 @@ function NavLink({
  */
 export function NavSections({ collapsed = false }: { collapsed?: boolean }) {
   const pathname = usePathname();
-  const { spaces, current, home, notesEnabled } = useSpace();
+  const { spaces, current, home, notesEnabled, roles } = useSpace();
 
   return (
     <>
@@ -123,6 +124,17 @@ export function NavSections({ collapsed = false }: { collapsed?: boolean }) {
                 collapsed={collapsed}
               />
             </li>
+            {roles.editorialReviewer && (
+              <li>
+                <NavLink
+                  href={validationNavItem.href}
+                  label={validationNavItem.label}
+                  icon={validationNavItem.icon}
+                  active={sameRoute(pathname, validationNavItem.href)}
+                  collapsed={collapsed}
+                />
+              </li>
+            )}
           </ul>
         </div>
       )}

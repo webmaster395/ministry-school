@@ -16,10 +16,12 @@ import { formatSessionDate, formatTimeRangeFr } from "@/lib/format";
 import { sessionColor } from "@/lib/ministry";
 import SessionEditForm from "@/components/SessionEditForm";
 import { teacherPanels } from "@/components/gestion/TeacherPanels";
-import { publishCourse } from "@/app/gestion/pilotage/actions";
 import TrainerMultiSelect, {
   type TrainerChoice,
 } from "@/components/gestion/TrainerMultiSelect";
+import MinistryCourseReviewPanel from "@/components/MinistryCourseReviewPanel";
+import { getMinistryCourseReviewState } from "@/lib/data/ministry-course-review";
+import { createMinistryCourseRevision } from "@/app/gestion/a-valider/actions";
 
 type FullSession = PilotSession & {
   session_type: "commun" | "ministere";
@@ -45,10 +47,16 @@ const SECTION_LABELS = {
   apres: "À faire après",
 } as const;
 
-export default async function PreparationPage({
+export default async function PreparationPage(props: { params: Promise<{ id: string }> }) {
+  return PreparationPageContent({ ...props, accessMode: "administration" });
+}
+
+export async function PreparationPageContent({
   params,
+  accessMode,
 }: {
   params: Promise<{ id: string }>;
+  accessMode: "administration" | "pilotage";
 }) {
   const { id } = await params;
   const viewer = await getViewer();
@@ -58,7 +66,7 @@ export default async function PreparationPage({
   const { data } = await supabase
     .from("sessions")
     .select(
-      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, show_parking_notice, session_type, course_id, day, teacher_id, ministry_id, service_id, teacher:profiles!sessions_teacher_id_fkey(full_name)" +
+      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, show_parking_notice, session_type, course_id, day, teacher_id, ministry_id, service_id, editorial_status, publication_at, revision_of, teacher:profiles!sessions_teacher_id_fkey(full_name)" +
         DRAFT_COLUMN,
     )
     .eq("id", id)
@@ -82,11 +90,12 @@ export default async function PreparationPage({
     )
     .eq("session_id", id)
     .order("position");
-  const canEdit =
-    viewer.roles.admin ||
-    (s.session_type === "ministere" &&
+  const strictPilot = s.session_type === "ministere" &&
       !!s.ministry_id &&
-      viewer.roles.steeringMinistryIds.includes(s.ministry_id));
+      viewer.roles.steeringMinistryIds.includes(s.ministry_id);
+  const canEdit = accessMode === "pilotage"
+    ? strictPilot
+    : viewer.roles.admin || viewer.roles.editorialReviewer || strictPilot;
   if (!canEdit) redirect("/etudiant");
 
   const [{ data: materials }, { data: assignments }] = await Promise.all([
@@ -116,8 +125,8 @@ export default async function PreparationPage({
         .order("sort_order")
     : { data: [] };
 
-  // L'administrateur a la vue du pilotage sur tous les ministères, sans être limité au sien
-  const adminOptions = viewer.roles.admin
+  // Les options globales restent réservées à la vue Administration.
+  const adminOptions = accessMode === "administration" && viewer.roles.admin
     ? {
         courses: ((
           await supabase.from("courses").select("id, title").order("title")
@@ -128,10 +137,7 @@ export default async function PreparationPage({
         services: ((await supabase.from("services").select("id, name").order("name")).data ?? []) as { id: string; name: string }[],
       }
     : undefined;
-  const isPilot =
-    viewer.roles.admin ||
-    (!!s.ministry_id &&
-      viewer.roles.steeringMinistryIds.includes(s.ministry_id));
+  const isPilot = s.session_type === "ministere" && (viewer.roles.admin || strictPilot);
   const kind = isPilot ? "pilotage" : "enseignant";
   const afterCount = (assignments ?? []).filter((a) =>
     isAfterClass(a.due_at, s.session_date),
@@ -144,12 +150,16 @@ export default async function PreparationPage({
     afterCount,
   );
   const progress = progressOf(items);
-  const back = viewer.roles.admin
+  const back = accessMode === "pilotage"
+    ? "/gestion/pilotage"
+    : viewer.roles.admin
     ? "/gestion/admin?onglet=programme"
     : isPilot
       ? "/gestion/pilotage"
       : "/gestion/enseignement";
-  const backLabel = viewer.roles.admin
+  const backLabel = accessMode === "pilotage"
+    ? "Retour à la préparation"
+    : viewer.roles.admin
     ? "Retour au programme"
     : isPilot
       ? "Retour à la préparation"
@@ -163,6 +173,19 @@ export default async function PreparationPage({
   const color = sessionColor(s.track, "commun", "#1d2625");
   const teacher = s.speaker_name ?? s.teacher?.full_name;
   const isDraft = DRAFTS_ENABLED && !!s.is_draft;
+  const reviewState = s.session_type === "ministere"
+    ? await getMinistryCourseReviewState(supabase, s.id)
+    : null;
+  const statusLabel = reviewState
+    ? ({
+        draft: "Brouillon",
+        pending: "En attente",
+        changes_requested: "À corriger",
+        scheduled: "Programmé",
+        published: "Publié",
+        superseded: "Version remplacée",
+      } as const)[reviewState.status]
+    : isDraft ? "Brouillon" : progress.ready ? "Prêt" : "À compléter";
   const { data: trainerRows } = await supabase
     .from("trainers")
     .select("id, first_name, last_name, title, photo_path")
@@ -205,7 +228,7 @@ export default async function PreparationPage({
           <div className="flex items-center gap-2">
             <Link href={`/etudiant/seances/${s.id}`} className="rounded-full border border-border px-4 py-2 text-sm font-medium text-foreground transition hover:border-foreground">Aperçu étudiant</Link>
             <span className={`label rounded-full px-3.5 py-1.5 text-[11px] tracking-[0.1em] ${progress.ready ? "bg-surface text-foreground" : "bg-m-doctoral/[0.12] text-link"}`}>
-              {isDraft ? "Brouillon" : progress.ready ? "Prêt" : "À compléter"}
+              {statusLabel}
             </span>
           </div>
         </div>
@@ -235,6 +258,15 @@ export default async function PreparationPage({
           )}
         </p>
       </section>
+
+      {reviewState && <MinistryCourseReviewPanel sessionId={s.id} state={reviewState} />}
+
+      {accessMode === "pilotage" && reviewState && (reviewState.status === "published" || reviewState.status === "scheduled") && (
+        <section className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-surface p-5">
+          <div><h3 className="font-title text-[19px]">Modifier sans toucher à la version visible</h3><p className="mt-1 text-sm text-muted">Créez un nouveau brouillon reprenant le cours et ses contenus. La version actuelle restera accessible jusqu’à la prochaine validation.</p></div>
+          <form action={createMinistryCourseRevision}><input type="hidden" name="session_id" value={s.id} /><button className="rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent">Créer une nouvelle version</button></form>
+        </section>
+      )}
 
       {isPilot && (
         <section className="rounded-2xl border border-border bg-background">
@@ -350,17 +382,6 @@ export default async function PreparationPage({
             >
               Voir comme un étudiant
             </Link>
-            {isDraft && (
-              <form action={publishCourse}>
-                <input type="hidden" name="session_id" value={s.id} />
-                <button
-                  type="submit"
-                  className="rounded-full bg-accent px-5 py-2.5 text-[15px] font-medium text-on-accent transition hover:bg-[#1b2221]"
-                >
-                  Publier le cours
-                </button>
-              </form>
-            )}
           </div>
         </div>
       </div>

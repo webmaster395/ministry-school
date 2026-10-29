@@ -46,6 +46,7 @@ export default function SessionEditForm({
 }) {
   const [state, formAction, pending] = useActionState(updateSessionWithFeedback, null);
   const [category, setCategory] = useState(s.track ?? "Formation du cœur");
+  const fixedMinistrySchedule = s.session_type === "ministere" && !admin;
   const standardCategories = ["Formation du cœur", "Formation du caractère", "Sensibilité ministérielle", "Mise en pratique", "Services & Projets"];
   return (
     <details className="group mt-2" open={defaultOpen}>
@@ -61,9 +62,8 @@ export default function SessionEditForm({
         <label className="block text-sm font-medium text-foreground">Catégorie<select name="track" value={category} onChange={(event) => setCategory(event.target.value)} className={`${field} mt-1.5`}>{s.track && !standardCategories.includes(s.track) && <option value={s.track}>{s.track}</option>}{standardCategories.map((item) => <option key={item}>{item}</option>)}</select></label>
 
         <div className="grid gap-3 sm:grid-cols-[1fr_1fr_1fr]">
-          <label className="block text-sm font-medium text-foreground">Date<input type="date" name="session_date" required defaultValue={s.session_date} className={`${field} mt-1.5`} /></label>
-          <label className="block text-sm font-medium text-foreground">Début<input type="time" name="start_time" required defaultValue={s.start_time.slice(0, 5)} className={`${field} mt-1.5`} /></label>
-          <label className="block text-sm font-medium text-foreground">Fin<input type="time" name="end_time" required defaultValue={s.end_time.slice(0, 5)} className={`${field} mt-1.5`} /></label>
+          <label className="block text-sm font-medium text-foreground">Date<input type="date" name="session_date" min={fixedMinistrySchedule ? "2027-01-01" : undefined} required defaultValue={s.session_date} className={`${field} mt-1.5`} /></label>
+          {fixedMinistrySchedule ? <><input type="hidden" name="start_time" value="10:30" /><input type="hidden" name="end_time" value="13:00" /><div className="sm:col-span-2"><p className="text-sm font-medium text-foreground">Horaire ministériel</p><p className="mt-1.5 rounded-md bg-surface px-3 py-2.5 text-sm text-muted">10 h 30 – 13 h</p></div></> : <><label className="block text-sm font-medium text-foreground">Début<input type="time" name="start_time" required defaultValue={s.start_time.slice(0, 5)} className={`${field} mt-1.5`} /></label><label className="block text-sm font-medium text-foreground">Fin<input type="time" name="end_time" required defaultValue={s.end_time.slice(0, 5)} className={`${field} mt-1.5`} /></label></>}
         </div>
 
         <input type="hidden" name="location" value={s.location} />
