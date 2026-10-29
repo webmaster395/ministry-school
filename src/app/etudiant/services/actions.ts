@@ -5,6 +5,26 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
 const text = (formData: FormData, key: string) => String(formData.get(key) ?? "").trim();
+const list = (formData: FormData, key: string) =>
+  formData.getAll(key).map(String).map((value) => value.trim()).filter(Boolean).join("\n");
+
+async function uploadOpportunityCover(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  opportunityId: string,
+  formData: FormData,
+) {
+  const file = formData.get("cover_image");
+  if (!(file instanceof File) || file.size === 0) return;
+  if (file.size > 8 * 1024 * 1024 || !["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+    throw new Error("La bannière doit être une image JPG, PNG ou WebP de 8 Mo maximum.");
+  }
+  const extension = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
+  const path = `${opportunityId}/${crypto.randomUUID()}.${extension}`;
+  const { error: uploadError } = await supabase.storage.from("opportunity-covers").upload(path, file, { contentType: file.type });
+  if (uploadError) throw new Error("L’image de bannière n’a pas pu être déposée : " + uploadError.message);
+  const { error } = await supabase.from("opportunities").update({ cover_image_path: path }).eq("id", opportunityId);
+  if (error) throw new Error("La bannière n’a pas pu être associée : " + error.message);
+}
 
 function refreshOpportunity(id: string) {
   revalidatePath("/etudiant/services");
@@ -14,24 +34,33 @@ function refreshOpportunity(id: string) {
   revalidatePath("/gestion/admin");
 }
 
-/** S'inscrire ou se désinscrire d'une formation / d'un projet. */
-export async function toggleRegistration(formData: FormData) {
+/** Inscription atomique à une ou plusieurs séances, avec capacité vérifiée sous verrou en base. */
+export async function registerOpportunityDates(formData: FormData) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Non authentifié");
-
   const id = text(formData, "opportunity_id");
-  const registered = formData.get("registered") === "1";
-  const rpc = registered ? "cancel_opportunity_registration" : "register_for_opportunity";
-  const { error } = await supabase.rpc(rpc, { p_opportunity: id });
+  const dates = [...new Set(formData.getAll("date_ids").map(String).filter(Boolean))];
+  if (!dates.length) throw new Error("Sélectionnez au moins une séance.");
+  const { error } = await supabase.rpc("register_for_opportunity_dates", { p_opportunity: id, p_dates: dates });
   if (error) {
-    if (error.message.includes("CAPACITY_REACHED")) throw new Error("Cette activité vient d’être complétée.");
-    if (error.message.includes("CANCELLATION_NOT_ALLOWED")) throw new Error("L’annulation n’est pas autorisée.");
-    if (error.message.includes("ALREADY_REGISTERED")) throw new Error("Vous êtes déjà inscrit.");
-    throw new Error("Les inscriptions sont fermées.");
+    if (error.message.includes("CAPACITY_REACHED")) throw new Error("Une des séances sélectionnées vient d’être complétée.");
+    if (error.message.includes("ALREADY_REGISTERED")) throw new Error("Vous êtes déjà inscrit à cette séance.");
+    throw new Error("L’inscription n’a pas pu être enregistrée.");
   }
+  refreshOpportunity(id);
+}
+
+/** Annule uniquement la séance choisie et libère immédiatement sa place. */
+export async function cancelOpportunityDate(formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Non authentifié");
+  const id = text(formData, "opportunity_id");
+  const dateId = text(formData, "date_id");
+  const { error } = await supabase.rpc("cancel_opportunity_date_registration", { p_date: dateId });
+  if (error?.message.includes("CANCELLATION_NOT_ALLOWED")) throw new Error("L’annulation n’est pas autorisée.");
+  if (error) throw new Error("L’annulation n’a pas pu être enregistrée.");
   refreshOpportunity(id);
 }
 
@@ -62,26 +91,32 @@ export async function createOpportunity(formData: FormData) {
     end_time: ends[index] || "17:00",
     room: rooms[index] || null,
     location: locations[index] || null,
+    capacity: Number.isFinite(capacity) && capacity > 0 ? capacity : null,
   })).filter((date) => date.session_date).sort((a, b) => a.session_date.localeCompare(b.session_date));
   if (!dates.length) throw new Error("Ajoutez au moins une date.");
 
+  const serviceName = text(formData, "service_name");
+  const { data: serviceId, error: serviceError } = serviceName
+    ? await supabase.rpc("resolve_service_name", { p_name: serviceName })
+    : { data: null, error: null };
+  if (serviceError) throw new Error("Le service pilote n’a pas pu être enregistré : " + serviceError.message);
   const { data, error } = await supabase.rpc("create_opportunity_admin", {
     p_payload: {
       kind: type === "formation" ? "formation" : "projet",
       is_project: type === "projet" || type === "both",
       is_training: type === "formation" || type === "both",
       title: text(formData, "title"),
-      short_description: text(formData, "short_description") || null,
+      short_description: null,
       description: text(formData, "description"),
-      objectives: text(formData, "objectives") || null,
-      service_id: text(formData, "service_id") || null,
-      organizer_label: text(formData, "organizer_label") || null,
-      speakers: text(formData, "speakers") || null,
-      prerequisites: text(formData, "prerequisites") || null,
+      objectives: list(formData, "objectives_items") || null,
+      service_id: serviceId || null,
+      organizer_label: serviceName || null,
+      speakers: list(formData, "speakers_items") || null,
+      prerequisites: list(formData, "prerequisites_items") || null,
       location: text(formData, "location") || null,
-      organization_material: text(formData, "organization_material") || null,
-      participant_material: text(formData, "participant_material") || null,
-      schedule_label: text(formData, "schedule_label") || null,
+      organization_material: null,
+      participant_material: list(formData, "participant_material_items") || null,
+      schedule_label: null,
       starts_on: dates[0].session_date,
       ends_on: dates.at(-1)?.session_date ?? dates[0].session_date,
       capacity: Number.isFinite(capacity) && capacity > 0 ? capacity : null,
@@ -96,6 +131,8 @@ export async function createOpportunity(formData: FormData) {
   });
   if (error) throw new Error("La création a échoué : " + error.message);
   const id = String(data);
+  await supabase.from("opportunity_dates").update({ capacity: Number.isFinite(capacity) && capacity > 0 ? capacity : null }).eq("opportunity_id", id);
+  await uploadOpportunityCover(supabase, id, formData);
   refreshOpportunity(id);
   redirect(`/gestion/projets-formations/${id}?creation=ok`);
 }
@@ -214,14 +251,15 @@ export async function updateOpportunityContent(formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Non authentifié");
   const id = text(formData, "opportunity_id");
+  const { data: current } = await supabase.from("opportunities").select("organization_material").eq("id", id).single();
   const { error } = await supabase.rpc("update_opportunity_content", {
     p_opportunity: id,
     p_description: text(formData, "description"),
-    p_objectives: text(formData, "objectives"),
-    p_speakers: text(formData, "speakers"),
-    p_prerequisites: text(formData, "prerequisites"),
-    p_organization_material: text(formData, "organization_material"),
-    p_participant_material: text(formData, "participant_material"),
+    p_objectives: list(formData, "objectives_items") || text(formData, "objectives"),
+    p_speakers: list(formData, "speakers_items") || text(formData, "speakers"),
+    p_prerequisites: list(formData, "prerequisites_items") || text(formData, "prerequisites"),
+    p_organization_material: current?.organization_material ?? "",
+    p_participant_material: list(formData, "participant_material_items") || text(formData, "participant_material"),
   });
   if (error) throw new Error("La modification a échoué : " + error.message);
   refreshOpportunity(id);
@@ -240,14 +278,18 @@ export async function updateOpportunityManagement(formData: FormData) {
   if (status === "scheduled" && !text(formData, "published_at")) throw new Error("Choisissez la date de publication programmée.");
   const capacity = Number.parseInt(text(formData, "capacity"), 10);
   const publishedAt = status === "published" ? new Date().toISOString() : status === "scheduled" ? new Date(text(formData, "published_at")).toISOString() : null;
+  const serviceName = text(formData, "service_name");
+  const { data: serviceId, error: serviceError } = serviceName
+    ? await supabase.rpc("resolve_service_name", { p_name: serviceName })
+    : { data: null, error: null };
+  if (serviceError) throw new Error("Le service pilote n’a pas pu être enregistré : " + serviceError.message);
   const { error } = await supabase.from("opportunities").update({
     kind: type === "formation" ? "formation" : "projet",
     is_project: type === "projet" || type === "both",
     is_training: type === "formation" || type === "both",
     title: text(formData, "title"),
-    short_description: text(formData, "short_description") || null,
-    service_id: text(formData, "service_id") || null,
-    organizer_label: text(formData, "organizer_label") || null,
+    service_id: serviceId || null,
+    organizer_label: serviceName || null,
     location: text(formData, "location") || null,
     capacity: Number.isFinite(capacity) && capacity > 0 ? capacity : null,
     registration_open: formData.get("registration_open") === "on",
@@ -258,6 +300,8 @@ export async function updateOpportunityManagement(formData: FormData) {
     updated_at: new Date().toISOString(),
   }).eq("id", id);
   if (error) throw new Error("La modification a échoué : " + error.message);
+  await supabase.from("opportunity_dates").update({ capacity: Number.isFinite(capacity) && capacity > 0 ? capacity : null }).eq("opportunity_id", id);
+  await uploadOpportunityCover(supabase, id, formData);
   refreshOpportunity(id);
 }
 
@@ -271,12 +315,16 @@ export async function replaceOpportunityDates(formData: FormData) {
   const ends = formData.getAll("end_time").map(String);
   const rooms = formData.getAll("room").map(String);
   const locations = formData.getAll("date_location").map(String);
+  const ids = formData.getAll("date_id").map(String);
+  const capacities = formData.getAll("date_capacity").map(String);
   const dates = sessionDates.map((session_date, index) => ({
+    id: ids[index] || null,
     session_date,
     start_time: starts[index] || "14:00",
     end_time: ends[index] || "17:00",
     room: rooms[index] || null,
     location: locations[index] || null,
+    capacity: capacities[index] || null,
   })).filter((date) => date.session_date);
   const { error } = await supabase.rpc("replace_opportunity_dates", { p_opportunity: id, p_dates: dates });
   if (error) throw new Error("La mise à jour des séances a échoué : " + error.message);

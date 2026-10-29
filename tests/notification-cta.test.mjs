@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 const notificationSource = readFileSync(
-  new URL("../src/lib/course-notifications.ts", import.meta.url),
+  new URL("../supabase/migrations/20261029130000_opportunity_sessions_and_daily_digest.sql", import.meta.url),
   "utf8",
 );
 const messageSource = readFileSync(
@@ -15,16 +15,18 @@ const courseSource = readFileSync(
   "utf8",
 );
 
-test("seuls les supports créent une notification automatique ciblée", () => {
-  assert.match(notificationSource, /course-resources/);
-  assert.doesNotMatch(notificationSource, /Cours mis à jour/);
-  assert.doesNotMatch(notificationSource, /Nouveau travail/);
+test("le récapitulatif ne contient que les contenus réellement disponibles", () => {
+  assert.match(notificationSource, /visible_at > p_run_at - interval '24 hours'/);
+  assert.match(notificationSource, /visible_at <= p_run_at/);
+  assert.doesNotMatch(notificationSource, /sera disponible/);
 });
 
-test("les ressources rapprochées sont regroupées dans une seule notification", () => {
-  assert.match(notificationSource, /10 \* 60 \* 1000/);
-  assert.match(notificationSource, /De nouvelles ressources sont disponibles/);
-  assert.match(notificationSource, /\.update\(/);
+test("le récapitulatif de 9 h est quotidien et idempotent", () => {
+  assert.match(notificationSource, /Europe\/Paris/);
+  assert.match(notificationSource, /extract\(hour/);
+  assert.match(notificationSource, /course_content_notification_log/);
+  assert.match(notificationSource, /primary key\(recipient_id, content_type, content_id\)/);
+  assert.match(notificationSource, /'0 \* \* \* \*'/);
 });
 
 test("la messagerie rend la destination sous forme de bouton", () => {

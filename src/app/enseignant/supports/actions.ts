@@ -2,7 +2,6 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { notifyCourseContent } from "@/lib/course-notifications";
 
 export async function addMaterial(formData: FormData) {
   const supabase = await createClient();
@@ -16,21 +15,14 @@ export async function addMaterial(formData: FormData) {
   const linkUrl = formData.get("link_url") as string;
   const visibleAtRaw = formData.get("visible_at") as string;
 
-  const { data: material, error } = await supabase.from("materials").insert({
+  const { error } = await supabase.from("materials").insert({
     session_id: sessionId,
     title,
     link_url: linkUrl || null,
     visible_at: visibleAtRaw ? new Date(visibleAtRaw).toISOString() : new Date().toISOString(),
     created_by: user.id,
-  }).select("id").single();
-  if (error) throw new Error("L'ajout du support a échoué : " + error.message);
-  await notifyCourseContent({
-    supabase,
-    actorId: user.id,
-    sessionId,
-    targetId: material?.id,
-    contentTitle: title,
   });
+  if (error) throw new Error("L'ajout du support a échoué : " + error.message);
 
   revalidatePath("/enseignant/supports");
   revalidatePath("/etudiant", "layout");
@@ -47,21 +39,14 @@ export async function shareNow(formData: FormData) {
   const title = formData.get("title") as string;
   const linkUrl = formData.get("link_url") as string;
 
-  const { data: material, error } = await supabase.from("materials").insert({
+  const { error } = await supabase.from("materials").insert({
     session_id: sessionId,
     title,
     link_url: linkUrl || null,
     visible_at: new Date().toISOString(),
     created_by: user.id,
-  }).select("id").single();
-  if (error) throw new Error("L'ajout du support a échoué : " + error.message);
-  await notifyCourseContent({
-    supabase,
-    actorId: user.id,
-    sessionId,
-    targetId: material?.id,
-    contentTitle: title,
   });
+  if (error) throw new Error("L'ajout du support a échoué : " + error.message);
 
   revalidatePath("/enseignant/supports");
   revalidatePath("/etudiant/cours");

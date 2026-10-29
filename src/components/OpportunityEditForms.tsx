@@ -1,59 +1,82 @@
 "use client";
 
+import { CalendarDays, ImagePlus, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { Plus, Trash2 } from "lucide-react";
 import type { Opportunity, Responsibility } from "@/lib/data/opportunities";
 import { opportunityType } from "@/lib/data/opportunities";
 import { replaceOpportunityDates, updateOpportunityContent, updateOpportunityManagement } from "@/app/etudiant/services/actions";
+import DynamicListInput from "@/components/DynamicListInput";
+import RichTextEditor from "@/components/gestion/RichTextEditor";
 
-type DateRow = { id?: string; session_date: string; start_time: string; end_time: string; room: string | null; location: string | null };
-const field = "w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm";
-const localDateTime = (value: string | null) => {
-  if (!value) return "";
-  const date = new Date(value);
-  return new Date(date.getTime() - date.getTimezoneOffset() * 60_000).toISOString().slice(0, 16);
-};
+type DateRow = { id?: string; session_date: string; start_time: string; end_time: string; room: string | null; location: string | null; capacity: number | null };
+const field = "min-h-11 w-full rounded-xl border border-border bg-background px-3 text-sm text-foreground outline-none focus:border-accent";
+const localDateTime = (value: string | null) => value ? new Date(new Date(value).getTime() - new Date(value).getTimezoneOffset() * 60_000).toISOString().slice(0,16) : "";
 
-export default function OpportunityEditForms({ opportunity: o, initialDates, responsibility, services }: {
+export default function OpportunityEditForms({ opportunity: o, initialDates, responsibility, services, suggestedSaturdays }: {
   opportunity: Opportunity;
   initialDates: DateRow[];
   responsibility: Responsibility | "admin";
   services: { id: string; name: string }[];
+  suggestedSaturdays: string[];
 }) {
   const [dates, setDates] = useState(initialDates);
   const [publishedAt, setPublishedAt] = useState(localDateTime(o.published_at));
+  const [publication, setPublication] = useState(o.publication_status);
   const manager = responsibility === "manager" || responsibility === "admin";
-  return <div className="space-y-5">
-    <details className="rounded-2xl border border-border bg-background p-5"><summary className="cursor-pointer font-medium">Compléter les informations</summary><form action={updateOpportunityContent} className="mt-4 grid gap-4 sm:grid-cols-2">
-      <input type="hidden" name="opportunity_id" value={o.id} />
-      <label className="sm:col-span-2">Présentation détaillée<textarea name="description" rows={5} required defaultValue={o.description} className={`${field} mt-1`} /></label>
-      <label className="sm:col-span-2">Objectifs<textarea name="objectives" rows={3} defaultValue={o.objectives ?? ""} className={`${field} mt-1`} /></label>
-      <label>Intervenants<textarea name="speakers" rows={3} defaultValue={o.speakers ?? ""} className={`${field} mt-1`} /></label>
-      <label>Prérequis<textarea name="prerequisites" rows={3} defaultValue={o.prerequisites ?? ""} className={`${field} mt-1`} /></label>
-      <label>Matériel d’organisation<textarea name="organization_material" rows={3} defaultValue={o.organization_material ?? ""} className={`${field} mt-1`} /></label>
-      <label>Matériel des participants<textarea name="participant_material" rows={3} defaultValue={o.participant_material ?? ""} className={`${field} mt-1`} /></label>
-      <button className="rounded-full bg-accent px-5 py-2.5 text-sm text-on-accent sm:w-fit">Enregistrer le contenu</button>
-    </form></details>
-    {manager && <>
-      <details className="rounded-2xl border border-border bg-background p-5"><summary className="cursor-pointer font-medium">Organisation et publication</summary><form action={updateOpportunityManagement} className="mt-4 grid gap-4 sm:grid-cols-2">
-        <input type="hidden" name="opportunity_id" value={o.id} />
-        <label className="sm:col-span-2">Nom<input name="title" required defaultValue={o.title} className={`${field} mt-1`} /></label>
-        <label className="sm:col-span-2">Présentation courte<textarea name="short_description" rows={2} defaultValue={o.short_description ?? ""} className={`${field} mt-1`} /></label>
-        <label>Type<select name="type" defaultValue={opportunityType(o)} className={`${field} mt-1`}><option value="projet">Projet</option><option value="formation">Formation</option><option value="both">Projet et formation</option></select></label>
-        <label>Service pilote<select name="service_id" defaultValue={o.service_id ?? ""} className={`${field} mt-1`}><option value="">— Aucun —</option>{services.map((service) => <option key={service.id} value={service.id}>{service.name}</option>)}</select></label>
-        <label>Organisateur<input name="organizer_label" defaultValue={o.organizer_label ?? ""} className={`${field} mt-1`} /></label>
-        <label>Lieu<input name="location" defaultValue={o.location ?? ""} className={`${field} mt-1`} /></label>
-        <label>Places<input type="number" min={1} name="capacity" defaultValue={o.capacity ?? ""} className={`${field} mt-1`} /></label>
-        <label>Publication<select name="publication_status" defaultValue={o.publication_status} className={`${field} mt-1`}><option value="draft">Brouillon</option><option value="published">Publié</option><option value="scheduled">Programmé</option><option value="unpublished">Dépublié</option><option value="archived">Archivé</option></select></label>
-        <label>Publication programmée<input type="datetime-local" value={publishedAt} onChange={(event) => setPublishedAt(event.target.value)} className={`${field} mt-1`} />{publishedAt && <input type="hidden" name="published_at" value={new Date(publishedAt).toISOString()} />}</label>
-        <div className="space-y-2 self-end pb-2"><label className="flex gap-2"><input type="checkbox" name="registration_open" defaultChecked={o.registration_open} /> Inscriptions ouvertes</label><label className="flex gap-2"><input type="checkbox" name="cancellation_allowed" defaultChecked={o.cancellation_allowed} /> Annulation autorisée</label></div>
-        <button className="rounded-full bg-accent px-5 py-2.5 text-sm text-on-accent sm:col-span-2 sm:w-fit">Enregistrer l’organisation</button>
-      </form></details>
-      <details className="rounded-2xl border border-border bg-background p-5"><summary className="cursor-pointer font-medium">Dates et séances</summary><form action={replaceOpportunityDates} className="mt-4 space-y-3"><input type="hidden" name="opportunity_id" value={o.id} />{dates.map((date, index) => <div key={date.id ?? index} className="grid gap-2 rounded-xl bg-surface p-3 md:grid-cols-[1.2fr_.7fr_.7fr_1fr_1fr_auto]">
-        {(["session_date", "start_time", "end_time"] as const).map((key) => <input key={key} type={key === "session_date" ? "date" : "time"} name={key} required value={date[key].slice(0, key === "session_date" ? 10 : 5)} onChange={(event) => setDates((rows) => rows.map((row, rowIndex) => rowIndex === index ? { ...row, [key]: event.target.value } : row))} className={field} />)}
-        {(["room", "location"] as const).map((key) => <input key={key} name={key === "location" ? "date_location" : key} value={date[key] ?? ""} onChange={(event) => setDates((rows) => rows.map((row, rowIndex) => rowIndex === index ? { ...row, [key]: event.target.value } : row))} placeholder={key === "room" ? "Salle" : "Lieu"} className={field} />)}
-        <button type="button" onClick={() => setDates((rows) => rows.filter((_, rowIndex) => rowIndex !== index))} aria-label="Supprimer"><Trash2 size={17} /></button>
-      </div>)}<div className="flex flex-wrap gap-2"><button type="button" onClick={() => setDates((rows) => [...rows, { session_date: "", start_time: "14:00", end_time: "17:00", room: null, location: null }])} className="inline-flex items-center gap-2 rounded-full border border-foreground px-4 py-2 text-sm"><Plus size={15} /> Ajouter une date</button><button className="rounded-full bg-accent px-5 py-2 text-sm text-on-accent">Enregistrer les séances</button></div></form></details>
-    </>}
-  </div>;
+  const addDate = (date = "") => {
+    if (date && dates.some((row) => row.session_date === date)) return;
+    setDates((rows) => [...rows, { session_date: date, start_time: "14:00", end_time: "17:00", room: null, location: null, capacity: o.capacity }]);
+  };
+
+  return (
+    <div className="space-y-5">
+      <details open className="rounded-3xl border border-border bg-background p-5 sm:p-7">
+        <summary className="cursor-pointer font-title text-[21px]">Présentation et contenu</summary>
+        <form action={updateOpportunityContent} className="mt-5 grid gap-5 sm:grid-cols-2">
+          <input type="hidden" name="opportunity_id" value={o.id} />
+          <div className="sm:col-span-2"><Label>Présentation</Label><RichTextEditor name="description" rows={7} defaultValue={o.description} /></div>
+          <div className="sm:col-span-2"><DynamicListInput name="objectives_items" label="Objectifs" initialValue={o.objectives} placeholder="Un objectif" /></div>
+          <DynamicListInput name="speakers_items" label="Intervenants" initialValue={o.speakers} placeholder="Nom de l’intervenant" />
+          <DynamicListInput name="prerequisites_items" label="Prérequis" initialValue={o.prerequisites} placeholder="Un prérequis" />
+          <div className="sm:col-span-2"><DynamicListInput name="participant_material_items" label="Matériel à apporter" initialValue={o.participant_material} placeholder="Un élément à apporter" /></div>
+          <button className="rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent sm:w-fit">Enregistrer le contenu</button>
+        </form>
+      </details>
+
+      {manager && <>
+        <details className="rounded-3xl border border-border bg-background p-5 sm:p-7">
+          <summary className="cursor-pointer font-title text-[21px]">Informations générales et publication</summary>
+          <form action={updateOpportunityManagement} encType="multipart/form-data" className="mt-5 grid gap-4 sm:grid-cols-2">
+            <input type="hidden" name="opportunity_id" value={o.id} />
+            <label className="sm:col-span-2"><Label>Nom</Label><input name="title" required defaultValue={o.title} className={field} /></label>
+            <fieldset className="sm:col-span-2"><legend className="mb-2 text-sm font-semibold">Type</legend><div className="grid gap-2 sm:grid-cols-3">{[["projet","Projet"],["formation","Formation"],["both","Projet et formation"]].map(([value,label]) => <label key={value}><input className="peer sr-only" type="radio" name="type" value={value} defaultChecked={opportunityType(o) === value} /><span className="block cursor-pointer rounded-xl border border-border px-3 py-3 text-center text-sm peer-checked:bg-accent peer-checked:text-on-accent">{label}</span></label>)}</div></fieldset>
+            <label className="sm:col-span-2"><Label>Service pilote</Label><input name="service_name" list={`services-${o.id}`} defaultValue={o.services?.name ?? o.organizer_label ?? ""} className={field} /><datalist id={`services-${o.id}`}>{services.map((service) => <option key={service.id} value={service.name} />)}</datalist></label>
+            <label><Label>Lieu principal</Label><input name="location" defaultValue={o.location ?? ""} className={field} /></label>
+            <label><Label>Places par séance</Label><input type="number" min={1} name="capacity" defaultValue={o.capacity ?? ""} className={field} /></label>
+            <label className="sm:col-span-2 flex min-h-24 cursor-pointer items-center justify-center gap-2 rounded-2xl border border-dashed border-border bg-surface text-sm font-medium"><ImagePlus size={18} /> Modifier la bannière<input type="file" name="cover_image" accept="image/jpeg,image/png,image/webp" className="sr-only" /></label>
+            <div className="sm:col-span-2 rounded-2xl bg-surface p-4"><p className="mb-3 text-sm font-semibold">Publication</p><div className="grid gap-3 sm:grid-cols-2"><select name="publication_status" value={publication} onChange={(event) => setPublication(event.target.value as Opportunity["publication_status"])} className={field}><option value="draft">Brouillon</option><option value="published">Publié</option><option value="scheduled">Programmé</option><option value="unpublished">Dépublié</option><option value="archived">Archivé</option></select>{publication === "scheduled" && <label><input type="datetime-local" value={publishedAt} onChange={(event) => setPublishedAt(event.target.value)} className={field} />{publishedAt && <input type="hidden" name="published_at" value={new Date(publishedAt).toISOString()} />}</label>}<label className="flex items-center gap-2 text-sm"><input type="checkbox" name="registration_open" defaultChecked={o.registration_open} /> Inscriptions ouvertes</label><label className="flex items-center gap-2 text-sm"><input type="checkbox" name="cancellation_allowed" defaultChecked={o.cancellation_allowed} /> Annulation autorisée</label></div></div>
+            <button className="rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent sm:col-span-2 sm:w-fit">Enregistrer</button>
+          </form>
+        </details>
+
+        <details className="rounded-3xl border border-border bg-background p-5 sm:p-7">
+          <summary className="flex cursor-pointer list-none items-center gap-2 font-title text-[21px]"><CalendarDays size={19} /> Dates et séances</summary>
+          <form action={replaceOpportunityDates} className="mt-5 space-y-3">
+            <input type="hidden" name="opportunity_id" value={o.id} />
+            <div className="mb-4 flex flex-wrap gap-2">{suggestedSaturdays.map((date) => <button key={date} type="button" onClick={() => addDate(date)} className="rounded-full border border-border px-3 py-2 text-sm">{new Intl.DateTimeFormat("fr-FR",{day:"numeric",month:"long",timeZone:"UTC"}).format(new Date(`${date}T12:00:00Z`))}</button>)}<button type="button" onClick={() => addDate()} className="inline-flex items-center gap-1.5 rounded-full border border-foreground px-3 py-2 text-sm"><Plus size={15} /> Date personnalisée</button></div>
+            {dates.map((date,index) => <div key={date.id ?? index} className="grid gap-2 rounded-2xl bg-surface p-3 md:grid-cols-[1.2fr_.7fr_.7fr_.7fr_auto]">
+              <input type="hidden" name="date_id" value={date.id ?? ""} />
+              {(["session_date","start_time","end_time"] as const).map((key) => <input key={key} type={key === "session_date" ? "date" : "time"} name={key} required value={date[key].slice(0,key === "session_date" ? 10 : 5)} onChange={(event) => setDates((rows) => rows.map((row,i) => i === index ? {...row,[key]:event.target.value} : row))} className={field} aria-label={key} />)}
+              <input type="number" min={1} name="date_capacity" value={date.capacity ?? ""} onChange={(event) => setDates((rows) => rows.map((row,i) => i === index ? {...row,capacity:event.target.value ? Number(event.target.value) : null} : row))} placeholder="Places" className={field} />
+              <input type="hidden" name="room" value={date.room ?? ""} /><input type="hidden" name="date_location" value={date.location ?? ""} />
+              <button type="button" onClick={() => setDates((rows) => rows.filter((_,i) => i !== index))} aria-label="Supprimer"><Trash2 size={17} /></button>
+            </div>)}
+            <button className="rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent">Enregistrer les séances</button>
+          </form>
+        </details>
+      </>}
+    </div>
+  );
 }
+
+function Label({ children }: { children: React.ReactNode }) { return <span className="mb-1.5 block text-sm font-medium">{children}</span>; }

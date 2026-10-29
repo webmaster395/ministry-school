@@ -32,6 +32,7 @@ export type Opportunity = {
   publication_status: PublicationStatus;
   published_at: string | null;
   archived_at: string | null;
+  cover_image_path: string | null;
   services: { name: string } | null;
   objectives?: string | null;
   prerequisites?: string | null;
@@ -95,7 +96,7 @@ export async function getOpportunities(supabase: SupabaseClient) {
   const { data } = await supabase
     .from("opportunities")
     .select(
-      "id, kind, title, description, service_id, organizer_label, schedule_label, starts_on, ends_on, capacity, registration_open, created_by, lead_id, services(name), is_project, is_training, short_description, speakers, location, organization_material, participant_material, cancellation_allowed, publication_status, published_at, archived_at" + DETAIL_COLUMNS
+      "id, kind, title, description, service_id, organizer_label, schedule_label, starts_on, ends_on, capacity, registration_open, created_by, lead_id, services(name), is_project, is_training, short_description, speakers, location, organization_material, participant_material, cancellation_allowed, publication_status, published_at, archived_at, cover_image_path" + DETAIL_COLUMNS
     )
     .order("starts_on", { ascending: true, nullsFirst: false })
     .order("created_at", { ascending: true });
@@ -114,10 +115,27 @@ export async function getOpportunityCounts(supabase: SupabaseClient) {
 
 export async function getMyRegistrationIds(supabase: SupabaseClient, userId: string) {
   const { data } = await supabase
-    .from("opportunity_registrations")
-    .select("opportunity_id")
+    .from("opportunity_date_registrations")
+    .select("opportunity_dates(opportunity_id)")
     .eq("user_id", userId);
-  return new Set((data ?? []).map((r) => r.opportunity_id as string));
+  return new Set((data ?? []).flatMap((row) => {
+    const date = row.opportunity_dates as unknown as { opportunity_id: string } | null;
+    return date ? [date.opportunity_id] : [];
+  }));
+}
+
+export async function getMyOpportunityDateRegistrationIds(supabase: SupabaseClient, userId: string) {
+  const { data } = await supabase
+    .from("opportunity_date_registrations")
+    .select("opportunity_date_id")
+    .eq("user_id", userId);
+  return new Set((data ?? []).map((row) => row.opportunity_date_id as string));
+}
+
+export async function getOpportunityDateCounts(supabase: SupabaseClient, id: string) {
+  const { data } = await supabase.rpc("opportunity_date_counts", { p_opportunity: id });
+  return new Map<string, number>(((data ?? []) as { opportunity_date_id: string; taken: number }[])
+    .map((row) => [row.opportunity_date_id, Number(row.taken)]));
 }
 
 export async function getOpportunity(supabase: SupabaseClient, id: string) {
@@ -128,7 +146,7 @@ export async function getOpportunity(supabase: SupabaseClient, id: string) {
 export async function getOpportunityDates(supabase: SupabaseClient, id: string) {
   const { data } = await supabase
     .from("opportunity_dates")
-    .select("id, session_date, start_time, end_time, room, location")
+    .select("id, session_date, start_time, end_time, room, location, capacity")
     .eq("opportunity_id", id)
     .order("session_date")
     .order("start_time");
@@ -139,6 +157,7 @@ export async function getOpportunityDates(supabase: SupabaseClient, id: string) 
     end_time: string;
     room: string | null;
     location: string | null;
+    capacity: number | null;
   }[];
 }
 

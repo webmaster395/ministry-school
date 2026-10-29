@@ -1,12 +1,14 @@
 "use client";
 
+import { CalendarDays, ImagePlus, Plus, Search, Trash2, Users } from "lucide-react";
 import { useMemo, useState } from "react";
-import { Plus, Search, Trash2 } from "lucide-react";
 import { createOpportunity } from "@/app/etudiant/services/actions";
+import DynamicListInput from "@/components/DynamicListInput";
+import RichTextEditor from "@/components/gestion/RichTextEditor";
 
 type Member = { id: string; full_name: string; email: string };
-type DateRow = { date: string; start: string; end: string; room: string; location: string };
-const field = "w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-foreground";
+type DateRow = { date: string; start: string; end: string };
+const field = "min-h-12 w-full rounded-xl border border-border bg-background px-3 text-[15px] text-foreground outline-none focus:border-accent focus:ring-2 focus:ring-accent/10";
 
 export default function OpportunityCreateForm({ members, services, suggestedSaturdays }: {
   members: Member[];
@@ -17,83 +19,85 @@ export default function OpportunityCreateForm({ members, services, suggestedSatu
   const [query, setQuery] = useState("");
   const [managers, setManagers] = useState(new Set<string>());
   const [contributors, setContributors] = useState(new Set<string>());
+  const [publication, setPublication] = useState("draft");
   const [publishedAt, setPublishedAt] = useState("");
   const shown = useMemo(() => {
-    const value = query.trim().toLowerCase();
-    return value ? members.filter((member) => `${member.full_name} ${member.email}`.toLowerCase().includes(value)) : members;
+    const value = query.trim().toLocaleLowerCase("fr-FR");
+    return value ? members.filter((member) => `${member.full_name} ${member.email}`.toLocaleLowerCase("fr-FR").includes(value)) : members;
   }, [members, query]);
   const addDate = (date = "") => {
     if (date && dates.some((row) => row.date === date)) return;
-    setDates((rows) => [...rows, { date, start: "14:00", end: "17:00", room: "", location: "" }]);
+    setDates((rows) => [...rows, { date, start: "14:00", end: "17:00" }]);
   };
   const updateDate = (index: number, key: keyof DateRow, value: string) =>
     setDates((rows) => rows.map((row, rowIndex) => rowIndex === index ? { ...row, [key]: value } : row));
   const selectPerson = (id: string, responsibility: "manager" | "contributor", checked: boolean) => {
-    const own = responsibility === "manager" ? managers : contributors;
-    const other = responsibility === "manager" ? contributors : managers;
-    const setOwn = responsibility === "manager" ? setManagers : setContributors;
-    const setOther = responsibility === "manager" ? setContributors : setManagers;
-    const next = new Set(own);
-    if (checked) next.add(id); else next.delete(id);
-    setOwn(next);
-    if (checked) { const opposite = new Set(other); opposite.delete(id); setOther(opposite); }
+    const own = new Set(responsibility === "manager" ? managers : contributors);
+    const other = new Set(responsibility === "manager" ? contributors : managers);
+    if (checked) own.add(id); else own.delete(id);
+    if (checked) other.delete(id);
+    if (responsibility === "manager") { setManagers(own); setContributors(other); }
+    else { setContributors(own); setManagers(other); }
   };
 
-  return <form action={createOpportunity} className="space-y-8">
-    <Fieldset title="Informations générales">
-      <label className="sm:col-span-2"><Label>Nom *</Label><input name="title" required className={field} /></label>
-      <label><Label>Type *</Label><select name="type" defaultValue="projet" className={field}><option value="projet">Projet</option><option value="formation">Formation</option><option value="both">Projet et formation</option></select></label>
-      <label><Label>Service pilote</Label><select name="service_id" defaultValue="" className={field}><option value="">— Aucun —</option>{services.map((service) => <option key={service.id} value={service.id}>{service.name}</option>)}</select></label>
-      <label className="sm:col-span-2"><Label>Présentation courte</Label><textarea name="short_description" rows={2} maxLength={240} className={field} /></label>
-      <label className="sm:col-span-2"><Label>Présentation détaillée *</Label><textarea name="description" rows={5} required className={field} /></label>
-      <label className="sm:col-span-2"><Label>Objectifs</Label><textarea name="objectives" rows={3} className={field} /></label>
-      <label><Label>Intervenants</Label><textarea name="speakers" rows={3} className={field} /></label>
-      <label><Label>Prérequis</Label><textarea name="prerequisites" rows={3} className={field} /></label>
-      <label className="sm:col-span-2"><Label>Libellé de l’organisateur</Label><input name="organizer_label" className={field} /></label>
-    </Fieldset>
+  return (
+    <form action={createOpportunity} encType="multipart/form-data" className="space-y-6">
+      <section className="overflow-hidden rounded-3xl border border-border bg-background">
+        <div className="flex min-h-44 flex-col items-center justify-center bg-[linear-gradient(135deg,var(--surface),color-mix(in_srgb,var(--accent)_18%,var(--background)))] px-6 text-center">
+          <ImagePlus size={28} className="text-muted" />
+          <label className="mt-3 cursor-pointer rounded-full bg-background px-4 py-2 text-sm font-semibold shadow-sm ring-1 ring-border">
+            Choisir une image de bannière
+            <input type="file" name="cover_image" accept="image/jpeg,image/png,image/webp" className="sr-only" />
+          </label>
+          <p className="mt-2 text-xs text-muted">JPG, PNG ou WebP · 8 Mo maximum</p>
+        </div>
+        <div className="grid gap-5 p-5 sm:p-7 lg:grid-cols-2">
+          <label className="lg:col-span-2"><Label>Nom</Label><input name="title" required className={field} placeholder="Nom du projet ou de la formation" /></label>
+          <fieldset className="lg:col-span-2"><legend className="mb-2 text-sm font-semibold">Type</legend><div className="grid gap-2 sm:grid-cols-3">{[["projet","Projet"],["formation","Formation"],["both","Projet et formation"]].map(([value,label]) => <label key={value} className="cursor-pointer"><input type="radio" name="type" value={value} defaultChecked={value === "projet"} className="peer sr-only" /><span className="block rounded-xl border border-border px-4 py-3 text-center text-sm font-medium peer-checked:border-accent peer-checked:bg-accent peer-checked:text-on-accent">{label}</span></label>)}</div></fieldset>
+          <label className="lg:col-span-2"><Label>Service pilote</Label><input name="service_name" list="service-suggestions" className={field} placeholder="Choisir ou saisir un nouveau service" autoComplete="off" /><datalist id="service-suggestions">{services.map((service) => <option key={service.id} value={service.name} />)}</datalist></label>
+          <div className="lg:col-span-2"><Label>Présentation</Label><RichTextEditor name="description" rows={7} placeholder="Présentez l’activité, son intérêt et son déroulement…" /></div>
+          <div className="lg:col-span-2"><DynamicListInput name="objectives_items" label="Objectifs" placeholder="Un objectif" /></div>
+          <DynamicListInput name="speakers_items" label="Intervenants" placeholder="Nom de l’intervenant" />
+          <DynamicListInput name="prerequisites_items" label="Prérequis" placeholder="Un prérequis" />
+        </div>
+      </section>
 
-    <Fieldset title="Organisation">
-      <label><Label>Lieu principal</Label><input name="location" className={field} /></label>
-      <label><Label>Nombre de places</Label><input type="number" min={1} name="capacity" placeholder="Vide = illimité" className={field} /></label>
-      <label><Label>Matériel nécessaire à l’organisation</Label><textarea name="organization_material" rows={3} className={field} /></label>
-      <label><Label>Matériel à apporter par les participants</Label><textarea name="participant_material" rows={3} className={field} /></label>
-      <label className="sm:col-span-2"><Label>Résumé du calendrier</Label><input name="schedule_label" placeholder="Ex. Trois samedis de 14 h à 17 h" className={field} /></label>
-    </Fieldset>
+      <section className="rounded-3xl border border-border bg-background p-5 sm:p-7">
+        <h2 className="font-title text-[23px]">Organisation</h2>
+        <div className="mt-4 grid gap-5 sm:grid-cols-2">
+          <label><Label>Lieu principal</Label><input name="location" className={field} placeholder="Espace Martin Luther King" /></label>
+          <label><Label>Nombre de places par séance</Label><input type="number" min={1} name="capacity" className={field} placeholder="Illimité si vide" /></label>
+          <div className="sm:col-span-2"><DynamicListInput name="participant_material_items" label="Matériel à apporter" placeholder="Un élément à apporter" /></div>
+        </div>
+      </section>
 
-    <fieldset>
-      <legend className="font-title text-[22px]">Dates et séances</legend>
-      <p className="mt-1 text-sm text-muted">Sélectionnez les premiers samedis de novembre à juin ou ajoutez une date personnalisée.</p>
-      <div className="mt-3 flex flex-wrap gap-2">{suggestedSaturdays.map((date) => <button key={date} type="button" onClick={() => addDate(date)} className="rounded-lg border border-border px-3 py-2 text-sm hover:border-foreground">{new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${date}T12:00:00Z`))}</button>)}<button type="button" onClick={() => addDate()} className="inline-flex items-center gap-1.5 rounded-lg border border-foreground px-3 py-2 text-sm"><Plus size={15} /> Date personnalisée</button></div>
-      <div className="mt-4 space-y-3">{dates.map((row, index) => <div key={`${row.date}-${index}`} className="grid gap-2 rounded-xl bg-surface p-3 md:grid-cols-[1.2fr_.7fr_.7fr_1fr_1fr_auto]">
-        <input type="date" name="session_date" required value={row.date} onChange={(event) => updateDate(index, "date", event.target.value)} className={field} aria-label="Date" />
-        <input type="time" name="start_time" required value={row.start} onChange={(event) => updateDate(index, "start", event.target.value)} className={field} aria-label="Début" />
-        <input type="time" name="end_time" required value={row.end} onChange={(event) => updateDate(index, "end", event.target.value)} className={field} aria-label="Fin" />
-        <input name="room" value={row.room} onChange={(event) => updateDate(index, "room", event.target.value)} placeholder="Salle" className={field} />
-        <input name="date_location" value={row.location} onChange={(event) => updateDate(index, "location", event.target.value)} placeholder="Lieu spécifique" className={field} />
-        <button type="button" onClick={() => setDates((rows) => rows.filter((_, rowIndex) => rowIndex !== index))} className="p-2 text-muted" aria-label="Supprimer la date"><Trash2 size={17} /></button>
-      </div>)}</div>
-    </fieldset>
+      <section className="rounded-3xl border border-border bg-background p-5 sm:p-7">
+        <div className="flex items-start gap-3"><CalendarDays className="mt-1 text-muted" size={21} /><div><h2 className="font-title text-[23px]">Dates des séances</h2><p className="mt-1 text-sm text-muted">Premiers samedis de novembre à juin, ou dates personnalisées.</p></div></div>
+        <div className="mt-4 flex flex-wrap gap-2">{suggestedSaturdays.map((date) => <button key={date} type="button" onClick={() => addDate(date)} className="rounded-full border border-border px-3 py-2 text-sm hover:border-foreground">{new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", timeZone: "UTC" }).format(new Date(`${date}T12:00:00Z`))}</button>)}<button type="button" onClick={() => addDate()} className="inline-flex items-center gap-1.5 rounded-full border border-foreground px-3 py-2 text-sm"><Plus size={15} /> Date personnalisée</button></div>
+        <div className="mt-4 space-y-3">{dates.map((row, index) => <div key={`${row.date}-${index}`} className="grid gap-2 rounded-2xl bg-surface p-3 sm:grid-cols-[1.3fr_.8fr_.8fr_auto]">
+          <input type="date" name="session_date" required value={row.date} onChange={(event) => updateDate(index,"date",event.target.value)} className={field} aria-label="Date" />
+          <input type="time" name="start_time" required value={row.start} onChange={(event) => updateDate(index,"start",event.target.value)} className={field} aria-label="Début" />
+          <input type="time" name="end_time" required value={row.end} onChange={(event) => updateDate(index,"end",event.target.value)} className={field} aria-label="Fin" />
+          <button type="button" onClick={() => setDates((rows) => rows.filter((_,i) => i !== index))} aria-label="Supprimer la séance" className="p-3 text-muted hover:text-red-700"><Trash2 size={17} /></button>
+        </div>)}</div>
+      </section>
 
-    <fieldset>
-      <legend className="font-title text-[22px]">Responsables et contributeurs</legend>
-      <label className="relative mt-3 block max-w-lg"><Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" /><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Rechercher un membre" className={`${field} pl-9`} /></label>
-      <div className="mt-3 max-h-72 overflow-auto rounded-xl border border-border">{shown.map((member) => <div key={member.id} className="grid gap-2 border-b border-border-soft px-4 py-3 last:border-0 sm:grid-cols-[1fr_auto_auto]"><span className="min-w-0 text-sm"><strong>{member.full_name}</strong><small className="ml-2 text-muted">{member.email}</small></span><label className="flex gap-2 text-sm"><input type="checkbox" checked={managers.has(member.id)} onChange={(event) => selectPerson(member.id, "manager", event.target.checked)} /> Responsable</label><label className="flex gap-2 text-sm"><input type="checkbox" checked={contributors.has(member.id)} onChange={(event) => selectPerson(member.id, "contributor", event.target.checked)} /> Contributeur</label></div>)}</div>
-      {[...managers].map((id) => <input key={`manager-${id}`} type="hidden" name="manager_ids" value={id} />)}
-      {[...contributors].map((id) => <input key={`contributor-${id}`} type="hidden" name="contributor_ids" value={id} />)}
-    </fieldset>
+      <details className="rounded-3xl border border-border bg-background p-5 sm:p-7">
+        <summary className="flex cursor-pointer list-none items-center gap-2 font-title text-[21px]"><Users size={19} /> Responsables et contributeurs</summary>
+        <div className="mt-4"><label className="relative block max-w-lg"><Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" /><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Rechercher un membre" className={`${field} pl-9`} /></label>
+        <div className="mt-3 max-h-72 overflow-auto rounded-2xl border border-border">{shown.map((member) => <div key={member.id} className="grid gap-2 border-b border-border-soft px-4 py-3 last:border-0 sm:grid-cols-[1fr_auto_auto]"><span className="min-w-0 text-sm"><strong>{member.full_name}</strong><small className="ml-2 text-muted">{member.email}</small></span><label className="flex gap-2 text-sm"><input type="checkbox" checked={managers.has(member.id)} onChange={(event) => selectPerson(member.id,"manager",event.target.checked)} /> Responsable</label><label className="flex gap-2 text-sm"><input type="checkbox" checked={contributors.has(member.id)} onChange={(event) => selectPerson(member.id,"contributor",event.target.checked)} /> Contributeur</label></div>)}</div></div>
+        {[...managers].map((id) => <input key={`m-${id}`} type="hidden" name="manager_ids" value={id} />)}{[...contributors].map((id) => <input key={`c-${id}`} type="hidden" name="contributor_ids" value={id} />)}
+      </details>
 
-    <Fieldset title="Publication">
-      <label><Label>État</Label><select name="publication_status" defaultValue="draft" className={field}><option value="draft">Brouillon</option><option value="published">Publier immédiatement</option><option value="scheduled">Programmer la publication</option><option value="unpublished">Dépublier</option></select></label>
-      <label><Label>Date et heure programmées</Label><input type="datetime-local" value={publishedAt} onChange={(event) => setPublishedAt(event.target.value)} className={field} />{publishedAt && <input type="hidden" name="published_at" value={new Date(publishedAt).toISOString()} />}</label>
-      <label className="flex items-center gap-2 text-sm"><input type="checkbox" name="registration_open" defaultChecked /> Inscriptions ouvertes à la publication</label>
-      <label className="flex items-center gap-2 text-sm"><input type="checkbox" name="cancellation_allowed" defaultChecked /> Annulation autorisée</label>
-    </Fieldset>
-    <button className="rounded-full bg-accent px-6 py-3 text-sm font-medium text-on-accent">Créer l’élément</button>
-    <p className="text-xs text-muted">La création et les affectations n’envoient aucune notification.</p>
-  </form>;
+      <details className="rounded-2xl border border-border bg-background p-5">
+        <summary className="cursor-pointer text-sm font-semibold">Publication et inscriptions</summary>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2"><label><Label>État</Label><select name="publication_status" value={publication} onChange={(event) => setPublication(event.target.value)} className={field}><option value="draft">Brouillon</option><option value="published">Publier immédiatement</option><option value="scheduled">Programmer</option><option value="unpublished">Dépublié</option></select></label>{publication === "scheduled" && <label><Label>Date et heure de publication</Label><input type="datetime-local" value={publishedAt} onChange={(event) => setPublishedAt(event.target.value)} className={field} />{publishedAt && <input type="hidden" name="published_at" value={new Date(publishedAt).toISOString()} />}</label>}<label className="flex items-center gap-2 text-sm"><input type="checkbox" name="registration_open" defaultChecked /> Inscriptions ouvertes</label><label className="flex items-center gap-2 text-sm"><input type="checkbox" name="cancellation_allowed" defaultChecked /> Annulation autorisée</label></div>
+      </details>
+      <button className="w-full rounded-full bg-accent px-6 py-3.5 text-sm font-semibold text-on-accent sm:w-auto">Créer l’élément</button>
+      <p className="text-xs text-muted">La création et les affectations n’envoient aucune notification.</p>
+    </form>
+  );
 }
-
-function Fieldset({ title, children }: { title: string; children: React.ReactNode }) {
-  return <fieldset className="grid gap-4 sm:grid-cols-2"><legend className="font-title mb-4 text-[22px]">{title}</legend>{children}</fieldset>;
+function Label({ children }: { children: React.ReactNode }) {
+  return <span className="mb-1.5 block text-sm font-medium text-foreground">{children}</span>;
 }
-function Label({ children }: { children: React.ReactNode }) { return <span className="mb-1 block text-xs text-muted">{children}</span>; }

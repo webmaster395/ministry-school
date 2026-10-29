@@ -8,6 +8,12 @@ import { formatSessionDate } from "@/lib/format";
 import OpportunityEditForms from "@/components/OpportunityEditForms";
 import AssignmentEditor from "@/components/admin/AssignmentEditor";
 
+function firstSaturday(year: number, month: number) {
+  const date = new Date(Date.UTC(year, month, 1));
+  date.setUTCDate(1 + ((6 - date.getUTCDay() + 7) % 7));
+  return date.toISOString().slice(0, 10);
+}
+
 export default async function ProjectsTrainingManageDetail({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ creation?: string }> }) {
   const [{ id }, query] = await Promise.all([params, searchParams]);
   const supabase = await createClient();
@@ -24,32 +30,39 @@ export default async function ProjectsTrainingManageDetail({ params, searchParam
   const responsibility = rights.admin ? "admin" : rights.assignments.get(id);
   if (!responsibility) redirect("/gestion/projets-formations");
   const canManage = responsibility === "admin" || responsibility === "manager";
-  const [{ data: team }, { data: participants }] = await Promise.all([
+  const [{ data: team }, { data: participants }, { data: sessionParticipants }] = await Promise.all([
     supabase.rpc("opportunity_team", { p_opportunity: id }),
     supabase.rpc("opportunity_participants", { p_opp: id }),
+    supabase.rpc("opportunity_session_participants", { p_opp: id }),
   ]);
   const teamRows = (team ?? []) as { user_id: string; full_name: string; responsibility: "manager" | "contributor" }[];
   const participantRows = (participants ?? []) as { full_name: string }[];
+  const sessionParticipantRows = (sessionParticipants ?? []) as { opportunity_date_id: string; user_id: string; full_name: string }[];
   const members = rights.admin ? await getMembers(supabase) : [];
   const taken = counts.get(id) ?? participantRows.length;
+  const now = new Date();
+  const schoolYear = now.getUTCMonth() >= 6 ? now.getUTCFullYear() : now.getUTCFullYear() - 1;
+  const suggestedSaturdays = [10, 11, 0, 1, 2, 3, 4, 5].map((month) => firstSaturday(month >= 10 ? schoolYear : schoolYear + 1, month));
+  const coverUrl = opportunity.cover_image_path ? supabase.storage.from("opportunity-covers").getPublicUrl(opportunity.cover_image_path).data.publicUrl : null;
 
   return <div className="space-y-5">
     <div className="flex flex-wrap items-center justify-between gap-3"><Link href="/gestion/projets-formations" className="inline-flex items-center gap-1.5 text-sm text-muted"><ChevronLeft size={16} /> Projets et formations</Link><Link href={`/etudiant/services/${id}`} className="text-sm text-muted hover:text-foreground">Voir la fiche étudiante</Link></div>
     {query.creation === "ok" && <p role="status" className="flex items-center gap-2 rounded-xl border border-border bg-background px-4 py-3 text-sm"><CheckCircle2 size={18} /> Élément créé. Aucune notification n’a été envoyée.</p>}
     <div className="grid items-start gap-5 lg:grid-cols-[1fr_340px]">
-      <article className="rounded-2xl border border-border bg-background p-6 sm:p-7"><div className="flex flex-wrap items-center justify-between gap-3"><span className="rounded-full bg-surface px-3 py-1 text-xs font-medium">{TYPE_LABEL[opportunityType(opportunity)]}</span><span className="text-xs text-muted">{opportunity.publication_status === "scheduled" ? "Publication programmée" : opportunity.publication_status === "published" ? "Publié" : opportunity.publication_status === "archived" ? "Archivé" : "Non publié"}</span></div><h1 className="font-title mt-5 text-[30px]">{opportunity.title}</h1><p className="mt-4 whitespace-pre-line leading-relaxed text-muted">{opportunity.description}</p><Info title="Objectifs" value={opportunity.objectives} /><Info title="Intervenants" value={opportunity.speakers} /><Info title="Prérequis" value={opportunity.prerequisites} /><Info title="Matériel d’organisation" value={opportunity.organization_material} /><Info title="Matériel des participants" value={opportunity.participant_material} />
+      <article className="overflow-hidden rounded-3xl border border-border bg-background"><div className="relative min-h-48 bg-accent bg-cover bg-center p-6 text-on-accent sm:p-8" style={coverUrl ? { backgroundImage: `linear-gradient(90deg,rgba(20,28,27,.9),rgba(20,28,27,.25)),url(${coverUrl})` } : undefined}><div className="flex flex-wrap items-center justify-between gap-3"><span className="rounded-full bg-white/15 px-3 py-1 text-xs font-medium">{TYPE_LABEL[opportunityType(opportunity)]}</span><span className="text-xs text-white/75">{opportunity.publication_status === "scheduled" ? "Publication programmée" : opportunity.publication_status === "published" ? "Publié" : opportunity.publication_status === "archived" ? "Archivé" : "Non publié"}</span></div><h1 className="font-title mt-8 text-[34px]">{opportunity.title}</h1></div><div className="p-6 sm:p-8"><p className="whitespace-pre-line leading-relaxed text-muted">{opportunity.description}</p><Info title="Objectifs" value={opportunity.objectives} bullets /><Info title="Intervenants" value={opportunity.speakers} inline /><Info title="Prérequis" value={opportunity.prerequisites} bullets /><Info title="Matériel des participants" value={opportunity.participant_material} bullets />
         {dates.length > 0 && <section className="mt-6 border-t border-border-soft pt-5"><h2 className="font-title text-[20px]">Dates et horaires</h2><ul className="mt-2 divide-y divide-border-soft">{dates.map((date) => <li key={date.id} className="flex items-start gap-2.5 py-3 text-sm"><CalendarDays size={17} className="mt-0.5" /><span>{formatSessionDate(date.session_date)} · {date.start_time.slice(0, 5)}–{date.end_time.slice(0, 5)}{date.location || date.room ? ` · ${[date.location, date.room].filter(Boolean).join(" · ")}` : ""}</span></li>)}</ul></section>}
-      </article>
-      <aside className="space-y-5"><section className="rounded-2xl border border-border bg-background p-5"><h2 className="font-title text-[20px]">Organisation</h2><ul className="mt-3 space-y-3 text-sm text-muted">{(opportunity.services?.name || opportunity.organizer_label) && <li><strong className="text-foreground">Service pilote :</strong> {opportunity.services?.name || opportunity.organizer_label}</li>}{opportunity.location && <li className="flex gap-2"><MapPin size={17} /> {opportunity.location}</li>}<li className="flex gap-2"><Users size={17} /> {taken} inscrit{taken > 1 ? "s" : ""}{opportunity.capacity === null ? " · capacité illimitée" : ` · ${Math.max(0, opportunity.capacity - taken)} place(s) restante(s)`}</li></ul></section>
-        <section id="inscrits" className="rounded-2xl border border-border bg-background p-5"><h2 className="font-title text-[20px]">Équipe</h2><ul className="mt-3 space-y-2 text-sm">{teamRows.map((person) => <li key={person.user_id} className="flex justify-between gap-3"><span>{person.full_name}</span><span className="text-muted">{person.responsibility === "manager" ? "Responsable" : "Contributeur"}</span></li>)}</ul>{canManage && participantRows.length > 0 && <details className="mt-5 border-t border-border-soft pt-4"><summary className="cursor-pointer text-sm font-medium">Voir les inscrits ({participantRows.length})</summary><ul className="mt-2 space-y-1 text-sm text-muted">{participantRows.map((person, index) => <li key={`${person.full_name}-${index}`}>{person.full_name}</li>)}</ul></details>}</section>
+      </div></article>
+      <aside className="space-y-5"><section className="rounded-2xl border border-border bg-background p-5"><h2 className="font-title text-[20px]">Organisation</h2><ul className="mt-3 space-y-3 text-sm text-muted">{(opportunity.services?.name || opportunity.organizer_label) && <li><strong className="text-foreground">Service pilote :</strong> {opportunity.services?.name || opportunity.organizer_label}</li>}{opportunity.location && <li className="flex gap-2"><MapPin size={17} /> {opportunity.location}</li>}<li className="flex gap-2"><Users size={17} /> {taken} participant{taken > 1 ? "s" : ""} distinct{taken > 1 ? "s" : ""} · capacité {opportunity.capacity === null ? "illimitée" : `${opportunity.capacity} par séance`}</li></ul></section>
+        <section id="inscrits" className="rounded-2xl border border-border bg-background p-5"><h2 className="font-title text-[20px]">Équipe</h2><ul className="mt-3 space-y-2 text-sm">{teamRows.map((person) => <li key={person.user_id} className="flex justify-between gap-3"><span>{person.full_name}</span><span className="text-muted">{person.responsibility === "manager" ? "Responsable" : "Contributeur"}</span></li>)}</ul>{canManage && dates.length > 0 && <details className="mt-5 border-t border-border-soft pt-4"><summary className="cursor-pointer text-sm font-medium">Inscriptions par séance ({participantRows.length} personne{participantRows.length > 1 ? "s" : ""})</summary><div className="mt-3 space-y-3">{dates.map((date) => { const people = sessionParticipantRows.filter((person) => person.opportunity_date_id === date.id); return <div key={date.id} className="rounded-xl bg-surface p-3"><p className="text-xs font-semibold">{formatSessionDate(date.session_date)} · {people.length} inscrit{people.length > 1 ? "s" : ""}</p><p className="mt-1 text-xs leading-5 text-muted">{people.length ? people.map((person) => person.full_name).join(" • ") : "Aucune inscription"}</p></div>; })}</div></details>}</section>
       </aside>
     </div>
-    <OpportunityEditForms opportunity={opportunity} initialDates={dates} responsibility={responsibility} services={services} />
+    <OpportunityEditForms opportunity={opportunity} initialDates={dates} responsibility={responsibility} services={services} suggestedSaturdays={suggestedSaturdays} />
     {rights.admin && <AssignmentEditor opportunityId={id} members={members.filter((member) => !member.deactivated).map(({ id: memberId, full_name, email }) => ({ id: memberId, full_name, email }))} managers={teamRows.filter((person) => person.responsibility === "manager").map((person) => person.user_id)} contributors={teamRows.filter((person) => person.responsibility === "contributor").map((person) => person.user_id)} />}
   </div>;
 }
 
-function Info({ title, value }: { title: string; value?: string | null }) {
+function Info({ title, value, bullets = false, inline = false }: { title: string; value?: string | null; bullets?: boolean; inline?: boolean }) {
   if (!value) return null;
-  return <section className="mt-6 border-t border-border-soft pt-5"><h2 className="font-title text-[20px]">{title}</h2><p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-muted">{value}</p></section>;
+  const lines = value.split("\n").map((line) => line.trim()).filter(Boolean);
+  return <section className="mt-6 border-t border-border-soft pt-5"><h2 className="font-title text-[20px]">{title}</h2>{bullets ? <ul className="mt-2 space-y-1.5 text-sm text-muted">{lines.map((line) => <li key={line} className="flex gap-2"><span>•</span>{line}</li>)}</ul> : <p className="mt-2 text-sm leading-relaxed text-muted">{inline ? lines.join(" • ") : value}</p>}</section>;
 }
