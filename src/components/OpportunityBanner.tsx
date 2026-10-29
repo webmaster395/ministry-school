@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { opportunityEmoji } from "@/lib/opportunity-banner";
+import { opportunityEmojis } from "@/lib/opportunity-banner";
 
 type Variant = "hero" | "admin" | "preview" | "card";
 
@@ -35,6 +35,7 @@ export default function OpportunityBanner({
   variant?: Variant;
 }) {
   const compact = variant === "card";
+  const emojis = opportunityEmojis(emoji);
   return (
     <div className={`relative isolate flex overflow-hidden bg-[#202927] text-white ${layout[variant]}`}>
       <span className="absolute inset-y-0 left-0 w-1.5 bg-[linear-gradient(180deg,#FFD45A,#F28A24)]" />
@@ -51,12 +52,8 @@ export default function OpportunityBanner({
             <h1 className={`font-title mt-4 font-semibold tracking-[-.03em] text-white ${titleStyle[variant]}`}>{title}</h1>
           </div>
           <div className="flex items-center gap-3">
-            <span
-              aria-hidden="true"
-              className={`${compact ? "h-11 w-11 text-[25px]" : "h-14 w-14 text-[32px] sm:h-16 sm:w-16 sm:text-[38px]"} grid shrink-0 place-items-center rounded-full border-[3px] border-[#202927] bg-white/12 leading-none ring-1 ring-white/15`}
-              style={{ fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif' }}
-            >
-              {opportunityEmoji(emoji)}
+            <span className="flex shrink-0 -space-x-3" aria-hidden="true">
+              {emojis.map((item, index) => <span key={`${item}-${index}`} className={`${compact ? "h-11 w-11 text-[25px]" : "h-14 w-14 text-[32px] sm:h-16 sm:w-16 sm:text-[38px]"} grid place-items-center rounded-full border-[3px] border-[#202927] bg-white/12 leading-none ring-1 ring-white/15`} style={{ fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif' }}>{item}</span>)}
             </span>
             {meta && !compact && <p className="text-sm font-medium text-white/75 sm:text-base">{meta}</p>}
           </div>
