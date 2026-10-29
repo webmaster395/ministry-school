@@ -60,3 +60,11 @@ test("une révision publiée est clonée avant modification", async () => {
   assert.match(migration, /editorial_status = 'superseded'/);
   assert.match(page, /Créer une nouvelle version/);
 });
+
+test("le digest de 9 h attend aussi la publication réelle du cours", async () => {
+  const migration = await source("supabase/migrations/20261029200000_digest_respects_course_publication.sql");
+  assert.match(migration, /Europe\/Paris/);
+  assert.match(migration, /s\.editorial_status = 'published'/);
+  assert.match(migration, /s\.editorial_status = 'scheduled' and s\.publication_at <= p_run_at/);
+  assert.match(migration, /course_content_notification_log/);
+});
