@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { Check, ChevronRight, Clock } from "lucide-react";
-import RejectOpportunityDialog from "@/components/RejectOpportunityDialog";
+import { ChevronRight, Clock } from "lucide-react";
 import {
   datesLabel,
   phaseOf,
@@ -9,7 +8,6 @@ import {
   type OppPhase,
   type OppRow,
 } from "@/lib/data/admin-hub";
-import { validateOpportunity } from "@/app/etudiant/services/actions";
 import ReportsTab from "@/components/admin/ReportsTab";
 
 export default async function ProjectsTab({
@@ -128,18 +126,7 @@ export default async function ProjectsTab({
 
                 <div className="flex w-full flex-wrap items-center justify-between gap-2 sm:w-auto sm:justify-start">
                   {!o.registration_open ? (
-                    <>
-                      <RejectOpportunityDialog id={o.id} title={o.title} kind={o.kind} />
-                      <form action={validateOpportunity}>
-                        <input type="hidden" name="opportunity_id" value={o.id} />
-                        <button
-                          type="submit"
-                          className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3.5 py-2 text-xs font-semibold text-on-accent transition hover:bg-[#1b2221]"
-                        >
-                          <Check size={14} /> Valider et publier
-                        </button>
-                      </form>
-                    </>
+                    <Link href={`/gestion/projets-formations/${o.id}`} className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3.5 py-2 text-xs font-semibold text-on-accent transition hover:bg-[#1b2221]">Examiner le rendu</Link>
                   ) : (
                     <div className="text-right">
                       <span className="block text-[14px] font-semibold text-foreground">Publié</span>

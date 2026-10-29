@@ -8,6 +8,10 @@ import { formatSessionDate } from "@/lib/format";
 import OpportunityEditForms from "@/components/OpportunityEditForms";
 import AssignmentEditor from "@/components/admin/AssignmentEditor";
 import OpportunityBanner from "@/components/OpportunityBanner";
+import OpportunityReviewPanel from "@/components/OpportunityReviewPanel";
+import { getOpportunityReviewState } from "@/lib/data/opportunity-review";
+import { getOpportunityResources } from "@/lib/data/opportunity-resources";
+import OpportunityResourcesEditor from "@/components/OpportunityResourcesEditor";
 
 function firstSaturday(year: number, month: number) {
   const date = new Date(Date.UTC(year, month, 1));
@@ -31,10 +35,12 @@ export default async function ProjectsTrainingManageDetail({ params, searchParam
   const responsibility = rights.admin ? "admin" : rights.assignments.get(id);
   if (!responsibility) redirect("/gestion/projets-formations");
   const canManage = responsibility === "admin" || responsibility === "manager";
-  const [{ data: team }, { data: participants }, { data: sessionParticipants }] = await Promise.all([
+  const [{ data: team }, { data: participants }, { data: sessionParticipants }, reviewState, resources] = await Promise.all([
     supabase.rpc("opportunity_team", { p_opportunity: id }),
     supabase.rpc("opportunity_participants", { p_opp: id }),
     supabase.rpc("opportunity_session_participants", { p_opp: id }),
+    getOpportunityReviewState(supabase, id),
+    getOpportunityResources(supabase, id),
   ]);
   const teamRows = (team ?? []) as { user_id: string; full_name: string; responsibility: "manager" | "contributor" }[];
   const participantRows = (participants ?? []) as { full_name: string }[];
@@ -48,7 +54,8 @@ export default async function ProjectsTrainingManageDetail({ params, searchParam
 
   return <div className="space-y-5">
     <div className="flex flex-wrap items-center justify-between gap-3"><Link href="/gestion/projets-formations" className="inline-flex items-center gap-1.5 text-sm text-muted"><ChevronLeft size={16} /> Projets et formations</Link><Link href={`/etudiant/services/${id}`} className="text-sm text-muted hover:text-foreground">Voir la fiche étudiante</Link></div>
-    {query.creation === "ok" && <p role="status" className="flex items-center gap-2 rounded-xl border border-border bg-background px-4 py-3 text-sm"><CheckCircle2 size={18} /> Élément créé. Aucune notification n’a été envoyée.</p>}
+    {query.creation === "ok" && <p role="status" className="flex items-center gap-2 rounded-xl border border-border bg-background px-4 py-3 text-sm"><CheckCircle2 size={18} /> Élément créé. Les personnes affectées et, si demandé, le circuit de validation ont été notifiés.</p>}
+    <OpportunityReviewPanel opportunityId={id} state={reviewState} canManage={canManage} />
     <div className="grid items-start gap-5 lg:grid-cols-[1fr_340px]">
       <article className="overflow-hidden rounded-3xl border border-border bg-background"><OpportunityBanner emoji={opportunity.banner_emoji} title={opportunity.title} typeLabel={TYPE_LABEL[opportunityType(opportunity)]} status={publicationLabel} variant="admin" details={dates[0] ? <div className="grid gap-2.5"><span className="flex items-center gap-2"><CalendarDays size={17} /> {formatSessionDate(dates[0].session_date)}</span><span className="flex items-center gap-2"><Clock size={17} /> {dates[0].start_time.slice(0,5)}–{dates[0].end_time.slice(0,5)}</span>{(dates[0].location || opportunity.location) && <span className="flex items-start gap-2"><MapPin className="mt-0.5 shrink-0" size={17} /><strong className="font-medium text-white">{dates[0].location || opportunity.location}</strong></span>}</div> : undefined} /><div className="p-6 sm:p-8"><p className="whitespace-pre-line leading-relaxed text-muted">{opportunity.description}</p><Info title="Objectifs" value={opportunity.objectives} bullets /><Info title="Intervenants" value={opportunity.speakers} inline /><Info title="Prérequis" value={opportunity.prerequisites} bullets /><Info title="Matériel des participants" value={opportunity.participant_material} bullets />
         {dates.length > 0 && <section className="mt-6 border-t border-border-soft pt-5"><h2 className="font-title text-[20px]">Dates et horaires</h2><ul className="mt-2 divide-y divide-border-soft">{dates.map((date) => <li key={date.id} className="flex items-start gap-2.5 py-3 text-sm"><CalendarDays size={17} className="mt-0.5" /><span>{formatSessionDate(date.session_date)} · {date.start_time.slice(0, 5)}–{date.end_time.slice(0, 5)}{date.location || date.room ? ` · ${[date.location, date.room].filter(Boolean).join(" · ")}` : ""}</span></li>)}</ul></section>}
@@ -58,6 +65,7 @@ export default async function ProjectsTrainingManageDetail({ params, searchParam
       </aside>
     </div>
     <OpportunityEditForms opportunity={opportunity} initialDates={dates} responsibility={responsibility} services={services} suggestedSaturdays={suggestedSaturdays} />
+    <OpportunityResourcesEditor opportunityId={id} resources={resources} />
     {rights.admin && <AssignmentEditor opportunityId={id} members={members.filter((member) => !member.deactivated).map(({ id: memberId, full_name, email }) => ({ id: memberId, full_name, email }))} managers={teamRows.filter((person) => person.responsibility === "manager").map((person) => person.user_id)} contributors={teamRows.filter((person) => person.responsibility === "contributor").map((person) => person.user_id)} />}
   </div>;
 }

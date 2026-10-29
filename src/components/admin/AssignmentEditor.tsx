@@ -35,7 +35,7 @@ export default function AssignmentEditor({ opportunityId, members, managers, con
       {[...managerIds].map((id) => <input key={`manager-${id}`} type="hidden" name="manager_ids" value={id} />)}
       {[...contributorIds].map((id) => <input key={`contributor-${id}`} type="hidden" name="contributor_ids" value={id} />)}
       <button className="mt-4 rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-on-accent">Enregistrer les affectations</button>
-      <p className="mt-2 text-xs text-muted">Aucune notification n’est envoyée.</p>
+      <p className="mt-2 text-xs text-muted">Chaque nouveau membre ajouté reçoit une notification interne avec un lien vers la fiche.</p>
     </form>
   </details>;
 }

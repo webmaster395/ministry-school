@@ -1,4 +1,4 @@
-import { CalendarDays, Check, Clock, MapPin, PackageCheck, Users } from "lucide-react";
+import { CalendarDays, Check, Clock, ExternalLink, FileText, Link2, MapPin, PackageCheck, PackageOpen, Users } from "lucide-react";
 import { redirect } from "next/navigation";
 import BackButton from "@/components/BackButton";
 import OpportunityBanner from "@/components/OpportunityBanner";
@@ -15,6 +15,7 @@ import {
 } from "@/lib/data/opportunities";
 import { linesOf } from "@/lib/opportunity-details";
 import { cancelOpportunityDate, registerOpportunityDates } from "../actions";
+import { getOpportunityResources } from "@/lib/data/opportunity-resources";
 
 const fullDate = (iso: string) => new Intl.DateTimeFormat("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${iso}T12:00:00Z`));
 const hm = (time: string) => time.slice(0,5).replace(":"," h ").replace(/ h 00$/," h");
@@ -33,12 +34,13 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
-  const [all, registeredDates, rights, dates, dateCounts] = await Promise.all([
+  const [all, registeredDates, rights, dates, dateCounts, resources] = await Promise.all([
     getOpportunities(supabase),
     getMyOpportunityDateRegistrationIds(supabase, user.id),
     getProjectsTrainingRights(supabase, user.id),
     getOpportunityDates(supabase, id),
     getOpportunityDateCounts(supabase, id),
+    getOpportunityResources(supabase, id),
   ]);
   const o = all.find((item) => item.id === id);
   if (!o) redirect("/etudiant/services");
@@ -79,6 +81,8 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
           {speakers.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Intervenants</h2><p className="mt-3 text-[16px] leading-7 text-foreground">{speakers.join(" • ")}</p></section>}
           {prerequisites.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Prérequis</h2><BulletList items={prerequisites} /></section>}
           {materials.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title flex items-center gap-2 text-[25px]"><PackageCheck size={22} /> Matériel à apporter</h2><BulletList items={materials} /></section>}
+
+          {resources.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Supports et ressources</h2><div className="mt-4 grid gap-3 sm:grid-cols-2">{resources.map((resource) => { const Icon = resource.kind === "support" ? FileText : resource.kind === "link" ? Link2 : PackageOpen; return <a key={resource.id} href={`/etudiant/services/${o.id}/ressources/${resource.id}/ouvrir`} target="_blank" rel="noreferrer" className="group flex items-center gap-3 rounded-2xl border border-border bg-background p-4 transition hover:border-foreground hover:shadow-sm"><span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-surface"><Icon size={20} /></span><span className="min-w-0 flex-1"><strong className="block truncate text-sm">{resource.title}</strong><small className="text-muted">{resource.kind === "support" ? "Support de cours" : resource.kind === "link" ? "Lien" : "Ressource"}</small></span><ExternalLink size={16} className="text-muted transition group-hover:text-foreground" /></a>; })}</div></section>}
 
           <section className="border-t border-border-soft pt-7">
             <h2 className="font-title text-[25px]">Les séances</h2>

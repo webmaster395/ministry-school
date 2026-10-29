@@ -35,10 +35,11 @@ test("le catalogue inclut les éléments mixtes dans les deux filtres", async ()
   assert.match(page, /isPublished\(o\)/);
 });
 
-test("les mutations utilisent les fonctions serveur sécurisées sans notification", async () => {
+test("les mutations utilisent les fonctions serveur sécurisées et centralisent les notifications", async () => {
   const actions = await source("src/app/etudiant/services/actions.ts");
   assert.match(actions, /register_for_opportunity_dates/);
   assert.match(actions, /create_opportunity_admin/);
   assert.match(actions, /replace_opportunity_assignments/);
+  assert.match(actions, /request_opportunity_review/);
   assert.doesNotMatch(actions, /from\("announcements"\)\.insert/);
 });
