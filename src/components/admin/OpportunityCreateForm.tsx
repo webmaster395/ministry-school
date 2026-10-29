@@ -8,6 +8,7 @@ import OpportunityBanner from "@/components/OpportunityBanner";
 import OpportunityEmojiPicker from "@/components/OpportunityEmojiPicker";
 import RichTextEditor from "@/components/gestion/RichTextEditor";
 import { DEFAULT_OPPORTUNITY_EMOJI } from "@/lib/opportunity-banner";
+import StrategicAxesFields from "@/components/StrategicAxesFields";
 
 type Member = { id: string; full_name: string; email: string };
 type DateRow = { date: string; start: string; end: string };
@@ -57,6 +58,7 @@ export default function OpportunityCreateForm({ members, services, suggestedSatu
           <label className="lg:col-span-2"><Label>Service pilote</Label><input name="service_name" list="service-suggestions" className={field} placeholder="Choisir ou saisir un nouveau service" autoComplete="off" /><datalist id="service-suggestions">{services.map((service) => <option key={service.id} value={service.name} />)}</datalist></label>
           <div className="lg:col-span-2"><Label>Présentation</Label><RichTextEditor name="description" rows={7} placeholder="Présentez l’activité, son intérêt et son déroulement…" /></div>
           <div className="lg:col-span-2"><DynamicListInput name="objectives_items" label="Objectifs" placeholder="Un objectif" /></div>
+          <StrategicAxesFields title={title} type={type as "projet" | "formation" | "both"} />
           <DynamicListInput name="speakers_items" label="Intervenants" placeholder="Nom de l’intervenant" />
           <DynamicListInput name="prerequisites_items" label="Prérequis" placeholder="Un prérequis" />
         </div>

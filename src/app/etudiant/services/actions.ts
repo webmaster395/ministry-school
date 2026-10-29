@@ -4,10 +4,38 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { opportunityEmoji } from "@/lib/opportunity-banner";
+import { strategicAxesComplete, type StrategicAxis } from "@/lib/opportunity-strategy";
 
 const text = (formData: FormData, key: string) => String(formData.get(key) ?? "").trim();
 const list = (formData: FormData, key: string) =>
   formData.getAll(key).map(String).map((value) => value.trim()).filter(Boolean).join("\n");
+
+function strategyFrom(formData: FormData) {
+  const allowed = new Set<StrategicAxis>(["former", "auberge", "fundraising"]);
+  const axes = [...new Set(formData.getAll("strategic_axes").map(String))]
+    .filter((axis): axis is StrategicAxis => allowed.has(axis as StrategicAxis));
+  const strategy = {
+    axes,
+    former: text(formData, "strategic_contribution_former"),
+    auberge: text(formData, "strategic_contribution_auberge"),
+    fundraising: text(formData, "strategic_contribution_fundraising"),
+    connection: text(formData, "strategic_axes_connection"),
+  };
+  if (!strategicAxesComplete({
+    title: text(formData, "title") || "Initiative",
+    is_project: true,
+    is_training: false,
+    strategic_axes: strategy.axes,
+    strategic_contribution_former: strategy.former,
+    strategic_contribution_auberge: strategy.auberge,
+    strategic_contribution_fundraising: strategy.fundraising,
+    strategic_axes_connection: strategy.connection,
+  })) {
+    if (!axes.length) throw new Error("Sélectionnez au moins un axe stratégique MLK.");
+    throw new Error("Précisez la contribution concrète de chaque axe sélectionné et, si nécessaire, le lien entre eux.");
+  }
+  return strategy;
+}
 
 function refreshOpportunity(id: string) {
   revalidatePath("/etudiant/services");
@@ -64,6 +92,7 @@ export async function createOpportunity(formData: FormData) {
   if (status === "scheduled" && !publicationInput) throw new Error("Choisissez la date de publication programmée.");
   const requestedPublishedAt = status === "scheduled" ? new Date(publicationInput).toISOString() : null;
   const requiresReview = status === "published" || status === "scheduled";
+  const strategy = strategyFrom(formData);
   const sessionDates = formData.getAll("session_date").map(String);
   const starts = formData.getAll("start_time").map(String);
   const ends = formData.getAll("end_time").map(String);
@@ -108,6 +137,11 @@ export async function createOpportunity(formData: FormData) {
       cancellation_allowed: formData.get("cancellation_allowed") === "on",
       publication_status: requiresReview ? "draft" : status,
       published_at: null,
+      strategic_axes: strategy.axes,
+      strategic_contribution_former: strategy.former || null,
+      strategic_contribution_auberge: strategy.auberge || null,
+      strategic_contribution_fundraising: strategy.fundraising || null,
+      strategic_axes_connection: strategy.connection || null,
     },
     p_dates: dates,
     p_managers: formData.getAll("manager_ids").map(String),
@@ -328,6 +362,7 @@ export async function updateOpportunityContent(formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Non authentifié");
   const id = text(formData, "opportunity_id");
+  const strategy = strategyFrom(formData);
   const { data: current } = await supabase.from("opportunities").select("organization_material").eq("id", id).single();
   const { error } = await supabase.rpc("update_opportunity_content", {
     p_opportunity: id,
@@ -337,7 +372,13 @@ export async function updateOpportunityContent(formData: FormData) {
     p_prerequisites: list(formData, "prerequisites_items") || text(formData, "prerequisites"),
     p_organization_material: current?.organization_material ?? "",
     p_participant_material: list(formData, "participant_material_items") || text(formData, "participant_material"),
+    p_strategic_axes: strategy.axes,
+    p_strategic_contribution_former: strategy.former || null,
+    p_strategic_contribution_auberge: strategy.auberge || null,
+    p_strategic_contribution_fundraising: strategy.fundraising || null,
+    p_strategic_axes_connection: strategy.connection || null,
   });
+  if (error?.message.includes("STRATEGIC_")) throw new Error("Complétez la contribution concrète de chaque axe stratégique sélectionné.");
   if (error) throw new Error("La modification a échoué : " + error.message);
   refreshOpportunity(id);
 }
@@ -355,7 +396,10 @@ export async function updateOpportunityManagement(formData: FormData) {
   if (status === "scheduled" && !text(formData, "published_at")) throw new Error("Choisissez la date de publication programmée.");
   const capacity = Number.parseInt(text(formData, "capacity"), 10);
   const requestedAt = status === "scheduled" ? new Date(text(formData, "published_at")).toISOString() : null;
-  const { data: current } = await supabase.from("opportunities").select("publication_status,published_at").eq("id", id).single();
+  const { data: current } = await supabase.from("opportunities").select("publication_status,published_at,title,is_project,is_training,strategic_axes,strategic_contribution_former,strategic_contribution_auberge,strategic_contribution_fundraising,strategic_axes_connection").eq("id", id).single();
+  if ((status === "published" || status === "scheduled") && (!current || !strategicAxesComplete(current as Parameters<typeof strategicAxesComplete>[0]))) {
+    throw new Error("Complétez les axes stratégiques et leurs contributions avant de demander la publication.");
+  }
   const scheduledChanged = status === "scheduled"
     && new Date(requestedAt!).getTime() !== new Date(current?.published_at ?? 0).getTime();
   const requiresReview = (status === "published" || status === "scheduled")

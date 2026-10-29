@@ -10,6 +10,7 @@ import OpportunityBanner from "@/components/OpportunityBanner";
 import OpportunityEmojiPicker from "@/components/OpportunityEmojiPicker";
 import RichTextEditor from "@/components/gestion/RichTextEditor";
 import { opportunityEmoji } from "@/lib/opportunity-banner";
+import StrategicAxesFields from "@/components/StrategicAxesFields";
 
 type DateRow = { id?: string; session_date: string; start_time: string; end_time: string; room: string | null; location: string | null; capacity: number | null };
 const field = "min-h-11 w-full rounded-xl border border-border bg-background px-3 text-sm text-foreground outline-none focus:border-accent";
@@ -42,6 +43,18 @@ export default function OpportunityEditForms({ opportunity: o, initialDates, res
           <input type="hidden" name="opportunity_id" value={o.id} />
           <div className="sm:col-span-2"><Label>Présentation</Label><RichTextEditor name="description" rows={7} defaultValue={o.description} /></div>
           <div className="sm:col-span-2"><DynamicListInput name="objectives_items" label="Objectifs" initialValue={o.objectives} placeholder="Un objectif" /></div>
+          <StrategicAxesFields
+            title={title}
+            type={type}
+            objectives={o.objectives}
+            initial={{
+              axes: o.strategic_axes,
+              former: o.strategic_contribution_former,
+              auberge: o.strategic_contribution_auberge,
+              fundraising: o.strategic_contribution_fundraising,
+              connection: o.strategic_axes_connection,
+            }}
+          />
           <DynamicListInput name="speakers_items" label="Intervenants" initialValue={o.speakers} placeholder="Nom de l’intervenant" />
           <DynamicListInput name="prerequisites_items" label="Prérequis" initialValue={o.prerequisites} placeholder="Un prérequis" />
           <div className="sm:col-span-2"><DynamicListInput name="participant_material_items" label="Matériel à apporter" initialValue={o.participant_material} placeholder="Un élément à apporter" /></div>

@@ -1,5 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { DETAIL_COLUMNS } from "@/lib/opportunity-details";
+import type { StrategicAxis } from "@/lib/opportunity-strategy";
 
 export type OpportunityKind = "formation" | "projet";
 export type OpportunityType = OpportunityKind | "both";
@@ -37,6 +38,11 @@ export type Opportunity = {
   services: { name: string } | null;
   objectives?: string | null;
   prerequisites?: string | null;
+  strategic_axes: StrategicAxis[];
+  strategic_contribution_former: string | null;
+  strategic_contribution_auberge: string | null;
+  strategic_contribution_fundraising: string | null;
+  strategic_axes_connection: string | null;
 };
 
 export type OpportunityStatus = "disponible" | "a_venir" | "complet" | "termine";

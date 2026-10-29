@@ -16,6 +16,7 @@ import {
 import { linesOf } from "@/lib/opportunity-details";
 import { cancelOpportunityDate, registerOpportunityDates } from "../actions";
 import { getOpportunityResources } from "@/lib/data/opportunity-resources";
+import StrategicVisionSection from "@/components/StrategicVisionSection";
 
 const fullDate = (iso: string) => new Intl.DateTimeFormat("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${iso}T12:00:00Z`));
 const hm = (time: string) => time.slice(0,5).replace(":"," h ").replace(/ h 00$/," h");
@@ -77,6 +78,7 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
       <div className="grid items-start gap-7 lg:grid-cols-[minmax(0,1fr)_320px]">
         <article className="space-y-9 rounded-3xl border border-border bg-background p-6 sm:p-9">
           <section><p className="label text-xs tracking-[.16em] text-muted">Présentation</p><div className="mt-3 max-w-[68ch] whitespace-pre-line text-[17px] leading-8 text-foreground">{o.description}</div></section>
+          <StrategicVisionSection opportunity={o} />
           {objectives.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Objectifs</h2><BulletList items={objectives} /></section>}
           {speakers.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Intervenants</h2><p className="mt-3 text-[16px] leading-7 text-foreground">{speakers.join(" • ")}</p></section>}
           {prerequisites.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Prérequis</h2><BulletList items={prerequisites} /></section>}
