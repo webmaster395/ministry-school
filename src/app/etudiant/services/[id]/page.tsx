@@ -17,6 +17,7 @@ import { linesOf } from "@/lib/opportunity-details";
 import { cancelOpportunityDate, registerOpportunityDates } from "../actions";
 import { getOpportunityResources } from "@/lib/data/opportunity-resources";
 import StrategicVisionSection from "@/components/StrategicVisionSection";
+import FormattedContent from "@/components/FormattedContent";
 
 const fullDate = (iso: string) => new Intl.DateTimeFormat("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${iso}T12:00:00Z`));
 const hm = (time: string) => time.slice(0,5).replace(":"," h ").replace(/ h 00$/," h");
@@ -30,8 +31,8 @@ const weekendKey = (iso: string) => {
 function BulletList({ items }: { items: string[] }) {
   return <ul className="mt-4 grid gap-3 sm:grid-cols-2">{items.map((item,index) => <li key={`${item}-${index}`} className="flex items-start gap-3 rounded-xl bg-surface px-4 py-3 text-[15px] leading-6"><Check size={17} className="mt-1 shrink-0" />{item}</li>)}</ul>;
 }
-export default async function OpportunityPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+export default async function OpportunityPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ preview?: string }> }) {
+  const [{ id }, query] = await Promise.all([params, searchParams]);
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
@@ -45,7 +46,7 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
   ]);
   const o = all.find((item) => item.id === id);
   if (!o) redirect("/etudiant/services");
-  const canPreview = rights.admin || rights.assignments.has(id);
+  const canPreview = query.preview === "1" && (rights.admin || rights.assignments.has(id));
   if (!isPublished(o) && !canPreview) redirect("/etudiant/services");
 
   const objectives = linesOf(o.objectives);
@@ -77,7 +78,7 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
 
       <div className="grid items-start gap-7 lg:grid-cols-[minmax(0,1fr)_320px]">
         <article className="space-y-9 rounded-3xl border border-border bg-background p-6 sm:p-9">
-          <section><p className="label text-xs tracking-[.16em] text-muted">Présentation</p><div className="mt-3 max-w-[68ch] whitespace-pre-line text-[17px] leading-8 text-foreground">{o.description}</div></section>
+          <section><p className="label text-xs tracking-[.16em] text-muted">Présentation</p><div className="mt-4 max-w-[72ch]"><FormattedContent value={o.description} /></div></section>
           <StrategicVisionSection opportunity={o} />
           {objectives.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Objectifs</h2><BulletList items={objectives} /></section>}
           {speakers.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Intervenants</h2><p className="mt-3 text-[16px] leading-7 text-foreground">{speakers.join(" • ")}</p></section>}

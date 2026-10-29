@@ -9,6 +9,7 @@ import OpportunityEmojiPicker from "@/components/OpportunityEmojiPicker";
 import RichTextEditor from "@/components/gestion/RichTextEditor";
 import { DEFAULT_OPPORTUNITY_EMOJI } from "@/lib/opportunity-banner";
 import StrategicAxesFields from "@/components/StrategicAxesFields";
+import WorkshopMaterialsInput from "@/components/WorkshopMaterialsInput";
 
 type Member = { id: string; full_name: string; email: string };
 type DateRow = { date: string; start: string; end: string };
@@ -66,10 +67,12 @@ export default function OpportunityCreateForm({ members, services, suggestedSatu
 
       <section className="rounded-3xl border border-border bg-background p-5 sm:p-7">
         <h2 className="font-title text-[23px]">Organisation</h2>
+        <p className="mt-1 text-sm text-muted">Les besoins internes permettent à Nathalie et Flora de préparer l’atelier.</p>
         <div className="mt-4 grid gap-5 sm:grid-cols-2">
           <label><Label>Lieu principal</Label><input name="location" className={field} placeholder="Espace Martin Luther King" /></label>
           <label><Label>Nombre de places par séance</Label><input type="number" min={1} name="capacity" className={field} placeholder="Illimité si vide" /></label>
           <div className="sm:col-span-2"><DynamicListInput name="participant_material_items" label="Matériel à apporter" placeholder="Un élément à apporter" /></div>
+          <div className="sm:col-span-2"><WorkshopMaterialsInput /></div>
         </div>
       </section>
 
@@ -96,7 +99,6 @@ export default function OpportunityCreateForm({ members, services, suggestedSatu
         <div className="mt-4 grid gap-4 sm:grid-cols-2"><label><Label>État souhaité</Label><select name="publication_status" value={publication} onChange={(event) => setPublication(event.target.value)} className={field}><option value="draft">Conserver en brouillon</option><option value="published">Demander une publication immédiate</option><option value="scheduled">Demander une publication programmée</option><option value="unpublished">Conserver dépublié</option></select></label>{publication === "scheduled" && <label><Label>Date et heure de publication</Label><input type="datetime-local" value={publishedAt} onChange={(event) => setPublishedAt(event.target.value)} className={field} />{publishedAt && <input type="hidden" name="published_at" value={new Date(publishedAt).toISOString()} />}</label>}<label className="flex items-center gap-2 text-sm"><input type="checkbox" name="registration_open" defaultChecked /> Inscriptions ouvertes</label><label className="flex items-center gap-2 text-sm"><input type="checkbox" name="cancellation_allowed" defaultChecked /> Annulation autorisée</label><p className="sm:col-span-2 rounded-xl bg-surface px-4 py-3 text-xs leading-relaxed text-muted">La publication sera effective après une validation de Nathalie Boudehent ou Flora Demerle. Richard Tamard recevra uniquement l’aperçu du rendu.</p></div>
       </details>
       <button className="w-full rounded-full bg-accent px-6 py-3.5 text-sm font-semibold text-on-accent sm:w-auto">Créer l’élément</button>
-      <p className="text-xs text-muted">Les notifications internes sont envoyées uniquement aux membres affectés et aux personnes du circuit de validation.</p>
     </form>
   );
 }

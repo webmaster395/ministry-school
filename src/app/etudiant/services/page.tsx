@@ -2,6 +2,7 @@ import Link from "next/link";
 import { CalendarDays, ChevronRight, CircleUser, Users } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import OpportunityBanner from "@/components/OpportunityBanner";
+import { plainTextContent } from "@/components/FormattedContent";
 import {
   getMyRegistrationIds,
   getOpportunities,
@@ -129,7 +130,7 @@ export default async function ServicesPage({
                       {mine.has(o.id) && status(o) !== "termine" ? "Inscrit" : STATUS_LABEL[status(o)]}
                     </span>
                   <p className="mt-2 line-clamp-2 text-[15px] leading-relaxed text-muted">
-                    {o.short_description || o.description}
+                    {plainTextContent(o.short_description || o.description)}
                   </p>
 
                   <ul className="mt-auto space-y-2 pt-5 text-[15px] text-muted">

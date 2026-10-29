@@ -127,7 +127,7 @@ export async function createOpportunity(formData: FormData) {
       speakers: list(formData, "speakers_items") || null,
       prerequisites: list(formData, "prerequisites_items") || null,
       location: text(formData, "location") || null,
-      organization_material: null,
+      organization_material: list(formData, "organization_material_items") || null,
       participant_material: list(formData, "participant_material_items") || null,
       schedule_label: null,
       starts_on: dates[0].session_date,
@@ -363,15 +363,17 @@ export async function updateOpportunityContent(formData: FormData) {
   if (!user) throw new Error("Non authentifié");
   const id = text(formData, "opportunity_id");
   const strategy = strategyFrom(formData);
-  const { data: current } = await supabase.from("opportunities").select("organization_material").eq("id", id).single();
+  const parsedCapacity = Number.parseInt(text(formData, "capacity"), 10);
+  const capacity = Number.isFinite(parsedCapacity) && parsedCapacity > 0 ? parsedCapacity : null;
   const { error } = await supabase.rpc("update_opportunity_content", {
     p_opportunity: id,
     p_description: text(formData, "description"),
     p_objectives: list(formData, "objectives_items") || text(formData, "objectives"),
     p_speakers: list(formData, "speakers_items") || text(formData, "speakers"),
     p_prerequisites: list(formData, "prerequisites_items") || text(formData, "prerequisites"),
-    p_organization_material: current?.organization_material ?? "",
+    p_organization_material: list(formData, "organization_material_items"),
     p_participant_material: list(formData, "participant_material_items") || text(formData, "participant_material"),
+    p_capacity: capacity,
     p_strategic_axes: strategy.axes,
     p_strategic_contribution_former: strategy.former || null,
     p_strategic_contribution_auberge: strategy.auberge || null,
@@ -381,6 +383,17 @@ export async function updateOpportunityContent(formData: FormData) {
   if (error?.message.includes("STRATEGIC_")) throw new Error("Complétez la contribution concrète de chaque axe stratégique sélectionné.");
   if (error) throw new Error("La modification a échoué : " + error.message);
   refreshOpportunity(id);
+}
+
+export type OpportunityFormState = { ok: boolean; message: string } | null;
+
+export async function saveOpportunityContent(_previous: OpportunityFormState, formData: FormData): Promise<OpportunityFormState> {
+  try {
+    await updateOpportunityContent(formData);
+    return { ok: true, message: "Le contenu et les besoins d’organisation ont été enregistrés." };
+  } catch (error) {
+    return { ok: false, message: error instanceof Error ? error.message : "L’enregistrement a échoué." };
+  }
 }
 
 /** Organisation et publication : responsable affecté ou administrateur, vérifié par RLS. */
@@ -394,7 +407,6 @@ export async function updateOpportunityManagement(formData: FormData) {
   if (!(["projet", "formation", "both"] as string[]).includes(type)) throw new Error("Type invalide.");
   if (!(["draft", "published", "scheduled", "unpublished", "archived"] as string[]).includes(status)) throw new Error("État de publication invalide.");
   if (status === "scheduled" && !text(formData, "published_at")) throw new Error("Choisissez la date de publication programmée.");
-  const capacity = Number.parseInt(text(formData, "capacity"), 10);
   const requestedAt = status === "scheduled" ? new Date(text(formData, "published_at")).toISOString() : null;
   const { data: current } = await supabase.from("opportunities").select("publication_status,published_at,title,is_project,is_training,strategic_axes,strategic_contribution_former,strategic_contribution_auberge,strategic_contribution_fundraising,strategic_axes_connection").eq("id", id).single();
   if ((status === "published" || status === "scheduled") && (!current || !strategicAxesComplete(current as Parameters<typeof strategicAxesComplete>[0]))) {
@@ -421,7 +433,6 @@ export async function updateOpportunityManagement(formData: FormData) {
     service_id: serviceId || null,
     organizer_label: serviceName || null,
     location: text(formData, "location") || null,
-    capacity: Number.isFinite(capacity) && capacity > 0 ? capacity : null,
     registration_open: formData.get("registration_open") === "on",
     cancellation_allowed: formData.get("cancellation_allowed") === "on",
     publication_status: directStatus,
@@ -431,7 +442,6 @@ export async function updateOpportunityManagement(formData: FormData) {
     updated_at: new Date().toISOString(),
   }).eq("id", id);
   if (error) throw new Error("La modification a échoué : " + error.message);
-  await supabase.from("opportunity_dates").update({ capacity: Number.isFinite(capacity) && capacity > 0 ? capacity : null }).eq("opportunity_id", id);
   if (requiresReview) {
     const { error: reviewError } = await supabase.rpc("request_opportunity_review", {
       p_opportunity: id,
@@ -443,6 +453,15 @@ export async function updateOpportunityManagement(formData: FormData) {
     await supabase.rpc("cancel_opportunity_review", { p_opportunity: id });
   }
   refreshOpportunity(id);
+}
+
+export async function saveOpportunityManagement(_previous: OpportunityFormState, formData: FormData): Promise<OpportunityFormState> {
+  try {
+    await updateOpportunityManagement(formData);
+    return { ok: true, message: "Les informations générales ont été enregistrées." };
+  } catch (error) {
+    return { ok: false, message: error instanceof Error ? error.message : "L’enregistrement a échoué." };
+  }
 }
 
 export async function replaceOpportunityDates(formData: FormData) {
