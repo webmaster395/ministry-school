@@ -29,6 +29,13 @@ export default async function PilotagePage({
   if (!ministry) redirect("/etudiant");
 
   const rows = await buildRows(supabase, await getMinistrySessions(supabase, ministry.id), "pilotage");
+  const { data: ministryStudents } = await supabase
+    .from("profiles")
+    .select("id, full_name, preferred_day")
+    .eq("ministry_id", ministry.id)
+    .eq("email_confirmed", true)
+    .or("deactivated.is.null,deactivated.eq.false")
+    .order("full_name");
 
   const requiredDone = rows.reduce((n, r) => n + r.progress.requiredDone, 0);
   const requiredTotal = rows.reduce((n, r) => n + r.progress.requiredTotal, 0);
@@ -102,6 +109,28 @@ export default async function PilotagePage({
         ministryColor={color}
         today={new Date().toISOString().slice(0, 10)}
       />
+
+      <details className="rounded-2xl border border-border bg-background">
+        <summary className="cursor-pointer list-none px-5 py-4 text-sm font-semibold text-foreground sm:px-6">
+          Étudiants inscrits à cette sensibilité ({ministryStudents?.length ?? 0})
+        </summary>
+        <div className="border-t border-border-soft px-5 py-4 sm:px-6">
+          {ministryStudents?.length ? (
+            <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              {ministryStudents.map((student) => (
+                <li key={student.id} className="rounded-xl bg-surface px-3 py-2.5 text-sm text-foreground">
+                  {student.full_name || "Nom non renseigné"}
+                  {student.preferred_day && (
+                    <span className="ml-2 text-xs capitalize text-muted">{student.preferred_day}</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-muted">Aucun étudiant inscrit à cette sensibilité.</p>
+          )}
+        </div>
+      </details>
     </div>
   );
 }

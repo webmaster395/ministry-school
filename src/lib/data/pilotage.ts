@@ -16,6 +16,7 @@ export type PilotSession = {
   objectives: string | null;
   bible_refs: string | null;
   video_url?: string | null;
+  video_visible_at?: string | null;
   teacher: { full_name: string } | null;
   /** Cours pas encore publié : invisible des étudiants (si les brouillons sont activés) */
   is_draft?: boolean;
@@ -48,12 +49,26 @@ export async function getMinistrySessions(supabase: SupabaseClient, ministryId: 
   const { data } = await supabase
     .from("sessions")
     .select(
-      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, video_url, teacher:profiles!sessions_teacher_id_fkey(full_name)" + DRAFT_COLUMN
+      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, teacher:profiles!sessions_teacher_id_fkey(full_name)" + DRAFT_COLUMN
     )
     .eq("ministry_id", ministryId)
     .order("session_date", { ascending: true })
     .order("start_time", { ascending: true });
-  return (data ?? []) as unknown as PilotSession[];
+  return attachVideos(supabase, (data ?? []) as unknown as PilotSession[]);
+}
+
+async function attachVideos(supabase: SupabaseClient, sessions: PilotSession[]) {
+  if (!sessions.length) return sessions;
+  const { data } = await supabase
+    .from("session_videos")
+    .select("session_id, url, visible_at")
+    .in("session_id", sessions.map((session) => session.id));
+  const videos = new Map((data ?? []).map((video) => [video.session_id, video]));
+  return sessions.map((session) => ({
+    ...session,
+    video_url: videos.get(session.id)?.url ?? null,
+    video_visible_at: videos.get(session.id)?.visible_at ?? null,
+  }));
 }
 
 /** Un travail à rendre après le jour du cours (échéance postérieure à la date de la séance). */
@@ -188,7 +203,7 @@ export async function getTeacherPrepSessions(supabase: SupabaseClient, teacherId
     .order("start_time", { ascending: true });
   if (teacherId) query = query.eq("teacher_id", teacherId);
   const { data } = await query;
-  return (data ?? []) as unknown as PilotSession[];
+  return attachVideos(supabase, (data ?? []) as unknown as PilotSession[]);
 }
 
 export async function buildRows(

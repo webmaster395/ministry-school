@@ -5,9 +5,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { DRAFTS_ENABLED } from "@/lib/drafts";
 import { TYPES_ENABLED } from "@/lib/material-types";
-import { getViewer } from "@/lib/data/viewer";
-import { notifyCourseContent } from "@/lib/course-notifications";
 import { invalidateStudentProgram } from "@/lib/cache/program";
+import { parseAvailability } from "@/lib/availability";
 
 /** Ajoute un support (lien ou fichier déposé) à une séance. La base vérifie le droit d'écriture. */
 export async function addSupport(formData: FormData) {
@@ -20,24 +19,9 @@ export async function addSupport(formData: FormData) {
   const text = (key: string) => ((formData.get(key) as string) ?? "").trim();
   const sessionId = text("session_id");
 
-  // Visibilité : tout de suite, au début du cours ou à sa fin
-  const visibility = text("visibility");
-  let visibleAt = new Date().toISOString();
-  if (visibility === "start" || visibility === "end") {
-    const { data: s } = await supabase
-      .from("sessions")
-      .select("session_date, start_time, end_time")
-      .eq("id", sessionId)
-      .single();
-    if (s) {
-      const at = new Date(
-        `${s.session_date}T${(visibility === "start" ? s.start_time : s.end_time).slice(0, 5)}:00`,
-      );
-      if (!Number.isNaN(at.getTime())) visibleAt = at.toISOString();
-    }
-  }
+  const visibleAt = parseAvailability(formData);
 
-  const { data: material, error } = await supabase.from("materials").insert({
+  const { error } = await supabase.from("materials").insert({
     session_id: sessionId,
     title: text("title"),
     link_url: text("link_url") || null,
@@ -47,17 +31,8 @@ export async function addSupport(formData: FormData) {
     ...(TYPES_ENABLED && text("resource_type")
       ? { resource_type: text("resource_type") }
       : {}),
-  }).select("id").single();
+  });
   if (error) throw new Error("L'ajout du support a échoué : " + error.message);
-
-  // Prévenir les étudiants dans leur messagerie (sans jamais bloquer l'ajout du support)
-  await notifyNewSupport(
-    supabase,
-    sessionId,
-    text("title"),
-    visibility === "start" || visibility === "end" ? visibility : "now",
-    material?.id,
-  );
 
   revalidatePath(`/gestion/enseignement/preparation/${sessionId}`);
   revalidatePath("/gestion/pilotage", "layout");
@@ -92,6 +67,7 @@ export async function addPilotAssignment(formData: FormData) {
     kind: text("kind") || null,
     duration_min: Number.isFinite(duration) && duration > 0 ? duration : null,
     due_at: due ? new Date(due).toISOString() : null,
+    visible_at: parseAvailability(formData),
   });
   if (error)
     throw new Error("L'ajout de la consigne a échoué : " + error.message);
@@ -288,6 +264,7 @@ export async function updateAssignment(formData: FormData) {
       content_type: str(formData, "content_type") || null,
       resource_url: str(formData, "resource_url") || null,
       duration_min: Number.isFinite(duration) && duration > 0 ? duration : null,
+      visible_at: parseAvailability(formData),
     })
     .eq("id", str(formData, "id"))
     .select("id");
@@ -309,7 +286,7 @@ export async function duplicateAssignment(formData: FormData) {
   const { data: source, error: readError } = await supabase
     .from("assignments")
     .select(
-      "title,description,instructions,content_type,resource_url,file_url,phase,sort_order,kind,duration_min,due_at",
+      "title,description,instructions,content_type,resource_url,file_url,phase,sort_order,kind,duration_min,due_at,visible_at",
     )
     .eq("id", id)
     .single();
@@ -336,10 +313,12 @@ export async function updateSupport(formData: FormData) {
     description?: string | null;
     resource_type?: string | null;
     link_url?: string | null;
+    visible_at: string;
   } = {
     title,
     description: str(formData, "description") || null,
     resource_type: str(formData, "resource_type") || null,
+    visible_at: parseAvailability(formData),
   };
   if (formData.has("link_url"))
     changes.link_url = str(formData, "link_url") || null;
@@ -381,56 +360,6 @@ export async function updateObjective(formData: FormData) {
   if (!data?.length)
     throw new Error("Vous n'avez pas le droit de modifier ce cours.");
   refreshPrep(sessionId);
-}
-
-/**
- * Message automatique dans la messagerie des étudiants concernés quand un support est déposé.
- * Admin et formateur du cours écrivent à la séance ; le pilotage écrit à son ministère.
- * Une erreur ici ne doit jamais empêcher l'ajout du support : on l'ignore.
- */
-async function notifyNewSupport(
-  supabase: Awaited<ReturnType<typeof createClient>>,
-  sessionId: string,
-  title: string,
-  when: "now" | "start" | "end",
-  targetId?: string,
-) {
-  try {
-    const viewer = await getViewer();
-    if (!viewer) return;
-    const { data: s } = await supabase
-      .from("sessions")
-      .select("description, session_date, ministry_id, teacher_id")
-      .eq("id", sessionId)
-      .single();
-    if (!s) return;
-
-    if (viewer.roles.admin || s.teacher_id === viewer.id) {
-      await notifyCourseContent({
-        supabase,
-        actorId: viewer.id,
-        sessionId,
-        targetId,
-        contentTitle: title,
-        availability: when,
-      });
-    } else if (
-      s.ministry_id &&
-      viewer.roles.steeringMinistryIds.includes(s.ministry_id)
-    ) {
-      await notifyCourseContent({
-        supabase,
-        actorId: viewer.id,
-        sessionId,
-        targetId,
-        contentTitle: title,
-        availability: when,
-        scope: { ministry_id: s.ministry_id },
-      });
-    }
-  } catch (e) {
-    console.error("Message automatique de nouveau support non envoyé :", e);
-  }
 }
 
 /** Déplace un objectif sans créer un second modèle de données. */

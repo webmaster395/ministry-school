@@ -14,6 +14,8 @@ import ResourceDialog from "@/components/ResourceDialog";
 import MaterialLink from "@/components/MaterialLink";
 import FormSubmitButton from "@/components/FormSubmitButton";
 import RichTextEditor from "@/components/gestion/RichTextEditor";
+import AvailabilityPicker from "@/components/AvailabilityPicker";
+import { formatAvailability } from "@/lib/availability";
 import { updateSession } from "@/lib/actions/sessions";
 import {
   addObjective,
@@ -55,6 +57,7 @@ type Assignment = {
   kind: string | null;
   duration_min: number | null;
   due_at: string | null;
+  visible_at?: string | null;
 };
 type Material = {
   id: string;
@@ -130,23 +133,14 @@ export function teacherPanels(
   assignmentSteps: AssignmentStep[] = [],
 ): Record<string, ReactNode> {
   const materials = materialRows as Material[];
+  const isScheduled = (value: string | null | undefined) =>
+    !!value && new Date(value).getTime() > Date.now();
   const before = assignments.filter((a) =>
     a.phase ? a.phase === "before" : !isAfterClass(a.due_at, s.session_date),
   );
   const after = assignments.filter((a) =>
     a.phase ? a.phase === "after" : isAfterClass(a.due_at, s.session_date),
   );
-  const at = (time: string) =>
-    new Date(`${s.session_date}T${time.slice(0, 5)}:00`).getTime();
-  /** Moment où la ressource devient visible, par rapport au cours. */
-  const visibilityOf = (visibleAt: string | null | undefined) => {
-    if (!visibleAt) return "";
-    const t = new Date(visibleAt).getTime();
-    if (Math.abs(t - at(s.start_time)) < 60000)
-      return "Visible au début du cours";
-    if (Math.abs(t - at(s.end_time)) < 60000) return "Visible après le cours";
-    return "Visible dès l'ajout";
-  };
   const objectives = (s.objectives ?? "")
     .split("\n")
     .map((l) => l.trim())
@@ -196,6 +190,7 @@ export function teacherPanels(
                   </p>
                 )}
                 <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
+                  <span>{formatAvailability(a.visible_at)}</span>
                   {a.duration_min && (
                     <span className="inline-flex items-center gap-1">
                       <Clock3 size={13} />
@@ -451,6 +446,9 @@ export function teacherPanels(
                     defaultValue={a.duration_min ?? ""}
                     className={field}
                   />
+                  <div className="sm:col-span-2">
+                    <AvailabilityPicker value={a.visible_at} scheduled={isScheduled(a.visible_at)} label="Disponibilité du devoir" />
+                  </div>
                   <FormSubmitButton
                     className={`${save} sm:col-span-2 sm:justify-self-start`}
                   />
@@ -538,6 +536,9 @@ export function teacherPanels(
           placeholder="Durée estimée (min)"
           className={field}
         />
+        <div className="sm:col-span-2">
+          <AvailabilityPicker label="Disponibilité du devoir" />
+        </div>
         <button
           type="submit"
           className={`${save} sm:col-span-2 sm:justify-self-start`}
@@ -659,6 +660,12 @@ export function teacherPanels(
           placeholder="https://…"
           className={field}
         />
+        <AvailabilityPicker
+          prefix="video_availability"
+          value={s.video_visible_at}
+          scheduled={isScheduled(s.video_visible_at)}
+          label="Disponibilité de la vidéo"
+        />
         <p className="text-sm text-muted">
           La section vidéo reste invisible pour les étudiants tant qu’aucune URL
           n’est renseignée.
@@ -695,7 +702,7 @@ export function teacherPanels(
                     url={m.link_url ?? m.file_url}
                   />
                   <span className="mt-0.5 block text-[13px] text-muted">
-                    {[m.resource_type, visibilityOf(m.visible_at)]
+                    {[m.resource_type, formatAvailability(m.visible_at)]
                       .filter(Boolean)
                       .join(" · ")}
                   </span>
@@ -754,6 +761,9 @@ export function teacherPanels(
                         className={`${field} min-w-[200px] flex-1`}
                       />
                     )}
+                    <div className="w-full min-w-[280px]">
+                      <AvailabilityPicker value={m.visible_at} scheduled={isScheduled(m.visible_at)} label="Disponibilité du support" />
+                    </div>
                   </Edit>
                 </div>
               </li>

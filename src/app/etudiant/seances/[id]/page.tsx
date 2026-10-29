@@ -112,7 +112,11 @@ export default async function SessionDetailPage({
   const structuredPlace = coursePlace(s.location, s.room);
   const place = s.room ? `${s.location} · ${s.room}` : s.location;
   const teacher = s.speaker_name ?? s.teacher?.full_name ?? null;
-  const canManage = viewer.roles.admin || viewer.roles.steeringMinistryIds.length > 0;
+  const canManage =
+    viewer.roles.admin ||
+    (s.session_type === "ministere" &&
+      !!s.ministry_id &&
+      viewer.roles.steeringMinistryIds.includes(s.ministry_id));
 
   const backHref = parcoursSlug
     ? `/etudiant/cours/parcours/${parcoursSlug}`
@@ -131,9 +135,10 @@ export default async function SessionDetailPage({
           .maybeSingle()
       : { data: null };
     const { data: enrichment } = await supabase
-      .from("sessions")
-      .select("video_url")
-      .eq("id", s.id)
+      .from("session_videos")
+      .select("url")
+      .eq("session_id", s.id)
+      .lte("visible_at", new Date().toISOString())
       .maybeSingle();
     const { data: trainerLinks } = await supabase
       .from("session_trainers")
@@ -256,11 +261,11 @@ export default async function SessionDetailPage({
           objectives,
           bibleRefs: refs,
           videoUrl:
-            enrichment?.video_url ??
+            enrichment?.url ??
             (previewDemo
               ? "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
               : null),
-          videoDemo: previewDemo && !enrichment?.video_url,
+          videoDemo: previewDemo && !enrichment?.url,
           date: formatSessionDateWithYear(s.session_date),
           dateIso: s.session_date,
           hours: formatHours(s.start_time, s.end_time),

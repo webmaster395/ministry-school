@@ -5,7 +5,8 @@ import { createPortal } from "react-dom";
 import { Paperclip, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { addSupport } from "@/app/gestion/pilotage/actions";
-import { RESOURCE_TYPES, VISIBILITIES } from "@/lib/material-types";
+import { RESOURCE_TYPES } from "@/lib/material-types";
+import AvailabilityPicker from "@/components/AvailabilityPicker";
 
 const ALLOWED = /\.(pdf|pptx?|docx?|xlsx?|odp|odt|ods)$/i;
 const MAX_BYTES = 20 * 1024 * 1024;
@@ -145,14 +146,7 @@ export default function ResourceDialog({ sessionId, withTypes }: { sessionId: st
               <p className="mt-1 text-[12px] text-muted">PDF, PowerPoint, Word ou Excel · 20 Mo maximum</p>
             </div>
 
-            <div>
-              <label className={label} htmlFor="r-visibility">Visibilité</label>
-              <select id="r-visibility" name="visibility" defaultValue="now" className={field}>
-                {VISIBILITIES.map((v) => (
-                  <option key={v.key} value={v.key}>{v.label}</option>
-                ))}
-              </select>
-            </div>
+            <AvailabilityPicker label="Disponibilité du support" />
 
             {error && <p role="alert" className="rounded-lg border border-m-doctoral/30 bg-m-doctoral/10 px-3 py-2 text-[14px] text-link">{error}</p>}
 

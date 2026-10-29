@@ -13,6 +13,7 @@ export type StudentSession = {
   room: string | null;
   day: string;
   session_type: "commun" | "ministere";
+  ministry_id: string | null;
   description: string | null;
   objectives: string | null;
   course_id: string | null;
@@ -34,7 +35,7 @@ export type StudentSession = {
 };
 
 const SESSION_FIELDS =
-  "id, session_date, start_time, end_time, location, room, day, session_type, description, objectives, speaker_name, track, summary, bible_refs, show_parking_notice, course_id, courses(id, title), teacher:profiles!sessions_teacher_id_fkey(full_name)";
+  "id, session_date, start_time, end_time, location, room, day, session_type, ministry_id, description, objectives, speaker_name, track, summary, bible_refs, show_parking_notice, course_id, courses(id, title), teacher:profiles!sessions_teacher_id_fkey(full_name)";
 
 export function studentSessionTrainerNames(session: StudentSession) {
   if (session.trainers?.length) {
@@ -321,6 +322,7 @@ export type StudentAssignment = {
   kind: string | null;
   duration_min: number | null;
   due_at: string | null;
+  visible_at: string | null;
 };
 
 export async function getStudentAssignments(
@@ -332,9 +334,10 @@ export async function getStudentAssignments(
   const enriched = await supabase
     .from("assignments")
     .select(
-      "id, title, description, instructions, content_type, resource_url, file_url, phase, sort_order, session_id, created_at, kind, duration_min, due_at",
+      "id, title, description, instructions, content_type, resource_url, file_url, phase, sort_order, session_id, created_at, kind, duration_min, due_at, visible_at",
     )
     .in("session_id", sessionIds)
+    .lte("visible_at", new Date().toISOString())
     .order("sort_order")
     .order("created_at", { ascending: false });
 
@@ -359,6 +362,7 @@ export async function getStudentAssignments(
     file_url: null,
     phase: null,
     sort_order: null,
+    visible_at: assignment.created_at,
   })) as StudentAssignment[];
 }
 

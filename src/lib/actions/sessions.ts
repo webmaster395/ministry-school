@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { invalidateStudentProgram } from "@/lib/cache/program";
+import { parseAvailability } from "@/lib/availability";
 
 /**
  * Modifie une séance existante (date, horaire, lieu, titre, intervenant, parcours).
@@ -22,7 +23,6 @@ export async function updateSession(formData: FormData) {
 
   // Les références bibliques ne sont modifiées que si le formulaire les propose
   const refs = formData.has("bible_refs") ? { bible_refs: text("bible_refs") || null } : {};
-  const video = formData.has("video_url") ? { video_url: text("video_url") || null } : {};
   const parking = formData.has("show_parking_notice")
     ? { show_parking_notice: formData.getAll("show_parking_notice").includes("1") }
     : {};
@@ -48,7 +48,6 @@ export async function updateSession(formData: FormData) {
     .from("sessions")
     .update({
       ...refs,
-      ...video,
       ...parking,
       ...admin,
       session_date: text("session_date"),
@@ -71,6 +70,21 @@ export async function updateSession(formData: FormData) {
   }
   if ((data[0].track ?? "") !== (text("track") || "")) {
     throw new Error("La catégorie n’a pas été enregistrée. Rechargez la page puis réessayez.");
+  }
+
+  if (formData.has("video_url")) {
+    const videoUrl = text("video_url");
+    const result = videoUrl
+      ? await supabase.from("session_videos").upsert({
+          session_id: id,
+          url: videoUrl,
+          visible_at: parseAvailability(formData, "video_availability"),
+          updated_by: user.id,
+        })
+      : await supabase.from("session_videos").delete().eq("session_id", id);
+    if (result.error) {
+      throw new Error("La disponibilité de la vidéo n’a pas pu être enregistrée : " + result.error.message);
+    }
   }
 
   const courseId = text("course_id");

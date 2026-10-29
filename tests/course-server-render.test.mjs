@@ -27,7 +27,7 @@ test("les pages de cours réutilisent le viewer vérifié sans second appel Auth
 
 test("la page de séance dérive les permissions du même contexte sécurisé", async () => {
   const code = await source("src/app/etudiant/seances/[id]/page.tsx");
-  assert.match(code, /viewer\.roles\.admin \|\| viewer\.roles\.steeringMinistryIds\.length > 0/);
+  assert.match(code, /viewer\.roles\.admin[\s\S]*?s\.session_type === "ministere"[\s\S]*?steeringMinistryIds\.includes\(s\.ministry_id\)/);
   assert.match(code, /getStudentAllSessions\(supabase, viewer\.id\)/);
   assert.match(code, /\.eq\("user_id", viewer\.id\)/);
 });

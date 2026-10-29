@@ -22,6 +22,7 @@ import TrainerMultiSelect, {
 } from "@/components/gestion/TrainerMultiSelect";
 
 type FullSession = PilotSession & {
+  session_type: "commun" | "ministere";
   teacher_id: string | null;
   ministry_id: string | null;
   service_id: string | null;
@@ -57,13 +58,22 @@ export default async function PreparationPage({
   const { data } = await supabase
     .from("sessions")
     .select(
-      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, video_url, show_parking_notice, session_type, course_id, day, teacher_id, ministry_id, service_id, teacher:profiles!sessions_teacher_id_fkey(full_name)" +
+      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, show_parking_notice, session_type, course_id, day, teacher_id, ministry_id, service_id, teacher:profiles!sessions_teacher_id_fkey(full_name)" +
         DRAFT_COLUMN,
     )
     .eq("id", id)
     .single();
-  const s = data as unknown as FullSession | null;
-  if (!s) notFound();
+  if (!data) notFound();
+  const { data: video } = await supabase
+    .from("session_videos")
+    .select("url, visible_at")
+    .eq("session_id", id)
+    .maybeSingle();
+  const s = {
+    ...(data as unknown as FullSession),
+    video_url: video?.url ?? null,
+    video_visible_at: video?.visible_at ?? null,
+  };
 
   const { data: trainerLinks } = await supabase
     .from("session_trainers")
@@ -72,18 +82,10 @@ export default async function PreparationPage({
     )
     .eq("session_id", id)
     .order("position");
-  const linkedProfiles = (trainerLinks ?? [])
-    .map(
-      (link) =>
-        (link.trainer as unknown as { profile_id: string | null } | null)
-          ?.profile_id,
-    )
-    .filter(Boolean);
   const canEdit =
     viewer.roles.admin ||
-    s.teacher_id === viewer.id ||
-    linkedProfiles.includes(viewer.id) ||
-    (!!s.ministry_id &&
+    (s.session_type === "ministere" &&
+      !!s.ministry_id &&
       viewer.roles.steeringMinistryIds.includes(s.ministry_id));
   if (!canEdit) redirect("/etudiant");
 
@@ -100,7 +102,7 @@ export default async function PreparationPage({
     supabase
       .from("assignments")
       .select(
-        "id, title, description, instructions, content_type, resource_url, file_url, phase, sort_order, kind, duration_min, due_at",
+        "id, title, description, instructions, content_type, resource_url, file_url, phase, sort_order, kind, duration_min, due_at, visible_at",
       )
       .eq("session_id", id)
       .order("created_at"),

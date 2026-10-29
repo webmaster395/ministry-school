@@ -31,7 +31,7 @@ export default async function TeachingPage({
   if (tab === "prochain" && next) {
     const [{ data: materials }, { data: assignments }] = await Promise.all([
       supabase.from("materials").select("id, title, link_url, file_url, visible_at" + TYPE_COLUMN).eq("session_id", next.s.id).order("created_at"),
-      supabase.from("assignments").select("id, instructions, kind, duration_min, due_at").eq("session_id", next.s.id).order("created_at"),
+      supabase.from("assignments").select("id, title, description, instructions, content_type, resource_url, file_url, phase, sort_order, kind, duration_min, due_at, visible_at").eq("session_id", next.s.id).order("created_at"),
     ]);
     panels = teacherPanels(next.s, assignments ?? [], materials ?? []);
   }
