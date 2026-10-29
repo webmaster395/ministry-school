@@ -47,6 +47,7 @@ export default function OpportunityEditForms({ opportunity: o, initialDates, res
             title={title}
             type={type}
             objectives={o.objectives}
+            description={o.description}
             initial={{
               axes: o.strategic_axes,
               former: o.strategic_contribution_former,

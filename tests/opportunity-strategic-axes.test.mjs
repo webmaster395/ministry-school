@@ -15,6 +15,7 @@ async function strategyModule() {
 
 const base = {
   title: "Initiative test",
+  description: "Le contexte P décrit précisément le point de départ.",
   is_project: true,
   is_training: false,
   objectives: "Obtenir un résultat vérifiable",
@@ -34,6 +35,7 @@ test("les sept combinaisons produisent sept rédactions spécifiques", async () 
   const texts = combinations.map((strategic_axes) => strategicNarrativeOf({ ...base, strategic_axes }).join("\n"));
   assert.equal(new Set(texts).size, 7);
   for (const [index, axes] of combinations.entries()) {
+    assert.match(texts[index], /contexte P/);
     if (axes.includes("former")) assert.match(texts[index], /compétence F/);
     if (axes.includes("auberge")) assert.match(texts[index], /public A/);
     if (axes.includes("fundraising")) assert.match(texts[index], /partenariat R/);

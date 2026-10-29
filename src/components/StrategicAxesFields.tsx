@@ -28,11 +28,13 @@ export default function StrategicAxesFields({
   title,
   type,
   objectives,
+  description,
 }: {
   initial?: Initial;
   title: string;
   type: "projet" | "formation" | "both";
   objectives?: string | null;
+  description?: string | null;
 }) {
   const [selected, setSelected] = useState<StrategicAxis[]>(initial?.axes ?? []);
   const [contributions, setContributions] = useState<Record<StrategicAxis, string>>({
@@ -46,12 +48,13 @@ export default function StrategicAxesFields({
     is_project: type === "projet" || type === "both",
     is_training: type === "formation" || type === "both",
     objectives,
+    description,
     strategic_axes: selected,
     strategic_contribution_former: contributions.former,
     strategic_contribution_auberge: contributions.auberge,
     strategic_contribution_fundraising: contributions.fundraising,
     strategic_axes_connection: connection,
-  }), [connection, contributions, objectives, selected, title, type]);
+  }), [connection, contributions, description, objectives, selected, title, type]);
 
   function toggle(axis: StrategicAxis) {
     setSelected((current) => current.includes(axis)

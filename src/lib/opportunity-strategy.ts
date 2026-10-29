@@ -28,6 +28,7 @@ export const STRATEGIC_AXES: Record<StrategicAxis, {
 
 export type StrategicOpportunity = {
   title: string;
+  description?: string | null;
   is_project: boolean;
   is_training: boolean;
   objectives?: string | null;
@@ -73,45 +74,56 @@ export function strategicNarrativeOf(o: StrategicOpportunity): string[] {
   const fundraising = sentence(o.strategic_contribution_fundraising);
   const connection = sentence(o.strategic_axes_connection);
   const firstObjective = sentence((o.objectives ?? "").split("\n").map((item) => item.trim()).find(Boolean));
+  const presentation = sentence((o.description ?? "").split(/(?<=[.!?…])\s+/)[0]);
+  const context = presentation
+    ? `La présentation pose un point de départ précis : ${lowerFirst(presentation)}`
+    : "";
   const objective = firstObjective
     ? `Un objectif concret donne son cap à cette démarche : ${lowerFirst(firstObjective)}`
     : "";
 
   if (axes.length === 1 && has("former")) return [
     `${initiative} « ${o.title} » s’inscrit dans la priorité Former de MLK : donner à chacun des moyens concrets de grandir et de développer son potentiel.`,
+    context,
     `Dans cette initiative, ${lowerFirst(former)}`,
     objective || "Les apprentissages proposés sont ainsi reliés à une mise en pratique réelle, dans la vie personnelle, professionnelle, ecclésiale ou ministérielle des participants.",
-  ];
+  ].filter(Boolean);
   if (axes.length === 1 && has("auberge")) return [
     `${initiative} « ${o.title} » participe à l’esprit de l’Auberge, la priorité de MLK qui fait de l’Église un lieu d’accueil, de soutien et de solidarité concrète.`,
+    context,
     `Concrètement, ${lowerFirst(auberge)}`,
     objective || "Cette contribution précise les personnes et les besoins concernés, afin que la solidarité se traduise par une action identifiable.",
-  ];
+  ].filter(Boolean);
   if (axes.length === 1 && has("fundraising")) return [
     `${initiative} « ${o.title} » contribue à la priorité de MLK consacrée à la mobilisation des ressources nécessaires à sa mission.`,
+    context,
     `Dans ce cadre, ${lowerFirst(fundraising)}`,
     objective || "La mobilisation des ressources est ainsi reliée à ce qu’elle permettra réellement de rendre possible, au service de la vision de MLK.",
-  ];
+  ].filter(Boolean);
   if (axes.length === 2 && has("former") && has("auberge")) return [
     `${initiative} « ${o.title} » réunit deux priorités de MLK : développer les personnes et faire vivre une Église accueillante, solidaire et capable d’accompagner concrètement.`,
+    context,
     `Sur le plan de la formation, ${lowerFirst(former)} Du côté de l’Auberge, ${lowerFirst(auberge)}`,
     connection,
     objective,
   ].filter(Boolean);
   if (axes.length === 2 && has("former") && has("fundraising")) return [
     `${initiative} « ${o.title} » associe le développement des compétences à la mobilisation des ressources utiles à la mission de MLK.`,
+    context,
     `Les apprentissages visés sont précis : ${lowerFirst(former)} La contribution à la mobilisation des ressources est elle aussi explicitée : ${lowerFirst(fundraising)}`,
     connection,
     objective,
   ].filter(Boolean);
   if (axes.length === 2 && has("auberge") && has("fundraising")) return [
     `${initiative} « ${o.title} » articule la solidarité portée par l’Auberge avec les moyens nécessaires pour la rendre concrète et durable.`,
+    context,
     `La réponse solidaire prend la forme suivante : ${lowerFirst(auberge)} Pour la soutenir, ${lowerFirst(fundraising)}`,
     connection,
     objective,
   ].filter(Boolean);
   return [
     `${initiative} « ${o.title} » réunit les trois priorités de MLK pour 2026-2027 : former, développer une Église solidaire et mobiliser les ressources nécessaires à sa mission.`,
+    context,
     `Elle contribue d’abord au développement des personnes : ${lowerFirst(former)} Elle fait également vivre l’Auberge de manière concrète : ${lowerFirst(auberge)} Enfin, elle participe à la mobilisation des ressources : ${lowerFirst(fundraising)}`,
     connection,
     objective,
