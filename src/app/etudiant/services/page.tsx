@@ -5,11 +5,14 @@ import {
   getMyRegistrationIds,
   getOpportunities,
   getOpportunityCounts,
+  isPublished,
   KIND_COLOR,
-  KIND_LABEL,
+  matchesKind,
+  opportunityType,
   placesLabel,
   statusOf,
   STATUS_LABEL,
+  TYPE_LABEL,
   type Opportunity,
 } from "@/lib/data/opportunities";
 
@@ -54,17 +57,18 @@ export default async function ServicesPage({
   const taken = (o: Opportunity) => counts.get(o.id) ?? 0;
   const status = (o: Opportunity) => statusOf(o, taken(o), today);
 
+  const published = all.filter((o) => isPublished(o));
   const inTab = (o: Opportunity) =>
     tab === "decouvrir"
-      ? status(o) !== "termine" && o.registration_open && !mine.has(o.id)
+      ? status(o) !== "termine" && !mine.has(o.id)
       : tab === "inscriptions"
         ? status(o) !== "termine" && mine.has(o.id)
         : status(o) === "termine" && mine.has(o.id);
 
-  const tabbed = all.filter(inTab);
-  const shown = tabbed.filter((o) => filter === "tout" || o.kind === filter);
-  const nProjets = tabbed.filter((o) => o.kind === "projet").length;
-  const nFormations = tabbed.filter((o) => o.kind === "formation").length;
+  const tabbed = published.filter(inTab);
+  const shown = tabbed.filter((o) => filter === "tout" || matchesKind(o, filter));
+  const nProjets = tabbed.filter((o) => matchesKind(o, "projet")).length;
+  const nFormations = tabbed.filter((o) => matchesKind(o, "formation")).length;
 
   const filters: { key: Filter; label: string }[] = [
     { key: "tout", label: `Tout (${tabbed.length})` },
@@ -111,7 +115,7 @@ export default async function ServicesPage({
       {shown.length ? (
         <ul className="grid gap-[22px] lg:grid-cols-2">
           {shown.map((o) => {
-            const color = KIND_COLOR[o.kind];
+            const color = KIND_COLOR[o.is_project ? "projet" : "formation"];
             const places = placesLabel(o, taken(o));
             const organizer = o.organizer_label ?? o.services?.name;
             return (
@@ -126,7 +130,7 @@ export default async function ServicesPage({
                       className="label rounded-full px-3 py-1 text-[11px] tracking-[0.1em] text-foreground"
                       style={{ background: `color-mix(in srgb, ${color} 22%, transparent)` }}
                     >
-                      {KIND_LABEL[o.kind]}
+                      {TYPE_LABEL[opportunityType(o)]}
                     </span>
                     <span className="text-[13px] text-muted">
                       {mine.has(o.id) && status(o) !== "termine" ? "Inscrit" : STATUS_LABEL[status(o)]}
@@ -137,7 +141,7 @@ export default async function ServicesPage({
                     {o.title}
                   </h3>
                   <p className="mt-2 line-clamp-2 text-[15px] leading-relaxed text-muted">
-                    {o.description}
+                    {o.short_description || o.description}
                   </p>
 
                   <ul className="mt-auto space-y-2 pt-5 text-[15px] text-muted">
@@ -151,6 +155,7 @@ export default async function ServicesPage({
                         <CalendarDays size={17} strokeWidth={1.6} /> {o.schedule_label}
                       </li>
                     )}
+                    {o.location && <li className="flex items-center gap-2.5">{o.location}</li>}
                     <li className="flex items-center justify-between gap-2.5">
                       <span className="flex items-center gap-2.5">
                         {places && (

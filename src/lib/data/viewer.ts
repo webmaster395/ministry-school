@@ -12,7 +12,7 @@ export { isPlainStudent } from "@/lib/roles";
 export type Viewer = {
   id: string;
   fullName: string;
-  role: "student" | "teacher" | "admin";
+  role: "student" | "admin";
   ministrySlug: string | null;
   ministryName: string | null;
   roles: ViewerRoles;
@@ -51,6 +51,7 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
     full_name?: string;
     role?: Viewer["role"];
     is_teacher?: boolean;
+    is_projects_training_member?: boolean;
     deactivated?: boolean;
     avatar_path?: string | null;
     created_at?: string | null;
@@ -75,6 +76,12 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
   const seenAt = data.notifications_seen_at ?? "1970-01-01T00:00:00Z";
   const createdAt = data.created_at ?? null;
 
+  const { data: access } = await supabase
+    .from("profiles")
+    .select("is_projects_training_member")
+    .eq("id", userId)
+    .single();
+
   return {
     id: userId,
     unreadMessages: Number(data.unread_messages ?? 0),
@@ -92,10 +99,8 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
     deactivated: !!data.deactivated,
     avatarUrl,
     roles: {
-      teacher: role === "teacher" || !!data.is_teacher,
       admin: role === "admin",
-      serviceLead: !!data.is_service_lead,
-      projectLead: !!data.is_project_lead,
+      projectsTraining: !!access?.is_projects_training_member,
       steeringMinistryIds: data.steering_ministry_ids ?? [],
     },
   };

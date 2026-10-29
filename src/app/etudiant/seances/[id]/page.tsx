@@ -112,7 +112,7 @@ export default async function SessionDetailPage({
   const structuredPlace = coursePlace(s.location, s.room);
   const place = s.room ? `${s.location} · ${s.room}` : s.location;
   const teacher = s.speaker_name ?? s.teacher?.full_name ?? null;
-  const canManage = viewer.roles.admin || viewer.roles.teacher;
+  const canManage = viewer.roles.admin || viewer.roles.steeringMinistryIds.length > 0;
 
   const backHref = parcoursSlug
     ? `/etudiant/cours/parcours/${parcoursSlug}`
@@ -465,7 +465,7 @@ export default async function SessionDetailPage({
               </>
             ) : (
               <p className="mt-2 text-sm text-muted">
-                Les supports apparaîtront ici quand le formateur les aura
+                Les supports apparaîtront ici quand l’intervenant les aura
                 publiés.
               </p>
             )}

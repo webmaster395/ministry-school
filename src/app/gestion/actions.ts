@@ -54,7 +54,7 @@ export async function proposeOpportunity(_prev: ProposeState, formData: FormData
 
   if (!title || !lead || !description || !place)
     return { error: kind === "projet"
-      ? "Renseignez le titre, le chef de projet, le lieu et la présentation."
+      ? "Renseignez le titre, le responsable, le lieu et la présentation."
       : "Renseignez le titre, le responsable, le lieu et la présentation." };
   if (kind === "projet" && !referentId) return { error: "Sélectionnez un référent du suivi." };
   if (kind === "formation" && !serviceId) return { error: "Choisissez le service organisateur." };
@@ -143,7 +143,7 @@ export async function updateOpportunity(_prev: UpdateOpportunityState, formData:
 
   if (!title || !lead || !description || !place)
     return { error: kind === "projet"
-      ? "Renseignez le titre, le chef de projet, le lieu et la présentation."
+      ? "Renseignez le titre, le responsable, le lieu et la présentation."
       : "Renseignez le titre, le responsable, le lieu et la présentation." };
   if (kind === "formation" && !serviceId) return { error: "Choisissez le service organisateur." };
   if (!dates.length) return { error: "Choisissez au moins une date." };

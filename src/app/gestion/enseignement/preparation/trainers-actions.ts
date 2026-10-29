@@ -13,7 +13,7 @@ export async function updateSessionTrainers(formData: FormData) {
   const supabase = await createClient();
   const { data: session } = await supabase.from("sessions").select("teacher_id, ministry_id").eq("id", sessionId).single();
   const canEdit = viewer.roles.admin || session?.teacher_id === viewer.id || (!!session?.ministry_id && viewer.roles.steeringMinistryIds.includes(session.ministry_id));
-  if (!canEdit) throw new Error("Tu ne peux pas modifier les formateurs de cette séance.");
+  if (!canEdit) throw new Error("Tu ne peux pas modifier les intervenants de cette séance.");
 
   const { error: removeError } = await supabase.from("session_trainers").delete().eq("session_id", sessionId);
   if (removeError) throw new Error(removeError.message);

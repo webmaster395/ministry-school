@@ -6,12 +6,11 @@ import { getViewer } from "@/lib/data/viewer";
 
 export type CommunicationState = { error?: string; success?: boolean };
 
-type As = "admin" | "teacher" | "steering" | "service" | "project";
+type As = "admin" | "steering";
 
 /**
  * Envoie un message au nom d'une fonction. Chacun n'écrit qu'à son périmètre :
- * Admin → toute la promotion ou un ministère ; Formateur → son cours ; Pilotage → son ministère ;
- * Responsable de service → sa formation ; Chef de projet → son projet.
+ * Admin → toute la promotion ou un ministère ; Pilotage → son ministère.
  * L'application refuse d'abord avec un message clair, puis la base refuse de toute façon (RLS)
  * si quelqu'un contourne l'écran.
  */
@@ -28,10 +27,7 @@ export async function sendCommunication(_prev: CommunicationState, formData: For
 
   const allowed: Record<As, boolean> = {
     admin: viewer.roles.admin,
-    teacher: viewer.roles.teacher,
     steering: viewer.roles.steeringMinistryIds.length > 0,
-    service: viewer.roles.serviceLead,
-    project: viewer.roles.projectLead,
   };
   if (!allowed[as]) return { error: "Vous n'avez pas cette fonction." };
 
@@ -44,12 +40,6 @@ export async function sendCommunication(_prev: CommunicationState, formData: For
     if (as === "admin") row.ministry_id = id;
     else if (as === "steering" && viewer.roles.steeringMinistryIds.includes(id)) row.ministry_id = id;
     else return { error: "Ce ministère n'est pas dans votre périmètre." };
-  } else if (kind === "session") {
-    if (as !== "teacher") return { error: "Seul un formateur écrit à son cours." };
-    row.session_id = id;
-  } else if (kind === "opportunity") {
-    if (as !== "service" && as !== "project") return { error: "Cette cible n'est pas dans votre périmètre." };
-    row.opportunity_id = id;
   } else {
     return { error: "Destinataires non valides." };
   }

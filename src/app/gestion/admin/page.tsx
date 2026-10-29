@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getMembers, getOpportunitiesWithDates, getProgramEntries } from "@/lib/data/admin-hub";
 import OverviewTab from "@/components/admin/OverviewTab";
@@ -39,6 +40,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
   const requestedTab = p.onglet === "comptes-rendus" ? "projets" : p.onglet;
   const tab = VALID_TABS.includes(requestedTab ?? "") ? requestedTab! : "vue";
   const peopleView = p.personnes === "formateurs" || tab === "formateurs" ? "formateurs" : "membres";
+  if (tab === "projets") redirect("/gestion/projets-formations");
 
   const supabase = await createClient();
   const today = new Date().toISOString().slice(0, 10);
@@ -100,7 +102,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
             <h1 className="font-title mt-1 text-[30px] text-foreground">Membres</h1>
             <div className="mt-4 grid grid-cols-2 gap-2 sm:flex">
               <Link href="/gestion/admin?onglet=personnes" className={`rounded-full px-3 py-2.5 text-center text-xs sm:px-4 sm:py-2 sm:text-sm ${peopleView === "membres" ? "bg-accent text-on-accent" : "bg-surface text-muted"}`}>Étudiants et accès</Link>
-              <Link href="/gestion/admin?onglet=personnes&personnes=formateurs" className={`rounded-full px-3 py-2.5 text-center text-xs sm:px-4 sm:py-2 sm:text-sm ${peopleView === "formateurs" ? "bg-accent text-on-accent" : "bg-surface text-muted"}`}>Formateurs</Link>
+              <Link href="/gestion/admin?onglet=personnes&personnes=formateurs" className={`rounded-full px-3 py-2.5 text-center text-xs sm:px-4 sm:py-2 sm:text-sm ${peopleView === "formateurs" ? "bg-accent text-on-accent" : "bg-surface text-muted"}`}>Intervenants</Link>
             </div>
           </header>
           {peopleView === "membres" ? <MembersTab

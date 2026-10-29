@@ -24,9 +24,7 @@ const rolesOf = (m: Member, services: Map<string, string>, ministries: Map<strin
     return extra.length > 0 ? ["Admin", ...extra] : ["Admin (accès complet)"];
   }
   return [
-    m.is_teacher || m.role === "teacher" ? "Formateur" : null,
-    m.is_project_lead ? "Chef de projet" : null,
-    m.is_service_lead ? `Responsable de service${m.service_id ? ` · ${services.get(m.service_id) ?? ""}` : ""}` : null,
+    m.is_projects_training_member ? "Projets et formations" : null,
     m.ministry_lead_of ? `Pilotage · ${ministries.get(m.ministry_lead_of) ?? ""}` : null,
   ].filter(Boolean) as string[];
 };
@@ -80,11 +78,9 @@ export default async function MembersTab({
     .filter((m) => {
       if (role === "tous") return true;
       if (role === "admin") return m.role === "admin";
-      if (role === "enseignant") return m.is_teacher || m.role === "teacher";
-      if (role === "chef") return m.is_project_lead;
-      if (role === "responsable") return m.is_service_lead;
+      if (role === "projets-formations") return m.is_projects_training_member;
       if (role === "pilotage") return !!m.ministry_lead_of;
-      return m.role === "student" && !m.is_teacher && !m.is_project_lead && !m.is_service_lead && !m.ministry_lead_of;
+      return m.role === "student" && !m.is_projects_training_member && !m.ministry_lead_of;
     })
     .filter((m) => sens === "toutes" || (sens === "non_renseignee" ? !m.ministry_id : ministryById.get(m.ministry_id ?? "")?.slug === sens))
     .filter((m) => statut === "tous" || memberStatus(m) === statut)

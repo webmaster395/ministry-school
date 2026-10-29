@@ -1,10 +1,5 @@
-import NewOpportunity from "@/components/gestion/NewOpportunity";
+import { redirect } from "next/navigation";
 
-export default async function NewProjectPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ exemple?: string }>;
-}) {
-  const { exemple } = await searchParams;
-  return <NewOpportunity type="projet" exemple={exemple === "1" || exemple === "true"} />;
+export default function LegacyNewProjectPage() {
+  redirect("/gestion/projets-formations/nouveau");
 }

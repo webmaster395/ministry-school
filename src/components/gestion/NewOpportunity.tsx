@@ -60,7 +60,7 @@ export default async function NewOpportunity({
         objectives:
           "Comprendre les principes éthiques et la confidentialité dans l'écoute\nDévelopper des techniques d'écoute active et de reformulation\nAccompagner dans la prière avec discernement et bienveillance\nOrienter vers des professionnels compétents lorsque nécessaire",
         prerequisites:
-          "Être engagé dans un service de l'église depuis au moins 6 mois\nValidation préalable par le responsable de service",
+          "Être engagé dans un service de l'église depuis au moins 6 mois\nValidation préalable par le responsable affecté",
         serviceId: services?.[0]?.id ?? "",
       };
 
@@ -83,10 +83,10 @@ export default async function NewOpportunity({
             </h2>
             <p className="mt-1 text-sm text-muted">
               {type === "formation" && rights.formation
-                ? "Une formation est proposée par un responsable de service."
+                ? "Une formation est créée par un administrateur."
                 : type === "projet" && rights.projet
-                  ? "Un projet est proposé par un chef de projet."
-                  : "Une formation est proposée par un responsable de service, un projet par un chef de projet."}
+                  ? "Un projet est créé par un administrateur."
+                  : "Les projets et formations sont créés par un administrateur."}
             </p>
           </div>
 
@@ -183,7 +183,7 @@ export default async function NewOpportunity({
 
           <div>
             <label className="mb-1 block text-xs text-muted">
-              {type === "projet" ? "Chef de projet principal *" : "Responsable principal *"}
+              {type === "projet" ? "Responsable de projet principal *" : "Responsable principal *"}
             </label>
             <input
               name="organizer_label"

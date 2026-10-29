@@ -1,0 +1,26 @@
+import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { getMembers } from "@/lib/data/admin-hub";
+import { getServices } from "@/lib/data/opportunities";
+import OpportunityCreateForm from "@/components/admin/OpportunityCreateForm";
+
+function firstSaturday(year: number, month: number) {
+  const date = new Date(Date.UTC(year, month, 1));
+  date.setUTCDate(1 + ((6 - date.getUTCDay() + 7) % 7));
+  return date.toISOString().slice(0, 10);
+}
+
+export default async function NewProjectsTrainingPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/auth/connexion");
+  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+  if (profile?.role !== "admin") redirect("/gestion/projets-formations");
+  const [members, services] = await Promise.all([getMembers(supabase), getServices(supabase)]);
+  const now = new Date();
+  const schoolYear = now.getUTCMonth() >= 6 ? now.getUTCFullYear() : now.getUTCFullYear() - 1;
+  const suggestedSaturdays = [10, 11, 0, 1, 2, 3, 4, 5].map((month) => firstSaturday(month >= 10 ? schoolYear : schoolYear + 1, month));
+  return <div className="space-y-5"><Link href="/gestion/projets-formations" className="inline-flex items-center gap-1.5 text-sm text-muted"><ChevronLeft size={16} /> Projets et formations</Link><section className="rounded-2xl border border-border bg-background p-5 sm:p-8"><h1 className="font-title text-[30px]">Créer un projet ou une formation</h1><p className="mt-1 text-sm text-muted">Création réservée aux administrateurs.</p><div className="mt-7"><OpportunityCreateForm members={members.filter((member) => !member.deactivated).map(({ id, full_name, email }) => ({ id, full_name, email }))} services={services} suggestedSaturdays={suggestedSaturdays} /></div></section></div>;
+}

@@ -96,7 +96,7 @@ export default function AddCourseDialog({ ministryId, drafts = false }: { minist
             </div>
 
             <div>
-              <label className={label} htmlFor="course-speaker">Formateur ou intervenants</label>
+              <label className={label} htmlFor="course-speaker">Intervenant ou intervenants</label>
               <input
                 id="course-speaker"
                 name="speaker_name"

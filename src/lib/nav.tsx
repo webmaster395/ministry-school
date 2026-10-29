@@ -76,9 +76,9 @@ export const studentSections: NavSection[] = [
     items: [
       { label: "Mes cours", href: "/etudiant/cours", icon: icons.book },
       { label: "Travail à faire", href: "/etudiant/travail", icon: icons.task },
-      // Masquées aux étudiants tant que ces espaces ne sont pas prêts (pages et données conservées)
+      // Le ministère reste masqué tant que son espace n'est pas prêt.
       // { label: "Mon ministère", href: "/etudiant/formation", icon: icons.ministries },
-      // { label: "Services et projets", href: "/etudiant/services", icon: icons.services },
+      { label: "Projets et formations", href: "/etudiant/services", icon: icons.services },
     ],
   },
 ];
@@ -109,8 +109,7 @@ export function profileTabs(roles: ViewerRoles): ProfileTab[] {
   return tabs;
 }
 
-export type SpaceKey =
-  "admin" | "teacher" | "steering" | "services" | "project";
+export type SpaceKey = "admin" | "steering" | "projectsTraining";
 
 /** Une « casquette » : un ensemble d'entrées de menu que la personne choisit d'afficher. */
 export type Space = {
@@ -160,40 +159,9 @@ export function navSpaces(roles: ViewerRoles): Space[] {
               icon: icons.profile,
             },
             {
-              label: "Projets & services",
-              href: "/gestion/admin?onglet=projets",
+              label: "Projets et formations",
+              href: "/gestion/projets-formations",
               icon: icons.functions,
-            },
-            {
-              label: "Communication",
-              href: "/gestion/communication",
-              icon: icons.announce,
-            },
-          ],
-        },
-      ],
-    });
-  }
-
-  if (roles.admin || roles.teacher) {
-    spaces.push({
-      key: "teacher",
-      label: "Formateur",
-      title: "Mes cours",
-      subtitle: "Préparez les cours que vous enseignez.",
-      sections: [
-        {
-          title: "Enseignement",
-          items: [
-            {
-              label: "Préparer mes cours",
-              href: "/gestion/enseignement",
-              icon: icons.prep,
-            },
-            {
-              label: "Communication",
-              href: "/gestion/communication",
-              icon: icons.announce,
             },
           ],
         },
@@ -212,6 +180,7 @@ export function navSpaces(roles: ViewerRoles): Space[] {
           title: "Pilotage",
           items: [
             { label: "Pilotage", href: "/gestion/pilotage", icon: icons.steer },
+            { label: "Préparer les enseignements", href: "/gestion/enseignement", icon: icons.prep },
             {
               label: "Communication",
               href: "/gestion/communication",
@@ -223,53 +192,20 @@ export function navSpaces(roles: ViewerRoles): Space[] {
     });
   }
 
-  // Deux casquettes distinctes : le responsable de service propose des formations,
-  // le chef de projet des projets. L'administrateur a les deux.
-  if (roles.admin || roles.serviceLead) {
+  if (roles.admin || roles.projectsTraining) {
     spaces.push({
-      key: "services",
-      label: "Responsable de service",
-      title: "Responsable de service",
-      subtitle: "Créez et pilotez les formations de votre service.",
+      key: "projectsTraining",
+      label: "Projets et formations",
+      title: "Projets et formations",
+      subtitle: "Gérez uniquement les éléments auxquels vous êtes affecté.",
       sections: [
         {
-          title: "Services",
+          title: "Projets et formations",
           items: [
             {
-              label: "Mes formations",
-              href: "/gestion/services",
+              label: "Mes affectations",
+              href: "/gestion/projets-formations",
               icon: icons.propose,
-            },
-            {
-              label: "Communication",
-              href: "/gestion/communication",
-              icon: icons.announce,
-            },
-          ],
-        },
-      ],
-    });
-  }
-
-  if (roles.admin || roles.projectLead) {
-    spaces.push({
-      key: "project",
-      label: "Chef de projet",
-      title: "Chef de projet",
-      subtitle: "Créez et pilotez les projets dont vous êtes responsable.",
-      sections: [
-        {
-          title: "Projets",
-          items: [
-            {
-              label: "Mes projets",
-              href: "/gestion/projets",
-              icon: icons.projectPropose,
-            },
-            {
-              label: "Communication",
-              href: "/gestion/communication",
-              icon: icons.announce,
             },
           ],
         },

@@ -234,7 +234,7 @@ export default function ProposeDialog({
               /* ── Champs spécifiques projet ── */
               <>
                 <div>
-                  <label className={label} htmlFor="p-lead">Chef de projet principal *</label>
+                  <label className={label} htmlFor="p-lead">Responsable de projet principal *</label>
                   <input id="p-lead" name="organizer_label" required className={field} />
                 </div>
                 <PersonSearch name="referent_id" label="Référent du suivi *" />

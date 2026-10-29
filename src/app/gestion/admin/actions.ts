@@ -18,12 +18,10 @@ export async function updateMember(
   const text = (key: string) => ((data.get(key) as string) ?? "").trim();
   const on = (key: string) => data.get(key) === "on";
 
-  const { error } = await supabase.rpc("set_user_access", {
+  const { error } = await supabase.rpc("set_user_access_v2", {
     target: text("user_id"),
     p_admin: on("is_admin"),
-    p_teacher: on("is_teacher"),
-    p_service_lead: on("is_service_lead"),
-    p_project_lead: on("is_project_lead"),
+    p_projects_training: on("is_projects_training_member"),
     p_service: text("service_id") || null,
     p_ministry_lead: text("ministry_lead_of") || null,
   });

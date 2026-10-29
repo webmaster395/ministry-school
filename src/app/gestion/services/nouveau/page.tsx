@@ -1,10 +1,5 @@
-import NewOpportunity from "@/components/gestion/NewOpportunity";
+import { redirect } from "next/navigation";
 
-export default async function NewTrainingPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ exemple?: string }>;
-}) {
-  const { exemple } = await searchParams;
-  return <NewOpportunity type="formation" exemple={exemple === "1" || exemple === "true"} />;
+export default function LegacyNewTrainingPage() {
+  redirect("/gestion/projets-formations/nouveau");
 }

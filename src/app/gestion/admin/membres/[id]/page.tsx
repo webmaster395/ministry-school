@@ -63,7 +63,7 @@ export default async function AdminMemberProfilePage({ params, searchParams }: {
           <div className="min-w-0">
             <p className="label text-[10px] tracking-[0.16em] text-muted">FICHE PROFIL</p>
             <h1 className="font-title mt-1 text-[30px] leading-tight text-foreground sm:text-[36px]">{profile.full_name || "Sans nom"}</h1>
-            <p className="mt-2 text-sm capitalize text-muted">{profile.role === "admin" ? "Administrateur" : profile.role === "teacher" ? "Formateur" : "Étudiant"}</p>
+            <p className="mt-2 text-sm capitalize text-muted">{profile.role === "admin" ? "Administrateur" : profile.role === "teacher" ? "Intervenant" : "Étudiant"}</p>
           </div>
         </div>
 

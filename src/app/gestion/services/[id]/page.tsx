@@ -1,6 +1,6 @@
-import OpportunityManage from "@/components/gestion/OpportunityManage";
+import { redirect } from "next/navigation";
 
-export default async function ServiceManagePage({ params }: { params: Promise<{ id: string }> }) {
+export default async function LegacyTrainingPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  return <OpportunityManage id={id} kind="formation" />;
+  redirect(`/gestion/projets-formations/${id}`);
 }

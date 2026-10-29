@@ -10,7 +10,7 @@ export default async function TeacherLayout({ children }: { children: React.Reac
   const viewer = await getViewer();
   if (viewer?.deactivated) redirect("/auth/desactive");
   // Les onglets sont masqués aux autres rôles ; on bloque aussi l'accès direct par l'adresse.
-  if (!viewer?.roles.teacher && !viewer?.roles.admin) redirect("/etudiant");
+  if (!viewer?.roles.admin && !viewer?.roles.steeringMinistryIds.length) redirect("/etudiant");
 
   return (
     <SpaceProvider roles={viewer!.roles} unread={viewer!.unreadMessages}>

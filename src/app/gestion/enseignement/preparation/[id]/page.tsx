@@ -151,7 +151,7 @@ export default async function PreparationPage({
     ? "Retour au programme"
     : isPilot
       ? "Retour à la préparation"
-      : "Retour à l'Espace formateur";
+      : "Retour à l’espace d’enseignement";
   const panels = teacherPanels(
     s,
     assignments ?? [],
@@ -241,7 +241,7 @@ export default async function PreparationPage({
               Informations du cours
             </h3>
             <p className="text-sm text-muted">
-              Date, horaire, lieu et formateur.
+              Date, horaire, lieu et intervenant.
             </p>
           </div>
           <div className="px-6 pb-6 pt-2">
@@ -257,7 +257,7 @@ export default async function PreparationPage({
         <section className="rounded-2xl border border-border bg-background">
           <div className="border-b border-border-soft px-6 py-5">
             <h3 className="font-title text-[20px] text-foreground">
-              Formateurs de la séance
+              Intervenants de la séance
             </h3>
             <p className="text-sm text-muted">
               Sélectionne une ou plusieurs personnes depuis l’annuaire

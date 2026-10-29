@@ -8,7 +8,7 @@ const TITLES: Record<string, string> = {
   "/etudiant/cours": "Mes cours",
   "/etudiant/travail": "Travail à faire",
   "/etudiant/notes": "Mes notes",
-  "/etudiant/services": "Services et projets",
+  "/etudiant/services": "Projets et formations",
   "/etudiant/aide": "Une question ?",
   "/gestion/enseignement": "Préparer mes cours",
   "/gestion/pilotage": "Pilotage ministériel",
@@ -58,7 +58,7 @@ export default function HeaderTitle({ greeting }: { greeting: string }) {
       : pathname.startsWith("/etudiant/notes/")
         ? "Mes notes"
         : pathname.startsWith("/etudiant/services/")
-          ? "Services et projets"
+          ? "Projets et formations"
           : pathname.startsWith("/gestion/enseignement/preparation/") ||
               pathname.startsWith("/gestion/pilotage/preparation/")
             ? "Préparer le cours"

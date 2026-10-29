@@ -139,7 +139,7 @@ export default function EditOpportunityDialog({
                   <>
                     <div>
                       <label className={label} htmlFor="e-lead">
-                        Chef de projet principal *
+                        Responsable de projet principal *
                       </label>
                       <input id="e-lead" name="organizer_label" defaultValue={initialOrganizer} required className={field} />
                     </div>

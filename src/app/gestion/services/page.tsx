@@ -1,6 +1,5 @@
-import OpportunityList from "@/components/gestion/OpportunityList";
+import { redirect } from "next/navigation";
 
-export default async function ServicesPage({ searchParams }: { searchParams: Promise<{ onglet?: string }> }) {
-  const { onglet } = await searchParams;
-  return <OpportunityList kind="formation" tab={onglet} />;
+export default function LegacyServicesPage() {
+  redirect("/gestion/projets-formations");
 }

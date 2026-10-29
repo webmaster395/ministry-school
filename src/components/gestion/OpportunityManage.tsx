@@ -34,7 +34,7 @@ import { assignLead } from "@/app/gestion/actions";
 import EditOpportunityDialog from "./EditOpportunityDialog";
 
 const COPY: Record<OpportunityKind, { slug: string; back: string; leadRole: string }> = {
-  projet: { slug: "projets", back: "Mes projets", leadRole: "Chef de projet principal" },
+  projet: { slug: "projets", back: "Mes projets", leadRole: "Responsable de projet principal" },
   formation: { slug: "services", back: "Mes formations", leadRole: "Responsable principal" },
 };
 
@@ -219,7 +219,7 @@ export default async function OpportunityManage({ id, kind }: { id: string; kind
                 <input type="hidden" name="id" value={o.id} />
                 <div className="min-w-[220px] flex-1">
                   <label htmlFor="lead-select" className="mb-1.5 block text-[13px] text-muted">
-                    Responsable de service attribué
+                    Responsable de formation attribué
                   </label>
                   <select
                     id="lead-select"
@@ -255,7 +255,7 @@ export default async function OpportunityManage({ id, kind }: { id: string; kind
               </p>
             </div>
 
-            {/* ── Cartes d'informations clés (Chef de projet, Référent, Lieu, Horaires, Capacité) ── */}
+            {/* ── Cartes d'informations clés (Responsable de projet, Référent, Lieu, Horaires, Capacité) ── */}
             <div className="mt-6 grid gap-3 border-t border-border-soft pt-5 sm:grid-cols-2">
               <div className="flex items-start gap-3 rounded-xl border border-border bg-surface p-3.5">
                 <CircleUser size={20} className="mt-0.5 text-muted" />

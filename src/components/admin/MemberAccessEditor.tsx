@@ -23,9 +23,7 @@ export default function MemberAccessEditor({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(member.role === "admin");
-  const [isTeacher, setIsTeacher] = useState(member.is_teacher || member.role === "teacher");
-  const [isServiceLead, setIsServiceLead] = useState(member.is_service_lead);
-  const [isProjectLead, setIsProjectLead] = useState(member.is_project_lead);
+  const [isProjectsTraining, setIsProjectsTraining] = useState(member.is_projects_training_member);
 
   const [state, action, isPending] = useActionState<MemberActionResult, FormData>(updateMember, {});
   const [showSuccess, setShowSuccess] = useState(false);
@@ -84,16 +82,13 @@ export default function MemberAccessEditor({
                 <div>
                   <p className="font-semibold text-foreground">Accès complet inclus</p>
                   <p className="mt-0.5 text-muted">
-                    Un Admin a automatiquement accès à tous les espaces (Formateur, Pilotage, Services, Projets). Les autres cases sont donc figées.
+                    Un Admin a automatiquement accès à tous les espaces. Les autres cases sont donc figées.
                   </p>
                 </div>
               </div>
             )}
 
-            {/* Conserve l'état en base si déjà coché avant d'activer l'admin */}
-            {isAdmin && isTeacher && <input type="hidden" name="is_teacher" value="on" />}
-            {isAdmin && isServiceLead && <input type="hidden" name="is_service_lead" value="on" />}
-            {isAdmin && isProjectLead && <input type="hidden" name="is_project_lead" value="on" />}
+            {isAdmin && isProjectsTraining && <input type="hidden" name="is_projects_training_member" value="on" />}
 
             <label
               className={`flex items-center justify-between gap-2 rounded-md p-1 -mx-1 transition ${
@@ -103,16 +98,16 @@ export default function MemberAccessEditor({
               <span className="flex items-center gap-2">
                 <input
                   type="checkbox"
-                  name={isAdmin ? undefined : "is_teacher"}
+                  name={isAdmin ? undefined : "is_projects_training_member"}
                   disabled={isAdmin}
-                  checked={isTeacher}
+                  checked={isProjectsTraining}
                   onChange={(e) => {
-                    setIsTeacher(e.target.checked);
+                    setIsProjectsTraining(e.target.checked);
                     if (showSuccess) setShowSuccess(false);
                   }}
                   className={isAdmin ? "cursor-not-allowed" : ""}
                 />{" "}
-                <span className={isAdmin ? "text-muted" : "text-foreground"}>Formateur</span>
+                <span className={isAdmin ? "text-muted" : "text-foreground"}>Projets et formations</span>
               </span>
               {isAdmin && (
                 <span className="inline-flex items-center gap-1 text-[11px] text-muted">
@@ -121,69 +116,13 @@ export default function MemberAccessEditor({
               )}
             </label>
 
-            <label
-              className={`flex items-center justify-between gap-2 rounded-md p-1 -mx-1 transition ${
-                isAdmin ? "cursor-not-allowed opacity-55" : "cursor-pointer hover:bg-foreground/[0.02]"
-              }`}
-            >
-              <span className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  name={isAdmin ? undefined : "is_service_lead"}
-                  disabled={isAdmin}
-                  checked={isServiceLead}
-                  onChange={(e) => {
-                    setIsServiceLead(e.target.checked);
-                    if (showSuccess) setShowSuccess(false);
-                  }}
-                  className={isAdmin ? "cursor-not-allowed" : ""}
-                />{" "}
-                <span className={isAdmin ? "text-muted" : "text-foreground"}>
-                  Responsable de service (propose des formations)
-                </span>
-              </span>
-              {isAdmin && (
-                <span className="inline-flex items-center gap-1 text-[11px] text-muted">
-                  <Lock size={11} className="shrink-0" /> Figé
-                </span>
-              )}
-            </label>
-
-            <label
-              className={`flex items-center justify-between gap-2 rounded-md p-1 -mx-1 transition ${
-                isAdmin ? "cursor-not-allowed opacity-55" : "cursor-pointer hover:bg-foreground/[0.02]"
-              }`}
-            >
-              <span className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  name={isAdmin ? undefined : "is_project_lead"}
-                  disabled={isAdmin}
-                  checked={isProjectLead}
-                  onChange={(e) => {
-                    setIsProjectLead(e.target.checked);
-                    if (showSuccess) setShowSuccess(false);
-                  }}
-                  className={isAdmin ? "cursor-not-allowed" : ""}
-                />{" "}
-                <span className={isAdmin ? "text-muted" : "text-foreground"}>
-                  Chef de projet (propose des projets)
-                </span>
-              </span>
-              {isAdmin && (
-                <span className="inline-flex items-center gap-1 text-[11px] text-muted">
-                  <Lock size={11} className="shrink-0" /> Figé
-                </span>
-              )}
-            </label>
           </div>
 
           <div className="space-y-3">
-            {isServiceLead && (
-              <label className="block text-xs font-medium text-foreground">
-                Formation de service gérée dans la plateforme
+            <label className="block text-xs font-medium text-foreground">
+                Service associé
                 <select name="service_id" defaultValue={member.service_id ?? ""} className={`${field} mt-1.5 w-full`}>
-                  <option value="">Aucune formation attribuée</option>
+                  <option value="">Aucun service associé</option>
                   {services.map((s) => (
                     <option key={s.id} value={s.id}>
                       {s.name}
@@ -191,10 +130,9 @@ export default function MemberAccessEditor({
                   ))}
                 </select>
                 <span className="mt-1.5 block font-normal leading-relaxed text-muted">
-                  Ce choix donne un accès de gestion. Il ne correspond pas au service d&apos;implication déclaré librement par la personne.
+                  Cette information n’accorde pas à elle seule de droit de gestion.
                 </span>
               </label>
-            )}
             <select
               name="ministry_lead_of"
               defaultValue={member.ministry_lead_of ?? ""}

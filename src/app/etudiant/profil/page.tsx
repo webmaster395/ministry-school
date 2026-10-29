@@ -32,10 +32,8 @@ export default async function StudentProfilePage() {
   // Les fonctions de la personne, pour ne pas afficher « Étudiant » à un administrateur
   const functions = [
     r?.admin && "Admin",
-    r?.teacher && "Formateur",
     r && r.steeringMinistryIds.length > 0 && "Pilotage",
-    r?.serviceLead && "Responsable de service",
-    r?.projectLead && "Chef de projet",
+    r?.projectsTraining && "Projets et formations",
   ].filter(Boolean) as string[];
 
   return (

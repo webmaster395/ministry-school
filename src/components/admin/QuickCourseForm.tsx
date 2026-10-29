@@ -88,9 +88,9 @@ export default function QuickCourseForm({
           )}
 
           <label className="block text-sm font-medium">
-            Formateur{category === "Services & Projets" ? " (facultatif)" : ""}
+            Intervenant{category === "Services & Projets" ? " (facultatif)" : ""}
             <select name="trainer_id" required={category !== "Services & Projets"} className={field}>
-              <option value="">{category === "Services & Projets" ? "Aucun formateur" : "Choisir un formateur"}</option>
+              <option value="">{category === "Services & Projets" ? "Aucun intervenant" : "Choisir un intervenant"}</option>
               {trainers.map((trainer) => <option key={trainer.id} value={trainer.id}>{trainer.name}</option>)}
             </select>
           </label>

@@ -782,7 +782,7 @@ export default function CourseExperience({
                 >
                   <summary className="flex min-h-12 cursor-pointer list-none items-center gap-3 rounded-lg [&::-webkit-details-marker]:hidden">
                     <span className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-full bg-surface text-[11px] font-bold text-muted">{trainer.photoUrl ? <img src={trainer.photoUrl} alt="" loading="lazy" className="h-full w-full object-cover" /> : initials(trainer.name)}</span>
-                    <span className="min-w-0 flex-1"><strong className="block truncate text-sm text-foreground">{trainer.name}</strong><span className="block truncate text-xs text-muted">{trainer.title || "Formateur"}</span></span>
+                    <span className="min-w-0 flex-1"><strong className="block truncate text-sm text-foreground">{trainer.name}</strong><span className="block truncate text-xs text-muted">{trainer.title || "Intervenant"}</span></span>
                     <span className="text-xs font-semibold text-muted group-open:hidden">En savoir plus</span>
                     <ChevronRight size={16} className="shrink-0 text-muted transition group-open:rotate-90" />
                   </summary>

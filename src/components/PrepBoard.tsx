@@ -143,7 +143,7 @@ function Next({ row, today, ministryColor, pilot, panels }: { row: PrepRow; toda
             <MapPin size={17} strokeWidth={1.6} />
             {s.location}
             {s.room ? ` · ${s.room}` : ""}
-            {teacher ? ` · ${teacher}` : pilot ? " · Formateur à affecter" : ""}
+            {teacher ? ` · ${teacher}` : pilot ? " · Intervenant à affecter" : ""}
             {!pilot && (days > 0 ? ` · Dans ${days} jour${days > 1 ? "s" : ""}` : days === 0 ? " · Aujourd'hui" : "")}
           </p>
           {students !== null && !pilot && (
@@ -189,7 +189,7 @@ function Next({ row, today, ministryColor, pilot, panels }: { row: PrepRow; toda
         <h3 className="font-title text-[24px] text-foreground">{pilot ? "Préparer le cours" : "Préparer mon cours"}</h3>
         <p className="text-sm text-muted">
           {pilot
-            ? "Complétez les informations nécessaires avec le formateur, sur la même fiche de cours."
+            ? "Complétez les informations nécessaires avec l’intervenant, sur la même fiche de cours."
             : "Complétez chaque partie pour que les étudiants disposent de toutes les informations nécessaires."}
         </p>
       </div>
@@ -293,7 +293,7 @@ const FILTERS: { key: UpcomingFilter; label: string }[] = [
   { key: "tous", label: "Tous" },
   { key: "a-completer", label: "À compléter" },
   { key: "prets", label: "Prêts" },
-  { key: "sans-formateur", label: "Sans formateur" },
+  { key: "sans-formateur", label: "Sans intervenant" },
 ];
 
 /** « Brouillon » : cours pas encore publié ; sinon « À compléter » puis « Prêt » quand tout l'est. */
@@ -389,7 +389,7 @@ function UpcomingTable({
                     <span className="min-w-0">
                       <span className="block text-[17px] font-semibold text-foreground">{titleOf(s)}</span>
                       <span className="block text-[14px] text-muted">
-                        {ministry ? `${s.speaker_name ?? s.teacher?.full_name ?? "Formateur à affecter"} · ` : ""}
+                        {ministry ? `${s.speaker_name ?? s.teacher?.full_name ?? "Intervenant à affecter"} · ` : ""}
                         {s.location}
                         {s.room ? ` · ${s.room}` : ""}
                       </span>

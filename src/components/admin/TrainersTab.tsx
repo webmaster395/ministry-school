@@ -30,7 +30,7 @@ function TrainerForm({ trainer }: { trainer?: TrainerAdminRow }) {
         <label className="block space-y-1.5 text-sm text-muted">Fonction ou titre<input name="title" defaultValue={trainer?.title ?? ""} placeholder="Ex. Pasteur, coach, intervenante…" className={field} /></label>
         <label className="block space-y-1.5 text-sm text-muted">Courte biographie<textarea name="bio" rows={4} defaultValue={trainer?.bio ?? ""} className={field} /></label>
         <input type="hidden" name="is_active" value={trainer?.is_active === false ? "0" : "1"} />
-        <FormSubmitButton className="rounded-full bg-accent px-6 py-3 text-sm font-semibold text-on-accent" label={trainer ? "Enregistrer les modifications" : "Créer le formateur"} />
+        <FormSubmitButton className="rounded-full bg-accent px-6 py-3 text-sm font-semibold text-on-accent" label={trainer ? "Enregistrer les modifications" : "Créer l’intervenant"} />
       </div>
     </form>
   );
@@ -41,12 +41,12 @@ export default function TrainersTab({ trainers }: { trainers: TrainerAdminRow[] 
     <div className="space-y-6">
       <header>
         <p className="label text-xs tracking-[0.18em] text-muted">Annuaire centralisé</p>
-        <h1 className="font-title mt-2 text-[30px] leading-tight text-foreground sm:text-[38px]">Formateurs</h1>
+        <h1 className="font-title mt-2 text-[30px] leading-tight text-foreground sm:text-[38px]">Intervenants</h1>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">Une seule fiche par intervenant. Sa photo et ses informations se mettent ensuite à jour sur tous ses cours.</p>
       </header>
 
       <details className="rounded-xl border border-border bg-background p-4 sm:rounded-2xl sm:p-7">
-        <summary className="cursor-pointer list-none font-title text-xl text-foreground">+ Ajouter un formateur</summary>
+        <summary className="cursor-pointer list-none font-title text-xl text-foreground">+ Ajouter un intervenant</summary>
         <div className="mt-6 border-t border-border-soft pt-6"><TrainerForm /></div>
       </details>
 
@@ -57,14 +57,14 @@ export default function TrainersTab({ trainers }: { trainers: TrainerAdminRow[] 
               <span className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-full bg-surface font-semibold text-muted">
                 {trainer.photoUrl ? <img src={trainer.photoUrl} alt="" className="h-full w-full object-cover" /> : `${trainer.first_name[0] ?? ""}${trainer.last_name[0] ?? ""}`.toUpperCase()}
               </span>
-              <span className="min-w-0 flex-1"><strong className="block truncate text-base text-foreground">{trainer.first_name} {trainer.last_name}</strong><span className="block truncate text-sm text-muted">{trainer.title || (trainer.is_active ? "Formateur" : "Désactivé")}</span></span>
+              <span className="min-w-0 flex-1"><strong className="block truncate text-base text-foreground">{trainer.first_name} {trainer.last_name}</strong><span className="block truncate text-sm text-muted">{trainer.title || (trainer.is_active ? "Intervenant" : "Désactivé")}</span></span>
               <span className="hidden text-sm text-link min-[360px]:inline">Modifier</span>
             </summary>
             <div className="mt-6 border-t border-border-soft pt-6"><TrainerForm trainer={trainer} /></div>
             <form action={setTrainerActive} className="mt-5 border-t border-border-soft pt-4">
               <input type="hidden" name="id" value={trainer.id} />
               <input type="hidden" name="active" value={trainer.is_active ? "0" : "1"} />
-              <button type="submit" className="text-sm text-muted underline underline-offset-4">{trainer.is_active ? "Désactiver ce formateur" : "Réactiver ce formateur"}</button>
+              <button type="submit" className="text-sm text-muted underline underline-offset-4">{trainer.is_active ? "Désactiver cet intervenant" : "Réactiver cet intervenant"}</button>
             </form>
           </details>
         ))}

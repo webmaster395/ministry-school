@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getViewer } from "@/lib/data/viewer";
-import { getTeacherPrepSessions } from "@/lib/data/pilotage";
 import CommunicationForm, { type CommunicationOption } from "@/components/gestion/CommunicationForm";
 import { deleteCommunication } from "./actions";
 
@@ -20,10 +19,10 @@ type Sent = {
 
 const AS_LABEL: Record<string, string> = {
   admin: "Admin",
-  teacher: "Formateur",
+  teacher: "Intervenant",
   steering: "Pilotage ministériel",
-  service: "Responsable de service",
-  project: "Chef de projet",
+  service: "Projets et formations",
+  project: "Projets et formations",
 };
 
 const fmt = (v: string) => new Intl.DateTimeFormat("fr-FR", { dateStyle: "short", timeStyle: "short" }).format(new Date(v));
@@ -33,7 +32,7 @@ export default async function CommunicationPage() {
   const viewer = await getViewer();
   if (!viewer) redirect("/login");
   const r = viewer.roles;
-  const hasFunction = r.admin || r.teacher || r.steeringMinistryIds.length > 0 || r.serviceLead || r.projectLead;
+  const hasFunction = r.admin || r.steeringMinistryIds.length > 0;
   if (!hasFunction) redirect("/etudiant");
 
   const supabase = await createClient();
@@ -52,16 +51,6 @@ export default async function CommunicationPage() {
     });
   }
 
-  if (r.teacher) {
-    const sessions = await getTeacherPrepSessions(supabase, viewer.id);
-    options.push({
-      as: "teacher",
-      label: "Formateur",
-      targetLabel: "Votre cours",
-      targets: sessions.map((s) => ({ value: `session:${s.id}`, label: `${dayLabel(s.session_date)} · ${s.description ?? "Cours"}` })),
-    });
-  }
-
   if (r.steeringMinistryIds.length > 0) {
     const { data: ministries } = await supabase.from("ministries").select("id, name").in("id", r.steeringMinistryIds).order("name");
     options.push({
@@ -71,18 +60,6 @@ export default async function CommunicationPage() {
       targets: (ministries ?? []).map((m) => ({ value: `ministry:${m.id}`, label: m.name })),
     });
   }
-
-  const mine = async (kind: "formation" | "projet") => {
-    const { data } = await supabase
-      .from("opportunities")
-      .select("id, title")
-      .eq("kind", kind)
-      .or(`created_by.eq.${viewer.id},lead_id.eq.${viewer.id}`)
-      .order("title");
-    return (data ?? []).map((o) => ({ value: `opportunity:${o.id}`, label: o.title as string }));
-  };
-  if (r.serviceLead) options.push({ as: "service", label: "Responsable de service", targetLabel: "Votre formation", targets: await mine("formation") });
-  if (r.projectLead) options.push({ as: "project", label: "Chef de projet", targetLabel: "Votre projet", targets: await mine("projet") });
 
   // Les messages envoyés : les siens, et tous pour un Admin
   let query = supabase

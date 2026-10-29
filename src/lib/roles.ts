@@ -5,10 +5,8 @@
  * Les rôles se cumulent : tout le monde a la vue étudiant, et chaque rôle ajoute des onglets.
  */
 export type ViewerRoles = {
-  teacher: boolean;
   admin: boolean;
-  serviceLead: boolean;
-  projectLead: boolean;
+  projectsTraining: boolean;
   /** Ministères pilotés (en propre ou par délégation), par identifiant */
   steeringMinistryIds: string[];
 };
@@ -17,9 +15,7 @@ export type ViewerRoles = {
 export function isPlainStudent(roles: ViewerRoles) {
   return (
     !roles.admin &&
-    !roles.teacher &&
-    !roles.serviceLead &&
-    !roles.projectLead &&
+    !roles.projectsTraining &&
     roles.steeringMinistryIds.length === 0
   );
 }

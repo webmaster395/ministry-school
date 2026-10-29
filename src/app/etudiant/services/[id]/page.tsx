@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { CalendarDays, Check, Clock } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import { createClient } from "@/lib/supabase/server";
@@ -7,11 +6,14 @@ import {
   getMyRegistrationIds,
   getOpportunities,
   getOpportunityCounts,
+  getProjectsTrainingRights,
+  isPublished,
   KIND_COLOR,
-  KIND_LABEL,
+  opportunityType,
   placesLabel,
   statusOf,
   STATUS_LABEL,
+  TYPE_LABEL,
 } from "@/lib/data/opportunities";
 import { DETAILS_ENABLED, linesOf } from "@/lib/opportunity-details";
 import { toggleRegistration } from "../actions";
@@ -58,18 +60,17 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
     data: { user },
   } = await supabase.auth.getUser();
 
-  const [all, counts, mine, { data: me }] = await Promise.all([
+  const [all, counts, mine, rights] = await Promise.all([
     getOpportunities(supabase),
     getOpportunityCounts(supabase),
     getMyRegistrationIds(supabase, user!.id),
-    supabase.from("profiles").select("role").eq("id", user!.id).single(),
+    getProjectsTrainingRights(supabase, user!.id),
   ]);
   const o = all.find((x) => x.id === id);
   if (!o) redirect("/etudiant/services");
 
-  const isAdmin = me?.role === "admin";
-  const isOwner = o.created_by === user!.id || o.lead_id === user!.id;
-  if (!o.registration_open && !isAdmin && !isOwner) {
+  const canPreview = rights.admin || rights.assignments.has(id);
+  if (!isPublished(o) && !canPreview) {
     redirect("/etudiant/services");
   }
 
@@ -77,7 +78,7 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
   const taken = counts.get(o.id) ?? 0;
   const status = statusOf(o, taken, today);
   const registered = mine.has(o.id);
-  const color = KIND_COLOR[o.kind];
+  const color = KIND_COLOR[o.is_project ? "projet" : "formation"];
   const places = placesLabel(o, taken);
   const organizer = o.organizer_label ?? o.services?.name ?? null;
 
@@ -107,25 +108,25 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
     .join("");
 
   const canJoin = o.registration_open && (registered || status === "disponible");
-  const target = o.kind === "projet" ? "ce projet" : "cette formation";
+  const target = opportunityType(o) === "projet" ? "ce projet" : opportunityType(o) === "formation" ? "cette formation" : "ce projet et cette formation";
 
   const facts: { label: string; value: string | null }[] = [
     { label: "Date ou période", value: period },
     { label: "Horaire", value: hours.length ? hours.join(" · ") : null },
-    { label: "Lieu", value: rooms.length ? rooms.join(", ") : null },
+    { label: "Lieu", value: o.location || (rooms.length ? rooms.join(", ") : null) },
     { label: "Places", value: o.capacity !== null ? `${o.capacity} au total` : null },
     { label: "Disponibilité", value: places },
   ];
 
   return (
     <div className="space-y-5">
-      {!o.registration_open && (
+      {!isPublished(o) && canPreview && (
         <div className="flex items-start gap-3 rounded-xl border border-border bg-surface p-4 text-[14px]">
           <Clock size={18} className="mt-0.5 shrink-0 text-muted" />
           <p className="text-foreground">
             <strong className="font-semibold">Mode aperçu :</strong>{" "}
             <span className="text-muted">
-              Cette proposition est en attente de validation administrative. Elle n&apos;est pas visible par les étudiants et les inscriptions sont fermées.
+              Cet élément n&apos;est pas publié. Il reste invisible dans le catalogue étudiant.
             </span>
           </p>
         </div>
@@ -142,7 +143,7 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
               className="rounded-full px-3 py-1 text-[12px] font-semibold text-white"
               style={{ background: color }}
             >
-              {KIND_LABEL[o.kind]}
+              {TYPE_LABEL[opportunityType(o)]}
             </span>
             <span className="text-[13px] text-muted">
               {registered && status !== "termine" ? "Inscrit" : STATUS_LABEL[status]}
@@ -155,7 +156,7 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
           {objectives.length > 0 && (
             <section className="mt-8">
               <h3 className="font-title text-[20px] text-foreground">
-                Objectifs {o.kind === "projet" ? "du projet" : "de la formation"}
+                Objectifs
               </h3>
               <Checklist items={objectives} />
             </section>
@@ -167,6 +168,9 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
               <Checklist items={prerequisites.length ? prerequisites : ["Aucun prérequis particulier"]} />
             </section>
           )}
+
+          {o.speakers && <section className="mt-8 border-t border-border pt-6"><h3 className="font-title text-[20px] text-foreground">Intervenants</h3><p className="mt-3 whitespace-pre-line text-[15px] text-muted">{o.speakers}</p></section>}
+          {o.participant_material && <section className="mt-8 border-t border-border pt-6"><h3 className="font-title text-[20px] text-foreground">Matériel à apporter</h3><p className="mt-3 whitespace-pre-line text-[15px] text-muted">{o.participant_material}</p></section>}
 
           {dates.length > 0 && (
             <section className="mt-8 border-t border-border pt-6">
@@ -213,11 +217,11 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
               ))}
           </dl>
 
-          {status === "termine" ? (
+          {!isPublished(o) ? null : status === "termine" ? (
             <p className="mt-4 text-sm text-muted">Cette proposition est terminée.</p>
           ) : (
             <>
-              {canJoin ? (
+              {canJoin && (!registered || o.cancellation_allowed) ? (
                 <form action={toggleRegistration} className="mt-4">
                   <input type="hidden" name="opportunity_id" value={o.id} />
                   <input type="hidden" name="registered" value={registered ? "1" : "0"} />
@@ -239,7 +243,7 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
               )}
               {registered && (
                 <p className="mt-2 text-center text-[13px] text-muted">
-                  Vous êtes inscrit. Vous pouvez vous désinscrire à tout moment.
+                  Votre inscription est confirmée{o.cancellation_allowed ? ". Vous pouvez l’annuler." : "."}
                 </p>
               )}
             </>

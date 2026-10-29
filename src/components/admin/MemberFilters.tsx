@@ -18,7 +18,7 @@ export type MemberFilterValues = {
 };
 
 const field = "min-h-10 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition focus:border-foreground";
-const ROLE_LABELS: Record<string, string> = { etudiant: "Étudiant", enseignant: "Formateur", chef: "Chef de projet", responsable: "Responsable de service", pilotage: "Pilotage ministériel", admin: "Admin" };
+const ROLE_LABELS: Record<string, string> = { etudiant: "Étudiant", "projets-formations": "Projets et formations", pilotage: "Pilotage ministériel", admin: "Admin" };
 const STATUS_LABELS: Record<string, string> = { actif: "Actif", a_confirmer: "À confirmer", desactive: "Désactivé" };
 const IMPLICATION_LABELS: Record<string, string> = { aucun: "Aucun engagement", equipier: "Équipier MLK", manager: "Manager", collaborateur: "Collaborateur", non_renseigne: "Non renseignée" };
 const GENDER_LABELS: Record<string, string> = { homme: "Hommes", femme: "Femmes", non_renseigne: "Non renseigné" };
@@ -85,7 +85,7 @@ export default function MemberFilters({ initial, ministries }: { initial: Member
           {pending && <Loader2 size={16} className="absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-muted" aria-label="Recherche en cours" />}
         </label>
         <select name="role" value={values.role} onChange={(event) => change("role", event.target.value)} className={`${field} hidden min-w-[150px] sm:block`} aria-label="Rôle">
-          <option value="tous">Tous les rôles</option><option value="etudiant">Étudiant seulement</option><option value="enseignant">Formateur</option><option value="chef">Chef de projet</option><option value="responsable">Responsable de service</option><option value="pilotage">Pilotage ministériel</option><option value="admin">Admin</option>
+          <option value="tous">Tous les rôles</option><option value="etudiant">Étudiant seulement</option><option value="projets-formations">Projets et formations</option><option value="pilotage">Pilotage ministériel</option><option value="admin">Admin</option>
         </select>
         <select name="statut" value={values.statut} onChange={(event) => change("statut", event.target.value)} className={`${field} hidden min-w-[145px] sm:block`} aria-label="Statut">
           <option value="tous">Tous les statuts</option><option value="actif">Actif</option><option value="a_confirmer">À confirmer</option><option value="desactive">Désactivé</option>
@@ -113,7 +113,7 @@ export default function MemberFilters({ initial, ministries }: { initial: Member
           <div className="flex-none space-y-5 overflow-y-auto px-5 py-4 sm:px-6 sm:py-5">
             <fieldset className="space-y-3 sm:hidden">
               <legend className="label mb-3 text-[11px] tracking-[0.14em] text-muted">ACCÈS</legend>
-              <label className="block space-y-1.5 text-sm">Rôle<select value={values.role} onChange={(event) => change("role", event.target.value, false)} className={`${field} w-full`}><option value="tous">Tous les rôles</option><option value="etudiant">Étudiant seulement</option><option value="enseignant">Formateur</option><option value="chef">Chef de projet</option><option value="responsable">Responsable de service</option><option value="pilotage">Pilotage ministériel</option><option value="admin">Admin</option></select></label>
+              <label className="block space-y-1.5 text-sm">Rôle<select value={values.role} onChange={(event) => change("role", event.target.value, false)} className={`${field} w-full`}><option value="tous">Tous les rôles</option><option value="etudiant">Étudiant seulement</option><option value="projets-formations">Projets et formations</option><option value="pilotage">Pilotage ministériel</option><option value="admin">Admin</option></select></label>
               <label className="block space-y-1.5 text-sm">Statut<select value={values.statut} onChange={(event) => change("statut", event.target.value, false)} className={`${field} w-full`}><option value="tous">Tous les statuts</option><option value="actif">Actif</option><option value="a_confirmer">À confirmer</option><option value="desactive">Désactivé</option></select></label>
             </fieldset>
             <fieldset className="space-y-3">

@@ -24,12 +24,12 @@ export default function TrainerMultiSelect({ sessionId, trainers, selectedIds }:
       <input type="hidden" name="session_id" value={sessionId} />
       {[...checkedIds].map((id) => <input key={id} type="hidden" name="trainer_ids" value={id} />)}
       {selected.length > 0 && <div className="flex items-center gap-3"><div className="flex -space-x-2">{selected.map((trainer) => <span key={trainer.id} className="rounded-full border-2 border-background"><Avatar trainer={trainer} /></span>)}</div><p className="text-sm text-muted">{selected.map((trainer) => trainer.name).join(" · ")}</p></div>}
-      <label className="flex items-center gap-2 rounded-xl border border-border bg-surface px-3"><Search size={17} className="text-muted" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Rechercher un formateur" className="min-w-0 flex-1 bg-transparent py-3 text-sm outline-none" /></label>
+      <label className="flex items-center gap-2 rounded-xl border border-border bg-surface px-3"><Search size={17} className="text-muted" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Rechercher un intervenant" className="min-w-0 flex-1 bg-transparent py-3 text-sm outline-none" /></label>
       <div className="max-h-72 space-y-1 overflow-y-auto rounded-xl border border-border p-2">
         {filtered.map((trainer) => <label key={trainer.id} className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 transition hover:bg-surface"><input type="checkbox" checked={checkedIds.has(trainer.id)} onChange={(event) => setCheckedIds((current) => { const next = new Set(current); if (event.target.checked) next.add(trainer.id); else next.delete(trainer.id); return next; })} className="h-4 w-4 accent-[var(--accent)]" /><Avatar trainer={trainer} /><span className="min-w-0"><strong className="block truncate text-sm text-foreground">{trainer.name}</strong>{trainer.title && <small className="block truncate text-muted">{trainer.title}</small>}</span></label>)}
-        {!filtered.length && <p className="p-4 text-center text-sm text-muted">Aucun formateur trouvé.</p>}
+        {!filtered.length && <p className="p-4 text-center text-sm text-muted">Aucun intervenant trouvé.</p>}
       </div>
-      <FormSubmitButton className="rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent" label="Enregistrer les formateurs" />
+      <FormSubmitButton className="rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent" label="Enregistrer les intervenants" />
     </form>
   );
 }

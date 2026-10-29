@@ -110,8 +110,8 @@ export function checklistOf(
   };
   const enseignant: ChecklistItem = {
     key: "enseignant",
-    label: "Formateur",
-    detail: teacher ?? "Aucun formateur affecté",
+    label: "Intervenant",
+    detail: teacher ?? "Aucun intervenant affecté",
     done: !!teacher,
     required: true,
   };

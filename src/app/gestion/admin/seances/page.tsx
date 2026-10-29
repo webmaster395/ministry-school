@@ -70,7 +70,7 @@ export default async function AdminSessionsPage() {
           </div>
 
           <div>
-            <label className="mb-1 block text-xs text-muted">Formateur (compte, optionnel)</label>
+            <label className="mb-1 block text-xs text-muted">Intervenant (compte, optionnel)</label>
             <select
               name="teacher_id"
               className="w-full rounded-md border border-border px-3 py-2 text-sm"

@@ -32,7 +32,7 @@ export default async function TeacherProfilePage() {
         user?.phone ??
         ""
       }
-      roleLabel="Formateur"
+      roleLabel="Intervenant"
       ministryName={ministryName}
       fields={[
         { label: "Séances assignées", value: String(sessions.length) },
