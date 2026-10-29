@@ -1,12 +1,15 @@
 "use client";
 
-import { CalendarDays, ImagePlus, Plus, Trash2 } from "lucide-react";
+import { CalendarDays, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import type { Opportunity, Responsibility } from "@/lib/data/opportunities";
 import { opportunityType } from "@/lib/data/opportunities";
 import { replaceOpportunityDates, updateOpportunityContent, updateOpportunityManagement } from "@/app/etudiant/services/actions";
 import DynamicListInput from "@/components/DynamicListInput";
+import OpportunityBanner from "@/components/OpportunityBanner";
+import OpportunityEmojiPicker from "@/components/OpportunityEmojiPicker";
 import RichTextEditor from "@/components/gestion/RichTextEditor";
+import { opportunityEmoji } from "@/lib/opportunity-banner";
 
 type DateRow = { id?: string; session_date: string; start_time: string; end_time: string; room: string | null; location: string | null; capacity: number | null };
 const field = "min-h-11 w-full rounded-xl border border-border bg-background px-3 text-sm text-foreground outline-none focus:border-accent";
@@ -22,6 +25,9 @@ export default function OpportunityEditForms({ opportunity: o, initialDates, res
   const [dates, setDates] = useState(initialDates);
   const [publishedAt, setPublishedAt] = useState(localDateTime(o.published_at));
   const [publication, setPublication] = useState(o.publication_status);
+  const [title, setTitle] = useState(o.title);
+  const [type, setType] = useState(opportunityType(o));
+  const [emoji, setEmoji] = useState(opportunityEmoji(o.banner_emoji));
   const manager = responsibility === "manager" || responsibility === "admin";
   const addDate = (date = "") => {
     if (date && dates.some((row) => row.session_date === date)) return;
@@ -46,14 +52,15 @@ export default function OpportunityEditForms({ opportunity: o, initialDates, res
       {manager && <>
         <details className="rounded-3xl border border-border bg-background p-5 sm:p-7">
           <summary className="cursor-pointer font-title text-[21px]">Informations générales et publication</summary>
-          <form action={updateOpportunityManagement} encType="multipart/form-data" className="mt-5 grid gap-4 sm:grid-cols-2">
+          <form action={updateOpportunityManagement} className="mt-5 grid gap-4 sm:grid-cols-2">
             <input type="hidden" name="opportunity_id" value={o.id} />
-            <label className="sm:col-span-2"><Label>Nom</Label><input name="title" required defaultValue={o.title} className={field} /></label>
-            <fieldset className="sm:col-span-2"><legend className="mb-2 text-sm font-semibold">Type</legend><div className="grid gap-2 sm:grid-cols-3">{[["projet","Projet"],["formation","Formation"],["both","Projet et formation"]].map(([value,label]) => <label key={value}><input className="peer sr-only" type="radio" name="type" value={value} defaultChecked={opportunityType(o) === value} /><span className="block cursor-pointer rounded-xl border border-border px-3 py-3 text-center text-sm peer-checked:bg-accent peer-checked:text-on-accent">{label}</span></label>)}</div></fieldset>
+            <div className="sm:col-span-2 overflow-hidden rounded-2xl"><OpportunityBanner emoji={emoji} title={title} typeLabel={type === "both" ? "Projet et formation" : type === "formation" ? "Formation" : "Projet"} variant="preview" /></div>
+            <label className="sm:col-span-2"><Label>Nom</Label><input name="title" required value={title} onChange={(event) => setTitle(event.target.value)} className={field} /></label>
+            <fieldset className="sm:col-span-2"><legend className="mb-2 text-sm font-semibold">Type</legend><div className="grid gap-2 sm:grid-cols-3">{[["projet","Projet"],["formation","Formation"],["both","Projet et formation"]].map(([value,label]) => <label key={value}><input className="peer sr-only" type="radio" name="type" value={value} checked={type === value} onChange={() => setType(value as typeof type)} /><span className="block cursor-pointer rounded-xl border border-border px-3 py-3 text-center text-sm peer-checked:bg-accent peer-checked:text-on-accent">{label}</span></label>)}</div></fieldset>
+            <div className="sm:col-span-2"><OpportunityEmojiPicker value={emoji} onChange={setEmoji} /></div>
             <label className="sm:col-span-2"><Label>Service pilote</Label><input name="service_name" list={`services-${o.id}`} defaultValue={o.services?.name ?? o.organizer_label ?? ""} className={field} /><datalist id={`services-${o.id}`}>{services.map((service) => <option key={service.id} value={service.name} />)}</datalist></label>
             <label><Label>Lieu principal</Label><input name="location" defaultValue={o.location ?? ""} className={field} /></label>
             <label><Label>Places par séance</Label><input type="number" min={1} name="capacity" defaultValue={o.capacity ?? ""} className={field} /></label>
-            <label className="sm:col-span-2 flex min-h-24 cursor-pointer items-center justify-center gap-2 rounded-2xl border border-dashed border-border bg-surface text-sm font-medium"><ImagePlus size={18} /> Modifier la bannière<input type="file" name="cover_image" accept="image/jpeg,image/png,image/webp" className="sr-only" /></label>
             <div className="sm:col-span-2 rounded-2xl bg-surface p-4"><p className="mb-3 text-sm font-semibold">Publication</p><div className="grid gap-3 sm:grid-cols-2"><select name="publication_status" value={publication} onChange={(event) => setPublication(event.target.value as Opportunity["publication_status"])} className={field}><option value="draft">Brouillon</option><option value="published">Publié</option><option value="scheduled">Programmé</option><option value="unpublished">Dépublié</option><option value="archived">Archivé</option></select>{publication === "scheduled" && <label><input type="datetime-local" value={publishedAt} onChange={(event) => setPublishedAt(event.target.value)} className={field} />{publishedAt && <input type="hidden" name="published_at" value={new Date(publishedAt).toISOString()} />}</label>}<label className="flex items-center gap-2 text-sm"><input type="checkbox" name="registration_open" defaultChecked={o.registration_open} /> Inscriptions ouvertes</label><label className="flex items-center gap-2 text-sm"><input type="checkbox" name="cancellation_allowed" defaultChecked={o.cancellation_allowed} /> Annulation autorisée</label></div></div>
             <button className="rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent sm:col-span-2 sm:w-fit">Enregistrer</button>
           </form>

@@ -3,28 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { opportunityEmoji } from "@/lib/opportunity-banner";
 
 const text = (formData: FormData, key: string) => String(formData.get(key) ?? "").trim();
 const list = (formData: FormData, key: string) =>
   formData.getAll(key).map(String).map((value) => value.trim()).filter(Boolean).join("\n");
-
-async function uploadOpportunityCover(
-  supabase: Awaited<ReturnType<typeof createClient>>,
-  opportunityId: string,
-  formData: FormData,
-) {
-  const file = formData.get("cover_image");
-  if (!(file instanceof File) || file.size === 0) return;
-  if (file.size > 8 * 1024 * 1024 || !["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
-    throw new Error("La bannière doit être une image JPG, PNG ou WebP de 8 Mo maximum.");
-  }
-  const extension = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
-  const path = `${opportunityId}/${crypto.randomUUID()}.${extension}`;
-  const { error: uploadError } = await supabase.storage.from("opportunity-covers").upload(path, file, { contentType: file.type });
-  if (uploadError) throw new Error("L’image de bannière n’a pas pu être déposée : " + uploadError.message);
-  const { error } = await supabase.from("opportunities").update({ cover_image_path: path }).eq("id", opportunityId);
-  if (error) throw new Error("La bannière n’a pas pu être associée : " + error.message);
-}
 
 function refreshOpportunity(id: string) {
   revalidatePath("/etudiant/services");
@@ -131,8 +114,9 @@ export async function createOpportunity(formData: FormData) {
   });
   if (error) throw new Error("La création a échoué : " + error.message);
   const id = String(data);
+  const { error: bannerError } = await supabase.from("opportunities").update({ banner_emoji: opportunityEmoji(text(formData, "banner_emoji")) }).eq("id", id);
+  if (bannerError) throw new Error("La bannière n’a pas pu être enregistrée : " + bannerError.message);
   await supabase.from("opportunity_dates").update({ capacity: Number.isFinite(capacity) && capacity > 0 ? capacity : null }).eq("opportunity_id", id);
-  await uploadOpportunityCover(supabase, id, formData);
   refreshOpportunity(id);
   redirect(`/gestion/projets-formations/${id}?creation=ok`);
 }
@@ -297,11 +281,11 @@ export async function updateOpportunityManagement(formData: FormData) {
     publication_status: status,
     published_at: publishedAt,
     archived_at: status === "archived" ? new Date().toISOString() : null,
+    banner_emoji: opportunityEmoji(text(formData, "banner_emoji")),
     updated_at: new Date().toISOString(),
   }).eq("id", id);
   if (error) throw new Error("La modification a échoué : " + error.message);
   await supabase.from("opportunity_dates").update({ capacity: Number.isFinite(capacity) && capacity > 0 ? capacity : null }).eq("opportunity_id", id);
-  await uploadOpportunityCover(supabase, id, formData);
   refreshOpportunity(id);
 }
 

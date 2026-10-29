@@ -1,10 +1,13 @@
 "use client";
 
-import { CalendarDays, ImagePlus, Plus, Search, Trash2, Users } from "lucide-react";
+import { CalendarDays, Plus, Search, Trash2, Users } from "lucide-react";
 import { useMemo, useState } from "react";
 import { createOpportunity } from "@/app/etudiant/services/actions";
 import DynamicListInput from "@/components/DynamicListInput";
+import OpportunityBanner from "@/components/OpportunityBanner";
+import OpportunityEmojiPicker from "@/components/OpportunityEmojiPicker";
 import RichTextEditor from "@/components/gestion/RichTextEditor";
+import { DEFAULT_OPPORTUNITY_EMOJI } from "@/lib/opportunity-banner";
 
 type Member = { id: string; full_name: string; email: string };
 type DateRow = { date: string; start: string; end: string };
@@ -21,6 +24,9 @@ export default function OpportunityCreateForm({ members, services, suggestedSatu
   const [contributors, setContributors] = useState(new Set<string>());
   const [publication, setPublication] = useState("draft");
   const [publishedAt, setPublishedAt] = useState("");
+  const [title, setTitle] = useState("");
+  const [type, setType] = useState("projet");
+  const [emoji, setEmoji] = useState(DEFAULT_OPPORTUNITY_EMOJI);
   const shown = useMemo(() => {
     const value = query.trim().toLocaleLowerCase("fr-FR");
     return value ? members.filter((member) => `${member.full_name} ${member.email}`.toLocaleLowerCase("fr-FR").includes(value)) : members;
@@ -41,19 +47,13 @@ export default function OpportunityCreateForm({ members, services, suggestedSatu
   };
 
   return (
-    <form action={createOpportunity} encType="multipart/form-data" className="space-y-6">
+    <form action={createOpportunity} className="space-y-6">
       <section className="overflow-hidden rounded-3xl border border-border bg-background">
-        <div className="flex min-h-44 flex-col items-center justify-center bg-[linear-gradient(135deg,var(--surface),color-mix(in_srgb,var(--accent)_18%,var(--background)))] px-6 text-center">
-          <ImagePlus size={28} className="text-muted" />
-          <label className="mt-3 cursor-pointer rounded-full bg-background px-4 py-2 text-sm font-semibold shadow-sm ring-1 ring-border">
-            Choisir une image de bannière
-            <input type="file" name="cover_image" accept="image/jpeg,image/png,image/webp" className="sr-only" />
-          </label>
-          <p className="mt-2 text-xs text-muted">JPG, PNG ou WebP · 8 Mo maximum</p>
-        </div>
+        <OpportunityBanner emoji={emoji} title={title || "Nom du projet ou de la formation"} typeLabel={type === "both" ? "Projet et formation" : type === "formation" ? "Formation" : "Projet"} variant="preview" />
         <div className="grid gap-5 p-5 sm:p-7 lg:grid-cols-2">
-          <label className="lg:col-span-2"><Label>Nom</Label><input name="title" required className={field} placeholder="Nom du projet ou de la formation" /></label>
-          <fieldset className="lg:col-span-2"><legend className="mb-2 text-sm font-semibold">Type</legend><div className="grid gap-2 sm:grid-cols-3">{[["projet","Projet"],["formation","Formation"],["both","Projet et formation"]].map(([value,label]) => <label key={value} className="cursor-pointer"><input type="radio" name="type" value={value} defaultChecked={value === "projet"} className="peer sr-only" /><span className="block rounded-xl border border-border px-4 py-3 text-center text-sm font-medium peer-checked:border-accent peer-checked:bg-accent peer-checked:text-on-accent">{label}</span></label>)}</div></fieldset>
+          <label className="lg:col-span-2"><Label>Nom</Label><input name="title" required value={title} onChange={(event) => setTitle(event.target.value)} className={field} placeholder="Nom du projet ou de la formation" /></label>
+          <fieldset className="lg:col-span-2"><legend className="mb-2 text-sm font-semibold">Type</legend><div className="grid gap-2 sm:grid-cols-3">{[["projet","Projet"],["formation","Formation"],["both","Projet et formation"]].map(([value,label]) => <label key={value} className="cursor-pointer"><input type="radio" name="type" value={value} checked={type === value} onChange={() => setType(value)} className="peer sr-only" /><span className="block rounded-xl border border-border px-4 py-3 text-center text-sm font-medium peer-checked:border-accent peer-checked:bg-accent peer-checked:text-on-accent">{label}</span></label>)}</div></fieldset>
+          <div className="lg:col-span-2"><OpportunityEmojiPicker value={emoji} onChange={setEmoji} /></div>
           <label className="lg:col-span-2"><Label>Service pilote</Label><input name="service_name" list="service-suggestions" className={field} placeholder="Choisir ou saisir un nouveau service" autoComplete="off" /><datalist id="service-suggestions">{services.map((service) => <option key={service.id} value={service.name} />)}</datalist></label>
           <div className="lg:col-span-2"><Label>Présentation</Label><RichTextEditor name="description" rows={7} placeholder="Présentez l’activité, son intérêt et son déroulement…" /></div>
           <div className="lg:col-span-2"><DynamicListInput name="objectives_items" label="Objectifs" placeholder="Un objectif" /></div>

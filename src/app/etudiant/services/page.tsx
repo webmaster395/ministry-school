@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { CalendarDays, ChevronRight, CircleUser, Users } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import OpportunityBanner from "@/components/OpportunityBanner";
 import {
   getMyRegistrationIds,
   getOpportunities,
   getOpportunityCounts,
   isPublished,
-  KIND_COLOR,
   matchesKind,
   opportunityType,
   placesLabel,
@@ -115,31 +115,19 @@ export default async function ServicesPage({
       {shown.length ? (
         <ul className="grid gap-[22px] lg:grid-cols-2">
           {shown.map((o) => {
-            const color = KIND_COLOR[o.is_project ? "projet" : "formation"];
             const places = placesLabel(o, taken(o));
             const organizer = o.organizer_label ?? o.services?.name;
             return (
               <li key={o.id}>
                 <Link
                   href={`/etudiant/services/${o.id}`}
-                  className="flex h-full flex-col rounded-lg border border-border border-t-[3px] bg-background p-6 transition hover:border-r-foreground hover:border-b-foreground hover:border-l-foreground"
-                  style={{ borderTopColor: color }}
+                  className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-background transition hover:border-foreground hover:shadow-sm"
                 >
-                  <div className="flex items-center justify-between gap-3">
-                    <span
-                      className="label rounded-full px-3 py-1 text-[11px] tracking-[0.1em] text-foreground"
-                      style={{ background: `color-mix(in srgb, ${color} 22%, transparent)` }}
-                    >
-                      {TYPE_LABEL[opportunityType(o)]}
-                    </span>
+                  <OpportunityBanner emoji={o.banner_emoji} title={o.title} typeLabel={TYPE_LABEL[opportunityType(o)]} variant="card" />
+                  <div className="flex flex-1 flex-col p-6">
                     <span className="text-[13px] text-muted">
                       {mine.has(o.id) && status(o) !== "termine" ? "Inscrit" : STATUS_LABEL[status(o)]}
                     </span>
-                  </div>
-
-                  <h3 className="font-title mt-4 text-[22px] leading-tight text-foreground">
-                    {o.title}
-                  </h3>
                   <p className="mt-2 line-clamp-2 text-[15px] leading-relaxed text-muted">
                     {o.short_description || o.description}
                   </p>
@@ -167,6 +155,7 @@ export default async function ServicesPage({
                       <ChevronRight size={16} />
                     </li>
                   </ul>
+                  </div>
                 </Link>
               </li>
             );

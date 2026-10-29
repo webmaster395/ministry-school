@@ -33,6 +33,7 @@ export type Opportunity = {
   published_at: string | null;
   archived_at: string | null;
   cover_image_path: string | null;
+  banner_emoji: string;
   services: { name: string } | null;
   objectives?: string | null;
   prerequisites?: string | null;
@@ -96,7 +97,7 @@ export async function getOpportunities(supabase: SupabaseClient) {
   const { data } = await supabase
     .from("opportunities")
     .select(
-      "id, kind, title, description, service_id, organizer_label, schedule_label, starts_on, ends_on, capacity, registration_open, created_by, lead_id, services(name), is_project, is_training, short_description, speakers, location, organization_material, participant_material, cancellation_allowed, publication_status, published_at, archived_at, cover_image_path" + DETAIL_COLUMNS
+      "id, kind, title, description, service_id, organizer_label, schedule_label, starts_on, ends_on, capacity, registration_open, created_by, lead_id, services(name), is_project, is_training, short_description, speakers, location, organization_material, participant_material, cancellation_allowed, publication_status, published_at, archived_at, cover_image_path, banner_emoji" + DETAIL_COLUMNS
     )
     .order("starts_on", { ascending: true, nullsFirst: false })
     .order("created_at", { ascending: true });

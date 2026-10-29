@@ -1,6 +1,7 @@
-import { Check, Clock, MapPin, PackageCheck, Users } from "lucide-react";
+import { CalendarDays, Check, Clock, MapPin, PackageCheck, Users } from "lucide-react";
 import { redirect } from "next/navigation";
 import BackButton from "@/components/BackButton";
+import OpportunityBanner from "@/components/OpportunityBanner";
 import { createClient } from "@/lib/supabase/server";
 import {
   getMyOpportunityDateRegistrationIds,
@@ -50,9 +51,7 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
   const speakers = linesOf(o.speakers);
   const weekends = new Set(dates.map((date) => weekendKey(date.session_date))).size;
   const today = new Date().toISOString().slice(0,10);
-  const coverUrl = o.cover_image_path
-    ? supabase.storage.from("opportunity-covers").getPublicUrl(o.cover_image_path).data.publicUrl
-    : null;
+  const featuredDate = dates.find((date) => date.session_date >= today) ?? dates[0];
   const selectable = dates.filter((date) => {
     const taken = dateCounts.get(date.id) ?? 0;
     return !registeredDates.has(date.id) && date.session_date >= today && (date.capacity === null || taken < date.capacity);
@@ -63,14 +62,14 @@ export default async function OpportunityPage({ params }: { params: Promise<{ id
       {!isPublished(o) && <p className="rounded-xl border border-border bg-surface px-4 py-3 text-sm"><strong>Mode aperçu :</strong> cette page est invisible des étudiants.</p>}
       <BackButton fallbackHref="/etudiant/services" fallbackLabel="Retour aux projets et formations" />
 
-      <header className="relative min-h-[280px] overflow-hidden rounded-3xl bg-accent text-on-accent sm:min-h-[360px]">
-        {coverUrl && <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `linear-gradient(90deg,rgba(20,28,27,.88),rgba(20,28,27,.28)),url(${coverUrl})` }} />}
-        {!coverUrl && <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,.18),transparent_34%),linear-gradient(135deg,#25312f,#111716)]" />}
-        <div className="relative flex min-h-[280px] max-w-3xl flex-col justify-end p-6 sm:min-h-[360px] sm:p-10">
-          <span className="w-fit rounded-full bg-white/15 px-3 py-1 text-xs font-semibold backdrop-blur">{TYPE_LABEL[opportunityType(o)]}</span>
-          <h1 className="font-title mt-4 text-[36px] leading-[1.05] sm:text-[52px]">{o.title}</h1>
-          <p className="mt-4 text-base text-white/80">{opportunityType(o) === "formation" ? "Une formation" : "Un parcours"} sur {weekends} week-end{weekends > 1 ? "s" : ""}</p>
-        </div>
+      <header className="overflow-hidden rounded-3xl">
+        <OpportunityBanner
+          emoji={o.banner_emoji}
+          title={o.title}
+          typeLabel={TYPE_LABEL[opportunityType(o)]}
+          meta={`${opportunityType(o) === "formation" ? "Une formation" : "Un parcours"} sur ${weekends} week-end${weekends > 1 ? "s" : ""}`}
+          details={featuredDate ? <div className="grid gap-2.5"><span className="flex items-center gap-2"><CalendarDays size={17} /> <span className="capitalize">{fullDate(featuredDate.session_date)}</span></span><span className="flex items-center gap-2"><Clock size={17} /> {hm(featuredDate.start_time)}–{hm(featuredDate.end_time)}</span>{(featuredDate.location || o.location) && <span className="flex items-start gap-2"><MapPin className="mt-0.5 shrink-0" size={17} /><strong className="font-medium text-white">{featuredDate.location || o.location}</strong></span>}</div> : undefined}
+        />
       </header>
 
       <div className="grid items-start gap-7 lg:grid-cols-[minmax(0,1fr)_320px]">

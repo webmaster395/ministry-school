@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CalendarDays, CheckCircle2, ChevronLeft, MapPin, Users } from "lucide-react";
+import { CalendarDays, CheckCircle2, ChevronLeft, Clock, MapPin, Users } from "lucide-react";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getMembers } from "@/lib/data/admin-hub";
@@ -7,6 +7,7 @@ import { getOpportunity, getOpportunityCounts, getOpportunityDates, getProjectsT
 import { formatSessionDate } from "@/lib/format";
 import OpportunityEditForms from "@/components/OpportunityEditForms";
 import AssignmentEditor from "@/components/admin/AssignmentEditor";
+import OpportunityBanner from "@/components/OpportunityBanner";
 
 function firstSaturday(year: number, month: number) {
   const date = new Date(Date.UTC(year, month, 1));
@@ -43,13 +44,13 @@ export default async function ProjectsTrainingManageDetail({ params, searchParam
   const now = new Date();
   const schoolYear = now.getUTCMonth() >= 6 ? now.getUTCFullYear() : now.getUTCFullYear() - 1;
   const suggestedSaturdays = [10, 11, 0, 1, 2, 3, 4, 5].map((month) => firstSaturday(month >= 10 ? schoolYear : schoolYear + 1, month));
-  const coverUrl = opportunity.cover_image_path ? supabase.storage.from("opportunity-covers").getPublicUrl(opportunity.cover_image_path).data.publicUrl : null;
+  const publicationLabel = opportunity.publication_status === "scheduled" ? "Publication programmée" : opportunity.publication_status === "published" ? "Publié" : opportunity.publication_status === "archived" ? "Archivé" : "Non publié";
 
   return <div className="space-y-5">
     <div className="flex flex-wrap items-center justify-between gap-3"><Link href="/gestion/projets-formations" className="inline-flex items-center gap-1.5 text-sm text-muted"><ChevronLeft size={16} /> Projets et formations</Link><Link href={`/etudiant/services/${id}`} className="text-sm text-muted hover:text-foreground">Voir la fiche étudiante</Link></div>
     {query.creation === "ok" && <p role="status" className="flex items-center gap-2 rounded-xl border border-border bg-background px-4 py-3 text-sm"><CheckCircle2 size={18} /> Élément créé. Aucune notification n’a été envoyée.</p>}
     <div className="grid items-start gap-5 lg:grid-cols-[1fr_340px]">
-      <article className="overflow-hidden rounded-3xl border border-border bg-background"><div className="relative min-h-48 bg-accent bg-cover bg-center p-6 text-on-accent sm:p-8" style={coverUrl ? { backgroundImage: `linear-gradient(90deg,rgba(20,28,27,.9),rgba(20,28,27,.25)),url(${coverUrl})` } : undefined}><div className="flex flex-wrap items-center justify-between gap-3"><span className="rounded-full bg-white/15 px-3 py-1 text-xs font-medium">{TYPE_LABEL[opportunityType(opportunity)]}</span><span className="text-xs text-white/75">{opportunity.publication_status === "scheduled" ? "Publication programmée" : opportunity.publication_status === "published" ? "Publié" : opportunity.publication_status === "archived" ? "Archivé" : "Non publié"}</span></div><h1 className="font-title mt-8 text-[34px]">{opportunity.title}</h1></div><div className="p-6 sm:p-8"><p className="whitespace-pre-line leading-relaxed text-muted">{opportunity.description}</p><Info title="Objectifs" value={opportunity.objectives} bullets /><Info title="Intervenants" value={opportunity.speakers} inline /><Info title="Prérequis" value={opportunity.prerequisites} bullets /><Info title="Matériel des participants" value={opportunity.participant_material} bullets />
+      <article className="overflow-hidden rounded-3xl border border-border bg-background"><OpportunityBanner emoji={opportunity.banner_emoji} title={opportunity.title} typeLabel={TYPE_LABEL[opportunityType(opportunity)]} status={publicationLabel} variant="admin" details={dates[0] ? <div className="grid gap-2.5"><span className="flex items-center gap-2"><CalendarDays size={17} /> {formatSessionDate(dates[0].session_date)}</span><span className="flex items-center gap-2"><Clock size={17} /> {dates[0].start_time.slice(0,5)}–{dates[0].end_time.slice(0,5)}</span>{(dates[0].location || opportunity.location) && <span className="flex items-start gap-2"><MapPin className="mt-0.5 shrink-0" size={17} /><strong className="font-medium text-white">{dates[0].location || opportunity.location}</strong></span>}</div> : undefined} /><div className="p-6 sm:p-8"><p className="whitespace-pre-line leading-relaxed text-muted">{opportunity.description}</p><Info title="Objectifs" value={opportunity.objectives} bullets /><Info title="Intervenants" value={opportunity.speakers} inline /><Info title="Prérequis" value={opportunity.prerequisites} bullets /><Info title="Matériel des participants" value={opportunity.participant_material} bullets />
         {dates.length > 0 && <section className="mt-6 border-t border-border-soft pt-5"><h2 className="font-title text-[20px]">Dates et horaires</h2><ul className="mt-2 divide-y divide-border-soft">{dates.map((date) => <li key={date.id} className="flex items-start gap-2.5 py-3 text-sm"><CalendarDays size={17} className="mt-0.5" /><span>{formatSessionDate(date.session_date)} · {date.start_time.slice(0, 5)}–{date.end_time.slice(0, 5)}{date.location || date.room ? ` · ${[date.location, date.room].filter(Boolean).join(" · ")}` : ""}</span></li>)}</ul></section>}
       </div></article>
       <aside className="space-y-5"><section className="rounded-2xl border border-border bg-background p-5"><h2 className="font-title text-[20px]">Organisation</h2><ul className="mt-3 space-y-3 text-sm text-muted">{(opportunity.services?.name || opportunity.organizer_label) && <li><strong className="text-foreground">Service pilote :</strong> {opportunity.services?.name || opportunity.organizer_label}</li>}{opportunity.location && <li className="flex gap-2"><MapPin size={17} /> {opportunity.location}</li>}<li className="flex gap-2"><Users size={17} /> {taken} participant{taken > 1 ? "s" : ""} distinct{taken > 1 ? "s" : ""} · capacité {opportunity.capacity === null ? "illimitée" : `${opportunity.capacity} par séance`}</li></ul></section>
