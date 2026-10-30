@@ -51,7 +51,7 @@ test("exactement les trois comptes nominatifs obtiennent la super administration
   assert.doesNotMatch(migration, /insert into auth\.users|insert into public\.profiles/);
 });
 
-test("l'espace Administrateur réunit tableau de bord, statistiques, programme et membres", async () => {
+test("l'espace Administrateur réunit tableau de bord, statistiques, programme, membres et rôles", async () => {
   const [nav, page, overview, users, exportRoute] = await Promise.all([
     source("src/lib/nav.tsx"),
     source("src/app/gestion/admin/page.tsx"),
@@ -64,9 +64,11 @@ test("l'espace Administrateur réunit tableau de bord, statistiques, programme e
   assert.match(adminBlock, /Statistiques/);
   assert.match(adminBlock, /Programme/);
   assert.match(adminBlock, /Membres/);
+  assert.match(adminBlock, /Rôles/);
   assert.doesNotMatch(adminBlock, /Utilisateurs|Projets et formations/);
-  assert.match(page, /\["vue", "statistiques", "programme", "membres"\]/);
+  assert.match(page, /\["vue", "statistiques", "programme", "membres", "roles"\]/);
   assert.match(page, /MembersTab/);
+  assert.match(page, /RolesTab/);
   assert.doesNotMatch(page, /ProjectsTab/);
   assert.doesNotMatch(overview, /onglet=membres|onglet=projets|Examiner et valider/);
   assert.match(users, /redirect\("\/gestion\/admin"\)/);

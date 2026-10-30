@@ -15,10 +15,12 @@ export default function MemberAccessEditor({
   member,
   services,
   ministries,
+  accessOnly = false,
 }: {
   member: Member;
   services: { id: string; name: string }[];
   ministries: { id: string; name: string }[];
+  accessOnly?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(member.role === "admin");
@@ -158,7 +160,7 @@ export default function MemberAccessEditor({
           </div>
         </form>
 
-        {member.avatar_path && (
+        {!accessOnly && member.avatar_path && (
           <form
             action={(formData) => {
               startAvatarTransition(async () => {
@@ -180,7 +182,7 @@ export default function MemberAccessEditor({
           </form>
         )}
 
-        <form
+        {!accessOnly && <form
           action={(formData) => {
             startActiveTransition(async () => {
               await setMemberActive(formData);
@@ -213,7 +215,7 @@ export default function MemberAccessEditor({
               ? "La personne pourra de nouveau se connecter."
               : "La personne ne pourra plus se connecter. Ses données sont conservées."}
           </p>
-        </form>
+        </form>}
       </div>
     </details>
   );

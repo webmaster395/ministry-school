@@ -4,11 +4,12 @@ import OverviewTab from "@/components/admin/OverviewTab";
 import ProgramTab from "@/components/admin/ProgramTab";
 import StatisticsTab from "@/components/admin/StatisticsTab";
 import MembersTab from "@/components/admin/MembersTab";
+import RolesTab from "@/components/admin/RolesTab";
 import { getMinistries, getMonthlyActiveUsers, getOpportunityAnalytics, getProgramAnalytics, getTrainingDayDates, getUsageAnalytics } from "@/lib/data/admin";
 import type { TrainerAdminRow } from "@/components/admin/TrainersTab";
 import { getViewer } from "@/lib/data/viewer";
 
-const VALID_TABS = ["vue", "statistiques", "programme", "membres"];
+const VALID_TABS = ["vue", "statistiques", "programme", "membres", "roles"];
 
 type Params = {
   onglet?: string;
@@ -27,6 +28,7 @@ type Params = {
   par?: string;
   mois?: string;
   statistiques?: string;
+  categorie?: string;
 };
 
 export default async function AdminPage({ searchParams }: { searchParams: Promise<Params> }) {
@@ -96,7 +98,14 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           genre={p.genre ?? "tous"}
           page={p.page ?? "1"}
           par={p.par ?? "50"}
+        />
+      )}
+      {tab === "roles" && (
+        <RolesTab
+          q={p.q ?? ""}
+          category={p.categorie ?? "toutes"}
           canManageAccess={!!viewer?.roles.superAdmin}
+          basePath="/gestion/admin"
         />
       )}
     </div>

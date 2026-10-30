@@ -25,7 +25,7 @@ type InitiativeRegistration = { date: { session_date: string; opportunity: { tit
 export default async function AdminMemberProfilePage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ returnTo?: string }> }) {
   const { id } = await params;
   const requestedReturn = (await searchParams).returnTo;
-  const returnTo = requestedReturn?.startsWith("/gestion/admin?") || requestedReturn?.startsWith("/gestion/super-admin/membres?")
+  const returnTo = requestedReturn?.startsWith("/gestion/admin?") || requestedReturn?.startsWith("/gestion/super-admin/membres") || requestedReturn?.startsWith("/gestion/super-admin/roles")
     ? requestedReturn
     : "/gestion/admin?onglet=membres";
   const supabase = await createClient();

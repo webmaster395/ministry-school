@@ -9,6 +9,11 @@ async function assertSuperAdmin() {
   if (!viewer?.roles.superAdmin) throw new Error("Action réservée à la Super administration.");
 }
 
+async function assertAdmin() {
+  const viewer = await getViewer();
+  if (!viewer?.roles.admin) throw new Error("Action réservée à l’administration.");
+}
+
 export type MemberActionResult = {
   success?: boolean;
   error?: string | null;
@@ -37,6 +42,7 @@ export async function updateMember(
   }
 
   revalidatePath("/gestion/admin");
+  revalidatePath("/gestion/super-admin/roles");
   revalidatePath("/etudiant", "layout");
   return { success: true };
 }
@@ -57,6 +63,7 @@ export async function setMemberActive(
   }
 
   revalidatePath("/gestion/admin");
+  revalidatePath("/gestion/super-admin/roles");
   return { success: true };
 }
 
@@ -82,6 +89,7 @@ export async function addDelegate(formData: FormData) {
   if (error) throw new Error("L'ajout a échoué : " + error.message);
 
   revalidatePath("/gestion/admin");
+  revalidatePath("/gestion/super-admin/roles");
 }
 
 export async function removeDelegate(formData: FormData) {
@@ -89,6 +97,33 @@ export async function removeDelegate(formData: FormData) {
   const supabase = await createClient();
   await supabase.from("ministry_delegates").delete().eq("id", formData.get("delegate_id") as string);
   revalidatePath("/gestion/admin");
+  revalidatePath("/gestion/super-admin/roles");
+}
+
+/** Enregistre une note interne à la page Rôles, sans créer de notification. */
+export async function saveMemberRoleComment(
+  prevStateOrFormData: MemberActionResult | FormData,
+  maybeFormData?: FormData
+): Promise<MemberActionResult> {
+  await assertAdmin();
+  const data = (maybeFormData instanceof FormData ? maybeFormData : prevStateOrFormData) as FormData;
+  const userId = String(data.get("user_id") ?? "");
+  const comment = String(data.get("comment") ?? "").trim().slice(0, 2000);
+  const viewer = await getViewer();
+  if (!userId || !viewer) return { success: false, error: "Membre introuvable." };
+
+  const supabase = await createClient();
+  const { error } = await supabase.from("admin_member_role_notes").upsert({
+    user_id: userId,
+    comment,
+    updated_by: viewer.id,
+    updated_at: new Date().toISOString(),
+  });
+  if (error) return { success: false, error: "Le commentaire n’a pas pu être enregistré." };
+
+  revalidatePath("/gestion/admin");
+  revalidatePath("/gestion/super-admin/roles");
+  return { success: true };
 }
 
 /** Marque une question comme traitée, ou la remet « à traiter ». */

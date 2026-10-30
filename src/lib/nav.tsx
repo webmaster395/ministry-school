@@ -182,6 +182,11 @@ export function navSpaces(roles: ViewerRoles): Space[] {
               href: "/gestion/admin?onglet=membres",
               icon: icons.profile,
             },
+            {
+              label: "Rôles",
+              href: "/gestion/admin?onglet=roles",
+              icon: icons.steer,
+            },
           ],
         },
       ],

@@ -1,0 +1,11 @@
+revoke execute on function public.opportunity_counts() from public, anon;
+revoke execute on function public.opportunity_participants(uuid) from public, anon;
+revoke execute on function public.has_room(uuid) from public, anon;
+revoke execute on function public.can_propose(text) from public, anon;
+revoke execute on function public.is_admin() from public, anon;
+revoke execute on function public.protect_profile_privileges() from public, anon;
+grant execute on function public.opportunity_counts() to authenticated;
+grant execute on function public.opportunity_participants(uuid) to authenticated;
+grant execute on function public.has_room(uuid) to authenticated;
+grant execute on function public.can_propose(text) to authenticated;
+grant execute on function public.is_admin() to authenticated;;

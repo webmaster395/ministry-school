@@ -7,13 +7,8 @@ import { getMembers, memberStatus, type Member } from "@/lib/data/admin-hub";
 import { signedAvatarUrls } from "@/lib/avatars";
 import { getMinistry } from "@/lib/ministry";
 import MinistryPicto from "@/components/MinistryPicto";
-import MemberAccessEditor from "@/components/admin/MemberAccessEditor";
-import AdminSelect from "@/components/admin/AdminSelect";
 import MemberFilters from "@/components/admin/MemberFilters";
-import { addDelegate, removeDelegate } from "@/app/gestion/admin/actions";
 import { parseMlkEngagement } from "@/lib/mlk-engagement";
-
-const field = "rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground";
 
 const STATUS_LABEL = { actif: "Actif", a_confirmer: "À confirmer", desactive: "Désactivé" };
 
@@ -45,7 +40,6 @@ export default async function MembersTab({
   genre,
   page,
   par,
-  canManageAccess = false,
   basePath = "/gestion/admin",
 }: {
   q: string;
@@ -57,15 +51,13 @@ export default async function MembersTab({
   genre: string;
   page: string;
   par: string;
-  canManageAccess?: boolean;
   basePath?: string;
 }) {
   const supabase = await createClient();
-  const [members, ministries, services, { data: delegates }] = await Promise.all([
+  const [members, ministries, services] = await Promise.all([
     getMembers(supabase),
     getMinistries(supabase),
     getServices(supabase),
-    supabase.from("ministry_delegates").select("id, email, user_id, ministry_id").order("created_at"),
   ]);
 
   const serviceName = new Map(services.map((s) => [s.id, s.name]));
@@ -240,7 +232,6 @@ export default async function MembersTab({
                     <span className="text-sm tabular-nums text-muted">{fmt(m.created_at)}</span>
                   </div>
 
-                  {canManageAccess && <MemberAccessEditor member={m} services={services} ministries={ministries} />}
                 </li>
               );
             })}
@@ -252,52 +243,6 @@ export default async function MembersTab({
 
       {pager}
 
-      {canManageAccess && <section suppressHydrationWarning className="rounded-lg border border-border bg-background p-4 sm:p-6">
-        <h3 className="font-title text-[22px] text-foreground">Contributeurs ministériels</h3>
-        <p className="mt-1 text-sm text-muted">
-          La Super administration affecte les contributeurs. Leur accès est en lecture seule par défaut ; le responsable pourra ensuite autoriser la modification.
-        </p>
-
-        <form action={addDelegate} className="mt-4 grid gap-3 sm:grid-cols-[auto_1fr_auto] sm:items-end">
-          <AdminSelect name="ministry_id" placeholder="Ministère…" options={ministries.map((item) => ({value:item.id,label:item.name}))} />
-          <input
-            type="email"
-            name="email"
-            required
-            placeholder="contributeur@exemple.fr"
-            className={`${field} min-w-0 w-full`}
-          />
-          <button
-            type="submit"
-            className="label rounded-md bg-accent px-4 py-2.5 text-xs tracking-[0.12em] text-on-accent hover:bg-[#1b2221]"
-          >
-            Donner l&apos;accès
-          </button>
-        </form>
-
-        {(delegates ?? []).length > 0 && (
-          <ul className="mt-5 divide-y divide-border-soft">
-            {(delegates ?? []).map((d) => (
-              <li key={d.id} className="flex flex-wrap items-center justify-between gap-2 py-3 text-sm">
-                <span className="text-foreground">
-                  {d.email} <span className="text-muted">· {ministryName.get(d.ministry_id) ?? ""}</span>
-                </span>
-                <span className="flex items-center gap-3">
-                  <span className="label rounded-full bg-surface px-2.5 py-1 text-[10px] tracking-[0.1em] text-muted">
-                    {d.user_id ? "Compte lié" : "En attente de connexion"}
-                  </span>
-                  <form action={removeDelegate}>
-                    <input type="hidden" name="delegate_id" value={d.id} />
-                    <button type="submit" className="text-xs text-link hover:underline">
-                      Retirer
-                    </button>
-                  </form>
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>}
     </div>
   );
 }
