@@ -22,7 +22,7 @@ export default function StrategicAxesFields({ initial }: {
   return <section className="sm:col-span-2 lg:col-span-2 rounded-3xl border border-[#E7B64F]/45 bg-[#FFF9EA] p-4 sm:p-6">
     <div className="max-w-3xl">
       <p className="label text-[11px] tracking-[.15em] text-[#86610F]">VISION MLK 2026-2027</p>
-      <h2 className="font-title mt-1 text-[22px] text-foreground">Axes stratégiques</h2>
+      <h2 className="font-title mt-1 text-[22px] text-foreground">Axes stratégiques *</h2>
       <p className="mt-2 text-sm leading-6 text-muted">Sélectionnez un ou plusieurs axes auxquels ce projet ou cette formation se rattache. Aucun texte complémentaire n’est demandé.</p>
     </div>
     <div className="mt-5 grid gap-3 lg:grid-cols-3">

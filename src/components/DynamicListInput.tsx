@@ -8,11 +8,13 @@ export default function DynamicListInput({
   label,
   initialValue = "",
   placeholder,
+  required = false,
 }: {
   name: string;
   label: string;
   initialValue?: string | null;
   placeholder: string;
+  required?: boolean;
 }) {
   const initial = (initialValue ?? "").split("\n").map((value) => value.trim()).filter(Boolean);
   const [items, setItems] = useState(initial.length ? initial : [""]);
@@ -33,10 +35,11 @@ export default function DynamicListInput({
       return next;
     });
   };
+  const hasValue = items.some((item) => item.trim().length > 0);
 
   return (
     <fieldset className="rounded-2xl border border-border bg-surface/50 p-4">
-      <legend className="px-1 text-sm font-semibold text-foreground">{label}</legend>
+      <legend className="px-1 text-sm font-semibold text-foreground">{label}{required ? " *" : ""}</legend>
       <div className="space-y-2">
         {items.map((item, index) => (
           <div key={index} className="flex items-center gap-2">
@@ -50,6 +53,7 @@ export default function DynamicListInput({
                 if (event.key === "Enter") { event.preventDefault(); add(index); }
               }}
               placeholder={placeholder}
+              required={required && index === 0 && !hasValue}
               className="min-h-11 min-w-0 flex-1 rounded-xl border border-border bg-background px-3 text-sm text-foreground outline-none focus:border-accent"
             />
             <div className="hidden items-center sm:flex">

@@ -52,6 +52,7 @@ export default async function OpportunityPage({ params, searchParams }: { params
   const objectives = linesOf(o.objectives);
   const prerequisites = linesOf(o.prerequisites);
   const materials = linesOf(o.participant_material);
+  const tools = linesOf(o.tools_used);
   const speakers = linesOf(o.speakers);
   const weekends = new Set(dates.map((date) => weekendKey(date.session_date))).size;
   const today = new Date().toISOString().slice(0,10);
@@ -83,6 +84,7 @@ export default async function OpportunityPage({ params, searchParams }: { params
           {objectives.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Objectifs</h2><BulletList items={objectives} /></section>}
           {speakers.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Intervenants</h2><p className="mt-3 text-[16px] leading-7 text-foreground">{speakers.join(" • ")}</p></section>}
           {prerequisites.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Prérequis</h2><BulletList items={prerequisites} /></section>}
+          {tools.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Outils utilisés</h2><BulletList items={tools} /></section>}
           {materials.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title flex items-center gap-2 text-[25px]"><PackageCheck size={22} /> Matériel à apporter</h2><BulletList items={materials} /></section>}
 
           {resources.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Supports et ressources</h2><div className="mt-4 grid gap-3 sm:grid-cols-2">{resources.map((resource) => { const Icon = resource.kind === "support" ? FileText : resource.kind === "link" ? Link2 : PackageOpen; return <a key={resource.id} href={`/etudiant/services/${o.id}/ressources/${resource.id}/ouvrir`} target="_blank" rel="noreferrer" className="group flex items-center gap-3 rounded-2xl border border-border bg-background p-4 transition hover:border-foreground hover:shadow-sm"><span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-surface"><Icon size={20} /></span><span className="min-w-0 flex-1"><strong className="block truncate text-sm">{resource.title}</strong><small className="text-muted">{resource.kind === "support" ? "Support de cours" : resource.kind === "link" ? "Lien" : "Ressource"}</small></span><ExternalLink size={16} className="text-muted transition group-hover:text-foreground" /></a>; })}</div></section>}

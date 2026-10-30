@@ -5,7 +5,7 @@ import { useEffect, useId, useMemo, useRef, useState } from "react";
 
 export type AdminSelectOption = { value: string; label: string; disabled?: boolean };
 
-export default function AdminSelect({ name, value, defaultValue = "", onValueChange, options, placeholder = "Sélectionner", disabled = false, searchable, allowCustom = false, className = "", ariaLabel }: {
+export default function AdminSelect({ name, value, defaultValue = "", onValueChange, options, placeholder = "Sélectionner", disabled = false, searchable, allowCustom = false, required = false, className = "", ariaLabel }: {
   name?: string;
   value?: string;
   defaultValue?: string;
@@ -15,6 +15,7 @@ export default function AdminSelect({ name, value, defaultValue = "", onValueCha
   disabled?: boolean;
   searchable?: boolean;
   allowCustom?: boolean;
+  required?: boolean;
   className?: string;
   ariaLabel?: string;
 }) {
@@ -47,7 +48,7 @@ export default function AdminSelect({ name, value, defaultValue = "", onValueCha
 
   return <div ref={root} className={`relative ${className}`}>
     {name && <input type="hidden" name={name} value={selectedValue} />}
-    <button type="button" disabled={disabled} aria-label={ariaLabel} aria-expanded={open} aria-controls={listId} onClick={() => setOpen((current) => !current)} className="flex min-h-11 w-full items-center justify-between gap-3 rounded-xl border border-border bg-background px-3.5 text-left text-sm text-foreground outline-none transition hover:border-foreground focus:border-accent focus:ring-4 focus:ring-accent/10 disabled:cursor-not-allowed disabled:bg-surface disabled:text-muted">
+    <button type="button" disabled={disabled} aria-label={ariaLabel} data-required={required || undefined} aria-expanded={open} aria-controls={listId} onClick={() => setOpen((current) => !current)} className="flex min-h-11 w-full items-center justify-between gap-3 rounded-xl border border-border bg-background px-3.5 text-left text-sm text-foreground outline-none transition hover:border-foreground focus:border-accent focus:ring-4 focus:ring-accent/10 disabled:cursor-not-allowed disabled:bg-surface disabled:text-muted">
       <span className={`truncate ${selected || selectedValue ? "" : "text-muted"}`}>{selected?.label ?? (selectedValue || placeholder)}</span><ChevronDown size={16} className={`shrink-0 text-muted transition ${open ? "rotate-180" : ""}`} />
     </button>
     {open && !disabled && <div id={listId} role="listbox" className="absolute z-50 mt-1.5 w-full min-w-[190px] overflow-hidden rounded-xl border border-border bg-background p-1.5 shadow-[0_16px_45px_rgba(20,30,28,.16)]">

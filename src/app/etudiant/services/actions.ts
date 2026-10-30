@@ -68,6 +68,36 @@ function strategyFrom(formData: FormData) {
   return { axes };
 }
 
+function requireOpportunityFields(formData: FormData, dates: Array<{
+  session_date: string;
+  start_time: string;
+  end_time: string;
+}> = opportunityDatesFrom(formData)) {
+  const missing: string[] = [];
+  const requiredText: Array<[string, string]> = [
+    ["title", "nom"],
+    ["service_name", "service pilote"],
+    ["description", "présentation"],
+    ["location", "lieu principal"],
+  ];
+  for (const [key, label] of requiredText) if (!text(formData, key)) missing.push(label);
+  const requiredLists: Array<[string, string]> = [
+    ["objectives_items", "objectifs"],
+    ["speakers_items", "intervenants"],
+    ["prerequisites_items", "prérequis"],
+  ];
+  for (const [key, label] of requiredLists) if (!list(formData, key)) missing.push(label);
+  const capacity = Number.parseInt(text(formData, "capacity"), 10);
+  if (!Number.isFinite(capacity) || capacity < 1) missing.push("nombre de places");
+  if (!dates.length) missing.push("au moins une séance");
+  if (dates.some((date) => !date.session_date || !date.start_time || !date.end_time || date.start_time >= date.end_time)) {
+    missing.push("dates et horaires valides");
+  }
+  if (missing.length) {
+    throw new Error(`Complétez les champs obligatoires suivants : ${[...new Set(missing)].join(", ")}.`);
+  }
+}
+
 function refreshOpportunity(id: string) {
   revalidatePath("/etudiant/services");
   revalidatePath(`/etudiant/services/${id}`);
@@ -131,7 +161,7 @@ export async function createOpportunity(formData: FormData) {
     location: locations[index] || null,
     capacity: Number.isFinite(capacity) && capacity > 0 ? capacity : null,
   })).filter((date) => date.session_date).sort((a, b) => a.session_date.localeCompare(b.session_date));
-  if (!dates.length) throw new Error("Ajoutez au moins une date.");
+  requireOpportunityFields(formData, dates);
 
   const serviceName = text(formData, "service_name");
   const { data: serviceId, error: serviceError } = serviceName
@@ -166,6 +196,7 @@ export async function createOpportunity(formData: FormData) {
       location: text(formData, "location") || null,
       organization_material: null,
       participant_material: list(formData, "participant_material_items") || null,
+      tools_used: list(formData, "tools_used_items") || null,
       schedule_label: null,
       starts_on: dates[0].session_date,
       ends_on: dates.at(-1)?.session_date ?? dates[0].session_date,
@@ -187,6 +218,11 @@ export async function createOpportunity(formData: FormData) {
   });
   if (error) throw new Error("La création a échoué : " + error.message);
   const id = String(data);
+  const { error: toolsError } = await supabase.rpc("set_opportunity_tools", {
+    p_opportunity: id,
+    p_tools: list(formData, "tools_used_items") || null,
+  });
+  if (toolsError) throw new Error("L’élément a été créé, mais les outils utilisés n’ont pas pu être enregistrés : " + toolsError.message);
   const { error: bannerError } = await supabase.from("opportunities").update({
     banner_emoji: opportunityEmoji(text(formData, "banner_emoji")),
     strategic_contribution_former: null,
@@ -269,6 +305,7 @@ export async function submitOpportunityReview(formData: FormData) {
     p_desired_at: null,
   });
   if (error?.message.includes("FORBIDDEN")) throw new Error("Seul un responsable peut soumettre cette fiche.");
+  if (error?.message.includes("REQUIRED_FIELDS:")) throw new Error(`Complétez les champs obligatoires avant la soumission : ${error.message.split("REQUIRED_FIELDS:")[1]?.split("\n")[0] ?? "fiche incomplète"}.`);
   if (error) throw new Error("La demande de validation n’a pas pu être envoyée : " + error.message);
   refreshOpportunity(id);
 }
@@ -456,6 +493,11 @@ export async function updateOpportunityContent(formData: FormData) {
   });
   if (error?.message.includes("STRATEGIC_")) throw new Error("Sélectionnez au moins un axe stratégique MLK.");
   if (error) throw new Error("La modification a échoué : " + error.message);
+  const { error: toolsError } = await supabase.rpc("set_opportunity_tools", {
+    p_opportunity: id,
+    p_tools: list(formData, "tools_used_items") || null,
+  });
+  if (toolsError) throw new Error("Les outils utilisés n’ont pas pu être enregistrés : " + toolsError.message);
   refreshOpportunity(id);
 }
 
@@ -528,10 +570,11 @@ export async function saveOpportunityInline(_previous: OpportunityFormState, for
   try {
     const supabase = await createClient();
     const id = text(formData, "opportunity_id");
+    requireOpportunityFields(formData);
     const [{ data: canManage }, { data: isSuperAdmin }, { data: current, error: currentError }] = await Promise.all([
       supabase.rpc("can_submit_opportunity", { p_opportunity: id }),
       supabase.rpc("is_super_admin"),
-      supabase.from("opportunities").select("kind,is_project,is_training,title,description,objectives,speakers,prerequisites,participant_material,capacity,strategic_axes,service_id,organizer_label,location,registration_open,cancellation_allowed,banner_emoji,publication_status").eq("id", id).single(),
+      supabase.from("opportunities").select("kind,is_project,is_training,title,description,objectives,speakers,prerequisites,participant_material,tools_used,capacity,strategic_axes,service_id,organizer_label,location,registration_open,cancellation_allowed,banner_emoji,publication_status").eq("id", id).single(),
     ]);
     if (currentError || !current) throw new Error("Cette fiche est introuvable ou inaccessible.");
 
@@ -560,6 +603,7 @@ export async function saveOpportunityInline(_previous: OpportunityFormState, for
           speakers: list(formData, "speakers_items") || text(formData, "speakers") || null,
           prerequisites: list(formData, "prerequisites_items") || text(formData, "prerequisites") || null,
           participant_material: list(formData, "participant_material_items") || text(formData, "participant_material") || null,
+          tools_used: list(formData, "tools_used_items") || null,
           capacity,
           strategic_axes: strategy.axes,
           service_id: serviceId || null,
@@ -610,6 +654,8 @@ export async function replaceOpportunityAssignments(formData: FormData) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Non authentifié");
+  const { data: isSuperAdmin } = await supabase.rpc("is_super_admin");
+  if (!isSuperAdmin) throw new Error("Seuls les super administrateurs peuvent gérer les affectations.");
   const id = text(formData, "opportunity_id");
   const { error } = await supabase.rpc("replace_opportunity_assignments", {
     p_opportunity: id,

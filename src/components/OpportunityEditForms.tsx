@@ -165,7 +165,7 @@ export default function OpportunityEditForms({
           <div className="space-y-5">
             <fieldset disabled={!canManage}><legend className="mb-2 text-xs font-semibold uppercase tracking-[.12em] text-white/60">Type</legend><div className="flex flex-wrap gap-2">{[["projet","Projet"],["formation","Formation"],["both","Projet et formation"]].map(([value,label]) => <label key={value}><input className="peer sr-only" type="radio" name="type" value={value} checked={type === value} onChange={() => setType(value as typeof type)} /><span className="block cursor-pointer rounded-full border border-white/20 px-3 py-2 text-xs font-semibold peer-checked:border-[#F4A12A] peer-checked:bg-[#F4A12A]">{label}</span></label>)}</div></fieldset>
             {!canManage && <input type="hidden" name="type" value={type} />}
-            <label><Label light>Nom</Label><input name="title" required readOnly={!canManage} value={title} onChange={(event) => setTitle(event.target.value)} className="min-h-14 w-full rounded-2xl border border-white/20 bg-white/10 px-4 font-title text-[25px] font-semibold text-white outline-none placeholder:text-white/40 read-only:opacity-75 focus:border-[#F4A12A] sm:text-[32px]" /></label>
+            <label><Label light>Nom *</Label><input name="title" required readOnly={!canManage} value={title} onChange={(event) => setTitle(event.target.value)} className="min-h-14 w-full rounded-2xl border border-white/20 bg-white/10 px-4 font-title text-[25px] font-semibold text-white outline-none placeholder:text-white/40 read-only:opacity-75 focus:border-[#F4A12A] sm:text-[32px]" /></label>
           </div>
           <OpportunityEmojiPicker value={emoji} onChange={setEmoji} />
         </div>
@@ -173,26 +173,28 @@ export default function OpportunityEditForms({
 
       <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
         <article className="space-y-6 rounded-3xl border border-border bg-background p-5 sm:p-7">
-          <section><SectionTitle>Présentation</SectionTitle><RichTextEditor name="description" rows={8} defaultValue={o.description} /></section>
+          <p className="rounded-xl bg-surface px-4 py-3 text-xs leading-relaxed text-muted">Les champs marqués d’un astérisque sont obligatoires. Seuls les outils et les deux listes de matériel peuvent rester vides.</p>
+          <section><SectionTitle>Présentation *</SectionTitle><RichTextEditor name="description" rows={8} defaultValue={o.description} /></section>
           <StrategicAxesFields title={title} type={type} objectives={o.objectives} description={o.description} initial={{ axes: o.strategic_axes }} />
-          <DynamicListInput name="objectives_items" label="Objectifs" initialValue={o.objectives} placeholder="Un objectif" />
-          <DynamicListInput name="speakers_items" label="Intervenants" initialValue={o.speakers} placeholder="Nom de l’intervenant" />
-          <DynamicListInput name="prerequisites_items" label="Prérequis" initialValue={o.prerequisites} placeholder="Un prérequis" />
-          <DynamicListInput name="participant_material_items" label="Matériel à apporter" initialValue={o.participant_material} placeholder="Un élément à apporter" />
+          <DynamicListInput name="objectives_items" label="Objectifs" initialValue={o.objectives} placeholder="Un objectif" required />
+          <DynamicListInput name="speakers_items" label="Intervenants" initialValue={o.speakers} placeholder="Nom de l’intervenant" required />
+          <DynamicListInput name="prerequisites_items" label="Prérequis" initialValue={o.prerequisites} placeholder="Un prérequis" required />
+          <DynamicListInput name="tools_used_items" label="Outils utilisés (facultatif)" initialValue={o.tools_used} placeholder="Ex. ChatGPT, Canva ou Photoshop" />
+          <DynamicListInput name="participant_material_items" label="Matériel à apporter (facultatif)" initialValue={o.participant_material} placeholder="Un élément à apporter" />
         </article>
 
         <aside className="space-y-5 rounded-3xl border border-border bg-background p-5 sm:p-6">
           <SectionTitle>Organisation</SectionTitle>
-          <label><Label>Service pilote</Label><AdminSelect name="service_name" value={serviceName} onValueChange={(value) => { setServiceName(value); setDirty(true); }} disabled={!canManage} searchable allowCustom placeholder="Choisir ou saisir un service" options={services.map((service) => ({ value: service.name, label: service.name }))} /></label>
-          <label><Label>Lieu principal</Label><input name="location" readOnly={!canManage} defaultValue={o.location ?? ""} className={field} /></label>
-          <label><Label>Nombre de places par séance</Label><input type="number" min={1} name="capacity" defaultValue={o.capacity ?? ""} className={field} placeholder="Illimité si vide" /></label>
+          <label><Label>Service pilote *</Label><AdminSelect name="service_name" value={serviceName} onValueChange={(value) => { setServiceName(value); setDirty(true); }} disabled={!canManage} required searchable allowCustom placeholder="Choisir ou saisir un service" options={services.map((service) => ({ value: service.name, label: service.name }))} /></label>
+          <label><Label>Lieu principal *</Label><input name="location" required readOnly={!canManage} defaultValue={o.location ?? ""} className={field} /></label>
+          <label><Label>Nombre de places par séance *</Label><input type="number" min={1} name="capacity" required readOnly={!canManage} defaultValue={o.capacity ?? ""} className={field} placeholder="Ex. 20" /></label>
           {canManageInternalMaterial && <WorkshopMaterialsInput initialValue={o.organization_material} />}
           {canManage && <div className="rounded-2xl bg-surface p-4"><p className="mb-3 text-sm font-semibold">Inscriptions</p><div className="space-y-3"><label className="flex items-center gap-2 text-sm"><input type="checkbox" name="registration_open" defaultChecked={o.registration_open} /> Inscriptions ouvertes</label><label className="flex items-center gap-2 text-sm"><input type="checkbox" name="cancellation_allowed" defaultChecked={o.cancellation_allowed} /> Annulation autorisée</label><p className="text-xs leading-relaxed text-muted">La publication se décide uniquement dans le bloc de validation, après examen complet de la fiche.</p></div></div>}
         </aside>
       </div>
 
       <section className="rounded-3xl border border-border bg-background p-5 sm:p-7">
-        <SectionTitle>Dates et séances</SectionTitle>
+        <SectionTitle>Dates et séances *</SectionTitle>
         {canManage ? <div className="mt-4 flex flex-wrap gap-2">{suggestedSaturdays.map((date) => <button key={date} type="button" onClick={() => addDate(date)} className="rounded-full border border-border px-3 py-2 text-sm">{new Intl.DateTimeFormat("fr-FR",{day:"numeric",month:"long",timeZone:"UTC"}).format(new Date(`${date}T12:00:00Z`))}</button>)}<button type="button" onClick={() => addDate()} className="inline-flex items-center gap-1.5 rounded-full border border-foreground px-3 py-2 text-sm"><Plus size={15} /> Date personnalisée</button></div> : <p className="mt-2 text-sm text-muted">Les dates sont modifiables uniquement par le responsable.</p>}
         <div className="mt-4 space-y-3">{dates.map((date,index) => <div key={date.id ?? index} className="grid gap-2 rounded-2xl bg-surface p-3 md:grid-cols-[1.2fr_.7fr_.7fr_.7fr_auto]">
           <input type="hidden" name="date_id" value={date.id ?? ""} />
@@ -222,6 +224,7 @@ function Consultation({ opportunity: o, dates, team, sessionParticipants, resour
   const prerequisites = linesOf(o.prerequisites);
   const materials = linesOf(o.participant_material);
   const speakers = linesOf(o.speakers);
+  const tools = linesOf(o.tools_used);
   const managers = team.filter((person) => person.responsibility === "manager");
   const contributors = team.filter((person) => person.responsibility === "contributor");
   const distinctPeople = new Set(sessionParticipants.map((person) => person.user_id)).size;
@@ -241,6 +244,7 @@ function Consultation({ opportunity: o, dates, team, sessionParticipants, resour
           <StrategicVisionSection opportunity={o} showIncomplete />
           {objectives.length > 0 && <ViewSection title="Objectifs"><BulletList items={objectives} /></ViewSection>}
           {prerequisites.length > 0 && <ViewSection title="Prérequis"><BulletList items={prerequisites} /></ViewSection>}
+          {tools.length > 0 && <ViewSection title="Outils utilisés"><BulletList items={tools} /></ViewSection>}
           {materials.length > 0 && <ViewSection title="Matériel à apporter" icon={<PackageCheck size={21} />}><BulletList items={materials} /></ViewSection>}
           {resources.length > 0 && <ViewSection title="Supports et ressources"><div className="mt-4 grid gap-3 sm:grid-cols-2">{resources.map((resource) => { const Icon = resource.kind === "support" ? FileText : resource.kind === "link" ? Link2 : PackageOpen; return <a key={resource.id} href={`/etudiant/services/${o.id}/ressources/${resource.id}/ouvrir`} target="_blank" rel="noreferrer" className="group flex items-center gap-3 rounded-2xl border border-border bg-background p-4 transition hover:border-foreground"><span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-surface"><Icon size={19} /></span><span className="min-w-0 flex-1"><strong className="block truncate text-sm">{resource.title}</strong><small className="text-muted">{resource.kind === "support" ? "Support de cours" : resource.kind === "link" ? "Lien" : "Ressource"}</small></span><ExternalLink size={15} className="text-muted" /></a>; })}</div></ViewSection>}
           {dates.length > 0 && <ViewSection title="Les séances"><div className="mt-4 space-y-3">{dates.map((date) => <div key={date.id} className="rounded-2xl border border-border p-4"><p className="font-semibold capitalize">{formatSessionDate(date.session_date)}</p><p className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted"><span className="inline-flex items-center gap-1.5"><Clock size={15} /> {hm(date.start_time)}–{hm(date.end_time)}</span>{(date.location || o.location) && <span className="inline-flex items-center gap-1.5"><MapPin size={15} /> {date.location || o.location}</span>}</p></div>)}</div></ViewSection>}

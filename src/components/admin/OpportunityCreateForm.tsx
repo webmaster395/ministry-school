@@ -60,15 +60,17 @@ export default function OpportunityCreateForm({ creationToken, members, services
       <section className="overflow-hidden rounded-3xl border border-border bg-background">
         <OpportunityBanner emoji={emoji} title={title || "Nom du projet ou de la formation"} typeLabel={type === "both" ? "Projet et formation" : type === "formation" ? "Formation" : "Projet"} variant="preview" />
         <div className="grid gap-5 p-5 sm:p-7 lg:grid-cols-2">
-          <label className="lg:col-span-2"><Label>Nom</Label><input name="title" required value={title} onChange={(event) => setTitle(event.target.value)} className={field} placeholder="Nom du projet ou de la formation" /></label>
+          <p className="lg:col-span-2 rounded-xl bg-surface px-4 py-3 text-xs leading-relaxed text-muted">Les champs marqués d’un astérisque sont obligatoires. Seuls les outils, le matériel des participants et le matériel interne peuvent rester vides.</p>
+          <label className="lg:col-span-2"><Label>Nom *</Label><input name="title" required value={title} onChange={(event) => setTitle(event.target.value)} className={field} placeholder="Nom du projet ou de la formation" /></label>
           <fieldset className="lg:col-span-2"><legend className="mb-2 text-sm font-semibold">Type</legend><div className="grid gap-2 sm:grid-cols-3">{[["projet","Projet"],["formation","Formation"],["both","Projet et formation"]].map(([value,label]) => <label key={value} className="cursor-pointer"><input type="radio" name="type" value={value} checked={type === value} onChange={() => setType(value)} className="peer sr-only" /><span className="block rounded-xl border border-border px-4 py-3 text-center text-sm font-medium peer-checked:border-accent peer-checked:bg-accent peer-checked:text-on-accent">{label}</span></label>)}</div></fieldset>
           <div className="lg:col-span-2"><OpportunityEmojiPicker value={emoji} onChange={setEmoji} /></div>
-          <label className="lg:col-span-2"><Label>Service pilote</Label><AdminSelect name="service_name" value={serviceName} onValueChange={setServiceName} searchable allowCustom placeholder="Choisir ou saisir un nouveau service" options={services.map((service) => ({ value: service.name, label: service.name }))} /></label>
-          <div className="lg:col-span-2"><Label>Présentation</Label><RichTextEditor name="description" rows={7} placeholder="Présentez l’activité, son intérêt et son déroulement…" /></div>
-          <div className="lg:col-span-2"><DynamicListInput name="objectives_items" label="Objectifs" placeholder="Un objectif" /></div>
+          <label className="lg:col-span-2"><Label>Service pilote *</Label><AdminSelect name="service_name" value={serviceName} onValueChange={setServiceName} required searchable allowCustom placeholder="Choisir ou saisir un nouveau service" options={services.map((service) => ({ value: service.name, label: service.name }))} /></label>
+          <div className="lg:col-span-2"><Label>Présentation *</Label><RichTextEditor name="description" rows={7} placeholder="Présentez l’activité, son intérêt et son déroulement…" /></div>
+          <div className="lg:col-span-2"><DynamicListInput name="objectives_items" label="Objectifs" placeholder="Un objectif" required /></div>
           <StrategicAxesFields title={title} type={type as "projet" | "formation" | "both"} />
-          <DynamicListInput name="speakers_items" label="Intervenants" placeholder="Nom de l’intervenant" />
-          <DynamicListInput name="prerequisites_items" label="Prérequis" placeholder="Un prérequis" />
+          <DynamicListInput name="speakers_items" label="Intervenants" placeholder="Nom de l’intervenant" required />
+          <DynamicListInput name="prerequisites_items" label="Prérequis" placeholder="Un prérequis" required />
+          <div className="lg:col-span-2"><DynamicListInput name="tools_used_items" label="Outils utilisés (facultatif)" placeholder="Ex. ChatGPT, Canva ou Photoshop" /></div>
         </div>
       </section>
 
@@ -76,15 +78,15 @@ export default function OpportunityCreateForm({ creationToken, members, services
         <h2 className="font-title text-[23px]">Organisation</h2>
         <p className="mt-1 text-sm text-muted">Les besoins internes permettent aux super administrateurs de préparer l’atelier.</p>
         <div className="mt-4 grid gap-5 sm:grid-cols-2">
-          <label><Label>Lieu principal</Label><input name="location" className={field} placeholder="Espace Martin Luther King" /></label>
-          <label><Label>Nombre de places par séance</Label><input type="number" min={1} name="capacity" className={field} placeholder="Illimité si vide" /></label>
-          <div className="sm:col-span-2"><DynamicListInput name="participant_material_items" label="Matériel à apporter" placeholder="Un élément à apporter" /></div>
+          <label><Label>Lieu principal *</Label><input name="location" required className={field} placeholder="Espace Martin Luther King" /></label>
+          <label><Label>Nombre de places par séance *</Label><input type="number" min={1} name="capacity" required className={field} placeholder="Ex. 20" /></label>
+          <div className="sm:col-span-2"><DynamicListInput name="participant_material_items" label="Matériel à apporter (facultatif)" placeholder="Un élément à apporter" /></div>
           {canManageInternalMaterial && <div className="sm:col-span-2"><WorkshopMaterialsInput /></div>}
         </div>
       </section>
 
       <section className="rounded-3xl border border-border bg-background p-5 sm:p-7">
-        <div className="flex items-start gap-3"><CalendarDays className="mt-1 text-muted" size={21} /><div><h2 className="font-title text-[23px]">Dates des séances</h2><p className="mt-1 text-sm text-muted">Premiers samedis de novembre à juin, ou dates personnalisées.</p></div></div>
+        <div className="flex items-start gap-3"><CalendarDays className="mt-1 text-muted" size={21} /><div><h2 className="font-title text-[23px]">Dates des séances *</h2><p className="mt-1 text-sm text-muted">Premiers samedis de novembre à juin, ou dates personnalisées.</p></div></div>
         <div className="mt-4 flex flex-wrap gap-2">{suggestedSaturdays.map((date) => <button key={date} type="button" onClick={() => addDate(date)} className="rounded-full border border-border px-3 py-2 text-sm hover:border-foreground">{new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", timeZone: "UTC" }).format(new Date(`${date}T12:00:00Z`))}</button>)}<button type="button" onClick={() => addDate()} className="inline-flex items-center gap-1.5 rounded-full border border-foreground px-3 py-2 text-sm"><Plus size={15} /> Date personnalisée</button></div>
         <div className="mt-4 space-y-3">{dates.map((row, index) => <div key={`${row.date}-${index}`} className="grid gap-2 rounded-2xl bg-surface p-3 sm:grid-cols-[1.3fr_.8fr_.8fr_auto]">
           <input type="date" name="session_date" required value={row.date} onChange={(event) => updateDate(index,"date",event.target.value)} className={field} aria-label="Date" />
