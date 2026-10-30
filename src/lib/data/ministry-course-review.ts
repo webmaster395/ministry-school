@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { distinctById } from "@/lib/distinct-by-id";
 
 export type CourseAnnotation = {
   id: string;
@@ -44,6 +45,7 @@ export type ValidationQueueItem = {
   contentType: "project" | "training" | "both" | "course";
   decidedAt?: string | null;
   reviewer?: string | null;
+  opportunityId?: string | null;
 };
 
 export async function getValidationQueue(supabase: SupabaseClient) {
@@ -53,9 +55,14 @@ export async function getValidationQueue(supabase: SupabaseClient) {
     courses: ValidationQueueItem[];
     history: ValidationQueueItem[];
   };
-  return data as unknown as {
+  const queue = data as unknown as {
     opportunities: ValidationQueueItem[];
     courses: ValidationQueueItem[];
     history: ValidationQueueItem[];
+  };
+  return {
+    opportunities: distinctById(queue.opportunities),
+    courses: distinctById(queue.courses).filter((item) => !item.opportunityId),
+    history: distinctById(queue.history.filter((item) => item.contentType !== "course" || !item.opportunityId)),
   };
 }

@@ -1,6 +1,7 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import type { OpportunityKind } from "@/lib/data/opportunities";
 import { isDemoAdminEmail } from "@/lib/demo-admin";
+import { distinctById } from "@/lib/distinct-by-id";
 
 export type Member = {
   id: string;
@@ -93,7 +94,7 @@ export async function getOpportunitiesWithDates(supabase: SupabaseClient) {
     supabase.from("opportunity_reports").select("opportunity_id, session_date, file_path, file_name"),
   ]);
 
-  return ((opps ?? []) as unknown as Omit<OppRow, "dates" | "reports">[]).map((o) => ({
+  return distinctById(((opps ?? []) as unknown as Omit<OppRow, "dates" | "reports">[]).map((o) => ({
     ...o,
     dates: (dates ?? []).filter((d) => d.opportunity_id === o.id),
     reports: new Map(
@@ -101,7 +102,7 @@ export async function getOpportunitiesWithDates(supabase: SupabaseClient) {
         .filter((r) => r.opportunity_id === o.id)
         .map((r) => [r.session_date as string, { file_path: r.file_path as string, file_name: r.file_name as string }])
     ),
-  })) as OppRow[];
+  })) as OppRow[]);
 }
 
 export type ReportState = "recu" | "a_recevoir" | "en_retard";

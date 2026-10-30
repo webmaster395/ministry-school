@@ -1,6 +1,7 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { isDemoAdminEmail } from "@/lib/demo-admin";
 import { parseMlkEngagement } from "@/lib/mlk-engagement";
+import { distinctById } from "@/lib/distinct-by-id";
 
 export type EnrollmentBreakdown = {
   byMinistry: { name: string; slug?: string; count: number }[];
@@ -275,14 +276,14 @@ export async function getOpportunityAnalytics(supabase: SupabaseClient): Promise
     registrations: number(value.registrations),
     uniqueParticipants: number(value.uniqueParticipants),
     resources: number(value.resources),
-    initiatives: (value.initiatives ?? []).map((item) => ({
+    initiatives: distinctById((value.initiatives ?? []).map((item) => ({
       ...item,
       sessions: number(item.sessions),
       capacity: number(item.capacity),
       registrations: number(item.registrations),
       participants: number(item.participants),
       resources: number(item.resources),
-    })),
+    }))),
   };
 }
 

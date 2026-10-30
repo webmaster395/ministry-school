@@ -1,6 +1,7 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { DETAIL_COLUMNS } from "@/lib/opportunity-details";
 import type { StrategicAxis } from "@/lib/opportunity-strategy";
+import { distinctById } from "@/lib/distinct-by-id";
 
 export type OpportunityKind = "formation" | "projet";
 export type OpportunityType = OpportunityKind | "both";
@@ -128,7 +129,7 @@ export async function getOpportunities(supabase: SupabaseClient) {
     .order("starts_on", { ascending: true, nullsFirst: false })
     .order("created_at", { ascending: true });
   const rows = (data ?? []) as unknown as Omit<Opportunity, "organization_material">[];
-  return rows.map((row) => ({ ...row, organization_material: null }));
+  return distinctById(rows.map((row) => ({ ...row, organization_material: null })));
 }
 
 export async function getOpportunityInternalMaterial(supabase: SupabaseClient, opportunityId: string) {
