@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BadgeCheck, BookOpen, ChartNoAxesColumnIncreasing, ChevronRight, Church, FolderKanban, ShieldCheck, UsersRound } from "lucide-react";
+import { BadgeCheck, BellRing, BookOpen, ChartNoAxesColumnIncreasing, ChevronRight, Church, FolderKanban, ShieldCheck, UsersRound } from "lucide-react";
 import type { Viewer } from "@/lib/data/viewer";
 
 const commonSections = [
@@ -15,6 +15,7 @@ export default function AdminHome({ viewer }: { viewer: Viewer }) {
     { title: "Membres", description: "Annuaire de l’ensemble des membres de la plateforme.", href: "/gestion/admin?onglet=membres", icon: UsersRound },
     { title: "Permissions", description: "Rôles, affectations, niveaux d’accès et commentaires internes.", href: "/gestion/admin?onglet=permissions", icon: ShieldCheck },
     { title: "Pilotage global", description: "Vue d’ensemble, statistiques réelles et organisation du programme.", href: "/gestion/super-admin/pilotage", icon: ChartNoAxesColumnIncreasing },
+    { title: "Notifications", description: "Fréquence, jour, heure et suivi des récapitulatifs étudiants.", href: "/gestion/admin?onglet=notifications", icon: BellRing },
   ] : [
     ...commonSections,
     { title: "Pilotage", description: "Les cinq indicateurs essentiels de Ministry School.", href: "/gestion/admin?onglet=pilotage", icon: ChartNoAxesColumnIncreasing },

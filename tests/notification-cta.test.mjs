@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 const notificationSource = readFileSync(
-  new URL("../supabase/migrations/20261029130000_opportunity_sessions_and_daily_digest.sql", import.meta.url),
+  new URL("../supabase/migrations/20261030210000_weekly_notification_digest.sql", import.meta.url),
   "utf8",
 );
 const messageSource = readFileSync(
@@ -16,17 +16,17 @@ const courseSource = readFileSync(
 );
 
 test("le récapitulatif ne contient que les contenus réellement disponibles", () => {
-  assert.match(notificationSource, /visible_at > p_run_at - interval '24 hours'/);
-  assert.match(notificationSource, /visible_at <= p_run_at/);
+  assert.match(notificationSource, /event\.available_at <= p_run_at/);
+  assert.match(notificationSource, /notification_event_audience_matches/);
   assert.doesNotMatch(notificationSource, /sera disponible/);
 });
 
-test("le récapitulatif de 9 h est quotidien et idempotent", () => {
+test("le récapitulatif hebdomadaire est configurable et idempotent", () => {
   assert.match(notificationSource, /Europe\/Paris/);
-  assert.match(notificationSource, /extract\(hour/);
-  assert.match(notificationSource, /course_content_notification_log/);
-  assert.match(notificationSource, /primary key\(recipient_id, content_type, content_id\)/);
-  assert.match(notificationSource, /'0 \* \* \* \*'/);
+  assert.match(notificationSource, /frequency text not null default 'weekly'/);
+  assert.match(notificationSource, /notification_event_receipts/);
+  assert.match(notificationSource, /notification_digest_one_delivery_per_period/);
+  assert.match(notificationSource, /pg_try_advisory_xact_lock/);
 });
 
 test("la messagerie rend la destination sous forme de bouton", () => {

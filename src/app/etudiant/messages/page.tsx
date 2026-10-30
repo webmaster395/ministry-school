@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import ProfileTabs from "@/components/ProfileTabs";
-import { getStudentMessages } from "@/lib/data/messages";
+import { getStudentMessages, messagePreview } from "@/lib/data/messages";
 import { getViewer } from "@/lib/data/viewer";
 import { markNotificationsSeen } from "../actions";
 import Link from "next/link";
@@ -56,7 +56,7 @@ export default async function StudentMessagesPage() {
                 <span className="text-xs text-muted">{fmt(m.at)}</span>
               </div>
               <h2 className="font-title mt-2 text-[22px] leading-tight text-foreground">{m.title}</h2>
-              <p className="mt-2 whitespace-pre-line text-[15px] leading-relaxed text-foreground">{m.body}</p>
+              <p className="mt-2 line-clamp-2 text-[15px] leading-relaxed text-muted">{messagePreview(m.body)}</p>
               {m.targetUrl && (
                 <Link
                   href={m.targetUrl}

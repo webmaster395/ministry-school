@@ -21,10 +21,17 @@ export type DigestItem = {
   body: string | null;
   targetUrl: string | null;
   targetType: string | null;
+  courseId: string | null;
+  courseTitle: string;
+  typeLabel: string;
 };
 
 export type DigestDetails = {
   date: string | null;
+  frequency: "daily" | "weekly" | null;
+  periodKey: string | null;
+  title: string;
+  intro: string;
   items: DigestItem[];
 };
 
@@ -95,7 +102,7 @@ export async function getStudentMessages(
     .sort((a, b) => (a.at < b.at ? 1 : -1));
 }
 
-/** Détails privés d'un récapitulatif quotidien appartenant à la personne connectée. */
+/** Détails privés d'un récapitulatif appartenant à la personne connectée. */
 export async function getDailyDigestDetails(
   supabase: SupabaseClient,
   announcementId: string,
@@ -104,7 +111,7 @@ export async function getDailyDigestDetails(
     p_announcement: announcementId,
   });
   if (error || !data || typeof data !== "object") return null;
-  const value = data as { date?: unknown; items?: unknown };
+  const value = data as { date?: unknown; frequency?: unknown; periodKey?: unknown; title?: unknown; intro?: unknown; items?: unknown };
   const items = Array.isArray(value.items)
     ? value.items
         .filter((item): item is Record<string, unknown> => !!item && typeof item === "object")
@@ -118,9 +125,32 @@ export async function getDailyDigestDetails(
               ? item.targetUrl
               : null,
           targetType: typeof item.targetType === "string" ? item.targetType : null,
+          courseId: typeof item.courseId === "string" ? item.courseId : null,
+          courseTitle:
+            typeof item.courseTitle === "string" && item.courseTitle.trim()
+              ? item.courseTitle
+              : "Ministry School",
+          typeLabel:
+            typeof item.typeLabel === "string" ? item.typeLabel : "Contenu",
         }))
     : [];
-  return { date: typeof value.date === "string" ? value.date : null, items };
+  return {
+    date: typeof value.date === "string" ? value.date : null,
+    frequency: value.frequency === "daily" || value.frequency === "weekly" ? value.frequency : null,
+    periodKey: typeof value.periodKey === "string" ? value.periodKey : null,
+    title: typeof value.title === "string" ? value.title : "Tes nouveautés de la semaine",
+    intro: typeof value.intro === "string" ? value.intro : "De nouveaux contenus sont disponibles dans tes cours.",
+    items,
+  };
+}
+
+/** Résumé compact pour la boîte de réception, sans couper au milieu d'une liste. */
+export function messagePreview(body: string, maxLength = 180) {
+  const normalized = body.replace(/^[•-]\s*/gm, "").replace(/\s+/g, " ").trim();
+  if (normalized.length <= maxLength) return normalized;
+  const shortened = normalized.slice(0, maxLength + 1);
+  const boundary = shortened.lastIndexOf(" ");
+  return `${shortened.slice(0, boundary > maxLength * 0.65 ? boundary : maxLength).trim()}…`;
 }
 
 /** « Aujourd'hui », « Hier » ou la date courte. */

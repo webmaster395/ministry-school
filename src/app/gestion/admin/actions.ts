@@ -14,6 +14,38 @@ export type MemberActionResult = {
   error?: string | null;
 };
 
+export type NotificationSettingsActionResult = MemberActionResult;
+
+/** Modifie l'ordonnancement réel du digest. La RPC répète le contrôle Super admin. */
+export async function saveNotificationDigestSettings(
+  _previous: NotificationSettingsActionResult,
+  formData: FormData,
+): Promise<NotificationSettingsActionResult> {
+  await assertSuperAdmin();
+  const frequency = String(formData.get("frequency") ?? "weekly");
+  const weekday = Number(formData.get("weekday") ?? 0);
+  const sendTime = String(formData.get("send_time") ?? "10:00");
+  const timezone = String(formData.get("timezone") ?? "Europe/Paris");
+
+  if (!["daily", "weekly"].includes(frequency)) return { success: false, error: "Fréquence invalide." };
+  if (!Number.isInteger(weekday) || weekday < 0 || weekday > 6) return { success: false, error: "Jour invalide." };
+  if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(sendTime)) return { success: false, error: "Heure invalide." };
+  if (timezone !== "Europe/Paris") return { success: false, error: "Fuseau horaire invalide." };
+
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("update_notification_digest_settings", {
+    p_enabled: formData.get("enabled") === "on",
+    p_frequency: frequency,
+    p_weekday: weekday,
+    p_send_time: sendTime,
+    p_timezone: timezone,
+  });
+  if (error) return { success: false, error: "Les paramètres n’ont pas pu être enregistrés." };
+
+  revalidatePath("/gestion/admin");
+  return { success: true };
+}
+
 /** Attribue les rôles d'un membre (ils se cumulent). La base refuse l'opération à qui n'est pas administrateur. */
 export async function updateMember(
   prevStateOrFormData: MemberActionResult | FormData,

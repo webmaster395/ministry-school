@@ -9,7 +9,7 @@ import {
 } from "@/lib/data/student";
 import { formatSessionDate, formatTimeRange } from "@/lib/format";
 import SessionTypeBadge from "@/components/SessionTypeBadge";
-import { getStudentMessages, shortDate } from "@/lib/data/messages";
+import { getStudentMessages, messagePreview, shortDate } from "@/lib/data/messages";
 import { getMinistry, INK, sessionColor } from "@/lib/ministry";
 import { markNotificationsSeen } from "./actions";
 import { getViewer } from "@/lib/data/viewer";
@@ -255,7 +255,7 @@ export default async function StudentDashboardPage() {
                       >
                         {m.title}
                       </span>
-                      <span className="mt-0.5 line-clamp-2 text-sm text-muted">{m.body.replace(/\s+/g, " ")}</span>
+                      <span className="mt-0.5 line-clamp-2 text-sm text-muted">{messagePreview(m.body, 130)}</span>
                       <span className="mt-1.5 block text-xs text-muted">
                         {m.by ? `${m.by} · ` : "L'équipe Ministry School · "}
                         {shortDate(m.at)}

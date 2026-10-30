@@ -48,7 +48,7 @@ test("les trois comptes initiaux sont migrés puis la super administration devie
   assert.doesNotMatch(migration, /insert into auth\.users|insert into public\.profiles/);
 });
 
-test("l'interface Admin présente sept sections aux super admins et quatre aux admins", async () => {
+test("l'interface Admin présente huit sections aux super admins et quatre aux admins", async () => {
   const [nav, page, home, summary, users, exportRoute] = await Promise.all([
     source("src/lib/nav.tsx"),
     source("src/app/gestion/admin/page.tsx"),
@@ -60,11 +60,11 @@ test("l'interface Admin présente sept sections aux super admins et quatre aux a
   const adminBlock = nav.slice(nav.indexOf('key: "admin"'), nav.indexOf('key: "steering"'));
   assert.match(adminBlock, /label: "Admin"/);
   assert.doesNotMatch(adminBlock, /Super administration|Statistiques|Membres/);
-  for (const label of ["Cours et formations", "Sensibilités ministérielles", "Projets et formations", "À valider", "Membres", "Permissions", "Pilotage global"]) assert.match(home, new RegExp(label));
+  for (const label of ["Cours et formations", "Sensibilités ministérielles", "Projets et formations", "À valider", "Membres", "Permissions", "Pilotage global", "Notifications"]) assert.match(home, new RegExp(label));
   assert.match(home, /viewer\.roles\.superAdmin \?/);
   assert.match(home, /title: "Pilotage"/);
   for (const label of ["Membres inscrits", "Nouveaux comptes", "En attente de confirmation", "Prochaine journée", "Projets"]) assert.match(summary, new RegExp(label));
-  assert.match(page, /\["pilotage", "vue", "statistiques", "programme", "membres", "permissions", "roles"\]/);
+  assert.match(page, /\["pilotage", "vue", "statistiques", "programme", "membres", "permissions", "roles", "notifications"\]/);
   assert.match(page, /MembersTab/);
   assert.match(page, /RolesTab/);
   assert.match(page, /!viewer\.roles\.superAdmin && !\["accueil", "pilotage"\]\.includes\(tab\)/);
