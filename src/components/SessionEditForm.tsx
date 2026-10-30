@@ -47,7 +47,7 @@ export default function SessionEditForm({
   const [state, formAction, pending] = useActionState(updateSessionWithFeedback, null);
   const [category, setCategory] = useState(s.track ?? "Formation du cœur");
   const fixedMinistrySchedule = s.session_type === "ministere" && !admin;
-  const standardCategories = ["Formation du cœur", "Formation du caractère", "Sensibilité ministérielle", "Mise en pratique", "Services & Projets"];
+  const standardCategories = ["Formation du cœur", "Formation du caractère", "Sensibilité ministérielle", "Mise en pratique"];
   return (
     <details className="group mt-2" open={defaultOpen}>
       <summary className="cursor-pointer list-none text-xs font-medium text-link hover:underline">
@@ -81,13 +81,6 @@ export default function SessionEditForm({
                 {admin.ministries.map((m) => (
                   <option key={m.id} value={m.id}>{m.name}</option>
                 ))}
-              </select>
-            </div>}
-            {category === "Services & Projets" && <div>
-              <label className="mb-1 block text-sm font-medium text-foreground">Service (facultatif)</label>
-              <select name="service_id" defaultValue={s.service_id ?? ""} className={field}>
-                <option value="">Aucun service associé</option>
-                {admin.services.map((service) => <option key={service.id} value={service.id}>{service.name}</option>)}
               </select>
             </div>}
           </>

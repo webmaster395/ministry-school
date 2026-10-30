@@ -25,7 +25,7 @@ const base = {
   strategic_axes_connection: "Ces contributions se complètent dans l’action C",
 };
 
-test("les sept combinaisons produisent sept rédactions spécifiques", async () => {
+test("les sept combinaisons affichent uniquement les axes réellement sélectionnés", async () => {
   const { strategicNarrativeOf } = await strategyModule();
   const combinations = [
     ["former"], ["auberge"], ["fundraising"],
@@ -35,29 +35,26 @@ test("les sept combinaisons produisent sept rédactions spécifiques", async () 
   const texts = combinations.map((strategic_axes) => strategicNarrativeOf({ ...base, strategic_axes }).join("\n"));
   assert.equal(new Set(texts).size, 7);
   for (const [index, axes] of combinations.entries()) {
-    assert.match(texts[index], /contexte P/);
-    if (axes.includes("former")) assert.match(texts[index], /compétence F/);
-    if (axes.includes("auberge")) assert.match(texts[index], /public A/);
-    if (axes.includes("fundraising")) assert.match(texts[index], /partenariat R/);
-    if (axes.length > 1) assert.match(texts[index], /action C/);
+    assert.match(texts[index], /axes? stratégiques? 2026-2027 de l’Église MLK/);
+    if (axes.includes("former")) assert.match(texts[index], /Former/);
+    if (axes.includes("auberge")) assert.match(texts[index], /L’Auberge/);
+    if (axes.includes("fundraising")) assert.match(texts[index], /Levée de fonds/);
+    assert.doesNotMatch(texts[index], /compétence F|public A|partenariat R|action C/);
   }
 });
 
-test("aucun texte n'est inventé lorsqu'une contribution manque", async () => {
+test("la sélection des axes suffit sans contribution rédigée", async () => {
   const { strategicNarrativeOf, strategicAxesComplete } = await strategyModule();
   const incomplete = { ...base, strategic_axes: ["former", "auberge"], strategic_contribution_auberge: "" };
-  assert.equal(strategicAxesComplete(incomplete), false);
-  assert.deepEqual(strategicNarrativeOf(incomplete), []);
+  assert.equal(strategicAxesComplete(incomplete), true);
+  assert.equal(strategicNarrativeOf(incomplete).length, 1);
 });
 
-test("la base exige un axe, chaque contribution et le lien entre plusieurs axes", async () => {
-  const migration = await source("supabase/migrations/20261029210000_opportunity_strategic_axes.sql");
-  assert.match(migration, /cardinality\(strategic_axes\) >= 1/);
-  assert.match(migration, /STRATEGIC_CONTRIBUTION_FORMER_REQUIRED/);
-  assert.match(migration, /STRATEGIC_CONTRIBUTION_AUBERGE_REQUIRED/);
-  assert.match(migration, /STRATEGIC_CONTRIBUTION_FUNDRAISING_REQUIRED/);
-  assert.match(migration, /STRATEGIC_AXES_CONNECTION_REQUIRED/);
-  assert.match(migration, /not valid/);
+test("la base exige uniquement au moins un axe reconnu", async () => {
+  const migration = await source("supabase/migrations/20261029230000_opportunity_status_delete_and_notification_dedupe.sql");
+  assert.match(migration, /cardinality\(v_axes\) = 0/);
+  assert.match(migration, /strategic_contribution_former = null/);
+  assert.doesNotMatch(migration, /STRATEGIC_CONTRIBUTION_FORMER_REQUIRED/);
 });
 
 test("les formulaires administratifs et la fiche étudiant partagent le même modèle", async () => {
@@ -67,7 +64,7 @@ test("les formulaires administratifs et la fiche étudiant partagent le même mo
   const student = await source("src/app/etudiant/services/[id]/page.tsx");
   assert.match(create, /<StrategicAxesFields/);
   assert.match(edit, /<StrategicAxesFields/);
-  assert.match(fields, /Aperçu du texte étudiant/);
   assert.match(fields, /name="strategic_axes"/);
+  assert.doesNotMatch(fields, /strategic_contribution|textarea/);
   assert.match(student, /<StrategicVisionSection opportunity=\{o\}/);
 });

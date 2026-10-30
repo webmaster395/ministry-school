@@ -2,6 +2,7 @@
 
 import { CalendarDays, Plus, Search, Trash2, Users } from "lucide-react";
 import { useMemo, useState } from "react";
+import { useFormStatus } from "react-dom";
 import { createOpportunity } from "@/app/etudiant/services/actions";
 import DynamicListInput from "@/components/DynamicListInput";
 import OpportunityBanner from "@/components/OpportunityBanner";
@@ -15,7 +16,8 @@ type Member = { id: string; full_name: string; email: string };
 type DateRow = { date: string; start: string; end: string };
 const field = "min-h-12 w-full rounded-xl border border-border bg-background px-3 text-[15px] text-foreground outline-none focus:border-accent focus:ring-2 focus:ring-accent/10";
 
-export default function OpportunityCreateForm({ members, services, suggestedSaturdays }: {
+export default function OpportunityCreateForm({ creationToken, members, services, suggestedSaturdays }: {
+  creationToken: string;
   members: Member[];
   services: { id: string; name: string }[];
   suggestedSaturdays: string[];
@@ -50,6 +52,7 @@ export default function OpportunityCreateForm({ members, services, suggestedSatu
 
   return (
     <form action={createOpportunity} className="space-y-6">
+      <input type="hidden" name="creation_token" value={creationToken} />
       <section className="overflow-hidden rounded-3xl border border-border bg-background">
         <OpportunityBanner emoji={emoji} title={title || "Nom du projet ou de la formation"} typeLabel={type === "both" ? "Projet et formation" : type === "formation" ? "Formation" : "Projet"} variant="preview" />
         <div className="grid gap-5 p-5 sm:p-7 lg:grid-cols-2">
@@ -98,9 +101,13 @@ export default function OpportunityCreateForm({ members, services, suggestedSatu
         <summary className="cursor-pointer text-sm font-semibold">Publication et inscriptions</summary>
         <div className="mt-4 grid gap-4 sm:grid-cols-2"><label><Label>État souhaité</Label><select name="publication_status" value={publication} onChange={(event) => setPublication(event.target.value)} className={field}><option value="draft">Conserver en brouillon</option><option value="published">Demander une publication immédiate</option><option value="scheduled">Demander une publication programmée</option><option value="unpublished">Conserver dépublié</option></select></label>{publication === "scheduled" && <label><Label>Date et heure de publication</Label><input type="datetime-local" value={publishedAt} onChange={(event) => setPublishedAt(event.target.value)} className={field} />{publishedAt && <input type="hidden" name="published_at" value={new Date(publishedAt).toISOString()} />}</label>}<label className="flex items-center gap-2 text-sm"><input type="checkbox" name="registration_open" defaultChecked /> Inscriptions ouvertes</label><label className="flex items-center gap-2 text-sm"><input type="checkbox" name="cancellation_allowed" defaultChecked /> Annulation autorisée</label><p className="sm:col-span-2 rounded-xl bg-surface px-4 py-3 text-xs leading-relaxed text-muted">La publication sera effective après une validation de Nathalie Boudehent ou Flora Demerle. Richard Tamard recevra uniquement l’aperçu du rendu.</p></div>
       </details>
-      <button className="w-full rounded-full bg-accent px-6 py-3.5 text-sm font-semibold text-on-accent sm:w-auto">Créer l’élément</button>
+      <CreateButton />
     </form>
   );
+}
+function CreateButton() {
+  const { pending } = useFormStatus();
+  return <button disabled={pending} className="w-full rounded-full bg-accent px-6 py-3.5 text-sm font-semibold text-on-accent disabled:cursor-wait disabled:opacity-60 sm:w-auto">{pending ? "Création en cours…" : "Créer l’élément"}</button>;
 }
 function Label({ children }: { children: React.ReactNode }) {
   return <span className="mb-1.5 block text-sm font-medium text-foreground">{children}</span>;

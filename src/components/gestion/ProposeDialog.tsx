@@ -144,7 +144,7 @@ export function LineList({ name, items, setItems, addLabel }: { name: string; it
 }
 
 /**
- * « Nouvelle proposition » : la fenêtre pour proposer une formation de service ou un projet.
+ * « Nouvelle proposition » : ancienne fenêtre de proposition, conservée pour compatibilité.
  * Les informations essentielles d'abord ; la fiche se complète ensuite.
  */
 export default function ProposeDialog({

@@ -15,6 +15,7 @@ import OpportunityResourcesEditor from "@/components/OpportunityResourcesEditor"
 import StrategicVisionSection from "@/components/StrategicVisionSection";
 import FormattedContent from "@/components/FormattedContent";
 import { getViewer } from "@/lib/data/viewer";
+import DeleteOpportunityButton from "@/components/admin/DeleteOpportunityButton";
 
 function firstSaturday(year: number, month: number) {
   const date = new Date(Date.UTC(year, month, 1));
@@ -71,6 +72,7 @@ export default async function ProjectsTrainingManageDetail({ params, searchParam
     <OpportunityEditForms opportunity={opportunity} initialDates={dates} responsibility={responsibility} services={services} suggestedSaturdays={suggestedSaturdays} />
     <OpportunityResourcesEditor opportunityId={id} resources={resources} />
     {rights.admin && <AssignmentEditor opportunityId={id} members={members.filter((member) => !member.deactivated).map(({ id: memberId, full_name, email }) => ({ id: memberId, full_name, email }))} managers={teamRows.filter((person) => person.responsibility === "manager").map((person) => person.user_id)} contributors={teamRows.filter((person) => person.responsibility === "contributor").map((person) => person.user_id)} />}
+    {rights.admin && <DeleteOpportunityButton opportunityId={id} title={opportunity.title} />}
   </div>;
 }
 

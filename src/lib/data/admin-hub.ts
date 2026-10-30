@@ -76,7 +76,7 @@ export type OppRow = {
   reports: Map<string, { file_path: string; file_name: string }>;
 };
 
-/** Toutes les formations de service et tous les projets, avec leurs dates et leurs comptes rendus. */
+/** Tous les projets et formations, avec leurs dates et leurs comptes rendus. */
 export async function getOpportunitiesWithDates(supabase: SupabaseClient) {
   const [{ data: opps }, { data: dates }, { data: reports }] = await Promise.all([
     supabase
@@ -149,9 +149,9 @@ export type ProgramEntry = {
   parking: boolean;
 };
 
-const KIND_TEXT: Record<OpportunityKind, string> = { formation: "Formation de service", projet: "Projet" };
+const KIND_TEXT: Record<OpportunityKind, string> = { formation: "Formation", projet: "Projet" };
 
-/** Le programme de chaque journée : séances de formation le matin, formations de service et projets l'après-midi. */
+/** Le programme de chaque journée : cours le matin, projets et formations l'après-midi. */
 export async function getProgramEntries(supabase: SupabaseClient, opps: OppRow[]): Promise<ProgramEntry[]> {
   const { data } = await supabase
     .from("sessions")

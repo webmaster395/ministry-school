@@ -11,7 +11,6 @@ import StatisticsTab from "@/components/admin/StatisticsTab";
 import { QUESTIONS_ENABLED } from "@/lib/questions";
 import { getMinistries, getMonthlyActiveUsers, getProgramAnalytics, getTrainingDayDates, getUsageAnalytics } from "@/lib/data/admin";
 import TrainersTab, { type TrainerAdminRow } from "@/components/admin/TrainersTab";
-import { getServices } from "@/lib/data/opportunities";
 
 const VALID_TABS = ["vue", "statistiques", "personnes", "membres", "formateurs", "programme", "projets", "questions"];
 
@@ -90,7 +89,6 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           today={today}
           trainers={trainers.filter((trainer) => trainer.is_active).map((trainer) => ({ id: trainer.id, name: `${trainer.first_name} ${trainer.last_name}`.trim() }))}
           ministries={(await getMinistries(supabase)).map((ministry) => ({ id: ministry.id, name: ministry.name }))}
-          services={(await getServices(supabase)).map((service) => ({ id: service.id, name: service.name }))}
         />
       )}
       {tab === "projets" && <ProjectsTab opps={opps} type={p.onglet === "comptes-rendus" ? "comptes-rendus" : p.type ?? "projet"} phase={p.phase ?? "actuel"} reportFilter={p.filtre ?? "a_recevoir"} today={today} />}

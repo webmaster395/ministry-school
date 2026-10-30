@@ -19,7 +19,7 @@ export async function createQuickCourse(formData: FormData) {
   const trainerId = text("trainer_id");
   const location = text("location");
   const room = text("room");
-  const trainerRequired = track !== "Services & Projets";
+  const trainerRequired = true;
   if (!title || !date || !start || !end || !track || (trainerRequired && !trainerId) || !location) throw new Error("Complétez les informations obligatoires.");
   if (end <= start) throw new Error("L’heure de fin doit être après l’heure de début.");
 
@@ -33,7 +33,7 @@ export async function createQuickCourse(formData: FormData) {
   const { data: session, error: sessionError } = await supabase.from("sessions").insert({
     session_type: ministryId ? "ministere" : "commun",
     ministry_id: ministryId,
-    service_id: track === "Services & Projets" ? text("service_id") || null : null,
+    service_id: null,
     course_id: course.id,
     teacher_id: trainer?.profile_id ?? null,
     session_date: date,

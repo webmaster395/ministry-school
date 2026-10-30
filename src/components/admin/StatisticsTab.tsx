@@ -12,7 +12,7 @@ import { accountsByTrainingCycle, parisDateKey } from "@/lib/training-cycle-stat
 
 type Section = "utilisation" | "membres" | "programmes";
 const TRACKING_START = "7 octobre 2026";
-const pageLabels: Record<string, string> = { home: "Accueil", courses: "Mes cours", course_detail: "Détail d’un cours", assignments: "À faire", profile: "Profil", notes: "Notes", services_projects: "Services & Projets" };
+const pageLabels: Record<string, string> = { home: "Accueil", courses: "Mes cours", course_detail: "Détail d’un cours", assignments: "À faire", profile: "Profil", notes: "Notes", services_projects: "Projets et formations" };
 const sensitivityLabels: Record<string, string> = { apotre: "Apostolique", prophete: "Prophétique", evangeliste: "Évangéliste", pasteur: "Pastorale", docteur: "Doctorale" };
 
 function Kpi({ value, label, detail }: { value: string | number; label: string; detail?: string }) {

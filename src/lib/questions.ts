@@ -14,7 +14,7 @@ export const QUESTION_CATEGORIES: Record<
 > = {
   organisation: {
     label: "Organisation du programme",
-    hint: "Dates, lieux, horaires, inscriptions, formations de service et projets.",
+    hint: "Dates, lieux, horaires et inscriptions aux projets et formations.",
     handler: "Flora",
   },
   ministeres: {

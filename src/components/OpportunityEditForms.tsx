@@ -52,10 +52,6 @@ export default function OpportunityEditForms({ opportunity: o, initialDates, res
             description={o.description}
             initial={{
               axes: o.strategic_axes,
-              former: o.strategic_contribution_former,
-              auberge: o.strategic_contribution_auberge,
-              fundraising: o.strategic_contribution_fundraising,
-              connection: o.strategic_axes_connection,
             }}
           />
           <DynamicListInput name="speakers_items" label="Intervenants" initialValue={o.speakers} placeholder="Nom de l’intervenant" />

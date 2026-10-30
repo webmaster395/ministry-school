@@ -25,7 +25,7 @@ export async function searchProfiles(query: string): Promise<{ id: string; full_
 }
 
 /**
- * Crée une formation de service ou un projet depuis la fenêtre « Nouvelle proposition » :
+ * Crée un projet ou une formation depuis l'ancienne fenêtre « Nouvelle proposition » :
  * la fiche (titre, présentation, places, objectifs, prérequis) et ses dates au programme.
  * Un brouillon a ses inscriptions fermées ; « publier » les ouvre. La base vérifie le droit de proposer.
  */

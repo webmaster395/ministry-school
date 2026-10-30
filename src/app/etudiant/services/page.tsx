@@ -80,7 +80,7 @@ export default async function ServicesPage({
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <p className="text-[15px] text-muted">Choisissez comment mettre vos compétences en pratique.</p>
+        <p className="text-[15px] text-muted">Choisissez parmi les projets et formations validés par Flora ou Nathalie. Chaque proposition dispose de ses propres séances et inscriptions.</p>
       </div>
 
       <nav className="tabbar grid auto-cols-fr grid-flow-col gap-1 rounded-lg border border-border bg-background p-1">
@@ -166,7 +166,7 @@ export default async function ServicesPage({
         <section className="rounded-lg border border-border bg-background p-6">
           <p className="text-[15px] text-muted">
             {tab === "decouvrir"
-              ? "Aucune proposition pour le moment. Les formations des services et les projets apparaîtront ici."
+              ? "Aucun projet ou formation validé n’est disponible pour le moment."
               : tab === "inscriptions"
                 ? "Vous n'êtes inscrit à rien pour l'instant."
                 : "Aucune formation ou projet terminé."}

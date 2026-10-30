@@ -11,7 +11,7 @@ export function programDates(): string[] {
   });
 }
 
-/** Horaire des formations de service et projets : l'après-midi de chaque samedi. */
+/** Horaire des projets et formations : l'après-midi de chaque samedi. */
 export const AFTERNOON = { start: "14:30", end: "17:00", label: "14 h 30–17 h" } as const;
 
 const MONTHS = [

@@ -79,7 +79,7 @@ export default async function OverviewTab({
     ...(currentProjects > 0 || finishedProjects > 0 ? [{ value: currentProjects, label: "Projets actuels", sub: `${finishedProjects} terminés` }] : []),
     ...(currentServiceTrainings > 0 || finishedServiceTrainings > 0 ? [{
       value: currentServiceTrainings,
-      label: "Formations de service actuelles",
+      label: "Formations actuelles",
       sub: `${finishedServiceTrainings} terminées`,
     }] : []),
     ...(toValidate > 0 ? [{ value: toValidate, label: "Propositions à valider", attention: true }] : []),

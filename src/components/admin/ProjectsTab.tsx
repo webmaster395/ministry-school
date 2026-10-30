@@ -43,7 +43,7 @@ export default async function ProjectsTab({
     <nav className="tabbar grid w-full grid-cols-3 gap-1 rounded-lg border border-border bg-background p-1 sm:inline-grid sm:w-auto">
       {[
         { key: "projet", label: "Projets" },
-        { key: "formation", label: "Formations de service" },
+        { key: "formation", label: "Formations" },
         { key: "comptes-rendus", label: "Comptes rendus" },
       ].map((tab) => (
         <Link

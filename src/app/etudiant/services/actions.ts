@@ -14,27 +14,15 @@ function strategyFrom(formData: FormData) {
   const allowed = new Set<StrategicAxis>(["former", "auberge", "fundraising"]);
   const axes = [...new Set(formData.getAll("strategic_axes").map(String))]
     .filter((axis): axis is StrategicAxis => allowed.has(axis as StrategicAxis));
-  const strategy = {
-    axes,
-    former: text(formData, "strategic_contribution_former"),
-    auberge: text(formData, "strategic_contribution_auberge"),
-    fundraising: text(formData, "strategic_contribution_fundraising"),
-    connection: text(formData, "strategic_axes_connection"),
-  };
   if (!strategicAxesComplete({
     title: text(formData, "title") || "Initiative",
     is_project: true,
     is_training: false,
-    strategic_axes: strategy.axes,
-    strategic_contribution_former: strategy.former,
-    strategic_contribution_auberge: strategy.auberge,
-    strategic_contribution_fundraising: strategy.fundraising,
-    strategic_axes_connection: strategy.connection,
+    strategic_axes: axes,
   })) {
-    if (!axes.length) throw new Error("Sélectionnez au moins un axe stratégique MLK.");
-    throw new Error("Précisez la contribution concrète de chaque axe sélectionné et, si nécessaire, le lien entre eux.");
+    throw new Error("Sélectionnez au moins un axe stratégique MLK.");
   }
-  return strategy;
+  return { axes };
 }
 
 function refreshOpportunity(id: string) {
@@ -113,6 +101,13 @@ export async function createOpportunity(formData: FormData) {
     ? await supabase.rpc("resolve_service_name", { p_name: serviceName })
     : { data: null, error: null };
   if (serviceError) throw new Error("Le service pilote n’a pas pu être enregistré : " + serviceError.message);
+  const creationToken = text(formData, "creation_token");
+  if (!creationToken) throw new Error("Rechargez le formulaire avant de créer l’élément.");
+  const { data: claim, error: claimError } = await supabase.rpc("claim_opportunity_creation", { p_token: creationToken });
+  if (claimError?.message.includes("CREATION_IN_PROGRESS")) throw new Error("La création est déjà en cours. Patientez quelques secondes.");
+  if (claimError) throw new Error("La création n’a pas pu être sécurisée : " + claimError.message);
+  const existingId = (claim as { opportunity_id?: string | null } | null)?.opportunity_id;
+  if (existingId) redirect(`/gestion/projets-formations/${existingId}`);
   const { data, error } = await supabase.rpc("create_opportunity_admin", {
     p_payload: {
       kind: type === "formation" ? "formation" : "projet",
@@ -138,10 +133,11 @@ export async function createOpportunity(formData: FormData) {
       publication_status: requiresReview ? "draft" : status,
       published_at: null,
       strategic_axes: strategy.axes,
-      strategic_contribution_former: strategy.former || null,
-      strategic_contribution_auberge: strategy.auberge || null,
-      strategic_contribution_fundraising: strategy.fundraising || null,
-      strategic_axes_connection: strategy.connection || null,
+      // Compatibilité avec l'ancienne RPC ; ces marqueurs sont effacés juste après la création.
+      strategic_contribution_former: strategy.axes.includes("former") ? "Axe sélectionné" : null,
+      strategic_contribution_auberge: strategy.axes.includes("auberge") ? "Axe sélectionné" : null,
+      strategic_contribution_fundraising: strategy.axes.includes("fundraising") ? "Axe sélectionné" : null,
+      strategic_axes_connection: strategy.axes.length > 1 ? "Axes sélectionnés" : null,
     },
     p_dates: dates,
     p_managers: formData.getAll("manager_ids").map(String),
@@ -149,8 +145,16 @@ export async function createOpportunity(formData: FormData) {
   });
   if (error) throw new Error("La création a échoué : " + error.message);
   const id = String(data);
-  const { error: bannerError } = await supabase.from("opportunities").update({ banner_emoji: opportunityEmoji(text(formData, "banner_emoji")) }).eq("id", id);
+  const { error: bannerError } = await supabase.from("opportunities").update({
+    banner_emoji: opportunityEmoji(text(formData, "banner_emoji")),
+    strategic_contribution_former: null,
+    strategic_contribution_auberge: null,
+    strategic_contribution_fundraising: null,
+    strategic_axes_connection: null,
+  }).eq("id", id);
   if (bannerError) throw new Error("La bannière n’a pas pu être enregistrée : " + bannerError.message);
+  const { error: bindError } = await supabase.rpc("bind_opportunity_creation", { p_token: creationToken, p_opportunity: id });
+  if (bindError) throw new Error("La création a réussi, mais son verrou anti-doublon n’a pas pu être finalisé : " + bindError.message);
   await supabase.from("opportunity_dates").update({ capacity: Number.isFinite(capacity) && capacity > 0 ? capacity : null }).eq("opportunity_id", id);
   if (requiresReview) {
     const { error: reviewError } = await supabase.rpc("request_opportunity_review", {
@@ -375,12 +379,12 @@ export async function updateOpportunityContent(formData: FormData) {
     p_participant_material: list(formData, "participant_material_items") || text(formData, "participant_material"),
     p_capacity: capacity,
     p_strategic_axes: strategy.axes,
-    p_strategic_contribution_former: strategy.former || null,
-    p_strategic_contribution_auberge: strategy.auberge || null,
-    p_strategic_contribution_fundraising: strategy.fundraising || null,
-    p_strategic_axes_connection: strategy.connection || null,
+    p_strategic_contribution_former: null,
+    p_strategic_contribution_auberge: null,
+    p_strategic_contribution_fundraising: null,
+    p_strategic_axes_connection: null,
   });
-  if (error?.message.includes("STRATEGIC_")) throw new Error("Complétez la contribution concrète de chaque axe stratégique sélectionné.");
+  if (error?.message.includes("STRATEGIC_")) throw new Error("Sélectionnez au moins un axe stratégique MLK.");
   if (error) throw new Error("La modification a échoué : " + error.message);
   refreshOpportunity(id);
 }
@@ -410,7 +414,7 @@ export async function updateOpportunityManagement(formData: FormData) {
   const requestedAt = status === "scheduled" ? new Date(text(formData, "published_at")).toISOString() : null;
   const { data: current } = await supabase.from("opportunities").select("publication_status,published_at,title,is_project,is_training,strategic_axes,strategic_contribution_former,strategic_contribution_auberge,strategic_contribution_fundraising,strategic_axes_connection").eq("id", id).single();
   if ((status === "published" || status === "scheduled") && (!current || !strategicAxesComplete(current as Parameters<typeof strategicAxesComplete>[0]))) {
-    throw new Error("Complétez les axes stratégiques et leurs contributions avant de demander la publication.");
+    throw new Error("Sélectionnez au moins un axe stratégique avant de demander la publication.");
   }
   const scheduledChanged = status === "scheduled"
     && new Date(requestedAt!).getTime() !== new Date(current?.published_at ?? 0).getTime();
@@ -502,6 +506,24 @@ export async function replaceOpportunityAssignments(formData: FormData) {
   });
   if (error) throw new Error("La mise à jour des affectations a échoué : " + error.message);
   refreshOpportunity(id);
+}
+
+/** Suppression complète réservée aux administrateurs, avec vérification SQL. */
+export async function deleteOpportunity(formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Non authentifié");
+  const id = text(formData, "opportunity_id");
+  const { data: resources } = await supabase.from("opportunity_resources").select("file_path").eq("opportunity_id", id);
+  const filePaths = (resources ?? []).flatMap((resource) => resource.file_path ? [resource.file_path] : []);
+  const { error } = await supabase.rpc("delete_opportunity_admin", { p_opportunity: id });
+  if (error?.message.includes("FORBIDDEN")) throw new Error("Suppression réservée aux administrateurs.");
+  if (error) throw new Error("La suppression a échoué : " + error.message);
+  if (filePaths.length) await supabase.storage.from("opportunity-resources").remove(filePaths);
+  revalidatePath("/gestion/projets-formations");
+  revalidatePath("/etudiant/services");
+  revalidatePath("/etudiant/messages");
+  redirect("/gestion/projets-formations");
 }
 
 /** Ouvre ou ferme les inscriptions. Un non-admin ne peut ouvrir que si l'opportunité a été validée. */
