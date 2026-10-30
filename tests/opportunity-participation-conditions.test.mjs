@@ -28,16 +28,20 @@ test("le public spécifique et les prérequis nécessaires sont contrôlés côt
   assert.doesNotMatch(migration, /insert into public\.notifications/);
 });
 
-test("la fiche étudiante affiche seulement les conditions pertinentes avant les séances", () => {
+test("la fiche étudiante rassemble les conditions dans les informations pratiques sans doublon", () => {
   const student = source("src/app/etudiant/services/[id]/page.tsx");
-  const summary = source("src/components/ParticipationConditionsSummary.tsx");
-  const conditionsIndex = student.indexOf("Conditions de participation");
-  const sessionsIndex = student.indexOf("Les séances");
-  assert.ok(conditionsIndex > -1 && conditionsIndex < sessionsIndex);
-  assert.match(summary, /Ouvert à tous/);
-  assert.match(summary, /Réservé à : \$\{audienceDetails\}/);
-  assert.match(summary, /prerequisitesRequired &&/);
-  assert.match(summary, /Prérequis nécessaires/);
+  const practicalIndex = student.indexOf("Informations pratiques");
+  const serviceIndex = student.indexOf("Service pilote", practicalIndex);
+  const durationIndex = student.indexOf("Durée", practicalIndex);
+  const conditionsIndex = student.indexOf("Conditions de participation", practicalIndex);
+  const capacityIndex = student.indexOf("Nombre de places", practicalIndex);
+  assert.ok(practicalIndex > -1 && practicalIndex < serviceIndex && serviceIndex < durationIndex && durationIndex < conditionsIndex && conditionsIndex < capacityIndex);
+  assert.equal(student.match(/Conditions de participation/g)?.length, 1);
+  assert.doesNotMatch(student.slice(practicalIndex), /Lieu principal/);
+  assert.match(student, /Ouvert à tous/);
+  assert.match(student, /Réservé à : \$\{o\.participation_audience_details\}/);
+  assert.match(student, /o\.participation_prerequisites_required &&/);
+  assert.match(student, /Prérequis nécessaires/);
 });
 
 test("les fiches existantes restent ouvertes à tous sans prérequis exigé", () => {

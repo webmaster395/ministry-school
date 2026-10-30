@@ -19,7 +19,6 @@ import { cancelOpportunityDate, registerOpportunityDates } from "../actions";
 import { getOpportunityResources } from "@/lib/data/opportunity-resources";
 import StrategicVisionSection from "@/components/StrategicVisionSection";
 import FormattedContent from "@/components/FormattedContent";
-import ParticipationConditionsSummary from "@/components/ParticipationConditionsSummary";
 
 const fullDate = (iso: string) => new Intl.DateTimeFormat("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${iso}T12:00:00Z`));
 const hm = (time: string) => time.slice(0,5).replace(":"," h ").replace(/ h 00$/," h");
@@ -91,8 +90,6 @@ export default async function OpportunityPage({ params, searchParams }: { params
 
           {resources.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Supports et ressources</h2><div className="mt-4 grid gap-3 sm:grid-cols-2">{resources.map((resource) => { const Icon = resource.kind === "support" ? FileText : resource.kind === "link" ? Link2 : PackageOpen; return <a key={resource.id} href={`/etudiant/services/${o.id}/ressources/${resource.id}/ouvrir`} target="_blank" rel="noreferrer" className="group flex items-start gap-3 rounded-2xl border border-border bg-background p-4 transition hover:border-foreground hover:shadow-sm"><span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-surface"><Icon size={20} /></span><span className="min-w-0 flex-1"><strong className="block break-words text-sm">{resource.title}</strong>{resource.description && <span className="mt-1.5 block whitespace-pre-line text-sm leading-5 text-muted">{resource.description}</span>}<small className="mt-1.5 block text-muted">{resource.kind === "support" ? "Support de cours" : resource.kind === "link" ? "Lien" : "Ressource"}</small></span><ExternalLink size={16} className="mt-1 shrink-0 text-muted transition group-hover:text-foreground" /></a>; })}</div></section>}
 
-          <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Conditions de participation</h2><ParticipationConditionsSummary audience={o.participation_audience} audienceDetails={o.participation_audience_details} prerequisitesRequired={o.participation_prerequisites_required} prerequisites={prerequisites} /></section>
-
           <section className="border-t border-border-soft pt-7">
             <h2 className="font-title text-[25px]">Les séances</h2>
             <p className="mt-1 text-sm text-muted">Choisissez uniquement les séances auxquelles vous souhaitez participer.</p>
@@ -122,9 +119,19 @@ export default async function OpportunityPage({ params, searchParams }: { params
         <aside className="rounded-3xl border border-border bg-background p-6 lg:sticky lg:top-5">
           <p className="label text-xs tracking-[.14em] text-muted">Informations pratiques</p>
           <dl className="mt-4 divide-y divide-border-soft text-sm">
-            {(o.services?.name || o.organizer_label) && <div className="py-3"><dt className="text-muted">Service pilote</dt><dd className="mt-1 font-semibold">{o.services?.name || o.organizer_label}</dd></div>}
-            {o.location && <div className="py-3"><dt className="text-muted">Lieu principal</dt><dd className="mt-1 font-semibold">{o.location}</dd></div>}
-            <div className="py-3"><dt className="text-muted">Durée</dt><dd className="mt-1 font-semibold">{weekends} week-end{weekends>1?"s":""} · {dates.length} séance{dates.length>1?"s":""}</dd></div>
+            <div className="py-3"><dt className="text-muted">Service pilote</dt><dd className="mt-1 font-semibold">{o.services?.name || o.organizer_label || "Non renseigné"}</dd></div>
+            <div className="py-3"><dt className="text-muted">Durée</dt><dd className="mt-1 font-semibold">{weekends} week-end{weekends === 1 ? "" : "s"} · {dates.length} séance{dates.length === 1 ? "" : "s"}</dd></div>
+            <div className="py-3">
+              <dt className="text-muted">Conditions de participation</dt>
+              <dd className="mt-1 font-semibold">
+                <p>{o.participation_audience === "specific" ? `Réservé à : ${o.participation_audience_details}` : "Ouvert à tous"}</p>
+                {o.participation_prerequisites_required && <div className="mt-2 font-normal">
+                  <p className="font-semibold">Prérequis nécessaires</p>
+                  <ul className="mt-1.5 space-y-1 pl-4 text-muted">{prerequisites.map((item) => <li key={item} className="list-disc">{item}</li>)}</ul>
+                </div>}
+              </dd>
+            </div>
+            <div className="py-3"><dt className="text-muted">Nombre de places</dt><dd className="mt-1 font-semibold">{o.capacity ? `${o.capacity} place${o.capacity === 1 ? "" : "s"} par séance` : "Non limité"}</dd></div>
           </dl>
           {registeredDates.size > 0 && <p className="mt-4 rounded-xl bg-surface px-4 py-3 text-sm font-medium">Vous êtes inscrit à {dates.filter((date) => registeredDates.has(date.id)).length} séance{dates.filter((date) => registeredDates.has(date.id)).length>1?"s":""}.</p>}
         </aside>
