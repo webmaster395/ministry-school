@@ -99,7 +99,21 @@ export function isPublished(o: Opportunity, now = new Date()) {
 export function placesLabel(o: Opportunity, taken: number) {
   if (o.capacity === null) return null;
   const left = Math.max(0, o.capacity - taken);
-  return left === 0 ? "Complet" : `${left} place${left > 1 ? "s" : ""} restante${left > 1 ? "s" : ""}`;
+  return studentPlacesLabel(left);
+}
+
+/** L'alerte de rareté n'est affichée que pour les cinq dernières places. */
+export function lastPlacesLabel(remaining: number | null) {
+  if (remaining === null || remaining < 1 || remaining > 5) return null;
+  return remaining === 1
+    ? "Plus qu’une place disponible"
+    : `Plus que ${remaining} places disponibles`;
+}
+
+/** Libellé étudiant : aucune capacité chiffrée tant qu'il reste au moins six places. */
+export function studentPlacesLabel(remaining: number | null) {
+  if (remaining === 0) return "Complet";
+  return lastPlacesLabel(remaining);
 }
 
 export async function getOpportunities(supabase: SupabaseClient) {

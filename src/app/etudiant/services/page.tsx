@@ -127,7 +127,7 @@ export default async function ServicesPage({
                   <OpportunityBanner emoji={o.banner_emoji} title={o.title} typeLabel={TYPE_LABEL[opportunityType(o)]} variant="card" />
                   <div className="flex flex-1 flex-col p-6">
                     <span className="text-[13px] text-muted">
-                      {mine.has(o.id) && status(o) !== "termine" ? "Inscrit" : STATUS_LABEL[status(o)]}
+                      {mine.has(o.id) && status(o) !== "termine" ? "Inscrit" : status(o) === "disponible" ? "M’inscrire" : STATUS_LABEL[status(o)]}
                     </span>
                   <p className="mt-2 line-clamp-2 text-[15px] leading-relaxed text-muted">
                     {plainTextContent(o.short_description || o.description)}
@@ -147,7 +147,7 @@ export default async function ServicesPage({
                     {o.location && <li className="flex items-center gap-2.5">{o.location}</li>}
                     <li className="flex items-center justify-between gap-2.5">
                       <span className="flex items-center gap-2.5">
-                        {places && (
+                        {places && status(o) !== "complet" && (
                           <>
                             <Users size={17} strokeWidth={1.6} /> {places}
                           </>

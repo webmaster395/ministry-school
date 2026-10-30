@@ -10,6 +10,7 @@ import {
   getOpportunityDates,
   getProjectsTrainingRights,
   isPublished,
+  studentPlacesLabel,
   opportunityType,
   TYPE_LABEL,
 } from "@/lib/data/opportunities";
@@ -100,16 +101,17 @@ export default async function OpportunityPage({ params, searchParams }: { params
                 const registered = registeredDates.has(date.id);
                 const full = remaining === 0;
                 const past = date.session_date < today;
+                const availability = studentPlacesLabel(remaining);
                 return <div key={date.id} className={`rounded-2xl border p-4 sm:p-5 ${registered ? "border-accent bg-accent/[.06]" : "border-border"}`}>
                   <div className="flex items-start gap-3">
                     {!registered && !past && !full && o.registration_open && <input type="checkbox" name="date_ids" value={date.id} className="mt-1 h-5 w-5 accent-[var(--accent)]" aria-label={`Sélectionner la séance ${index+1}`} />}
                     {registered && <span className="mt-0.5 grid h-6 w-6 place-items-center rounded-full bg-accent text-on-accent"><Check size={14} /></span>}
-                    <div className="min-w-0 flex-1"><p className="font-semibold capitalize text-foreground">{fullDate(date.session_date)}</p><p className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted"><span className="inline-flex items-center gap-1.5"><Clock size={15} /> {hm(date.start_time)}–{hm(date.end_time)}</span>{(date.location || o.location) && <span className="inline-flex items-center gap-1.5"><MapPin size={15} /> {date.location || o.location}</span>}<span className="inline-flex items-center gap-1.5"><Users size={15} /> {remaining === null ? "Places illimitées" : full ? "Complet" : `${remaining} place${remaining>1?"s":""} restante${remaining>1?"s":""}`}</span></p></div>
+                    <div className="min-w-0 flex-1"><p className="font-semibold capitalize text-foreground">{fullDate(date.session_date)}</p><p className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted"><span className="inline-flex items-center gap-1.5"><Clock size={15} /> {hm(date.start_time)}–{hm(date.end_time)}</span>{(date.location || o.location) && <span className="inline-flex items-center gap-1.5"><MapPin size={15} /> {date.location || o.location}</span>}{registered ? <span className="inline-flex items-center gap-1.5 font-semibold text-foreground"><Check size={15} /> Inscrit</span> : availability && <span className={`inline-flex items-center gap-1.5 font-semibold ${full ? "text-foreground" : "text-[#9A5B00]"}`}><Users size={15} /> {availability}</span>}</p></div>
                     {registered && o.cancellation_allowed && <button formAction={cancelOpportunityDate} name="date_id" value={date.id} className="shrink-0 text-xs font-semibold text-muted underline underline-offset-2">Annuler</button>}
                   </div>
                 </div>;
               })}
-              {selectable.length > 0 && o.registration_open && <button className="w-full rounded-full bg-accent px-6 py-3.5 text-sm font-semibold text-on-accent sm:w-auto">S’inscrire aux séances sélectionnées</button>}
+              {selectable.length > 0 && o.registration_open && <button className="w-full rounded-full bg-accent px-6 py-3.5 text-sm font-semibold text-on-accent sm:w-auto">M’inscrire</button>}
             </form>
           </section>
         </article>

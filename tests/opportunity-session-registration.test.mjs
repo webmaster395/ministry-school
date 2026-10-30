@@ -15,13 +15,28 @@ test("les inscriptions sont indépendantes par séance et atomiques", async () =
 
 test("la fiche étudiante permet une sélection multiple et une annulation ciblée", async () => {
   const page = await source("src/app/etudiant/services/[id]/page.tsx");
+  const catalogue = await source("src/app/etudiant/services/page.tsx");
+  const data = await source("src/lib/data/opportunities.ts");
   const actions = await source("src/app/etudiant/services/actions.ts");
   assert.match(page, /name="date_ids"/);
   assert.match(page, /registerOpportunityDates/);
   assert.match(page, /formAction=\{cancelOpportunityDate\}/);
-  assert.match(page, /place.*restante/s);
+  assert.match(page, /studentPlacesLabel\(remaining\)/);
+  assert.match(page, />M’inscrire</);
+  assert.match(page, /> Inscrit</);
+  assert.match(catalogue, /status\(o\) === "disponible" \? "M’inscrire"/);
+  assert.match(data, /remaining > 5/);
+  assert.match(data, /Plus qu’une place disponible/);
+  assert.match(data, /Plus que \$\{remaining\} places disponibles/);
   assert.match(actions, /register_for_opportunity_dates/);
   assert.match(actions, /cancel_opportunity_date_registration/);
+});
+
+test("les vues de gestion gardent les ratios précis et l’alerte des dernières places", async () => {
+  const form = await source("src/components/OpportunityEditForms.tsx");
+  assert.match(form, /registeredCount.*date\.capacity/s);
+  assert.match(form, /people\.length.*date\.capacity/s);
+  assert.match(form, /lastPlacesLabel\(remaining\)/);
 });
 
 test("le formulaire simplifié conserve uniquement les informations métier attendues", async () => {

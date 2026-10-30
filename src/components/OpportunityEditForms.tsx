@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { useActionState, useEffect, useState, type ReactNode } from "react";
 import type { Opportunity } from "@/lib/data/opportunities";
-import { opportunityType, TYPE_LABEL } from "@/lib/data/opportunities";
+import { lastPlacesLabel, opportunityType, TYPE_LABEL } from "@/lib/data/opportunities";
 import type { OpportunityResource } from "@/lib/data/opportunity-resources";
 import { saveOpportunityInline } from "@/app/etudiant/services/actions";
 import DynamicListInput from "@/components/DynamicListInput";
@@ -196,13 +196,21 @@ export default function OpportunityEditForms({
       <section className="rounded-3xl border border-border bg-background p-5 sm:p-7">
         <SectionTitle>Dates et séances *</SectionTitle>
         {canManage ? <div className="mt-4 flex flex-wrap gap-2">{suggestedSaturdays.map((date) => <button key={date} type="button" onClick={() => addDate(date)} className="rounded-full border border-border px-3 py-2 text-sm">{new Intl.DateTimeFormat("fr-FR",{day:"numeric",month:"long",timeZone:"UTC"}).format(new Date(`${date}T12:00:00Z`))}</button>)}<button type="button" onClick={() => addDate()} className="inline-flex items-center gap-1.5 rounded-full border border-foreground px-3 py-2 text-sm"><Plus size={15} /> Date personnalisée</button></div> : <p className="mt-2 text-sm text-muted">Les dates sont modifiables uniquement par le responsable.</p>}
-        <div className="mt-4 space-y-3">{dates.map((date,index) => <div key={date.id ?? index} className="grid gap-2 rounded-2xl bg-surface p-3 md:grid-cols-[1.2fr_.7fr_.7fr_.7fr_auto]">
-          <input type="hidden" name="date_id" value={date.id ?? ""} />
-          {(["session_date","start_time","end_time"] as const).map((key) => <input key={key} type={key === "session_date" ? "date" : "time"} name={key} required readOnly={!canManage} value={date[key].slice(0,key === "session_date" ? 10 : 5)} onChange={(event) => canManage && changeDates(dates.map((row,i) => i === index ? {...row,[key]:event.target.value} : row))} className={field} aria-label={key} />)}
-          <input type="number" min={1} name="date_capacity" readOnly={!canManage} value={date.capacity ?? ""} onChange={(event) => canManage && changeDates(dates.map((row,i) => i === index ? {...row,capacity:event.target.value ? Number(event.target.value) : null} : row))} placeholder="Places" className={field} />
-          <input type="hidden" name="room" value={date.room ?? ""} /><input type="hidden" name="date_location" value={date.location ?? ""} />
-          {canManage ? <button type="button" onClick={() => changeDates(dates.filter((_,i) => i !== index))} aria-label="Supprimer la séance" className="grid min-h-11 place-items-center text-muted hover:text-red-700"><Trash2 size={17} /></button> : <span />}
-        </div>)}</div>
+        <div className="mt-4 space-y-3">{dates.map((date,index) => {
+          const registeredCount = date.id ? sessionParticipants.filter((person) => person.opportunity_date_id === date.id).length : 0;
+          const remaining = date.capacity === null ? null : Math.max(0, date.capacity - registeredCount);
+          const lastPlaces = lastPlacesLabel(remaining);
+          return <div key={date.id ?? index} className="rounded-2xl bg-surface p-3">
+            <div className="grid gap-2 md:grid-cols-[1.2fr_.7fr_.7fr_.7fr_auto]">
+              <input type="hidden" name="date_id" value={date.id ?? ""} />
+              {(["session_date","start_time","end_time"] as const).map((key) => <input key={key} type={key === "session_date" ? "date" : "time"} name={key} required readOnly={!canManage} value={date[key].slice(0,key === "session_date" ? 10 : 5)} onChange={(event) => canManage && changeDates(dates.map((row,i) => i === index ? {...row,[key]:event.target.value} : row))} className={field} aria-label={key} />)}
+              <input type="number" min={1} name="date_capacity" readOnly={!canManage} value={date.capacity ?? ""} onChange={(event) => canManage && changeDates(dates.map((row,i) => i === index ? {...row,capacity:event.target.value ? Number(event.target.value) : null} : row))} placeholder="Places" className={field} />
+              <input type="hidden" name="room" value={date.room ?? ""} /><input type="hidden" name="date_location" value={date.location ?? ""} />
+              {canManage ? <button type="button" onClick={() => changeDates(dates.filter((_,i) => i !== index))} aria-label="Supprimer la séance" className="grid min-h-11 place-items-center text-muted hover:text-red-700"><Trash2 size={17} /></button> : <span />}
+            </div>
+            <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 px-1 text-xs text-muted"><span><strong className="text-foreground">{registeredCount}{date.capacity === null ? "" : ` / ${date.capacity}`}</strong> inscription{registeredCount === 1 ? "" : "s"}</span>{lastPlaces && <span className="font-semibold text-[#9A5B00]">{lastPlaces}</span>}</p>
+          </div>;
+        })}</div>
       </section>
     </form>
     {editExtras}
@@ -259,7 +267,7 @@ function Consultation({ opportunity: o, dates, team, sessionParticipants, resour
           <Definition label="Intervenants" value={speakers.join(" • ") || "Non renseignés"} />
           <Definition label="Lieu principal" value={o.location} />
         </dl></div>
-        <section className="border-t border-border-soft pt-5"><h2 className="font-title text-[19px]">Inscriptions par séance ({distinctPeople} personne{distinctPeople > 1 ? "s" : ""})</h2><div className="mt-3 space-y-3">{dates.map((date) => { const people = sessionParticipants.filter((person) => person.opportunity_date_id === date.id); return <div key={date.id} className="rounded-xl bg-surface p-3"><p className="text-xs font-semibold capitalize">{formatSessionDate(date.session_date)} · {people.length} inscrit{people.length > 1 ? "s" : ""}</p><p className="mt-1 text-xs leading-5 text-muted">{people.length ? people.map((person) => person.full_name).join(" • ") : "Aucune inscription"}</p></div>; })}{dates.length === 0 && <p className="text-sm text-muted">Aucune séance programmée.</p>}</div></section>
+        <section className="border-t border-border-soft pt-5"><h2 className="font-title text-[19px]">Inscriptions par séance ({distinctPeople} personne{distinctPeople === 1 ? "" : "s"})</h2><div className="mt-3 space-y-3">{dates.map((date) => { const people = sessionParticipants.filter((person) => person.opportunity_date_id === date.id); const remaining = date.capacity === null ? null : Math.max(0, date.capacity - people.length); const lastPlaces = lastPlacesLabel(remaining); return <div key={date.id} className="rounded-xl bg-surface p-3"><p className="text-xs font-semibold capitalize">{formatSessionDate(date.session_date)} · {people.length}{date.capacity === null ? "" : ` / ${date.capacity}`} inscrit{people.length === 1 ? "" : "s"}</p>{lastPlaces && <p className="mt-1 text-xs font-semibold text-[#9A5B00]">{lastPlaces}</p>}<p className="mt-1 text-xs leading-5 text-muted">{people.length ? people.map((person) => person.full_name).join(" • ") : "Aucune inscription"}</p></div>; })}{dates.length === 0 && <p className="text-sm text-muted">Aucune séance programmée.</p>}</div></section>
       </aside>
     </div>
   </div>;
