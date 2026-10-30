@@ -30,7 +30,7 @@ export default async function ProjectsTrainingManagementPage({ searchParams }: {
   const filter: StatusKey = (["draft", "pending", "published", "past"] as string[]).includes(requested ?? "") ? requested as StatusKey : "all";
   const withDates = await Promise.all(mine.map(async (row) => {
     const [dates, review] = await Promise.all([getOpportunityDates(supabase, row.id), getOpportunityReviewState(supabase, row.id)]);
-    const workflow = opportunityWorkflow(row, dates, review);
+    const workflow = opportunityWorkflow(row, dates, review, globalScope && !!viewer?.roles.superAdmin ? "supervision" : "workspace");
     return { row, dates, review, workflow: { ...workflow, key: workflow.key === "corrections" ? "pending" as const : workflow.key === "scheduled" ? "published" as const : workflow.key === "archived" ? "past" as const : workflow.key } };
   }));
   const shown = filter === "all" ? withDates : withDates.filter((item) => item.workflow.key === filter);

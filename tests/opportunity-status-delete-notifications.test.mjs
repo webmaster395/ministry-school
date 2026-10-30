@@ -20,8 +20,14 @@ test("la gestion affiche les cinq états et expose la suppression sécurisée", 
   const detail = source("src/app/gestion/projets-formations/[id]/page.tsx");
   const workflow = source("src/lib/opportunity-workflow.ts");
   const migration = source("supabase/migrations/20261029230000_opportunity_status_delete_and_notification_dedupe.sql");
-  for (const label of ["Brouillon", "À valider", "Corrections en attente", "Publication programmée", "Publié", "Passé", "Archivé"]) assert.match(workflow, new RegExp(label));
+  for (const label of ["Brouillon", "À valider", "En attente de validation", "Corrections demandées", "Corrections à apporter", "Publication programmée", "Publié", "Passé", "Archivé"]) assert.match(workflow, new RegExp(label));
   assert.match(list, /opportunityWorkflow/);
+  assert.match(list, /"supervision" : "workspace"/);
+  assert.match(detail, /superAdminView \? "supervision" : "workspace"/);
+  assert.match(detail, /#validation-publication/);
+  assert.match(detail, /const actionLabel = workflow\.actionLabel/);
+  assert.match(workflow, /pending: \{ label: "À valider", actionLabel: "Examiner la demande" \}/);
+  assert.match(workflow, /pending: \{ label: "En attente de validation", actionLabel: "Voir le suivi" \}/);
   assert.match(detail, /DeleteOpportunityButton/);
   assert.match(migration, /delete_opportunity_admin/);
 });

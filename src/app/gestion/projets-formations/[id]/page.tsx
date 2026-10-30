@@ -74,7 +74,7 @@ export default async function ProjectsTrainingManageDetail({ params, searchParam
     {superAdminView && <AssignmentEditor opportunityId={id} members={members.filter((member) => !member.deactivated).map(({ id: memberId, full_name, email }) => ({ id: memberId, full_name, email }))} managers={teamRows.filter((person) => person.responsibility === "manager").map((person) => person.user_id)} contributors={teamRows.filter((person) => person.responsibility === "contributor").map((person) => person.user_id)} />}
     {superAdminView && <DeleteOpportunityButton opportunityId={id} title={opportunity.title} />}
   </div>;
-  const workflow = opportunityWorkflow(opportunity, dates, reviewState);
+  const workflow = opportunityWorkflow(opportunity, dates, reviewState, superAdminView ? "supervision" : "workspace");
   const internalMaterials = linesOf(internalMaterial);
   const commonEditorProps = {
     opportunity: opportunityWithPrivatePlanning,
@@ -92,7 +92,7 @@ export default async function ProjectsTrainingManageDetail({ params, searchParam
   const actionHref = workflow.key === "pending" ? (superAdminView ? "#validation-publication" : !globalScope ? "#suivi-validation" : null)
     : workflow.key === "corrections" ? (superAdminView ? "#validation-publication" : !globalScope ? "#suivi-validation" : null)
       : workflow.key === "scheduled" ? (superAdminView ? "#validation-publication" : !globalScope ? "#suivi-validation" : null) : null;
-  const actionLabel = workflow.key === "pending" ? (superAdminView ? "À valider" : "Voir le suivi") : workflow.actionLabel;
+  const actionLabel = workflow.actionLabel;
 
   return <div className="space-y-5">
     <div className="flex flex-wrap items-center justify-between gap-3"><Link href={globalScope ? "/gestion/projets-formations?scope=admin" : "/gestion/projets-formations"} className="inline-flex items-center gap-1.5 text-sm text-muted"><ChevronLeft size={16} /> Projets et formations</Link><div className="flex flex-wrap items-center gap-3"><span className="inline-flex items-center gap-2"><span className="text-[11px] font-semibold uppercase tracking-[.12em] text-muted">Statut</span><span className={`rounded-full px-3 py-1.5 text-xs font-semibold ${workflow.badgeClass}`}>{workflow.label}</span></span>{actionHref && actionLabel && <span className="inline-flex items-center gap-2"><span className="text-[11px] font-semibold uppercase tracking-[.12em] text-muted">Action</span><a href={actionHref} className="inline-flex min-h-9 items-center rounded-full border border-foreground px-3.5 text-xs font-semibold text-foreground transition hover:bg-foreground hover:text-background">{actionLabel}</a></span>}<Link href={`/gestion/projets-formations/${id}/pdf${globalScope ? "?scope=admin" : ""}`} className="inline-flex min-h-9 items-center gap-2 rounded-full border border-border bg-background px-3.5 text-xs font-semibold text-foreground transition hover:border-foreground"><Download size={15} /> Télécharger le PDF</Link><Link href={`/etudiant/services/${id}?preview=1`} className="text-sm text-muted hover:text-foreground">Prévisualiser la fiche étudiante</Link></div></div>
