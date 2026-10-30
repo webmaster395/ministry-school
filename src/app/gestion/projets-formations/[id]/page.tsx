@@ -95,7 +95,7 @@ export default async function ProjectsTrainingManageDetail({ params, searchParam
   const actionLabel = workflow.actionLabel;
 
   return <div className="space-y-5">
-    <section className="grid min-w-0 gap-3 rounded-2xl border border-border bg-background p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:p-5">
+    {globalScope && <section className="grid min-w-0 gap-3 rounded-2xl border border-border bg-background p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:p-5">
       <div className="flex min-w-0 flex-wrap items-center gap-3">
         <Link href={globalScope ? "/gestion/projets-formations?scope=admin" : "/gestion/projets-formations"} className="inline-flex min-h-10 items-center gap-1.5 text-sm text-muted"><ChevronLeft size={16} /> Projets et formations</Link>
         <span className="inline-flex items-center gap-2"><span className="text-[10px] font-semibold uppercase tracking-[.12em] text-muted">Statut</span><span className={`rounded-full px-3 py-1.5 text-xs font-semibold ${workflow.badgeClass}`}>{workflow.label}</span></span>
@@ -105,7 +105,7 @@ export default async function ProjectsTrainingManageDetail({ params, searchParam
         <Link href={`/gestion/projets-formations/${id}/pdf${globalScope ? "?scope=admin" : ""}`} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-border px-3.5 text-xs font-semibold text-foreground transition hover:border-foreground"><Download size={15} /> Télécharger le PDF</Link>
         <Link href={`/etudiant/services/${id}?preview=1`} className="inline-flex min-h-10 items-center justify-center rounded-full px-3 text-center text-xs font-semibold text-muted hover:bg-surface hover:text-foreground min-[390px]:col-span-2">Prévisualiser la fiche étudiante</Link>
       </div>
-    </section>
+    </section>}
     {query.creation === "ok" && <p role="status" className="flex items-center gap-2 rounded-xl border border-border bg-background px-4 py-3 text-sm"><CheckCircle2 size={18} /> Élément créé en brouillon.</p>}
     {managementRevision && <p role="status" className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950"><strong>Version de travail non publiée.</strong> La fiche étudiante conserve la dernière version validée jusqu’à la prochaine approbation.</p>}
     {globalScope

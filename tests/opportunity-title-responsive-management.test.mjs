@@ -28,12 +28,17 @@ test("le titre possède une seule saisie et pilote l’aperçu de bannière", ()
 
 test("l’en-tête opérationnel adapte le rôle, le type, le statut et les droits", () => {
   const workspace = source("src/components/OpportunityOperationalWorkspace.tsx");
-  assert.match(workspace, /ESPACE PROJETS ET FORMATIONS · \{roleLabel\.toUpperCase\(\)\}/);
-  assert.match(workspace, /readOnly \|\| terminal \? "Consulter" : "Préparer"/);
-  assert.match(workspace, /onTypeChange=\{setType\}/);
-  assert.match(workspace, /Cette formation est en attente de validation\./);
-  assert.match(workspace, /Ce projet et cette formation sont terminés\./);
-  assert.doesNotMatch(workspace, /Préparer cette initiative|ESPACE OPÉRATIONNEL/);
+  const form = source("src/components/OpportunityEditForms.tsx");
+  const detail = source("src/app/gestion/projets-formations/[id]/page.tsx");
+  assert.match(workspace, /workspaceHeader=\{\{ roleLabel, readOnly, workflow, canSubmit: props\.canManage \}\}/);
+  assert.match(form, /<WorkspaceCompactHeader/);
+  assert.match(form, /\{title\}<\/h1>/);
+  assert.match(form, /\{roleLabel\}/);
+  assert.match(form, /\{workflow\.label\}/);
+  assert.match(form, /Plus d’options/);
+  assert.match(form, /Soumettre à validation/);
+  assert.match(detail, /\{globalScope && <section/);
+  assert.doesNotMatch(workspace, /Préparer ce projet|Préparer cette formation|Préparation du projet|ESPACE PROJETS ET FORMATIONS/);
 });
 
 test("les actions et grilles de gestion se replient avant de déborder", () => {

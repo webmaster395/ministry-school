@@ -1,9 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import {
   CalendarDays,
   Check,
   Clock,
+  Download,
+  Ellipsis,
   ExternalLink,
   FileText,
   Link2,
@@ -35,6 +38,7 @@ import { formatSessionDate } from "@/lib/format";
 import AdminSelect from "@/components/admin/AdminSelect";
 import ParticipationConditionsFields from "@/components/ParticipationConditionsFields";
 import ParticipationConditionsSummary from "@/components/ParticipationConditionsSummary";
+import type { OpportunityWorkflowDisplay } from "@/lib/opportunity-workflow";
 
 type DateRow = { id?: string; session_date: string; start_time: string; end_time: string; room: string | null; location: string | null; capacity: number | null };
 type TeamPerson = { user_id: string; full_name: string; responsibility: "manager" | "contributor"; can_edit: boolean };
@@ -58,6 +62,7 @@ export default function OpportunityEditForms({
   editExtras,
   experience = "supervision",
   onTypeChange,
+  workspaceHeader,
 }: {
   opportunity: Opportunity;
   initialDates: DateRow[];
@@ -73,9 +78,15 @@ export default function OpportunityEditForms({
   editExtras?: ReactNode;
   experience?: "supervision" | "workspace";
   onTypeChange?: (type: ReturnType<typeof opportunityType>) => void;
+  workspaceHeader?: {
+    roleLabel: "Responsable" | "Contributeur";
+    readOnly: boolean;
+    workflow: OpportunityWorkflowDisplay;
+    canSubmit: boolean;
+  };
 }) {
   const workspace = experience === "workspace";
-  const [editing, setEditing] = useState(workspace);
+  const [editing, setEditing] = useState(workspace ? !workspaceHeader?.readOnly : false);
   const [dirty, setDirty] = useState(false);
   const [confirmation, setConfirmation] = useState<string | null>(null);
   const [dates, setDates] = useState(initialDates);
@@ -161,7 +172,7 @@ export default function OpportunityEditForms({
     setEmoji(opportunityEmoji(o.banner_emoji));
     setServiceName(o.services?.name ?? o.organizer_label ?? "");
     setDirty(false);
-    setEditing(workspace);
+    setEditing(workspace ? !workspaceHeader?.readOnly : false);
   };
   const cancel = () => {
     if (dirty && !window.confirm("Abandonner les modifications non enregistrées ?")) return;
@@ -177,25 +188,37 @@ export default function OpportunityEditForms({
     changeDates([...dates, { session_date: date, start_time: "14:00", end_time: "17:00", room: null, location: null, capacity: o.capacity }]);
   };
 
-  if (!editing && !workspace) {
-    return <Consultation
-      opportunity={o}
-      dates={initialDates}
-      team={team}
-      sessionParticipants={sessionParticipants}
-      resources={resources}
-      publicationLabel={publicationLabel}
-      canEdit={canEdit}
-      confirmation={confirmation}
-      onEdit={() => { setConfirmation(null); setEditing(true); }}
-    />;
+  if (!editing) {
+    const consultation = <Consultation
+        opportunity={o}
+        dates={initialDates}
+        team={team}
+        sessionParticipants={sessionParticipants}
+        resources={resources}
+        publicationLabel={publicationLabel}
+        canEdit={canEdit && !workspaceHeader?.readOnly}
+        confirmation={confirmation}
+        onEdit={() => { setConfirmation(null); setEditing(true); }}
+      />;
+    return workspaceHeader ? <div className="space-y-5">
+      <WorkspaceCompactHeader opportunityId={o.id} title={o.title} {...workspaceHeader} />
+      {consultation}
+    </div> : consultation;
   }
 
   return <div className="space-y-5">
     <form ref={formRef} action={formAction} noValidate onSubmit={() => { submittedRevisionRef.current = currentRevisionRef.current; }} onChange={markDirty} className="space-y-5">
       <input type="hidden" name="opportunity_id" value={o.id} />
       <input type="hidden" name="base_updated_at" value={baseUpdatedAt} />
-      <div className="sticky top-2 z-30 grid gap-3 rounded-2xl border border-border bg-background/95 px-4 py-3 shadow-lg backdrop-blur sm:top-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:px-5">
+      {workspaceHeader ? <WorkspaceCompactHeader
+        opportunityId={o.id}
+        title={title || o.title}
+        {...workspaceHeader}
+        saveState={pending ? "Enregistrement…" : dirty ? "Modifications non enregistrées" : confirmation ? "Enregistré" : null}
+        submissionBlocked={pending || dirty}
+        saveAction={<button ref={saveButtonRef} disabled={pending || !dirty} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-accent px-4 text-sm font-semibold text-on-accent disabled:opacity-60 min-[430px]:w-auto"><Save size={16} /> {pending ? "Enregistrement…" : "Enregistrer"}</button>}
+        error={state && !state.ok ? state.message : null}
+      /> : <div className="sticky top-2 z-30 grid gap-3 rounded-2xl border border-border bg-background/95 px-4 py-3 shadow-lg backdrop-blur sm:top-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:px-5">
         <div className="min-w-0"><p className="text-sm font-semibold">{workspace ? "Préparation du projet ou de la formation" : "Modification de la fiche"}</p><p className="text-xs text-muted">{pending ? "Enregistrement…" : dirty ? "Modifications non enregistrées" : confirmation ? "Enregistré" : "Toutes les modifications sont enregistrées ensemble."}</p></div>
         <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center">
           <button type="button" onClick={cancel} disabled={pending} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-border px-3 text-sm font-semibold disabled:opacity-50 sm:px-4"><X size={16} /> Annuler</button>
@@ -203,7 +226,7 @@ export default function OpportunityEditForms({
         </div>
         {workspace && confirmation && <p role="status" className="w-full rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-sm text-emerald-900">{confirmation}</p>}
         {state && !state.ok && <p role="alert" className="w-full rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">{state.message}</p>}
-      </div>
+      </div>}
 
       <div className="overflow-hidden rounded-3xl" aria-label="Aperçu de la bannière">
         <OpportunityBanner emoji={emoji} title={title || "Titre du projet ou de la formation"} typeLabel={TYPE_LABEL[type]} status="APERÇU" variant="preview" headingLevel={workspace ? "h2" : "h1"} />
@@ -267,6 +290,69 @@ export default function OpportunityEditForms({
   </div>;
 }
 
+function WorkspaceCompactHeader({
+  opportunityId,
+  title,
+  roleLabel,
+  workflow,
+  canSubmit,
+  saveAction,
+  saveState,
+  submissionBlocked = false,
+  error,
+}: {
+  opportunityId: string;
+  title: string;
+  roleLabel: "Responsable" | "Contributeur";
+  readOnly: boolean;
+  workflow: OpportunityWorkflowDisplay;
+  canSubmit: boolean;
+  saveAction?: ReactNode;
+  saveState?: string | null;
+  submissionBlocked?: boolean;
+  error?: string | null;
+}) {
+  const actionLabel = workflow.key === "draft" ? (canSubmit ? "Soumettre à validation" : null)
+    : workflow.key === "pending" ? "Voir le suivi"
+      : workflow.key === "corrections" ? (canSubmit ? "Soumettre à nouveau" : "Voir les corrections")
+        : workflow.key === "scheduled" ? "Voir la programmation" : null;
+  const submissionAction = workflow.key === "draft" || workflow.key === "corrections";
+  const actionDisabled = submissionAction && submissionBlocked;
+  const secondaryLinkClass = "inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-border px-3.5 text-xs font-semibold text-foreground transition hover:border-foreground";
+
+  return <header className="min-w-0 rounded-2xl border border-border bg-background p-4 sm:p-5">
+    <div className="flex min-w-0 flex-col gap-3 min-[430px]:flex-row min-[430px]:items-start min-[430px]:justify-between">
+      <h1 className="font-title min-w-0 break-words text-[clamp(1.4rem,5vw,1.9rem)] leading-tight text-foreground">{title}</h1>
+      <span className={`w-fit shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold ${workflow.badgeClass}`}>{workflow.label}</span>
+    </div>
+
+    <div className="mt-4 flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <p className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted">
+        <span className="font-semibold text-foreground">{roleLabel}</span>
+        {saveState && <><span aria-hidden="true">·</span><span role="status">{saveState}</span></>}
+      </p>
+      <div className="flex min-w-0 flex-wrap items-center gap-2">
+        {saveAction}
+        {actionLabel && (actionDisabled
+          ? <span aria-disabled="true" title="Enregistrez les modifications avant de poursuivre" className="inline-flex min-h-10 items-center justify-center rounded-full border border-border px-3.5 text-xs font-semibold text-muted opacity-60">{actionLabel}</span>
+          : <a href="#suivi-validation" className="inline-flex min-h-10 items-center justify-center rounded-full border border-foreground px-3.5 text-xs font-semibold text-foreground transition hover:bg-foreground hover:text-background">{actionLabel}</a>)}
+        <div className="hidden items-center gap-2 md:flex">
+          <Link href={`/gestion/projets-formations/${opportunityId}/pdf`} className={secondaryLinkClass}><Download size={15} /> Télécharger le PDF</Link>
+          <Link href={`/etudiant/services/${opportunityId}?preview=1`} className="inline-flex min-h-10 items-center justify-center rounded-full px-3 text-xs font-semibold text-muted transition hover:bg-surface hover:text-foreground">Prévisualiser la fiche étudiante</Link>
+        </div>
+        <details className="group relative md:hidden">
+          <summary className="inline-flex min-h-10 cursor-pointer list-none items-center justify-center gap-2 rounded-full border border-border px-3.5 text-xs font-semibold text-foreground [&::-webkit-details-marker]:hidden"><Ellipsis size={16} /> Plus d’options</summary>
+          <div className="absolute right-0 top-full z-40 mt-2 grid w-[min(18rem,calc(100vw-2rem))] gap-1 rounded-2xl border border-border bg-background p-2 shadow-xl">
+            <Link href={`/gestion/projets-formations/${opportunityId}/pdf`} className="flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold hover:bg-surface"><Download size={16} /> Télécharger le PDF</Link>
+            <Link href={`/etudiant/services/${opportunityId}?preview=1`} className="flex min-h-11 items-center rounded-xl px-3 text-sm font-semibold hover:bg-surface">Prévisualiser la fiche étudiante</Link>
+          </div>
+        </details>
+      </div>
+    </div>
+    {error && <p role="alert" className="mt-3 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">{error}</p>}
+  </header>;
+}
+
 function Consultation({ opportunity: o, dates, team, sessionParticipants, resources, publicationLabel, canEdit, confirmation, onEdit }: {
   opportunity: Opportunity;
   dates: DateRow[];
@@ -289,10 +375,10 @@ function Consultation({ opportunity: o, dates, team, sessionParticipants, resour
   const firstDate = dates[0];
 
   return <div className="space-y-5">
-    <div className="flex flex-wrap items-center justify-between gap-3">
+    {(confirmation || canEdit) && <div className="flex flex-wrap items-center justify-between gap-3">
       {confirmation ? <p role="status" className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-sm text-emerald-900"><Check size={17} /> {confirmation}</p> : <span />}
       {canEdit && <button type="button" onClick={onEdit} className="ml-auto inline-flex min-h-10 items-center gap-2 rounded-full border border-border bg-background px-4 text-sm font-semibold transition hover:border-foreground"><Pencil size={16} /> Modifier</button>}
-    </div>
+    </div>}
 
     <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
       <article className="overflow-hidden rounded-3xl border border-border bg-background">
