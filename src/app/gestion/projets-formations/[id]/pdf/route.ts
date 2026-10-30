@@ -4,9 +4,9 @@ import { getViewer } from "@/lib/data/viewer";
 import { getOpportunity, getOpportunityDates, getOpportunityInternalMaterial, getOpportunityManagementRevision, getProjectsTrainingRights, mergeOpportunityManagementRevision, opportunityType, TYPE_LABEL } from "@/lib/data/opportunities";
 import { getOpportunityAgenda, AGENDA_TYPE_LABELS } from "@/lib/data/opportunity-agenda";
 import { linesOf } from "@/lib/opportunity-details";
-import { plainTextContent } from "@/components/FormattedContent";
 import { formatSessionDate } from "@/lib/format";
 import { SimplePdf } from "@/lib/pdf/simple-pdf";
+import { pdfContentBlocks } from "@/lib/pdf/structured-content";
 
 const hm = (value: string) => value.slice(0, 5).replace(":", " h ").replace(/ h 00$/, " h");
 
@@ -32,7 +32,13 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   const pdf = new SimplePdf(opportunity.title);
   pdf.banner(TYPE_LABEL[opportunityType(opportunity)], opportunity.services?.name || opportunity.organizer_label);
   pdf.heading("Présentation");
-  pdf.paragraph(plainTextContent(opportunity.description) || "Aucune présentation renseignée.");
+  const presentation = pdfContentBlocks(opportunity.description);
+  if (!presentation.length) pdf.paragraph("Aucune présentation renseignée.");
+  for (const block of presentation) {
+    if (block.kind === "heading") pdf.subheading(block.text);
+    if (block.kind === "paragraph") pdf.paragraph(block.text, { preserveLineBreaks: true });
+    if (block.kind === "list") block.items.forEach((item, index) => pdf.paragraph(item, { listMarker: block.ordered ? `${block.start + index}.` : "•" }));
+  }
   const objectives = linesOf(opportunity.objectives);
   if (objectives.length) { pdf.heading("Objectifs"); objectives.forEach((item) => pdf.paragraph(item, { bullet: true })); }
   const speakers = linesOf(opportunity.speakers);

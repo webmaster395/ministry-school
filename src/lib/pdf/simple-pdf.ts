@@ -82,12 +82,14 @@ export class SimplePdf {
     this.y -= 20;
   }
 
-  paragraph(value: string, options: { bullet?: boolean; muted?: boolean } = {}) {
-    const lines = wrap(value, options.bullet ? 86 : 94);
-    this.ensure(lines.length * 15 + 8);
+  paragraph(value: string, options: { bullet?: boolean; listMarker?: string; muted?: boolean; preserveLineBreaks?: boolean } = {}) {
+    const marker = options.listMarker ?? (options.bullet ? "•" : "");
+    const sourceLines = options.preserveLineBreaks ? value.replace(/\r\n?/g, "\n").split("\n") : [value];
+    const lines = sourceLines.flatMap((line) => wrap(line, marker ? 86 : 94));
     lines.forEach((line, index) => {
-      const prefix = options.bullet && index === 0 ? "• " : options.bullet ? "  " : "";
-      this.text(`${prefix}${line}`, 10, "regular", options.bullet ? 56 : 48, this.y, options.muted ? "0.38 0.42 0.41" : undefined);
+      this.ensure(15);
+      const prefix = marker && index === 0 ? `${marker} ` : marker ? "   " : "";
+      this.text(`${prefix}${line}`, 10, "regular", marker ? 56 : 48, this.y, options.muted ? "0.38 0.42 0.41" : undefined);
       this.y -= 15;
     });
     this.y -= 7;
