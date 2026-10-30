@@ -7,10 +7,10 @@ import BarChart, { type BarDatum } from "@/components/BarChart";
 import { parseMlkEngagement } from "@/lib/mlk-engagement";
 import { getMinistry, sessionColor } from "@/lib/ministry";
 import { memberStatus, type Member } from "@/lib/data/admin-hub";
-import type { Ministry, MonthlyActiveUsers, ProgramAnalytics, UsageAnalytics } from "@/lib/data/admin";
+import type { Ministry, MonthlyActiveUsers, OpportunityAnalytics, ProgramAnalytics, UsageAnalytics } from "@/lib/data/admin";
 import { accountsByTrainingCycle, parisDateKey } from "@/lib/training-cycle-stats";
 
-type Section = "utilisation" | "membres" | "programmes";
+type Section = "utilisation" | "membres" | "programmes" | "initiatives";
 const TRACKING_START = "7 octobre 2026";
 const pageLabels: Record<string, string> = { home: "Accueil", courses: "Mes cours", course_detail: "Détail d’un cours", assignments: "À faire", profile: "Profil", notes: "Notes", services_projects: "Projets et formations" };
 const sensitivityLabels: Record<string, string> = { apotre: "Apostolique", prophete: "Prophétique", evangeliste: "Évangéliste", pasteur: "Pastorale", docteur: "Doctorale" };
@@ -40,7 +40,7 @@ function weekLabel(date: string) {
 function sectionHref(section: Section) { return `/gestion/admin?onglet=statistiques&statistiques=${section}`; }
 
 function StatisticsNav({ section }: { section: Section }) {
-  return <nav aria-label="Sections des statistiques" className="grid w-full grid-cols-3 gap-1 rounded-xl border border-border bg-background p-1 sm:inline-grid sm:w-auto">{([['utilisation', 'Utilisation'], ['membres', 'Membres'], ['programmes', 'Programmes']] as const).map(([key, label]) => <Link key={key} href={sectionHref(key)} aria-current={section === key ? "page" : undefined} className={`min-w-0 rounded-lg px-1.5 py-2.5 text-center text-[12px] font-semibold transition min-[375px]:text-[13px] sm:px-5 sm:text-sm ${section === key ? "bg-accent text-on-accent" : "text-muted hover:bg-surface hover:text-foreground"}`}>{label}</Link>)}</nav>;
+  return <nav aria-label="Sections des statistiques" className="grid w-full grid-cols-2 gap-1 rounded-xl border border-border bg-background p-1 lg:inline-grid lg:w-auto lg:grid-cols-4">{([['utilisation', 'Engagement'], ['membres', 'Membres'], ['programmes', 'Programme'], ['initiatives', 'Projets et formations']] as const).map(([key, label]) => <Link key={key} href={sectionHref(key)} aria-current={section === key ? "page" : undefined} className={`min-w-0 rounded-lg px-2 py-2.5 text-center text-[12px] font-semibold transition min-[375px]:text-[13px] sm:px-5 sm:text-sm ${section === key ? "bg-accent text-on-accent" : "text-muted hover:bg-surface hover:text-foreground"}`}>{label}</Link>)}</nav>;
 }
 
 function UsageSection({ members, trainingDates, monthlyActivity, usage }: { members: Member[]; trainingDates: string[]; monthlyActivity: MonthlyActiveUsers[]; usage: UsageAnalytics }) {
@@ -122,13 +122,96 @@ function ProgramSection({ program, downloads }: { program: ProgramAnalytics; dow
   return <div className="space-y-6"><header><p className="label text-xs tracking-[0.18em] text-muted">PROGRAMMES</p><h1 className="font-title mt-2 text-[30px] leading-tight text-foreground sm:text-[38px]">Qu’est-ce que Ministry School délivre concrètement&nbsp;?</h1></header><section className="grid grid-cols-2 gap-2.5 sm:gap-3 xl:grid-cols-4"><Kpi value={program.courseCount} label="Cours" /><Kpi value={program.trainerCount} label="Intervenants" detail="Personnes uniques" /><Kpi value={`${Number(program.hours.toFixed(1))} h`} label="Formation proposée" /><Kpi value={program.resourceCount} label="Ressources pédagogiques" /></section><BarChart title="Heures de formation par parcours" subtitle="Volume programmé à partir des horaires réels des cours." data={hours} unit=" h" /><Panel title="Détail par parcours"><div className="space-y-3 sm:hidden">{program.tracks.map((track) => <article key={track.label} className="rounded-lg bg-surface p-3.5"><h3 className="text-sm font-semibold text-foreground">{track.label}</h3><dl className="mt-3 grid grid-cols-4 gap-2 text-center"><div><dt className="text-[10px] text-muted">Cours</dt><dd className="mt-1 font-semibold tabular-nums">{track.courses}</dd></div><div><dt className="text-[10px] text-muted">Intervenants</dt><dd className="mt-1 font-semibold tabular-nums">{track.trainers}</dd></div><div><dt className="text-[10px] text-muted">Heures</dt><dd className="mt-1 font-semibold tabular-nums">{Number(track.hours.toFixed(1))} h</dd></div><div><dt className="text-[10px] text-muted">Ressources</dt><dd className="mt-1 font-semibold tabular-nums">{track.resources}</dd></div></dl></article>)}</div><div className="hidden sm:block"><table className="w-full text-left text-sm"><thead className="border-b border-border text-xs uppercase tracking-wider text-muted"><tr><th className="pb-3 font-medium">Parcours</th><th className="pb-3 text-right font-medium">Cours</th><th className="pb-3 text-right font-medium">Intervenants</th><th className="pb-3 text-right font-medium">Heures</th><th className="pb-3 text-right font-medium">Ressources</th></tr></thead><tbody className="divide-y divide-border-soft">{program.tracks.map((track) => <tr key={track.label}><td className="py-3 font-medium text-foreground">{track.label}</td><td className="py-3 text-right tabular-nums">{track.courses}</td><td className="py-3 text-right tabular-nums">{track.trainers}</td><td className="py-3 text-right tabular-nums">{Number(track.hours.toFixed(1))} h</td><td className="py-3 text-right tabular-nums">{track.resources}</td></tr>)}</tbody></table></div></Panel><div className="grid items-start gap-6 xl:grid-cols-[1fr_2fr]"><Panel title="Ressources"><div className="grid grid-cols-2 gap-4"><div><p className="font-title text-3xl">{program.resourceCount}</p><p className="mt-1 text-xs text-muted">ressources proposées</p></div><div><p className="font-title text-3xl">{program.totalDownloads}</p><p className="mt-1 text-xs text-muted">téléchargements suivis</p></div></div><p className="mt-5 text-xs text-muted">Collecte disponible depuis le {TRACKING_START}.</p></Panel><Panel title="Ressources les plus téléchargées"><DownloadTable downloads={downloads} /></Panel></div></div>;
 }
 
-export default function StatisticsTab({ members, ministries, trainingDates, monthlyActivity, usage, program, section: requestedSection }: { members: Member[]; ministries: Ministry[]; trainingDates: string[]; monthlyActivity: MonthlyActiveUsers[]; usage: UsageAnalytics; program: ProgramAnalytics; section: string }) {
-  const section: Section = requestedSection === "membres" || requestedSection === "programmes" ? requestedSection : "utilisation";
+const initiativeTypeLabel = {
+  project: "Projet",
+  training: "Formation",
+  both: "Projet et formation",
+} as const;
+
+const initiativeStatusLabel: Record<string, string> = {
+  draft: "Brouillon",
+  unpublished: "Dépublié",
+  pending: "À valider",
+  changes_requested: "À corriger",
+  scheduled: "Programmé",
+  published: "Publié",
+  past: "Passé",
+  archived: "Archivé",
+};
+
+function InitiativesSection({ analytics }: { analytics: OpportunityAnalytics }) {
+  const fillRate = analytics.capacity ? Math.round(analytics.registrations / analytics.capacity * 100) : 0;
+  const active = analytics.published + analytics.scheduled;
+  const initiatives = analytics.initiatives.slice(0, 10);
+  const statusRows = [
+    { label: "Brouillons", value: analytics.draft, color: "#A6ACA9" },
+    { label: "En attente de validation", value: analytics.pending, color: "#E9B85D" },
+    { label: "À corriger", value: analytics.changesRequested, color: "#D56B62" },
+    { label: "Programmés", value: analytics.scheduled, color: "#6B8FD6" },
+    { label: "Publiés et à venir", value: analytics.published, color: "#3D9A70" },
+    { label: "Passés", value: analytics.past, color: "#5F6764" },
+    { label: "Archivés", value: analytics.archived, color: "#2B3130" },
+  ];
+
+  return <div className="space-y-6">
+    <header>
+      <p className="label text-xs tracking-[0.18em] text-muted">PROJETS ET FORMATIONS</p>
+      <h1 className="font-title mt-2 text-[30px] leading-tight text-foreground sm:text-[38px]">Quelles initiatives mobilisent réellement la communauté&nbsp;?</h1>
+      <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted">Une lecture commune de l’offre, de son état de publication, des séances proposées et des inscriptions réellement enregistrées.</p>
+    </header>
+
+    <section className="grid grid-cols-2 gap-2.5 sm:gap-3 xl:grid-cols-4">
+      <Kpi value={analytics.total} label="Initiatives" detail={`${analytics.projects} projets · ${analytics.trainings} formations · ${analytics.combined} mixtes`} />
+      <Kpi value={active} label="Visibles ou programmées" detail={`${analytics.published} publiées · ${analytics.scheduled} programmées`} />
+      <Kpi value={analytics.registrations} label="Inscriptions aux séances" detail={`${analytics.uniqueParticipants} participants uniques`} />
+      <Kpi value={`${fillRate} %`} label="Taux de remplissage" detail={analytics.capacity ? `${analytics.registrations} inscriptions pour ${analytics.capacity} places renseignées` : "Aucune capacité renseignée"} />
+    </section>
+
+    <div className="grid items-start gap-6 xl:grid-cols-2">
+      <Panel title="Répartition de l’offre" subtitle="Chaque initiative mixte est comptée une seule fois.">
+        <ProportionRows total={analytics.total} rows={[
+          { label: "Projets", value: analytics.projects, color: "#F2A51A" },
+          { label: "Formations", value: analytics.trainings, color: "#E57A23" },
+          { label: "Projets et formations", value: analytics.combined, color: "#D65A18" },
+        ]} />
+      </Panel>
+      <Panel title="Cycle de publication" subtitle="Vision exacte des contenus en préparation, en validation, publiés ou terminés.">
+        <ProportionRows total={analytics.total} rows={statusRows} />
+      </Panel>
+    </div>
+
+    <Panel title="Initiatives les plus mobilisatrices" subtitle="Classement par nombre d’inscriptions aux séances, sans confondre une personne inscrite à plusieurs dates.">
+      {initiatives.length ? <>
+        <div className="space-y-3 lg:hidden">
+          {initiatives.map((item) => {
+            const rate = item.capacity ? Math.round(item.registrations / item.capacity * 100) : null;
+            return <article key={item.id} className="rounded-lg bg-surface p-3.5">
+              <div className="flex items-start justify-between gap-3"><div><h3 className="text-sm font-semibold text-foreground">{item.title}</h3><p className="mt-1 text-xs text-muted">{initiativeTypeLabel[item.type]} · {initiativeStatusLabel[item.status] ?? item.status}</p></div><strong className="text-lg tabular-nums text-foreground">{item.registrations}</strong></div>
+              <dl className="mt-3 grid grid-cols-3 gap-2 text-center"><div><dt className="text-[10px] text-muted">Séances</dt><dd className="mt-1 font-semibold tabular-nums">{item.sessions}</dd></div><div><dt className="text-[10px] text-muted">Participants</dt><dd className="mt-1 font-semibold tabular-nums">{item.participants}</dd></div><div><dt className="text-[10px] text-muted">Remplissage</dt><dd className="mt-1 font-semibold tabular-nums">{rate === null ? "—" : `${rate} %`}</dd></div></dl>
+            </article>;
+          })}
+        </div>
+        <div className="hidden lg:block">
+          <table className="w-full table-fixed text-left text-sm"><thead className="border-b border-border text-xs uppercase tracking-wider text-muted"><tr><th className="w-[34%] pb-3 font-medium">Initiative</th><th className="w-[18%] pb-3 font-medium">État</th><th className="pb-3 text-right font-medium">Séances</th><th className="pb-3 text-right font-medium">Participants</th><th className="pb-3 text-right font-medium">Inscriptions</th><th className="pb-3 text-right font-medium">Remplissage</th></tr></thead><tbody className="divide-y divide-border-soft">{initiatives.map((item) => <tr key={item.id}><td className="py-3 pr-4"><strong className="block break-words text-foreground">{item.title}</strong><span className="text-xs text-muted">{initiativeTypeLabel[item.type]}</span></td><td className="py-3 pr-4 text-muted">{initiativeStatusLabel[item.status] ?? item.status}</td><td className="py-3 text-right tabular-nums">{item.sessions}</td><td className="py-3 text-right tabular-nums">{item.participants}</td><td className="py-3 text-right font-semibold tabular-nums">{item.registrations}</td><td className="py-3 text-right tabular-nums">{item.capacity ? `${Math.round(item.registrations / item.capacity * 100)} %` : "—"}</td></tr>)}</tbody></table>
+        </div>
+      </> : <p className="text-sm text-muted">Aucune initiative n’est encore enregistrée.</p>}
+    </Panel>
+
+    <section className="grid gap-3 sm:grid-cols-3">
+      <Kpi value={analytics.sessions} label="Séances proposées" detail={`${analytics.sessionsWithCapacity} avec une capacité renseignée`} />
+      <Kpi value={analytics.capacity} label="Places proposées" detail="Somme des capacités de chaque séance" />
+      <Kpi value={analytics.resources} label="Supports et ressources" detail="Documents et liens associés aux initiatives" />
+    </section>
+  </div>;
+}
+
+export default function StatisticsTab({ members, ministries, trainingDates, monthlyActivity, usage, program, opportunities, section: requestedSection }: { members: Member[]; ministries: Ministry[]; trainingDates: string[]; monthlyActivity: MonthlyActiveUsers[]; usage: UsageAnalytics; program: ProgramAnalytics; opportunities: OpportunityAnalytics; section: string }) {
+  const section: Section = requestedSection === "membres" || requestedSection === "programmes" || requestedSection === "initiatives" ? requestedSection : "utilisation";
   function downloadCsv() {
-    const rows = [["Indicateur", "Valeur"], ["Comptes", String(members.length)], ["Utilisateurs actifs ce mois", String(monthlyActivity.find((item) => item.activity_month === currentParisMonth())?.active_users ?? 0)], ["Cours", String(program.courseCount)], ["Intervenants", String(program.trainerCount)], ["Heures", String(program.hours)], ["Ressources", String(program.resourceCount)]];
+    const rows = [["Indicateur", "Valeur"], ["Comptes", String(members.length)], ["Utilisateurs actifs ce mois", String(monthlyActivity.find((item) => item.activity_month === currentParisMonth())?.active_users ?? 0)], ["Cours", String(program.courseCount)], ["Intervenants", String(program.trainerCount)], ["Heures", String(program.hours)], ["Ressources pédagogiques", String(program.resourceCount)], ["Projets et formations", String(opportunities.total)], ["Séances de projets et formations", String(opportunities.sessions)], ["Inscriptions aux séances", String(opportunities.registrations)], ["Participants uniques", String(opportunities.uniqueParticipants)], ["Places proposées", String(opportunities.capacity)]];
     const csv = `\ufeff${rows.map((row) => row.map((cell) => `"${cell.replaceAll('"', '""')}"`).join(";")).join("\n")}`;
     const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
     const anchor = document.createElement("a"); anchor.href = url; anchor.download = `statistiques-ministry-school-${new Date().toISOString().slice(0, 10)}.csv`; anchor.click(); URL.revokeObjectURL(url);
   }
-  return <div className="space-y-7"><div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><StatisticsNav section={section} /><button type="button" onClick={downloadCsv} className="inline-flex items-center gap-2 self-start px-2 py-2 text-xs font-medium text-muted hover:text-foreground"><Download size={14} /> Exporter</button></div>{section === "utilisation" && <UsageSection members={members} trainingDates={trainingDates} monthlyActivity={monthlyActivity} usage={usage} />}{section === "membres" && <MembersSection members={members} ministries={ministries} />}{section === "programmes" && <ProgramSection program={program} downloads={usage.downloads} />}</div>;
+  return <div className="space-y-7"><div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between"><StatisticsNav section={section} /><button type="button" onClick={downloadCsv} className="inline-flex items-center gap-2 self-start px-2 py-2 text-xs font-medium text-muted hover:text-foreground"><Download size={14} /> Exporter</button></div>{section === "utilisation" && <UsageSection members={members} trainingDates={trainingDates} monthlyActivity={monthlyActivity} usage={usage} />}{section === "membres" && <MembersSection members={members} ministries={ministries} />}{section === "programmes" && <ProgramSection program={program} downloads={usage.downloads} />}{section === "initiatives" && <InitiativesSection analytics={opportunities} />}</div>;
 }

@@ -218,6 +218,74 @@ export type ProgramAnalytics = {
   tracks: { label: string; courses: number; trainers: number; hours: number; resources: number }[];
 };
 
+export type OpportunityAnalyticsItem = {
+  id: string;
+  title: string;
+  type: "project" | "training" | "both";
+  status: "draft" | "unpublished" | "pending" | "changes_requested" | "scheduled" | "published" | "past" | "archived";
+  sessions: number;
+  capacity: number;
+  registrations: number;
+  participants: number;
+  resources: number;
+};
+
+export type OpportunityAnalytics = {
+  total: number;
+  projects: number;
+  trainings: number;
+  combined: number;
+  draft: number;
+  pending: number;
+  changesRequested: number;
+  scheduled: number;
+  published: number;
+  past: number;
+  archived: number;
+  sessions: number;
+  capacity: number;
+  sessionsWithCapacity: number;
+  registrations: number;
+  uniqueParticipants: number;
+  resources: number;
+  initiatives: OpportunityAnalyticsItem[];
+};
+
+/** Données agrégées : elles n'ouvrent aucun droit de gestion sur les fiches. */
+export async function getOpportunityAnalytics(supabase: SupabaseClient): Promise<OpportunityAnalytics> {
+  const { data, error } = await supabase.rpc("admin_opportunity_analytics");
+  if (error) throw error;
+  const value = (data ?? {}) as Partial<OpportunityAnalytics>;
+  const number = (input: unknown) => Number(input ?? 0);
+  return {
+    total: number(value.total),
+    projects: number(value.projects),
+    trainings: number(value.trainings),
+    combined: number(value.combined),
+    draft: number(value.draft),
+    pending: number(value.pending),
+    changesRequested: number(value.changesRequested),
+    scheduled: number(value.scheduled),
+    published: number(value.published),
+    past: number(value.past),
+    archived: number(value.archived),
+    sessions: number(value.sessions),
+    capacity: number(value.capacity),
+    sessionsWithCapacity: number(value.sessionsWithCapacity),
+    registrations: number(value.registrations),
+    uniqueParticipants: number(value.uniqueParticipants),
+    resources: number(value.resources),
+    initiatives: (value.initiatives ?? []).map((item) => ({
+      ...item,
+      sessions: number(item.sessions),
+      capacity: number(item.capacity),
+      registrations: number(item.registrations),
+      participants: number(item.participants),
+      resources: number(item.resources),
+    })),
+  };
+}
+
 const timeMinutes = (value: string) => {
   const [hours, minutes] = value.split(":").map(Number);
   return hours * 60 + minutes;

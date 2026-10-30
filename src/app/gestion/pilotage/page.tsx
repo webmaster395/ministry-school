@@ -28,6 +28,12 @@ export default async function PilotagePage({
   if (!ministry) redirect("/etudiant");
 
   const rows = await buildRows(supabase, await getMinistrySessions(supabase, ministry.id), "pilotage");
+  const { data: leadProfile } = await supabase
+    .from("profiles")
+    .select("ministry_lead_of")
+    .eq("id", viewer.id)
+    .single();
+  const canCreateCourse = viewer.roles.superAdmin || leadProfile?.ministry_lead_of === ministry.id;
   const { data: ministryStudents } = await supabase
     .from("profiles")
     .select("id, full_name, preferred_day")
@@ -99,6 +105,7 @@ export default async function PilotagePage({
         hrefFor={(t) => hrefFor(t)}
         labels={{ avenir: "Cours à venir", passes: "Cours passés" }}
         ministry={{ slug: ministry.slug, name: ministry.name, id: ministry.id }}
+        canCreateCourse={canCreateCourse}
         upcomingFilter={{
           current: filter,
           hrefFor: (f) => hrefFor("avenir", f),

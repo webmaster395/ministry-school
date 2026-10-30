@@ -177,6 +177,11 @@ export function navSpaces(roles: ViewerRoles): Space[] {
               href: "/gestion/admin?onglet=programme",
               icon: icons.adminSessions,
             },
+            {
+              label: "Membres",
+              href: "/gestion/admin?onglet=membres",
+              icon: icons.profile,
+            },
           ],
         },
       ],
@@ -196,11 +201,6 @@ export function navSpaces(roles: ViewerRoles): Space[] {
           items: [
             { label: "Pilotage", href: "/gestion/pilotage", icon: icons.steer },
             { label: "Préparer les enseignements", href: "/gestion/enseignement", icon: icons.prep },
-            {
-              label: "Communication",
-              href: "/gestion/communication",
-              icon: icons.announce,
-            },
           ],
         },
       ],

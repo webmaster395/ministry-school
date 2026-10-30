@@ -15,7 +15,8 @@ test("les KPI Statistiques restent compacts dès 320 px", async () => {
   const code = await source("src/components/admin/StatisticsTab.tsx");
   assert.match(code, /grid grid-cols-2 gap-2\.5/);
   assert.match(code, /min-h-\[104px\]/);
-  assert.match(code, /grid w-full grid-cols-3/);
+  assert.match(code, /grid w-full grid-cols-2/);
+  assert.match(code, /lg:grid-cols-4/);
 });
 
 test("les tableaux critiques deviennent des listes ou cartes sur mobile", async () => {

@@ -46,12 +46,15 @@ export default function PrepBoard({
   labels,
   upcomingFilter,
   ministry,
+  canCreateCourse = false,
   panels,
 }: {
   /** Contenu des lignes dépliables de la préparation (espace formateur) : édition sur place */
   panels?: Record<string, ReactNode>;
   /** Présent dans l'espace Pilotage : le ministère supervisé (présentation propre au pilotage) */
   ministry?: { slug: string; name: string; id?: string };
+  /** Seuls le responsable du ministère et les super administratrices créent un cours. */
+  canCreateCourse?: boolean;
   /** Libellés des onglets « à venir » et « passés », propres à chaque espace */
   labels?: Partial<Record<PrepTab, string>>;
   /** Si présent, l'onglet « à venir » devient un tableau filtrable de tous les cours (espace enseignant) */
@@ -91,7 +94,7 @@ export default function PrepBoard({
         ))}
       {tab === "avenir" &&
         (upcomingFilter ? (
-          <UpcomingTable rows={upcoming} filter={upcomingFilter} ministryColor={ministryColor} ministry={ministry} />
+          <UpcomingTable rows={upcoming} filter={upcomingFilter} ministryColor={ministryColor} ministry={ministry} canCreateCourse={canCreateCourse} />
         ) : later.length ? (
           <List rows={later} pilot={!!ministry} />
         ) : (
@@ -314,11 +317,13 @@ function UpcomingTable({
   filter,
   ministryColor,
   ministry,
+  canCreateCourse = false,
 }: {
   rows: PrepRow[];
   filter: { current: UpcomingFilter; hrefFor: (f: UpcomingFilter) => string; options?: UpcomingFilter[] };
   ministryColor: string;
   ministry?: { slug: string; name: string; id?: string };
+  canCreateCourse?: boolean;
 }) {
   const noTeacher = (r: PrepRow) => !r.s.teacher && !r.s.speaker_name;
   const shown = rows.filter((r) =>
@@ -349,7 +354,7 @@ function UpcomingTable({
           </Link>
         ))}
       </nav>
-      {ministry?.id && <AddCourseDialog ministryId={ministry.id} drafts={DRAFTS_ENABLED} />}
+      {ministry?.id && canCreateCourse && <AddCourseDialog ministryId={ministry.id} drafts={DRAFTS_ENABLED} />}
       </div>
 
       {shown.length ? (

@@ -3,10 +3,11 @@ import { getMembers, getOpportunitiesWithDates, getProgramEntries } from "@/lib/
 import OverviewTab from "@/components/admin/OverviewTab";
 import ProgramTab from "@/components/admin/ProgramTab";
 import StatisticsTab from "@/components/admin/StatisticsTab";
-import { getMinistries, getMonthlyActiveUsers, getProgramAnalytics, getTrainingDayDates, getUsageAnalytics } from "@/lib/data/admin";
+import MembersTab from "@/components/admin/MembersTab";
+import { getMinistries, getMonthlyActiveUsers, getOpportunityAnalytics, getProgramAnalytics, getTrainingDayDates, getUsageAnalytics } from "@/lib/data/admin";
 import type { TrainerAdminRow } from "@/components/admin/TrainersTab";
 
-const VALID_TABS = ["vue", "statistiques", "programme"];
+const VALID_TABS = ["vue", "statistiques", "programme", "membres"];
 
 type Params = {
   onglet?: string;
@@ -62,15 +63,16 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
         />
       )}
       {tab === "statistiques" && await (async () => {
-        const [members, ministries, trainingDates, monthlyActivity, usage] = await Promise.all([
+        const [members, ministries, trainingDates, monthlyActivity, usage, opportunities] = await Promise.all([
           getMembers(supabase),
           getMinistries(supabase),
           getTrainingDayDates(supabase),
           getMonthlyActiveUsers(supabase),
           getUsageAnalytics(supabase),
+          getOpportunityAnalytics(supabase),
         ]);
         const program = await getProgramAnalytics(supabase, usage.downloads);
-        return <StatisticsTab members={members} ministries={ministries} trainingDates={trainingDates} monthlyActivity={monthlyActivity} usage={usage} program={program} section={p.statistiques ?? "utilisation"} />;
+        return <StatisticsTab members={members} ministries={ministries} trainingDates={trainingDates} monthlyActivity={monthlyActivity} usage={usage} program={program} opportunities={opportunities} section={p.statistiques ?? "utilisation"} />;
       })()}
       {tab === "programme" && (
         <ProgramTab
@@ -79,6 +81,19 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           today={today}
           trainers={trainers.filter((trainer) => trainer.is_active).map((trainer) => ({ id: trainer.id, name: `${trainer.first_name} ${trainer.last_name}`.trim() }))}
           ministries={(await getMinistries(supabase)).map((ministry) => ({ id: ministry.id, name: ministry.name }))}
+        />
+      )}
+      {tab === "membres" && (
+        <MembersTab
+          q={p.q ?? ""}
+          role={p.role ?? "tous"}
+          sens={p.sens ?? "toutes"}
+          statut={p.statut ?? "tous"}
+          tri={p.tri ?? "nom"}
+          implication={p.implication ?? "toutes"}
+          genre={p.genre ?? "tous"}
+          page={p.page ?? "1"}
+          par={p.par ?? "50"}
         />
       )}
     </div>

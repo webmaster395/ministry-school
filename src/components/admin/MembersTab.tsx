@@ -21,7 +21,7 @@ const rolesOf = (m: Member, services: Map<string, string>, ministries: Map<strin
     const extra: string[] = [];
     if (m.service_id && services.get(m.service_id)) extra.push(`Service · ${services.get(m.service_id)}`);
     if (m.ministry_lead_of && ministries.get(m.ministry_lead_of)) extra.push(`Pilotage · ${ministries.get(m.ministry_lead_of)}`);
-    return extra.length > 0 ? ["Admin", ...extra] : ["Admin (accès complet)"];
+    return extra.length > 0 ? ["Administrateur", ...extra] : ["Administrateur"];
   }
   return [
     m.is_projects_training_member ? "Projets et formations" : null,

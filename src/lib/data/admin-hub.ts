@@ -18,6 +18,7 @@ export type Member = {
   email_confirmed: boolean;
   deactivated: boolean;
   created_at: string;
+  preferred_day: string | null;
   avatar_path: string | null;
   notification_prefs?: unknown;
 };
@@ -33,7 +34,7 @@ export async function getMembers(supabase: SupabaseClient) {
     supabase
       .from("profiles")
       .select(
-        "id, full_name, role, gender, is_teacher, is_service_lead, is_project_lead, is_projects_training_member, service_id, ministry_lead_of, ministry_id, email_confirmed, deactivated, created_at, avatar_path, notification_prefs"
+        "id, full_name, role, gender, is_teacher, is_service_lead, is_project_lead, is_projects_training_member, service_id, ministry_lead_of, ministry_id, email_confirmed, deactivated, created_at, preferred_day, avatar_path, notification_prefs"
       )
       .eq("is_test_account", false)
       .order("full_name"),
@@ -44,7 +45,7 @@ export async function getMembers(supabase: SupabaseClient) {
     const { data: fallback } = await supabase
       .from("profiles")
       .select(
-        "id, full_name, role, is_teacher, is_service_lead, is_project_lead, is_projects_training_member, service_id, ministry_lead_of, ministry_id, email_confirmed, deactivated, created_at, avatar_path, notification_prefs"
+        "id, full_name, role, is_teacher, is_service_lead, is_project_lead, is_projects_training_member, service_id, ministry_lead_of, ministry_id, email_confirmed, deactivated, created_at, preferred_day, avatar_path, notification_prefs"
       )
       .eq("is_test_account", false)
       .order("full_name");

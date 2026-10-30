@@ -51,7 +51,7 @@ test("exactement les trois comptes nominatifs obtiennent la super administration
   assert.doesNotMatch(migration, /insert into auth\.users|insert into public\.profiles/);
 });
 
-test("l'espace Administrateur est limité au tableau de bord, aux statistiques et au programme", async () => {
+test("l'espace Administrateur réunit tableau de bord, statistiques, programme et membres", async () => {
   const [nav, page, overview, users, exportRoute] = await Promise.all([
     source("src/lib/nav.tsx"),
     source("src/app/gestion/admin/page.tsx"),
@@ -63,12 +63,43 @@ test("l'espace Administrateur est limité au tableau de bord, aux statistiques e
   assert.match(adminBlock, /Tableau de bord/);
   assert.match(adminBlock, /Statistiques/);
   assert.match(adminBlock, /Programme/);
-  assert.doesNotMatch(adminBlock, /Membres|Utilisateurs|Projets et formations/);
-  assert.match(page, /\["vue", "statistiques", "programme"\]/);
-  assert.doesNotMatch(page, /MembersTab|ProjectsTab/);
+  assert.match(adminBlock, /Membres/);
+  assert.doesNotMatch(adminBlock, /Utilisateurs|Projets et formations/);
+  assert.match(page, /\["vue", "statistiques", "programme", "membres"\]/);
+  assert.match(page, /MembersTab/);
+  assert.doesNotMatch(page, /ProjectsTab/);
   assert.doesNotMatch(overview, /onglet=membres|onglet=projets|Examiner et valider/);
   assert.match(users, /redirect\("\/gestion\/admin"\)/);
-  assert.match(exportRoute, /status: 404/);
+  assert.match(exportRoute, /getMembers/);
+  assert.match(exportRoute, /if \(!viewer\.roles\.admin\)/);
+});
+
+test("les statistiques agrègent les projets et formations sans ouvrir leur gestion", async () => {
+  const [component, data, migration] = await Promise.all([
+    source("src/components/admin/StatisticsTab.tsx"),
+    source("src/lib/data/admin.ts"),
+    source("supabase/migrations/20261030130000_admin_opportunity_analytics.sql"),
+  ]);
+  assert.match(component, /Projets et formations/);
+  assert.match(component, /Initiatives les plus mobilisatrices/);
+  assert.match(component, /Taux de remplissage/);
+  assert.match(component, /Cycle de publication/);
+  assert.match(data, /admin_opportunity_analytics/);
+  assert.match(migration, /if not public\.is_platform_admin\(\) then/);
+  assert.doesNotMatch(migration, /grant .* on public\.opportunities/);
+});
+
+test("la fiche membre rassemble contact, compte, responsabilités et inscriptions", async () => {
+  const detail = await source("src/app/gestion/admin/membres/[id]/page.tsx");
+  assert.match(detail, /Adresse e-mail/);
+  assert.match(detail, /Téléphone/);
+  assert.match(detail, /Dernière connexion/);
+  assert.match(detail, /SENSIBILITÉ MINISTÉRIELLE/);
+  assert.match(detail, /DROITS ET RESPONSABILITÉS/);
+  assert.match(detail, /Cours suivis/);
+  assert.match(detail, /Projets et formations/);
+  assert.match(detail, /opportunity_assignments/);
+  assert.match(detail, /opportunity_date_registrations/);
 });
 
 test("projets et pilotage sont bornés aux affectations explicites côté serveur", async () => {
@@ -79,6 +110,22 @@ test("projets et pilotage sont bornés aux affectations explicites côté serveu
   assert.match(migration, /enforce_super_admin_opportunity_creation/);
   assert.match(migration, /is_strict_pilotage_for[\s\S]*?ministry_lead_of = p_ministry[\s\S]*?ministry_delegates/);
   assert.doesNotMatch(migration.slice(migration.indexOf("create or replace function public.is_strict_pilotage_for"), migration.indexOf("create or replace function public.strict_pilotage_ministries")), /p\.ministry_id = p_ministry/);
+});
+
+test("seuls le responsable ministériel et les super administratrices créent un cours", async () => {
+  const [migration, page, board, nav, communication] = await Promise.all([
+    source("supabase/migrations/20261030130000_admin_opportunity_analytics.sql"),
+    source("src/app/gestion/pilotage/page.tsx"),
+    source("src/components/PrepBoard.tsx"),
+    source("src/lib/nav.tsx"),
+    source("src/app/gestion/communication/page.tsx"),
+  ]);
+  assert.match(migration, /create_ministry_course[\s\S]*?is_super_admin\(\)[\s\S]*?ministry_lead_of = p_ministry/);
+  assert.match(page, /canCreateCourse = viewer\.roles\.superAdmin \|\| leadProfile\?\.ministry_lead_of === ministry\.id/);
+  assert.match(board, /ministry\?\.id && canCreateCourse/);
+  const steeringBlock = nav.slice(nav.indexOf('key: "steering"'), nav.indexOf('key: "projectsTraining"'));
+  assert.doesNotMatch(steeringBlock, /Communication/);
+  assert.match(communication, /redirect\(viewer\.roles\.steeringMinistryIds\.length \? "\/gestion\/pilotage" : "\/gestion\/admin"\)/);
 });
 
 test("les validations et leur compteur sont réservés aux super administratrices", async () => {
