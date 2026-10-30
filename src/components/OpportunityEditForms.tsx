@@ -16,7 +16,7 @@ import {
   Trash2,
   X,
 } from "lucide-react";
-import { useActionState, useEffect, useState, type ReactNode } from "react";
+import { useActionState, useEffect, useRef, useState, type ReactNode } from "react";
 import type { Opportunity } from "@/lib/data/opportunities";
 import { lastPlacesLabel, opportunityType, TYPE_LABEL } from "@/lib/data/opportunities";
 import type { OpportunityResource } from "@/lib/data/opportunity-resources";
@@ -82,14 +82,51 @@ export default function OpportunityEditForms({
   const [emoji, setEmoji] = useState(opportunityEmoji(o.banner_emoji));
   const [serviceName, setServiceName] = useState(o.services?.name ?? o.organizer_label ?? "");
   const [state, formAction, pending] = useActionState(saveOpportunityInline, null);
-  const [handledSuccess, setHandledSuccess] = useState<typeof state>(null);
+  const [baseUpdatedAt, setBaseUpdatedAt] = useState(o.updated_at);
+  const [changeRevision, setChangeRevision] = useState(0);
+  const formRef = useRef<HTMLFormElement>(null);
+  const saveButtonRef = useRef<HTMLButtonElement>(null);
+  const currentRevisionRef = useRef(0);
+  const submittedRevisionRef = useRef(0);
+  const lastAutoAttemptRef = useRef(-1);
+  const handledStateRef = useRef<typeof state>(null);
 
-  if (state?.ok && state !== handledSuccess) {
-    setHandledSuccess(state);
-    setDirty(false);
-    setEditing(workspace);
-    setConfirmation(state.message);
-  }
+  const markDirty = () => {
+    setDirty(true);
+    setConfirmation(null);
+    setChangeRevision((value) => {
+      currentRevisionRef.current = value + 1;
+      return value + 1;
+    });
+  };
+
+  useEffect(() => {
+    if (!state || state === handledStateRef.current) return;
+    handledStateRef.current = state;
+    const timer = window.setTimeout(() => {
+      if (!state.ok) {
+        setDirty(true);
+        return;
+      }
+      if (state.updatedAt) setBaseUpdatedAt(state.updatedAt);
+      if (submittedRevisionRef.current === currentRevisionRef.current) {
+        setDirty(false);
+        if (state.dates) setDates(state.dates);
+      }
+      setConfirmation(state.message);
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [state]);
+
+  useEffect(() => {
+    if (!editing || !dirty || pending || changeRevision === lastAutoAttemptRef.current) return;
+    const timer = window.setTimeout(() => {
+      lastAutoAttemptRef.current = changeRevision;
+      submittedRevisionRef.current = currentRevisionRef.current;
+      formRef.current?.requestSubmit(saveButtonRef.current ?? undefined);
+    }, 1600);
+    return () => window.clearTimeout(timer);
+  }, [changeRevision, dirty, editing, pending]);
 
   useEffect(() => {
     if (!editing || !dirty) return;
@@ -124,11 +161,12 @@ export default function OpportunityEditForms({
   };
   const cancel = () => {
     if (dirty && !window.confirm("Abandonner les modifications non enregistrées ?")) return;
-    resetEditor();
+    if (dirty) window.location.reload();
+    else resetEditor();
   };
   const changeDates = (next: DateRow[]) => {
     setDates(next);
-    setDirty(true);
+    markDirty();
   };
   const addDate = (date = "") => {
     if (date && dates.some((row) => row.session_date === date)) return;
@@ -150,13 +188,14 @@ export default function OpportunityEditForms({
   }
 
   return <div className="space-y-5">
-    <form action={formAction} onChange={() => setDirty(true)} className="space-y-5">
+    <form ref={formRef} action={formAction} noValidate onSubmit={() => { submittedRevisionRef.current = currentRevisionRef.current; }} onChange={markDirty} className="space-y-5">
       <input type="hidden" name="opportunity_id" value={o.id} />
+      <input type="hidden" name="base_updated_at" value={baseUpdatedAt} />
       <div className="sticky top-3 z-30 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-background/95 px-4 py-3 shadow-lg backdrop-blur sm:px-5">
-        <div><p className="text-sm font-semibold">{workspace ? "Préparation du projet ou de la formation" : "Modification de la fiche"}</p><p className="text-xs text-muted">{workspace ? "Complétez la fiche progressivement puis soumettez-la lorsqu’elle est prête." : "Les champs sont enregistrés ensemble."}</p></div>
+        <div><p className="text-sm font-semibold">{workspace ? "Préparation du projet ou de la formation" : "Modification de la fiche"}</p><p className="text-xs text-muted">{pending ? "Enregistrement…" : dirty ? "Modifications non enregistrées" : confirmation ? "Enregistré" : "Toutes les modifications sont enregistrées ensemble."}</p></div>
         <div className="ml-auto flex items-center gap-2">
           <button type="button" onClick={cancel} disabled={pending} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-border px-4 text-sm font-semibold disabled:opacity-50"><X size={16} /> Annuler</button>
-          <button disabled={pending} className="inline-flex min-h-10 items-center gap-2 rounded-full bg-accent px-4 text-sm font-semibold text-on-accent disabled:opacity-60"><Save size={16} /> {pending ? "Enregistrement…" : workspace ? "Enregistrer le brouillon" : "Enregistrer"}</button>
+          <button ref={saveButtonRef} disabled={pending || !dirty} className="inline-flex min-h-10 items-center gap-2 rounded-full bg-accent px-4 text-sm font-semibold text-on-accent disabled:opacity-60"><Save size={16} /> {pending ? "Enregistrement…" : workspace ? "Enregistrer le brouillon" : "Enregistrer"}</button>
         </div>
         {workspace && confirmation && <p role="status" className="w-full rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-sm text-emerald-900">{confirmation}</p>}
         {state && !state.ok && <p role="alert" className="w-full rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">{state.message}</p>}
@@ -176,22 +215,22 @@ export default function OpportunityEditForms({
       <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
         <article className="space-y-6 rounded-3xl border border-border bg-background p-5 sm:p-7">
           <p className="rounded-xl bg-surface px-4 py-3 text-xs leading-relaxed text-muted">Les champs marqués d’un astérisque sont obligatoires. Les prérequis peuvent rester vides lorsque l’option « Prérequis nécessaires » n’est pas activée.</p>
-          <section><SectionTitle>Présentation *</SectionTitle><RichTextEditor name="description" rows={8} defaultValue={o.description} /></section>
+          <section><SectionTitle>Présentation *</SectionTitle><RichTextEditor name="description" rows={8} defaultValue={o.description} onDirty={markDirty} /></section>
           <StrategicAxesFields title={title} type={type} objectives={o.objectives} description={o.description} initial={{ axes: o.strategic_axes }} />
-          <DynamicListInput name="objectives_items" label="Objectifs" initialValue={o.objectives} placeholder="Un objectif" required />
-          <DynamicListInput name="speakers_items" label="Intervenants" initialValue={o.speakers} placeholder="Nom de l’intervenant" required />
-          <DynamicListInput name="prerequisites_items" label="Prérequis" initialValue={o.prerequisites} placeholder="Un prérequis" />
-          <DynamicListInput name="tools_used_items" label="Outils utilisés (facultatif)" initialValue={o.tools_used} placeholder="Ex. ChatGPT, Canva ou Photoshop" />
-          <DynamicListInput name="participant_material_items" label="Matériel à apporter (facultatif)" initialValue={o.participant_material} placeholder="Un élément à apporter" />
+          <DynamicListInput name="objectives_items" label="Objectifs" initialValue={o.objectives} placeholder="Un objectif" required onDirty={markDirty} />
+          <DynamicListInput name="speakers_items" label="Intervenants" initialValue={o.speakers} placeholder="Nom de l’intervenant" required onDirty={markDirty} />
+          <DynamicListInput name="prerequisites_items" label="Prérequis" initialValue={o.prerequisites} placeholder="Un prérequis" onDirty={markDirty} />
+          <DynamicListInput name="tools_used_items" label="Outils utilisés (facultatif)" initialValue={o.tools_used} placeholder="Ex. ChatGPT, Canva ou Photoshop" onDirty={markDirty} />
+          <DynamicListInput name="participant_material_items" label="Matériel à apporter (facultatif)" initialValue={o.participant_material} placeholder="Un élément à apporter" onDirty={markDirty} />
           <ParticipationConditionsFields initialAudience={o.participation_audience} initialAudienceDetails={o.participation_audience_details} initialPrerequisitesRequired={o.participation_prerequisites_required} />
         </article>
 
         <aside className="space-y-5 rounded-3xl border border-border bg-background p-5 sm:p-6">
           <SectionTitle>Organisation</SectionTitle>
-          <label><Label>Service pilote *</Label><AdminSelect name="service_name" value={serviceName} onValueChange={(value) => { setServiceName(value); setDirty(true); }} disabled={!canManage} required searchable allowCustom placeholder="Choisir ou saisir un service" options={services.map((service) => ({ value: service.name, label: service.name }))} /></label>
+          <label><Label>Service pilote *</Label><AdminSelect name="service_name" value={serviceName} onValueChange={(value) => { setServiceName(value); markDirty(); }} disabled={!canManage} required searchable allowCustom placeholder="Choisir ou saisir un service" options={services.map((service) => ({ value: service.name, label: service.name }))} /></label>
           <label><Label>Lieu principal *</Label><input name="location" required readOnly={!canManage} defaultValue={o.location ?? ""} className={field} /></label>
           <label><Label>Nombre de places par séance *</Label><input type="number" min={1} name="capacity" required readOnly={!canManage} defaultValue={o.capacity ?? ""} className={field} placeholder="Ex. 20" /></label>
-          {canManageInternalMaterial && <WorkshopMaterialsInput initialValue={o.organization_material} />}
+          {canManageInternalMaterial && <WorkshopMaterialsInput initialValue={o.organization_material} onDirty={markDirty} />}
           {canManage && <div className="rounded-2xl bg-surface p-4"><p className="mb-3 text-sm font-semibold">Inscriptions</p><div className="space-y-3"><label className="flex items-center gap-2 text-sm"><input type="checkbox" name="registration_open" defaultChecked={o.registration_open} /> Inscriptions ouvertes</label><label className="flex items-center gap-2 text-sm"><input type="checkbox" name="cancellation_allowed" defaultChecked={o.cancellation_allowed} /> Annulation autorisée</label><p className="text-xs leading-relaxed text-muted">La publication se décide uniquement dans le bloc de validation, après examen complet de la fiche.</p></div></div>}
         </aside>
       </div>

@@ -8,6 +8,7 @@ type Props = {
   defaultValue?: string;
   placeholder?: string;
   rows?: number;
+  onDirty?: () => void;
 };
 
 function htmlToCourseText(html: string) {
@@ -48,6 +49,7 @@ export default function RichTextEditor({
   defaultValue = "",
   placeholder,
   rows = 10,
+  onDirty,
 }: Props) {
   const ref = useRef<HTMLTextAreaElement>(null);
 
@@ -68,6 +70,7 @@ export default function RichTextEditor({
     if (kind === "underline")
       replacement = `<u>${selected || "texte souligné"}</u>`;
     area.setRangeText(replacement, start, end, "end");
+    onDirty?.();
     area.focus();
   }
 
@@ -80,6 +83,7 @@ export default function RichTextEditor({
     if (!converted) return;
     event.preventDefault();
     area.setRangeText(converted, area.selectionStart, area.selectionEnd, "end");
+    onDirty?.();
   }
 
   const tool =

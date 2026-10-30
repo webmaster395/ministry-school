@@ -615,7 +615,12 @@ export async function updateOpportunityContent(formData: FormData) {
   refreshOpportunity(id);
 }
 
-export type OpportunityFormState = { ok: boolean; message: string } | null;
+export type OpportunityFormState = {
+  ok: boolean;
+  message: string;
+  updatedAt?: string;
+  dates?: Array<{ id: string; session_date: string; start_time: string; end_time: string; room: string | null; location: string | null; capacity: number | null }>;
+} | null;
 
 export async function saveOpportunityContent(_previous: OpportunityFormState, formData: FormData): Promise<OpportunityFormState> {
   try {
@@ -679,90 +684,62 @@ export async function replaceOpportunityDates(formData: FormData) {
   refreshOpportunity(id);
 }
 
-/** Sauvegarde la fiche éditée en place en réutilisant les trois traitements existants. */
+/**
+ * Sauvegarde atomique de la fiche. Les contraintes de complétude appartiennent
+ * volontairement à request_opportunity_review : un brouillon incomplet doit
+ * toujours pouvoir être conservé sans ouvrir une validation.
+ */
 export async function saveOpportunityInline(_previous: OpportunityFormState, formData: FormData): Promise<OpportunityFormState> {
   try {
     const supabase = await createClient();
     const id = text(formData, "opportunity_id");
-    requireOpportunityFields(formData);
-    const [{ data: canManage }, { data: isSuperAdmin }, { data: current, error: currentError }] = await Promise.all([
-      supabase.rpc("can_submit_opportunity", { p_opportunity: id }),
-      supabase.rpc("is_super_admin"),
-      supabase.from("opportunities").select("kind,is_project,is_training,title,description,objectives,speakers,prerequisites,participation_audience,participation_audience_details,participation_prerequisites_required,participant_material,tools_used,capacity,strategic_axes,service_id,organizer_label,location,registration_open,cancellation_allowed,banner_emoji,publication_status").eq("id", id).single(),
-    ]);
-    if (currentError || !current) throw new Error("Cette fiche est introuvable ou inaccessible.");
-
-    // Une fiche déjà visible conserve sa version publique. Toutes les modifications
-    // sont stockées dans une version de travail privée jusqu'à la prochaine validation.
-    if (["published", "scheduled"].includes(current.publication_status)) {
-      const strategy = strategyFrom(formData);
-      const participation = participationConditionsFrom(formData);
-      const parsedCapacity = Number.parseInt(text(formData, "capacity"), 10);
-      const capacity = Number.isFinite(parsedCapacity) && parsedCapacity > 0 ? parsedCapacity : null;
-      const type = canManage ? text(formData, "type") : current.is_project && current.is_training ? "both" : current.is_project ? "projet" : "formation";
-      if (!(type === "projet" || type === "formation" || type === "both")) throw new Error("Type invalide.");
-      const serviceName = canManage ? text(formData, "service_name") : current.organizer_label;
-      const { data: serviceId, error: serviceError } = canManage && serviceName
-        ? await supabase.rpc("resolve_service_name", { p_name: serviceName })
-        : { data: current.service_id, error: null };
-      if (serviceError) throw new Error("Le service pilote n’a pas pu être enregistré : " + serviceError.message);
-      const { error: revisionError } = await supabase.rpc("save_opportunity_revision", {
-        p_opportunity: id,
-        p_payload: {
-          kind: type === "formation" ? "formation" : "projet",
-          is_project: type === "projet" || type === "both",
-          is_training: type === "formation" || type === "both",
-          title: canManage ? text(formData, "title") : current.title,
-          description: text(formData, "description"),
-          objectives: list(formData, "objectives_items") || text(formData, "objectives") || null,
-          speakers: list(formData, "speakers_items") || text(formData, "speakers") || null,
-          prerequisites: list(formData, "prerequisites_items") || text(formData, "prerequisites") || null,
-          participation_audience: participation.audience,
-          participation_audience_details: participation.audienceDetails,
-          participation_prerequisites_required: participation.prerequisitesRequired,
-          participant_material: list(formData, "participant_material_items") || text(formData, "participant_material") || null,
-          tools_used: list(formData, "tools_used_items") || null,
-          capacity,
-          strategic_axes: strategy.axes,
-          service_id: serviceId || null,
-          service_name: serviceName || null,
-          organizer_label: serviceName || null,
-          location: canManage ? text(formData, "location") || null : current.location,
-          registration_open: canManage ? formData.get("registration_open") === "on" : current.registration_open,
-          cancellation_allowed: canManage ? formData.get("cancellation_allowed") === "on" : current.cancellation_allowed,
-          banner_emoji: opportunityEmoji(text(formData, "banner_emoji")),
-        },
-        p_dates: opportunityDatesFrom(formData),
-      });
-      if (revisionError?.message.includes("FORBIDDEN")) throw new Error("Vous n’avez pas le droit de modifier cette fiche.");
-      if (revisionError) throw new Error("La version de travail n’a pas pu être enregistrée : " + revisionError.message);
-
-      const internalMaterial = list(formData, "organization_material_items");
-      if (formData.get("organization_material_present") === "1") {
-        const { error: internalError } = await supabase.rpc("set_opportunity_internal_material", {
-          p_opportunity: id,
-          p_organization_material: internalMaterial,
-        });
-        if (internalError) throw new Error("Le matériel interne n’a pas pu être enregistré.");
-      }
-      if (isSuperAdmin) {
-        const { error: submitError } = await supabase.rpc("request_opportunity_review", {
-          p_opportunity: id,
-          p_desired_status: "published",
-          p_desired_at: null,
-        });
-        if (submitError) throw new Error("La version est enregistrée, mais sa validation n’a pas pu être ouverte.");
-      }
-      refreshOpportunity(id);
-      return { ok: true, message: isSuperAdmin ? "La nouvelle version est enregistrée et prête à être validée. La version publiée reste inchangée." : "La version de travail est enregistrée. La version publiée reste inchangée jusqu’à validation." };
+    const type = text(formData, "type");
+    if (!(type === "projet" || type === "formation" || type === "both")) throw new Error("Type invalide.");
+    const parsedCapacity = Number.parseInt(text(formData, "capacity"), 10);
+    const capacity = Number.isFinite(parsedCapacity) && parsedCapacity > 0 ? parsedCapacity : null;
+    const allowedAxes = new Set(["former", "auberge", "fundraising"]);
+    const strategicAxes = [...new Set(formData.getAll("strategic_axes").map(String))].filter((axis) => allowedAxes.has(axis));
+    const audienceValue = text(formData, "participation_audience");
+    const audience = audienceValue === "specific" ? "specific" : "all";
+    const payload: Record<string, unknown> = {
+      type,
+      title: text(formData, "title"),
+      description: text(formData, "description"),
+      objectives: list(formData, "objectives_items") || text(formData, "objectives") || null,
+      speakers: list(formData, "speakers_items") || text(formData, "speakers") || null,
+      prerequisites: list(formData, "prerequisites_items") || text(formData, "prerequisites") || null,
+      participant_material: list(formData, "participant_material_items") || text(formData, "participant_material") || null,
+      tools_used: list(formData, "tools_used_items") || null,
+      capacity,
+      strategic_axes: strategicAxes,
+      service_name: text(formData, "service_name") || null,
+      location: text(formData, "location") || null,
+      registration_open: formData.get("registration_open") === "on",
+      cancellation_allowed: formData.get("cancellation_allowed") === "on",
+      banner_emoji: opportunityEmoji(text(formData, "banner_emoji")),
+      participation_audience: audience,
+      participation_audience_details: audience === "specific" ? text(formData, "participation_audience_details") || null : null,
+      participation_prerequisites_required: formData.get("participation_prerequisites_required") === "on",
+    };
+    if (formData.get("organization_material_present") === "1") {
+      payload.organization_material = list(formData, "organization_material_items") || null;
     }
-
-    await updateOpportunityContent(formData);
-    if (canManage) {
-      await replaceOpportunityDates(formData);
-      await updateOpportunityManagement(formData);
-    }
-    return { ok: true, message: "Les modifications ont été enregistrées dans le brouillon." };
+    const { data, error } = await supabase.rpc("save_opportunity_form", {
+      p_opportunity: id,
+      p_payload: payload,
+      p_dates: opportunityDatesFrom(formData),
+      p_expected_updated_at: text(formData, "base_updated_at") || null,
+    });
+    if (error?.message.includes("SAVE_CONFLICT")) throw new Error("Cette fiche a été modifiée ailleurs depuis son ouverture. Actualisez la page avant de réessayer afin de ne pas écraser ces changements.");
+    if (error?.message.includes("SESSION_HAS_REGISTRATIONS")) throw new Error("Une séance comportant des inscriptions ne peut pas être supprimée.");
+    if (error?.message.includes("FORBIDDEN")) throw new Error("Vous n’avez pas le droit de modifier cette fiche.");
+    if (error) throw new Error("L’enregistrement en base a échoué : " + error.message);
+    const result = (data ?? {}) as {
+      updatedAt?: string;
+      dates?: Array<{ id: string; session_date: string; start_time: string; end_time: string; room: string | null; location: string | null; capacity: number | null }>;
+    };
+    refreshOpportunity(id);
+    return { ok: true, message: "Enregistré", updatedAt: result.updatedAt, dates: result.dates };
   } catch (error) {
     return { ok: false, message: error instanceof Error ? error.message : "L’enregistrement a échoué." };
   }

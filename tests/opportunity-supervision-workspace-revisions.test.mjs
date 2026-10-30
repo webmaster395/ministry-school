@@ -22,9 +22,11 @@ test("une version publiée reste intacte jusqu'à l'approbation suivante", () =>
   const action = source("src/app/etudiant/services/actions.ts");
   const data = source("src/lib/data/opportunities.ts");
   const migration = source("supabase/migrations/20261030230000_opportunity_draft_revisions.sql");
+  const reliableSaving = source("supabase/migrations/20261030280000_reliable_opportunity_saving.sql");
   const student = source("src/app/etudiant/services/[id]/page.tsx");
-  assert.match(action, /\["published", "scheduled"\]\.includes\(current\.publication_status\)/);
-  assert.match(action, /save_opportunity_revision/);
+  assert.match(action, /save_opportunity_form/);
+  assert.match(reliableSaving, /opportunity_row\.publication_status in \('published','scheduled'\)/);
+  assert.match(reliableSaving, /insert into public\.opportunity_draft_revisions/);
   assert.match(data, /opportunity_management_revision/);
   assert.match(migration, /create table if not exists public\.opportunity_draft_revisions/);
   assert.match(migration, /delete from public\.opportunity_draft_revisions where opportunity_id=p_opportunity/);

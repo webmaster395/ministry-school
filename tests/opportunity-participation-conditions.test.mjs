@@ -35,13 +35,25 @@ test("la fiche étudiante rassemble les conditions dans les informations pratiqu
   const durationIndex = student.indexOf("Durée", practicalIndex);
   const conditionsIndex = student.indexOf("Conditions de participation", practicalIndex);
   const capacityIndex = student.indexOf("Nombre de places", practicalIndex);
-  assert.ok(practicalIndex > -1 && practicalIndex < serviceIndex && serviceIndex < durationIndex && durationIndex < conditionsIndex && conditionsIndex < capacityIndex);
+  assert.ok(practicalIndex > -1 && practicalIndex < serviceIndex && serviceIndex < durationIndex && durationIndex < capacityIndex && capacityIndex < conditionsIndex);
   assert.equal(student.match(/Conditions de participation/g)?.length, 1);
   assert.doesNotMatch(student.slice(practicalIndex), /Lieu principal/);
   assert.match(student, /Ouvert à tous/);
   assert.match(student, /Réservé à : \$\{o\.participation_audience_details\}/);
-  assert.match(student, /o\.participation_prerequisites_required &&/);
-  assert.match(student, /Prérequis nécessaires/);
+  assert.match(student, /o\.participation_prerequisites_required && prerequisites\.length > 0/);
+  assert.match(student, /<PrerequisitesAccordion items=\{prerequisites\}/);
+});
+
+test("les prérequis étudiants sont repliés par défaut et accessibles au clavier", () => {
+  const accordion = source("src/components/PrerequisitesAccordion.tsx");
+  assert.match(accordion, /useState\(false\)/);
+  assert.match(accordion, /type="button"/);
+  assert.match(accordion, /aria-expanded=\{open\}/);
+  assert.match(accordion, /aria-controls=\{contentId\}/);
+  assert.match(accordion, /onClick=\{\(\) => setOpen/);
+  assert.match(accordion, /open \? "rotate-90"/);
+  assert.match(accordion, /grid-rows-\[0fr\]/);
+  assert.match(accordion, /list-disc/);
 });
 
 test("les fiches existantes restent ouvertes à tous sans prérequis exigé", () => {

@@ -9,23 +9,31 @@ export default function DynamicListInput({
   initialValue = "",
   placeholder,
   required = false,
+  onDirty,
 }: {
   name: string;
   label: string;
   initialValue?: string | null;
   placeholder: string;
   required?: boolean;
+  onDirty?: () => void;
 }) {
   const initial = (initialValue ?? "").split("\n").map((value) => value.trim()).filter(Boolean);
   const [items, setItems] = useState(initial.length ? initial : [""]);
   const refs = useRef<Array<HTMLInputElement | null>>([]);
-  const update = (index: number, value: string) =>
+  const update = (index: number, value: string) => {
     setItems((current) => current.map((item, itemIndex) => itemIndex === index ? value : item));
+    onDirty?.();
+  };
   const add = (after = items.length - 1) => {
     setItems((current) => [...current.slice(0, after + 1), "", ...current.slice(after + 1)]);
+    onDirty?.();
     requestAnimationFrame(() => refs.current[after + 1]?.focus());
   };
-  const remove = (index: number) => setItems((current) => current.length === 1 ? [""] : current.filter((_, i) => i !== index));
+  const remove = (index: number) => {
+    setItems((current) => current.length === 1 ? [""] : current.filter((_, i) => i !== index));
+    onDirty?.();
+  };
   const move = (index: number, direction: -1 | 1) => {
     const target = index + direction;
     if (target < 0 || target >= items.length) return;
@@ -34,6 +42,7 @@ export default function DynamicListInput({
       [next[index], next[target]] = [next[target], next[index]];
       return next;
     });
+    onDirty?.();
   };
   const hasValue = items.some((item) => item.trim().length > 0);
 

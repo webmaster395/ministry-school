@@ -60,24 +60,42 @@ export class SimplePdf {
   }
 
   banner(type: string, service: string | null) {
-    this.commands.push("0.12 0.16 0.15 rg 36 642 523 150 re f");
-    this.commands.push("0.96 0.63 0.16 rg 36 642 7 150 re f");
-    this.text(type.toLocaleUpperCase("fr-FR"), 9, "bold", 58, 760, "0.96 0.63 0.16");
-    const titleLines = wrap(this.title, 42).slice(0, 3);
-    titleLines.forEach((line, index) => this.text(line, 25, "bold", 58, 725 - index * 30, "1 1 1"));
-    if (service) this.text(`Service pilote : ${service}`, 10, "regular", 58, 662, "0.83 0.86 0.85");
-    this.y = 610;
+    const top = 792;
+    const choices = [25, 23, 21, 19];
+    let titleSize = choices.at(-1) ?? 19;
+    let titleLines = wrap(this.title, Math.floor(800 / titleSize));
+    for (const candidate of choices) {
+      const candidateLines = wrap(this.title, Math.floor(800 / candidate));
+      if (candidateLines.length <= 4) {
+        titleSize = candidate;
+        titleLines = candidateLines;
+        break;
+      }
+    }
+    const lineHeight = titleSize + 5;
+    const firstTitleBaseline = top - 67;
+    const lastTitleBaseline = firstTitleBaseline - (titleLines.length - 1) * lineHeight;
+    const serviceBaseline = service ? lastTitleBaseline - lineHeight - 1 : null;
+    const bottom = Math.min(642, (serviceBaseline ?? lastTitleBaseline) - 22);
+    const height = top - bottom;
+    this.commands.push(`0.12 0.16 0.15 rg 36 ${bottom} 523 ${height} re f`);
+    this.commands.push(`0.96 0.63 0.16 rg 36 ${bottom} 7 ${height} re f`);
+    this.text(type.toLocaleUpperCase("fr-FR"), 9, "bold", 58, top - 32, "0.96 0.63 0.16");
+    titleLines.forEach((line, index) => this.text(line, titleSize, "bold", 58, firstTitleBaseline - index * lineHeight, "1 1 1"));
+    if (service && serviceBaseline !== null) this.text(`Service pilote : ${service}`, 10, "regular", 58, serviceBaseline, "0.83 0.86 0.85");
+    this.y = bottom - 32;
   }
 
   heading(value: string) {
-    this.ensure(40);
+    // Le titre et au moins une ligne de son contenu restent sur la même page.
+    this.ensure(72);
     this.commands.push(`0.96 0.63 0.16 rg 48 ${this.y - 3} 20 3 re f`);
     this.text(value, 16, "bold", 48, this.y - 25);
     this.y -= 46;
   }
 
   subheading(value: string) {
-    this.ensure(28);
+    this.ensure(48);
     this.text(value, 11, "bold", 48, this.y);
     this.y -= 20;
   }
@@ -86,8 +104,13 @@ export class SimplePdf {
     const marker = options.listMarker ?? (options.bullet ? "•" : "");
     const sourceLines = options.preserveLineBreaks ? value.replace(/\r\n?/g, "\n").split("\n") : [value];
     const lines = sourceLines.flatMap((line) => wrap(line, marker ? 86 : 94));
+    const blockHeight = lines.length * 15 + 7;
+    // Une étape pédagogique ou un élément de liste ne se coupe pas lorsque le
+    // bloc tient sur une page complète. Les contenus exceptionnellement longs
+    // conservent le repli ligne par ligne.
+    if (blockHeight <= 700) this.ensure(blockHeight);
     lines.forEach((line, index) => {
-      this.ensure(15);
+      if (blockHeight > 700) this.ensure(15);
       const prefix = marker && index === 0 ? `${marker} ` : marker ? "   " : "";
       this.text(`${prefix}${line}`, 10, "regular", marker ? 56 : 48, this.y, options.muted ? "0.38 0.42 0.41" : undefined);
       this.y -= 15;

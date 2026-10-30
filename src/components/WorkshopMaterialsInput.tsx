@@ -5,16 +5,20 @@ import { useMemo, useState } from "react";
 
 const SUGGESTIONS = ["Écran", "Paperboard", "Stylos", "Feutres", "Papier"];
 
-export default function WorkshopMaterialsInput({ initialValue = "" }: { initialValue?: string | null }) {
+export default function WorkshopMaterialsInput({ initialValue = "", onDirty }: { initialValue?: string | null; onDirty?: () => void }) {
   const initial = useMemo(() => (initialValue ?? "").split("\n").map((item) => item.trim()).filter(Boolean), [initialValue]);
   const [items, setItems] = useState(initial);
   const [custom, setCustom] = useState("");
-  const toggle = (item: string) => setItems((current) => current.includes(item) ? current.filter((value) => value !== item) : [...current, item]);
+  const toggle = (item: string) => {
+    setItems((current) => current.includes(item) ? current.filter((value) => value !== item) : [...current, item]);
+    onDirty?.();
+  };
   const addCustom = () => {
     const value = custom.trim();
     if (!value) return;
     setItems((current) => current.some((item) => item.toLocaleLowerCase("fr-FR") === value.toLocaleLowerCase("fr-FR")) ? current : [...current, value]);
     setCustom("");
+    onDirty?.();
   };
 
   return (

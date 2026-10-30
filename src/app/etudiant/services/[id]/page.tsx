@@ -19,6 +19,7 @@ import { cancelOpportunityDate, registerOpportunityDates } from "../actions";
 import { getOpportunityResources } from "@/lib/data/opportunity-resources";
 import StrategicVisionSection from "@/components/StrategicVisionSection";
 import FormattedContent from "@/components/FormattedContent";
+import PrerequisitesAccordion from "@/components/PrerequisitesAccordion";
 
 const fullDate = (iso: string) => new Intl.DateTimeFormat("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${iso}T12:00:00Z`));
 const hm = (time: string) => time.slice(0,5).replace(":"," h ").replace(/ h 00$/," h");
@@ -121,17 +122,14 @@ export default async function OpportunityPage({ params, searchParams }: { params
           <dl className="mt-4 divide-y divide-border-soft text-sm">
             <div className="py-3"><dt className="text-muted">Service pilote</dt><dd className="mt-1 font-semibold">{o.services?.name || o.organizer_label || "Non renseigné"}</dd></div>
             <div className="py-3"><dt className="text-muted">Durée</dt><dd className="mt-1 font-semibold">{weekends} week-end{weekends === 1 ? "" : "s"} · {dates.length} séance{dates.length === 1 ? "" : "s"}</dd></div>
+            <div className="py-3"><dt className="text-muted">Nombre de places</dt><dd className="mt-1 font-semibold">{o.capacity ? `${o.capacity} place${o.capacity === 1 ? "" : "s"} par séance` : "Non limité"}</dd></div>
             <div className="py-3">
               <dt className="text-muted">Conditions de participation</dt>
               <dd className="mt-1 font-semibold">
                 <p>{o.participation_audience === "specific" ? `Réservé à : ${o.participation_audience_details}` : "Ouvert à tous"}</p>
-                {o.participation_prerequisites_required && <div className="mt-2 font-normal">
-                  <p className="font-semibold">Prérequis nécessaires</p>
-                  <ul className="mt-1.5 space-y-1 pl-4 text-muted">{prerequisites.map((item) => <li key={item} className="list-disc">{item}</li>)}</ul>
-                </div>}
+                {o.participation_prerequisites_required && prerequisites.length > 0 && <PrerequisitesAccordion items={prerequisites} />}
               </dd>
             </div>
-            <div className="py-3"><dt className="text-muted">Nombre de places</dt><dd className="mt-1 font-semibold">{o.capacity ? `${o.capacity} place${o.capacity === 1 ? "" : "s"} par séance` : "Non limité"}</dd></div>
           </dl>
           {registeredDates.size > 0 && <p className="mt-4 rounded-xl bg-surface px-4 py-3 text-sm font-medium">Vous êtes inscrit à {dates.filter((date) => registeredDates.has(date.id)).length} séance{dates.filter((date) => registeredDates.has(date.id)).length>1?"s":""}.</p>}
         </aside>

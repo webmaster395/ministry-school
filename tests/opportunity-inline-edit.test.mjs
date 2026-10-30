@@ -16,15 +16,22 @@ test("la fiche alterne entre consultation et édition sans second formulaire vis
   assert.match(experience, /<X size=\{16\} \/> Annuler/);
 });
 
-test("une sauvegarde unique réutilise les traitements de contenu, séances et publication", () => {
+test("une sauvegarde unique est atomique, versionnée et indépendante de la soumission", () => {
   const actions = source("src/app/etudiant/services/actions.ts");
   const experience = source("src/components/OpportunityEditForms.tsx");
+  const migration = source("supabase/migrations/20261030280000_reliable_opportunity_saving.sql");
   assert.match(actions, /export async function saveOpportunityInline/);
-  assert.match(actions, /await updateOpportunityContent\(formData\)/);
-  assert.match(actions, /await replaceOpportunityDates\(formData\)/);
-  assert.match(actions, /await updateOpportunityManagement\(formData\)/);
+  assert.match(actions, /supabase\.rpc\("save_opportunity_form"/);
+  assert.doesNotMatch(actions.slice(actions.indexOf("export async function saveOpportunityInline"), actions.indexOf("export async function replaceOpportunityAssignments")), /request_opportunity_review/);
+  assert.match(migration, /for update/);
+  assert.match(migration, /SAVE_CONFLICT/);
+  assert.match(migration, /grant execute on function public\.save_opportunity_form/);
   assert.match(experience, /useActionState\(saveOpportunityInline, null\)/);
   assert.match(experience, /setConfirmation\(state\.message\)/);
+  assert.match(experience, /requestSubmit/);
+  assert.match(experience, /Modifications non enregistrées/);
+  assert.match(experience, /Enregistrement…/);
+  assert.match(experience, /base_updated_at/);
 });
 
 test("les modifications non enregistrées sont protégées", () => {

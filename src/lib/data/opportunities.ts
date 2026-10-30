@@ -50,6 +50,7 @@ export type Opportunity = {
   strategic_contribution_auberge: string | null;
   strategic_contribution_fundraising: string | null;
   strategic_axes_connection: string | null;
+  updated_at: string;
 };
 
 export type OpportunityStatus = "disponible" | "a_venir" | "complet" | "termine";
@@ -124,7 +125,7 @@ export async function getOpportunities(supabase: SupabaseClient) {
   const { data } = await supabase
     .from("opportunities")
     .select(
-      "id, kind, title, description, service_id, organizer_label, schedule_label, starts_on, ends_on, capacity, registration_open, created_by, lead_id, services(name), is_project, is_training, short_description, speakers, location, participant_material, tools_used, cancellation_allowed, publication_status, published_at, archived_at, archive_requested_at, archive_requested_by, cover_image_path, banner_emoji" + DETAIL_COLUMNS
+      "id, kind, title, description, service_id, organizer_label, schedule_label, starts_on, ends_on, capacity, registration_open, created_by, lead_id, services(name), is_project, is_training, short_description, speakers, location, participant_material, tools_used, cancellation_allowed, publication_status, published_at, archived_at, archive_requested_at, archive_requested_by, cover_image_path, banner_emoji, updated_at" + DETAIL_COLUMNS
     )
     .order("starts_on", { ascending: true, nullsFirst: false })
     .order("created_at", { ascending: true });
@@ -235,6 +236,7 @@ export function mergeOpportunityManagementRevision(
     archive_requested_at: opportunity.archive_requested_at,
     archive_requested_by: opportunity.archive_requested_by,
     organization_material: opportunity.organization_material,
+    updated_at: revision.updatedAt,
   };
   return { opportunity: merged, dates: revision.dates ?? dates, revision };
 }
