@@ -496,6 +496,19 @@ export async function replaceOpportunityDates(formData: FormData) {
   refreshOpportunity(id);
 }
 
+/** Sauvegarde la fiche éditée en place en réutilisant les trois traitements existants. */
+export async function saveOpportunityInline(_previous: OpportunityFormState, formData: FormData): Promise<OpportunityFormState> {
+  try {
+    await updateOpportunityContent(formData);
+    await replaceOpportunityDates(formData);
+    // La publication est traitée en dernier : les contenus et les séances sont déjà cohérents.
+    await updateOpportunityManagement(formData);
+    return { ok: true, message: "Les modifications ont été enregistrées." };
+  } catch (error) {
+    return { ok: false, message: error instanceof Error ? error.message : "L’enregistrement a échoué." };
+  }
+}
+
 export async function replaceOpportunityAssignments(formData: FormData) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();

@@ -24,7 +24,7 @@ export default function OpportunityEmojiPicker({ value, onChange }: { value: str
             type="text"
             name="banner_emoji"
             value={value}
-            onChange={(event) => onChange(opportunityEmoji(event.target.value))}
+            onChange={(event) => onChange(event.target.value)}
             maxLength={32}
             inputMode="text"
             autoComplete="off"

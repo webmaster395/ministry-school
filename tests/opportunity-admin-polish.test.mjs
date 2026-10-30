@@ -7,12 +7,12 @@ const source = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "u
 test("la présentation rend les titres, le gras et les listes au lieu d'afficher le Markdown brut", () => {
   const renderer = source("src/components/FormattedContent.tsx");
   const student = source("src/app/etudiant/services/[id]/page.tsx");
-  const management = source("src/app/gestion/projets-formations/[id]/page.tsx");
+  const management = source("src/components/OpportunityEditForms.tsx");
   assert.ok(renderer.includes("const heading = line.match(/^(#{1,4})"));
   assert.match(renderer, /<strong/);
   assert.match(renderer, /kind === "list"/);
   assert.match(student, /<FormattedContent value={o\.description}/);
-  assert.match(management, /<FormattedContent value={opportunity\.description}/);
+  assert.match(management, /<FormattedContent value={o\.description}/);
 });
 
 test("un brouillon exige un aperçu explicite et autorisé", () => {
@@ -27,7 +27,7 @@ test("les besoins internes et la capacité sont saisis sans dupliquer la section
   const form = source("src/components/OpportunityEditForms.tsx");
   const action = source("src/app/etudiant/services/actions.ts");
   const migration = source("supabase/migrations/20261029220000_opportunity_internal_planning_and_legacy_edits.sql");
-  assert.match(form, /Besoins d’organisation/);
+  assert.match(form, /<SectionTitle>Organisation<\/SectionTitle>/);
   assert.match(form, /<WorkshopMaterialsInput/);
   assert.equal((form.match(/name="capacity"/g) ?? []).length, 1);
   assert.match(action, /p_organization_material: list\(formData, "organization_material_items"\)/);
