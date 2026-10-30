@@ -28,6 +28,7 @@ export type Viewer = {
   notificationsSeenAt: string;
   profileCreatedAt: string | null;
   courseNotesEnabled: boolean;
+  pendingValidationCount: number;
 };
 
 /**
@@ -66,6 +67,9 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
     ministry_name?: string | null;
     steering_ministry_ids?: string[];
     editorial_reviewer?: boolean;
+    super_admin?: boolean;
+    projects_training_member?: boolean;
+    pending_validation_count?: number;
     course_notes_enabled?: boolean;
     unread_messages?: number;
   };
@@ -77,12 +81,6 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
   const seenAt = data.notifications_seen_at ?? "1970-01-01T00:00:00Z";
   const createdAt = data.created_at ?? null;
 
-  const { data: access } = await supabase
-    .from("profiles")
-    .select("is_projects_training_member")
-    .eq("id", userId)
-    .single();
-
   return {
     id: userId,
     unreadMessages: Number(data.unread_messages ?? 0),
@@ -93,6 +91,7 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
     notificationsSeenAt: seenAt,
     profileCreatedAt: createdAt,
     courseNotesEnabled: process.env.COURSE_NOTES_ENABLED === "1" || !!data.course_notes_enabled,
+    pendingValidationCount: Number(data.pending_validation_count ?? 0),
     fullName: data.full_name ?? "",
     role,
     ministrySlug: demoAdmin ? null : (data.ministry_slug ?? null),
@@ -101,7 +100,8 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
     avatarUrl,
     roles: {
       admin: role === "admin",
-      projectsTraining: !!access?.is_projects_training_member,
+      superAdmin: !!data.super_admin,
+      projectsTraining: !!data.projects_training_member,
       editorialReviewer: !!data.editorial_reviewer,
       steeringMinistryIds: data.steering_ministry_ids ?? [],
     },

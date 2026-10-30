@@ -24,14 +24,16 @@ test("les chargements publics ne sélectionnent plus le besoin matériel interne
   assert.match(data, /opportunity_internal_material/);
 });
 
-test("seules Flora et Nathalie reçoivent et modifient le champ interne", () => {
+test("seules les trois super administratrices modifient le champ interne", () => {
   const page = source("src/app/gestion/projets-formations/[id]/page.tsx");
   const editor = source("src/components/OpportunityEditForms.tsx");
   const create = source("src/components/admin/OpportunityCreateForm.tsx");
+  const permissions = source("supabase/migrations/20261030120000_admin_spaces_and_super_admins.sql");
   assert.match(page, /canManageInternalMaterial \? await getOpportunityInternalMaterial/);
   assert.match(editor, /canManageInternalMaterial && <WorkshopMaterialsInput/);
   assert.match(editor, /canManageInternalMaterial && o\.organization_material/);
   assert.match(create, /canManageInternalMaterial && <div[^>]*><WorkshopMaterialsInput/);
+  assert.match(permissions, /can_review_editorial_content[\s\S]*?is_super_admin/);
 });
 
 test("prérequis et matériel à apporter restent visibles aux participants", () => {

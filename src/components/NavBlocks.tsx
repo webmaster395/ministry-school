@@ -1,15 +1,16 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { ChevronDown } from "lucide-react";
 import { usePathname } from "next/navigation";
 import MinistryPicto from "@/components/MinistryPicto";
 import { useSpace } from "@/components/SpaceProvider";
 import {
-  functionsIcon,
   notesNavItem,
   profileTabs,
+  spaceHome,
   studentSections,
-  validationNavItem,
 } from "@/lib/nav";
 import { getMinistry } from "@/lib/ministry";
 
@@ -23,6 +24,7 @@ function NavLink({
   active,
   collapsed,
   nested = false,
+  badge,
 }: {
   href: string;
   label: string;
@@ -30,6 +32,7 @@ function NavLink({
   active: boolean;
   collapsed: boolean;
   nested?: boolean;
+  badge?: number;
 }) {
   return (
     <Link
@@ -54,18 +57,48 @@ function NavLink({
           {icon}
         </span>
       )}
-      {!collapsed && label}
+      {!collapsed && <span className="min-w-0 flex-1 truncate">{label}</span>}
+      {!collapsed && !!badge && badge > 0 && (
+        <span className="inline-flex min-w-6 items-center justify-center rounded-full bg-[#C43D32] px-1.5 py-0.5 text-[11px] font-semibold text-white">
+          {badge}
+        </span>
+      )}
     </Link>
   );
 }
 
 /**
  * Le menu commun à la barre latérale et au tiroir du téléphone : le menu étudiant, toujours
- * le même, puis le bloc « Mes espaces » pour ceux qui ont des fonctions de gestion.
+ * le même, puis le bloc administratif pour ceux qui ont des responsabilités de gestion.
  */
 export function NavSections({ collapsed = false }: { collapsed?: boolean }) {
   const pathname = usePathname();
-  const { spaces, current, home, notesEnabled, roles } = useSpace();
+  const { spaces, current, notesEnabled, pendingValidationCount } = useSpace();
+  const multiple = spaces.length > 1;
+  const [adminOpen, setAdminOpen] = useState(!!current);
+
+  useEffect(() => {
+    if (current) {
+      // L'ouverture suit volontairement la route active ; elle n'est pas un état métier dérivé.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setAdminOpen(true);
+      localStorage.setItem("admin-spaces-open", "1");
+      return;
+    }
+    const stored = localStorage.getItem("admin-spaces-open");
+    if (stored !== null) {
+      // Synchronisation initiale avec la préférence purement visuelle du navigateur.
+      setAdminOpen(stored === "1");
+    }
+  }, [current]);
+
+  function toggleAdminSpaces() {
+    setAdminOpen((value) => {
+      const next = !value;
+      localStorage.setItem("admin-spaces-open", next ? "1" : "0");
+      return next;
+    });
+  }
 
   return (
     <>
@@ -102,7 +135,7 @@ export function NavSections({ collapsed = false }: { collapsed?: boolean }) {
         </div>
       ))}
 
-      {spaces.length > 0 && home && (
+      {spaces.length > 0 && (
         <div>
           {collapsed ? (
             <div
@@ -110,32 +143,38 @@ export function NavSections({ collapsed = false }: { collapsed?: boolean }) {
               aria-hidden="true"
             />
           ) : (
-            <p className="label mb-2 px-3 text-[11px] !font-medium tracking-[0.16em] text-muted">
-              Mes espaces
-            </p>
+            multiple ? (
+              <button
+                type="button"
+                onClick={toggleAdminSpaces}
+                aria-expanded={adminOpen}
+                className="label mb-2 flex w-full items-center justify-between px-3 text-left text-[11px] !font-medium tracking-[0.16em] text-muted"
+              >
+                Mes espaces admin
+                <ChevronDown size={14} strokeWidth={1.5} className={`transition ${adminOpen ? "rotate-180" : ""}`} />
+              </button>
+            ) : (
+              <p className="label mb-2 px-3 text-[11px] !font-medium tracking-[0.16em] text-muted">
+                Mon espace admin
+              </p>
+            )
           )}
-          <ul className="space-y-0.5">
-            <li>
-              <NavLink
-                href={home}
-                label="Mes fonctions"
-                icon={functionsIcon}
-                active={!!current}
-                collapsed={collapsed}
-              />
-            </li>
-            {roles.editorialReviewer && (
-              <li>
+          {(collapsed || !multiple || adminOpen) && (
+            <ul className="space-y-0.5">
+              {spaces.map((space) => (
+                <li key={space.key}>
                 <NavLink
-                  href={validationNavItem.href}
-                  label={validationNavItem.label}
-                  icon={validationNavItem.icon}
-                  active={sameRoute(pathname, validationNavItem.href)}
+                  href={spaceHome(space)}
+                  label={space.label}
+                  icon={space.icon}
+                  active={current?.key === space.key}
                   collapsed={collapsed}
+                  badge={space.key === "validation" ? pendingValidationCount : undefined}
                 />
-              </li>
-            )}
-          </ul>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       )}
     </>

@@ -6,6 +6,8 @@
  */
 export type ViewerRoles = {
   admin: boolean;
+  /** Super administration nominative : Rose-Alice, Flora ou Nathalie uniquement. */
+  superAdmin: boolean;
   projectsTraining: boolean;
   /** Validation éditoriale nominative (Flora ou Nathalie), indépendante du rôle admin. */
   editorialReviewer: boolean;
@@ -17,6 +19,7 @@ export type ViewerRoles = {
 export function isPlainStudent(roles: ViewerRoles) {
   return (
     !roles.admin &&
+    !roles.superAdmin &&
     !roles.projectsTraining &&
     !roles.editorialReviewer &&
     roles.steeringMinistryIds.length === 0

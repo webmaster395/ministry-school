@@ -39,17 +39,22 @@ test("les responsables créent un brouillon à 10 h 30 puis le soumettent", asyn
   assert.match(panel, /Valider et programmer/);
 });
 
-test("À valider reste nominatif et conserve les annotations privées", async () => {
+test("À valider reste nominatif, unifié et conserve les annotations privées", async () => {
   const migration = await source("supabase/migrations/20261029190000_ministry_editorial_workflow.sql");
+  const spacesMigration = await source("supabase/migrations/20261030120000_admin_spaces_and_super_admins.sql");
   const page = await source("src/app/gestion/a-valider/page.tsx");
   const nav = await source("src/components/NavBlocks.tsx");
   assert.match(migration, /nathalie\.boudehent@eglisemlk\.fr/);
   assert.match(migration, /flora\.demerle@mlkgrandparis\.com/);
+  assert.match(spacesMigration, /r\.tamard@gmail\.com/);
   assert.match(migration, /create table if not exists public\.ministry_course_annotations/);
   assert.match(migration, /requires_action boolean/);
-  assert.match(page, /Projets et formations/);
-  assert.match(page, /Cours ministériels/);
-  assert.match(nav, /roles\.editorialReviewer/);
+  assert.match(page, /label="Projets"/);
+  assert.match(page, /label="Formations"/);
+  assert.match(page, /label="Cours de ministère"/);
+  assert.match(page, /label="Historique"/);
+  assert.match(page, /viewer\?\.roles\.superAdmin/);
+  assert.match(nav, /pendingValidationCount/);
 });
 
 test("une révision publiée est clonée avant modification", async () => {

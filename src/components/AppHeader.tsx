@@ -3,7 +3,6 @@ import HeaderTitle from "./HeaderTitle";
 import LogoutButton from "./LogoutButton";
 import HeaderBadge from "./HeaderBadge";
 import MobileNav from "./MobileNav";
-import SpaceSwitcher from "./SpaceSwitcher";
 
 export default async function AppHeader() {
   const viewer = await getViewer();
@@ -23,7 +22,6 @@ export default async function AppHeader() {
         </div>
 
         <div className="app-header__actions flex max-w-full shrink-0 flex-wrap items-center justify-end gap-x-3 gap-y-2 sm:gap-x-4">
-          <SpaceSwitcher />
           <HeaderBadge
             firstName={firstName}
             ministrySlug={viewer?.ministrySlug ?? null}

@@ -17,8 +17,8 @@ export default async function NewProjectsTrainingPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/auth/connexion");
-  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
-  if (profile?.role !== "admin") redirect("/gestion/projets-formations");
+  const { data: superAdmin } = await supabase.rpc("is_super_admin", { p_user: user.id });
+  if (!superAdmin) redirect("/gestion/projets-formations");
   const [members, services, { data: canManageInternalMaterial }] = await Promise.all([
     getMembers(supabase),
     getServices(supabase),

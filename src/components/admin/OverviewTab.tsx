@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Clock } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { getEnrollmentBreakdown } from "@/lib/data/admin";
 import { getMinistries } from "@/lib/data/admin";
@@ -57,7 +56,6 @@ export default async function OverviewTab({
     })
   );
 
-  const toValidate = opps.filter((o) => !o.registration_open && phaseOf(o, today) !== "termine").length;
   const currentProjects = count("projet", false);
   const finishedProjects = count("projet", true);
   const currentServiceTrainings = count("formation", false);
@@ -82,34 +80,11 @@ export default async function OverviewTab({
       label: "Formations actuelles",
       sub: `${finishedServiceTrainings} terminées`,
     }] : []),
-    ...(toValidate > 0 ? [{ value: toValidate, label: "Propositions à valider", attention: true }] : []),
     ...(expected > 0 ? [{ value: expected, label: "Comptes rendus attendus", attention: true }] : []),
   ];
 
   return (
     <div className="space-y-6">
-      {toValidate > 0 && (
-        <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border bg-surface p-4 text-[14px]">
-          <div className="flex items-start gap-3">
-            <Clock size={18} className="mt-0.5 shrink-0 text-muted" />
-            <div>
-              <p className="font-semibold text-foreground">
-                {toValidate} proposition{toValidate > 1 ? "s" : ""} en attente de validation
-              </p>
-              <p className="mt-0.5 text-[13px] text-muted">
-                Des projets ou formations ont été soumis et nécessitent votre approbation avant d&apos;être publiés.
-              </p>
-            </div>
-          </div>
-          <Link
-            href="/gestion/admin?onglet=projets&phase=a_valider"
-            className="w-full rounded-lg bg-accent px-4 py-2.5 text-center text-xs font-semibold text-on-accent transition hover:bg-[#1b2221] sm:w-auto"
-          >
-            Examiner et valider →
-          </Link>
-        </div>
-      )}
-
       <section className="grid grid-cols-2 gap-2.5 sm:gap-3 lg:grid-cols-4">
         {cards.map((c) => (
           <div
@@ -167,7 +142,7 @@ export default async function OverviewTab({
       <div className="grid items-start gap-6 lg:grid-cols-2">
         <section className="rounded-lg border border-border bg-background p-4 sm:p-6">
           <h2 className="label text-xs tracking-[0.18em] text-muted">Implication à MLK</h2>
-          <p className="mt-1 text-sm text-muted">Clique sur une ligne pour afficher les personnes. Un seul statut est attribué à chaque membre.</p>
+          <p className="mt-1 text-sm text-muted">Un seul statut est attribué à chaque membre.</p>
           <ul className="mt-5 divide-y divide-border-soft">
             {[
               ["Aucun", breakdown.engagement.none, "aucun"],
@@ -175,12 +150,12 @@ export default async function OverviewTab({
               ["Managers et adjoints", breakdown.engagement.managers, "manager"],
               ["Collaborateurs", breakdown.engagement.collaborators, "collaborateur"],
               ["Non renseigné", breakdown.engagement.unassigned, "non_renseigne"],
-            ].map(([label, value, filter]) => (
+            ].map(([label, value]) => (
               <li key={label as string}>
-                <Link href={`/gestion/admin?onglet=membres&implication=${filter}`} className="group flex items-center justify-between gap-4 py-3 text-sm transition hover:pl-1">
-                  <span className="text-foreground group-hover:underline group-hover:underline-offset-4">{label}</span>
-                  <span className="font-title text-[19px] tabular-nums text-foreground">{value}<span className="ml-2 text-sm font-sans text-muted" aria-hidden="true">→</span></span>
-                </Link>
+                <div className="flex items-center justify-between gap-4 py-3 text-sm">
+                  <span className="text-foreground">{label}</span>
+                  <span className="font-title text-[19px] tabular-nums text-foreground">{value}</span>
+                </div>
               </li>
             ))}
           </ul>
@@ -190,10 +165,10 @@ export default async function OverviewTab({
           title="Répartition par genre"
           subtitle="Nombre d'hommes et de femmes inscrits."
           data={[
-            { label: "Hommes", value: breakdown.byGender.men, href: "/gestion/admin?onglet=membres&genre=homme" },
-            { label: "Femmes", value: breakdown.byGender.women, href: "/gestion/admin?onglet=membres&genre=femme" },
+            { label: "Hommes", value: breakdown.byGender.men },
+            { label: "Femmes", value: breakdown.byGender.women },
             ...(breakdown.byGender.unassigned > 0
-              ? [{ label: "Non renseigné", value: breakdown.byGender.unassigned, href: "/gestion/admin?onglet=membres&genre=non_renseigne" }]
+              ? [{ label: "Non renseigné", value: breakdown.byGender.unassigned }]
               : []),
           ]}
         />
@@ -207,7 +182,6 @@ export default async function OverviewTab({
           value: m.count,
           slug: m.slug,
           fallbackIcon: m.slug ? undefined : "🤔",
-          href: m.slug ? `/gestion/admin?onglet=membres&sens=${m.slug}` : "/gestion/admin?onglet=membres&sens=non_renseignee",
         }))}
       />
     </div>

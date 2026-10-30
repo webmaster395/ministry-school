@@ -41,16 +41,21 @@ export type ValidationQueueItem = {
   status: string;
   ministry?: string;
   ministrySlug?: string;
+  contentType: "project" | "training" | "both" | "course";
+  decidedAt?: string | null;
+  reviewer?: string | null;
 };
 
 export async function getValidationQueue(supabase: SupabaseClient) {
   const { data, error } = await supabase.rpc("validation_queue");
-  if (error || !data) return { opportunities: [], courses: [] } as {
+  if (error || !data) return { opportunities: [], courses: [], history: [] } as {
     opportunities: ValidationQueueItem[];
     courses: ValidationQueueItem[];
+    history: ValidationQueueItem[];
   };
   return data as unknown as {
     opportunities: ValidationQueueItem[];
     courses: ValidationQueueItem[];
+    history: ValidationQueueItem[];
   };
 }

@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-// Les membres sont désormais dans l'onglet « Membres et accès » de l'administration.
+// La gestion des utilisateurs ne fait plus partie de l'espace Administrateur.
 export default function UsersRedirect() {
-  redirect("/gestion/admin?onglet=membres");
+  redirect("/gestion/admin");
 }

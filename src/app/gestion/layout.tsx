@@ -17,7 +17,7 @@ export default async function ManagementLayout({ children }: { children: React.R
   if (!viewer || navSpaces(viewer.roles).length === 0) redirect("/etudiant");
 
   return (
-    <SpaceProvider roles={viewer.roles} unread={viewer.unreadMessages}>
+    <SpaceProvider roles={viewer.roles} unread={viewer.unreadMessages} pendingValidationCount={viewer.pendingValidationCount}>
       <div className="app-shell flex min-h-screen w-full">
         <Sidebar fullName={viewer.fullName} avatarUrl={viewer.avatarUrl} ministrySlug={viewer.ministrySlug} />
         <div className="flex min-h-screen min-w-0 flex-1 flex-col bg-surface">

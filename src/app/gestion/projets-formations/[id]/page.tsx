@@ -33,7 +33,7 @@ export default async function ProjectsTrainingManageDetail({ params, searchParam
   if (!opportunity) notFound();
   const responsibility = rights.admin ? "admin" : rights.assignments.get(id);
   if (!responsibility) redirect("/gestion/projets-formations");
-  const canManage = responsibility === "admin" || responsibility === "manager" || responsibility === "contributor";
+  const canManage = responsibility === "admin" || responsibility === "manager";
   const [{ data: team }, { data: sessionParticipants }, reviewState, resources] = await Promise.all([
     supabase.rpc("opportunity_team", { p_opportunity: id }),
     supabase.rpc("opportunity_session_participants", { p_opp: id }),

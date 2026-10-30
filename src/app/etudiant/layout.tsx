@@ -25,6 +25,7 @@ export default async function StudentLayout({
       roles={viewer.roles}
       unread={viewer.unreadMessages}
       notesEnabled={notesEnabled}
+      pendingValidationCount={viewer.pendingValidationCount}
     >
       <StudentUsageTracker />
       <div className="app-shell flex min-h-screen w-full">

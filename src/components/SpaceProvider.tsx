@@ -16,11 +16,12 @@ type SpaceContext = {
   /** Messages non lus, pour les pastilles du menu et l'onglet Messagerie */
   unread: number;
   notesEnabled: boolean;
+  pendingValidationCount: number;
   /** Les espaces de gestion de la personne ; vide pour un étudiant simple */
   spaces: Space[];
   /** L'espace de gestion de la page ouverte ; null sur les pages étudiant */
   current: Space | null;
-  /** Où mène « Mes fonctions » : l'espace ouvert, sinon le dernier utilisé */
+  /** Espace de gestion ouvert, sinon dernier espace de gestion utilisé */
   home: string | null;
   select: (key: SpaceKey) => void;
 };
@@ -31,17 +32,19 @@ const STORAGE_KEY = "space";
 
 /**
  * Porte l'espace de gestion (« casquette ») entre l'en-tête, la barre latérale et le menu du
- * téléphone. L'espace suit la page ouverte ; on retient le dernier utilisé pour « Mes fonctions ».
+ * téléphone. L'espace suit la page ouverte ; on retient le dernier espace de gestion utilisé.
  */
 export function SpaceProvider({
   roles,
   unread = 0,
   notesEnabled = false,
+  pendingValidationCount = 0,
   children,
 }: {
   roles: ViewerRoles;
   unread?: number;
   notesEnabled?: boolean;
+  pendingValidationCount?: number;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -78,12 +81,12 @@ export function SpaceProvider({
   const home = shown ? spaceHome(shown) : last ? spaceHome(last) : null;
 
   useEffect(() => {
-    // Retient l'espace ouvert pour que « Mes fonctions » y revienne
+    // Retient l'espace de gestion ouvert pour la navigation suivante.
     if (current && current.key !== stored) {
       try {
         localStorage.setItem(STORAGE_KEY, current.key);
       } catch {
-        // sans stockage, « Mes fonctions » ouvre le premier espace
+        // Sans stockage, la navigation ouvre le premier espace autorisé.
       }
     }
   }, [current, stored]);
@@ -106,6 +109,7 @@ export function SpaceProvider({
         roles,
         unread,
         notesEnabled,
+        pendingValidationCount,
         spaces,
         current: shown,
         home,

@@ -15,6 +15,6 @@ export default async function AppEntryPage() {
   // plus naturel surtout à l'ouverture de la PWA pour la première fois)
   if (!user) redirect("/");
 
-  // Tout le monde arrive sur la page d'accueil ; les fonctions s'ouvrent ensuite via « Mes fonctions »
+  // Tout le monde arrive sur la page d'accueil ; les responsabilités restent dans leur espace de gestion.
   redirect("/etudiant");
 }

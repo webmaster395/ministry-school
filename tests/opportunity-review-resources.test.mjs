@@ -4,11 +4,12 @@ import { readFile } from "node:fs/promises";
 
 const source = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("la publication exige une validation de Nathalie ou Flora et Richard reste observateur", async () => {
+test("la publication exige une validation unique de Rose-Alice, Flora ou Nathalie", async () => {
   const [workflow, single] = await Promise.all([
     source("supabase/migrations/20261029170000_opportunity_editorial_review.sql"),
     source("supabase/migrations/20261029180000_single_review_and_opportunity_resources.sql"),
   ]);
+  const permissions = await source("supabase/migrations/20261030120000_admin_spaces_and_super_admins.sql");
   assert.match(workflow, /nathalie\.boudehent@eglisemlk\.fr/);
   assert.match(workflow, /flora\.demerle@mlkgrandparis\.com/);
   assert.match(workflow, /r\.tamard@gmail\.com/);
@@ -16,6 +17,9 @@ test("la publication exige une validation de Nathalie ou Flora et Richard reste 
   assert.match(workflow, /opportunity_review_preview/);
   assert.match(single, /status = 'approved'/);
   assert.doesNotMatch(single, /v_approved = 2/);
+  assert.match(permissions, /'r\.tamard@gmail\.com'/);
+  assert.match(permissions, /is_opportunity_review_observer[\s\S]*?select false/);
+  assert.match(permissions, /if not public\.is_super_admin\(\) then raise exception 'FORBIDDEN'/);
 });
 
 test("les corrections et demandes de complément notifient seulement l’équipe affectée", async () => {

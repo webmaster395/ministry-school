@@ -8,6 +8,7 @@ export type OpportunityReviewState = {
   correctionMessage: string | null;
   nathalieApproved: boolean;
   floraApproved: boolean;
+  roseAliceApproved: boolean;
   canDecide: boolean;
   isObserver: boolean;
 };
@@ -20,6 +21,7 @@ const EMPTY_REVIEW: OpportunityReviewState = {
   correctionMessage: null,
   nathalieApproved: false,
   floraApproved: false,
+  roseAliceApproved: false,
   canDecide: false,
   isObserver: false,
 };

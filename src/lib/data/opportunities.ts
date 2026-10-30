@@ -189,25 +189,20 @@ export async function getMyAssignments(supabase: SupabaseClient, userId: string)
 }
 
 export async function getProjectsTrainingRights(supabase: SupabaseClient, userId: string) {
-  const [{ data: profile }, assignments] = await Promise.all([
-    supabase.from("profiles").select("role, is_projects_training_member").eq("id", userId).single(),
+  const [{ data: superAdmin }, assignments] = await Promise.all([
+    supabase.rpc("is_super_admin", { p_user: userId }),
     getMyAssignments(supabase, userId),
   ]);
-  return { admin: profile?.role === "admin", member: !!profile?.is_projects_training_member, assignments };
+  return { admin: !!superAdmin, member: assignments.size > 0, assignments };
 }
 
 /** La création est strictement réservée aux administrateurs. */
 export async function getProposalRights(supabase: SupabaseClient, userId: string) {
-  const { data } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", userId)
-    .single();
-  const admin = data?.role === "admin";
+  const { data: admin } = await supabase.rpc("is_super_admin", { p_user: userId });
   return {
     // Les projets et formations sont créés par un administrateur.
-    formation: admin,
-    projet: admin,
+    formation: !!admin,
+    projet: !!admin,
   };
 }
 

@@ -91,7 +91,7 @@ export const notesNavItem: NavItem = {
   icon: icons.notes,
 };
 
-/** L'entrée « Mes fonctions » du bloc « Mes espaces », en bas du menu. */
+/** Icône générique conservée pour les anciens appels qui représentent une fonction de gestion. */
 export const functionsIcon = icons.functions;
 
 export const validationNavItem: NavItem = {
@@ -117,12 +117,13 @@ export function profileTabs(roles: ViewerRoles): ProfileTab[] {
   return tabs;
 }
 
-export type SpaceKey = "admin" | "steering" | "projectsTraining";
+export type SpaceKey = "validation" | "admin" | "steering" | "projectsTraining";
 
 /** Une « casquette » : un ensemble d'entrées de menu que la personne choisit d'afficher. */
 export type Space = {
   key: SpaceKey;
   label: string;
+  icon: React.ReactNode;
   /** Titre et sous-titre de l'en-tête quand la personne est dans cet espace */
   title: string;
   subtitle: string;
@@ -130,18 +131,33 @@ export type Space = {
 };
 
 /**
- * Les espaces de gestion d'une personne (ses « casquettes »), dans l'ordre du sélecteur, l'administration
- * en tête. L'administrateur les a tous. Le menu étudiant, lui, est commun à tout le monde.
+ * Les espaces de gestion d'une personne, dans l'ordre demandé. Chaque espace dépend de la
+ * permission effective correspondante ; le rôle Administrateur ne donne pas implicitement accès aux autres.
  */
 export function navSpaces(roles: ViewerRoles): Space[] {
   const spaces: Space[] = [];
 
+  if (roles.superAdmin) {
+    spaces.push({
+      key: "validation",
+      label: "À valider",
+      icon: icons.validate,
+      title: "À valider",
+      subtitle: "Examinez les contenus soumis avant leur publication.",
+      sections: [{
+        title: "Validation",
+        items: [{ label: "À valider", href: "/gestion/a-valider", icon: icons.validate }],
+      }],
+    });
+  }
+
   if (roles.admin) {
     spaces.push({
       key: "admin",
-      label: "Administration",
-      title: "Administration",
-      subtitle: "Administrez les espaces et les accès de la plateforme.",
+      label: "Administrateur",
+      icon: icons.adminHome,
+      title: "Administrateur",
+      subtitle: "Suivez les statistiques et organisez le programme général.",
       sections: [
         {
           title: "Administration",
@@ -161,16 +177,6 @@ export function navSpaces(roles: ViewerRoles): Space[] {
               href: "/gestion/admin?onglet=programme",
               icon: icons.adminSessions,
             },
-            {
-              label: "Membres",
-              href: "/gestion/admin?onglet=personnes",
-              icon: icons.profile,
-            },
-            {
-              label: "Projets et formations",
-              href: "/gestion/projets-formations",
-              icon: icons.functions,
-            },
           ],
         },
       ],
@@ -180,7 +186,8 @@ export function navSpaces(roles: ViewerRoles): Space[] {
   if (roles.steeringMinistryIds.length > 0) {
     spaces.push({
       key: "steering",
-      label: "Pilotage ministériel",
+      label: "Pilotage ministère",
+      icon: icons.steer,
       title: "Pilotage du ministère",
       subtitle: "Organisez et supervisez les formations de votre ministère.",
       sections: [
@@ -200,10 +207,11 @@ export function navSpaces(roles: ViewerRoles): Space[] {
     });
   }
 
-  if (roles.admin || roles.projectsTraining) {
+  if (roles.superAdmin || roles.projectsTraining) {
     spaces.push({
       key: "projectsTraining",
       label: "Projets et formations",
+      icon: icons.projectPropose,
       title: "Projets et formations",
       subtitle: "Gérez uniquement les éléments auxquels vous êtes affecté.",
       sections: [
