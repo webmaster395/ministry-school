@@ -51,6 +51,19 @@ export default function AdminBreadcrumbs() {
   }, [pathname, query]);
 
   const crumbs = useMemo<Crumb[]>(() => {
+    if (current?.key === "projectsTraining" && pathname.startsWith("/gestion/projets-formations")) {
+      const root: Crumb[] = [{ label: "Projets et formations", href: "/gestion/projets-formations" }];
+      if (pathname === "/gestion/projets-formations") return [];
+      if (pathname.endsWith("/nouveau")) return [...root, { label: "Créer" }];
+      return [...root, ...(pageTitle ? [{ label: pageTitle }] : [{ label: "Fiche" }])];
+    }
+
+    if (current?.key === "steering" && pathname.startsWith("/gestion/pilotage")) {
+      const root: Crumb[] = [{ label: "Pilotage ministère", href: "/gestion/pilotage" }];
+      if (pathname === "/gestion/pilotage") return [];
+      return [...root, ...(pageTitle ? [{ label: pageTitle }] : [{ label: "Cours" }])];
+    }
+
     if (current?.key !== "admin") return [];
 
     if (pathname === "/gestion/admin") {

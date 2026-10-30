@@ -8,6 +8,7 @@ import {
   type NotificationSettingsActionResult,
 } from "@/app/gestion/admin/actions";
 import type { NotificationDigestSettings } from "@/lib/data/notification-settings";
+import ManagementPageHeader from "@/components/management/ManagementPageHeader";
 
 const DAYS = [
   { value: "0", label: "Dimanche" },
@@ -52,19 +53,10 @@ export default function NotificationSettingsForm({
 
   return (
     <div className="space-y-6">
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <p className="label text-[11px] tracking-[.15em] text-muted">MESSAGES ÉTUDIANTS</p>
-          <h1 className="font-title mt-2 text-[32px] leading-tight text-foreground sm:text-[40px]">Notifications</h1>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
-            Programmez le récapitulatif unique qui regroupe les contenus réellement devenus accessibles.
-          </p>
-        </div>
-        <span className={`inline-flex w-fit items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold ${enabled ? "bg-[#E7F1E8] text-[#315D38]" : "bg-surface text-muted"}`}>
+      <ManagementPageHeader eyebrow="MESSAGES ÉTUDIANTS" title="Notifications" subtitle="Programmez le récapitulatif unique qui regroupe les contenus réellement devenus accessibles." actions={<span className={`inline-flex w-fit items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold ${enabled ? "bg-[#E7F1E8] text-[#315D38]" : "bg-surface text-muted"}`}>
           <span className={`h-2 w-2 rounded-full ${enabled ? "bg-[#4D8A58]" : "bg-muted"}`} />
           {enabled ? "Récapitulatifs actifs" : "Récapitulatifs désactivés"}
-        </span>
-      </header>
+        </span>} />
 
       <section className="grid gap-3 sm:grid-cols-3">
         <article className="rounded-2xl border border-border bg-background p-5">

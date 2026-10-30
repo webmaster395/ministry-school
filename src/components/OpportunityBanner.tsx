@@ -25,6 +25,7 @@ export default function OpportunityBanner({
   status,
   details,
   variant = "hero",
+  headingLevel,
 }: {
   emoji?: string | null;
   title: string;
@@ -33,9 +34,11 @@ export default function OpportunityBanner({
   status?: string;
   details?: ReactNode;
   variant?: Variant;
+  headingLevel?: "h1" | "h2";
 }) {
   const compact = variant === "card";
   const emojis = opportunityEmojis(emoji);
+  const TitleTag = headingLevel ?? (variant === "card" || variant === "preview" ? "h2" : "h1");
   return (
     <div className={`relative isolate flex overflow-hidden bg-[#202927] text-white ${layout[variant]}`}>
       <span className="absolute inset-y-0 left-0 w-1.5 bg-[linear-gradient(180deg,#FFD45A,#F28A24)]" />
@@ -49,7 +52,7 @@ export default function OpportunityBanner({
               </span>
               {status && <span className="text-[11px] font-medium uppercase tracking-[.14em] text-white/55">{status}</span>}
             </div>
-            <h1 className={`font-title mt-4 font-semibold tracking-[-.03em] text-white ${titleStyle[variant]}`}>{title}</h1>
+            <TitleTag className={`font-title mt-4 break-words font-semibold tracking-[-.03em] text-white ${titleStyle[variant]}`}>{title}</TitleTag>
           </div>
           <div className="flex items-center gap-3">
             <span className="flex shrink-0 -space-x-3" aria-hidden="true">

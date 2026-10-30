@@ -32,11 +32,12 @@ test("la gestion affiche les cinq états et expose la suppression sécurisée", 
   assert.match(migration, /delete_opportunity_admin/);
 });
 
-test("l'ancien intitulé Services & Projets n'est plus visible", () => {
+test("l'ancien intitulé et les noms des valideurs ne sont plus visibles", () => {
   const quick = source("src/components/admin/QuickCourseForm.tsx");
   const stats = source("src/components/admin/StatisticsTab.tsx");
   const student = source("src/app/etudiant/services/page.tsx");
   assert.doesNotMatch(quick, /Services & Projets/);
   assert.doesNotMatch(stats, /Services & Projets/);
-  assert.match(student, /projets et formations validés/);
+  assert.doesNotMatch(student, /projets et formations validés|Flora|Nathalie/);
+  assert.match(student, /Explore les projets et formations, fais ton choix et réserve ta place ! Une seule inscription par créneau\./);
 });

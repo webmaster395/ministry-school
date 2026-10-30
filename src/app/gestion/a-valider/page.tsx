@@ -5,6 +5,7 @@ import { getViewer } from "@/lib/data/viewer";
 import { createClient } from "@/lib/supabase/server";
 import { getValidationQueue, type ValidationQueueItem } from "@/lib/data/ministry-course-review";
 import MinistryPicto from "@/components/MinistryPicto";
+import ManagementPageHeader from "@/components/management/ManagementPageHeader";
 
 const parisDate = (value: string) => new Intl.DateTimeFormat("fr-FR", {
   dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Paris",
@@ -26,12 +27,8 @@ export default async function ValidationPage({ searchParams }: { searchParams: P
           : pending;
 
   return <div className="space-y-5">
-    <header>
-      <p className="label text-xs tracking-[.18em] text-muted">VALIDATION ÉDITORIALE</p>
-      <h1 className="font-title mt-2 text-[32px]">À valider</h1>
-      <p className="mt-1 max-w-2xl text-sm text-muted">Retrouvez les contenus en attente de publication et examinez les demandes des responsables.</p>
-    </header>
-    <nav className="grid grid-cols-2 gap-1.5 rounded-2xl border border-border bg-background p-1.5 lg:grid-cols-5">
+    <ManagementPageHeader eyebrow="VALIDATION ÉDITORIALE" title="À valider" subtitle="Retrouvez les contenus en attente de publication et examinez les demandes des responsables." />
+    <nav className="grid grid-cols-2 gap-1.5 rounded-2xl border border-border bg-background p-1.5 min-[430px]:grid-cols-3 lg:grid-cols-5">
       <Tab href="/gestion/a-valider" active={tab === "all"} label="Tout" count={pending.length} />
       <Tab href="/gestion/a-valider?onglet=projects" active={tab === "projects"} label="Projets" count={queue.opportunities.filter((item) => item.contentType === "project" || item.contentType === "both").length} />
       <Tab href="/gestion/a-valider?onglet=training" active={tab === "training"} label="Formations" count={queue.opportunities.filter((item) => item.contentType === "training" || item.contentType === "both").length} />

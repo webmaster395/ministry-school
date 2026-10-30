@@ -191,26 +191,31 @@ export default function OpportunityEditForms({
     <form ref={formRef} action={formAction} noValidate onSubmit={() => { submittedRevisionRef.current = currentRevisionRef.current; }} onChange={markDirty} className="space-y-5">
       <input type="hidden" name="opportunity_id" value={o.id} />
       <input type="hidden" name="base_updated_at" value={baseUpdatedAt} />
-      <div className="sticky top-3 z-30 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-background/95 px-4 py-3 shadow-lg backdrop-blur sm:px-5">
-        <div><p className="text-sm font-semibold">{workspace ? "Préparation du projet ou de la formation" : "Modification de la fiche"}</p><p className="text-xs text-muted">{pending ? "Enregistrement…" : dirty ? "Modifications non enregistrées" : confirmation ? "Enregistré" : "Toutes les modifications sont enregistrées ensemble."}</p></div>
-        <div className="ml-auto flex items-center gap-2">
-          <button type="button" onClick={cancel} disabled={pending} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-border px-4 text-sm font-semibold disabled:opacity-50"><X size={16} /> Annuler</button>
-          <button ref={saveButtonRef} disabled={pending || !dirty} className="inline-flex min-h-10 items-center gap-2 rounded-full bg-accent px-4 text-sm font-semibold text-on-accent disabled:opacity-60"><Save size={16} /> {pending ? "Enregistrement…" : workspace ? "Enregistrer le brouillon" : "Enregistrer"}</button>
+      <div className="sticky top-2 z-30 grid gap-3 rounded-2xl border border-border bg-background/95 px-4 py-3 shadow-lg backdrop-blur sm:top-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:px-5">
+        <div className="min-w-0"><p className="text-sm font-semibold">{workspace ? "Préparation du projet ou de la formation" : "Modification de la fiche"}</p><p className="text-xs text-muted">{pending ? "Enregistrement…" : dirty ? "Modifications non enregistrées" : confirmation ? "Enregistré" : "Toutes les modifications sont enregistrées ensemble."}</p></div>
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center">
+          <button type="button" onClick={cancel} disabled={pending} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-border px-3 text-sm font-semibold disabled:opacity-50 sm:px-4"><X size={16} /> Annuler</button>
+          <button ref={saveButtonRef} disabled={pending || !dirty} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-accent px-3 text-sm font-semibold text-on-accent disabled:opacity-60 sm:px-4"><Save size={16} /> {pending ? "Enregistrement…" : workspace ? "Enregistrer" : "Enregistrer"}</button>
         </div>
         {workspace && confirmation && <p role="status" className="w-full rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-sm text-emerald-900">{confirmation}</p>}
         {state && !state.ok && <p role="alert" className="w-full rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">{state.message}</p>}
       </div>
 
-      <section className="overflow-hidden rounded-3xl bg-[#202927] p-5 text-white sm:p-7">
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_390px] lg:items-start">
+      <section className="rounded-3xl border border-border bg-background p-5 sm:p-7">
+        <p className="label text-xs tracking-[.14em] text-muted">INFORMATIONS GÉNÉRALES</p>
+        <div className="mt-4 grid gap-5 lg:grid-cols-[minmax(0,1fr)_390px] lg:items-start">
           <div className="space-y-5">
-            <fieldset disabled={!canManage}><legend className="mb-2 text-xs font-semibold uppercase tracking-[.12em] text-white/60">Type</legend><div className="flex flex-wrap gap-2">{[["projet","Projet"],["formation","Formation"],["both","Projet et formation"]].map(([value,label]) => <label key={value}><input className="peer sr-only" type="radio" name="type" value={value} checked={type === value} onChange={() => setType(value as typeof type)} /><span className="block cursor-pointer rounded-full border border-white/20 px-3 py-2 text-xs font-semibold peer-checked:border-[#F4A12A] peer-checked:bg-[#F4A12A]">{label}</span></label>)}</div></fieldset>
+            <label><Label>Titre *</Label><input name="title" required readOnly={!canManage} value={title} onChange={(event) => setTitle(event.target.value)} className={field} placeholder="Titre du projet ou de la formation" autoComplete="off" /></label>
+            <fieldset disabled={!canManage}><legend className="mb-2 text-sm font-semibold">Type</legend><div className="grid gap-2 sm:grid-cols-3">{[["projet","Projet"],["formation","Formation"],["both","Projet et formation"]].map(([value,label]) => <label key={value}><input className="peer sr-only" type="radio" name="type" value={value} checked={type === value} onChange={() => setType(value as typeof type)} /><span className="block cursor-pointer rounded-xl border border-border px-3 py-3 text-center text-xs font-semibold transition peer-checked:border-accent peer-checked:bg-accent peer-checked:text-on-accent">{label}</span></label>)}</div></fieldset>
             {!canManage && <input type="hidden" name="type" value={type} />}
-            <label><Label light>Nom *</Label><input name="title" required readOnly={!canManage} value={title} onChange={(event) => setTitle(event.target.value)} className="min-h-14 w-full rounded-2xl border border-white/20 bg-white/10 px-4 font-title text-[25px] font-semibold text-white outline-none placeholder:text-white/40 read-only:opacity-75 focus:border-[#F4A12A] sm:text-[32px]" /></label>
           </div>
-          <OpportunityEmojiPicker value={emoji} onChange={setEmoji} />
+          <OpportunityEmojiPicker value={emoji} onChange={emoji => { setEmoji(emoji); markDirty(); }} />
         </div>
       </section>
+
+      <div className="overflow-hidden rounded-3xl" aria-label="Aperçu de la bannière">
+        <OpportunityBanner emoji={emoji} title={title || "Titre du projet ou de la formation"} typeLabel={TYPE_LABEL[type]} status="APERÇU" variant="preview" headingLevel={workspace ? "h2" : "h1"} />
+      </div>
 
       <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
         <article className="space-y-6 rounded-3xl border border-border bg-background p-5 sm:p-7">
@@ -243,7 +248,7 @@ export default function OpportunityEditForms({
           const remaining = date.capacity === null ? null : Math.max(0, date.capacity - registeredCount);
           const lastPlaces = lastPlacesLabel(remaining);
           return <div key={date.id ?? index} className="rounded-2xl bg-surface p-3">
-            <div className="grid gap-2 md:grid-cols-[1.2fr_.7fr_.7fr_.7fr_auto]">
+            <div className="grid gap-2 lg:grid-cols-[1.2fr_.7fr_.7fr_.7fr_auto]">
               <input type="hidden" name="date_id" value={date.id ?? ""} />
               {(["session_date","start_time","end_time"] as const).map((key) => <input key={key} type={key === "session_date" ? "date" : "time"} name={key} required readOnly={!canManage} value={date[key].slice(0,key === "session_date" ? 10 : 5)} onChange={(event) => canManage && changeDates(dates.map((row,i) => i === index ? {...row,[key]:event.target.value} : row))} className={field} aria-label={key} />)}
               <input type="number" min={1} name="date_capacity" readOnly={!canManage} value={date.capacity ?? ""} onChange={(event) => canManage && changeDates(dates.map((row,i) => i === index ? {...row,capacity:event.target.value ? Number(event.target.value) : null} : row))} placeholder="Places" className={field} />

@@ -11,6 +11,7 @@ import RoleCommentForm from "@/components/admin/RoleCommentForm";
 import RoleAssignmentForm from "@/components/admin/RoleAssignmentForm";
 import RemoveRoleButton from "@/components/admin/RemoveRoleButton";
 import { toggleMemberRoleAccess } from "@/app/gestion/admin/actions";
+import ManagementPageHeader from "@/components/management/ManagementPageHeader";
 
 type Category = "administration" | "projects_training" | "ministry";
 type DirectoryRow = { user_id: string; category: Category; role_level: string; role_key: string; scope_id: string | null; scope_label: string | null; can_edit: boolean; assignment_id: string | null };
@@ -79,11 +80,7 @@ export default async function RolesTab({ q, category, canManageAccess, basePath,
   ] as const;
 
   return <div className="space-y-5">
-    <header>
-      <p className="label text-xs tracking-[.16em] text-muted">PERMISSIONS</p>
-      <h1 className="font-title mt-2 text-[30px] leading-tight text-foreground sm:text-[36px]">Rôles et périmètres</h1>
-      <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted">Uniquement les personnes disposant d’une responsabilité administrative, ministérielle ou liée à un projet ou une formation.</p>
-    </header>
+    <ManagementPageHeader eyebrow="PERMISSIONS" title="Rôles et périmètres" subtitle="Uniquement les personnes disposant d’une responsabilité administrative, ministérielle ou liée à un projet ou une formation." />
 
     <form method="get" action={basePath} className="grid gap-2 rounded-xl border border-border bg-background p-3 sm:grid-cols-[minmax(0,1fr)_240px_auto]">
       {isAdminPath && <input type="hidden" name="onglet" value="permissions" />}

@@ -229,7 +229,7 @@ export async function PreparationPageContent({
       <BackButton fallbackHref={back} fallbackLabel={backLabel} />
 
       <section
-        className="rounded-2xl border bg-background p-6 sm:p-7"
+        className="rounded-2xl border bg-background p-5 sm:p-7"
         style={{ borderColor: color }}
       >
         <div className="flex flex-wrap items-start justify-between gap-3">
@@ -245,19 +245,19 @@ export async function PreparationPageContent({
           ) : (
             <span />
           )}
-          <div className="flex items-center gap-2">
-            <Link href={`/etudiant/seances/${s.id}`} className="rounded-full border border-border px-4 py-2 text-sm font-medium text-foreground transition hover:border-foreground">Aperçu étudiant</Link>
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            <Link href={`/etudiant/seances/${s.id}`} className="inline-flex min-h-10 items-center justify-center rounded-full border border-border px-4 py-2 text-sm font-medium text-foreground transition hover:border-foreground">Aperçu étudiant</Link>
             <span className={`label rounded-full px-3.5 py-1.5 text-[11px] tracking-[0.1em] ${progress.ready ? "bg-surface text-foreground" : "bg-m-doctoral/[0.12] text-link"}`}>
               {statusLabel}
             </span>
           </div>
         </div>
-        <h2
-          className="font-title mt-4 text-[30px] leading-tight"
+        <h1
+          className="font-title mt-4 break-words text-[clamp(1.7rem,7vw,2.25rem)] leading-tight"
           style={{ color }}
         >
           {s.description ?? "À définir"}
-        </h2>
+        </h1>
         <p className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 text-[15px] text-muted">
           <span className="inline-flex items-center gap-2">
             <CalendarDays size={17} strokeWidth={1.6} />{" "}

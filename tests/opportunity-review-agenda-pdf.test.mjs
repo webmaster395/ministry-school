@@ -38,7 +38,7 @@ test("le déroulé est distinct par séance, contrôlé côté serveur et export
   assert.match(editor, />Durée<\/span>/);
   assert.match(editor, />Activité<\/span>/);
   assert.match(editor, />Description<\/span>/);
-  assert.match(editor, /md:grid-cols-\[96px_minmax\(150px,0\.75fr\)_minmax\(0,1\.75fr\)_auto\]/);
+  assert.match(editor, /lg:grid-cols-\[96px_minmax\(150px,0\.75fr\)_minmax\(0,1\.75fr\)_auto\]/);
   assert.doesNotMatch(editor, /AGENDA_TYPES|Type d.activity|options=\{AGENDA_TYPES/);
   assert.match(migration, /opportunity_date_id uuid not null/);
   assert.match(migration, /public\.can_edit_opportunity\(p_opportunity\)/);

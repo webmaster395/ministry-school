@@ -13,6 +13,7 @@ import AdminHome from "@/components/admin/AdminHome";
 import AdminPilotageSummary from "@/components/admin/AdminPilotageSummary";
 import NotificationSettingsForm from "@/components/admin/NotificationSettingsForm";
 import { getNotificationDigestSettings } from "@/lib/data/notification-settings";
+import ManagementPageHeader from "@/components/management/ManagementPageHeader";
 
 const VALID_TABS = ["pilotage", "vue", "statistiques", "programme", "membres", "permissions", "roles", "notifications"];
 
@@ -99,17 +100,20 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
         />
       )}
       {tab === "membres" && (
-        <MembersTab
-          q={p.q ?? ""}
-          role={p.role ?? "tous"}
-          sens={p.sens ?? "toutes"}
-          statut={p.statut ?? "tous"}
-          tri={p.tri ?? "nom"}
-          implication={p.implication ?? "toutes"}
-          genre={p.genre ?? "tous"}
-          page={p.page ?? "1"}
-          par={p.par ?? "50"}
-        />
+        <div className="space-y-5">
+          <ManagementPageHeader eyebrow="ADMIN" title="Membres" subtitle="Consultez l’annuaire et les informations disponibles pour chaque membre." />
+          <MembersTab
+            q={p.q ?? ""}
+            role={p.role ?? "tous"}
+            sens={p.sens ?? "toutes"}
+            statut={p.statut ?? "tous"}
+            tri={p.tri ?? "nom"}
+            implication={p.implication ?? "toutes"}
+            genre={p.genre ?? "tous"}
+            page={p.page ?? "1"}
+            par={p.par ?? "50"}
+          />
+        </div>
       )}
       {tab === "permissions" && (
         <RolesTab

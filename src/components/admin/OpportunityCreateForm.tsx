@@ -59,12 +59,15 @@ export default function OpportunityCreateForm({ creationToken, members, services
       <input type="hidden" name="creation_token" value={creationToken} />
       <input type="hidden" name="return_scope" value={adminScope ? "admin" : "workspace"} />
       <section className="overflow-hidden rounded-3xl border border-border bg-background">
-        <OpportunityBanner emoji={emoji} title={title || "Nom du projet ou de la formation"} typeLabel={type === "both" ? "Projet et formation" : type === "formation" ? "Formation" : "Projet"} variant="preview" />
         <div className="grid gap-5 p-5 sm:p-7 lg:grid-cols-2">
+          <div className="lg:col-span-2"><p className="label text-xs tracking-[.14em] text-muted">INFORMATIONS GÉNÉRALES</p><h2 className="font-title mt-1 text-[22px] text-foreground">Le projet ou la formation</h2></div>
           <p className="lg:col-span-2 rounded-xl bg-surface px-4 py-3 text-xs leading-relaxed text-muted">Les champs marqués d’un astérisque sont obligatoires. Les prérequis peuvent rester vides lorsque l’option « Prérequis nécessaires » n’est pas activée.</p>
-          <label className="lg:col-span-2"><Label>Nom *</Label><input name="title" required value={title} onChange={(event) => setTitle(event.target.value)} className={field} placeholder="Nom du projet ou de la formation" /></label>
+          <label className="lg:col-span-2"><Label>Titre *</Label><input name="title" required value={title} onChange={(event) => setTitle(event.target.value)} className={field} placeholder="Titre du projet ou de la formation" autoComplete="off" /></label>
           <fieldset className="lg:col-span-2"><legend className="mb-2 text-sm font-semibold">Type</legend><div className="grid gap-2 sm:grid-cols-3">{[["projet","Projet"],["formation","Formation"],["both","Projet et formation"]].map(([value,label]) => <label key={value} className="cursor-pointer"><input type="radio" name="type" value={value} checked={type === value} onChange={() => setType(value)} className="peer sr-only" /><span className="block rounded-xl border border-border px-4 py-3 text-center text-sm font-medium peer-checked:border-accent peer-checked:bg-accent peer-checked:text-on-accent">{label}</span></label>)}</div></fieldset>
           <div className="lg:col-span-2"><OpportunityEmojiPicker value={emoji} onChange={setEmoji} /></div>
+          <div className="lg:col-span-2 overflow-hidden rounded-2xl" aria-label="Aperçu de la bannière">
+            <OpportunityBanner emoji={emoji} title={title || "Titre du projet ou de la formation"} typeLabel={type === "both" ? "Projet et formation" : type === "formation" ? "Formation" : "Projet"} variant="preview" />
+          </div>
           <label className="lg:col-span-2"><Label>Service pilote *</Label><AdminSelect name="service_name" value={serviceName} onValueChange={setServiceName} required searchable allowCustom placeholder="Choisir ou saisir un nouveau service" options={services.map((service) => ({ value: service.name, label: service.name }))} /></label>
           <div className="lg:col-span-2"><Label>Présentation *</Label><RichTextEditor name="description" rows={7} placeholder="Présentez l’activité, son intérêt et son déroulement…" /></div>
           <div className="lg:col-span-2"><DynamicListInput name="objectives_items" label="Objectifs" placeholder="Un objectif" required /></div>

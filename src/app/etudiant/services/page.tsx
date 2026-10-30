@@ -80,7 +80,7 @@ export default async function ServicesPage({
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <p className="text-[15px] text-muted">Choisissez parmi les projets et formations validés par Flora ou Nathalie. Chaque proposition dispose de ses propres séances et inscriptions.</p>
+        <p className="text-[15px] text-muted">Explore les projets et formations, fais ton choix et réserve ta place ! Une seule inscription par créneau.</p>
       </div>
 
       <nav className="tabbar grid auto-cols-fr grid-flow-col gap-1 rounded-lg border border-border bg-background p-1">

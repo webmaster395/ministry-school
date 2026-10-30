@@ -7,6 +7,7 @@ import { getMinistry } from "@/lib/ministry";
 import MinistryPicto from "@/components/MinistryPicto";
 import PrepBoard, { type PrepTab } from "@/components/PrepBoard";
 import MinistryContributorAccess from "@/components/gestion/MinistryContributorAccess";
+import ManagementPageHeader from "@/components/management/ManagementPageHeader";
 
 export default async function PilotagePage({
   searchParams,
@@ -63,6 +64,7 @@ export default async function PilotagePage({
 
   return (
     <div className="space-y-5">
+      <ManagementPageHeader eyebrow="ESPACE OPÉRATIONNEL" title="Pilotage du ministère" subtitle="Préparez les cours et suivez uniquement les sensibilités qui vous sont attribuées." />
       {steered.length > 1 && (
         <div className="flex flex-wrap gap-2">
           {steered.map((x) => (
@@ -81,7 +83,7 @@ export default async function PilotagePage({
         </div>
       )}
 
-      <section className="grid gap-6 rounded-lg border border-border bg-background p-6 md:grid-cols-[1fr_360px] md:divide-x md:divide-border-soft">
+      <section className="grid gap-6 rounded-lg border border-border bg-background p-5 sm:p-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:divide-x lg:divide-border-soft">
         <div>
           <p className="text-sm text-muted">Ministère supervisé</p>
           <div className="mt-2 flex items-center gap-3">
@@ -94,7 +96,7 @@ export default async function PilotagePage({
             <h2 className="font-title text-[26px] leading-tight text-foreground">{ministry.name}</h2>
           </div>
         </div>
-        <div className="md:pl-6">
+        <div className="lg:pl-6">
           <div className="flex items-baseline justify-between gap-3">
             <p className="text-sm text-muted">Préparation du programme</p>
             <p className="font-title text-[26px] text-foreground">{percent} %</p>
