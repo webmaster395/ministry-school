@@ -64,9 +64,9 @@ export default function OpportunityCreateForm({ creationToken, members, services
 
       <section className="rounded-3xl border border-border bg-background p-5 sm:p-7">
         <p className="label text-xs tracking-[.14em] text-muted">PRÉSENTATION</p>
-        <div className="mt-4 space-y-5">
+        <div className="mt-4">
           <label><Label>Titre *</Label><input name="title" required value={title} onChange={(event) => setTitle(event.target.value)} className={field} placeholder="Titre du projet ou de la formation" autoComplete="off" /></label>
-          <div><Label>Présentation *</Label><RichTextEditor name="description" rows={7} placeholder="Présentez l’activité, son intérêt et son déroulement…" /></div>
+          <div className="mt-[clamp(1.5rem,10%,4rem)]"><Label>Présentation *</Label><RichTextEditor name="description" rows={7} placeholder="Présentez l’activité, son intérêt et son déroulement…" /></div>
         </div>
       </section>
 

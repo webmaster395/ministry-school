@@ -212,8 +212,10 @@ export default function OpportunityEditForms({
       <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
         <article className="space-y-6 rounded-3xl border border-border bg-background p-5 sm:p-7">
           <p className="rounded-xl bg-surface px-4 py-3 text-xs leading-relaxed text-muted">Les champs marqués d’un astérisque sont obligatoires. Les prérequis peuvent rester vides lorsque l’option « Prérequis nécessaires » n’est pas activée.</p>
-          <label><Label>Titre *</Label><input name="title" required readOnly={!canManage} value={title} onChange={(event) => setTitle(event.target.value)} className={field} placeholder="Titre du projet ou de la formation" autoComplete="off" /></label>
-          <section><SectionTitle>Présentation *</SectionTitle><RichTextEditor name="description" rows={8} defaultValue={o.description} onDirty={markDirty} /></section>
+          <section>
+            <label><Label>Titre *</Label><input name="title" required readOnly={!canManage} value={title} onChange={(event) => setTitle(event.target.value)} className={field} placeholder="Titre du projet ou de la formation" autoComplete="off" /></label>
+            <div className="mt-[clamp(1.5rem,10%,4rem)]"><SectionTitle>Présentation *</SectionTitle><RichTextEditor name="description" rows={8} defaultValue={o.description} onDirty={markDirty} /></div>
+          </section>
           <section className="rounded-2xl border border-border-soft bg-surface p-4 sm:p-5">
             <p className="label text-[10px] tracking-[.14em] text-muted sm:text-xs">PERSONNALISATION DE LA BANNIÈRE</p>
             <div className="mt-4 grid min-w-0 gap-5 xl:grid-cols-[minmax(0,1fr)_390px] xl:items-start">

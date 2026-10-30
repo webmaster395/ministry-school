@@ -19,6 +19,8 @@ test("le titre possède une seule saisie et pilote l’aperçu de bannière", ()
   assert.ok(create.indexOf("<Label>Titre *</Label>") < create.indexOf("<Label>Présentation *</Label>"));
   assert.ok(edit.indexOf('aria-label="Aperçu de la bannière"') < edit.indexOf("<Label>Titre *</Label>"));
   assert.ok(edit.indexOf("<Label>Titre *</Label>") < edit.indexOf("<SectionTitle>Présentation *</SectionTitle>"));
+  assert.match(create, /mt-\[clamp\(1\.5rem,10%,4rem\)\][^>]*><Label>Présentation \*<\/Label>/);
+  assert.match(edit, /mt-\[clamp\(1\.5rem,10%,4rem\)\][^>]*><SectionTitle>Présentation \*<\/SectionTitle>/);
   assert.match(actions, /title: text\(formData, "title"\)/);
   assert.match(list, /OpportunityBanner emoji=\{row\.banner_emoji\} title=\{row\.title\}/);
   assert.match(pdf, /new SimplePdf\(opportunity\.title\)/);
