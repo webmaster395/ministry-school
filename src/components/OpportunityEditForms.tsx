@@ -31,7 +31,7 @@ export default function OpportunityEditForms({ opportunity: o, initialDates, res
   const [emoji, setEmoji] = useState(opportunityEmoji(o.banner_emoji));
   const [contentState, contentAction, contentPending] = useActionState(saveOpportunityContent, null);
   const [managementState, managementAction, managementPending] = useActionState(saveOpportunityManagement, null);
-  const manager = responsibility === "manager" || responsibility === "admin";
+  const canManage = responsibility === "manager" || responsibility === "contributor" || responsibility === "admin";
   const addDate = (date = "") => {
     if (date && dates.some((row) => row.session_date === date)) return;
     setDates((rows) => [...rows, { session_date: date, start_time: "14:00", end_time: "17:00", room: null, location: null, capacity: o.capacity }]);
@@ -69,7 +69,7 @@ export default function OpportunityEditForms({ opportunity: o, initialDates, res
         </form>
       </details>
 
-      {manager && <>
+      {canManage && <>
         <details className="rounded-3xl border border-border bg-background p-5 sm:p-7">
           <summary className="cursor-pointer font-title text-[21px]">Informations générales et publication</summary>
           <form action={managementAction} className="mt-5 grid gap-4 sm:grid-cols-2">

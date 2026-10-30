@@ -294,8 +294,9 @@ export async function deleteOpportunityResource(formData: FormData) {
   const opportunityId = text(formData, "opportunity_id");
   const resourceId = text(formData, "resource_id");
   const { data: resource } = await supabase.from("opportunity_resources").select("file_path").eq("id", resourceId).eq("opportunity_id", opportunityId).single();
-  const { error } = await supabase.from("opportunity_resources").delete().eq("id", resourceId).eq("opportunity_id", opportunityId);
+  const { data: removed, error } = await supabase.from("opportunity_resources").delete().eq("id", resourceId).eq("opportunity_id", opportunityId).select("id");
   if (error) throw new Error("La ressource n’a pas pu être supprimée.");
+  if (!removed?.length) throw new Error("Vous n’avez pas le droit de supprimer cette ressource.");
   if (resource?.file_path) await supabase.storage.from("opportunity-resources").remove([resource.file_path]);
   refreshOpportunity(opportunityId);
 }
@@ -429,7 +430,7 @@ export async function updateOpportunityManagement(formData: FormData) {
     ? await supabase.rpc("resolve_service_name", { p_name: serviceName })
     : { data: null, error: null };
   if (serviceError) throw new Error("Le service pilote n’a pas pu être enregistré : " + serviceError.message);
-  const { error } = await supabase.from("opportunities").update({
+  const { data: updated, error } = await supabase.from("opportunities").update({
     kind: type === "formation" ? "formation" : "projet",
     is_project: type === "projet" || type === "both",
     is_training: type === "formation" || type === "both",
@@ -444,8 +445,9 @@ export async function updateOpportunityManagement(formData: FormData) {
     archived_at: directStatus === "archived" ? new Date().toISOString() : null,
     banner_emoji: opportunityEmoji(text(formData, "banner_emoji")),
     updated_at: new Date().toISOString(),
-  }).eq("id", id);
+  }).eq("id", id).select("id");
   if (error) throw new Error("La modification a échoué : " + error.message);
+  if (!updated?.length) throw new Error("Vous n’avez pas le droit de modifier ce projet ou cette formation.");
   if (requiresReview) {
     const { error: reviewError } = await supabase.rpc("request_opportunity_review", {
       p_opportunity: id,
@@ -508,7 +510,7 @@ export async function replaceOpportunityAssignments(formData: FormData) {
   refreshOpportunity(id);
 }
 
-/** Suppression complète réservée aux administrateurs, avec vérification SQL. */
+/** Suppression complète : administrateur global ou personne affectée, avec vérification SQL. */
 export async function deleteOpportunity(formData: FormData) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -517,7 +519,7 @@ export async function deleteOpportunity(formData: FormData) {
   const { data: resources } = await supabase.from("opportunity_resources").select("file_path").eq("opportunity_id", id);
   const filePaths = (resources ?? []).flatMap((resource) => resource.file_path ? [resource.file_path] : []);
   const { error } = await supabase.rpc("delete_opportunity_admin", { p_opportunity: id });
-  if (error?.message.includes("FORBIDDEN")) throw new Error("Suppression réservée aux administrateurs.");
+  if (error?.message.includes("FORBIDDEN")) throw new Error("Vous ne pouvez supprimer que les projets et formations auxquels vous êtes affecté.");
   if (error) throw new Error("La suppression a échoué : " + error.message);
   if (filePaths.length) await supabase.storage.from("opportunity-resources").remove(filePaths);
   revalidatePath("/gestion/projets-formations");

@@ -15,7 +15,7 @@ test("les affectations et les créations sont idempotentes", () => {
   assert.match(action, /bind_opportunity_creation/);
 });
 
-test("la gestion affiche les cinq états et permet la suppression administrateur", () => {
+test("la gestion affiche les cinq états et expose la suppression sécurisée", () => {
   const list = source("src/app/gestion/projets-formations/page.tsx");
   const detail = source("src/app/gestion/projets-formations/[id]/page.tsx");
   const migration = source("supabase/migrations/20261029230000_opportunity_status_delete_and_notification_dedupe.sql");
