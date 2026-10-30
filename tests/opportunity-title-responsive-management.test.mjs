@@ -15,9 +15,23 @@ test("le titre possède une seule saisie et pilote l’aperçu de bannière", ()
   assert.match(create, /OpportunityBanner emoji=\{emoji\} title=\{title \|\|/);
   assert.match(edit, /OpportunityBanner emoji=\{emoji\} title=\{title \|\|/);
   assert.doesNotMatch(edit, /<Label light>Nom/);
+  assert.ok(create.indexOf('aria-label="Aperçu de la bannière"') < create.indexOf("<Label>Titre *</Label>"));
+  assert.ok(create.indexOf("<Label>Titre *</Label>") < create.indexOf("<Label>Présentation *</Label>"));
+  assert.ok(edit.indexOf('aria-label="Aperçu de la bannière"') < edit.indexOf("<Label>Titre *</Label>"));
+  assert.ok(edit.indexOf("<Label>Titre *</Label>") < edit.indexOf("<SectionTitle>Présentation *</SectionTitle>"));
   assert.match(actions, /title: text\(formData, "title"\)/);
   assert.match(list, /OpportunityBanner emoji=\{row\.banner_emoji\} title=\{row\.title\}/);
   assert.match(pdf, /new SimplePdf\(opportunity\.title\)/);
+});
+
+test("l’en-tête opérationnel adapte le rôle, le type, le statut et les droits", () => {
+  const workspace = source("src/components/OpportunityOperationalWorkspace.tsx");
+  assert.match(workspace, /ESPACE PROJETS ET FORMATIONS · \{roleLabel\.toUpperCase\(\)\}/);
+  assert.match(workspace, /readOnly \|\| terminal \? "Consulter" : "Préparer"/);
+  assert.match(workspace, /onTypeChange=\{setType\}/);
+  assert.match(workspace, /Cette formation est en attente de validation\./);
+  assert.match(workspace, /Ce projet et cette formation sont terminés\./);
+  assert.doesNotMatch(workspace, /Préparer cette initiative|ESPACE OPÉRATIONNEL/);
 });
 
 test("les actions et grilles de gestion se replient avant de déborder", () => {

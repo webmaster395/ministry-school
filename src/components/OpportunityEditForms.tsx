@@ -57,6 +57,7 @@ export default function OpportunityEditForms({
   canManageInternalMaterial,
   editExtras,
   experience = "supervision",
+  onTypeChange,
 }: {
   opportunity: Opportunity;
   initialDates: DateRow[];
@@ -71,6 +72,7 @@ export default function OpportunityEditForms({
   canManageInternalMaterial: boolean;
   editExtras?: ReactNode;
   experience?: "supervision" | "workspace";
+  onTypeChange?: (type: ReturnType<typeof opportunityType>) => void;
 }) {
   const workspace = experience === "workspace";
   const [editing, setEditing] = useState(workspace);
@@ -153,7 +155,9 @@ export default function OpportunityEditForms({
   const resetEditor = () => {
     setDates(initialDates);
     setTitle(o.title);
-    setType(opportunityType(o));
+    const initialType = opportunityType(o);
+    setType(initialType);
+    onTypeChange?.(initialType);
     setEmoji(opportunityEmoji(o.banner_emoji));
     setServiceName(o.services?.name ?? o.organizer_label ?? "");
     setDirty(false);
@@ -201,18 +205,6 @@ export default function OpportunityEditForms({
         {state && !state.ok && <p role="alert" className="w-full rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">{state.message}</p>}
       </div>
 
-      <section className="rounded-3xl border border-border bg-background p-5 sm:p-7">
-        <p className="label text-xs tracking-[.14em] text-muted">INFORMATIONS GÉNÉRALES</p>
-        <div className="mt-4 grid gap-5 lg:grid-cols-[minmax(0,1fr)_390px] lg:items-start">
-          <div className="space-y-5">
-            <label><Label>Titre *</Label><input name="title" required readOnly={!canManage} value={title} onChange={(event) => setTitle(event.target.value)} className={field} placeholder="Titre du projet ou de la formation" autoComplete="off" /></label>
-            <fieldset disabled={!canManage}><legend className="mb-2 text-sm font-semibold">Type</legend><div className="grid gap-2 sm:grid-cols-3">{[["projet","Projet"],["formation","Formation"],["both","Projet et formation"]].map(([value,label]) => <label key={value}><input className="peer sr-only" type="radio" name="type" value={value} checked={type === value} onChange={() => setType(value as typeof type)} /><span className="block cursor-pointer rounded-xl border border-border px-3 py-3 text-center text-xs font-semibold transition peer-checked:border-accent peer-checked:bg-accent peer-checked:text-on-accent">{label}</span></label>)}</div></fieldset>
-            {!canManage && <input type="hidden" name="type" value={type} />}
-          </div>
-          <OpportunityEmojiPicker value={emoji} onChange={emoji => { setEmoji(emoji); markDirty(); }} />
-        </div>
-      </section>
-
       <div className="overflow-hidden rounded-3xl" aria-label="Aperçu de la bannière">
         <OpportunityBanner emoji={emoji} title={title || "Titre du projet ou de la formation"} typeLabel={TYPE_LABEL[type]} status="APERÇU" variant="preview" headingLevel={workspace ? "h2" : "h1"} />
       </div>
@@ -220,7 +212,16 @@ export default function OpportunityEditForms({
       <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
         <article className="space-y-6 rounded-3xl border border-border bg-background p-5 sm:p-7">
           <p className="rounded-xl bg-surface px-4 py-3 text-xs leading-relaxed text-muted">Les champs marqués d’un astérisque sont obligatoires. Les prérequis peuvent rester vides lorsque l’option « Prérequis nécessaires » n’est pas activée.</p>
+          <label><Label>Titre *</Label><input name="title" required readOnly={!canManage} value={title} onChange={(event) => setTitle(event.target.value)} className={field} placeholder="Titre du projet ou de la formation" autoComplete="off" /></label>
           <section><SectionTitle>Présentation *</SectionTitle><RichTextEditor name="description" rows={8} defaultValue={o.description} onDirty={markDirty} /></section>
+          <section className="rounded-2xl border border-border-soft bg-surface p-4 sm:p-5">
+            <p className="label text-[10px] tracking-[.14em] text-muted sm:text-xs">PERSONNALISATION DE LA BANNIÈRE</p>
+            <div className="mt-4 grid min-w-0 gap-5 xl:grid-cols-[minmax(0,1fr)_390px] xl:items-start">
+              <fieldset disabled={!canManage}><legend className="mb-2 text-sm font-semibold">Type</legend><div className="grid gap-2 sm:grid-cols-3">{[["projet","Projet"],["formation","Formation"],["both","Projet et formation"]].map(([value,label]) => <label key={value}><input className="peer sr-only" type="radio" name="type" value={value} checked={type === value} onChange={() => { const nextType = value as typeof type; setType(nextType); onTypeChange?.(nextType); }} /><span className="block cursor-pointer rounded-xl border border-border bg-background px-3 py-3 text-center text-xs font-semibold transition peer-checked:border-accent peer-checked:bg-accent peer-checked:text-on-accent">{label}</span></label>)}</div></fieldset>
+              {!canManage && <input type="hidden" name="type" value={type} />}
+              <OpportunityEmojiPicker value={emoji} onChange={nextEmoji => { setEmoji(nextEmoji); markDirty(); }} />
+            </div>
+          </section>
           <StrategicAxesFields title={title} type={type} objectives={o.objectives} description={o.description} initial={{ axes: o.strategic_axes }} />
           <DynamicListInput name="objectives_items" label="Objectifs" initialValue={o.objectives} placeholder="Un objectif" required onDirty={markDirty} />
           <DynamicListInput name="speakers_items" label="Intervenants" initialValue={o.speakers} placeholder="Nom de l’intervenant" required onDirty={markDirty} />

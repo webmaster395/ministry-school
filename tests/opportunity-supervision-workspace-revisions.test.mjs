@@ -11,7 +11,7 @@ test("supervision et préparation utilisent deux parcours explicites", () => {
   const review = source("src/components/OpportunityReviewPanel.tsx");
   assert.match(page, /globalScope[\s\S]*?<OpportunityEditForms/);
   assert.match(page, /<OpportunityOperationalWorkspace/);
-  assert.match(workspace, /ESPACE OPÉRATIONNEL/);
+  assert.match(workspace, /ESPACE PROJETS ET FORMATIONS/);
   assert.match(submission, /Soumettre à validation/);
   assert.doesNotMatch(submission, /Valider et publier|Valider et programmer/);
   assert.match(review, /Valider et publier maintenant/);

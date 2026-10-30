@@ -47,7 +47,7 @@ export default function DynamicListInput({
   const hasValue = items.some((item) => item.trim().length > 0);
 
   return (
-    <fieldset className="rounded-2xl border border-border bg-surface/50 p-4">
+    <fieldset className="min-w-0 max-w-full rounded-2xl border border-border bg-surface/50 p-4">
       <legend className="px-1 text-sm font-semibold text-foreground">{label}{required ? " *" : ""}</legend>
       <div className="space-y-2">
         {items.map((item, index) => (
