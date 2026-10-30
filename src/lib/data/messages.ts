@@ -14,6 +14,20 @@ export type Message = {
   ctaLabel: string | null;
 };
 
+export type DigestItem = {
+  id: string;
+  category: string;
+  title: string;
+  body: string | null;
+  targetUrl: string | null;
+  targetType: string | null;
+};
+
+export type DigestDetails = {
+  date: string | null;
+  items: DigestItem[];
+};
+
 /**
  * Les communications humaines passent par l'écran Communication et ont toujours `sent_as`.
  * Les annonces créées automatiquement par la plateforme n'en ont pas : leur auteur réel reste
@@ -79,6 +93,34 @@ export async function getStudentMessages(
       };
     })
     .sort((a, b) => (a.at < b.at ? 1 : -1));
+}
+
+/** Détails privés d'un récapitulatif quotidien appartenant à la personne connectée. */
+export async function getDailyDigestDetails(
+  supabase: SupabaseClient,
+  announcementId: string,
+): Promise<DigestDetails | null> {
+  const { data, error } = await supabase.rpc("daily_notification_digest_details", {
+    p_announcement: announcementId,
+  });
+  if (error || !data || typeof data !== "object") return null;
+  const value = data as { date?: unknown; items?: unknown };
+  const items = Array.isArray(value.items)
+    ? value.items
+        .filter((item): item is Record<string, unknown> => !!item && typeof item === "object")
+        .map((item) => ({
+          id: String(item.id ?? ""),
+          category: String(item.category ?? "workflow"),
+          title: String(item.title ?? "Information Ministry School"),
+          body: typeof item.body === "string" ? item.body : null,
+          targetUrl:
+            typeof item.targetUrl === "string" && item.targetUrl.startsWith("/")
+              ? item.targetUrl
+              : null,
+          targetType: typeof item.targetType === "string" ? item.targetType : null,
+        }))
+    : [];
+  return { date: typeof value.date === "string" ? value.date : null, items };
 }
 
 /** « Aujourd'hui », « Hier » ou la date courte. */
