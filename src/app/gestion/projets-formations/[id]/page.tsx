@@ -3,7 +3,7 @@ import { CheckCircle2, ChevronLeft } from "lucide-react";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getMembers } from "@/lib/data/admin-hub";
-import { getOpportunity, getOpportunityDates, getProjectsTrainingRights, getServices } from "@/lib/data/opportunities";
+import { getOpportunity, getOpportunityDates, getOpportunityInternalMaterial, getProjectsTrainingRights, getServices } from "@/lib/data/opportunities";
 import OpportunityEditForms from "@/components/OpportunityEditForms";
 import AssignmentEditor from "@/components/admin/AssignmentEditor";
 import OpportunityReviewPanel from "@/components/OpportunityReviewPanel";
@@ -23,11 +23,12 @@ export default async function ProjectsTrainingManageDetail({ params, searchParam
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/auth/connexion");
-  const [opportunity, dates, rights, services] = await Promise.all([
+  const [opportunity, dates, rights, services, { data: canManageInternalMaterial }] = await Promise.all([
     getOpportunity(supabase, id),
     getOpportunityDates(supabase, id),
     getProjectsTrainingRights(supabase, user.id),
     getServices(supabase),
+    supabase.rpc("can_review_editorial_content"),
   ]);
   if (!opportunity) notFound();
   const responsibility = rights.admin ? "admin" : rights.assignments.get(id);
@@ -42,6 +43,8 @@ export default async function ProjectsTrainingManageDetail({ params, searchParam
   const teamRows = (team ?? []) as { user_id: string; full_name: string; responsibility: "manager" | "contributor" }[];
   const sessionParticipantRows = (sessionParticipants ?? []) as { opportunity_date_id: string; user_id: string; full_name: string }[];
   const members = rights.admin ? await getMembers(supabase) : [];
+  const internalMaterial = canManageInternalMaterial ? await getOpportunityInternalMaterial(supabase, id) : null;
+  const opportunityWithPrivatePlanning = { ...opportunity, organization_material: internalMaterial };
   const now = new Date();
   const schoolYear = now.getUTCMonth() >= 6 ? now.getUTCFullYear() : now.getUTCFullYear() - 1;
   const suggestedSaturdays = [10, 11, 0, 1, 2, 3, 4, 5].map((month) => firstSaturday(month >= 10 ? schoolYear : schoolYear + 1, month));
@@ -58,7 +61,7 @@ export default async function ProjectsTrainingManageDetail({ params, searchParam
     {query.creation === "ok" && <p role="status" className="flex items-center gap-2 rounded-xl border border-border bg-background px-4 py-3 text-sm"><CheckCircle2 size={18} /> Élément créé et conservé dans son état de publication choisi.</p>}
     <OpportunityReviewPanel opportunityId={id} state={reviewState} canManage={canManage} />
     <OpportunityEditForms
-      opportunity={opportunity}
+      opportunity={opportunityWithPrivatePlanning}
       initialDates={dates}
       responsibility={responsibility}
       services={services}
@@ -67,6 +70,7 @@ export default async function ProjectsTrainingManageDetail({ params, searchParam
       sessionParticipants={sessionParticipantRows}
       resources={resources}
       publicationLabel={publicationLabel}
+      canManageInternalMaterial={!!canManageInternalMaterial}
       editExtras={editExtras}
     />
   </div>;

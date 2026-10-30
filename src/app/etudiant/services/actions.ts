@@ -101,6 +101,11 @@ export async function createOpportunity(formData: FormData) {
     ? await supabase.rpc("resolve_service_name", { p_name: serviceName })
     : { data: null, error: null };
   if (serviceError) throw new Error("Le service pilote n’a pas pu être enregistré : " + serviceError.message);
+  const internalMaterial = list(formData, "organization_material_items");
+  if (internalMaterial) {
+    const { data: canManageInternalMaterial } = await supabase.rpc("can_review_editorial_content");
+    if (!canManageInternalMaterial) throw new Error("Le matériel d’organisation est réservé à Nathalie et Flora.");
+  }
   const creationToken = text(formData, "creation_token");
   if (!creationToken) throw new Error("Rechargez le formulaire avant de créer l’élément.");
   const { data: claim, error: claimError } = await supabase.rpc("claim_opportunity_creation", { p_token: creationToken });
@@ -122,7 +127,7 @@ export async function createOpportunity(formData: FormData) {
       speakers: list(formData, "speakers_items") || null,
       prerequisites: list(formData, "prerequisites_items") || null,
       location: text(formData, "location") || null,
-      organization_material: list(formData, "organization_material_items") || null,
+      organization_material: null,
       participant_material: list(formData, "participant_material_items") || null,
       schedule_label: null,
       starts_on: dates[0].session_date,
@@ -155,6 +160,13 @@ export async function createOpportunity(formData: FormData) {
   if (bannerError) throw new Error("La bannière n’a pas pu être enregistrée : " + bannerError.message);
   const { error: bindError } = await supabase.rpc("bind_opportunity_creation", { p_token: creationToken, p_opportunity: id });
   if (bindError) throw new Error("La création a réussi, mais son verrou anti-doublon n’a pas pu être finalisé : " + bindError.message);
+  if (internalMaterial) {
+    const { error: internalError } = await supabase.rpc("set_opportunity_internal_material", {
+      p_opportunity: id,
+      p_organization_material: internalMaterial,
+    });
+    if (internalError) throw new Error("Le matériel nécessaire à l’atelier n’a pas pu être enregistré : " + internalError.message);
+  }
   await supabase.from("opportunity_dates").update({ capacity: Number.isFinite(capacity) && capacity > 0 ? capacity : null }).eq("opportunity_id", id);
   if (requiresReview) {
     const { error: reviewError } = await supabase.rpc("request_opportunity_review", {

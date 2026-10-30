@@ -16,11 +16,12 @@ type Member = { id: string; full_name: string; email: string };
 type DateRow = { date: string; start: string; end: string };
 const field = "min-h-12 w-full rounded-xl border border-border bg-background px-3 text-[15px] text-foreground outline-none focus:border-accent focus:ring-2 focus:ring-accent/10";
 
-export default function OpportunityCreateForm({ creationToken, members, services, suggestedSaturdays }: {
+export default function OpportunityCreateForm({ creationToken, members, services, suggestedSaturdays, canManageInternalMaterial }: {
   creationToken: string;
   members: Member[];
   services: { id: string; name: string }[];
   suggestedSaturdays: string[];
+  canManageInternalMaterial: boolean;
 }) {
   const [dates, setDates] = useState<DateRow[]>([]);
   const [query, setQuery] = useState("");
@@ -75,7 +76,7 @@ export default function OpportunityCreateForm({ creationToken, members, services
           <label><Label>Lieu principal</Label><input name="location" className={field} placeholder="Espace Martin Luther King" /></label>
           <label><Label>Nombre de places par séance</Label><input type="number" min={1} name="capacity" className={field} placeholder="Illimité si vide" /></label>
           <div className="sm:col-span-2"><DynamicListInput name="participant_material_items" label="Matériel à apporter" placeholder="Un élément à apporter" /></div>
-          <div className="sm:col-span-2"><WorkshopMaterialsInput /></div>
+          {canManageInternalMaterial && <div className="sm:col-span-2"><WorkshopMaterialsInput /></div>}
         </div>
       </section>
 

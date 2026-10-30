@@ -51,6 +51,7 @@ export default function OpportunityEditForms({
   sessionParticipants,
   resources,
   publicationLabel,
+  canManageInternalMaterial,
   editExtras,
 }: {
   opportunity: Opportunity;
@@ -62,6 +63,7 @@ export default function OpportunityEditForms({
   sessionParticipants: SessionParticipant[];
   resources: OpportunityResource[];
   publicationLabel: string;
+  canManageInternalMaterial: boolean;
   editExtras?: ReactNode;
 }) {
   const [editing, setEditing] = useState(false);
@@ -139,6 +141,7 @@ export default function OpportunityEditForms({
       publicationLabel={publicationLabel}
       canEdit={canEdit}
       confirmation={confirmation}
+      canManageInternalMaterial={canManageInternalMaterial}
       onEdit={() => { setConfirmation(null); setEditing(true); }}
     />;
   }
@@ -180,7 +183,7 @@ export default function OpportunityEditForms({
           <label><Label>Service pilote</Label><input name="service_name" list={`services-${o.id}`} defaultValue={o.services?.name ?? o.organizer_label ?? ""} className={field} /><datalist id={`services-${o.id}`}>{services.map((service) => <option key={service.id} value={service.name} />)}</datalist></label>
           <label><Label>Lieu principal</Label><input name="location" defaultValue={o.location ?? ""} className={field} /></label>
           <label><Label>Nombre de places par séance</Label><input type="number" min={1} name="capacity" defaultValue={o.capacity ?? ""} className={field} placeholder="Illimité si vide" /></label>
-          <WorkshopMaterialsInput initialValue={o.organization_material} />
+          {canManageInternalMaterial && <WorkshopMaterialsInput initialValue={o.organization_material} />}
           <div className="rounded-2xl bg-surface p-4"><p className="mb-3 text-sm font-semibold">Publication</p><div className="space-y-3"><select name="publication_status" value={publication} onChange={(event) => setPublication(event.target.value as Opportunity["publication_status"])} className={field}><option value="draft">Brouillon</option><option value="published">Demander la publication immédiate</option><option value="scheduled">Demander une publication programmée</option><option value="unpublished">Dépublié</option><option value="archived">Archivé</option></select>{publication === "scheduled" && <label><input type="datetime-local" value={publishedAt} onChange={(event) => setPublishedAt(event.target.value)} className={field} />{publishedAt && <input type="hidden" name="published_at" value={new Date(publishedAt).toISOString()} />}</label>}<label className="flex items-center gap-2 text-sm"><input type="checkbox" name="registration_open" defaultChecked={o.registration_open} /> Inscriptions ouvertes</label><label className="flex items-center gap-2 text-sm"><input type="checkbox" name="cancellation_allowed" defaultChecked={o.cancellation_allowed} /> Annulation autorisée</label><p className="text-xs leading-relaxed text-muted">La publication devient effective après validation éditoriale.</p></div></div>
         </aside>
       </div>
@@ -201,7 +204,7 @@ export default function OpportunityEditForms({
   </div>;
 }
 
-function Consultation({ opportunity: o, dates, team, sessionParticipants, resources, publicationLabel, canEdit, confirmation, onEdit }: {
+function Consultation({ opportunity: o, dates, team, sessionParticipants, resources, publicationLabel, canEdit, confirmation, canManageInternalMaterial, onEdit }: {
   opportunity: Opportunity;
   dates: DateRow[];
   team: TeamPerson[];
@@ -210,6 +213,7 @@ function Consultation({ opportunity: o, dates, team, sessionParticipants, resour
   publicationLabel: string;
   canEdit: boolean;
   confirmation: string | null;
+  canManageInternalMaterial: boolean;
   onEdit: () => void;
 }) {
   const objectives = linesOf(o.objectives);
@@ -246,7 +250,7 @@ function Consultation({ opportunity: o, dates, team, sessionParticipants, resour
           <Definition label="Responsable" value={managers.map((person) => person.full_name).join(" • ") || "Non désigné"} />
           <Definition label="Intervenants" value={speakers.join(" • ") || "Non renseignés"} />
           <Definition label="Lieu principal" value={o.location} />
-          {o.organization_material && <Definition label="Matériel nécessaire à l’atelier" value={linesOf(o.organization_material).join(" • ")} />}
+          {canManageInternalMaterial && o.organization_material && <Definition label="Matériel nécessaire à l’atelier" value={linesOf(o.organization_material).join(" • ")} />}
         </dl></div>
         <section className="border-t border-border-soft pt-5"><h2 className="font-title text-[19px]">Inscriptions par séance ({distinctPeople} personne{distinctPeople > 1 ? "s" : ""})</h2><div className="mt-3 space-y-3">{dates.map((date) => { const people = sessionParticipants.filter((person) => person.opportunity_date_id === date.id); return <div key={date.id} className="rounded-xl bg-surface p-3"><p className="text-xs font-semibold capitalize">{formatSessionDate(date.session_date)} · {people.length} inscrit{people.length > 1 ? "s" : ""}</p><p className="mt-1 text-xs leading-5 text-muted">{people.length ? people.map((person) => person.full_name).join(" • ") : "Aucune inscription"}</p></div>; })}{dates.length === 0 && <p className="text-sm text-muted">Aucune séance programmée.</p>}</div></section>
       </aside>

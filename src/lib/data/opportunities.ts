@@ -103,11 +103,18 @@ export async function getOpportunities(supabase: SupabaseClient) {
   const { data } = await supabase
     .from("opportunities")
     .select(
-      "id, kind, title, description, service_id, organizer_label, schedule_label, starts_on, ends_on, capacity, registration_open, created_by, lead_id, services(name), is_project, is_training, short_description, speakers, location, organization_material, participant_material, cancellation_allowed, publication_status, published_at, archived_at, cover_image_path, banner_emoji" + DETAIL_COLUMNS
+      "id, kind, title, description, service_id, organizer_label, schedule_label, starts_on, ends_on, capacity, registration_open, created_by, lead_id, services(name), is_project, is_training, short_description, speakers, location, participant_material, cancellation_allowed, publication_status, published_at, archived_at, cover_image_path, banner_emoji" + DETAIL_COLUMNS
     )
     .order("starts_on", { ascending: true, nullsFirst: false })
     .order("created_at", { ascending: true });
-  return (data ?? []) as unknown as Opportunity[];
+  const rows = (data ?? []) as unknown as Omit<Opportunity, "organization_material">[];
+  return rows.map((row) => ({ ...row, organization_material: null }));
+}
+
+export async function getOpportunityInternalMaterial(supabase: SupabaseClient, opportunityId: string) {
+  const { data, error } = await supabase.rpc("opportunity_internal_material", { p_opportunity: opportunityId });
+  if (error) return null;
+  return typeof data === "string" ? data : null;
 }
 
 export async function getOpportunityCounts(supabase: SupabaseClient) {
