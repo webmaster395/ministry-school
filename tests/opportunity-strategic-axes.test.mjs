@@ -25,29 +25,50 @@ const base = {
   strategic_axes_connection: "Ces contributions se complètent dans l’action C",
 };
 
-test("les sept combinaisons affichent uniquement les axes réellement sélectionnés", async () => {
-  const { strategicNarrativeOf } = await strategyModule();
+test("les sept combinaisons utilisent sept textes officiels distincts", async () => {
+  const { strategicNarrativeOf, MLK_STRATEGIC_VISION } = await strategyModule();
   const combinations = [
     ["former"], ["auberge"], ["fundraising"],
     ["former", "auberge"], ["former", "fundraising"],
     ["auberge", "fundraising"], ["former", "auberge", "fundraising"],
   ];
-  const texts = combinations.map((strategic_axes) => strategicNarrativeOf({ ...base, strategic_axes }).join("\n"));
+  const texts = combinations.map((strategic_axes) => strategicNarrativeOf({ ...base, strategic_axes }).join("\n\n"));
   assert.equal(new Set(texts).size, 7);
-  for (const [index, axes] of combinations.entries()) {
-    assert.match(texts[index], /axes? stratégiques? 2026-2027 de l’Église MLK/);
-    if (axes.includes("former")) assert.match(texts[index], /Former/);
-    if (axes.includes("auberge")) assert.match(texts[index], /L’Auberge/);
-    if (axes.includes("fundraising")) assert.match(texts[index], /Levée de fonds/);
-    assert.doesNotMatch(texts[index], /compétence F|public A|partenariat R|action C/);
-  }
+  assert.deepEqual(strategicNarrativeOf({ ...base, strategic_axes: ["former"] }), MLK_STRATEGIC_VISION.texts.former.paragraphs);
+  assert.deepEqual(strategicNarrativeOf({ ...base, strategic_axes: ["auberge"] }), MLK_STRATEGIC_VISION.texts.auberge.paragraphs);
+  assert.deepEqual(strategicNarrativeOf({ ...base, strategic_axes: ["fundraising"] }), MLK_STRATEGIC_VISION.texts.une_place_de_plus.paragraphs);
+  assert.deepEqual(strategicNarrativeOf({ ...base, strategic_axes: ["former", "auberge"] }), MLK_STRATEGIC_VISION.texts.former_auberge.paragraphs);
+  assert.deepEqual(strategicNarrativeOf({ ...base, strategic_axes: ["former", "fundraising"] }), MLK_STRATEGIC_VISION.texts.former_une_place_de_plus.paragraphs);
+  assert.deepEqual(strategicNarrativeOf({ ...base, strategic_axes: ["auberge", "fundraising"] }), MLK_STRATEGIC_VISION.texts.auberge_une_place_de_plus.paragraphs);
+  assert.deepEqual(strategicNarrativeOf({ ...base, strategic_axes: ["former", "auberge", "fundraising"] }), MLK_STRATEGIC_VISION.texts.former_auberge_une_place_de_plus.paragraphs);
 });
 
-test("la sélection des axes suffit sans contribution rédigée", async () => {
+test("l'ordre de sélection ne change pas le texte et aucun axe masque la section", async () => {
   const { strategicNarrativeOf, strategicAxesComplete } = await strategyModule();
-  const incomplete = { ...base, strategic_axes: ["former", "auberge"], strategic_contribution_auberge: "" };
-  assert.equal(strategicAxesComplete(incomplete), true);
-  assert.equal(strategicNarrativeOf(incomplete).length, 1);
+  const ordered = { ...base, strategic_axes: ["former", "auberge", "fundraising"] };
+  const reversed = { ...base, strategic_axes: ["fundraising", "auberge", "former"] };
+  assert.deepEqual(strategicNarrativeOf(ordered), strategicNarrativeOf(reversed));
+  assert.equal(strategicAxesComplete({ ...base, strategic_axes: [] }), false);
+  assert.deepEqual(strategicNarrativeOf({ ...base, strategic_axes: [] }), []);
+});
+
+test("les textes restent identiques pour projet, formation et fiche mixte", async () => {
+  const { strategicNarrativeOf } = await strategyModule();
+  const types = [
+    { is_project: true, is_training: false },
+    { is_project: false, is_training: true },
+    { is_project: true, is_training: true },
+  ];
+  const combinations = [
+    ["former"], ["auberge"], ["fundraising"],
+    ["former", "auberge"], ["former", "fundraising"],
+    ["auberge", "fundraising"], ["former", "auberge", "fundraising"],
+  ];
+  for (const strategic_axes of combinations) {
+    const variants = types.map((type) => strategicNarrativeOf({ ...base, ...type, strategic_axes }));
+    assert.deepEqual(variants[0], variants[1]);
+    assert.deepEqual(variants[1], variants[2]);
+  }
 });
 
 test("la base exige uniquement au moins un axe reconnu", async () => {
@@ -67,4 +88,16 @@ test("les formulaires administratifs et la fiche étudiant partagent le même mo
   assert.match(fields, /name="strategic_axes"/);
   assert.doesNotMatch(fields, /strategic_contribution|textarea/);
   assert.match(student, /<StrategicVisionSection opportunity=\{o\}/);
+});
+
+test("le rendu public utilise le titre officiel, un texte unique et des badges discrets", async () => {
+  const section = await source("src/components/StrategicVisionSection.tsx");
+  const strategy = await source("src/lib/opportunity-strategy.ts");
+  assert.match(strategy, /VISION MLK · 2026–2027/);
+  assert.match(strategy, /Ensemble, faisons vivre notre vision/);
+  assert.match(strategy, /fundraising: "une_place_de_plus"/);
+  assert.match(section, /const paragraphs = strategicNarrativeOf\(opportunity\)/);
+  assert.match(section, /paragraphs\.map/);
+  assert.match(section, /Axes stratégiques sélectionnés/);
+  assert.match(section, /if \(!axes\.length && !showIncomplete\) return null/);
 });
