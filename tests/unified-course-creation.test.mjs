@@ -4,19 +4,24 @@ import { readFile } from "node:fs/promises";
 
 const source = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("les trois contextes réutilisent le même formulaire complet", async () => {
-  const [form, admin, ministry, opportunity] = await Promise.all([
+test("les cours classiques et ministériels réutilisent le même formulaire complet", async () => {
+  const [form, admin, ministry] = await Promise.all([
     source("src/components/gestion/CourseCreationDialog.tsx"),
     source("src/components/admin/QuickCourseForm.tsx"),
     source("src/components/gestion/AddCourseDialog.tsx"),
-    source("src/app/gestion/projets-formations/[id]/page.tsx"),
   ]);
   for (const label of ["Informations générales", "Date, horaires et lieu", "Cadre pédagogique", "Contenus pédagogiques", "Vidéo", "Supports et ressources", "Devoirs"]) assert.match(form, new RegExp(label));
   assert.match(admin, /CourseCreationDialog/);
   assert.match(ministry, /CourseCreationDialog/);
-  assert.match(opportunity, /context="opportunity"/);
-  assert.match(opportunity, /Créer un cours/);
-  assert.match(opportunity, /Cours associés/);
+});
+
+test("les fiches Projets et formations et leur validation n’affichent plus le bloc de cours associés", async () => {
+  const [opportunity, validation] = await Promise.all([
+    source("src/app/gestion/projets-formations/[id]/page.tsx"),
+    source("src/app/gestion/a-valider/page.tsx"),
+  ]);
+  assert.doesNotMatch(opportunity, /Cours associés|Parcours pédagogique|Créer le premier cours|LinkedCourses/);
+  assert.match(validation, /\/gestion\/projets-formations\/\$\{item\.id\}\?scope=admin/);
 });
 
 test("la création et les contenus d'initiative sont contrôlés côté base", async () => {

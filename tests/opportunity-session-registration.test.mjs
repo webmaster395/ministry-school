@@ -26,7 +26,7 @@ test("la fiche étudiante permet une sélection multiple et une annulation cibl�
 
 test("le formulaire simplifié conserve uniquement les informations métier attendues", async () => {
   const form = await source("src/components/admin/OpportunityCreateForm.tsx");
-  assert.match(form, /name="service_name" list="service-suggestions"/);
+  assert.match(form, /AdminSelect name="service_name"[^>]*allowCustom/);
   assert.match(form, /DynamicListInput name="objectives_items"/);
   assert.match(form, /DynamicListInput name="speakers_items"/);
   assert.match(form, /DynamicListInput name="prerequisites_items"/);

@@ -10,6 +10,49 @@ const text = (formData: FormData, key: string) => String(formData.get(key) ?? ""
 const list = (formData: FormData, key: string) =>
   formData.getAll(key).map(String).map((value) => value.trim()).filter(Boolean).join("\n");
 
+function opportunityDatesFrom(formData: FormData) {
+  const sessionDates = formData.getAll("session_date").map(String);
+  const starts = formData.getAll("start_time").map(String);
+  const ends = formData.getAll("end_time").map(String);
+  const rooms = formData.getAll("room").map(String);
+  const locations = formData.getAll("date_location").map(String);
+  const ids = formData.getAll("date_id").map(String);
+  const capacities = formData.getAll("date_capacity").map(String);
+  return sessionDates.map((session_date, index) => ({
+    id: ids[index] || null,
+    session_date,
+    start_time: starts[index] || "14:00",
+    end_time: ends[index] || "17:00",
+    room: rooms[index] || null,
+    location: locations[index] || null,
+    capacity: capacities[index] || null,
+  })).filter((date) => date.session_date);
+}
+
+/** Convertit une saisie datetime-local en instant UTC selon Europe/Paris, heure d'été comprise. */
+function parisLocalDateTimeToIso(value: string) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/.exec(value);
+  if (!match) throw new Error("Choisissez une date et une heure de publication valides.");
+  const [, year, month, day, hour, minute] = match.map(Number);
+  const desiredAsUtc = Date.UTC(year, month - 1, day, hour, minute);
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/Paris",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  });
+  let instant = desiredAsUtc;
+  for (let pass = 0; pass < 2; pass += 1) {
+    const parts = Object.fromEntries(formatter.formatToParts(new Date(instant)).map((part) => [part.type, part.value]));
+    const representedLocal = Date.UTC(Number(parts.year), Number(parts.month) - 1, Number(parts.day), Number(parts.hour), Number(parts.minute));
+    instant += desiredAsUtc - representedLocal;
+  }
+  return new Date(instant).toISOString();
+}
+
 function strategyFrom(formData: FormData) {
   const allowed = new Set<StrategicAxis>(["former", "auberge", "fundraising"]);
   const axes = [...new Set(formData.getAll("strategic_axes").map(String))]
@@ -74,12 +117,6 @@ export async function createOpportunity(formData: FormData) {
   const type = text(formData, "type");
   if (!(["projet", "formation", "both"] as string[]).includes(type)) throw new Error("Type invalide.");
   const capacity = Number.parseInt(text(formData, "capacity"), 10);
-  const status = text(formData, "publication_status") || "draft";
-  if (!(["draft", "published", "scheduled", "unpublished"] as string[]).includes(status)) throw new Error("État de publication invalide.");
-  const publicationInput = text(formData, "published_at");
-  if (status === "scheduled" && !publicationInput) throw new Error("Choisissez la date de publication programmée.");
-  const requestedPublishedAt = status === "scheduled" ? new Date(publicationInput).toISOString() : null;
-  const requiresReview = status === "published" || status === "scheduled";
   const strategy = strategyFrom(formData);
   const sessionDates = formData.getAll("session_date").map(String);
   const starts = formData.getAll("start_time").map(String);
@@ -104,7 +141,7 @@ export async function createOpportunity(formData: FormData) {
   const internalMaterial = list(formData, "organization_material_items");
   if (internalMaterial) {
     const { data: canManageInternalMaterial } = await supabase.rpc("can_review_editorial_content");
-    if (!canManageInternalMaterial) throw new Error("Le matériel d’organisation est réservé à Nathalie et Flora.");
+    if (!canManageInternalMaterial) throw new Error("Le matériel d’organisation est réservé aux super administrateurs.");
   }
   const creationToken = text(formData, "creation_token");
   if (!creationToken) throw new Error("Rechargez le formulaire avant de créer l’élément.");
@@ -135,7 +172,7 @@ export async function createOpportunity(formData: FormData) {
       capacity: Number.isFinite(capacity) && capacity > 0 ? capacity : null,
       registration_open: formData.get("registration_open") === "on",
       cancellation_allowed: formData.get("cancellation_allowed") === "on",
-      publication_status: requiresReview ? "draft" : status,
+      publication_status: "draft",
       published_at: null,
       strategic_axes: strategy.axes,
       // Compatibilité avec l'ancienne RPC ; ces marqueurs sont effacés juste après la création.
@@ -168,19 +205,11 @@ export async function createOpportunity(formData: FormData) {
     if (internalError) throw new Error("Le matériel nécessaire à l’atelier n’a pas pu être enregistré : " + internalError.message);
   }
   await supabase.from("opportunity_dates").update({ capacity: Number.isFinite(capacity) && capacity > 0 ? capacity : null }).eq("opportunity_id", id);
-  if (requiresReview) {
-    const { error: reviewError } = await supabase.rpc("request_opportunity_review", {
-      p_opportunity: id,
-      p_desired_status: status,
-      p_desired_at: requestedPublishedAt,
-    });
-    if (reviewError) throw new Error("La demande de validation n’a pas pu être envoyée : " + reviewError.message);
-  }
   refreshOpportunity(id);
-  redirect(`/gestion/projets-formations/${id}?creation=ok`);
+  redirect(`/gestion/projets-formations/${id}?creation=ok${text(formData, "return_scope") === "admin" ? "&scope=admin" : ""}`);
 }
 
-/** Enregistre l'une des deux validations éditoriales obligatoires. */
+/** Compatibilité historique : validation immédiate par un super administrateur. */
 export async function validateOpportunity(formData: FormData) {
   const supabase = await createClient();
   const {
@@ -190,8 +219,8 @@ export async function validateOpportunity(formData: FormData) {
 
   const id = formData.get("opportunity_id") as string;
   if (!id) throw new Error("Proposition introuvable");
-  const { error } = await supabase.rpc("review_opportunity", { p_opportunity: id, p_decision: "approve", p_message: null });
-  if (error?.message.includes("FORBIDDEN")) throw new Error("Cette validation est réservée à Nathalie Boudehent et Flora Demerle.");
+  const { error } = await supabase.rpc("review_opportunity", { p_opportunity: id, p_decision: "approve", p_message: null, p_publish_mode: "now", p_publish_at: null });
+  if (error?.message.includes("FORBIDDEN")) throw new Error("Cette validation est réservée aux super administrateurs.");
   if (error) throw new Error("Échec de la validation : " + error.message);
 
   revalidatePath("/etudiant/services");
@@ -212,27 +241,55 @@ export async function decideOpportunityReview(formData: FormData) {
   const id = text(formData, "opportunity_id");
   const decision = text(formData, "decision");
   const message = text(formData, "message");
+  const publishMode = text(formData, "publish_mode") || null;
+  const publishInput = text(formData, "publish_at");
+  const publishAt = publishInput ? parisLocalDateTimeToIso(publishInput) : null;
   const { error } = await supabase.rpc("review_opportunity", {
     p_opportunity: id,
     p_decision: decision,
     p_message: message || null,
+    p_publish_mode: publishMode,
+    p_publish_at: publishAt,
   });
   if (error?.message.includes("MESSAGE_REQUIRED")) throw new Error("Précisez les corrections attendues.");
-  if (error?.message.includes("FORBIDDEN")) throw new Error("Vous ne faites pas partie des deux valideuses.");
+  if (error?.message.includes("INVALID_SCHEDULE")) throw new Error("Choisissez une date de publication future.");
+  if (error?.message.includes("FORBIDDEN")) throw new Error("Cette décision est réservée aux super administrateurs.");
   if (error) throw new Error("La décision n’a pas pu être enregistrée : " + error.message);
   refreshOpportunity(id);
 }
 
-export async function requestOpportunityContribution(formData: FormData) {
+export async function submitOpportunityReview(formData: FormData) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Non authentifié");
   const id = text(formData, "opportunity_id");
-  const message = text(formData, "message");
-  if (!message) throw new Error("Précisez le complément attendu.");
-  const { error } = await supabase.rpc("request_opportunity_contribution", { p_opportunity: id, p_message: message });
-  if (error) throw new Error("La demande n’a pas pu être envoyée : " + error.message);
+  const { error } = await supabase.rpc("request_opportunity_review", {
+    p_opportunity: id,
+    p_desired_status: "published",
+    p_desired_at: null,
+  });
+  if (error?.message.includes("FORBIDDEN")) throw new Error("Seul un responsable peut soumettre cette fiche.");
+  if (error) throw new Error("La demande de validation n’a pas pu être envoyée : " + error.message);
   refreshOpportunity(id);
+}
+
+export async function saveOpportunityAgenda(formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Non authentifié");
+  const opportunityId = text(formData, "opportunity_id");
+  const dateId = text(formData, "opportunity_date_id");
+  let steps: unknown;
+  try { steps = JSON.parse(text(formData, "steps") || "[]"); }
+  catch { throw new Error("Le déroulé transmis est invalide."); }
+  const { error } = await supabase.rpc("save_opportunity_agenda", {
+    p_opportunity: opportunityId,
+    p_opportunity_date: dateId,
+    p_steps: steps,
+  });
+  if (error?.message.includes("FORBIDDEN")) throw new Error("Vous n’avez pas le droit de modifier ce déroulé.");
+  if (error) throw new Error("Le déroulé n’a pas pu être enregistré : " + error.message);
+  refreshOpportunity(opportunityId);
 }
 
 const RESOURCE_MIME_TYPES = new Set([
@@ -422,23 +479,7 @@ export async function updateOpportunityManagement(formData: FormData) {
   const { data: canManage } = await supabase.rpc("can_submit_opportunity", { p_opportunity: id });
   if (!canManage) throw new Error("Seul un responsable peut modifier l’organisation ou soumettre cet élément.");
   const type = text(formData, "type");
-  const status = text(formData, "publication_status");
   if (!(["projet", "formation", "both"] as string[]).includes(type)) throw new Error("Type invalide.");
-  if (!(["draft", "published", "scheduled", "unpublished", "archived"] as string[]).includes(status)) throw new Error("État de publication invalide.");
-  if (status === "scheduled" && !text(formData, "published_at")) throw new Error("Choisissez la date de publication programmée.");
-  const requestedAt = status === "scheduled" ? new Date(text(formData, "published_at")).toISOString() : null;
-  const { data: current } = await supabase.from("opportunities").select("publication_status,published_at,title,is_project,is_training,strategic_axes,strategic_contribution_former,strategic_contribution_auberge,strategic_contribution_fundraising,strategic_axes_connection").eq("id", id).single();
-  if ((status === "published" || status === "scheduled") && (!current || !strategicAxesComplete(current as Parameters<typeof strategicAxesComplete>[0]))) {
-    throw new Error("Sélectionnez au moins un axe stratégique avant de demander la publication.");
-  }
-  const scheduledChanged = status === "scheduled"
-    && new Date(requestedAt!).getTime() !== new Date(current?.published_at ?? 0).getTime();
-  const requiresReview = (status === "published" || status === "scheduled")
-    && (current?.publication_status !== status || scheduledChanged);
-  const directStatus = requiresReview
-    ? (current?.publication_status === "published" ? "published" : "draft")
-    : status;
-  const directPublishedAt = directStatus === "published" || directStatus === "scheduled" ? current?.published_at ?? null : null;
   const serviceName = text(formData, "service_name");
   const { data: serviceId, error: serviceError } = serviceName
     ? await supabase.rpc("resolve_service_name", { p_name: serviceName })
@@ -454,24 +495,11 @@ export async function updateOpportunityManagement(formData: FormData) {
     location: text(formData, "location") || null,
     registration_open: formData.get("registration_open") === "on",
     cancellation_allowed: formData.get("cancellation_allowed") === "on",
-    publication_status: directStatus,
-    published_at: directPublishedAt,
-    archived_at: directStatus === "archived" ? new Date().toISOString() : null,
     banner_emoji: opportunityEmoji(text(formData, "banner_emoji")),
     updated_at: new Date().toISOString(),
   }).eq("id", id).select("id");
   if (error) throw new Error("La modification a échoué : " + error.message);
   if (!updated?.length) throw new Error("Vous n’avez pas le droit de modifier ce projet ou cette formation.");
-  if (requiresReview) {
-    const { error: reviewError } = await supabase.rpc("request_opportunity_review", {
-      p_opportunity: id,
-      p_desired_status: status,
-      p_desired_at: requestedAt,
-    });
-    if (reviewError) throw new Error("La demande de validation n’a pas pu être envoyée : " + reviewError.message);
-  } else if (!["published", "scheduled"].includes(status)) {
-    await supabase.rpc("cancel_opportunity_review", { p_opportunity: id });
-  }
   refreshOpportunity(id);
 }
 
@@ -489,22 +517,7 @@ export async function replaceOpportunityDates(formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Non authentifié");
   const id = text(formData, "opportunity_id");
-  const sessionDates = formData.getAll("session_date").map(String);
-  const starts = formData.getAll("start_time").map(String);
-  const ends = formData.getAll("end_time").map(String);
-  const rooms = formData.getAll("room").map(String);
-  const locations = formData.getAll("date_location").map(String);
-  const ids = formData.getAll("date_id").map(String);
-  const capacities = formData.getAll("date_capacity").map(String);
-  const dates = sessionDates.map((session_date, index) => ({
-    id: ids[index] || null,
-    session_date,
-    start_time: starts[index] || "14:00",
-    end_time: ends[index] || "17:00",
-    room: rooms[index] || null,
-    location: locations[index] || null,
-    capacity: capacities[index] || null,
-  })).filter((date) => date.session_date);
+  const dates = opportunityDatesFrom(formData);
   const { error } = await supabase.rpc("replace_opportunity_dates", { p_opportunity: id, p_dates: dates });
   if (error) throw new Error("La mise à jour des séances a échoué : " + error.message);
   refreshOpportunity(id);
@@ -513,14 +526,81 @@ export async function replaceOpportunityDates(formData: FormData) {
 /** Sauvegarde la fiche éditée en place en réutilisant les trois traitements existants. */
 export async function saveOpportunityInline(_previous: OpportunityFormState, formData: FormData): Promise<OpportunityFormState> {
   try {
-    await updateOpportunityContent(formData);
-    await replaceOpportunityDates(formData);
-    // Un contributeur autorisé peut préparer le contenu, mais jamais gérer la publication.
     const supabase = await createClient();
     const id = text(formData, "opportunity_id");
-    const { data: canManage } = await supabase.rpc("can_submit_opportunity", { p_opportunity: id });
-    if (canManage) await updateOpportunityManagement(formData);
-    return { ok: true, message: "Les modifications ont été enregistrées." };
+    const [{ data: canManage }, { data: isSuperAdmin }, { data: current, error: currentError }] = await Promise.all([
+      supabase.rpc("can_submit_opportunity", { p_opportunity: id }),
+      supabase.rpc("is_super_admin"),
+      supabase.from("opportunities").select("kind,is_project,is_training,title,description,objectives,speakers,prerequisites,participant_material,capacity,strategic_axes,service_id,organizer_label,location,registration_open,cancellation_allowed,banner_emoji,publication_status").eq("id", id).single(),
+    ]);
+    if (currentError || !current) throw new Error("Cette fiche est introuvable ou inaccessible.");
+
+    // Une fiche déjà visible conserve sa version publique. Toutes les modifications
+    // sont stockées dans une version de travail privée jusqu'à la prochaine validation.
+    if (["published", "scheduled"].includes(current.publication_status)) {
+      const strategy = strategyFrom(formData);
+      const parsedCapacity = Number.parseInt(text(formData, "capacity"), 10);
+      const capacity = Number.isFinite(parsedCapacity) && parsedCapacity > 0 ? parsedCapacity : null;
+      const type = canManage ? text(formData, "type") : current.is_project && current.is_training ? "both" : current.is_project ? "projet" : "formation";
+      if (!(type === "projet" || type === "formation" || type === "both")) throw new Error("Type invalide.");
+      const serviceName = canManage ? text(formData, "service_name") : current.organizer_label;
+      const { data: serviceId, error: serviceError } = canManage && serviceName
+        ? await supabase.rpc("resolve_service_name", { p_name: serviceName })
+        : { data: current.service_id, error: null };
+      if (serviceError) throw new Error("Le service pilote n’a pas pu être enregistré : " + serviceError.message);
+      const { error: revisionError } = await supabase.rpc("save_opportunity_revision", {
+        p_opportunity: id,
+        p_payload: {
+          kind: type === "formation" ? "formation" : "projet",
+          is_project: type === "projet" || type === "both",
+          is_training: type === "formation" || type === "both",
+          title: canManage ? text(formData, "title") : current.title,
+          description: text(formData, "description"),
+          objectives: list(formData, "objectives_items") || text(formData, "objectives") || null,
+          speakers: list(formData, "speakers_items") || text(formData, "speakers") || null,
+          prerequisites: list(formData, "prerequisites_items") || text(formData, "prerequisites") || null,
+          participant_material: list(formData, "participant_material_items") || text(formData, "participant_material") || null,
+          capacity,
+          strategic_axes: strategy.axes,
+          service_id: serviceId || null,
+          service_name: serviceName || null,
+          organizer_label: serviceName || null,
+          location: canManage ? text(formData, "location") || null : current.location,
+          registration_open: canManage ? formData.get("registration_open") === "on" : current.registration_open,
+          cancellation_allowed: canManage ? formData.get("cancellation_allowed") === "on" : current.cancellation_allowed,
+          banner_emoji: opportunityEmoji(text(formData, "banner_emoji")),
+        },
+        p_dates: opportunityDatesFrom(formData),
+      });
+      if (revisionError?.message.includes("FORBIDDEN")) throw new Error("Vous n’avez pas le droit de modifier cette fiche.");
+      if (revisionError) throw new Error("La version de travail n’a pas pu être enregistrée : " + revisionError.message);
+
+      const internalMaterial = list(formData, "organization_material_items");
+      if (formData.get("organization_material_present") === "1") {
+        const { error: internalError } = await supabase.rpc("set_opportunity_internal_material", {
+          p_opportunity: id,
+          p_organization_material: internalMaterial,
+        });
+        if (internalError) throw new Error("Le matériel interne n’a pas pu être enregistré.");
+      }
+      if (isSuperAdmin) {
+        const { error: submitError } = await supabase.rpc("request_opportunity_review", {
+          p_opportunity: id,
+          p_desired_status: "published",
+          p_desired_at: null,
+        });
+        if (submitError) throw new Error("La version est enregistrée, mais sa validation n’a pas pu être ouverte.");
+      }
+      refreshOpportunity(id);
+      return { ok: true, message: isSuperAdmin ? "La nouvelle version est enregistrée et prête à être validée. La version publiée reste inchangée." : "La version de travail est enregistrée. La version publiée reste inchangée jusqu’à validation." };
+    }
+
+    await updateOpportunityContent(formData);
+    if (canManage) {
+      await replaceOpportunityDates(formData);
+      await updateOpportunityManagement(formData);
+    }
+    return { ok: true, message: "Les modifications ont été enregistrées dans le brouillon." };
   } catch (error) {
     return { ok: false, message: error instanceof Error ? error.message : "L’enregistrement a échoué." };
   }

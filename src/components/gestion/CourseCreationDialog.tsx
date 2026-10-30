@@ -22,7 +22,7 @@ import {
 } from "@/app/gestion/cours/actions";
 
 type Choice = { id: string; name: string };
-type CreationContext = "admin" | "ministry" | "opportunity";
+type CreationContext = "admin" | "ministry";
 
 const field =
   "mt-1.5 min-h-11 w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-[15px] text-foreground outline-none transition focus:border-foreground";
@@ -32,7 +32,6 @@ const section =
 export default function CourseCreationDialog({
   context,
   parentId,
-  parentLabel,
   defaultDate = "",
   defaultLocation = "",
   defaultParking = true,
@@ -43,7 +42,6 @@ export default function CourseCreationDialog({
 }: {
   context: CreationContext;
   parentId?: string;
-  parentLabel?: string;
   defaultDate?: string;
   defaultLocation?: string;
   defaultParking?: boolean;
@@ -61,11 +59,7 @@ export default function CourseCreationDialog({
     {},
   );
   const ministry = context === "ministry";
-  const title = context === "opportunity"
-    ? `Créer un cours pour ${parentLabel ?? "cette initiative"}`
-    : ministry
-      ? "Créer un cours ministériel"
-      : "Créer un cours";
+  const title = ministry ? "Créer un cours ministériel" : "Créer un cours";
   const nav = useMemo(
     () => [
       ["informations", "Informations"],
@@ -109,7 +103,6 @@ export default function CourseCreationDialog({
                 onClick={(event) => event.stopPropagation()}
               >
                 <input type="hidden" name="creation_context" value={context} />
-                <input type="hidden" name="parent_id" value={parentId ?? ""} />
                 {ministry && <input type="hidden" name="ministry_id" value={parentId ?? ""} />}
 
                 <header className="border-b border-border bg-background px-5 py-4 sm:px-7 sm:py-5">

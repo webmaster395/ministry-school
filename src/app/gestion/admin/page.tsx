@@ -34,6 +34,7 @@ type Params = {
   mois?: string;
   statistiques?: string;
   categorie?: string;
+  membre?: string;
 };
 
 export default async function AdminPage({ searchParams }: { searchParams: Promise<Params> }) {
@@ -116,6 +117,9 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           category={p.categorie ?? "toutes"}
           canManageAccess={!!viewer?.roles.superAdmin}
           basePath="/gestion/admin"
+          selectedMemberId={p.membre ?? ""}
+          projectsTrainingAccess={viewer.roles.projectsTraining}
+          ministryAccess={viewer.roles.steeringMinistryIds.length > 0}
         />
       )}
       {tab === "notifications" && (

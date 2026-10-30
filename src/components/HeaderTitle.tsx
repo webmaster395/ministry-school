@@ -39,6 +39,9 @@ export default function HeaderTitle({ greeting }: { greeting: string }) {
 
   // Dans un espace de gestion, l'en-tête porte le nom de l'espace, pas la salutation étudiante
   if (current) {
+    // L'espace Admin possède déjà un en-tête de page et, dans ses sous-pages, un fil d'Ariane.
+    // Ne pas répéter son nom dans la barre globale.
+    if (current.key === "admin") return null;
     return (
       <div className="min-w-0">
         <h1 className="font-title truncate text-[20px] leading-tight text-foreground">

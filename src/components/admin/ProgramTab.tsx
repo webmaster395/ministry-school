@@ -80,7 +80,7 @@ export default function ProgramTab({ entries, month, today, trainers, ministries
               <p className="mt-0.5 text-sm text-muted">{reference.location}{reference.room ? ` · ${reference.room}` : ""} · {courseEntries.length} cours</p>
             </div>
             <DayList entries={list} readOnly={readOnly} />
-            {!readOnly && <QuickCourseForm date={date} dateLabel={`${formatSessionDate(date)} ${date.slice(0, 4)}`} parking={courseEntries.some((entry) => entry.parking)} trainers={trainers} ministries={ministries} />}
+            {!readOnly && <QuickCourseForm date={date} parking={courseEntries.some((entry) => entry.parking)} trainers={trainers} ministries={ministries} />}
           </section>
         );
       }) : (

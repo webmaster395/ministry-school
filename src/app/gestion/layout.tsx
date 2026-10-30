@@ -4,6 +4,7 @@ import { SpaceProvider } from "@/components/SpaceProvider";
 import AppHeader from "@/components/AppHeader";
 import AppFooter from "@/components/AppFooter";
 import SpaceTabs from "@/components/SpaceTabs";
+import AdminBreadcrumbs from "@/components/admin/AdminBreadcrumbs";
 import { getViewer } from "@/lib/data/viewer";
 import { navSpaces } from "@/lib/nav";
 
@@ -24,6 +25,7 @@ export default async function ManagementLayout({ children }: { children: React.R
           <AppHeader />
           <main className="app-main mx-auto w-full max-w-[1280px] flex-1 px-4 py-5 sm:px-7 sm:py-7">
             <SpaceTabs />
+            <AdminBreadcrumbs />
             {children}
           </main>
           <AppFooter />

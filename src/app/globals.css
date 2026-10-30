@@ -59,6 +59,14 @@
   --radius-md: 8px;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
 /* Champs de formulaire de l'application : fond crème, focus encre (charte).
    Couche « base » : les utilitaires Tailwind restent prioritaires quand une page les précise. */
 @layer base {

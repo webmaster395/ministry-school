@@ -17,7 +17,7 @@ const roleOptions = [
   { value: "project_contributor", label: "Contributeur d’une initiative" },
 ];
 
-export default function RoleAssignmentForm({ members, ministries, opportunities }: { members: Choice[]; ministries: Choice[]; opportunities: Choice[] }) {
+export default function RoleAssignmentForm({ members, ministries, opportunities, defaultMemberId = "", embedded = false }: { members: Choice[]; ministries: Choice[]; opportunities: Choice[]; defaultMemberId?: string; embedded?: boolean }) {
   const [role, setRole] = useState("");
   const [state, action, pending] = useActionState<MemberActionResult, FormData>(assignMemberRole, {});
   const [saved, setSaved] = useState(false);
@@ -32,10 +32,10 @@ export default function RoleAssignmentForm({ members, ministries, opportunities 
     return () => clearTimeout(timer);
   }, [state]);
 
-  return <section className="rounded-xl border border-border bg-background p-4 sm:p-6">
+  return <section className={embedded ? "p-4 sm:p-5" : "rounded-xl border border-border bg-background p-4 sm:p-6"}>
     <div className="flex items-start gap-3"><span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-surface"><Plus size={18} /></span><div><h2 className="font-title text-[22px] text-foreground">Attribuer un rôle</h2><p className="mt-1 text-sm text-muted">Sélectionnez un membre, son niveau de responsabilité et son périmètre éventuel.</p></div></div>
     <form action={action} className="mt-5 grid gap-3 lg:grid-cols-3">
-      <AdminSelect name="user_id" placeholder="Rechercher un membre…" options={members.map((item) => ({ value: item.id, label: item.label }))} searchable />
+      <AdminSelect name="user_id" defaultValue={defaultMemberId} placeholder="Rechercher un membre…" options={members.map((item) => ({ value: item.id, label: item.label }))} searchable />
       <AdminSelect name="role_key" value={role} onValueChange={setRole} placeholder="Choisir un rôle…" options={roleOptions} />
       {ministryScope ? <AdminSelect name="scope_id" placeholder="Choisir une sensibilité…" options={ministries.map((item) => ({ value: item.id, label: item.label }))} searchable /> : projectScope ? <AdminSelect name="scope_id" placeholder="Choisir un projet ou une formation…" options={opportunities.map((item) => ({ value: item.id, label: item.label }))} searchable /> : <input type="hidden" name="scope_id" value="" />}
       {contributor && <label className="flex min-h-11 items-center gap-2 rounded-xl border border-border px-3.5 text-sm text-foreground lg:col-span-2"><input type="checkbox" name="can_edit" /> Peut modifier les contenus autorisés</label>}

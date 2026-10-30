@@ -7,13 +7,11 @@ type Choice = { id: string; name: string };
 /** Entrée compacte du programme Admin ; le formulaire est partagé par tous les cours. */
 export default function QuickCourseForm({
   date,
-  dateLabel,
   parking,
   trainers,
   ministries,
 }: {
   date: string;
-  dateLabel: string;
   parking: boolean;
   trainers: Choice[];
   ministries: Choice[];
@@ -23,7 +21,6 @@ export default function QuickCourseForm({
       context="admin"
       defaultDate={date}
       defaultParking={parking}
-      parentLabel={dateLabel}
       trainers={trainers}
       ministries={ministries}
       triggerLabel="Ajouter un cours"

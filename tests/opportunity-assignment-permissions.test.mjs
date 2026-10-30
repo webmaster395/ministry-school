@@ -16,7 +16,8 @@ test("l'accès direct exige une affectation et l'écriture contributeur est expl
   const form = source("src/components/OpportunityEditForms.tsx");
   assert.match(page, /if \(!responsibility\) redirect\("\/gestion\/projets-formations"\)/);
   assert.match(page, /rights\.editableAssignments\.has\(id\)/);
-  assert.match(page, /responsibility === "admin" \? <DeleteOpportunityButton/);
+  assert.match(page, /superAdminView \? <DeleteOpportunityButton/);
+  assert.match(page, /!globalScope && responsibility === "manager" \? <ArchiveOpportunityRequest/);
   assert.match(form, /canEdit: boolean/);
 });
 

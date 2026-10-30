@@ -1,53 +1,32 @@
-import { Check, CheckCircle2, Clock3, Eye, MessageSquareWarning, Send } from "lucide-react";
-import { decideOpportunityReview, requestOpportunityContribution } from "@/app/etudiant/services/actions";
+import { CalendarClock, Check, CheckCircle2, Clock3, History, MessageSquareWarning } from "lucide-react";
+import { decideOpportunityReview } from "@/app/etudiant/services/actions";
 import type { OpportunityReviewState } from "@/lib/data/opportunity-review";
 
 const parisDate = (value: string) => new Intl.DateTimeFormat("fr-FR", {
-  dateStyle: "long",
-  timeStyle: "short",
-  timeZone: "Europe/Paris",
+  dateStyle: "long", timeStyle: "short", timeZone: "Europe/Paris",
 }).format(new Date(value));
 
-function Approval({ name, approved }: { name: string; approved: boolean }) {
-  return <div className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 text-sm ${approved ? "border-emerald-200 bg-emerald-50 text-emerald-900" : "border-border bg-background text-muted"}`}>{approved ? <CheckCircle2 size={17} /> : <Clock3 size={17} />}<span><strong className="font-semibold">{name}</strong><small className="ml-1.5">{approved ? "a validé" : "en attente"}</small></span></div>;
-}
+export default function OpportunityReviewPanel({ opportunityId, state }: { opportunityId: string; state: OpportunityReviewState }) {
+  const pending = state.status === "pending";
+  const corrections = state.status === "changes_requested";
+  const approved = state.status === "approved";
+  if (state.status === "none" && state.history.length === 0) return null;
+  return <section id="validation-publication" className="scroll-mt-24 rounded-3xl border border-[#E9B85D]/55 bg-[#FFF8E7] p-5 sm:p-7">
+    <div className="flex items-start gap-3">
+      <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl text-white ${corrections ? "bg-amber-500" : approved ? "bg-emerald-700" : "bg-[#F4A12A]"}`}>{corrections ? <MessageSquareWarning size={20} /> : approved ? <CheckCircle2 size={20} /> : <Clock3 size={20} />}</span>
+      <div><p className="label text-xs tracking-[.14em] text-muted">VALIDATION ET PUBLICATION</p><h2 className="font-title mt-1 text-[24px] text-foreground">{corrections ? "Corrections demandées" : approved ? "Décision enregistrée" : pending ? "Fiche en attente de validation" : "Soumettre la fiche"}</h2><p className="mt-1 text-sm leading-relaxed text-muted">{state.requestedAt ? <>Soumise le {parisDate(state.requestedAt)}{state.requestedByName ? ` par ${state.requestedByName}` : ""}.</> : "Lorsque la fiche est prête, le responsable peut la transmettre à un super administrateur."}</p></div>
+    </div>
 
-export default function OpportunityReviewPanel({ opportunityId, state, canManage }: { opportunityId: string; state: OpportunityReviewState; canManage: boolean }) {
-  const active = state.status === "pending" || state.status === "changes_requested" || state.status === "approved";
-  return <section className="space-y-4">
-    {active && <div className={`rounded-3xl border p-5 sm:p-6 ${state.status === "changes_requested" ? "border-amber-300 bg-amber-50/80" : state.status === "approved" ? "border-emerald-200 bg-emerald-50/70" : "border-[#E9B85D]/55 bg-[#FFF8E7]"}`}>
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="flex items-start gap-3">
-          <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl ${state.status === "changes_requested" ? "bg-amber-500 text-white" : state.status === "approved" ? "bg-emerald-600 text-white" : "bg-[#F4A12A] text-white"}`}>{state.status === "changes_requested" ? <MessageSquareWarning size={20} /> : state.status === "approved" ? <CheckCircle2 size={20} /> : <Clock3 size={20} />}</span>
-          <div><h2 className="font-title text-[21px]">{state.status === "changes_requested" ? "Corrections demandées" : state.status === "approved" ? "Validation terminée" : "Validation avant publication"}</h2><p className="mt-1 text-sm leading-relaxed text-muted">{state.status === "changes_requested" ? "La fiche reste invisible des étudiants jusqu’à une nouvelle demande de validation." : state.status === "approved" ? "Une validation a été recueillie. La publication demandée est activée." : `Publication ${state.desiredPublicationStatus === "scheduled" && state.desiredPublishedAt ? `programmée au ${parisDate(state.desiredPublishedAt)}` : "immédiate"} après validation par Rose-Alice, Flora ou Nathalie.`}</p></div>
-        </div>
-        {state.isObserver && <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-white px-3 py-1.5 text-xs font-semibold text-muted"><Eye size={14} /> Aperçu uniquement</span>}
-      </div>
+    {state.decidedAt && <dl className="mt-5 grid gap-3 rounded-2xl border border-border bg-white/80 p-4 text-sm sm:grid-cols-2"><div><dt className="text-muted">Décision prise par</dt><dd className="mt-1 font-semibold">{state.decidedByName || "Super administrateur"}</dd></div><div><dt className="text-muted">Date de décision</dt><dd className="mt-1 font-semibold">{parisDate(state.decidedAt)}</dd></div>{approved && state.desiredPublishedAt && <div className="sm:col-span-2"><dt className="text-muted">Publication</dt><dd className="mt-1 font-semibold">{state.desiredPublicationStatus === "scheduled" ? `Programmée le ${parisDate(state.desiredPublishedAt)}` : `Publiée le ${parisDate(state.desiredPublishedAt)}`}</dd></div>}</dl>}
 
-      {state.status === "pending" && <div className="mt-5 grid gap-2 sm:grid-cols-3"><Approval name="Rose-Alice Tamard" approved={state.roseAliceApproved} /><Approval name="Flora Demerle" approved={state.floraApproved} /><Approval name="Nathalie Boudehent" approved={state.nathalieApproved} /></div>}
+    {corrections && state.correctionMessage && <div className="mt-5 rounded-2xl border border-amber-300 bg-white p-4 text-sm leading-relaxed text-amber-950"><strong className="mb-1 block">Modifications attendues</strong>{state.correctionMessage}</div>}
 
-      {state.status === "changes_requested" && state.correctionMessage && <div className="mt-5 rounded-2xl border border-amber-300 bg-white px-4 py-4 text-sm leading-relaxed text-amber-950"><strong className="mb-1 block">Modifications attendues</strong>{state.correctionMessage}</div>}
-
-      {state.canDecide && state.status === "pending" && <div className="mt-5 grid gap-4 border-t border-[#E9B85D]/40 pt-5 lg:grid-cols-[auto_minmax(0,1fr)] lg:items-start">
-        <form action={decideOpportunityReview}>
-          <input type="hidden" name="opportunity_id" value={opportunityId} />
-          <input type="hidden" name="decision" value="approve" />
-          <button className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-emerald-700 px-5 text-sm font-semibold text-white transition hover:bg-emerald-800 lg:w-auto"><Check size={17} /> Valider ce rendu</button>
-        </form>
-        <form action={decideOpportunityReview} className="rounded-2xl border border-amber-300 bg-white p-3">
-          <input type="hidden" name="opportunity_id" value={opportunityId} />
-          <input type="hidden" name="decision" value="changes_requested" />
-          <label className="block text-xs font-semibold text-amber-950">Demander des corrections</label>
-          <textarea name="message" required rows={3} placeholder="Décrivez précisément les éléments à corriger ou compléter…" className="mt-2 w-full resize-y rounded-xl border border-amber-200 bg-amber-50/40 p-3 text-sm outline-none focus:border-amber-500" />
-          <button className="mt-2 inline-flex items-center gap-2 rounded-full border border-amber-400 px-4 py-2 text-xs font-semibold text-amber-950 hover:bg-amber-50"><MessageSquareWarning size={15} /> Envoyer la demande</button>
-        </form>
-      </div>}
+    {state.canDecide && pending && <div className="mt-5 grid gap-4 border-t border-[#E9B85D]/40 pt-5 xl:grid-cols-2">
+      <form action={decideOpportunityReview} className="rounded-2xl border border-emerald-200 bg-white p-4"><input type="hidden" name="opportunity_id" value={opportunityId} /><input type="hidden" name="decision" value="approve" /><input type="hidden" name="publish_mode" value="now" /><h3 className="font-semibold text-foreground">Publier maintenant</h3><p className="mt-1 text-xs leading-5 text-muted">La première décision valide la fiche pour toute l’équipe.</p><button className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-emerald-700 px-5 text-sm font-semibold text-white hover:bg-emerald-800"><Check size={17} /> Valider et publier maintenant</button></form>
+      <form action={decideOpportunityReview} className="rounded-2xl border border-border bg-white p-4"><input type="hidden" name="opportunity_id" value={opportunityId} /><input type="hidden" name="decision" value="approve" /><input type="hidden" name="publish_mode" value="scheduled" /><label className="block text-sm font-semibold text-foreground">Valider et programmer<input type="datetime-local" name="publish_at" required className="mt-2 min-h-11 w-full rounded-xl border border-border bg-background px-3 text-sm outline-none focus:border-accent focus:ring-4 focus:ring-accent/10" /></label><button className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-foreground px-5 text-sm font-semibold"><CalendarClock size={17} /> Valider et programmer</button></form>
+      <form action={decideOpportunityReview} className="rounded-2xl border border-amber-300 bg-white p-4 xl:col-span-2"><input type="hidden" name="opportunity_id" value={opportunityId} /><input type="hidden" name="decision" value="changes_requested" /><label className="block text-sm font-semibold text-amber-950">Demander des corrections<textarea name="message" required rows={4} placeholder="Décrivez précisément les éléments à corriger ou compléter…" className="mt-2 w-full resize-y rounded-xl border border-amber-200 bg-amber-50/40 p-3 text-sm outline-none focus:border-amber-500" /></label><button className="mt-3 inline-flex min-h-10 items-center gap-2 rounded-full border border-amber-400 px-4 text-sm font-semibold text-amber-950 hover:bg-amber-50"><MessageSquareWarning size={16} /> Envoyer la demande</button></form>
     </div>}
 
-    {canManage && <details className="rounded-2xl border border-border bg-background p-5"><summary className="flex cursor-pointer list-none items-center gap-2 text-sm font-semibold"><Send size={16} /> Demander un complément à l’équipe</summary><ContributionForm opportunityId={opportunityId} /></details>}
+    {state.history.length > 0 && <details className="mt-5 border-t border-[#E9B85D]/40 pt-5"><summary className="flex cursor-pointer list-none items-center gap-2 text-sm font-semibold text-foreground"><History size={16} /> Historique des décisions</summary><ol className="mt-3 space-y-2">{state.history.map((item) => <li key={item.id} className="rounded-xl border border-border bg-white/80 px-4 py-3 text-sm"><div className="flex flex-wrap items-center justify-between gap-2"><strong>{item.decision === "approved" ? "Validation" : "Corrections demandées"}</strong><time className="text-xs text-muted">{parisDate(item.decidedAt)}</time></div><p className="mt-1 text-xs text-muted">{item.decidedByName || "Super administrateur"}{item.requestedByName ? ` · demande de ${item.requestedByName}` : ""}</p>{item.message && <p className="mt-2 leading-6">{item.message}</p>}{item.publishAt && <p className="mt-2 text-xs font-medium">{item.publishMode === "scheduled" ? `Publication programmée le ${parisDate(item.publishAt)}` : `Publication immédiate le ${parisDate(item.publishAt)}`}</p>}</li>)}</ol></details>}
   </section>;
-}
-
-function ContributionForm({ opportunityId }: { opportunityId: string }) {
-  return <form action={requestOpportunityContribution} className="mt-4 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end"><input type="hidden" name="opportunity_id" value={opportunityId} /><label className="block"><span className="mb-1.5 block text-xs font-medium text-muted">Informations ou ajouts attendus</span><textarea name="message" required rows={3} placeholder="Ex. Merci de compléter les prérequis et de confirmer le matériel…" className="w-full resize-y rounded-xl border border-border bg-surface p-3 text-sm outline-none focus:border-foreground" /></label><button className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-accent px-5 text-sm font-semibold text-on-accent"><Send size={16} /> Notifier l’équipe</button></form>;
 }

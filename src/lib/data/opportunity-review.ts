@@ -6,11 +6,25 @@ export type OpportunityReviewState = {
   desiredPublishedAt: string | null;
   requestedAt: string | null;
   correctionMessage: string | null;
-  nathalieApproved: boolean;
-  floraApproved: boolean;
-  roseAliceApproved: boolean;
+  requestedByName: string | null;
+  decidedAt: string | null;
+  decidedByName: string | null;
   canDecide: boolean;
   isObserver: boolean;
+  hasDraftRevision: boolean;
+  history: OpportunityReviewHistory[];
+};
+
+export type OpportunityReviewHistory = {
+  id: string;
+  decision: "approved" | "changes_requested";
+  message: string | null;
+  publishMode: "now" | "scheduled" | null;
+  publishAt: string | null;
+  requestedAt: string;
+  decidedAt: string;
+  requestedByName: string | null;
+  decidedByName: string | null;
 };
 
 const EMPTY_REVIEW: OpportunityReviewState = {
@@ -19,11 +33,13 @@ const EMPTY_REVIEW: OpportunityReviewState = {
   desiredPublishedAt: null,
   requestedAt: null,
   correctionMessage: null,
-  nathalieApproved: false,
-  floraApproved: false,
-  roseAliceApproved: false,
+  requestedByName: null,
+  decidedAt: null,
+  decidedByName: null,
   canDecide: false,
   isObserver: false,
+  hasDraftRevision: false,
+  history: [],
 };
 
 export async function getOpportunityReviewState(supabase: SupabaseClient, opportunityId: string) {

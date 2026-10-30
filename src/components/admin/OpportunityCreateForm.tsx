@@ -17,23 +17,23 @@ type Member = { id: string; full_name: string; email: string };
 type DateRow = { date: string; start: string; end: string };
 const field = "min-h-12 w-full rounded-xl border border-border bg-background px-3 text-[15px] text-foreground outline-none focus:border-accent focus:ring-2 focus:ring-accent/10";
 
-export default function OpportunityCreateForm({ creationToken, members, services, suggestedSaturdays, canManageInternalMaterial, canAssignMembers }: {
+export default function OpportunityCreateForm({ creationToken, members, services, suggestedSaturdays, canManageInternalMaterial, canAssignMembers, adminScope = false }: {
   creationToken: string;
   members: Member[];
   services: { id: string; name: string }[];
   suggestedSaturdays: string[];
   canManageInternalMaterial: boolean;
   canAssignMembers: boolean;
+  adminScope?: boolean;
 }) {
   const [dates, setDates] = useState<DateRow[]>([]);
   const [query, setQuery] = useState("");
   const [managers, setManagers] = useState(new Set<string>());
   const [contributors, setContributors] = useState(new Set<string>());
-  const [publication, setPublication] = useState("draft");
-  const [publishedAt, setPublishedAt] = useState("");
   const [title, setTitle] = useState("");
   const [type, setType] = useState("projet");
   const [emoji, setEmoji] = useState(DEFAULT_OPPORTUNITY_EMOJI);
+  const [serviceName, setServiceName] = useState("");
   const shown = useMemo(() => {
     const value = query.trim().toLocaleLowerCase("fr-FR");
     return value ? members.filter((member) => `${member.full_name} ${member.email}`.toLocaleLowerCase("fr-FR").includes(value)) : members;
@@ -56,13 +56,14 @@ export default function OpportunityCreateForm({ creationToken, members, services
   return (
     <form action={createOpportunity} className="space-y-6">
       <input type="hidden" name="creation_token" value={creationToken} />
+      <input type="hidden" name="return_scope" value={adminScope ? "admin" : "workspace"} />
       <section className="overflow-hidden rounded-3xl border border-border bg-background">
         <OpportunityBanner emoji={emoji} title={title || "Nom du projet ou de la formation"} typeLabel={type === "both" ? "Projet et formation" : type === "formation" ? "Formation" : "Projet"} variant="preview" />
         <div className="grid gap-5 p-5 sm:p-7 lg:grid-cols-2">
           <label className="lg:col-span-2"><Label>Nom</Label><input name="title" required value={title} onChange={(event) => setTitle(event.target.value)} className={field} placeholder="Nom du projet ou de la formation" /></label>
           <fieldset className="lg:col-span-2"><legend className="mb-2 text-sm font-semibold">Type</legend><div className="grid gap-2 sm:grid-cols-3">{[["projet","Projet"],["formation","Formation"],["both","Projet et formation"]].map(([value,label]) => <label key={value} className="cursor-pointer"><input type="radio" name="type" value={value} checked={type === value} onChange={() => setType(value)} className="peer sr-only" /><span className="block rounded-xl border border-border px-4 py-3 text-center text-sm font-medium peer-checked:border-accent peer-checked:bg-accent peer-checked:text-on-accent">{label}</span></label>)}</div></fieldset>
           <div className="lg:col-span-2"><OpportunityEmojiPicker value={emoji} onChange={setEmoji} /></div>
-          <label className="lg:col-span-2"><Label>Service pilote</Label><input name="service_name" list="service-suggestions" className={field} placeholder="Choisir ou saisir un nouveau service" autoComplete="off" /><datalist id="service-suggestions">{services.map((service) => <option key={service.id} value={service.name} />)}</datalist></label>
+          <label className="lg:col-span-2"><Label>Service pilote</Label><AdminSelect name="service_name" value={serviceName} onValueChange={setServiceName} searchable allowCustom placeholder="Choisir ou saisir un nouveau service" options={services.map((service) => ({ value: service.name, label: service.name }))} /></label>
           <div className="lg:col-span-2"><Label>Présentation</Label><RichTextEditor name="description" rows={7} placeholder="Présentez l’activité, son intérêt et son déroulement…" /></div>
           <div className="lg:col-span-2"><DynamicListInput name="objectives_items" label="Objectifs" placeholder="Un objectif" /></div>
           <StrategicAxesFields title={title} type={type as "projet" | "formation" | "both"} />
@@ -73,7 +74,7 @@ export default function OpportunityCreateForm({ creationToken, members, services
 
       <section className="rounded-3xl border border-border bg-background p-5 sm:p-7">
         <h2 className="font-title text-[23px]">Organisation</h2>
-        <p className="mt-1 text-sm text-muted">Les besoins internes permettent à Nathalie et Flora de préparer l’atelier.</p>
+        <p className="mt-1 text-sm text-muted">Les besoins internes permettent aux super administrateurs de préparer l’atelier.</p>
         <div className="mt-4 grid gap-5 sm:grid-cols-2">
           <label><Label>Lieu principal</Label><input name="location" className={field} placeholder="Espace Martin Luther King" /></label>
           <label><Label>Nombre de places par séance</Label><input type="number" min={1} name="capacity" className={field} placeholder="Illimité si vide" /></label>
@@ -101,8 +102,8 @@ export default function OpportunityCreateForm({ creationToken, members, services
       </details>}
 
       <details className="rounded-2xl border border-border bg-background p-5">
-        <summary className="cursor-pointer text-sm font-semibold">Publication et inscriptions</summary>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2"><label><Label>État souhaité</Label><AdminSelect name="publication_status" value={publication} onValueChange={setPublication} options={[{value:"draft",label:"Conserver en brouillon"},{value:"published",label:"Demander une publication immédiate"},{value:"scheduled",label:"Demander une publication programmée"},{value:"unpublished",label:"Conserver dépublié"}]} /></label>{publication === "scheduled" && <label><Label>Date et heure de publication</Label><input type="datetime-local" value={publishedAt} onChange={(event) => setPublishedAt(event.target.value)} className={field} />{publishedAt && <input type="hidden" name="published_at" value={new Date(publishedAt).toISOString()} />}</label>}<label className="flex items-center gap-2 text-sm"><input type="checkbox" name="registration_open" defaultChecked /> Inscriptions ouvertes</label><label className="flex items-center gap-2 text-sm"><input type="checkbox" name="cancellation_allowed" defaultChecked /> Annulation autorisée</label><p className="sm:col-span-2 rounded-xl bg-surface px-4 py-3 text-xs leading-relaxed text-muted">La publication devient effective uniquement après validation par la Super administration.</p></div>
+        <summary className="cursor-pointer text-sm font-semibold">Inscriptions</summary>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2"><input type="hidden" name="publication_status" value="draft" /><label className="flex items-center gap-2 text-sm"><input type="checkbox" name="registration_open" defaultChecked /> Inscriptions ouvertes</label><label className="flex items-center gap-2 text-sm"><input type="checkbox" name="cancellation_allowed" defaultChecked /> Annulation autorisée</label><p className="sm:col-span-2 rounded-xl bg-surface px-4 py-3 text-xs leading-relaxed text-muted">L’élément est créé en brouillon. Le responsable pourra le soumettre lorsqu’il sera prêt ; seul un super administrateur choisira ensuite la publication.</p></div>
       </details>
       <CreateButton />
     </form>

@@ -39,7 +39,6 @@ type TeamPerson = { user_id: string; full_name: string; responsibility: "manager
 type SessionParticipant = { opportunity_date_id: string; user_id: string; full_name: string };
 
 const field = "min-h-11 w-full rounded-xl border border-border bg-background px-3 text-sm text-foreground outline-none focus:border-accent focus:ring-4 focus:ring-accent/10";
-const localDateTime = (value: string | null) => value ? new Date(new Date(value).getTime() - new Date(value).getTimezoneOffset() * 60_000).toISOString().slice(0,16) : "";
 const hm = (value: string) => value.slice(0, 5).replace(":", " h ").replace(/ h 00$/, " h");
 
 export default function OpportunityEditForms({
@@ -55,6 +54,7 @@ export default function OpportunityEditForms({
   publicationLabel,
   canManageInternalMaterial,
   editExtras,
+  experience = "supervision",
 }: {
   opportunity: Opportunity;
   initialDates: DateRow[];
@@ -68,23 +68,24 @@ export default function OpportunityEditForms({
   publicationLabel: string;
   canManageInternalMaterial: boolean;
   editExtras?: ReactNode;
+  experience?: "supervision" | "workspace";
 }) {
-  const [editing, setEditing] = useState(false);
+  const workspace = experience === "workspace";
+  const [editing, setEditing] = useState(workspace);
   const [dirty, setDirty] = useState(false);
   const [confirmation, setConfirmation] = useState<string | null>(null);
   const [dates, setDates] = useState(initialDates);
-  const [publishedAt, setPublishedAt] = useState(localDateTime(o.published_at));
-  const [publication, setPublication] = useState(o.publication_status);
   const [title, setTitle] = useState(o.title);
   const [type, setType] = useState(opportunityType(o));
   const [emoji, setEmoji] = useState(opportunityEmoji(o.banner_emoji));
+  const [serviceName, setServiceName] = useState(o.services?.name ?? o.organizer_label ?? "");
   const [state, formAction, pending] = useActionState(saveOpportunityInline, null);
   const [handledSuccess, setHandledSuccess] = useState<typeof state>(null);
 
   if (state?.ok && state !== handledSuccess) {
     setHandledSuccess(state);
     setDirty(false);
-    setEditing(false);
+    setEditing(workspace);
     setConfirmation(state.message);
   }
 
@@ -112,13 +113,12 @@ export default function OpportunityEditForms({
 
   const resetEditor = () => {
     setDates(initialDates);
-    setPublishedAt(localDateTime(o.published_at));
-    setPublication(o.publication_status);
     setTitle(o.title);
     setType(opportunityType(o));
     setEmoji(opportunityEmoji(o.banner_emoji));
+    setServiceName(o.services?.name ?? o.organizer_label ?? "");
     setDirty(false);
-    setEditing(false);
+    setEditing(workspace);
   };
   const cancel = () => {
     if (dirty && !window.confirm("Abandonner les modifications non enregistrées ?")) return;
@@ -133,7 +133,7 @@ export default function OpportunityEditForms({
     changeDates([...dates, { session_date: date, start_time: "14:00", end_time: "17:00", room: null, location: null, capacity: o.capacity }]);
   };
 
-  if (!editing) {
+  if (!editing && !workspace) {
     return <Consultation
       opportunity={o}
       dates={initialDates}
@@ -143,7 +143,6 @@ export default function OpportunityEditForms({
       publicationLabel={publicationLabel}
       canEdit={canEdit}
       confirmation={confirmation}
-      canManageInternalMaterial={canManageInternalMaterial}
       onEdit={() => { setConfirmation(null); setEditing(true); }}
     />;
   }
@@ -152,11 +151,12 @@ export default function OpportunityEditForms({
     <form action={formAction} onChange={() => setDirty(true)} className="space-y-5">
       <input type="hidden" name="opportunity_id" value={o.id} />
       <div className="sticky top-3 z-30 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-background/95 px-4 py-3 shadow-lg backdrop-blur sm:px-5">
-        <div><p className="text-sm font-semibold">Modification de la fiche</p><p className="text-xs text-muted">Les champs sont enregistrés ensemble.</p></div>
+        <div><p className="text-sm font-semibold">{workspace ? "Préparation du projet ou de la formation" : "Modification de la fiche"}</p><p className="text-xs text-muted">{workspace ? "Complétez la fiche progressivement puis soumettez-la lorsqu’elle est prête." : "Les champs sont enregistrés ensemble."}</p></div>
         <div className="ml-auto flex items-center gap-2">
           <button type="button" onClick={cancel} disabled={pending} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-border px-4 text-sm font-semibold disabled:opacity-50"><X size={16} /> Annuler</button>
-          <button disabled={pending} className="inline-flex min-h-10 items-center gap-2 rounded-full bg-accent px-4 text-sm font-semibold text-on-accent disabled:opacity-60"><Save size={16} /> {pending ? "Enregistrement…" : "Enregistrer"}</button>
+          <button disabled={pending} className="inline-flex min-h-10 items-center gap-2 rounded-full bg-accent px-4 text-sm font-semibold text-on-accent disabled:opacity-60"><Save size={16} /> {pending ? "Enregistrement…" : workspace ? "Enregistrer le brouillon" : "Enregistrer"}</button>
         </div>
+        {workspace && confirmation && <p role="status" className="w-full rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-sm text-emerald-900">{confirmation}</p>}
         {state && !state.ok && <p role="alert" className="w-full rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">{state.message}</p>}
       </div>
 
@@ -183,23 +183,23 @@ export default function OpportunityEditForms({
 
         <aside className="space-y-5 rounded-3xl border border-border bg-background p-5 sm:p-6">
           <SectionTitle>Organisation</SectionTitle>
-          <label><Label>Service pilote</Label><input name="service_name" readOnly={!canManage} list={`services-${o.id}`} defaultValue={o.services?.name ?? o.organizer_label ?? ""} className={field} /><datalist id={`services-${o.id}`}>{services.map((service) => <option key={service.id} value={service.name} />)}</datalist></label>
+          <label><Label>Service pilote</Label><AdminSelect name="service_name" value={serviceName} onValueChange={(value) => { setServiceName(value); setDirty(true); }} disabled={!canManage} searchable allowCustom placeholder="Choisir ou saisir un service" options={services.map((service) => ({ value: service.name, label: service.name }))} /></label>
           <label><Label>Lieu principal</Label><input name="location" readOnly={!canManage} defaultValue={o.location ?? ""} className={field} /></label>
           <label><Label>Nombre de places par séance</Label><input type="number" min={1} name="capacity" defaultValue={o.capacity ?? ""} className={field} placeholder="Illimité si vide" /></label>
           {canManageInternalMaterial && <WorkshopMaterialsInput initialValue={o.organization_material} />}
-          {canManage ? <div className="rounded-2xl bg-surface p-4"><p className="mb-3 text-sm font-semibold">Publication</p><div className="space-y-3"><AdminSelect name="publication_status" value={publication} onValueChange={(next) => setPublication(next as Opportunity["publication_status"])} options={[{value:"draft",label:"Brouillon"},{value:"published",label:"Demander la publication immédiate"},{value:"scheduled",label:"Demander une publication programmée"},{value:"unpublished",label:"Dépublié"}]} />{publication === "scheduled" && <label><input type="datetime-local" value={publishedAt} onChange={(event) => setPublishedAt(event.target.value)} className={field} />{publishedAt && <input type="hidden" name="published_at" value={new Date(publishedAt).toISOString()} />}</label>}<label className="flex items-center gap-2 text-sm"><input type="checkbox" name="registration_open" defaultChecked={o.registration_open} /> Inscriptions ouvertes</label><label className="flex items-center gap-2 text-sm"><input type="checkbox" name="cancellation_allowed" defaultChecked={o.cancellation_allowed} /> Annulation autorisée</label><p className="text-xs leading-relaxed text-muted">La publication devient effective après validation par la Super administration.</p></div></div> : <input type="hidden" name="publication_status" value={o.publication_status} />}
+          {canManage && <div className="rounded-2xl bg-surface p-4"><p className="mb-3 text-sm font-semibold">Inscriptions</p><div className="space-y-3"><label className="flex items-center gap-2 text-sm"><input type="checkbox" name="registration_open" defaultChecked={o.registration_open} /> Inscriptions ouvertes</label><label className="flex items-center gap-2 text-sm"><input type="checkbox" name="cancellation_allowed" defaultChecked={o.cancellation_allowed} /> Annulation autorisée</label><p className="text-xs leading-relaxed text-muted">La publication se décide uniquement dans le bloc de validation, après examen complet de la fiche.</p></div></div>}
         </aside>
       </div>
 
       <section className="rounded-3xl border border-border bg-background p-5 sm:p-7">
         <SectionTitle>Dates et séances</SectionTitle>
-        <div className="mt-4 flex flex-wrap gap-2">{suggestedSaturdays.map((date) => <button key={date} type="button" onClick={() => addDate(date)} className="rounded-full border border-border px-3 py-2 text-sm">{new Intl.DateTimeFormat("fr-FR",{day:"numeric",month:"long",timeZone:"UTC"}).format(new Date(`${date}T12:00:00Z`))}</button>)}<button type="button" onClick={() => addDate()} className="inline-flex items-center gap-1.5 rounded-full border border-foreground px-3 py-2 text-sm"><Plus size={15} /> Date personnalisée</button></div>
+        {canManage ? <div className="mt-4 flex flex-wrap gap-2">{suggestedSaturdays.map((date) => <button key={date} type="button" onClick={() => addDate(date)} className="rounded-full border border-border px-3 py-2 text-sm">{new Intl.DateTimeFormat("fr-FR",{day:"numeric",month:"long",timeZone:"UTC"}).format(new Date(`${date}T12:00:00Z`))}</button>)}<button type="button" onClick={() => addDate()} className="inline-flex items-center gap-1.5 rounded-full border border-foreground px-3 py-2 text-sm"><Plus size={15} /> Date personnalisée</button></div> : <p className="mt-2 text-sm text-muted">Les dates sont modifiables uniquement par le responsable.</p>}
         <div className="mt-4 space-y-3">{dates.map((date,index) => <div key={date.id ?? index} className="grid gap-2 rounded-2xl bg-surface p-3 md:grid-cols-[1.2fr_.7fr_.7fr_.7fr_auto]">
           <input type="hidden" name="date_id" value={date.id ?? ""} />
-          {(["session_date","start_time","end_time"] as const).map((key) => <input key={key} type={key === "session_date" ? "date" : "time"} name={key} required value={date[key].slice(0,key === "session_date" ? 10 : 5)} onChange={(event) => changeDates(dates.map((row,i) => i === index ? {...row,[key]:event.target.value} : row))} className={field} aria-label={key} />)}
-          <input type="number" min={1} name="date_capacity" value={date.capacity ?? ""} onChange={(event) => changeDates(dates.map((row,i) => i === index ? {...row,capacity:event.target.value ? Number(event.target.value) : null} : row))} placeholder="Places" className={field} />
+          {(["session_date","start_time","end_time"] as const).map((key) => <input key={key} type={key === "session_date" ? "date" : "time"} name={key} required readOnly={!canManage} value={date[key].slice(0,key === "session_date" ? 10 : 5)} onChange={(event) => canManage && changeDates(dates.map((row,i) => i === index ? {...row,[key]:event.target.value} : row))} className={field} aria-label={key} />)}
+          <input type="number" min={1} name="date_capacity" readOnly={!canManage} value={date.capacity ?? ""} onChange={(event) => canManage && changeDates(dates.map((row,i) => i === index ? {...row,capacity:event.target.value ? Number(event.target.value) : null} : row))} placeholder="Places" className={field} />
           <input type="hidden" name="room" value={date.room ?? ""} /><input type="hidden" name="date_location" value={date.location ?? ""} />
-          <button type="button" onClick={() => changeDates(dates.filter((_,i) => i !== index))} aria-label="Supprimer la séance" className="grid min-h-11 place-items-center text-muted hover:text-red-700"><Trash2 size={17} /></button>
+          {canManage ? <button type="button" onClick={() => changeDates(dates.filter((_,i) => i !== index))} aria-label="Supprimer la séance" className="grid min-h-11 place-items-center text-muted hover:text-red-700"><Trash2 size={17} /></button> : <span />}
         </div>)}</div>
       </section>
     </form>
@@ -207,7 +207,7 @@ export default function OpportunityEditForms({
   </div>;
 }
 
-function Consultation({ opportunity: o, dates, team, sessionParticipants, resources, publicationLabel, canEdit, confirmation, canManageInternalMaterial, onEdit }: {
+function Consultation({ opportunity: o, dates, team, sessionParticipants, resources, publicationLabel, canEdit, confirmation, onEdit }: {
   opportunity: Opportunity;
   dates: DateRow[];
   team: TeamPerson[];
@@ -216,7 +216,6 @@ function Consultation({ opportunity: o, dates, team, sessionParticipants, resour
   publicationLabel: string;
   canEdit: boolean;
   confirmation: string | null;
-  canManageInternalMaterial: boolean;
   onEdit: () => void;
 }) {
   const objectives = linesOf(o.objectives);
@@ -224,6 +223,7 @@ function Consultation({ opportunity: o, dates, team, sessionParticipants, resour
   const materials = linesOf(o.participant_material);
   const speakers = linesOf(o.speakers);
   const managers = team.filter((person) => person.responsibility === "manager");
+  const contributors = team.filter((person) => person.responsibility === "contributor");
   const distinctPeople = new Set(sessionParticipants.map((person) => person.user_id)).size;
   const firstDate = dates[0];
 
@@ -244,6 +244,7 @@ function Consultation({ opportunity: o, dates, team, sessionParticipants, resour
           {materials.length > 0 && <ViewSection title="Matériel à apporter" icon={<PackageCheck size={21} />}><BulletList items={materials} /></ViewSection>}
           {resources.length > 0 && <ViewSection title="Supports et ressources"><div className="mt-4 grid gap-3 sm:grid-cols-2">{resources.map((resource) => { const Icon = resource.kind === "support" ? FileText : resource.kind === "link" ? Link2 : PackageOpen; return <a key={resource.id} href={`/etudiant/services/${o.id}/ressources/${resource.id}/ouvrir`} target="_blank" rel="noreferrer" className="group flex items-center gap-3 rounded-2xl border border-border bg-background p-4 transition hover:border-foreground"><span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-surface"><Icon size={19} /></span><span className="min-w-0 flex-1"><strong className="block truncate text-sm">{resource.title}</strong><small className="text-muted">{resource.kind === "support" ? "Support de cours" : resource.kind === "link" ? "Lien" : "Ressource"}</small></span><ExternalLink size={15} className="text-muted" /></a>; })}</div></ViewSection>}
           {dates.length > 0 && <ViewSection title="Les séances"><div className="mt-4 space-y-3">{dates.map((date) => <div key={date.id} className="rounded-2xl border border-border p-4"><p className="font-semibold capitalize">{formatSessionDate(date.session_date)}</p><p className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted"><span className="inline-flex items-center gap-1.5"><Clock size={15} /> {hm(date.start_time)}–{hm(date.end_time)}</span>{(date.location || o.location) && <span className="inline-flex items-center gap-1.5"><MapPin size={15} /> {date.location || o.location}</span>}</p></div>)}</div></ViewSection>}
+          {team.length > 0 && <ViewSection title="Responsables et contributeurs"><div className="mt-4 grid gap-3 sm:grid-cols-2">{managers.map((person) => <div key={person.user_id} className="rounded-xl bg-surface px-4 py-3"><strong className="block text-sm">{person.full_name}</strong><span className="text-xs text-muted">Responsable</span></div>)}{contributors.map((person) => <div key={person.user_id} className="rounded-xl bg-surface px-4 py-3"><strong className="block text-sm">{person.full_name}</strong><span className="text-xs text-muted">Contributeur · {person.can_edit ? "peut modifier" : "lecture seule"}</span></div>)}</div></ViewSection>}
         </div>
       </article>
 
@@ -253,7 +254,6 @@ function Consultation({ opportunity: o, dates, team, sessionParticipants, resour
           <Definition label="Responsable" value={managers.map((person) => person.full_name).join(" • ") || "Non désigné"} />
           <Definition label="Intervenants" value={speakers.join(" • ") || "Non renseignés"} />
           <Definition label="Lieu principal" value={o.location} />
-          {canManageInternalMaterial && o.organization_material && <Definition label="Matériel nécessaire à l’atelier" value={linesOf(o.organization_material).join(" • ")} />}
         </dl></div>
         <section className="border-t border-border-soft pt-5"><h2 className="font-title text-[19px]">Inscriptions par séance ({distinctPeople} personne{distinctPeople > 1 ? "s" : ""})</h2><div className="mt-3 space-y-3">{dates.map((date) => { const people = sessionParticipants.filter((person) => person.opportunity_date_id === date.id); return <div key={date.id} className="rounded-xl bg-surface p-3"><p className="text-xs font-semibold capitalize">{formatSessionDate(date.session_date)} · {people.length} inscrit{people.length > 1 ? "s" : ""}</p><p className="mt-1 text-xs leading-5 text-muted">{people.length ? people.map((person) => person.full_name).join(" • ") : "Aucune inscription"}</p></div>; })}{dates.length === 0 && <p className="text-sm text-muted">Aucune séance programmée.</p>}</div></section>
       </aside>

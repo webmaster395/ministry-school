@@ -177,6 +177,49 @@ export async function getOpportunityDates(supabase: SupabaseClient, id: string) 
   }[];
 }
 
+export type OpportunityManagementRevision = {
+  payload: Partial<Opportunity> & {
+    service_id?: string | null;
+    service_name?: string | null;
+  };
+  dates: Awaited<ReturnType<typeof getOpportunityDates>>;
+  updatedAt: string;
+  updatedByName: string | null;
+};
+
+/** Brouillon privé d'une fiche déjà publiée, jamais utilisé par l'espace étudiant. */
+export async function getOpportunityManagementRevision(supabase: SupabaseClient, id: string) {
+  const { data, error } = await supabase.rpc("opportunity_management_revision", { p_opportunity: id });
+  if (error || !data) return null;
+  return data as OpportunityManagementRevision;
+}
+
+export function mergeOpportunityManagementRevision(
+  opportunity: Opportunity,
+  dates: Awaited<ReturnType<typeof getOpportunityDates>>,
+  revision: OpportunityManagementRevision | null,
+) {
+  if (!revision) return { opportunity, dates, revision: null };
+  const payload = revision.payload;
+  const merged: Opportunity = {
+    ...opportunity,
+    ...payload,
+    services: payload.service_name
+      ? { name: payload.service_name }
+      : payload.service_id === null
+        ? null
+        : opportunity.services,
+    // Le brouillon ne peut jamais changer lui-même son état public.
+    publication_status: opportunity.publication_status,
+    published_at: opportunity.published_at,
+    archived_at: opportunity.archived_at,
+    archive_requested_at: opportunity.archive_requested_at,
+    archive_requested_by: opportunity.archive_requested_by,
+    organization_material: opportunity.organization_material,
+  };
+  return { opportunity: merged, dates: revision.dates ?? dates, revision };
+}
+
 export async function getMyAssignments(supabase: SupabaseClient, userId: string) {
   const { data } = await supabase
     .from("opportunity_assignments")
@@ -198,7 +241,8 @@ export async function getProjectsTrainingRights(supabase: SupabaseClient, userId
     getMyAssignments(supabase, userId),
     supabase.from("profiles").select("can_create_opportunities").eq("id", userId).single(),
   ]);
-  return { admin: !!superAdmin, member: assignments.responsibilities.size > 0, assignments: assignments.responsibilities, editableAssignments: assignments.editable, canCreate: !!superAdmin || !!profile?.can_create_opportunities };
+  const managesAtLeastOne = [...assignments.responsibilities.values()].some((role) => role === "manager");
+  return { admin: !!superAdmin, member: assignments.responsibilities.size > 0, assignments: assignments.responsibilities, editableAssignments: assignments.editable, canCreate: !!profile?.can_create_opportunities || managesAtLeastOne };
 }
 
 /** La création est réservée aux super administrateurs et responsables habilités. */

@@ -19,6 +19,7 @@ export default function WorkshopMaterialsInput({ initialValue = "" }: { initialV
 
   return (
     <fieldset className="rounded-2xl border border-border bg-surface/50 p-4 sm:p-5">
+      <input type="hidden" name="organization_material_present" value="1" />
       <legend className="px-1 text-sm font-semibold text-foreground">Matériel nécessaire à l’organisation</legend>
       <p className="mb-3 text-xs leading-5 text-muted">Informations internes réservées aux super administrateurs. Elles ne sont jamais affichées aux participants.</p>
       <div className="flex flex-wrap gap-2">

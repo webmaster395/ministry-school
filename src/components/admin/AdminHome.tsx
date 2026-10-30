@@ -23,9 +23,8 @@ export default function AdminHome({ viewer }: { viewer: Viewer }) {
 
   return <div className="space-y-7">
     <header>
-      <span className="label inline-flex rounded-full border border-border bg-surface px-3 py-1 text-[10px] tracking-[.14em] text-muted">{viewer.roles.superAdmin ? "SUPER ADMIN" : "ADMIN"}</span>
-      <h1 className="font-title mt-3 text-[34px] leading-tight text-foreground sm:text-[42px]">Administration</h1>
-      <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">Accédez aux outils correspondant à votre niveau de permissions depuis une interface unique.</p>
+      <span className="label inline-flex rounded-full border border-border bg-surface px-3 py-1 text-[10px] tracking-[.14em] text-muted">{viewer.roles.superAdmin ? "Super admin" : "Admin"}</span>
+      <h1 className="font-title mt-3 text-[34px] leading-tight text-foreground sm:text-[42px]">Admin</h1>
     </header>
     <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
       {sections.map((section) => { const Icon = section.icon; const badge = "badge" in section && section.badge; return <Link key={section.href} href={section.href} className="group flex min-h-[176px] flex-col rounded-2xl border border-border bg-background p-5 transition hover:border-foreground sm:p-6">

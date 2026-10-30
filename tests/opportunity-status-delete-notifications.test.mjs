@@ -18,8 +18,10 @@ test("les affectations et les créations sont idempotentes", () => {
 test("la gestion affiche les cinq états et expose la suppression sécurisée", () => {
   const list = source("src/app/gestion/projets-formations/page.tsx");
   const detail = source("src/app/gestion/projets-formations/[id]/page.tsx");
+  const workflow = source("src/lib/opportunity-workflow.ts");
   const migration = source("supabase/migrations/20261029230000_opportunity_status_delete_and_notification_dedupe.sql");
-  for (const label of ["Brouillon", "Soumis à validation", "Publié", "Passé"]) assert.match(list, new RegExp(label));
+  for (const label of ["Brouillon", "À valider", "Corrections en attente", "Publication programmée", "Publié", "Passé", "Archivé"]) assert.match(workflow, new RegExp(label));
+  assert.match(list, /opportunityWorkflow/);
   assert.match(detail, /DeleteOpportunityButton/);
   assert.match(migration, /delete_opportunity_admin/);
 });

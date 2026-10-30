@@ -2,24 +2,15 @@ import Link from "next/link";
 import { CalendarDays, ChevronRight, MapPin, Plus, Users } from "lucide-react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { getOpportunities, getOpportunityCounts, getOpportunityDates, getProjectsTrainingRights, isPublished, opportunityType, TYPE_LABEL, type Opportunity } from "@/lib/data/opportunities";
+import { getOpportunities, getOpportunityCounts, getOpportunityDates, getProjectsTrainingRights, opportunityType, TYPE_LABEL } from "@/lib/data/opportunities";
 import { formatSessionDate } from "@/lib/format";
 import OpportunityBanner from "@/components/OpportunityBanner";
-import { getOpportunityReviewState, type OpportunityReviewState } from "@/lib/data/opportunity-review";
+import { getOpportunityReviewState } from "@/lib/data/opportunity-review";
 import { plainTextContent } from "@/components/FormattedContent";
 import { getViewer } from "@/lib/data/viewer";
+import { opportunityWorkflow } from "@/lib/opportunity-workflow";
 
 type StatusKey = "all" | "draft" | "pending" | "published" | "past";
-
-function workflowStatus(row: Opportunity, dates: { session_date: string }[], review: OpportunityReviewState, today: string) {
-  if (row.publication_status === "archived") return { key: "past" as const, label: "Archivé" };
-  if (isPublished(row) && dates.length > 0 && dates.every((date) => date.session_date < today)) return { key: "past" as const, label: "Passé" };
-  if (review.status === "pending") return { key: "pending" as const, label: "Soumis à validation" };
-  if (review.status === "changes_requested") return { key: "pending" as const, label: "À corriger" };
-  if (row.publication_status === "scheduled") return { key: "published" as const, label: "Publication programmée" };
-  if (isPublished(row)) return { key: "published" as const, label: "Publié" };
-  return { key: "draft" as const, label: "Brouillon" };
-}
 
 export default async function ProjectsTrainingManagementPage({ searchParams }: { searchParams: Promise<{ statut?: string; scope?: string }> }) {
   const supabase = await createClient();
@@ -33,19 +24,19 @@ export default async function ProjectsTrainingManagementPage({ searchParams }: {
   ]);
   const query = await searchParams;
   const globalScope = !!viewer?.roles.admin && ["admin", "super"].includes(query.scope ?? "");
-  if (!globalScope && !rights.admin && !rights.member) redirect("/etudiant");
+  if (!globalScope && !rights.member && !rights.canCreate) redirect("/etudiant");
   const mine = globalScope ? rows : rows.filter((row) => rights.assignments.has(row.id));
   const requested = query.statut;
   const filter: StatusKey = (["draft", "pending", "published", "past"] as string[]).includes(requested ?? "") ? requested as StatusKey : "all";
-  const today = new Date().toISOString().slice(0, 10);
   const withDates = await Promise.all(mine.map(async (row) => {
     const [dates, review] = await Promise.all([getOpportunityDates(supabase, row.id), getOpportunityReviewState(supabase, row.id)]);
-    return { row, dates, review, workflow: workflowStatus(row, dates, review, today) };
+    const workflow = opportunityWorkflow(row, dates, review);
+    return { row, dates, review, workflow: { ...workflow, key: workflow.key === "corrections" ? "pending" as const : workflow.key === "scheduled" ? "published" as const : workflow.key === "archived" ? "past" as const : workflow.key } };
   }));
   const shown = filter === "all" ? withDates : withDates.filter((item) => item.workflow.key === filter);
 
   return <div className="space-y-5">
-    <header className="flex flex-wrap items-start justify-between gap-4"><div><p className="label text-xs tracking-[.18em] text-muted">{globalScope ? "ADMINISTRATION" : "GESTION"}</p><h1 className="font-title mt-2 text-[30px]">Projets et formations</h1><p className="mt-1 text-sm text-muted">{globalScope ? "Vue globale. Les actions dépendent de votre niveau d’accès." : "Uniquement les éléments auxquels vous êtes affecté."}</p></div>{rights.canCreate && (!globalScope || viewer?.roles.superAdmin) && <Link href={`/gestion/projets-formations/nouveau${globalScope ? "?scope=admin" : ""}`} className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-medium text-on-accent"><Plus size={17} /> Créer un élément</Link>}</header>
+    <header className="flex flex-wrap items-start justify-between gap-4"><div><p className="label text-xs tracking-[.18em] text-muted">{globalScope ? "ADMINISTRATION" : "GESTION"}</p><h1 className="font-title mt-2 text-[30px]">Projets et formations</h1><p className="mt-1 text-sm text-muted">{globalScope ? "Vue globale. Les actions dépendent de votre niveau d’accès." : "Uniquement les éléments auxquels vous êtes affecté."}</p></div>{(globalScope ? viewer?.roles.superAdmin : rights.canCreate) && <Link href={`/gestion/projets-formations/nouveau${globalScope ? "?scope=admin" : ""}`} className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-medium text-on-accent"><Plus size={17} /> Créer un élément</Link>}</header>
     <nav className="grid grid-cols-2 gap-2 rounded-2xl border border-border bg-background p-1.5 sm:grid-cols-5">{[
       ["all", "Tous"], ["draft", "Brouillons"], ["pending", "Soumis"], ["published", "Publiés"], ["past", "Passés"],
     ].map(([key, label]) => { const params = new URLSearchParams(); if (key !== "all") params.set("statut", key); if (globalScope) params.set("scope", "admin"); const suffix = params.toString(); return <Link key={key} href={`/gestion/projets-formations${suffix ? `?${suffix}` : ""}`} className={`rounded-xl px-3 py-2.5 text-center text-sm font-medium ${filter === key ? "bg-accent text-on-accent" : "text-muted hover:bg-surface hover:text-foreground"}`}>{label}</Link>; })}</nav>

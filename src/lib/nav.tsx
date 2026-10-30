@@ -142,8 +142,8 @@ export function navSpaces(roles: ViewerRoles): Space[] {
       key: "admin",
       label: "Admin",
       icon: icons.functions,
-      title: "Administration",
-      subtitle: "Consultez les outils correspondant à votre niveau d’accès.",
+      title: "Admin",
+      subtitle: "",
       sections: [
         {
           title: "Administration",
