@@ -4,6 +4,7 @@ import { formatSessionDate, formatTimeRange } from "@/lib/format";
 import SessionTypeBadge from "@/components/SessionTypeBadge";
 import SessionEditForm from "@/components/SessionEditForm";
 import { createSession, deleteSession } from "./actions";
+import AdminSelect from "@/components/admin/AdminSelect";
 
 export default async function AdminSessionsPage() {
   const supabase = await createClient();
@@ -28,73 +29,27 @@ export default async function AdminSessionsPage() {
         <form action={createSession} className="grid gap-3 sm:grid-cols-2">
           <div>
             <label className="mb-1 block text-xs text-muted">Type</label>
-            <select
-              name="session_type"
-              required
-              defaultValue="commun"
-              className="w-full rounded-md border border-border px-3 py-2 text-sm"
-            >
-              <option value="commun">Tronc commun</option>
-              <option value="ministere">Par ministère</option>
-            </select>
+            <AdminSelect name="session_type" defaultValue="commun" options={[{value:"commun",label:"Tronc commun"},{value:"ministere",label:"Par ministère"}]} />
           </div>
 
           <div>
             <label className="mb-1 block text-xs text-muted">Ministère</label>
-            <select
-              name="ministry_id"
-              className="w-full rounded-md border border-border px-3 py-2 text-sm"
-            >
-              <option value="">— Tronc commun / non applicable —</option>
-              {ministries.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.name}
-                </option>
-              ))}
-            </select>
+            <AdminSelect name="ministry_id" options={[{value:"",label:"Tronc commun / non applicable"},...ministries.map((m) => ({value:m.id,label:m.name}))]} searchable />
           </div>
 
           <div>
             <label className="mb-1 block text-xs text-muted">Cours</label>
-            <select
-              name="course_id"
-              className="w-full rounded-md border border-border px-3 py-2 text-sm"
-            >
-              <option value="">— Aucun cours rattaché —</option>
-              {courses.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.title}
-                </option>
-              ))}
-            </select>
+            <AdminSelect name="course_id" options={[{value:"",label:"Aucun cours rattaché"},...courses.map((c) => ({value:c.id,label:c.title}))]} searchable />
           </div>
 
           <div>
             <label className="mb-1 block text-xs text-muted">Intervenant (compte, optionnel)</label>
-            <select
-              name="teacher_id"
-              className="w-full rounded-md border border-border px-3 py-2 text-sm"
-            >
-              <option value="">— Non assigné —</option>
-              {teachers.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.full_name}
-                </option>
-              ))}
-            </select>
+            <AdminSelect name="teacher_id" options={[{value:"",label:"Non assigné"},...teachers.map((t) => ({value:t.id,label:t.full_name}))]} searchable />
           </div>
 
           <div>
             <label className="mb-1 block text-xs text-muted">Jour</label>
-            <select
-              name="day"
-              required
-              defaultValue="samedi"
-              className="w-full rounded-md border border-border px-3 py-2 text-sm"
-            >
-              <option value="samedi">Samedi</option>
-              <option value="dimanche">Dimanche</option>
-            </select>
+            <AdminSelect name="day" defaultValue="samedi" options={[{value:"samedi",label:"Samedi"},{value:"dimanche",label:"Dimanche"}]} />
           </div>
 
           <div>
@@ -130,30 +85,14 @@ export default async function AdminSessionsPage() {
 
           <div>
             <label className="mb-1 block text-xs text-muted">Lieu</label>
-            <select
-              name="location"
-              required
-              defaultValue="Espace Martin Luther King"
-              className="w-full rounded-md border border-border px-3 py-2 text-sm"
-            >
-              <option value="Espace Martin Luther King">Espace Martin Luther King</option>
-            </select>
+            <AdminSelect name="location" defaultValue="Espace Martin Luther King" options={[{value:"Espace Martin Luther King",label:"Espace Martin Luther King"}]} />
           </div>
 
           <div>
             <label className="mb-1 block text-xs text-muted">
               Salle <span className="text-muted">(facultatif)</span>
             </label>
-            <select
-              name="room"
-              defaultValue=""
-              className="w-full rounded-md border border-border px-3 py-2 text-sm"
-            >
-              <option value="">Aucune salle</option>
-              <option value="Giroud">Giroud</option>
-              <option value="Rosa Parks">Rosa Parks</option>
-              <option value="Denis">Denis</option>
-            </select>
+            <AdminSelect name="room" options={[{value:"",label:"Aucune salle"},{value:"Giroud",label:"Giroud"},{value:"Rosa Parks",label:"Rosa Parks"},{value:"Denis",label:"Denis"}]} />
           </div>
 
           <div className="sm:col-span-2">

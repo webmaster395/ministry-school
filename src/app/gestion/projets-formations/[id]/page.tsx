@@ -11,6 +11,8 @@ import { getOpportunityReviewState } from "@/lib/data/opportunity-review";
 import { getOpportunityResources } from "@/lib/data/opportunity-resources";
 import OpportunityResourcesEditor from "@/components/OpportunityResourcesEditor";
 import DeleteOpportunityButton from "@/components/admin/DeleteOpportunityButton";
+import ContributorAccessEditor from "@/components/gestion/ContributorAccessEditor";
+import ArchiveOpportunityRequest from "@/components/gestion/ArchiveOpportunityRequest";
 
 function firstSaturday(year: number, month: number) {
   const date = new Date(Date.UTC(year, month, 1));
@@ -18,7 +20,7 @@ function firstSaturday(year: number, month: number) {
   return date.toISOString().slice(0, 10);
 }
 
-export default async function ProjectsTrainingManageDetail({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ creation?: string }> }) {
+export default async function ProjectsTrainingManageDetail({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ creation?: string; scope?: string }> }) {
   const [{ id }, query] = await Promise.all([params, searchParams]);
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -31,16 +33,18 @@ export default async function ProjectsTrainingManageDetail({ params, searchParam
     supabase.rpc("can_review_editorial_content"),
   ]);
   if (!opportunity) notFound();
-  const responsibility = rights.admin ? "admin" : rights.assignments.get(id);
+  const globalScope = rights.admin && query.scope === "super";
+  const responsibility = globalScope ? "admin" : rights.assignments.get(id);
   if (!responsibility) redirect("/gestion/projets-formations");
   const canManage = responsibility === "admin" || responsibility === "manager";
+  const canEdit = canManage || rights.editableAssignments.has(id);
   const [{ data: team }, { data: sessionParticipants }, reviewState, resources] = await Promise.all([
     supabase.rpc("opportunity_team", { p_opportunity: id }),
     supabase.rpc("opportunity_session_participants", { p_opp: id }),
     getOpportunityReviewState(supabase, id),
     getOpportunityResources(supabase, id),
   ]);
-  const teamRows = (team ?? []) as { user_id: string; full_name: string; responsibility: "manager" | "contributor" }[];
+  const teamRows = (team ?? []) as { user_id: string; full_name: string; responsibility: "manager" | "contributor"; can_edit: boolean }[];
   const sessionParticipantRows = (sessionParticipants ?? []) as { opportunity_date_id: string; user_id: string; full_name: string }[];
   const members = rights.admin ? await getMembers(supabase) : [];
   const internalMaterial = canManageInternalMaterial ? await getOpportunityInternalMaterial(supabase, id) : null;
@@ -51,19 +55,21 @@ export default async function ProjectsTrainingManageDetail({ params, searchParam
   const publicationLabel = opportunity.publication_status === "scheduled" ? "Publication programmée" : opportunity.publication_status === "published" ? "Publié" : opportunity.publication_status === "archived" ? "Archivé" : "Non publié";
 
   const editExtras = <div className="space-y-5">
-    <OpportunityResourcesEditor opportunityId={id} resources={resources} />
-    {rights.admin && <AssignmentEditor opportunityId={id} members={members.filter((member) => !member.deactivated).map(({ id: memberId, full_name, email }) => ({ id: memberId, full_name, email }))} managers={teamRows.filter((person) => person.responsibility === "manager").map((person) => person.user_id)} contributors={teamRows.filter((person) => person.responsibility === "contributor").map((person) => person.user_id)} />}
-    <DeleteOpportunityButton opportunityId={id} title={opportunity.title} />
+    {canEdit && <OpportunityResourcesEditor opportunityId={id} resources={resources} />}
+    {globalScope && <AssignmentEditor opportunityId={id} members={members.filter((member) => !member.deactivated).map(({ id: memberId, full_name, email }) => ({ id: memberId, full_name, email }))} managers={teamRows.filter((person) => person.responsibility === "manager").map((person) => person.user_id)} contributors={teamRows.filter((person) => person.responsibility === "contributor").map((person) => person.user_id)} />}
+    {responsibility === "manager" && <section className="rounded-3xl border border-border bg-background p-5 sm:p-6"><h2 className="font-title text-xl">Accès des contributeurs</h2><p className="mb-4 mt-1 text-sm text-muted">Les affectations sont gérées par la Super administration. Vous pouvez uniquement choisir le niveau d’accès des personnes déjà affectées.</p><ContributorAccessEditor opportunityId={id} contributors={teamRows.filter((person) => person.responsibility === "contributor")} /></section>}
+    {globalScope ? <DeleteOpportunityButton opportunityId={id} title={opportunity.title} /> : responsibility === "manager" ? <ArchiveOpportunityRequest opportunityId={id} requested={!!opportunity.archive_requested_at} /> : null}
   </div>;
 
   return <div className="space-y-5">
-    <div className="flex flex-wrap items-center justify-between gap-3"><Link href="/gestion/projets-formations" className="inline-flex items-center gap-1.5 text-sm text-muted"><ChevronLeft size={16} /> Projets et formations</Link><Link href={`/etudiant/services/${id}?preview=1`} className="text-sm text-muted hover:text-foreground">Prévisualiser la fiche étudiante</Link></div>
+    <div className="flex flex-wrap items-center justify-between gap-3"><Link href={globalScope ? "/gestion/projets-formations?scope=super" : "/gestion/projets-formations"} className="inline-flex items-center gap-1.5 text-sm text-muted"><ChevronLeft size={16} /> Projets et formations</Link><Link href={`/etudiant/services/${id}?preview=1`} className="text-sm text-muted hover:text-foreground">Prévisualiser la fiche étudiante</Link></div>
     {query.creation === "ok" && <p role="status" className="flex items-center gap-2 rounded-xl border border-border bg-background px-4 py-3 text-sm"><CheckCircle2 size={18} /> Élément créé et conservé dans son état de publication choisi.</p>}
     <OpportunityReviewPanel opportunityId={id} state={reviewState} canManage={canManage} />
     <OpportunityEditForms
       opportunity={opportunityWithPrivatePlanning}
       initialDates={dates}
-      responsibility={responsibility}
+      canEdit={canEdit}
+      canManage={canManage}
       services={services}
       suggestedSaturdays={suggestedSaturdays}
       team={teamRows}

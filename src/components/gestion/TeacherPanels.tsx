@@ -5,7 +5,6 @@ import {
   Clock3,
   Copy,
   ExternalLink,
-  FileText,
   Pencil,
   Trash2,
   X,
@@ -14,6 +13,7 @@ import ResourceDialog from "@/components/ResourceDialog";
 import MaterialLink from "@/components/MaterialLink";
 import FormSubmitButton from "@/components/FormSubmitButton";
 import RichTextEditor from "@/components/gestion/RichTextEditor";
+import AdminSelect from "@/components/admin/AdminSelect";
 import AvailabilityPicker from "@/components/AvailabilityPicker";
 import { formatAvailability } from "@/lib/availability";
 import { updateSession } from "@/lib/actions/sessions";
@@ -403,21 +403,7 @@ export function teacherPanels(
                     placeholder="Titre"
                     className={field}
                   />
-                  <select
-                    name="content_type"
-                    defaultValue={a.content_type ?? "Travail personnel"}
-                    className={field}
-                  >
-                    <option>Travail personnel</option>
-                    <option>Consigne</option>
-                    <option>Lecture</option>
-                    <option>Vidéo</option>
-                    <option>PDF</option>
-                    <option>Lien</option>
-                    <option>Question de réflexion</option>
-                    <option>Exercice</option>
-                    <option>Devoir</option>
-                  </select>
+                  <AdminSelect name="content_type" defaultValue={a.content_type ?? "Travail personnel"} options={["Travail personnel","Consigne","Lecture","Vidéo","PDF","Lien","Question de réflexion","Exercice","Devoir"].map((item) => ({value:item,label:item}))} />
                   <RichTextEditor
                     name="instructions"
                     rows={12}
@@ -503,21 +489,7 @@ export function teacherPanels(
           placeholder={placeholder}
           className={field}
         />
-        <select
-          name="content_type"
-          defaultValue={phase === "after" ? "Travail personnel" : "Consigne"}
-          className={field}
-        >
-          <option>Travail personnel</option>
-          <option>Consigne</option>
-          <option>Lecture</option>
-          <option>Vidéo</option>
-          <option>PDF</option>
-          <option>Lien</option>
-          <option>Question de réflexion</option>
-          <option>Exercice</option>
-          <option>Devoir</option>
-        </select>
+        <AdminSelect name="content_type" defaultValue={phase === "after" ? "Travail personnel" : "Consigne"} options={["Travail personnel","Consigne","Lecture","Vidéo","PDF","Lien","Question de réflexion","Exercice","Devoir"].map((item) => ({value:item,label:item}))} />
         <RichTextEditor
           name="instructions"
           rows={8}

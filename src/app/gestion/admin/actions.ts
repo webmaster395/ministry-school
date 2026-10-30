@@ -2,6 +2,12 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { getViewer } from "@/lib/data/viewer";
+
+async function assertSuperAdmin() {
+  const viewer = await getViewer();
+  if (!viewer?.roles.superAdmin) throw new Error("Action réservée à la Super administration.");
+}
 
 export type MemberActionResult = {
   success?: boolean;
@@ -13,6 +19,7 @@ export async function updateMember(
   prevStateOrFormData: MemberActionResult | FormData,
   maybeFormData?: FormData
 ): Promise<MemberActionResult> {
+  await assertSuperAdmin();
   const data = (maybeFormData instanceof FormData ? maybeFormData : prevStateOrFormData) as FormData;
   const supabase = await createClient();
   const text = (key: string) => ((data.get(key) as string) ?? "").trim();
@@ -53,8 +60,9 @@ export async function setMemberActive(
   return { success: true };
 }
 
-/** Donne accès à la vue d'un ministère à une adresse e-mail (le secrétaire du pasteur, par exemple). */
+/** Affecte un contributeur ministériel en lecture seule par défaut. */
 export async function addDelegate(formData: FormData) {
+  await assertSuperAdmin();
   const supabase = await createClient();
   const email = ((formData.get("email") as string) ?? "").trim().toLowerCase();
   const ministryId = formData.get("ministry_id") as string;
@@ -69,6 +77,7 @@ export async function addDelegate(formData: FormData) {
     ministry_id: ministryId,
     email,
     user_id: existing?.id ?? null,
+    can_edit: false,
   });
   if (error) throw new Error("L'ajout a échoué : " + error.message);
 
@@ -76,6 +85,7 @@ export async function addDelegate(formData: FormData) {
 }
 
 export async function removeDelegate(formData: FormData) {
+  await assertSuperAdmin();
   const supabase = await createClient();
   await supabase.from("ministry_delegates").delete().eq("id", formData.get("delegate_id") as string);
   revalidatePath("/gestion/admin");

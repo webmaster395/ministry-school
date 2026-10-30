@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { deleteSessionFromCard, updateSessionWithFeedback } from "@/lib/actions/sessions";
+import AdminSelect from "@/components/admin/AdminSelect";
 
 export type EditableSession = {
   id: string;
@@ -59,7 +60,7 @@ export default function SessionEditForm({
 
         <label className="block text-sm font-medium text-foreground">Titre du cours<input name="description" defaultValue={s.description ?? ""} className={`${field} mt-1.5`} /></label>
 
-        <label className="block text-sm font-medium text-foreground">Catégorie<select name="track" value={category} onChange={(event) => setCategory(event.target.value)} className={`${field} mt-1.5`}>{s.track && !standardCategories.includes(s.track) && <option value={s.track}>{s.track}</option>}{standardCategories.map((item) => <option key={item}>{item}</option>)}</select></label>
+        <label className="block text-sm font-medium text-foreground">Catégorie<AdminSelect name="track" value={category} onValueChange={setCategory} className="mt-1.5" options={[...(s.track && !standardCategories.includes(s.track) ? [{ value: s.track, label: s.track }] : []), ...standardCategories.map((item) => ({ value: item, label: item }))]} /></label>
 
         <div className="grid gap-3 sm:grid-cols-[1fr_1fr_1fr]">
           <label className="block text-sm font-medium text-foreground">Date<input type="date" name="session_date" min={fixedMinistrySchedule ? "2027-01-01" : undefined} required defaultValue={s.session_date} className={`${field} mt-1.5`} /></label>
@@ -76,12 +77,7 @@ export default function SessionEditForm({
             <input type="hidden" name="day" value={s.day ?? "samedi"} />
             {category === "Sensibilité ministérielle" && <div>
               <label className="mb-1 block text-sm font-medium text-foreground">Sensibilité ministérielle</label>
-              <select name="ministry_id" defaultValue={s.ministry_id ?? ""} className={field}>
-                <option value="">Choisir une sensibilité</option>
-                {admin.ministries.map((m) => (
-                  <option key={m.id} value={m.id}>{m.name}</option>
-                ))}
-              </select>
+              <AdminSelect name="ministry_id" defaultValue={s.ministry_id ?? ""} placeholder="Choisir une sensibilité" options={admin.ministries.map((m) => ({ value: m.id, label: m.name }))} searchable />
             </div>}
           </>
         )}

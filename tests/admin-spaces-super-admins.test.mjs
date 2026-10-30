@@ -20,21 +20,21 @@ test("les espaces administratifs suivent l'ordre et le comportement un ou plusie
     source("src/lib/nav.tsx"),
     source("src/components/NavBlocks.tsx"),
   ]);
-  const validation = nav.indexOf('key: "validation"');
+  const superAdmin = nav.indexOf('key: "superAdmin"');
   const admin = nav.indexOf('key: "admin"');
   const steering = nav.indexOf('key: "steering"');
   const projects = nav.indexOf('key: "projectsTraining"');
-  assert.ok(validation < admin && admin < steering && steering < projects);
+  assert.ok(superAdmin < admin && admin < steering && steering < projects);
   assert.match(nav, /if \(roles\.superAdmin\)/);
-  assert.match(nav, /if \(roles\.admin\)/);
+  assert.match(nav, /if \(roles\.admin && !roles\.superAdmin\)/);
   assert.match(nav, /if \(roles\.steeringMinistryIds\.length > 0\)/);
-  assert.match(nav, /if \(roles\.superAdmin \|\| roles\.projectsTraining\)/);
+  assert.match(nav, /if \(roles\.projectsTraining\)/);
   assert.match(blocks, /Mon espace admin/);
   assert.match(blocks, /Mes espaces admin/);
   assert.match(blocks, /multiple \? \(/);
   assert.match(blocks, /admin-spaces-open/);
   assert.match(blocks, /pendingValidationCount/);
-  assert.match(blocks, /space\.key === "validation"/);
+  assert.match(blocks, /space\.key === "superAdmin"/);
 });
 
 test("exactement les trois comptes nominatifs obtiennent la super administration", async () => {
@@ -103,25 +103,25 @@ test("la fiche membre rassemble contact, compte, responsabilités et inscription
 });
 
 test("projets et pilotage sont bornés aux affectations explicites côté serveur", async () => {
-  const migration = await source("supabase/migrations/20261030120000_admin_spaces_and_super_admins.sql");
-  assert.match(migration, /can_manage_opportunity[\s\S]*?opportunity_assignments[\s\S]*?responsibility in \('manager', 'contributor'\)/);
+  const migration = await source("supabase/migrations/20261030140000_separate_admin_scopes_and_contributor_access.sql");
+  assert.match(migration, /can_edit_opportunity[\s\S]*?opportunity_assignments[\s\S]*?assignment\.can_edit/);
   assert.match(migration, /can_submit_opportunity[\s\S]*?responsibility = 'manager'/);
   assert.match(migration, /has_projects_training_access[\s\S]*?opportunity_assignments/);
-  assert.match(migration, /enforce_super_admin_opportunity_creation/);
+  assert.match(migration, /can_create_opportunities/);
   assert.match(migration, /is_strict_pilotage_for[\s\S]*?ministry_lead_of = p_ministry[\s\S]*?ministry_delegates/);
   assert.doesNotMatch(migration.slice(migration.indexOf("create or replace function public.is_strict_pilotage_for"), migration.indexOf("create or replace function public.strict_pilotage_ministries")), /p\.ministry_id = p_ministry/);
 });
 
 test("seuls le responsable ministériel et les super administratrices créent un cours", async () => {
   const [migration, page, board, nav, communication] = await Promise.all([
-    source("supabase/migrations/20261030130000_admin_opportunity_analytics.sql"),
+    source("supabase/migrations/20261030140000_separate_admin_scopes_and_contributor_access.sql"),
     source("src/app/gestion/pilotage/page.tsx"),
     source("src/components/PrepBoard.tsx"),
     source("src/lib/nav.tsx"),
     source("src/app/gestion/communication/page.tsx"),
   ]);
-  assert.match(migration, /create_ministry_course[\s\S]*?is_super_admin\(\)[\s\S]*?ministry_lead_of = p_ministry/);
-  assert.match(page, /canCreateCourse = viewer\.roles\.superAdmin \|\| leadProfile\?\.ministry_lead_of === ministry\.id/);
+  assert.match(migration, /create_ministry_course[\s\S]*?is_super_admin\(\)[\s\S]*?is_ministry_lead_for\(p_ministry\)/);
+  assert.match(page, /canCreateCourse = leadProfile\?\.ministry_lead_of === ministry\.id/);
   assert.match(board, /ministry\?\.id && canCreateCourse/);
   const steeringBlock = nav.slice(nav.indexOf('key: "steering"'), nav.indexOf('key: "projectsTraining"'));
   assert.doesNotMatch(steeringBlock, /Communication/);

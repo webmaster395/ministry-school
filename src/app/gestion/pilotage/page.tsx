@@ -6,6 +6,7 @@ import { buildRows, getMinistrySessions, getSteeredMinistries } from "@/lib/data
 import { getMinistry } from "@/lib/ministry";
 import MinistryPicto from "@/components/MinistryPicto";
 import PrepBoard, { type PrepTab } from "@/components/PrepBoard";
+import MinistryContributorAccess from "@/components/gestion/MinistryContributorAccess";
 
 export default async function PilotagePage({
   searchParams,
@@ -33,7 +34,11 @@ export default async function PilotagePage({
     .select("ministry_lead_of")
     .eq("id", viewer.id)
     .single();
-  const canCreateCourse = viewer.roles.superAdmin || leadProfile?.ministry_lead_of === ministry.id;
+  const canCreateCourse = leadProfile?.ministry_lead_of === ministry.id;
+  const { data: delegateRows } = canCreateCourse ? await supabase
+    .from("ministry_delegates")
+    .select("user_id, can_edit, profile:profiles!ministry_delegates_user_id_fkey(full_name)")
+    .eq("ministry_id", ministry.id) : { data: [] };
   const { data: ministryStudents } = await supabase
     .from("profiles")
     .select("id, full_name, preferred_day")
@@ -115,6 +120,8 @@ export default async function PilotagePage({
         ministryColor={color}
         today={new Date().toISOString().slice(0, 10)}
       />
+
+      {canCreateCourse && <section className="rounded-2xl border border-border bg-background p-5 sm:p-6"><h2 className="font-title text-[20px]">Accès des contributeurs</h2><p className="mb-4 mt-1 text-sm text-muted">La Super administration choisit les contributeurs. Vous pouvez seulement définir leur accès en lecture ou en modification.</p><MinistryContributorAccess ministryId={ministry.id} contributors={(delegateRows ?? []).map((row) => ({ user_id: row.user_id as string, full_name: ((row.profile as unknown as { full_name?: string | null } | null)?.full_name || "Membre"), can_edit: !!row.can_edit }))} /></section>}
 
       <details className="rounded-2xl border border-border bg-background">
         <summary className="cursor-pointer list-none px-5 py-4 text-sm font-semibold text-foreground sm:px-6">

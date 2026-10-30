@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useState, useTransition } from "react";
-import { AlertCircle, Check, Loader2, Lock, ShieldCheck } from "lucide-react";
+import { AlertCircle, Check, Loader2, ShieldCheck } from "lucide-react";
 import {
   updateMember,
   removeMemberAvatar,
@@ -9,8 +9,7 @@ import {
   type MemberActionResult,
 } from "@/app/gestion/admin/actions";
 import type { Member } from "@/lib/data/admin-hub";
-
-const field = "rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground";
+import AdminSelect from "@/components/admin/AdminSelect";
 
 export default function MemberAccessEditor({
   member,
@@ -23,7 +22,7 @@ export default function MemberAccessEditor({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(member.role === "admin");
-  const [isProjectsTraining, setIsProjectsTraining] = useState(member.is_projects_training_member);
+  const [isProjectsTraining, setIsProjectsTraining] = useState(member.can_create_opportunities);
 
   const [state, action, isPending] = useActionState<MemberActionResult, FormData>(updateMember, {});
   const [showSuccess, setShowSuccess] = useState(false);
@@ -82,38 +81,27 @@ export default function MemberAccessEditor({
                 <div>
                   <p className="font-semibold text-foreground">Accès complet inclus</p>
                   <p className="mt-0.5 text-muted">
-                    Un Admin a automatiquement accès à tous les espaces. Les autres cases sont donc figées.
+                    L’administration classique reste séparée des responsabilités opérationnelles.
                   </p>
                 </div>
               </div>
             )}
 
-            {isAdmin && isProjectsTraining && <input type="hidden" name="is_projects_training_member" value="on" />}
-
             <label
-              className={`flex items-center justify-between gap-2 rounded-md p-1 -mx-1 transition ${
-                isAdmin ? "cursor-not-allowed opacity-55" : "cursor-pointer hover:bg-foreground/[0.02]"
-              }`}
+              className="-mx-1 flex cursor-pointer items-center justify-between gap-2 rounded-md p-1 transition hover:bg-foreground/[0.02]"
             >
               <span className="flex items-center gap-2">
                 <input
                   type="checkbox"
-                  name={isAdmin ? undefined : "is_projects_training_member"}
-                  disabled={isAdmin}
+                  name="is_projects_training_member"
                   checked={isProjectsTraining}
                   onChange={(e) => {
                     setIsProjectsTraining(e.target.checked);
                     if (showSuccess) setShowSuccess(false);
                   }}
-                  className={isAdmin ? "cursor-not-allowed" : ""}
                 />{" "}
-                <span className={isAdmin ? "text-muted" : "text-foreground"}>Projets et formations</span>
+                <span className="text-foreground">Peut créer des projets et formations</span>
               </span>
-              {isAdmin && (
-                <span className="inline-flex items-center gap-1 text-[11px] text-muted">
-                  <Lock size={11} className="shrink-0" /> Figé
-                </span>
-              )}
             </label>
 
           </div>
@@ -121,30 +109,12 @@ export default function MemberAccessEditor({
           <div className="space-y-3">
             <label className="block text-xs font-medium text-foreground">
                 Service associé
-                <select name="service_id" defaultValue={member.service_id ?? ""} className={`${field} mt-1.5 w-full`}>
-                  <option value="">Aucun service associé</option>
-                  {services.map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {s.name}
-                    </option>
-                  ))}
-                </select>
+                <AdminSelect name="service_id" defaultValue={member.service_id ?? ""} className="mt-1.5" options={[{value:"",label:"Aucun service associé"},...services.map((s) => ({value:s.id,label:s.name}))]} searchable />
                 <span className="mt-1.5 block font-normal leading-relaxed text-muted">
                   Cette information n’accorde pas à elle seule de droit de gestion.
                 </span>
               </label>
-            <select
-              name="ministry_lead_of"
-              defaultValue={member.ministry_lead_of ?? ""}
-              className={`${field} w-full`}
-            >
-              <option value="">Pilotage ministériel : aucun</option>
-              {ministries.map((x) => (
-                <option key={x.id} value={x.id}>
-                  Pilotage · {x.name}
-                </option>
-              ))}
-            </select>
+            <AdminSelect name="ministry_lead_of" defaultValue={member.ministry_lead_of ?? ""} options={[{value:"",label:"Pilotage ministériel : aucun"},...ministries.map((item) => ({value:item.id,label:`Pilotage · ${item.name}`}))]} searchable />
           </div>
 
           <div className="flex flex-wrap items-center gap-3 pt-1 sm:col-span-2">

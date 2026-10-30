@@ -93,10 +93,16 @@ export async function PreparationPageContent({
   const strictPilot = s.session_type === "ministere" &&
       !!s.ministry_id &&
       viewer.roles.steeringMinistryIds.includes(s.ministry_id);
-  const canEdit = accessMode === "pilotage"
+  const { data: pilotCanEdit } = accessMode === "pilotage"
+    ? await supabase.rpc("can_edit_ministry_course", { p_session: id })
+    : { data: false };
+  const canView = accessMode === "pilotage"
     ? strictPilot
     : viewer.roles.admin || viewer.roles.editorialReviewer || strictPilot;
-  if (!canEdit) redirect("/etudiant");
+  const canEdit = accessMode === "pilotage"
+    ? !!pilotCanEdit
+    : viewer.roles.admin || viewer.roles.editorialReviewer || strictPilot;
+  if (!canView) redirect("/etudiant");
 
   const [{ data: materials }, { data: assignments }] = await Promise.all([
     supabase
@@ -261,14 +267,14 @@ export async function PreparationPageContent({
 
       {reviewState && <MinistryCourseReviewPanel sessionId={s.id} state={reviewState} />}
 
-      {accessMode === "pilotage" && reviewState && (reviewState.status === "published" || reviewState.status === "scheduled") && (
+      {reviewState?.canSubmit && accessMode === "pilotage" && (reviewState.status === "published" || reviewState.status === "scheduled") && (
         <section className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-surface p-5">
           <div><h3 className="font-title text-[19px]">Modifier sans toucher à la version visible</h3><p className="mt-1 text-sm text-muted">Créez un nouveau brouillon reprenant le cours et ses contenus. La version actuelle restera accessible jusqu’à la prochaine validation.</p></div>
           <form action={createMinistryCourseRevision}><input type="hidden" name="session_id" value={s.id} /><button className="rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent">Créer une nouvelle version</button></form>
         </section>
       )}
 
-      {isPilot && (
+      {isPilot && canEdit && (
         <section className="rounded-2xl border border-border bg-background">
           <div className="border-b border-border-soft px-6 py-5">
             <h3 className="font-title text-[20px] text-foreground">
@@ -287,7 +293,7 @@ export async function PreparationPageContent({
         </section>
       )}
 
-      {isPilot && (
+      {isPilot && canEdit && (
         <section className="rounded-2xl border border-border bg-background">
           <div className="border-b border-border-soft px-6 py-5">
             <h3 className="font-title text-[20px] text-foreground">
@@ -363,7 +369,7 @@ export async function PreparationPageContent({
                   </span>
                 )}
               </div>
-              {panels[key]}
+              {canEdit ? panels[key] : <ReadOnlySection section={key} session={s} assignments={(assignments ?? []) as unknown as Parameters<typeof ReadOnlySection>[0]["assignments"]} materials={(materials ?? []) as unknown as Parameters<typeof ReadOnlySection>[0]["materials"]} />}
             </article>
           );
         })}
@@ -387,4 +393,19 @@ export async function PreparationPageContent({
       </div>
     </div>
   );
+}
+
+function ReadOnlySection({ section, session, assignments, materials }: {
+  section: typeof SECTIONS[number];
+  session: FullSession & { video_url: string | null; video_visible_at: string | null };
+  assignments: { id: string; title: string; description: string | null; instructions: string | null; phase: string | null; due_at: string | null }[];
+  materials: { id: string; title: string; description: string | null; link_url: string | null; file_url: string | null }[];
+}) {
+  if (section === "presentation") return <p className="whitespace-pre-wrap text-sm leading-6 text-muted">{session.summary || "Aucune présentation renseignée."}</p>;
+  if (section === "objectifs") return <p className="whitespace-pre-wrap text-sm leading-6 text-muted">{session.objectives || "Aucun objectif renseigné."}</p>;
+  if (section === "video") return session.video_url ? <a className="text-sm font-medium text-link underline underline-offset-4" href={session.video_url} target="_blank" rel="noreferrer">Consulter la vidéo</a> : <p className="text-sm text-muted">Aucune vidéo renseignée.</p>;
+  if (section === "supports") return materials.length ? <ul className="space-y-2">{materials.map((item) => <li key={item.id} className="rounded-xl bg-surface px-4 py-3 text-sm"><strong>{item.title}</strong>{item.description && <p className="mt-1 text-muted">{item.description}</p>}</li>)}</ul> : <p className="text-sm text-muted">Aucune ressource renseignée.</p>;
+  const phase = section === "apres" ? "after" : "before";
+  const rows = assignments.filter((item) => item.phase === phase || (!item.phase && section === "consignes"));
+  return rows.length ? <ul className="space-y-2">{rows.map((item) => <li key={item.id} className="rounded-xl bg-surface px-4 py-3 text-sm"><strong>{item.title}</strong>{(item.instructions || item.description) && <p className="mt-1 whitespace-pre-wrap text-muted">{item.instructions || item.description}</p>}</li>)}</ul> : <p className="text-sm text-muted">Aucun élément renseigné.</p>;
 }

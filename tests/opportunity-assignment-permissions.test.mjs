@@ -4,27 +4,28 @@ import test from "node:test";
 
 const source = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("la liste de gestion ne montre que les affectations sauf pour un administrateur", () => {
+test("la liste personnelle ne montre que les affectations et la vue globale est explicite", () => {
   const page = source("src/app/gestion/projets-formations/page.tsx");
-  assert.match(page, /rights\.admin \? rows : rows\.filter\(\(row\) => rights\.assignments\.has\(row\.id\)\)/);
+  assert.match(page, /globalScope \? rows : rows\.filter\(\(row\) => rights\.assignments\.has\(row\.id\)\)/);
+  assert.match(page, /query\.scope === "super"/);
   assert.match(page, /Uniquement les éléments auxquels vous êtes affecté/);
 });
 
-test("l'accès direct exige une affectation et les deux rôles peuvent gérer", () => {
+test("l'accès direct exige une affectation et l'écriture contributeur est explicite", () => {
   const page = source("src/app/gestion/projets-formations/[id]/page.tsx");
   const form = source("src/components/OpportunityEditForms.tsx");
   assert.match(page, /if \(!responsibility\) redirect\("\/gestion\/projets-formations"\)/);
-  assert.match(page, /responsibility === "contributor"/);
-  assert.match(form, /responsibility === "contributor"/);
-  assert.doesNotMatch(page, /rights\.admin && <DeleteOpportunityButton/);
+  assert.match(page, /rights\.editableAssignments\.has\(id\)/);
+  assert.match(page, /globalScope \? <DeleteOpportunityButton/);
+  assert.match(form, /canEdit: boolean/);
 });
 
-test("la base limite modification et suppression aux affectations ou à l'admin global", () => {
-  const migration = source("supabase/migrations/20261030080000_opportunity_assignment_permissions.sql");
+test("la base sépare lecture, écriture, soumission et suppression", () => {
+  const migration = source("supabase/migrations/20261030140000_separate_admin_scopes_and_contributor_access.sql");
   const actions = source("src/app/etudiant/services/actions.ts");
-  assert.match(migration, /public\.is_platform_admin\(p_user\) or exists/);
-  assert.match(migration, /a\.responsibility in \('manager', 'contributor'\)/);
-  assert.match(migration, /if not public\.can_contribute_opportunity\(p_opportunity\)/);
+  assert.match(migration, /can_edit_opportunity[\s\S]*?assignment\.can_edit/);
+  assert.match(migration, /can_submit_opportunity[\s\S]*?responsibility = 'manager'/);
+  assert.match(migration, /delete_opportunity_admin[\s\S]*?is_super_admin/);
   assert.match(actions, /\.eq\("id", id\)\.select\("id"\)/);
   assert.match(actions, /if \(!updated\?\.length\)/);
 });

@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getCourses, getMinistries } from "@/lib/data/admin";
 import { createCourse, deleteCourse, renameCourse } from "./actions";
 import FormSubmitButton from "@/components/FormSubmitButton";
+import AdminSelect from "@/components/admin/AdminSelect";
 
 export default async function AdminCoursesPage() {
   const supabase = await createClient();
@@ -33,17 +34,7 @@ export default async function AdminCoursesPage() {
 
           <div>
             <label className="mb-1 block text-xs text-muted">Ministère</label>
-            <select
-              name="ministry_id"
-              className="w-full rounded-md border border-border px-3 py-2 text-sm"
-            >
-              <option value="">— Tronc commun / non applicable —</option>
-              {ministries.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.name}
-                </option>
-              ))}
-            </select>
+            <AdminSelect name="ministry_id" options={[{value:"",label:"Tronc commun / non applicable"},...ministries.map((m) => ({value:m.id,label:m.name}))]} searchable />
           </div>
 
           <div className="sm:col-span-2">

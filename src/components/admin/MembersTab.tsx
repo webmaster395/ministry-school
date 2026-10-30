@@ -8,6 +8,7 @@ import { signedAvatarUrls } from "@/lib/avatars";
 import { getMinistry } from "@/lib/ministry";
 import MinistryPicto from "@/components/MinistryPicto";
 import MemberAccessEditor from "@/components/admin/MemberAccessEditor";
+import AdminSelect from "@/components/admin/AdminSelect";
 import MemberFilters from "@/components/admin/MemberFilters";
 import { addDelegate, removeDelegate } from "@/app/gestion/admin/actions";
 import { parseMlkEngagement } from "@/lib/mlk-engagement";
@@ -44,6 +45,8 @@ export default async function MembersTab({
   genre,
   page,
   par,
+  canManageAccess = false,
+  basePath = "/gestion/admin",
 }: {
   q: string;
   role: string;
@@ -54,6 +57,8 @@ export default async function MembersTab({
   genre: string;
   page: string;
   par: string;
+  canManageAccess?: boolean;
+  basePath?: string;
 }) {
   const supabase = await createClient();
   const [members, ministries, services, { data: delegates }] = await Promise.all([
@@ -113,7 +118,7 @@ export default async function MembersTab({
   /** Lien vers une autre page, en gardant la recherche et les filtres. */
   const pageHref = (n: number) => {
     const qs = new URLSearchParams({ onglet: "membres", q, role, sens, statut, tri, implication, genre, par: String(perPage), page: String(n) });
-    return `/gestion/admin?${qs.toString()}`;
+    return `${basePath}?${qs.toString()}`;
   };
   const pager = (
     <nav aria-label="Pages de membres" className="flex flex-col gap-3 text-sm text-muted sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
@@ -147,7 +152,7 @@ export default async function MembersTab({
   );
 
   const listParams = new URLSearchParams({ onglet: "membres", q, role, sens, statut, tri, implication, genre, par: String(perPage), page: String(current) });
-  const returnTo = `/gestion/admin?${listParams.toString()}`;
+  const returnTo = `${basePath}?${listParams.toString()}`;
 
   return (
     <div className="space-y-5">
@@ -235,7 +240,7 @@ export default async function MembersTab({
                     <span className="text-sm tabular-nums text-muted">{fmt(m.created_at)}</span>
                   </div>
 
-                  <MemberAccessEditor member={m} services={services} ministries={ministries} />
+                  {canManageAccess && <MemberAccessEditor member={m} services={services} ministries={ministries} />}
                 </li>
               );
             })}
@@ -247,29 +252,19 @@ export default async function MembersTab({
 
       {pager}
 
-      <section suppressHydrationWarning className="rounded-lg border border-border bg-background p-4 sm:p-6">
-        <h3 className="font-title text-[22px] text-foreground">Secrétaires de pilotage</h3>
+      {canManageAccess && <section suppressHydrationWarning className="rounded-lg border border-border bg-background p-4 sm:p-6">
+        <h3 className="font-title text-[22px] text-foreground">Contributeurs ministériels</h3>
         <p className="mt-1 text-sm text-muted">
-          Une adresse e-mail ajoutée ici donne la même vue que le pasteur du ministère. Si la personne n&apos;a pas
-          encore de compte, l&apos;accès s&apos;active à sa première connexion.
+          La Super administration affecte les contributeurs. Leur accès est en lecture seule par défaut ; le responsable pourra ensuite autoriser la modification.
         </p>
 
         <form action={addDelegate} className="mt-4 grid gap-3 sm:grid-cols-[auto_1fr_auto] sm:items-end">
-          <select name="ministry_id" required defaultValue="" className={field}>
-            <option value="" disabled>
-              Ministère…
-            </option>
-            {ministries.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.name}
-              </option>
-            ))}
-          </select>
+          <AdminSelect name="ministry_id" placeholder="Ministère…" options={ministries.map((item) => ({value:item.id,label:item.name}))} />
           <input
             type="email"
             name="email"
             required
-            placeholder="secretaire@exemple.fr"
+            placeholder="contributeur@exemple.fr"
             className={`${field} min-w-0 w-full`}
           />
           <button
@@ -302,7 +297,7 @@ export default async function MembersTab({
             ))}
           </ul>
         )}
-      </section>
+      </section>}
     </div>
   );
 }

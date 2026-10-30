@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Loader2, Search, SlidersHorizontal, X } from "lucide-react";
 import Portal from "@/components/Portal";
+import AdminSelect from "@/components/admin/AdminSelect";
 
 type MinistryChoice = { id: string; slug: string; name: string };
 export type MemberFilterValues = {
@@ -22,6 +23,8 @@ const ROLE_LABELS: Record<string, string> = { etudiant: "Étudiant", "projets-fo
 const STATUS_LABELS: Record<string, string> = { actif: "Actif", a_confirmer: "À confirmer", desactive: "Désactivé" };
 const IMPLICATION_LABELS: Record<string, string> = { aucun: "Aucun engagement", equipier: "Équipier MLK", manager: "Manager", collaborateur: "Collaborateur", non_renseigne: "Non renseignée" };
 const GENDER_LABELS: Record<string, string> = { homme: "Hommes", femme: "Femmes", non_renseigne: "Non renseigné" };
+const roleOptions = [{value:"tous",label:"Tous les rôles"},{value:"etudiant",label:"Étudiant seulement"},{value:"projets-formations",label:"Projets et formations"},{value:"pilotage",label:"Pilotage ministériel"},{value:"admin",label:"Admin"}];
+const statusOptions = [{value:"tous",label:"Tous les statuts"},{value:"actif",label:"Actif"},{value:"a_confirmer",label:"À confirmer"},{value:"desactive",label:"Désactivé"}];
 
 export default function MemberFilters({ initial, ministries }: { initial: MemberFilterValues; ministries: MinistryChoice[] }) {
   const router = useRouter();
@@ -84,12 +87,8 @@ export default function MemberFilters({ initial, ministries }: { initial: Member
           <input name="q" value={values.q} onChange={(event) => change("q", event.target.value)} placeholder="Rechercher par nom ou e-mail" autoComplete="off" className={`${field} w-full pl-9 pr-9`} />
           {pending && <Loader2 size={16} className="absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-muted" aria-label="Recherche en cours" />}
         </label>
-        <select name="role" value={values.role} onChange={(event) => change("role", event.target.value)} className={`${field} hidden min-w-[150px] sm:block`} aria-label="Rôle">
-          <option value="tous">Tous les rôles</option><option value="etudiant">Étudiant seulement</option><option value="projets-formations">Projets et formations</option><option value="pilotage">Pilotage ministériel</option><option value="admin">Admin</option>
-        </select>
-        <select name="statut" value={values.statut} onChange={(event) => change("statut", event.target.value)} className={`${field} hidden min-w-[145px] sm:block`} aria-label="Statut">
-          <option value="tous">Tous les statuts</option><option value="actif">Actif</option><option value="a_confirmer">À confirmer</option><option value="desactive">Désactivé</option>
-        </select>
+        <AdminSelect name="role" value={values.role} onValueChange={(next) => change("role", next)} options={roleOptions} className="hidden min-w-[170px] sm:block" ariaLabel="Rôle" />
+        <AdminSelect name="statut" value={values.statut} onValueChange={(next) => change("statut", next)} options={statusOptions} className="hidden min-w-[155px] sm:block" ariaLabel="Statut" />
         <button type="button" onClick={() => setOpen(true)} className="inline-flex min-h-10 shrink-0 items-center gap-2 rounded-md border border-border bg-background px-3.5 text-sm font-medium text-foreground transition hover:border-foreground/40">
           <SlidersHorizontal size={16} /> Filtres{active.length ? ` · ${active.length}` : ""}
         </button>
@@ -113,19 +112,19 @@ export default function MemberFilters({ initial, ministries }: { initial: Member
           <div className="flex-none space-y-5 overflow-y-auto px-5 py-4 sm:px-6 sm:py-5">
             <fieldset className="space-y-3 sm:hidden">
               <legend className="label mb-3 text-[11px] tracking-[0.14em] text-muted">ACCÈS</legend>
-              <label className="block space-y-1.5 text-sm">Rôle<select value={values.role} onChange={(event) => change("role", event.target.value, false)} className={`${field} w-full`}><option value="tous">Tous les rôles</option><option value="etudiant">Étudiant seulement</option><option value="projets-formations">Projets et formations</option><option value="pilotage">Pilotage ministériel</option><option value="admin">Admin</option></select></label>
-              <label className="block space-y-1.5 text-sm">Statut<select value={values.statut} onChange={(event) => change("statut", event.target.value, false)} className={`${field} w-full`}><option value="tous">Tous les statuts</option><option value="actif">Actif</option><option value="a_confirmer">À confirmer</option><option value="desactive">Désactivé</option></select></label>
+              <label className="block space-y-1.5 text-sm">Rôle<AdminSelect value={values.role} onValueChange={(next) => change("role", next, false)} options={roleOptions} /></label>
+              <label className="block space-y-1.5 text-sm">Statut<AdminSelect value={values.statut} onValueChange={(next) => change("statut", next, false)} options={statusOptions} /></label>
             </fieldset>
             <fieldset className="space-y-3">
               <legend className="label mb-3 text-[11px] tracking-[0.14em] text-muted">PROFIL ÉTUDIANT</legend>
-              <label className="block space-y-1.5 text-sm">Sensibilité<select name="sens" value={values.sens} onChange={(event) => change("sens", event.target.value, false)} className={`${field} w-full`}><option value="toutes">Toutes les sensibilités</option><option value="non_renseignee">Non renseignée</option>{ministries.map((item) => <option key={item.id} value={item.slug}>{item.name}</option>)}</select></label>
-              <label className="block space-y-1.5 text-sm">Implication à MLK<select name="implication" value={values.implication} onChange={(event) => change("implication", event.target.value, false)} className={`${field} w-full`}><option value="toutes">Toutes les implications</option><option value="aucun">Aucun engagement</option><option value="equipier">Équipiers MLK</option><option value="manager">Managers et adjoints</option><option value="collaborateur">Collaborateurs salariés</option><option value="non_renseigne">Non renseignée</option></select></label>
-              <label className="block space-y-1.5 text-sm">Genre<select name="genre" value={values.genre} onChange={(event) => change("genre", event.target.value, false)} className={`${field} w-full`}><option value="tous">Tous les genres</option><option value="homme">Hommes</option><option value="femme">Femmes</option><option value="non_renseigne">Non renseigné</option></select></label>
+              <label className="block space-y-1.5 text-sm">Sensibilité<AdminSelect name="sens" value={values.sens} onValueChange={(next) => change("sens", next, false)} options={[{value:"toutes",label:"Toutes les sensibilités"},{value:"non_renseignee",label:"Non renseignée"},...ministries.map((item) => ({value:item.slug,label:item.name}))]} searchable /></label>
+              <label className="block space-y-1.5 text-sm">Implication à MLK<AdminSelect name="implication" value={values.implication} onValueChange={(next) => change("implication", next, false)} options={[{value:"toutes",label:"Toutes les implications"},{value:"aucun",label:"Aucun engagement"},{value:"equipier",label:"Équipiers MLK"},{value:"manager",label:"Managers et adjoints"},{value:"collaborateur",label:"Collaborateurs salariés"},{value:"non_renseigne",label:"Non renseignée"}]} /></label>
+              <label className="block space-y-1.5 text-sm">Genre<AdminSelect name="genre" value={values.genre} onValueChange={(next) => change("genre", next, false)} options={[{value:"tous",label:"Tous les genres"},{value:"homme",label:"Hommes"},{value:"femme",label:"Femmes"},{value:"non_renseigne",label:"Non renseigné"}]} /></label>
             </fieldset>
             <fieldset className="grid gap-3 border-t border-border-soft pt-5 sm:grid-cols-2">
               <legend className="label mb-3 text-[11px] tracking-[0.14em] text-muted sm:col-span-2">AFFICHAGE</legend>
-              <label className="block space-y-1.5 text-sm">Trier<select name="tri" value={values.tri} onChange={(event) => change("tri", event.target.value, false)} className={`${field} w-full`}><option value="nom">Par nom</option><option value="creation">Plus récents</option></select></label>
-              <label className="block space-y-1.5 text-sm">Par page<select name="par" value={values.par} onChange={(event) => change("par", event.target.value, false)} className={`${field} w-full`}><option value="25">25 membres</option><option value="50">50 membres</option><option value="100">100 membres</option></select></label>
+              <label className="block space-y-1.5 text-sm">Trier<AdminSelect name="tri" value={values.tri} onValueChange={(next) => change("tri", next, false)} options={[{value:"nom",label:"Par nom"},{value:"creation",label:"Plus récents"}]} /></label>
+              <label className="block space-y-1.5 text-sm">Par page<AdminSelect name="par" value={values.par} onValueChange={(next) => change("par", next, false)} options={[{value:"25",label:"25 membres"},{value:"50",label:"50 membres"},{value:"100",label:"100 membres"}]} /></label>
             </fieldset>
           </div>
           <footer className="flex shrink-0 items-center gap-3 border-t border-border bg-background px-5 py-3.5 sm:px-6">

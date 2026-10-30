@@ -117,7 +117,7 @@ export function profileTabs(roles: ViewerRoles): ProfileTab[] {
   return tabs;
 }
 
-export type SpaceKey = "validation" | "admin" | "steering" | "projectsTraining";
+export type SpaceKey = "superAdmin" | "admin" | "steering" | "projectsTraining";
 
 /** Une « casquette » : un ensemble d'entrées de menu que la personne choisit d'afficher. */
 export type Space = {
@@ -139,19 +139,19 @@ export function navSpaces(roles: ViewerRoles): Space[] {
 
   if (roles.superAdmin) {
     spaces.push({
-      key: "validation",
-      label: "À valider",
-      icon: icons.validate,
-      title: "À valider",
-      subtitle: "Examinez les contenus soumis avant leur publication.",
+      key: "superAdmin",
+      label: "Super administration",
+      icon: icons.adminHome,
+      title: "Super administration",
+      subtitle: "Supervisez la plateforme depuis un point d’entrée unique.",
       sections: [{
-        title: "Validation",
-        items: [{ label: "À valider", href: "/gestion/a-valider", icon: icons.validate }],
+        title: "Super administration",
+        items: [{ label: "Accueil", href: "/gestion/super-admin", icon: icons.adminHome }],
       }],
     });
   }
 
-  if (roles.admin) {
+  if (roles.admin && !roles.superAdmin) {
     spaces.push({
       key: "admin",
       label: "Administrateur",
@@ -200,14 +200,13 @@ export function navSpaces(roles: ViewerRoles): Space[] {
           title: "Pilotage",
           items: [
             { label: "Pilotage", href: "/gestion/pilotage", icon: icons.steer },
-            { label: "Préparer les enseignements", href: "/gestion/enseignement", icon: icons.prep },
           ],
         },
       ],
     });
   }
 
-  if (roles.superAdmin || roles.projectsTraining) {
+  if (roles.projectsTraining) {
     spaces.push({
       key: "projectsTraining",
       label: "Projets et formations",

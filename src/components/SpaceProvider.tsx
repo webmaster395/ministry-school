@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   navSpaces,
   spaceHome,
@@ -48,6 +48,7 @@ export function SpaceProvider({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const router = useRouter();
   const spaces = useMemo(() => navSpaces(roles), [roles]);
   const [stored, setStored] = useState<string | null>(null);
@@ -62,7 +63,13 @@ export function SpaceProvider({
   }, []);
 
   // Une page partagée entre deux espaces garde celui que la personne a choisi.
-  const matches = spacesForPath(spaces, pathname);
+  const superAdministrationPath = pathname.startsWith("/gestion/super-admin")
+    || pathname.startsWith("/gestion/a-valider")
+    || (pathname.startsWith("/gestion/projets-formations") && searchParams.get("scope") === "super")
+    || (pathname.startsWith("/gestion/admin") && !spaces.some((space) => space.key === "admin"));
+  const matches = superAdministrationPath && spaces.some((space) => space.key === "superAdmin")
+    ? (["superAdmin"] as SpaceKey[])
+    : spacesForPath(spaces, pathname);
   const key = matches.find((k) => k === stored) ?? matches[0] ?? null;
   const current = spaces.find((s) => s.key === key) ?? null;
 
@@ -72,7 +79,7 @@ export function SpaceProvider({
     !current && pathname.startsWith("/gestion/enseignement/preparation/");
   const fallback = inPreparation
     ? (spaces.find((s) => s.key === stored) ??
-      spaces.find((s) => ["teacher", "steering", "admin"].includes(s.key)) ??
+      spaces.find((s) => ["steering", "admin", "superAdmin"].includes(s.key)) ??
       null)
     : null;
   const shown = current ?? fallback;

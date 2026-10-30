@@ -17,7 +17,7 @@ import {
   X,
 } from "lucide-react";
 import { useActionState, useEffect, useState, type ReactNode } from "react";
-import type { Opportunity, Responsibility } from "@/lib/data/opportunities";
+import type { Opportunity } from "@/lib/data/opportunities";
 import { opportunityType, TYPE_LABEL } from "@/lib/data/opportunities";
 import type { OpportunityResource } from "@/lib/data/opportunity-resources";
 import { saveOpportunityInline } from "@/app/etudiant/services/actions";
@@ -32,9 +32,10 @@ import StrategicVisionSection from "@/components/StrategicVisionSection";
 import FormattedContent from "@/components/FormattedContent";
 import { linesOf } from "@/lib/opportunity-details";
 import { formatSessionDate } from "@/lib/format";
+import AdminSelect from "@/components/admin/AdminSelect";
 
 type DateRow = { id?: string; session_date: string; start_time: string; end_time: string; room: string | null; location: string | null; capacity: number | null };
-type TeamPerson = { user_id: string; full_name: string; responsibility: "manager" | "contributor" };
+type TeamPerson = { user_id: string; full_name: string; responsibility: "manager" | "contributor"; can_edit: boolean };
 type SessionParticipant = { opportunity_date_id: string; user_id: string; full_name: string };
 
 const field = "min-h-11 w-full rounded-xl border border-border bg-background px-3 text-sm text-foreground outline-none focus:border-accent focus:ring-4 focus:ring-accent/10";
@@ -44,7 +45,8 @@ const hm = (value: string) => value.slice(0, 5).replace(":", " h ").replace(/ h 
 export default function OpportunityEditForms({
   opportunity: o,
   initialDates,
-  responsibility,
+  canEdit,
+  canManage,
   services,
   suggestedSaturdays,
   team,
@@ -56,7 +58,8 @@ export default function OpportunityEditForms({
 }: {
   opportunity: Opportunity;
   initialDates: DateRow[];
-  responsibility: Responsibility | "admin";
+  canEdit: boolean;
+  canManage: boolean;
   services: { id: string; name: string }[];
   suggestedSaturdays: string[];
   team: TeamPerson[];
@@ -77,7 +80,6 @@ export default function OpportunityEditForms({
   const [emoji, setEmoji] = useState(opportunityEmoji(o.banner_emoji));
   const [state, formAction, pending] = useActionState(saveOpportunityInline, null);
   const [handledSuccess, setHandledSuccess] = useState<typeof state>(null);
-  const canEdit = responsibility === "manager" || responsibility === "contributor" || responsibility === "admin";
 
   if (state?.ok && state !== handledSuccess) {
     setHandledSuccess(state);
@@ -161,8 +163,9 @@ export default function OpportunityEditForms({
       <section className="overflow-hidden rounded-3xl bg-[#202927] p-5 text-white sm:p-7">
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_390px] lg:items-start">
           <div className="space-y-5">
-            <fieldset><legend className="mb-2 text-xs font-semibold uppercase tracking-[.12em] text-white/60">Type</legend><div className="flex flex-wrap gap-2">{[["projet","Projet"],["formation","Formation"],["both","Projet et formation"]].map(([value,label]) => <label key={value}><input className="peer sr-only" type="radio" name="type" value={value} checked={type === value} onChange={() => setType(value as typeof type)} /><span className="block cursor-pointer rounded-full border border-white/20 px-3 py-2 text-xs font-semibold peer-checked:border-[#F4A12A] peer-checked:bg-[#F4A12A]">{label}</span></label>)}</div></fieldset>
-            <label><Label light>Nom</Label><input name="title" required value={title} onChange={(event) => setTitle(event.target.value)} className="min-h-14 w-full rounded-2xl border border-white/20 bg-white/10 px-4 font-title text-[25px] font-semibold text-white outline-none placeholder:text-white/40 focus:border-[#F4A12A] sm:text-[32px]" /></label>
+            <fieldset disabled={!canManage}><legend className="mb-2 text-xs font-semibold uppercase tracking-[.12em] text-white/60">Type</legend><div className="flex flex-wrap gap-2">{[["projet","Projet"],["formation","Formation"],["both","Projet et formation"]].map(([value,label]) => <label key={value}><input className="peer sr-only" type="radio" name="type" value={value} checked={type === value} onChange={() => setType(value as typeof type)} /><span className="block cursor-pointer rounded-full border border-white/20 px-3 py-2 text-xs font-semibold peer-checked:border-[#F4A12A] peer-checked:bg-[#F4A12A]">{label}</span></label>)}</div></fieldset>
+            {!canManage && <input type="hidden" name="type" value={type} />}
+            <label><Label light>Nom</Label><input name="title" required readOnly={!canManage} value={title} onChange={(event) => setTitle(event.target.value)} className="min-h-14 w-full rounded-2xl border border-white/20 bg-white/10 px-4 font-title text-[25px] font-semibold text-white outline-none placeholder:text-white/40 read-only:opacity-75 focus:border-[#F4A12A] sm:text-[32px]" /></label>
           </div>
           <OpportunityEmojiPicker value={emoji} onChange={setEmoji} />
         </div>
@@ -180,11 +183,11 @@ export default function OpportunityEditForms({
 
         <aside className="space-y-5 rounded-3xl border border-border bg-background p-5 sm:p-6">
           <SectionTitle>Organisation</SectionTitle>
-          <label><Label>Service pilote</Label><input name="service_name" list={`services-${o.id}`} defaultValue={o.services?.name ?? o.organizer_label ?? ""} className={field} /><datalist id={`services-${o.id}`}>{services.map((service) => <option key={service.id} value={service.name} />)}</datalist></label>
-          <label><Label>Lieu principal</Label><input name="location" defaultValue={o.location ?? ""} className={field} /></label>
+          <label><Label>Service pilote</Label><input name="service_name" readOnly={!canManage} list={`services-${o.id}`} defaultValue={o.services?.name ?? o.organizer_label ?? ""} className={field} /><datalist id={`services-${o.id}`}>{services.map((service) => <option key={service.id} value={service.name} />)}</datalist></label>
+          <label><Label>Lieu principal</Label><input name="location" readOnly={!canManage} defaultValue={o.location ?? ""} className={field} /></label>
           <label><Label>Nombre de places par séance</Label><input type="number" min={1} name="capacity" defaultValue={o.capacity ?? ""} className={field} placeholder="Illimité si vide" /></label>
           {canManageInternalMaterial && <WorkshopMaterialsInput initialValue={o.organization_material} />}
-          <div className="rounded-2xl bg-surface p-4"><p className="mb-3 text-sm font-semibold">Publication</p><div className="space-y-3"><select name="publication_status" value={publication} onChange={(event) => setPublication(event.target.value as Opportunity["publication_status"])} className={field}><option value="draft">Brouillon</option><option value="published">Demander la publication immédiate</option><option value="scheduled">Demander une publication programmée</option><option value="unpublished">Dépublié</option><option value="archived">Archivé</option></select>{publication === "scheduled" && <label><input type="datetime-local" value={publishedAt} onChange={(event) => setPublishedAt(event.target.value)} className={field} />{publishedAt && <input type="hidden" name="published_at" value={new Date(publishedAt).toISOString()} />}</label>}<label className="flex items-center gap-2 text-sm"><input type="checkbox" name="registration_open" defaultChecked={o.registration_open} /> Inscriptions ouvertes</label><label className="flex items-center gap-2 text-sm"><input type="checkbox" name="cancellation_allowed" defaultChecked={o.cancellation_allowed} /> Annulation autorisée</label><p className="text-xs leading-relaxed text-muted">La publication devient effective après validation éditoriale.</p></div></div>
+          {canManage ? <div className="rounded-2xl bg-surface p-4"><p className="mb-3 text-sm font-semibold">Publication</p><div className="space-y-3"><AdminSelect name="publication_status" value={publication} onValueChange={(next) => setPublication(next as Opportunity["publication_status"])} options={[{value:"draft",label:"Brouillon"},{value:"published",label:"Demander la publication immédiate"},{value:"scheduled",label:"Demander une publication programmée"},{value:"unpublished",label:"Dépublié"}]} />{publication === "scheduled" && <label><input type="datetime-local" value={publishedAt} onChange={(event) => setPublishedAt(event.target.value)} className={field} />{publishedAt && <input type="hidden" name="published_at" value={new Date(publishedAt).toISOString()} />}</label>}<label className="flex items-center gap-2 text-sm"><input type="checkbox" name="registration_open" defaultChecked={o.registration_open} /> Inscriptions ouvertes</label><label className="flex items-center gap-2 text-sm"><input type="checkbox" name="cancellation_allowed" defaultChecked={o.cancellation_allowed} /> Annulation autorisée</label><p className="text-xs leading-relaxed text-muted">La publication devient effective après validation par la Super administration.</p></div></div> : <input type="hidden" name="publication_status" value={o.publication_status} />}
         </aside>
       </div>
 

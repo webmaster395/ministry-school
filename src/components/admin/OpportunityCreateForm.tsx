@@ -11,17 +11,19 @@ import RichTextEditor from "@/components/gestion/RichTextEditor";
 import { DEFAULT_OPPORTUNITY_EMOJI } from "@/lib/opportunity-banner";
 import StrategicAxesFields from "@/components/StrategicAxesFields";
 import WorkshopMaterialsInput from "@/components/WorkshopMaterialsInput";
+import AdminSelect from "@/components/admin/AdminSelect";
 
 type Member = { id: string; full_name: string; email: string };
 type DateRow = { date: string; start: string; end: string };
 const field = "min-h-12 w-full rounded-xl border border-border bg-background px-3 text-[15px] text-foreground outline-none focus:border-accent focus:ring-2 focus:ring-accent/10";
 
-export default function OpportunityCreateForm({ creationToken, members, services, suggestedSaturdays, canManageInternalMaterial }: {
+export default function OpportunityCreateForm({ creationToken, members, services, suggestedSaturdays, canManageInternalMaterial, canAssignMembers }: {
   creationToken: string;
   members: Member[];
   services: { id: string; name: string }[];
   suggestedSaturdays: string[];
   canManageInternalMaterial: boolean;
+  canAssignMembers: boolean;
 }) {
   const [dates, setDates] = useState<DateRow[]>([]);
   const [query, setQuery] = useState("");
@@ -91,16 +93,16 @@ export default function OpportunityCreateForm({ creationToken, members, services
         </div>)}</div>
       </section>
 
-      <details className="rounded-3xl border border-border bg-background p-5 sm:p-7">
+      {canAssignMembers && <details className="rounded-3xl border border-border bg-background p-5 sm:p-7">
         <summary className="flex cursor-pointer list-none items-center gap-2 font-title text-[21px]"><Users size={19} /> Responsables et contributeurs</summary>
         <div className="mt-4"><label className="relative block max-w-lg"><Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" /><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Rechercher un membre" className={`${field} pl-9`} /></label>
         <div className="mt-3 max-h-72 overflow-auto rounded-2xl border border-border">{shown.map((member) => <div key={member.id} className="grid gap-2 border-b border-border-soft px-4 py-3 last:border-0 sm:grid-cols-[1fr_auto_auto]"><span className="min-w-0 text-sm"><strong>{member.full_name}</strong><small className="ml-2 text-muted">{member.email}</small></span><label className="flex gap-2 text-sm"><input type="checkbox" checked={managers.has(member.id)} onChange={(event) => selectPerson(member.id,"manager",event.target.checked)} /> Responsable</label><label className="flex gap-2 text-sm"><input type="checkbox" checked={contributors.has(member.id)} onChange={(event) => selectPerson(member.id,"contributor",event.target.checked)} /> Contributeur</label></div>)}</div></div>
         {[...managers].map((id) => <input key={`m-${id}`} type="hidden" name="manager_ids" value={id} />)}{[...contributors].map((id) => <input key={`c-${id}`} type="hidden" name="contributor_ids" value={id} />)}
-      </details>
+      </details>}
 
       <details className="rounded-2xl border border-border bg-background p-5">
         <summary className="cursor-pointer text-sm font-semibold">Publication et inscriptions</summary>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2"><label><Label>État souhaité</Label><select name="publication_status" value={publication} onChange={(event) => setPublication(event.target.value)} className={field}><option value="draft">Conserver en brouillon</option><option value="published">Demander une publication immédiate</option><option value="scheduled">Demander une publication programmée</option><option value="unpublished">Conserver dépublié</option></select></label>{publication === "scheduled" && <label><Label>Date et heure de publication</Label><input type="datetime-local" value={publishedAt} onChange={(event) => setPublishedAt(event.target.value)} className={field} />{publishedAt && <input type="hidden" name="published_at" value={new Date(publishedAt).toISOString()} />}</label>}<label className="flex items-center gap-2 text-sm"><input type="checkbox" name="registration_open" defaultChecked /> Inscriptions ouvertes</label><label className="flex items-center gap-2 text-sm"><input type="checkbox" name="cancellation_allowed" defaultChecked /> Annulation autorisée</label><p className="sm:col-span-2 rounded-xl bg-surface px-4 py-3 text-xs leading-relaxed text-muted">La publication sera effective après une validation de Nathalie Boudehent ou Flora Demerle. Richard Tamard recevra uniquement l’aperçu du rendu.</p></div>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2"><label><Label>État souhaité</Label><AdminSelect name="publication_status" value={publication} onValueChange={setPublication} options={[{value:"draft",label:"Conserver en brouillon"},{value:"published",label:"Demander une publication immédiate"},{value:"scheduled",label:"Demander une publication programmée"},{value:"unpublished",label:"Conserver dépublié"}]} /></label>{publication === "scheduled" && <label><Label>Date et heure de publication</Label><input type="datetime-local" value={publishedAt} onChange={(event) => setPublishedAt(event.target.value)} className={field} />{publishedAt && <input type="hidden" name="published_at" value={new Date(publishedAt).toISOString()} />}</label>}<label className="flex items-center gap-2 text-sm"><input type="checkbox" name="registration_open" defaultChecked /> Inscriptions ouvertes</label><label className="flex items-center gap-2 text-sm"><input type="checkbox" name="cancellation_allowed" defaultChecked /> Annulation autorisée</label><p className="sm:col-span-2 rounded-xl bg-surface px-4 py-3 text-xs leading-relaxed text-muted">La publication devient effective uniquement après validation par la Super administration.</p></div>
       </details>
       <CreateButton />
     </form>

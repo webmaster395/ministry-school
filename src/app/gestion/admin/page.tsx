@@ -6,6 +6,7 @@ import StatisticsTab from "@/components/admin/StatisticsTab";
 import MembersTab from "@/components/admin/MembersTab";
 import { getMinistries, getMonthlyActiveUsers, getOpportunityAnalytics, getProgramAnalytics, getTrainingDayDates, getUsageAnalytics } from "@/lib/data/admin";
 import type { TrainerAdminRow } from "@/components/admin/TrainersTab";
+import { getViewer } from "@/lib/data/viewer";
 
 const VALID_TABS = ["vue", "statistiques", "programme", "membres"];
 
@@ -33,6 +34,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
   const tab = VALID_TABS.includes(p.onglet ?? "") ? p.onglet! : "vue";
 
   const supabase = await createClient();
+  const viewer = await getViewer();
   const today = new Date().toISOString().slice(0, 10);
 
   const opps = await getOpportunitiesWithDates(supabase);
@@ -94,6 +96,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           genre={p.genre ?? "tous"}
           page={p.page ?? "1"}
           par={p.par ?? "50"}
+          canManageAccess={!!viewer?.roles.superAdmin}
         />
       )}
     </div>

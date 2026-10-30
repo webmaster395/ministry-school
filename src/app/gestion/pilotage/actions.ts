@@ -82,6 +82,20 @@ export async function addPilotAssignment(formData: FormData) {
 
 export type CourseFormState = { error?: string };
 
+export async function setMinistryContributorAccess(formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Non authentifié");
+  const ministryId = str(formData, "ministry_id");
+  const { error } = await supabase.rpc("set_ministry_contributor_access", {
+    p_ministry: ministryId,
+    p_contributor: str(formData, "contributor_id"),
+    p_can_edit: str(formData, "can_edit") === "1",
+  });
+  if (error) throw new Error("Le niveau d’accès n’a pas pu être modifié : " + error.message);
+  revalidatePath("/gestion/pilotage");
+}
+
 /** Ajoute un cours au programme d'un ministère piloté. La base vérifie le droit d'écriture. */
 export async function createCourse(
   _prev: CourseFormState,

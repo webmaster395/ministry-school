@@ -419,6 +419,8 @@ export async function updateOpportunityManagement(formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Non authentifié");
   const id = text(formData, "opportunity_id");
+  const { data: canManage } = await supabase.rpc("can_submit_opportunity", { p_opportunity: id });
+  if (!canManage) throw new Error("Seul un responsable peut modifier l’organisation ou soumettre cet élément.");
   const type = text(formData, "type");
   const status = text(formData, "publication_status");
   if (!(["projet", "formation", "both"] as string[]).includes(type)) throw new Error("Type invalide.");
@@ -513,8 +515,11 @@ export async function saveOpportunityInline(_previous: OpportunityFormState, for
   try {
     await updateOpportunityContent(formData);
     await replaceOpportunityDates(formData);
-    // La publication est traitée en dernier : les contenus et les séances sont déjà cohérents.
-    await updateOpportunityManagement(formData);
+    // Un contributeur autorisé peut préparer le contenu, mais jamais gérer la publication.
+    const supabase = await createClient();
+    const id = text(formData, "opportunity_id");
+    const { data: canManage } = await supabase.rpc("can_submit_opportunity", { p_opportunity: id });
+    if (canManage) await updateOpportunityManagement(formData);
     return { ok: true, message: "Les modifications ont été enregistrées." };
   } catch (error) {
     return { ok: false, message: error instanceof Error ? error.message : "L’enregistrement a échoué." };
@@ -535,7 +540,31 @@ export async function replaceOpportunityAssignments(formData: FormData) {
   refreshOpportunity(id);
 }
 
-/** Suppression complète : administrateur global ou personne affectée, avec vérification SQL. */
+export async function setOpportunityContributorAccess(formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Non authentifié");
+  const id = text(formData, "opportunity_id");
+  const { error } = await supabase.rpc("set_opportunity_contributor_access", {
+    p_opportunity: id,
+    p_contributor: text(formData, "contributor_id"),
+    p_can_edit: text(formData, "can_edit") === "1",
+  });
+  if (error) throw new Error("Le niveau d’accès n’a pas pu être modifié : " + error.message);
+  refreshOpportunity(id);
+}
+
+export async function requestOpportunityArchive(formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Non authentifié");
+  const id = text(formData, "opportunity_id");
+  const { error } = await supabase.rpc("request_opportunity_archive", { p_opportunity: id });
+  if (error) throw new Error("La demande d’archivage n’a pas pu être enregistrée : " + error.message);
+  refreshOpportunity(id);
+}
+
+/** Suppression complète réservée à la Super administration, avec vérification SQL. */
 export async function deleteOpportunity(formData: FormData) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -544,7 +573,7 @@ export async function deleteOpportunity(formData: FormData) {
   const { data: resources } = await supabase.from("opportunity_resources").select("file_path").eq("opportunity_id", id);
   const filePaths = (resources ?? []).flatMap((resource) => resource.file_path ? [resource.file_path] : []);
   const { error } = await supabase.rpc("delete_opportunity_admin", { p_opportunity: id });
-  if (error?.message.includes("FORBIDDEN")) throw new Error("Vous ne pouvez supprimer que les projets et formations auxquels vous êtes affecté.");
+  if (error?.message.includes("FORBIDDEN")) throw new Error("La suppression définitive est réservée à la Super administration.");
   if (error) throw new Error("La suppression a échoué : " + error.message);
   if (filePaths.length) await supabase.storage.from("opportunity-resources").remove(filePaths);
   revalidatePath("/gestion/projets-formations");

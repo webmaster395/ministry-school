@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { Plus, X } from "lucide-react";
 import { createQuickCourse } from "@/app/gestion/admin/seances/actions";
+import AdminSelect from "@/components/admin/AdminSelect";
 
 type Choice = { id: string; name: string };
 
@@ -66,30 +67,19 @@ export default function QuickCourseForm({
 
           <label className="block text-sm font-medium">
             Catégorie
-            <select name="track" value={category} onChange={(event) => setCategory(event.target.value)} className={field}>
-              <option>Formation du cœur</option>
-              <option>Formation du caractère</option>
-              <option>Sensibilité ministérielle</option>
-              <option>Mise en pratique</option>
-            </select>
+            <AdminSelect name="track" value={category} onValueChange={setCategory} className="mt-1.5" options={["Formation du cœur","Formation du caractère","Sensibilité ministérielle","Mise en pratique"].map((item) => ({ value:item,label:item }))} />
           </label>
 
           {category === "Sensibilité ministérielle" && (
             <label className="block text-sm font-medium">
               Sensibilité
-              <select name="ministry_id" required className={field}>
-                <option value="">Choisir une sensibilité</option>
-                {ministries.map((ministry) => <option key={ministry.id} value={ministry.id}>{ministry.name}</option>)}
-              </select>
+              <AdminSelect name="ministry_id" placeholder="Choisir une sensibilité" className="mt-1.5" options={ministries.map((ministry) => ({ value:ministry.id,label:ministry.name }))} />
             </label>
           )}
 
           <label className="block text-sm font-medium">
             Intervenant
-            <select name="trainer_id" required className={field}>
-              <option value="">Choisir un intervenant</option>
-              {trainers.map((trainer) => <option key={trainer.id} value={trainer.id}>{trainer.name}</option>)}
-            </select>
+            <AdminSelect name="trainer_id" placeholder="Choisir un intervenant" className="mt-1.5" options={trainers.map((trainer) => ({ value:trainer.id,label:trainer.name }))} searchable />
           </label>
 
           <label className="block text-sm font-medium">

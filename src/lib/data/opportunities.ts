@@ -33,6 +33,8 @@ export type Opportunity = {
   publication_status: PublicationStatus;
   published_at: string | null;
   archived_at: string | null;
+  archive_requested_at: string | null;
+  archive_requested_by: string | null;
   cover_image_path: string | null;
   banner_emoji: string;
   services: { name: string } | null;
@@ -103,7 +105,7 @@ export async function getOpportunities(supabase: SupabaseClient) {
   const { data } = await supabase
     .from("opportunities")
     .select(
-      "id, kind, title, description, service_id, organizer_label, schedule_label, starts_on, ends_on, capacity, registration_open, created_by, lead_id, services(name), is_project, is_training, short_description, speakers, location, participant_material, cancellation_allowed, publication_status, published_at, archived_at, cover_image_path, banner_emoji" + DETAIL_COLUMNS
+      "id, kind, title, description, service_id, organizer_label, schedule_label, starts_on, ends_on, capacity, registration_open, created_by, lead_id, services(name), is_project, is_training, short_description, speakers, location, participant_material, cancellation_allowed, publication_status, published_at, archived_at, archive_requested_at, archive_requested_by, cover_image_path, banner_emoji" + DETAIL_COLUMNS
     )
     .order("starts_on", { ascending: true, nullsFirst: false })
     .order("created_at", { ascending: true });
@@ -178,31 +180,33 @@ export async function getOpportunityDates(supabase: SupabaseClient, id: string) 
 export async function getMyAssignments(supabase: SupabaseClient, userId: string) {
   const { data } = await supabase
     .from("opportunity_assignments")
-    .select("opportunity_id, responsibility")
+    .select("opportunity_id, responsibility, can_edit")
     .eq("user_id", userId);
-  return new Map(
-    ((data ?? []) as { opportunity_id: string; responsibility: Responsibility }[]).map((row) => [
+  const rows = (data ?? []) as { opportunity_id: string; responsibility: Responsibility; can_edit: boolean }[];
+  return {
+    responsibilities: new Map(rows.map((row) => [
       row.opportunity_id,
       row.responsibility,
-    ])
-  );
+    ])),
+    editable: new Set(rows.filter((row) => row.responsibility === "manager" || row.can_edit).map((row) => row.opportunity_id)),
+  };
 }
 
 export async function getProjectsTrainingRights(supabase: SupabaseClient, userId: string) {
-  const [{ data: superAdmin }, assignments] = await Promise.all([
+  const [{ data: superAdmin }, assignments, { data: profile }] = await Promise.all([
     supabase.rpc("is_super_admin", { p_user: userId }),
     getMyAssignments(supabase, userId),
+    supabase.from("profiles").select("can_create_opportunities").eq("id", userId).single(),
   ]);
-  return { admin: !!superAdmin, member: assignments.size > 0, assignments };
+  return { admin: !!superAdmin, member: assignments.responsibilities.size > 0, assignments: assignments.responsibilities, editableAssignments: assignments.editable, canCreate: !!superAdmin || !!profile?.can_create_opportunities };
 }
 
-/** La création est strictement réservée aux administrateurs. */
+/** La création est réservée aux super administrateurs et responsables habilités. */
 export async function getProposalRights(supabase: SupabaseClient, userId: string) {
-  const { data: admin } = await supabase.rpc("is_super_admin", { p_user: userId });
+  const { data: allowed } = await supabase.rpc("can_create_opportunities", { p_user: userId });
   return {
-    // Les projets et formations sont créés par un administrateur.
-    formation: !!admin,
-    projet: !!admin,
+    formation: !!allowed,
+    projet: !!allowed,
   };
 }
 

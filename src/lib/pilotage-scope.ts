@@ -31,5 +31,7 @@ export async function assertPilotageRequestScope(supabase: SupabaseClient, sessi
   ) {
     throw new Error("Ce cours n'appartient pas à votre sensibilité ministérielle.");
   }
+  const { data: canEdit } = await supabase.rpc("can_edit_ministry_course", { p_session: sessionId });
+  if (!canEdit) throw new Error("Vous disposez d’un accès en lecture seule sur ce cours.");
   return true;
 }

@@ -12,6 +12,7 @@ export type Member = {
   is_service_lead: boolean;
   is_project_lead: boolean;
   is_projects_training_member: boolean;
+  can_create_opportunities: boolean;
   service_id: string | null;
   ministry_lead_of: string | null;
   ministry_id: string | null;
@@ -34,7 +35,7 @@ export async function getMembers(supabase: SupabaseClient) {
     supabase
       .from("profiles")
       .select(
-        "id, full_name, role, gender, is_teacher, is_service_lead, is_project_lead, is_projects_training_member, service_id, ministry_lead_of, ministry_id, email_confirmed, deactivated, created_at, preferred_day, avatar_path, notification_prefs"
+        "id, full_name, role, gender, is_teacher, is_service_lead, is_project_lead, is_projects_training_member, can_create_opportunities, service_id, ministry_lead_of, ministry_id, email_confirmed, deactivated, created_at, preferred_day, avatar_path, notification_prefs"
       )
       .eq("is_test_account", false)
       .order("full_name"),
@@ -45,7 +46,7 @@ export async function getMembers(supabase: SupabaseClient) {
     const { data: fallback } = await supabase
       .from("profiles")
       .select(
-        "id, full_name, role, is_teacher, is_service_lead, is_project_lead, is_projects_training_member, service_id, ministry_lead_of, ministry_id, email_confirmed, deactivated, created_at, preferred_day, avatar_path, notification_prefs"
+        "id, full_name, role, is_teacher, is_service_lead, is_project_lead, is_projects_training_member, can_create_opportunities, service_id, ministry_lead_of, ministry_id, email_confirmed, deactivated, created_at, preferred_day, avatar_path, notification_prefs"
       )
       .eq("is_test_account", false)
       .order("full_name");

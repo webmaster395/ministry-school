@@ -6,6 +6,7 @@ import { Paperclip, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { addSupport } from "@/app/gestion/pilotage/actions";
 import { RESOURCE_TYPES } from "@/lib/material-types";
+import AdminSelect from "@/components/admin/AdminSelect";
 import AvailabilityPicker from "@/components/AvailabilityPicker";
 
 const ALLOWED = /\.(pdf|pptx?|docx?|xlsx?|odp|odt|ods)$/i;
@@ -102,11 +103,7 @@ export default function ResourceDialog({ sessionId, withTypes }: { sessionId: st
             {withTypes && (
               <div>
                 <label className={label} htmlFor="r-type">Type</label>
-                <select id="r-type" name="resource_type" defaultValue="Document PDF" className={field}>
-                  {RESOURCE_TYPES.map((t) => (
-                    <option key={t}>{t}</option>
-                  ))}
-                </select>
+                <AdminSelect name="resource_type" defaultValue="Document PDF" options={RESOURCE_TYPES.map((item) => ({ value:item,label:item }))} />
               </div>
             )}
 
