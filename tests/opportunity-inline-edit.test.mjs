@@ -8,7 +8,7 @@ test("la fiche alterne entre consultation et édition sans second formulaire vis
   const page = source("src/app/gestion/projets-formations/[id]/page.tsx");
   const experience = source("src/components/OpportunityEditForms.tsx");
   assert.equal((page.match(/<OpportunityEditForms/g) ?? []).length, 1);
-  assert.match(experience, /const \[editing, setEditing\] = useState\(workspace \? !workspaceHeader\?\.readOnly : false\)/);
+  assert.match(experience, /const \[editing, setEditing\] = useState\(workspaceStartsEditing\)/);
   assert.match(experience, /<Pencil size=\{16\} \/> Modifier/);
   assert.match(experience, /if \(!editing\)/);
   assert.match(experience, /<Consultation/);

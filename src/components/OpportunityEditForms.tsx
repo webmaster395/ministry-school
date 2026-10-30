@@ -86,7 +86,8 @@ export default function OpportunityEditForms({
   };
 }) {
   const workspace = experience === "workspace";
-  const [editing, setEditing] = useState(workspace ? !workspaceHeader?.readOnly : false);
+  const workspaceStartsEditing = workspace && !workspaceHeader?.readOnly && (workspaceHeader?.workflow.key === "draft" || workspaceHeader?.workflow.key === "corrections");
+  const [editing, setEditing] = useState(workspaceStartsEditing);
   const [dirty, setDirty] = useState(false);
   const [confirmation, setConfirmation] = useState<string | null>(null);
   const [dates, setDates] = useState(initialDates);
@@ -172,7 +173,7 @@ export default function OpportunityEditForms({
     setEmoji(opportunityEmoji(o.banner_emoji));
     setServiceName(o.services?.name ?? o.organizer_label ?? "");
     setDirty(false);
-    setEditing(workspace ? !workspaceHeader?.readOnly : false);
+    setEditing(workspaceStartsEditing);
   };
   const cancel = () => {
     if (dirty && !window.confirm("Abandonner les modifications non enregistrées ?")) return;
@@ -189,6 +190,7 @@ export default function OpportunityEditForms({
   };
 
   if (!editing) {
+    const canStartWorkspaceEdit = !!workspaceHeader && !workspaceHeader.readOnly && canEdit && workspaceHeader.workflow.key === "published";
     const consultation = <Consultation
         opportunity={o}
         dates={initialDates}
@@ -196,12 +198,17 @@ export default function OpportunityEditForms({
         sessionParticipants={sessionParticipants}
         resources={resources}
         publicationLabel={publicationLabel}
-        canEdit={canEdit && !workspaceHeader?.readOnly}
+        canEdit={workspaceHeader ? false : canEdit}
         confirmation={confirmation}
         onEdit={() => { setConfirmation(null); setEditing(true); }}
       />;
     return workspaceHeader ? <div className="space-y-5">
-      <WorkspaceCompactHeader opportunityId={o.id} title={o.title} {...workspaceHeader} />
+      <WorkspaceCompactHeader
+        opportunityId={o.id}
+        title={o.title}
+        {...workspaceHeader}
+        editAction={canStartWorkspaceEdit ? <button type="button" onClick={() => setEditing(true)} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-foreground px-3.5 text-xs font-semibold text-foreground transition hover:bg-foreground hover:text-background"><Pencil size={15} /> Modifier</button> : null}
+      />
       {consultation}
     </div> : consultation;
   }
@@ -297,6 +304,7 @@ function WorkspaceCompactHeader({
   workflow,
   canSubmit,
   saveAction,
+  editAction,
   saveState,
   submissionBlocked = false,
   error,
@@ -308,6 +316,7 @@ function WorkspaceCompactHeader({
   workflow: OpportunityWorkflowDisplay;
   canSubmit: boolean;
   saveAction?: ReactNode;
+  editAction?: ReactNode;
   saveState?: string | null;
   submissionBlocked?: boolean;
   error?: string | null;
@@ -333,6 +342,7 @@ function WorkspaceCompactHeader({
       </p>
       <div className="flex min-w-0 flex-wrap items-center gap-2">
         {saveAction}
+        {editAction}
         {actionLabel && (actionDisabled
           ? <span aria-disabled="true" title="Enregistrez les modifications avant de poursuivre" className="inline-flex min-h-10 items-center justify-center rounded-full border border-border px-3.5 text-xs font-semibold text-muted opacity-60">{actionLabel}</span>
           : <a href="#suivi-validation" className="inline-flex min-h-10 items-center justify-center rounded-full border border-foreground px-3.5 text-xs font-semibold text-foreground transition hover:bg-foreground hover:text-background">{actionLabel}</a>)}
