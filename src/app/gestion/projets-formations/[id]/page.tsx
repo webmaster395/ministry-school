@@ -11,8 +11,6 @@ import { getOpportunityReviewState } from "@/lib/data/opportunity-review";
 import { getOpportunityResources } from "@/lib/data/opportunity-resources";
 import OpportunityResourcesEditor from "@/components/OpportunityResourcesEditor";
 import DeleteOpportunityButton from "@/components/admin/DeleteOpportunityButton";
-import ContributorAccessEditor from "@/components/gestion/ContributorAccessEditor";
-import ArchiveOpportunityRequest from "@/components/gestion/ArchiveOpportunityRequest";
 import { getViewer } from "@/lib/data/viewer";
 import { getOpportunityAgenda } from "@/lib/data/opportunity-agenda";
 import OpportunityAgendaEditor from "@/components/OpportunityAgendaEditor";
@@ -74,8 +72,7 @@ export default async function ProjectsTrainingManageDetail({ params, searchParam
   const editExtras = <div className="space-y-5">
     {canEdit && <OpportunityResourcesEditor opportunityId={id} resources={resources} />}
     {superAdminView && <AssignmentEditor opportunityId={id} members={members.filter((member) => !member.deactivated).map(({ id: memberId, full_name, email }) => ({ id: memberId, full_name, email }))} managers={teamRows.filter((person) => person.responsibility === "manager").map((person) => person.user_id)} contributors={teamRows.filter((person) => person.responsibility === "contributor").map((person) => person.user_id)} />}
-    {!globalScope && responsibility === "manager" && <section className="rounded-3xl border border-border bg-background p-5 sm:p-6"><h2 className="font-title text-xl">Accès des contributeurs</h2><p className="mb-4 mt-1 text-sm text-muted">Les affectations sont gérées par la Super administration. Vous pouvez uniquement choisir le niveau d’accès des personnes déjà affectées.</p><ContributorAccessEditor opportunityId={id} contributors={teamRows.filter((person) => person.responsibility === "contributor")} /></section>}
-    {superAdminView ? <DeleteOpportunityButton opportunityId={id} title={opportunity.title} /> : !globalScope && responsibility === "manager" ? <ArchiveOpportunityRequest opportunityId={id} requested={!!opportunity.archive_requested_at} /> : null}
+    {superAdminView && <DeleteOpportunityButton opportunityId={id} title={opportunity.title} />}
   </div>;
   const workflow = opportunityWorkflow(opportunity, dates, reviewState);
   const internalMaterials = linesOf(internalMaterial);

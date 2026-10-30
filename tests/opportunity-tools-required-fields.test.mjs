@@ -43,7 +43,7 @@ test("l'annuaire et les affectations restent réservés à la supervision Super 
   assert.match(createPage, /superAdminView \? getMembers\(supabase\) : Promise\.resolve\(\[\]\)/);
   assert.match(createPage, /canAssignMembers=\{superAdminView\}/);
   assert.match(detail, /superAdminView && <AssignmentEditor/);
-  assert.match(detail, /responsibility === "manager"[\s\S]*?<ContributorAccessEditor/);
+  assert.doesNotMatch(detail, /ContributorAccessEditor|Accès des contributeurs/);
   assert.match(action, /if \(!isSuperAdmin\) throw new Error\("Seuls les super administrateurs peuvent gérer les affectations/);
   assert.match(permissions, /replace_opportunity_assignments[\s\S]*?if not public\.is_super_admin\(\) then raise exception 'FORBIDDEN'/);
 });

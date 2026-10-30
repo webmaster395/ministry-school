@@ -39,3 +39,16 @@ test("les formulaires et filtres sensibles au tactile utilisent un panneau mobil
   assert.match(memberFilters, /w-full flex-col.*sm:w-\[430px\]/s);
   assert.match(stats, /max-h-\[85dvh\].*rounded-t-2xl/s);
 });
+
+test("la page Membres reste dans le flux et utilise des cartes avant le grand écran", async () => {
+  const [members, filters] = await Promise.all([
+    source("src/components/admin/MembersTab.tsx"),
+    source("src/components/admin/MemberFilters.tsx"),
+  ]);
+  assert.match(members, /overflow-x-hidden/);
+  assert.match(members, /lg:grid-cols-\[1\.4fr_1fr_1\.6fr_110px_90px\]/);
+  assert.match(members, /lg:hidden/);
+  assert.match(filters, /grid-cols-\[minmax\(0,1fr\)_auto\]/);
+  assert.match(filters, /min-h-0 flex-1.*overflow-y-auto overscroll-contain/);
+  assert.doesNotMatch(members, /\bsticky\b|\bfixed\b/);
+});

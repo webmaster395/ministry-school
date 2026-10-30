@@ -80,15 +80,15 @@ export default function MemberFilters({ initial, ministries }: { initial: Member
   }
 
   return (
-    <div className="space-y-3">
-      <div className="flex flex-wrap items-center gap-2.5">
-        <label className="relative min-w-[220px] flex-1">
+    <div className="min-w-0 space-y-3">
+      <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2.5 xl:grid-cols-[minmax(260px,1fr)_170px_155px_auto]">
+        <label className="relative min-w-0">
           <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
           <input name="q" value={values.q} onChange={(event) => change("q", event.target.value)} placeholder="Rechercher par nom ou e-mail" autoComplete="off" className={`${field} w-full pl-9 pr-9`} />
           {pending && <Loader2 size={16} className="absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-muted" aria-label="Recherche en cours" />}
         </label>
-        <AdminSelect name="role" value={values.role} onValueChange={(next) => change("role", next)} options={roleOptions} className="hidden min-w-[170px] sm:block" ariaLabel="Rôle" />
-        <AdminSelect name="statut" value={values.statut} onValueChange={(next) => change("statut", next)} options={statusOptions} className="hidden min-w-[155px] sm:block" ariaLabel="Statut" />
+        <AdminSelect name="role" value={values.role} onValueChange={(next) => change("role", next)} options={roleOptions} className="hidden min-w-0 xl:block" ariaLabel="Rôle" />
+        <AdminSelect name="statut" value={values.statut} onValueChange={(next) => change("statut", next)} options={statusOptions} className="hidden min-w-0 xl:block" ariaLabel="Statut" />
         <button type="button" onClick={() => setOpen(true)} className="inline-flex min-h-10 shrink-0 items-center gap-2 rounded-md border border-border bg-background px-3.5 text-sm font-medium text-foreground transition hover:border-foreground/40">
           <SlidersHorizontal size={16} /> Filtres{active.length ? ` · ${active.length}` : ""}
         </button>
@@ -109,8 +109,8 @@ export default function MemberFilters({ initial, ministries }: { initial: Member
             <div><p className="label text-[10px] tracking-[0.16em] text-muted">MEMBRES</p><h2 id="member-filter-title" className="font-title mt-1 text-[24px] text-foreground">Tous les filtres</h2></div>
             <button type="button" onClick={() => setOpen(false)} aria-label="Fermer" className="grid h-10 w-10 place-items-center rounded-full text-muted hover:bg-surface hover:text-foreground"><X size={20} /></button>
           </header>
-          <div className="flex-none space-y-5 overflow-y-auto px-5 py-4 sm:px-6 sm:py-5">
-            <fieldset className="space-y-3 sm:hidden">
+          <div className="min-h-0 flex-1 space-y-5 overflow-y-auto overscroll-contain px-5 py-4 sm:px-6 sm:py-5">
+            <fieldset className="space-y-3 xl:hidden">
               <legend className="label mb-3 text-[11px] tracking-[0.14em] text-muted">ACCÈS</legend>
               <label className="block space-y-1.5 text-sm">Rôle<AdminSelect value={values.role} onValueChange={(next) => change("role", next, false)} options={roleOptions} /></label>
               <label className="block space-y-1.5 text-sm">Statut<AdminSelect value={values.statut} onValueChange={(next) => change("statut", next, false)} options={statusOptions} /></label>

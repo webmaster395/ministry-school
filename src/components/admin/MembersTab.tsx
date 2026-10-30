@@ -147,8 +147,9 @@ export default async function MembersTab({
   const returnTo = `${basePath}?${listParams.toString()}`;
 
   return (
-    <div className="space-y-5">
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+    <div className="min-w-0 space-y-4 overflow-x-hidden">
+      <section aria-label="Recherche et filtres des membres" className="min-w-0 rounded-xl border border-border bg-background p-3 sm:p-4">
+      <div className="grid min-w-0 gap-3 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
         <div className="min-w-0 flex-1">
           <MemberFilters
             initial={{ q, role, sens, statut, implication, genre, tri, par: String(perPage) }}
@@ -162,11 +163,12 @@ export default async function MembersTab({
           Télécharger (CSV)
         </a>
       </div>
+      </section>
 
       {pager}
 
-      <section suppressHydrationWarning className="overflow-hidden rounded-lg border border-border bg-background">
-        <div className="label hidden grid-cols-[1.4fr_1fr_1.6fr_110px_90px] gap-4 border-b border-border px-5 py-3 text-[11px] tracking-[0.14em] text-muted md:grid">
+      <section suppressHydrationWarning className="min-w-0 overflow-hidden rounded-lg border border-border bg-background">
+        <div className="label hidden grid-cols-[1.4fr_1fr_1.6fr_110px_90px] gap-4 border-b border-border px-5 py-3 text-[11px] tracking-[0.14em] text-muted lg:grid">
           <span>Membre</span>
           <span>Sensibilité</span>
           <span>Rôles</span>
@@ -182,7 +184,7 @@ export default async function MembersTab({
               const roles = rolesOf(m, serviceName, ministryName);
               return (
                 <li key={m.id} className="px-4 py-3.5 sm:px-5">
-                  <div className="grid items-center gap-2 md:grid-cols-[1.4fr_1fr_1.6fr_110px_90px] md:gap-4">
+                  <div className="grid min-w-0 items-center gap-2 lg:grid-cols-[1.4fr_1fr_1.6fr_110px_90px] lg:gap-4">
                     <Link href={`/gestion/admin/membres/${m.id}?returnTo=${encodeURIComponent(returnTo)}`} className="group flex min-w-0 items-center gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-foreground">
                       {m.avatar_path && avatarUrls.get(m.avatar_path) ? (
                         // eslint-disable-next-line @next/next/no-img-element -- adresse temporaire signée
@@ -208,7 +210,7 @@ export default async function MembersTab({
                       </div>
                       <ChevronRight size={16} className="ml-auto shrink-0 text-muted transition group-hover:translate-x-0.5 group-hover:text-foreground" aria-hidden="true" />
                     </Link>
-                    <span className="flex items-center gap-2 text-[15px] text-foreground">
+                    <span className="hidden items-center gap-2 text-[15px] text-foreground lg:flex">
                       {mi ? (
                         <>
                           <MinistryPicto slug={mi.slug} size={18} /> {mi.name}
@@ -217,9 +219,9 @@ export default async function MembersTab({
                         <span className="text-muted">Non renseignée</span>
                       )}
                     </span>
-                    <span className="text-sm text-foreground">{roles.length ? roles.join(" · ") : "Étudiant"}</span>
+                    <span className="hidden text-sm text-foreground lg:block">{roles.length ? roles.join(" · ") : "Étudiant"}</span>
                     <span
-                      className={`label w-fit rounded-full px-2.5 py-1 text-[10px] tracking-[0.1em] ${
+                      className={`label hidden w-fit rounded-full px-2.5 py-1 text-[10px] tracking-[0.1em] lg:block ${
                         status === "actif"
                           ? "bg-surface text-foreground"
                           : status === "a_confirmer"
@@ -229,8 +231,15 @@ export default async function MembersTab({
                     >
                       {STATUS_LABEL[status]}
                     </span>
-                    <span className="text-sm tabular-nums text-muted">{fmt(m.created_at)}</span>
+                    <span className="hidden text-sm tabular-nums text-muted lg:block">{fmt(m.created_at)}</span>
                   </div>
+
+                  <dl className="mt-3 grid min-w-0 grid-cols-2 gap-x-4 gap-y-3 border-t border-border-soft pt-3 lg:hidden">
+                    <div className="min-w-0"><dt className="label text-[9px] tracking-[.1em] text-muted">Sensibilité</dt><dd className="mt-1 flex min-w-0 items-center gap-1.5 text-sm text-foreground">{mi ? <><MinistryPicto slug={mi.slug} size={16} /><span className="truncate">{mi.name}</span></> : <span className="text-muted">Non renseignée</span>}</dd></div>
+                    <div className="min-w-0"><dt className="label text-[9px] tracking-[.1em] text-muted">Statut</dt><dd className="mt-1 text-sm text-foreground">{STATUS_LABEL[status]}</dd></div>
+                    <div className="col-span-2 min-w-0"><dt className="label text-[9px] tracking-[.1em] text-muted">Rôles</dt><dd className="mt-1 break-words text-sm text-foreground">{roles.length ? roles.join(" · ") : "Étudiant"}</dd></div>
+                    <div className="col-span-2 min-w-0"><dt className="label text-[9px] tracking-[.1em] text-muted">Création du compte</dt><dd className="mt-1 text-sm tabular-nums text-muted">{fmt(m.created_at)}</dd></div>
+                  </dl>
 
                 </li>
               );
