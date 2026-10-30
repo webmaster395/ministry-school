@@ -18,15 +18,18 @@ test("les outils sont une liste facultative partagée par création modification
   assert.match(pdf, /pdf\.heading\("Outils utilisés"\)/);
 });
 
-test("seuls outils et matériels restent facultatifs", () => {
+test("les prérequis deviennent obligatoires uniquement lorsque la condition est activée", () => {
   const create = source("src/components/admin/OpportunityCreateForm.tsx");
   const edit = source("src/components/OpportunityEditForms.tsx");
   const actions = source("src/app/etudiant/services/actions.ts");
   const migration = source("supabase/migrations/20261030240000_opportunity_tools_and_required_fields.sql");
-  for (const field of ["objectives_items", "speakers_items", "prerequisites_items"]) {
+  for (const field of ["objectives_items", "speakers_items"]) {
     assert.match(create, new RegExp(`name="${field}"[^>]*required`));
     assert.match(edit, new RegExp(`name="${field}"[^>]*required`));
   }
+  assert.doesNotMatch(create, /name="prerequisites_items"[^>]*required/);
+  assert.doesNotMatch(edit, /name="prerequisites_items"[^>]*required/);
+  assert.match(actions, /prerequisitesRequired && !list\(formData, "prerequisites_items"\)/);
   assert.match(create, /name="location" required/);
   assert.match(create, /name="capacity" required/);
   assert.match(actions, /requireOpportunityFields\(formData/);

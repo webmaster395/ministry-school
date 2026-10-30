@@ -41,6 +41,9 @@ export type Opportunity = {
   services: { name: string } | null;
   objectives?: string | null;
   prerequisites?: string | null;
+  participation_audience: "all" | "specific";
+  participation_audience_details: string | null;
+  participation_prerequisites_required: boolean;
   strategic_axes: StrategicAxis[];
   strategic_contribution_former: string | null;
   strategic_contribution_auberge: string | null;

@@ -6,7 +6,7 @@
  */
 export const DETAILS_ENABLED = true;
 
-export const DETAIL_COLUMNS = ", objectives, prerequisites, strategic_axes, strategic_contribution_former, strategic_contribution_auberge, strategic_contribution_fundraising, strategic_axes_connection";
+export const DETAIL_COLUMNS = ", objectives, prerequisites, participation_audience, participation_audience_details, participation_prerequisites_required, strategic_axes, strategic_contribution_former, strategic_contribution_auberge, strategic_contribution_fundraising, strategic_axes_connection";
 
 /** Un élément par ligne, lignes vides ignorées. */
 export const linesOf = (text: string | null | undefined) =>

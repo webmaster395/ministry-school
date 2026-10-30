@@ -33,6 +33,8 @@ import FormattedContent from "@/components/FormattedContent";
 import { linesOf } from "@/lib/opportunity-details";
 import { formatSessionDate } from "@/lib/format";
 import AdminSelect from "@/components/admin/AdminSelect";
+import ParticipationConditionsFields from "@/components/ParticipationConditionsFields";
+import ParticipationConditionsSummary from "@/components/ParticipationConditionsSummary";
 
 type DateRow = { id?: string; session_date: string; start_time: string; end_time: string; room: string | null; location: string | null; capacity: number | null };
 type TeamPerson = { user_id: string; full_name: string; responsibility: "manager" | "contributor"; can_edit: boolean };
@@ -173,14 +175,15 @@ export default function OpportunityEditForms({
 
       <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
         <article className="space-y-6 rounded-3xl border border-border bg-background p-5 sm:p-7">
-          <p className="rounded-xl bg-surface px-4 py-3 text-xs leading-relaxed text-muted">Les champs marqués d’un astérisque sont obligatoires. Seuls les outils et les deux listes de matériel peuvent rester vides.</p>
+          <p className="rounded-xl bg-surface px-4 py-3 text-xs leading-relaxed text-muted">Les champs marqués d’un astérisque sont obligatoires. Les prérequis peuvent rester vides lorsque l’option « Prérequis nécessaires » n’est pas activée.</p>
           <section><SectionTitle>Présentation *</SectionTitle><RichTextEditor name="description" rows={8} defaultValue={o.description} /></section>
           <StrategicAxesFields title={title} type={type} objectives={o.objectives} description={o.description} initial={{ axes: o.strategic_axes }} />
           <DynamicListInput name="objectives_items" label="Objectifs" initialValue={o.objectives} placeholder="Un objectif" required />
           <DynamicListInput name="speakers_items" label="Intervenants" initialValue={o.speakers} placeholder="Nom de l’intervenant" required />
-          <DynamicListInput name="prerequisites_items" label="Prérequis" initialValue={o.prerequisites} placeholder="Un prérequis" required />
+          <DynamicListInput name="prerequisites_items" label="Prérequis" initialValue={o.prerequisites} placeholder="Un prérequis" />
           <DynamicListInput name="tools_used_items" label="Outils utilisés (facultatif)" initialValue={o.tools_used} placeholder="Ex. ChatGPT, Canva ou Photoshop" />
           <DynamicListInput name="participant_material_items" label="Matériel à apporter (facultatif)" initialValue={o.participant_material} placeholder="Un élément à apporter" />
+          <ParticipationConditionsFields initialAudience={o.participation_audience} initialAudienceDetails={o.participation_audience_details} initialPrerequisitesRequired={o.participation_prerequisites_required} />
         </article>
 
         <aside className="space-y-5 rounded-3xl border border-border bg-background p-5 sm:p-6">
@@ -251,7 +254,8 @@ function Consultation({ opportunity: o, dates, team, sessionParticipants, resour
           <section><p className="label text-xs tracking-[.16em] text-muted">Présentation</p><div className="mt-4 max-w-[72ch]"><FormattedContent value={o.description} /></div></section>
           <StrategicVisionSection opportunity={o} showIncomplete />
           {objectives.length > 0 && <ViewSection title="Objectifs"><BulletList items={objectives} /></ViewSection>}
-          {prerequisites.length > 0 && <ViewSection title="Prérequis"><BulletList items={prerequisites} /></ViewSection>}
+          {prerequisites.length > 0 && !o.participation_prerequisites_required && <ViewSection title="Prérequis"><BulletList items={prerequisites} /></ViewSection>}
+          <ViewSection title="Conditions de participation"><ParticipationConditionsSummary audience={o.participation_audience} audienceDetails={o.participation_audience_details} prerequisitesRequired={o.participation_prerequisites_required} prerequisites={prerequisites} /></ViewSection>
           {tools.length > 0 && <ViewSection title="Outils utilisés"><BulletList items={tools} /></ViewSection>}
           {materials.length > 0 && <ViewSection title="Matériel à apporter" icon={<PackageCheck size={21} />}><BulletList items={materials} /></ViewSection>}
           {resources.length > 0 && <ViewSection title="Supports et ressources"><div className="mt-4 grid gap-3 sm:grid-cols-2">{resources.map((resource) => { const Icon = resource.kind === "support" ? FileText : resource.kind === "link" ? Link2 : PackageOpen; return <a key={resource.id} href={`/etudiant/services/${o.id}/ressources/${resource.id}/ouvrir`} target="_blank" rel="noreferrer" className="group flex items-start gap-3 rounded-2xl border border-border bg-background p-4 transition hover:border-foreground"><span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-surface"><Icon size={19} /></span><span className="min-w-0 flex-1"><strong className="block break-words text-sm">{resource.title}</strong>{resource.description && <span className="mt-1.5 block whitespace-pre-line text-sm leading-5 text-muted">{resource.description}</span>}<small className="mt-1.5 block text-muted">{resource.kind === "support" ? "Support de cours" : resource.kind === "link" ? "Lien" : "Ressource"}</small></span><ExternalLink size={15} className="mt-1 shrink-0 text-muted" /></a>; })}</div></ViewSection>}

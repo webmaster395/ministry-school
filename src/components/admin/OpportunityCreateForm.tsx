@@ -12,6 +12,7 @@ import { DEFAULT_OPPORTUNITY_EMOJI } from "@/lib/opportunity-banner";
 import StrategicAxesFields from "@/components/StrategicAxesFields";
 import WorkshopMaterialsInput from "@/components/WorkshopMaterialsInput";
 import AdminSelect from "@/components/admin/AdminSelect";
+import ParticipationConditionsFields from "@/components/ParticipationConditionsFields";
 
 type Member = { id: string; full_name: string; email: string };
 type DateRow = { date: string; start: string; end: string };
@@ -60,7 +61,7 @@ export default function OpportunityCreateForm({ creationToken, members, services
       <section className="overflow-hidden rounded-3xl border border-border bg-background">
         <OpportunityBanner emoji={emoji} title={title || "Nom du projet ou de la formation"} typeLabel={type === "both" ? "Projet et formation" : type === "formation" ? "Formation" : "Projet"} variant="preview" />
         <div className="grid gap-5 p-5 sm:p-7 lg:grid-cols-2">
-          <p className="lg:col-span-2 rounded-xl bg-surface px-4 py-3 text-xs leading-relaxed text-muted">Les champs marqués d’un astérisque sont obligatoires. Seuls les outils, le matériel des participants et le matériel interne peuvent rester vides.</p>
+          <p className="lg:col-span-2 rounded-xl bg-surface px-4 py-3 text-xs leading-relaxed text-muted">Les champs marqués d’un astérisque sont obligatoires. Les prérequis peuvent rester vides lorsque l’option « Prérequis nécessaires » n’est pas activée.</p>
           <label className="lg:col-span-2"><Label>Nom *</Label><input name="title" required value={title} onChange={(event) => setTitle(event.target.value)} className={field} placeholder="Nom du projet ou de la formation" /></label>
           <fieldset className="lg:col-span-2"><legend className="mb-2 text-sm font-semibold">Type</legend><div className="grid gap-2 sm:grid-cols-3">{[["projet","Projet"],["formation","Formation"],["both","Projet et formation"]].map(([value,label]) => <label key={value} className="cursor-pointer"><input type="radio" name="type" value={value} checked={type === value} onChange={() => setType(value)} className="peer sr-only" /><span className="block rounded-xl border border-border px-4 py-3 text-center text-sm font-medium peer-checked:border-accent peer-checked:bg-accent peer-checked:text-on-accent">{label}</span></label>)}</div></fieldset>
           <div className="lg:col-span-2"><OpportunityEmojiPicker value={emoji} onChange={setEmoji} /></div>
@@ -69,8 +70,9 @@ export default function OpportunityCreateForm({ creationToken, members, services
           <div className="lg:col-span-2"><DynamicListInput name="objectives_items" label="Objectifs" placeholder="Un objectif" required /></div>
           <StrategicAxesFields title={title} type={type as "projet" | "formation" | "both"} />
           <DynamicListInput name="speakers_items" label="Intervenants" placeholder="Nom de l’intervenant" required />
-          <DynamicListInput name="prerequisites_items" label="Prérequis" placeholder="Un prérequis" required />
+          <DynamicListInput name="prerequisites_items" label="Prérequis" placeholder="Un prérequis" />
           <div className="lg:col-span-2"><DynamicListInput name="tools_used_items" label="Outils utilisés (facultatif)" placeholder="Ex. ChatGPT, Canva ou Photoshop" /></div>
+          <div className="lg:col-span-2"><ParticipationConditionsFields /></div>
         </div>
       </section>
 

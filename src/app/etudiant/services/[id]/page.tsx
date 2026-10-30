@@ -19,6 +19,7 @@ import { cancelOpportunityDate, registerOpportunityDates } from "../actions";
 import { getOpportunityResources } from "@/lib/data/opportunity-resources";
 import StrategicVisionSection from "@/components/StrategicVisionSection";
 import FormattedContent from "@/components/FormattedContent";
+import ParticipationConditionsSummary from "@/components/ParticipationConditionsSummary";
 
 const fullDate = (iso: string) => new Intl.DateTimeFormat("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${iso}T12:00:00Z`));
 const hm = (time: string) => time.slice(0,5).replace(":"," h ").replace(/ h 00$/," h");
@@ -84,11 +85,13 @@ export default async function OpportunityPage({ params, searchParams }: { params
           <StrategicVisionSection opportunity={o} />
           {objectives.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Objectifs</h2><BulletList items={objectives} /></section>}
           {speakers.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Intervenants</h2><p className="mt-3 text-[16px] leading-7 text-foreground">{speakers.join(" • ")}</p></section>}
-          {prerequisites.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Prérequis</h2><BulletList items={prerequisites} /></section>}
+          {prerequisites.length > 0 && !o.participation_prerequisites_required && <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Prérequis</h2><BulletList items={prerequisites} /></section>}
           {tools.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Outils utilisés</h2><BulletList items={tools} /></section>}
           {materials.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title flex items-center gap-2 text-[25px]"><PackageCheck size={22} /> Matériel à apporter</h2><BulletList items={materials} /></section>}
 
           {resources.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Supports et ressources</h2><div className="mt-4 grid gap-3 sm:grid-cols-2">{resources.map((resource) => { const Icon = resource.kind === "support" ? FileText : resource.kind === "link" ? Link2 : PackageOpen; return <a key={resource.id} href={`/etudiant/services/${o.id}/ressources/${resource.id}/ouvrir`} target="_blank" rel="noreferrer" className="group flex items-start gap-3 rounded-2xl border border-border bg-background p-4 transition hover:border-foreground hover:shadow-sm"><span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-surface"><Icon size={20} /></span><span className="min-w-0 flex-1"><strong className="block break-words text-sm">{resource.title}</strong>{resource.description && <span className="mt-1.5 block whitespace-pre-line text-sm leading-5 text-muted">{resource.description}</span>}<small className="mt-1.5 block text-muted">{resource.kind === "support" ? "Support de cours" : resource.kind === "link" ? "Lien" : "Ressource"}</small></span><ExternalLink size={16} className="mt-1 shrink-0 text-muted transition group-hover:text-foreground" /></a>; })}</div></section>}
+
+          <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Conditions de participation</h2><ParticipationConditionsSummary audience={o.participation_audience} audienceDetails={o.participation_audience_details} prerequisitesRequired={o.participation_prerequisites_required} prerequisites={prerequisites} /></section>
 
           <section className="border-t border-border-soft pt-7">
             <h2 className="font-title text-[25px]">Les séances</h2>

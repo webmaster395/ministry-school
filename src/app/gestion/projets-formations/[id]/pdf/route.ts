@@ -38,7 +38,13 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   const speakers = linesOf(opportunity.speakers);
   if (speakers.length) { pdf.heading("Intervenants"); pdf.paragraph(speakers.join(" • ")); }
   const prerequisites = linesOf(opportunity.prerequisites);
-  if (prerequisites.length) { pdf.heading("Prérequis"); prerequisites.forEach((item) => pdf.paragraph(item, { bullet: true })); }
+  if (prerequisites.length && !opportunity.participation_prerequisites_required) { pdf.heading("Prérequis"); prerequisites.forEach((item) => pdf.paragraph(item, { bullet: true })); }
+  pdf.heading("Conditions de participation");
+  pdf.paragraph(opportunity.participation_audience === "specific" ? `Réservé à : ${opportunity.participation_audience_details}` : "Ouvert à tous");
+  if (opportunity.participation_prerequisites_required) {
+    pdf.paragraph("Prérequis nécessaires");
+    prerequisites.forEach((item) => pdf.paragraph(item, { bullet: true }));
+  }
   const tools = linesOf(opportunity.tools_used);
   if (tools.length) { pdf.heading("Outils utilisés"); tools.forEach((item) => pdf.paragraph(item, { bullet: true })); }
   pdf.heading("Organisation");

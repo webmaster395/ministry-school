@@ -10,6 +10,22 @@ const text = (formData: FormData, key: string) => String(formData.get(key) ?? ""
 const list = (formData: FormData, key: string) =>
   formData.getAll(key).map(String).map((value) => value.trim()).filter(Boolean).join("\n");
 
+function participationConditionsFrom(formData: FormData) {
+  const audience = text(formData, "participation_audience");
+  if (audience !== "all" && audience !== "specific") {
+    throw new Error("Choisissez qui peut participer à ce projet ou cette formation.");
+  }
+  const audienceDetails = audience === "specific" ? text(formData, "participation_audience_details") : "";
+  if (audience === "specific" && !audienceDetails) {
+    throw new Error("Précisez à quel public ce projet ou cette formation est réservé.");
+  }
+  const prerequisitesRequired = formData.get("participation_prerequisites_required") === "on";
+  if (prerequisitesRequired && !list(formData, "prerequisites_items")) {
+    throw new Error("Ajoutez au moins un prérequis lorsque l’option « Prérequis nécessaires » est activée.");
+  }
+  return { audience, audienceDetails: audienceDetails || null, prerequisitesRequired };
+}
+
 function opportunityDatesFrom(formData: FormData) {
   const sessionDates = formData.getAll("session_date").map(String);
   const starts = formData.getAll("start_time").map(String);
@@ -84,7 +100,6 @@ function requireOpportunityFields(formData: FormData, dates: Array<{
   const requiredLists: Array<[string, string]> = [
     ["objectives_items", "objectifs"],
     ["speakers_items", "intervenants"],
-    ["prerequisites_items", "prérequis"],
   ];
   for (const [key, label] of requiredLists) if (!list(formData, key)) missing.push(label);
   const capacity = Number.parseInt(text(formData, "capacity"), 10);
@@ -96,6 +111,7 @@ function requireOpportunityFields(formData: FormData, dates: Array<{
   if (missing.length) {
     throw new Error(`Complétez les champs obligatoires suivants : ${[...new Set(missing)].join(", ")}.`);
   }
+  participationConditionsFrom(formData);
 }
 
 function refreshOpportunity(id: string) {
@@ -169,6 +185,7 @@ export async function createOpportunity(formData: FormData) {
     : { data: null, error: null };
   if (serviceError) throw new Error("Le service pilote n’a pas pu être enregistré : " + serviceError.message);
   const internalMaterial = list(formData, "organization_material_items");
+  const participation = participationConditionsFrom(formData);
   if (internalMaterial) {
     const { data: canManageInternalMaterial } = await supabase.rpc("can_review_editorial_content");
     if (!canManageInternalMaterial) throw new Error("Le matériel d’organisation est réservé aux super administrateurs.");
@@ -193,6 +210,9 @@ export async function createOpportunity(formData: FormData) {
       organizer_label: serviceName || null,
       speakers: list(formData, "speakers_items") || null,
       prerequisites: list(formData, "prerequisites_items") || null,
+      participation_audience: participation.audience,
+      participation_audience_details: participation.audienceDetails,
+      participation_prerequisites_required: participation.prerequisitesRequired,
       location: text(formData, "location") || null,
       organization_material: null,
       participant_material: list(formData, "participant_material_items") || null,
@@ -218,6 +238,13 @@ export async function createOpportunity(formData: FormData) {
   });
   if (error) throw new Error("La création a échoué : " + error.message);
   const id = String(data);
+  const { error: participationError } = await supabase.rpc("set_opportunity_participation_conditions", {
+    p_opportunity: id,
+    p_audience: participation.audience,
+    p_audience_details: participation.audienceDetails,
+    p_prerequisites_required: participation.prerequisitesRequired,
+  });
+  if (participationError) throw new Error("Les conditions de participation n’ont pas pu être enregistrées : " + participationError.message);
   const { error: toolsError } = await supabase.rpc("set_opportunity_tools", {
     p_opportunity: id,
     p_tools: list(formData, "tools_used_items") || null,
@@ -555,6 +582,7 @@ export async function updateOpportunityContent(formData: FormData) {
   const strategy = strategyFrom(formData);
   const parsedCapacity = Number.parseInt(text(formData, "capacity"), 10);
   const capacity = Number.isFinite(parsedCapacity) && parsedCapacity > 0 ? parsedCapacity : null;
+  const participation = participationConditionsFrom(formData);
   const { error } = await supabase.rpc("update_opportunity_content", {
     p_opportunity: id,
     p_description: text(formData, "description"),
@@ -577,6 +605,13 @@ export async function updateOpportunityContent(formData: FormData) {
     p_tools: list(formData, "tools_used_items") || null,
   });
   if (toolsError) throw new Error("Les outils utilisés n’ont pas pu être enregistrés : " + toolsError.message);
+  const { error: participationError } = await supabase.rpc("set_opportunity_participation_conditions", {
+    p_opportunity: id,
+    p_audience: participation.audience,
+    p_audience_details: participation.audienceDetails,
+    p_prerequisites_required: participation.prerequisitesRequired,
+  });
+  if (participationError) throw new Error("Les conditions de participation n’ont pas pu être enregistrées : " + participationError.message);
   refreshOpportunity(id);
 }
 
@@ -653,7 +688,7 @@ export async function saveOpportunityInline(_previous: OpportunityFormState, for
     const [{ data: canManage }, { data: isSuperAdmin }, { data: current, error: currentError }] = await Promise.all([
       supabase.rpc("can_submit_opportunity", { p_opportunity: id }),
       supabase.rpc("is_super_admin"),
-      supabase.from("opportunities").select("kind,is_project,is_training,title,description,objectives,speakers,prerequisites,participant_material,tools_used,capacity,strategic_axes,service_id,organizer_label,location,registration_open,cancellation_allowed,banner_emoji,publication_status").eq("id", id).single(),
+      supabase.from("opportunities").select("kind,is_project,is_training,title,description,objectives,speakers,prerequisites,participation_audience,participation_audience_details,participation_prerequisites_required,participant_material,tools_used,capacity,strategic_axes,service_id,organizer_label,location,registration_open,cancellation_allowed,banner_emoji,publication_status").eq("id", id).single(),
     ]);
     if (currentError || !current) throw new Error("Cette fiche est introuvable ou inaccessible.");
 
@@ -661,6 +696,7 @@ export async function saveOpportunityInline(_previous: OpportunityFormState, for
     // sont stockées dans une version de travail privée jusqu'à la prochaine validation.
     if (["published", "scheduled"].includes(current.publication_status)) {
       const strategy = strategyFrom(formData);
+      const participation = participationConditionsFrom(formData);
       const parsedCapacity = Number.parseInt(text(formData, "capacity"), 10);
       const capacity = Number.isFinite(parsedCapacity) && parsedCapacity > 0 ? parsedCapacity : null;
       const type = canManage ? text(formData, "type") : current.is_project && current.is_training ? "both" : current.is_project ? "projet" : "formation";
@@ -681,6 +717,9 @@ export async function saveOpportunityInline(_previous: OpportunityFormState, for
           objectives: list(formData, "objectives_items") || text(formData, "objectives") || null,
           speakers: list(formData, "speakers_items") || text(formData, "speakers") || null,
           prerequisites: list(formData, "prerequisites_items") || text(formData, "prerequisites") || null,
+          participation_audience: participation.audience,
+          participation_audience_details: participation.audienceDetails,
+          participation_prerequisites_required: participation.prerequisitesRequired,
           participant_material: list(formData, "participant_material_items") || text(formData, "participant_material") || null,
           tools_used: list(formData, "tools_used_items") || null,
           capacity,
