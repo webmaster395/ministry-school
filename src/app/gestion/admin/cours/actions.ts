@@ -3,8 +3,15 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { invalidateStudentProgram } from "@/lib/cache/program";
+import { getViewer } from "@/lib/data/viewer";
+
+async function assertSuperAdmin() {
+  const viewer = await getViewer();
+  if (!viewer?.roles.superAdmin) throw new Error("Action réservée aux super admins.");
+}
 
 export async function createCourse(formData: FormData) {
+  await assertSuperAdmin();
   const supabase = await createClient();
 
   const title = formData.get("title") as string;
@@ -29,6 +36,7 @@ export async function createCourse(formData: FormData) {
 }
 
 export async function deleteCourse(formData: FormData) {
+  await assertSuperAdmin();
   const supabase = await createClient();
   const courseId = formData.get("course_id") as string;
 
@@ -40,6 +48,7 @@ export async function deleteCourse(formData: FormData) {
 }
 
 export async function renameCourse(formData: FormData) {
+  await assertSuperAdmin();
   const supabase = await createClient();
   const courseId = formData.get("course_id") as string;
   const title = ((formData.get("title") as string) ?? "").trim();

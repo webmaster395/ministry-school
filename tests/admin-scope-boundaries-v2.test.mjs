@@ -4,16 +4,20 @@ import test from "node:test";
 
 const source = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("la super administration possède un portail unique et protégé", () => {
+test("Admin est l’unique portail et adapte ses sections au niveau réel", () => {
   const nav = source("src/lib/nav.tsx");
-  const portal = source("src/app/gestion/super-admin/page.tsx");
-  const layout = source("src/app/gestion/super-admin/layout.tsx");
-  assert.match(nav, /label: "Super administration"/);
-  assert.match(nav, /href: "\/gestion\/super-admin"/);
+  const portal = source("src/components/admin/AdminHome.tsx");
+  const page = source("src/app/gestion/admin/page.tsx");
+  assert.match(nav, /label: "Admin"/);
+  assert.doesNotMatch(nav, /label: "Super administration"/);
   assert.match(portal, /Cours et formations/);
   assert.match(portal, /Sensibilités ministérielles/);
-  assert.match(portal, /Membres et permissions/);
-  assert.match(layout, /roles\.superAdmin/);
+  assert.match(portal, /Projets et formations/);
+  assert.match(portal, /À valider/);
+  assert.match(portal, /Membres/);
+  assert.match(portal, /Permissions/);
+  assert.match(portal, /Pilotage global/);
+  assert.match(page, /!viewer\.roles\.superAdmin[\s\S]*?redirect\("\/gestion\/admin"\)/);
 });
 
 test("lecture, écriture et soumission des contributeurs restent distinctes", () => {

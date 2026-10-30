@@ -10,7 +10,7 @@ const csvCell = (value: string) => `"${value.replaceAll('"', '""')}"`;
 export async function GET() {
   const viewer = await getViewer();
   if (!viewer) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
-  if (!viewer.roles.admin) return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+  if (!viewer.roles.superAdmin) return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
 
   const supabase = await createClient();
   const [members, ministries, services] = await Promise.all([

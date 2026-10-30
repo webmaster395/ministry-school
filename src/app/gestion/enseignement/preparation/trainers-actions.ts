@@ -13,8 +13,8 @@ export async function updateSessionTrainers(formData: FormData) {
   const trainerIds = formData.getAll("trainer_ids").map(String);
   const supabase = await createClient();
   await assertPilotageRequestScope(supabase, sessionId);
-  const { data: session } = await supabase.from("sessions").select("session_type, ministry_id").eq("id", sessionId).single();
-  const canEdit = viewer.roles.admin || (session?.session_type === "ministere" && !!session.ministry_id && viewer.roles.steeringMinistryIds.includes(session.ministry_id));
+  const { data: pilotCanEdit } = await supabase.rpc("can_edit_ministry_course", { p_session: sessionId });
+  const canEdit = viewer.roles.superAdmin || !!pilotCanEdit;
   if (!canEdit) throw new Error("Tu ne peux pas modifier les intervenants de cette séance.");
 
   const { error: removeError } = await supabase.from("session_trainers").delete().eq("session_id", sessionId);

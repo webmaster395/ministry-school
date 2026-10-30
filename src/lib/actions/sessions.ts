@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { invalidateStudentProgram } from "@/lib/cache/program";
 import { parseAvailability } from "@/lib/availability";
 import { assertPilotageRequestScope } from "@/lib/pilotage-scope";
+import { getViewer } from "@/lib/data/viewer";
 
 /**
  * Modifie une séance existante (date, horaire, lieu, titre, intervenant, parcours).
@@ -13,6 +14,8 @@ import { assertPilotageRequestScope } from "@/lib/pilotage-scope";
  * cette action ne fait que transmettre la demande.
  */
 export async function updateSession(formData: FormData) {
+  const viewer = await getViewer();
+  if (!viewer) throw new Error("Non authentifié");
   const supabase = await createClient();
   const {
     data: { user },
@@ -21,6 +24,10 @@ export async function updateSession(formData: FormData) {
 
   const id = formData.get("session_id") as string;
   const pilotageRequest = await assertPilotageRequestScope(supabase, id);
+  const { data: pilotCanEdit } = await supabase.rpc("can_edit_ministry_course", { p_session: id });
+  if (!viewer.roles.superAdmin && !pilotCanEdit) {
+    throw new Error("Vous n’avez pas le droit de modifier cette séance.");
+  }
   const text = (key: string) => ((formData.get(key) as string) ?? "").trim();
 
   // Les références bibliques ne sont modifiées que si le formulaire les propose
@@ -126,6 +133,8 @@ export async function updateSessionWithFeedback(_prev: SessionSaveState, formDat
 
 /** Supprime une séance depuis sa fiche, puis revient au programme de l'administration. */
 export async function deleteSessionFromCard(formData: FormData) {
+  const viewer = await getViewer();
+  if (!viewer?.roles.superAdmin) throw new Error("Action réservée aux super admins.");
   const supabase = await createClient();
   const id = ((formData.get("session_id") as string) ?? "").trim();
   const { data, error } = await supabase.from("sessions").delete().eq("id", id).select("id");

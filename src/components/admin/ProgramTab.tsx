@@ -6,16 +6,19 @@ import QuickCourseForm from "@/components/admin/QuickCourseForm";
 
 type Choice = { id: string; name: string };
 
-export function DayList({ entries }: { entries: ProgramEntry[] }) {
+export function DayList({ entries, readOnly = false }: { entries: ProgramEntry[]; readOnly?: boolean }) {
   return (
     <ul className="divide-y divide-border-soft border-y border-border-soft">
       {entries.map((entry) => (
         <li key={entry.key}>
-          <Link href={entry.href} className="group grid min-h-14 gap-1 py-3.5 transition sm:grid-cols-[130px_1fr_auto] sm:items-center sm:gap-4 sm:hover:pl-2">
+          {readOnly ? <div className="grid min-h-14 gap-1 py-3.5 sm:grid-cols-[130px_1fr] sm:items-center sm:gap-4">
+            <span className="text-sm font-semibold text-foreground">{formatTimeRange(entry.start, entry.end)}</span>
+            <span className="min-w-0"><span className="block text-[16px] font-semibold text-foreground">{entry.title}</span><span className="mt-0.5 block truncate text-sm text-muted">{entry.sub}</span></span>
+          </div> : <Link href={entry.href} className="group grid min-h-14 gap-1 py-3.5 transition sm:grid-cols-[130px_1fr_auto] sm:items-center sm:gap-4 sm:hover:pl-2">
             <span className="text-sm font-semibold text-foreground">{formatTimeRange(entry.start, entry.end)}</span>
             <span className="min-w-0"><span className="block text-[16px] font-semibold text-foreground group-hover:text-link">{entry.title}</span><span className="mt-0.5 block truncate text-sm text-muted">{entry.sub}</span></span>
             <ChevronRight size={17} className="hidden text-muted sm:block" />
-          </Link>
+          </Link>}
         </li>
       ))}
     </ul>
@@ -34,12 +37,14 @@ function monthLabel(month: string) {
   return label.charAt(0).toUpperCase() + label.slice(1);
 }
 
-export default function ProgramTab({ entries, month, today, trainers, ministries }: {
+export default function ProgramTab({ entries, month, today, trainers, ministries, readOnly = false, basePath = "/gestion/admin?onglet=programme" }: {
   entries: ProgramEntry[];
   month?: string;
   today: string;
   trainers: Choice[];
   ministries: Choice[];
+  readOnly?: boolean;
+  basePath?: string;
 }) {
   const nextDate = entries.find((entry) => entry.date >= today)?.date ?? today;
   const selectedMonth = /^\d{4}-\d{2}$/.test(month ?? "") ? month! : nextDate.slice(0, 7);
@@ -48,6 +53,7 @@ export default function ProgramTab({ entries, month, today, trainers, ministries
     grouped.set(entry.date, [...(grouped.get(entry.date) ?? []), entry]);
   }
   const pastCount = entries.filter((entry) => entry.date < today).length;
+  const monthHref = (value: string) => `${basePath}${basePath.includes("?") ? "&" : "?"}mois=${value}`;
 
   return (
     <div className="mx-auto max-w-5xl space-y-6">
@@ -55,12 +61,12 @@ export default function ProgramTab({ entries, month, today, trainers, ministries
         <div>
           <p className="text-sm text-muted">Programme Ministry School</p>
           <h1 className="font-title mt-1 text-[30px] leading-tight text-foreground">Journées et cours</h1>
-          <p className="mt-1 text-sm text-muted">Clique sur un cours pour modifier sa fiche et son contenu.</p>
+          <p className="mt-1 text-sm text-muted">{readOnly ? "Consultez les journées, horaires, cours et intervenants." : "Clique sur un cours pour modifier sa fiche et son contenu."}</p>
         </div>
         <nav aria-label="Changer de mois" className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-start">
-          <Link href={`/gestion/admin?onglet=programme&mois=${shiftMonth(selectedMonth, -1)}`} aria-label="Mois précédent" className="rounded-full border border-border p-2 text-muted hover:text-foreground"><ChevronLeft size={18} /></Link>
+          <Link href={monthHref(shiftMonth(selectedMonth, -1))} aria-label="Mois précédent" className="rounded-full border border-border p-2 text-muted hover:text-foreground"><ChevronLeft size={18} /></Link>
           <span className="min-w-0 flex-1 text-center text-sm font-semibold text-foreground sm:min-w-[150px]">{monthLabel(selectedMonth)}</span>
-          <Link href={`/gestion/admin?onglet=programme&mois=${shiftMonth(selectedMonth, 1)}`} aria-label="Mois suivant" className="rounded-full border border-border p-2 text-muted hover:text-foreground"><ChevronRight size={18} /></Link>
+          <Link href={monthHref(shiftMonth(selectedMonth, 1))} aria-label="Mois suivant" className="rounded-full border border-border p-2 text-muted hover:text-foreground"><ChevronRight size={18} /></Link>
         </nav>
       </header>
 
@@ -73,8 +79,8 @@ export default function ProgramTab({ entries, month, today, trainers, ministries
               <h2 className="font-title text-[22px] text-foreground">{formatSessionDate(date)} {date.slice(0, 4)}</h2>
               <p className="mt-0.5 text-sm text-muted">{reference.location}{reference.room ? ` · ${reference.room}` : ""} · {courseEntries.length} cours</p>
             </div>
-            <DayList entries={list} />
-            <QuickCourseForm date={date} dateLabel={`${formatSessionDate(date)} ${date.slice(0, 4)}`} parking={courseEntries.some((entry) => entry.parking)} trainers={trainers} ministries={ministries} />
+            <DayList entries={list} readOnly={readOnly} />
+            {!readOnly && <QuickCourseForm date={date} dateLabel={`${formatSessionDate(date)} ${date.slice(0, 4)}`} parking={courseEntries.some((entry) => entry.parking)} trainers={trainers} ministries={ministries} />}
           </section>
         );
       }) : (
@@ -82,7 +88,7 @@ export default function ProgramTab({ entries, month, today, trainers, ministries
       )}
 
       {pastCount > 0 && selectedMonth >= today.slice(0, 7) && (
-        <Link href={`/gestion/admin?onglet=programme&mois=${shiftMonth(today.slice(0, 7), -1)}`} className="inline-block text-sm font-medium text-muted hover:text-foreground hover:underline">Voir les journées passées →</Link>
+        <Link href={monthHref(shiftMonth(today.slice(0, 7), -1))} className="inline-block text-sm font-medium text-muted hover:text-foreground hover:underline">Voir les journées passées →</Link>
       )}
     </div>
   );

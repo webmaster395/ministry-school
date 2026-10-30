@@ -8,7 +8,7 @@ import { invalidateStudentProgram } from "@/lib/cache/program";
 
 export async function createQuickCourse(formData: FormData) {
   const viewer = await getViewer();
-  if (!viewer?.roles.admin) throw new Error("Accès réservé aux administrateurs.");
+  if (!viewer?.roles.superAdmin) throw new Error("Action réservée aux super admins.");
   const supabase = await createClient();
   const text = (key: string) => String(formData.get(key) ?? "").trim();
   const title = text("title");
@@ -64,6 +64,8 @@ export async function createQuickCourse(formData: FormData) {
 }
 
 export async function createSession(formData: FormData) {
+  const viewer = await getViewer();
+  if (!viewer?.roles.superAdmin) throw new Error("Action réservée aux super admins.");
   const supabase = await createClient();
 
   const sessionType = formData.get("session_type") as string;
@@ -111,6 +113,8 @@ export async function createSession(formData: FormData) {
 }
 
 export async function deleteSession(formData: FormData) {
+  const viewer = await getViewer();
+  if (!viewer?.roles.superAdmin) throw new Error("Action réservée aux super admins.");
   const supabase = await createClient();
   const sessionId = formData.get("session_id") as string;
 

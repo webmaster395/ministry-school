@@ -29,7 +29,7 @@ const TITLES: Record<string, string> = {
   "/gestion/admin/seances": "Séances",
   "/gestion/admin/utilisateurs": "Utilisateurs",
   "/gestion/admin/roles": "Rôles et accès",
-  "/gestion/super-admin/roles": "Rôles",
+  "/gestion/super-admin/roles": "Permissions",
   "/gestion/admin/profil": "Profil",
 };
 

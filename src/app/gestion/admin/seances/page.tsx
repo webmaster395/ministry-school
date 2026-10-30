@@ -5,8 +5,12 @@ import SessionTypeBadge from "@/components/SessionTypeBadge";
 import SessionEditForm from "@/components/SessionEditForm";
 import { createSession, deleteSession } from "./actions";
 import AdminSelect from "@/components/admin/AdminSelect";
+import { getViewer } from "@/lib/data/viewer";
+import { redirect } from "next/navigation";
 
 export default async function AdminSessionsPage() {
+  const viewer = await getViewer();
+  if (!viewer?.roles.superAdmin) redirect("/gestion/admin/programme");
   const supabase = await createClient();
   const [sessions, ministries, teachers, courses] = await Promise.all([
     getAllSessions(supabase),

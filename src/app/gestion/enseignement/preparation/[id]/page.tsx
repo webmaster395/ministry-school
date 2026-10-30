@@ -98,10 +98,10 @@ export async function PreparationPageContent({
     : { data: false };
   const canView = accessMode === "pilotage"
     ? strictPilot
-    : viewer.roles.admin || viewer.roles.editorialReviewer || strictPilot;
+    : viewer.roles.admin;
   const canEdit = accessMode === "pilotage"
     ? !!pilotCanEdit
-    : viewer.roles.admin || viewer.roles.editorialReviewer || strictPilot;
+    : viewer.roles.superAdmin;
   if (!canView) redirect("/etudiant");
 
   const [{ data: materials }, { data: assignments }] = await Promise.all([
@@ -132,7 +132,7 @@ export async function PreparationPageContent({
     : { data: [] };
 
   // Les options globales restent réservées à la vue Administration.
-  const adminOptions = accessMode === "administration" && viewer.roles.admin
+  const adminOptions = accessMode === "administration" && viewer.roles.superAdmin
     ? {
         courses: ((
           await supabase.from("courses").select("id, title").order("title")

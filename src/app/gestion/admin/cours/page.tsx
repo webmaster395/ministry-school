@@ -3,8 +3,12 @@ import { getCourses, getMinistries } from "@/lib/data/admin";
 import { createCourse, deleteCourse, renameCourse } from "./actions";
 import FormSubmitButton from "@/components/FormSubmitButton";
 import AdminSelect from "@/components/admin/AdminSelect";
+import { getViewer } from "@/lib/data/viewer";
+import { redirect } from "next/navigation";
 
 export default async function AdminCoursesPage() {
+  const viewer = await getViewer();
+  if (!viewer?.roles.superAdmin) redirect("/gestion/admin/cours-formations");
   const supabase = await createClient();
   const [courses, ministries] = await Promise.all([
     getCourses(supabase),

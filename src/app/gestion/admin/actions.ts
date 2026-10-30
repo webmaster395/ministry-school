@@ -9,11 +9,6 @@ async function assertSuperAdmin() {
   if (!viewer?.roles.superAdmin) throw new Error("Action réservée à la Super administration.");
 }
 
-async function assertAdmin() {
-  const viewer = await getViewer();
-  if (!viewer?.roles.admin) throw new Error("Action réservée à l’administration.");
-}
-
 export type MemberActionResult = {
   success?: boolean;
   error?: string | null;
@@ -30,9 +25,10 @@ export async function updateMember(
   const text = (key: string) => ((data.get(key) as string) ?? "").trim();
   const on = (key: string) => data.get(key) === "on";
 
-  const { error } = await supabase.rpc("set_user_access_v2", {
+  const { error } = await supabase.rpc("set_user_access_v3", {
     target: text("user_id"),
     p_admin: on("is_admin"),
+    p_super_admin: on("is_super_admin"),
     p_projects_training: on("is_projects_training_member"),
     p_service: text("service_id") || null,
     p_ministry_lead: text("ministry_lead_of") || null,
@@ -52,6 +48,7 @@ export async function setMemberActive(
   prevStateOrFormData: MemberActionResult | FormData,
   maybeFormData?: FormData
 ): Promise<MemberActionResult> {
+  await assertSuperAdmin();
   const data = (maybeFormData instanceof FormData ? maybeFormData : prevStateOrFormData) as FormData;
   const supabase = await createClient();
   const { error } = await supabase.rpc("set_user_active", {
@@ -100,12 +97,55 @@ export async function removeDelegate(formData: FormData) {
   revalidatePath("/gestion/super-admin/roles");
 }
 
-/** Enregistre une note interne à la page Rôles, sans créer de notification. */
+export async function assignMemberRole(
+  prevStateOrFormData: MemberActionResult | FormData,
+  maybeFormData?: FormData
+): Promise<MemberActionResult> {
+  await assertSuperAdmin();
+  const data = (maybeFormData instanceof FormData ? maybeFormData : prevStateOrFormData) as FormData;
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("assign_admin_role", {
+    p_user: String(data.get("user_id") ?? ""),
+    p_role: String(data.get("role_key") ?? ""),
+    p_scope: String(data.get("scope_id") ?? "") || null,
+    p_can_edit: data.get("can_edit") === "on",
+  });
+  if (error) return { success: false, error: `L’attribution a échoué : ${error.message}` };
+  revalidatePath("/gestion/admin");
+  revalidatePath("/etudiant", "layout");
+  return { success: true };
+}
+
+/** Modifie uniquement le niveau d’écriture d’un contributeur déjà affecté. */
+export async function toggleMemberRoleAccess(formData: FormData): Promise<void> {
+  const result = await assignMemberRole(formData);
+  if (!result.success) throw new Error(result.error ?? "La permission n’a pas pu être modifiée.");
+}
+
+export async function removeMemberRole(
+  prevStateOrFormData: MemberActionResult | FormData,
+  maybeFormData?: FormData
+): Promise<MemberActionResult> {
+  await assertSuperAdmin();
+  const formData = (maybeFormData instanceof FormData ? maybeFormData : prevStateOrFormData) as FormData;
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("remove_admin_role", {
+    p_user: String(formData.get("user_id") ?? ""),
+    p_role: String(formData.get("role_key") ?? ""),
+    p_scope: String(formData.get("scope_id") ?? "") || null,
+  });
+  if (error) return { success: false, error: error.message.includes("LAST_ACTIVE_SUPER_ADMIN") ? "Le dernier super admin actif ne peut pas être retiré." : error.message };
+  revalidatePath("/gestion/admin");
+  revalidatePath("/etudiant", "layout");
+  return { success: true };
+}
+
+/** Enregistre une note interne à la page Permissions, sans créer de notification. */
 export async function saveMemberRoleComment(
   prevStateOrFormData: MemberActionResult | FormData,
   maybeFormData?: FormData
 ): Promise<MemberActionResult> {
-  await assertAdmin();
+  await assertSuperAdmin();
   const data = (maybeFormData instanceof FormData ? maybeFormData : prevStateOrFormData) as FormData;
   const userId = String(data.get("user_id") ?? "");
   const comment = String(data.get("comment") ?? "").trim().slice(0, 2000);
@@ -144,6 +184,7 @@ export async function removeMemberAvatar(
   prevStateOrFormData: MemberActionResult | FormData,
   maybeFormData?: FormData
 ): Promise<MemberActionResult> {
+  await assertSuperAdmin();
   const data = (maybeFormData instanceof FormData ? maybeFormData : prevStateOrFormData) as FormData;
   const supabase = await createClient();
   const userId = data.get("user_id") as string;

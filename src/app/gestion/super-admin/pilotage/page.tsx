@@ -3,7 +3,7 @@ import { BarChart3, CalendarDays, ChevronRight, LayoutDashboard } from "lucide-r
 import SuperAdminHeader from "@/components/admin/SuperAdminHeader";
 
 const links = [
-  ["Vue d’ensemble", "Indicateurs principaux de la plateforme.", "/gestion/admin", LayoutDashboard],
+  ["Vue d’ensemble", "Indicateurs principaux de la plateforme.", "/gestion/admin?onglet=vue", LayoutDashboard],
   ["Statistiques", "Engagement, membres, programme et initiatives.", "/gestion/admin?onglet=statistiques", BarChart3],
   ["Programme", "Cours, journées, horaires, salles et intervenants.", "/gestion/admin?onglet=programme", CalendarDays],
 ] as const;

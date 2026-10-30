@@ -24,6 +24,7 @@ export default function MemberAccessEditor({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(member.role === "admin");
+  const [isSuperAdmin, setIsSuperAdmin] = useState(member.is_super_admin);
   const [isProjectsTraining, setIsProjectsTraining] = useState(member.can_create_opportunities);
 
   const [state, action, isPending] = useActionState<MemberActionResult, FormData>(updateMember, {});
@@ -64,11 +65,25 @@ export default function MemberAccessEditor({
           <input type="hidden" name="user_id" value={member.id} />
 
           <div className="flex flex-col gap-2.5 text-sm text-foreground">
+            <label className="flex cursor-pointer items-center gap-2 font-medium">
+              <input
+                type="checkbox"
+                name="is_super_admin"
+                checked={isSuperAdmin}
+                onChange={(event) => {
+                  setIsSuperAdmin(event.target.checked);
+                  if (event.target.checked) setIsAdmin(true);
+                  if (showSuccess) setShowSuccess(false);
+                }}
+              />
+              <span>Super admin</span>
+            </label>
             <label className="flex items-center gap-2 font-medium cursor-pointer">
               <input
                 type="checkbox"
                 name="is_admin"
-                checked={isAdmin}
+                checked={isSuperAdmin || isAdmin}
+                disabled={isSuperAdmin}
                 onChange={(e) => {
                   setIsAdmin(e.target.checked);
                   if (showSuccess) setShowSuccess(false);
@@ -77,7 +92,7 @@ export default function MemberAccessEditor({
               <span>Admin</span>
             </label>
 
-            {isAdmin && (
+            {(isAdmin || isSuperAdmin) && (
               <div className="flex items-start gap-2.5 rounded-lg border border-border bg-background/90 p-3 text-xs leading-relaxed text-foreground/80 animate-in fade-in duration-200">
                 <ShieldCheck size={16} className="mt-0.5 shrink-0 text-accent" />
                 <div>
@@ -185,8 +200,8 @@ export default function MemberAccessEditor({
         {!accessOnly && <form
           action={(formData) => {
             startActiveTransition(async () => {
-              await setMemberActive(formData);
-              setActiveMessage(member.deactivated ? "Compte réactivé avec succès" : "Compte désactivé");
+              const result = await setMemberActive(formData);
+              setActiveMessage(result.success ? (member.deactivated ? "Compte réactivé avec succès" : "Compte désactivé") : (result.error ?? "La modification a échoué."));
               setTimeout(() => setActiveMessage(null), 3000);
             });
           }}

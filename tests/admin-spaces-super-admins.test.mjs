@@ -20,13 +20,12 @@ test("les espaces administratifs suivent l'ordre et le comportement un ou plusie
     source("src/lib/nav.tsx"),
     source("src/components/NavBlocks.tsx"),
   ]);
-  const superAdmin = nav.indexOf('key: "superAdmin"');
   const admin = nav.indexOf('key: "admin"');
   const steering = nav.indexOf('key: "steering"');
   const projects = nav.indexOf('key: "projectsTraining"');
-  assert.ok(superAdmin < admin && admin < steering && steering < projects);
-  assert.match(nav, /if \(roles\.superAdmin\)/);
-  assert.match(nav, /if \(roles\.admin && !roles\.superAdmin\)/);
+  assert.ok(admin >= 0 && admin < steering && steering < projects);
+  assert.match(nav, /if \(roles\.admin\)/);
+  assert.doesNotMatch(nav, /key: "superAdmin"|label: "Super administration"/);
   assert.match(nav, /if \(roles\.steeringMinistryIds\.length > 0\)/);
   assert.match(nav, /if \(roles\.projectsTraining\)/);
   assert.match(blocks, /Mon espace admin/);
@@ -34,46 +33,59 @@ test("les espaces administratifs suivent l'ordre et le comportement un ou plusie
   assert.match(blocks, /multiple \? \(/);
   assert.match(blocks, /admin-spaces-open/);
   assert.match(blocks, /pendingValidationCount/);
-  assert.match(blocks, /space\.key === "superAdmin"/);
+  assert.match(blocks, /space\.key === "admin"/);
 });
 
-test("exactement les trois comptes nominatifs obtiennent la super administration", async () => {
-  const migration = await source("supabase/migrations/20261030120000_admin_spaces_and_super_admins.sql");
-  const functionBody = migration.slice(migration.indexOf("create or replace function public.is_super_admin"), migration.indexOf("-- Les trois comptes existent déjà"));
-  const emails = [...functionBody.matchAll(/'([^']+@[^']+)'/g)].map((match) => match[1]);
-  assert.deepEqual(emails, [
-    "r.tamard@gmail.com",
-    "flora.demerle@mlkgrandparis.com",
-    "nathalie.boudehent@eglisemlk.fr",
-  ]);
-  assert.match(migration, /update public\.profiles p set role = 'admin'/);
-  assert.match(migration, /update auth\.users u set raw_app_meta_data/);
+test("les trois comptes initiaux sont migrés puis la super administration devient attribuable", async () => {
+  const migration = await source("supabase/migrations/20261030180000_dynamic_super_admin_and_unified_admin.sql");
+  for (const email of ["r.tamard@gmail.com", "flora.demerle@mlkgrandparis.com", "nathalie.boudehent@eglisemlk.fr"]) {
+    assert.match(migration, new RegExp(email.replaceAll(".", "\\.")));
+  }
+  assert.match(migration, /add column if not exists is_super_admin boolean/);
+  assert.match(migration, /when 'super_admin'/);
+  assert.match(migration, /LAST_ACTIVE_SUPER_ADMIN/);
+  assert.match(migration, /admin_role_audit/);
   assert.doesNotMatch(migration, /insert into auth\.users|insert into public\.profiles/);
 });
 
-test("l'espace Administrateur réunit tableau de bord, statistiques, programme, membres et rôles", async () => {
-  const [nav, page, overview, users, exportRoute] = await Promise.all([
+test("l'interface Admin présente sept sections aux super admins et quatre aux admins", async () => {
+  const [nav, page, home, summary, users, exportRoute] = await Promise.all([
     source("src/lib/nav.tsx"),
     source("src/app/gestion/admin/page.tsx"),
-    source("src/components/admin/OverviewTab.tsx"),
+    source("src/components/admin/AdminHome.tsx"),
+    source("src/components/admin/AdminPilotageSummary.tsx"),
     source("src/app/gestion/admin/utilisateurs/page.tsx"),
     source("src/app/gestion/admin/utilisateurs/export/route.ts"),
   ]);
   const adminBlock = nav.slice(nav.indexOf('key: "admin"'), nav.indexOf('key: "steering"'));
-  assert.match(adminBlock, /Tableau de bord/);
-  assert.match(adminBlock, /Statistiques/);
-  assert.match(adminBlock, /Programme/);
-  assert.match(adminBlock, /Membres/);
-  assert.match(adminBlock, /Rôles/);
-  assert.doesNotMatch(adminBlock, /Utilisateurs|Projets et formations/);
-  assert.match(page, /\["vue", "statistiques", "programme", "membres", "roles"\]/);
+  assert.match(adminBlock, /label: "Admin"/);
+  assert.doesNotMatch(adminBlock, /Super administration|Statistiques|Membres/);
+  for (const label of ["Cours et formations", "Sensibilités ministérielles", "Projets et formations", "À valider", "Membres", "Permissions", "Pilotage global"]) assert.match(home, new RegExp(label));
+  assert.match(home, /viewer\.roles\.superAdmin \?/);
+  assert.match(home, /title: "Pilotage"/);
+  for (const label of ["Membres inscrits", "Nouveaux comptes", "En attente de confirmation", "Prochaine journée", "Projets"]) assert.match(summary, new RegExp(label));
+  assert.match(page, /\["pilotage", "vue", "statistiques", "programme", "membres", "permissions", "roles"\]/);
   assert.match(page, /MembersTab/);
   assert.match(page, /RolesTab/);
-  assert.doesNotMatch(page, /ProjectsTab/);
-  assert.doesNotMatch(overview, /onglet=membres|onglet=projets|Examiner et valider/);
+  assert.match(page, /!viewer\.roles\.superAdmin && !\["accueil", "pilotage"\]\.includes\(tab\)/);
   assert.match(users, /redirect\("\/gestion\/admin"\)/);
   assert.match(exportRoute, /getMembers/);
-  assert.match(exportRoute, /if \(!viewer\.roles\.admin\)/);
+  assert.match(exportRoute, /if \(!viewer\.roles\.superAdmin\)/);
+});
+
+test("les mutations globales et les données membres restent réservées aux super admins", async () => {
+  const [courseActions, sessionActions, memberDetail, exportRoute, preparation] = await Promise.all([
+    source("src/app/gestion/admin/cours/actions.ts"),
+    source("src/app/gestion/admin/seances/actions.ts"),
+    source("src/app/gestion/admin/membres/[id]/page.tsx"),
+    source("src/app/gestion/admin/utilisateurs/export/route.ts"),
+    source("src/app/gestion/enseignement/preparation/[id]/page.tsx"),
+  ]);
+  assert.match(courseActions, /assertSuperAdmin/);
+  assert.match(sessionActions, /roles\.superAdmin/);
+  assert.match(memberDetail, /!viewer\?\.roles\.superAdmin/);
+  assert.match(exportRoute, /!viewer\.roles\.superAdmin/);
+  assert.match(preparation, /const canEdit[\s\S]*?: viewer\.roles\.superAdmin/);
 });
 
 test("les statistiques agrègent les projets et formations sans ouvrir leur gestion", async () => {

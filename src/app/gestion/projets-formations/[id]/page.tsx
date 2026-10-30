@@ -13,6 +13,7 @@ import OpportunityResourcesEditor from "@/components/OpportunityResourcesEditor"
 import DeleteOpportunityButton from "@/components/admin/DeleteOpportunityButton";
 import ContributorAccessEditor from "@/components/gestion/ContributorAccessEditor";
 import ArchiveOpportunityRequest from "@/components/gestion/ArchiveOpportunityRequest";
+import { getViewer } from "@/lib/data/viewer";
 
 function firstSaturday(year: number, month: number) {
   const date = new Date(Date.UTC(year, month, 1));
@@ -25,16 +26,17 @@ export default async function ProjectsTrainingManageDetail({ params, searchParam
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/auth/connexion");
-  const [opportunity, dates, rights, services, { data: canManageInternalMaterial }] = await Promise.all([
+  const [opportunity, dates, rights, services, { data: canManageInternalMaterial }, viewer] = await Promise.all([
     getOpportunity(supabase, id),
     getOpportunityDates(supabase, id),
     getProjectsTrainingRights(supabase, user.id),
     getServices(supabase),
     supabase.rpc("can_review_editorial_content"),
+    getViewer(),
   ]);
   if (!opportunity) notFound();
-  const globalScope = rights.admin && query.scope === "super";
-  const responsibility = globalScope ? "admin" : rights.assignments.get(id);
+  const globalScope = !!viewer?.roles.admin && ["admin", "super"].includes(query.scope ?? "");
+  const responsibility = globalScope ? (viewer?.roles.superAdmin ? "admin" : "readonly") : rights.assignments.get(id);
   if (!responsibility) redirect("/gestion/projets-formations");
   const canManage = responsibility === "admin" || responsibility === "manager";
   const canEdit = canManage || rights.editableAssignments.has(id);
@@ -56,15 +58,15 @@ export default async function ProjectsTrainingManageDetail({ params, searchParam
 
   const editExtras = <div className="space-y-5">
     {canEdit && <OpportunityResourcesEditor opportunityId={id} resources={resources} />}
-    {globalScope && <AssignmentEditor opportunityId={id} members={members.filter((member) => !member.deactivated).map(({ id: memberId, full_name, email }) => ({ id: memberId, full_name, email }))} managers={teamRows.filter((person) => person.responsibility === "manager").map((person) => person.user_id)} contributors={teamRows.filter((person) => person.responsibility === "contributor").map((person) => person.user_id)} />}
+    {responsibility === "admin" && <AssignmentEditor opportunityId={id} members={members.filter((member) => !member.deactivated).map(({ id: memberId, full_name, email }) => ({ id: memberId, full_name, email }))} managers={teamRows.filter((person) => person.responsibility === "manager").map((person) => person.user_id)} contributors={teamRows.filter((person) => person.responsibility === "contributor").map((person) => person.user_id)} />}
     {responsibility === "manager" && <section className="rounded-3xl border border-border bg-background p-5 sm:p-6"><h2 className="font-title text-xl">Accès des contributeurs</h2><p className="mb-4 mt-1 text-sm text-muted">Les affectations sont gérées par la Super administration. Vous pouvez uniquement choisir le niveau d’accès des personnes déjà affectées.</p><ContributorAccessEditor opportunityId={id} contributors={teamRows.filter((person) => person.responsibility === "contributor")} /></section>}
-    {globalScope ? <DeleteOpportunityButton opportunityId={id} title={opportunity.title} /> : responsibility === "manager" ? <ArchiveOpportunityRequest opportunityId={id} requested={!!opportunity.archive_requested_at} /> : null}
+    {responsibility === "admin" ? <DeleteOpportunityButton opportunityId={id} title={opportunity.title} /> : responsibility === "manager" ? <ArchiveOpportunityRequest opportunityId={id} requested={!!opportunity.archive_requested_at} /> : null}
   </div>;
 
   return <div className="space-y-5">
-    <div className="flex flex-wrap items-center justify-between gap-3"><Link href={globalScope ? "/gestion/projets-formations?scope=super" : "/gestion/projets-formations"} className="inline-flex items-center gap-1.5 text-sm text-muted"><ChevronLeft size={16} /> Projets et formations</Link><Link href={`/etudiant/services/${id}?preview=1`} className="text-sm text-muted hover:text-foreground">Prévisualiser la fiche étudiante</Link></div>
+    <div className="flex flex-wrap items-center justify-between gap-3"><Link href={globalScope ? "/gestion/projets-formations?scope=admin" : "/gestion/projets-formations"} className="inline-flex items-center gap-1.5 text-sm text-muted"><ChevronLeft size={16} /> Projets et formations</Link><Link href={`/etudiant/services/${id}?preview=1`} className="text-sm text-muted hover:text-foreground">Prévisualiser la fiche étudiante</Link></div>
     {query.creation === "ok" && <p role="status" className="flex items-center gap-2 rounded-xl border border-border bg-background px-4 py-3 text-sm"><CheckCircle2 size={18} /> Élément créé et conservé dans son état de publication choisi.</p>}
-    <OpportunityReviewPanel opportunityId={id} state={reviewState} canManage={canManage} />
+    {responsibility !== "readonly" && <OpportunityReviewPanel opportunityId={id} state={reviewState} canManage={canManage} />}
     <OpportunityEditForms
       opportunity={opportunityWithPrivatePlanning}
       initialDates={dates}

@@ -8,8 +8,11 @@ import RolesTab from "@/components/admin/RolesTab";
 import { getMinistries, getMonthlyActiveUsers, getOpportunityAnalytics, getProgramAnalytics, getTrainingDayDates, getUsageAnalytics } from "@/lib/data/admin";
 import type { TrainerAdminRow } from "@/components/admin/TrainersTab";
 import { getViewer } from "@/lib/data/viewer";
+import { redirect } from "next/navigation";
+import AdminHome from "@/components/admin/AdminHome";
+import AdminPilotageSummary from "@/components/admin/AdminPilotageSummary";
 
-const VALID_TABS = ["vue", "statistiques", "programme", "membres", "roles"];
+const VALID_TABS = ["pilotage", "vue", "statistiques", "programme", "membres", "permissions", "roles"];
 
 type Params = {
   onglet?: string;
@@ -33,10 +36,15 @@ type Params = {
 
 export default async function AdminPage({ searchParams }: { searchParams: Promise<Params> }) {
   const p = await searchParams;
-  const tab = VALID_TABS.includes(p.onglet ?? "") ? p.onglet! : "vue";
+  const tab = VALID_TABS.includes(p.onglet ?? "") ? p.onglet! : "accueil";
 
   const supabase = await createClient();
   const viewer = await getViewer();
+  if (!viewer) redirect("/etudiant");
+  if (tab === "roles") redirect("/gestion/admin?onglet=permissions");
+  if (!viewer.roles.superAdmin && !["accueil", "pilotage"].includes(tab)) redirect("/gestion/admin");
+  if (tab === "accueil") return <AdminHome viewer={viewer} />;
+  if (tab === "pilotage") return <AdminPilotageSummary />;
   const today = new Date().toISOString().slice(0, 10);
 
   const opps = await getOpportunitiesWithDates(supabase);
@@ -100,7 +108,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           par={p.par ?? "50"}
         />
       )}
-      {tab === "roles" && (
+      {tab === "permissions" && (
         <RolesTab
           q={p.q ?? ""}
           category={p.categorie ?? "toutes"}

@@ -6,8 +6,11 @@ const filters = readFileSync(new URL("../src/components/admin/MemberFilters.tsx"
 const members = readFileSync(new URL("../src/components/admin/MembersTab.tsx", import.meta.url), "utf8");
 const navigation = readFileSync(new URL("../src/lib/nav.tsx", import.meta.url), "utf8");
 
-test("Statistiques est de nouveau une entrée principale de l’admin", () => {
-  assert.match(navigation, /label: "Statistiques"[\s\S]*?onglet=statistiques/);
+test("la sidebar expose une seule entrée Admin sans dupliquer ses sections", () => {
+  const adminBlock = navigation.slice(navigation.indexOf('key: "admin"'), navigation.indexOf('key: "steering"'));
+  assert.match(adminBlock, /label: "Admin"/);
+  assert.match(adminBlock, /href: "\/gestion\/admin"/);
+  assert.doesNotMatch(adminBlock, /Statistiques|Super administration/);
 });
 
 test("les filtres essentiels restent visibles et tous les filtres historiques sont conservés", () => {

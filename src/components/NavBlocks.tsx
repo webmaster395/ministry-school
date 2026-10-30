@@ -169,7 +169,7 @@ export function NavSections({ collapsed = false }: { collapsed?: boolean }) {
                   icon={space.icon}
                   active={current?.key === space.key}
                   collapsed={collapsed}
-                  badge={space.key === "superAdmin" ? pendingValidationCount : undefined}
+                  badge={space.key === "admin" ? pendingValidationCount : undefined}
                 />
                 </li>
               ))}

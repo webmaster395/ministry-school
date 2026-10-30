@@ -117,7 +117,7 @@ export function profileTabs(roles: ViewerRoles): ProfileTab[] {
   return tabs;
 }
 
-export type SpaceKey = "superAdmin" | "admin" | "steering" | "projectsTraining";
+export type SpaceKey = "admin" | "steering" | "projectsTraining";
 
 /** Une « casquette » : un ensemble d'entrées de menu que la personne choisit d'afficher. */
 export type Space = {
@@ -137,55 +137,21 @@ export type Space = {
 export function navSpaces(roles: ViewerRoles): Space[] {
   const spaces: Space[] = [];
 
-  if (roles.superAdmin) {
-    spaces.push({
-      key: "superAdmin",
-      label: "Super administration",
-      icon: icons.adminHome,
-      title: "Super administration",
-      subtitle: "Supervisez la plateforme depuis un point d’entrée unique.",
-      sections: [{
-        title: "Super administration",
-        items: [{ label: "Accueil", href: "/gestion/super-admin", icon: icons.adminHome }],
-      }],
-    });
-  }
-
-  if (roles.admin && !roles.superAdmin) {
+  if (roles.admin) {
     spaces.push({
       key: "admin",
-      label: "Administrateur",
+      label: "Admin",
       icon: icons.functions,
-      title: "Administrateur",
-      subtitle: "Suivez les statistiques et organisez le programme général.",
+      title: "Administration",
+      subtitle: "Consultez les outils correspondant à votre niveau d’accès.",
       sections: [
         {
           title: "Administration",
           items: [
             {
-              label: "Tableau de bord",
+              label: "Accueil",
               href: "/gestion/admin",
               icon: icons.adminHome,
-            },
-            {
-              label: "Statistiques",
-              href: "/gestion/admin?onglet=statistiques",
-              icon: icons.adminStats,
-            },
-            {
-              label: "Programme",
-              href: "/gestion/admin?onglet=programme",
-              icon: icons.adminSessions,
-            },
-            {
-              label: "Membres",
-              href: "/gestion/admin?onglet=membres",
-              icon: icons.profile,
-            },
-            {
-              label: "Rôles",
-              href: "/gestion/admin?onglet=roles",
-              icon: icons.steer,
             },
           ],
         },

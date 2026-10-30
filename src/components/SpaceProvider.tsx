@@ -63,12 +63,11 @@ export function SpaceProvider({
   }, []);
 
   // Une page partagée entre deux espaces garde celui que la personne a choisi.
-  const superAdministrationPath = pathname.startsWith("/gestion/super-admin")
+  const administrationPath = pathname.startsWith("/gestion/super-admin")
     || pathname.startsWith("/gestion/a-valider")
-    || (pathname.startsWith("/gestion/projets-formations") && searchParams.get("scope") === "super")
-    || (pathname.startsWith("/gestion/admin") && !spaces.some((space) => space.key === "admin"));
-  const matches = superAdministrationPath && spaces.some((space) => space.key === "superAdmin")
-    ? (["superAdmin"] as SpaceKey[])
+    || (pathname.startsWith("/gestion/projets-formations") && ["super", "admin"].includes(searchParams.get("scope") ?? ""));
+  const matches = administrationPath && spaces.some((space) => space.key === "admin")
+    ? (["admin"] as SpaceKey[])
     : spacesForPath(spaces, pathname);
   const key = matches.find((k) => k === stored) ?? matches[0] ?? null;
   const current = spaces.find((s) => s.key === key) ?? null;
@@ -79,7 +78,7 @@ export function SpaceProvider({
     !current && pathname.startsWith("/gestion/enseignement/preparation/");
   const fallback = inPreparation
     ? (spaces.find((s) => s.key === stored) ??
-      spaces.find((s) => ["steering", "admin", "superAdmin"].includes(s.key)) ??
+      spaces.find((s) => ["steering", "admin"].includes(s.key)) ??
       null)
     : null;
   const shown = current ?? fallback;

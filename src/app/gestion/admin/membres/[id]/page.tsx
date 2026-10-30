@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { ArrowLeft, CalendarDays, CheckCircle2, Clock3, Mail, Phone, ShieldCheck, UserRound, UsersRound } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { signedAvatarUrls } from "@/lib/avatars";
 import { parseMlkEngagement } from "@/lib/mlk-engagement";
 import MinistryPicto from "@/components/MinistryPicto";
+import { getViewer } from "@/lib/data/viewer";
 
 const date = (value?: string | null) => value
   ? new Intl.DateTimeFormat("fr-FR", { dateStyle: "long", timeZone: "Europe/Paris" }).format(new Date(value))
@@ -23,6 +24,8 @@ type Enrollment = { session: { session_date: string; description: string | null;
 type InitiativeRegistration = { date: { session_date: string; opportunity: { title: string } | null } | null };
 
 export default async function AdminMemberProfilePage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ returnTo?: string }> }) {
+  const viewer = await getViewer();
+  if (!viewer?.roles.superAdmin) redirect("/gestion/admin");
   const { id } = await params;
   const requestedReturn = (await searchParams).returnTo;
   const returnTo = requestedReturn?.startsWith("/gestion/admin?") || requestedReturn?.startsWith("/gestion/super-admin/membres") || requestedReturn?.startsWith("/gestion/super-admin/roles")

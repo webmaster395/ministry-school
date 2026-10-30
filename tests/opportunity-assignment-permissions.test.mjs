@@ -7,7 +7,7 @@ const source = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "u
 test("la liste personnelle ne montre que les affectations et la vue globale est explicite", () => {
   const page = source("src/app/gestion/projets-formations/page.tsx");
   assert.match(page, /globalScope \? rows : rows\.filter\(\(row\) => rights\.assignments\.has\(row\.id\)\)/);
-  assert.match(page, /query\.scope === "super"/);
+  assert.match(page, /\["admin", "super"\]\.includes\(query\.scope/);
   assert.match(page, /Uniquement les éléments auxquels vous êtes affecté/);
 });
 
@@ -16,7 +16,7 @@ test("l'accès direct exige une affectation et l'écriture contributeur est expl
   const form = source("src/components/OpportunityEditForms.tsx");
   assert.match(page, /if \(!responsibility\) redirect\("\/gestion\/projets-formations"\)/);
   assert.match(page, /rights\.editableAssignments\.has\(id\)/);
-  assert.match(page, /globalScope \? <DeleteOpportunityButton/);
+  assert.match(page, /responsibility === "admin" \? <DeleteOpportunityButton/);
   assert.match(form, /canEdit: boolean/);
 });
 
