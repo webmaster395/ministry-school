@@ -155,7 +155,7 @@ export function navSpaces(roles: ViewerRoles): Space[] {
     spaces.push({
       key: "admin",
       label: "Administrateur",
-      icon: icons.adminHome,
+      icon: icons.functions,
       title: "Administrateur",
       subtitle: "Suivez les statistiques et organisez le programme général.",
       sections: [
