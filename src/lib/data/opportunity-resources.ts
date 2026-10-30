@@ -4,6 +4,7 @@ export type OpportunityResource = {
   id: string;
   opportunity_id: string;
   title: string;
+  description: string | null;
   kind: "support" | "resource" | "link";
   external_url: string | null;
   file_path: string | null;
@@ -15,7 +16,7 @@ export type OpportunityResource = {
 export async function getOpportunityResources(supabase: SupabaseClient, opportunityId: string) {
   const { data } = await supabase
     .from("opportunity_resources")
-    .select("id,opportunity_id,title,kind,external_url,file_path,file_name,mime_type,created_at")
+    .select("id,opportunity_id,title,description,kind,external_url,file_path,file_name,mime_type,created_at")
     .eq("opportunity_id", opportunityId)
     .order("created_at");
   return (data ?? []) as OpportunityResource[];

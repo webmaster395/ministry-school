@@ -345,8 +345,10 @@ export async function addOpportunityResource(formData: FormData) {
   if (!user) throw new Error("Non authentifié");
   const opportunityId = text(formData, "opportunity_id");
   const title = text(formData, "title");
+  const description = text(formData, "description") || null;
   const kind = text(formData, "kind");
   if (!title) throw new Error("Donnez un nom au support ou à la ressource.");
+  if (description && description.length > 2000) throw new Error("La description ne doit pas dépasser 2 000 caractères.");
   if (!["support", "resource", "link"].includes(kind)) throw new Error("Type de ressource invalide.");
 
   let externalUrl: string | null = null;
@@ -379,6 +381,7 @@ export async function addOpportunityResource(formData: FormData) {
   const { error } = await supabase.from("opportunity_resources").insert({
     opportunity_id: opportunityId,
     title,
+    description,
     kind,
     external_url: externalUrl,
     file_path: filePath,
@@ -389,6 +392,82 @@ export async function addOpportunityResource(formData: FormData) {
   if (error) {
     if (filePath) await supabase.storage.from("opportunity-resources").remove([filePath]);
     throw new Error("La ressource n’a pas pu être ajoutée : " + error.message);
+  }
+  refreshOpportunity(opportunityId);
+}
+
+export async function updateOpportunityResource(formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Non authentifié");
+  const opportunityId = text(formData, "opportunity_id");
+  const resourceId = text(formData, "resource_id");
+  const title = text(formData, "title");
+  const description = text(formData, "description") || null;
+  const kind = text(formData, "kind");
+  if (!title) throw new Error("Donnez un nom au support ou à la ressource.");
+  if (description && description.length > 2000) throw new Error("La description ne doit pas dépasser 2 000 caractères.");
+  if (!["support", "resource", "link"].includes(kind)) throw new Error("Type de ressource invalide.");
+
+  const { data: current } = await supabase
+    .from("opportunity_resources")
+    .select("kind,external_url,file_path,file_name,mime_type")
+    .eq("id", resourceId)
+    .eq("opportunity_id", opportunityId)
+    .maybeSingle();
+  if (!current) throw new Error("Cette ressource est introuvable ou inaccessible.");
+
+  let externalUrl: string | null = null;
+  let filePath: string | null = current.file_path;
+  let fileName: string | null = current.file_name;
+  let mimeType: string | null = current.mime_type;
+  let uploadedPath: string | null = null;
+
+  if (kind === "link") {
+    const rawUrl = text(formData, "external_url");
+    try {
+      const parsed = new URL(rawUrl);
+      if (!(parsed.protocol === "https:" || parsed.protocol === "http:")) throw new Error();
+      externalUrl = parsed.toString();
+    } catch {
+      throw new Error("Saisissez un lien web valide commençant par https://.");
+    }
+    filePath = null;
+    fileName = null;
+    mimeType = null;
+  } else {
+    const file = formData.get("file");
+    if (file instanceof File && file.size > 0) {
+      if (file.size > 25 * 1024 * 1024) throw new Error("Le fichier ne doit pas dépasser 25 Mo.");
+      if (!RESOURCE_MIME_TYPES.has(file.type)) throw new Error("Ce format de fichier n’est pas autorisé.");
+      const extension = file.name.includes(".") ? `.${file.name.split(".").pop()!.toLowerCase().replace(/[^a-z0-9]/g, "")}` : "";
+      uploadedPath = `${opportunityId}/${crypto.randomUUID()}${extension}`;
+      const { error: uploadError } = await supabase.storage.from("opportunity-resources").upload(uploadedPath, file, { contentType: file.type });
+      if (uploadError) throw new Error("Le fichier n’a pas pu être déposé : " + uploadError.message);
+      filePath = uploadedPath;
+      fileName = file.name;
+      mimeType = file.type;
+    } else if (!filePath) {
+      throw new Error("Sélectionnez un fichier.");
+    }
+  }
+
+  const { data: updated, error } = await supabase.from("opportunity_resources").update({
+    title,
+    description,
+    kind,
+    external_url: externalUrl,
+    file_path: filePath,
+    file_name: fileName,
+    mime_type: mimeType,
+    updated_at: new Date().toISOString(),
+  }).eq("id", resourceId).eq("opportunity_id", opportunityId).select("id");
+  if (error || !updated?.length) {
+    if (uploadedPath) await supabase.storage.from("opportunity-resources").remove([uploadedPath]);
+    throw new Error("La ressource n’a pas pu être modifiée.");
+  }
+  if (current.file_path && current.file_path !== filePath) {
+    await supabase.storage.from("opportunity-resources").remove([current.file_path]);
   }
   refreshOpportunity(opportunityId);
 }

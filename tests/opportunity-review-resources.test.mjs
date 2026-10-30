@@ -32,19 +32,35 @@ test("les corrections et demandes de complément notifient seulement l’équipe
 });
 
 test("supports, ressources et liens sont privés jusqu’à l’accès autorisé", async () => {
-  const [migration, editor, studentPage, route] = await Promise.all([
+  const [migration, descriptionMigration, editor, studentPage, route, actions, data] = await Promise.all([
     source("supabase/migrations/20261029180000_single_review_and_opportunity_resources.sql"),
+    source("supabase/migrations/20261030250000_opportunity_resource_descriptions.sql"),
     source("src/components/OpportunityResourcesEditor.tsx"),
     source("src/app/etudiant/services/[id]/page.tsx"),
     source("src/app/etudiant/services/[id]/ressources/[resourceId]/ouvrir/route.ts"),
+    source("src/app/etudiant/services/actions.ts"),
+    source("src/lib/data/opportunity-resources.ts"),
   ]);
   assert.match(migration, /create table if not exists public\.opportunity_resources/);
   assert.match(migration, /'support', 'resource', 'link'/);
   assert.match(migration, /'opportunity-resources', 'opportunity-resources', false/);
   assert.match(migration, /public\.opportunity_is_visible/);
   assert.match(editor, /Supports et ressources/);
+  assert.match(editor, /\(facultatif\)/);
+  assert.match(editor, /Type de contenu/);
+  assert.match(editor, /AdminSelect name="kind"/);
+  assert.doesNotMatch(editor, /type="radio" name="kind"/);
+  assert.match(editor, /name="description"/);
+  assert.doesNotMatch(editor, /name="description"[^>]*required/);
+  assert.match(editor, /updateOpportunityResource/);
+  assert.match(editor, /sm:grid-cols-\[minmax\(0,\.54fr\)_minmax\(0,1fr\)\]/);
   assert.match(editor, /name="external_url"/);
   assert.match(editor, /name="file"/);
+  assert.match(descriptionMigration, /add column if not exists description text/);
+  assert.match(data, /title,description,kind/);
+  assert.match(actions, /export async function updateOpportunityResource/);
+  assert.match(actions, /description,\s*kind,/);
   assert.match(studentPage, /getOpportunityResources/);
+  assert.match(studentPage, /resource\.description &&/);
   assert.match(route, /createSignedUrl/);
 });
