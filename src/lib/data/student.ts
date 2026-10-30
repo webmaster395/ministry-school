@@ -104,7 +104,10 @@ async function getCommonSessions(supabase: SupabaseClient) {
   let common = supabase
     .from("sessions")
     .select(SESSION_FIELDS)
-    .eq("session_type", "commun");
+    .eq("session_type", "commun")
+    // Les cours d'initiative restent dans leur espace de gestion tant qu'une
+    // intégration étudiante dédiée n'a pas été explicitement conçue.
+    .is("opportunity_id", null);
   if (DRAFTS_ENABLED) common = common.eq("is_draft", false);
   const { data } = await common;
 

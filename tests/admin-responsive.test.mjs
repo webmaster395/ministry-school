@@ -27,13 +27,15 @@ test("les tableaux critiques deviennent des listes ou cartes sur mobile", async 
 });
 
 test("les formulaires et filtres sensibles au tactile utilisent un panneau mobile", async () => {
-  const [course, memberFilters, stats] = await Promise.all([
+  const [courseEntry, course, memberFilters, stats] = await Promise.all([
     source("src/components/admin/QuickCourseForm.tsx"),
+    source("src/components/gestion/CourseCreationDialog.tsx"),
     source("src/components/admin/MemberFilters.tsx"),
     source("src/components/admin/StatisticsTab.tsx"),
   ]);
   assert.match(course, /h-dvh w-full/);
   assert.match(course, /safe-area-inset-bottom/);
+  assert.match(courseEntry, /CourseCreationDialog/);
   assert.match(memberFilters, /w-full flex-col.*sm:w-\[430px\]/s);
   assert.match(stats, /max-h-\[85dvh\].*rounded-t-2xl/s);
 });

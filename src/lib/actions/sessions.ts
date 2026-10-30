@@ -115,6 +115,7 @@ export async function updateSession(formData: FormData) {
   revalidatePath("/enseignant");
   revalidatePath("/gestion/enseignement/preparation", "layout");
   revalidatePath("/gestion/pilotage", "layout");
+  revalidatePath("/gestion/projets-formations", "layout");
   revalidatePath("/gestion/enseignement", "layout");
   revalidatePath("/etudiant", "layout");
 }

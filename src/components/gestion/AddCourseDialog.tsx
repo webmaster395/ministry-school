@@ -1,157 +1,19 @@
 "use client";
 
-import Portal from "@/components/Portal";
-import { useActionState, useEffect, useState } from "react";
-import { Plus, X } from "lucide-react";
-import { createCourse, type CourseFormState } from "@/app/gestion/pilotage/actions";
+import CourseCreationDialog from "@/components/gestion/CourseCreationDialog";
 
-const field = "w-full rounded-lg border border-border bg-background px-3 py-2.5 text-[15px] text-foreground";
-const label = "mb-1.5 block text-[14px] text-muted";
-
-/** « Ajouter un cours » : les informations indispensables ; le contenu pédagogique se complète ensuite sur la fiche du cours. */
-export default function AddCourseDialog({ ministryId }: { ministryId: string; drafts?: boolean }) {
-  const [open, setOpen] = useState(false);
-  const [state, action, pending] = useActionState<CourseFormState, FormData>(createCourse, {});
-
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [open]);
-
+/** Entrée Pilotage : même formulaire, sensibilité et horaire imposés par le serveur. */
+export default function AddCourseDialog({
+  ministryId,
+}: {
+  ministryId: string;
+  drafts?: boolean;
+}) {
   return (
-    <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-3 text-[15px] font-medium text-on-accent transition hover:bg-[#1b2221]"
-      >
-        <Plus size={16} strokeWidth={2} /> Ajouter un cours
-      </button>
-
-      {open && (
-        <Portal>
-        <div className="app-modal-layer fixed inset-0 z-50 bg-black/40">
-        <div className="flex h-full items-start justify-center sm:items-center sm:p-4" onClick={(e) => e.target === e.currentTarget && setOpen(false)}>
-          <form
-            action={action}
-            role="dialog"
-            aria-modal="true"
-            aria-label="Ajouter un cours"
-            onClick={(e) => e.stopPropagation()}
-            className="relative max-h-full w-full max-w-[640px] overflow-y-auto overscroll-contain rounded-t-2xl bg-surface shadow-[0_20px_60px_rgba(0,0,0,0.25)] sm:rounded-2xl"
-          >
-            <input type="hidden" name="ministry_id" value={ministryId} />
-
-            <div className="rounded-t-2xl border-b border-border bg-surface px-5 pb-3 pt-4 sm:px-6 sm:pt-4">
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              aria-label="Fermer"
-              className="absolute right-4 top-4 rounded-md p-1 text-muted transition hover:bg-foreground/[0.06] hover:text-foreground"
-            >
-              <X size={18} />
-            </button>
-              <header className="pr-6">
-              <h2 className="font-title text-[22px] leading-tight text-foreground">Ajouter un cours</h2>
-              <p className="mt-1.5 text-[14px] text-muted">
-                Commencez par les informations indispensables. Les contenus pédagogiques pourront être complétés ensuite
-                dans la fiche partagée.
-              </p>
-            </header>
-            </div>
-            <div className="space-y-5 px-5 py-5 sm:px-7">
-
-            <div>
-              <label className={label} htmlFor="course-title">Titre *</label>
-              <input id="course-title" name="title" required className={field} />
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-[1.4fr_1fr]">
-              <div>
-                <label className={label} htmlFor="course-date">Date *</label>
-                <input id="course-date" name="session_date" type="date" min="2027-01-01" required className={field} />
-              </div>
-              <div className="rounded-xl border border-border bg-surface px-4 py-3">
-                <span className="block text-xs font-medium text-muted">Horaire commun aux cinq sensibilités</span>
-                <strong className="mt-1 block text-[16px] text-foreground">10 h 30 – 13 h</strong>
-              </div>
-            </div>
-            <p className="-mt-3 text-xs text-muted">Les cours ministériels commencent en janvier et se tiennent le samedi.</p>
-
-            <div className="grid gap-4 sm:grid-cols-[1.4fr_1fr]">
-              <div>
-                <label className={label} htmlFor="course-location">Lieu *</label>
-                <input id="course-location" name="location" required defaultValue="Espace Martin Luther King" className={field} />
-              </div>
-              <div>
-                <label className={label} htmlFor="course-room">Salle</label>
-                <input id="course-room" name="room" className={field} />
-              </div>
-            </div>
-
-            <div>
-              <label className={label} htmlFor="course-speaker">Intervenant ou intervenants</label>
-              <input
-                id="course-speaker"
-                name="speaker_name"
-                placeholder="Séparez plusieurs noms par une virgule"
-                className={field}
-              />
-            </div>
-
-            <div>
-              <label className={label} htmlFor="course-summary">Présentation</label>
-              <textarea id="course-summary" name="summary" rows={3} className={field} />
-            </div>
-
-            <div>
-              <label className={label} htmlFor="course-objectives">Objectifs</label>
-              <p className="-mt-1 mb-1.5 text-[12px] text-muted">Un objectif par ligne</p>
-              <textarea id="course-objectives" name="objectives" rows={3} className={field} />
-            </div>
-
-            <label className="flex items-start gap-3 rounded-lg border border-border bg-background px-3.5 py-3 text-sm text-foreground">
-              <input type="hidden" name="show_parking_notice" value="0" />
-              <input type="checkbox" name="show_parking_notice" value="1" defaultChecked className="mt-0.5 h-4 w-4 accent-foreground" />
-              <span>
-                <strong className="block font-semibold">Afficher l’information parking</strong>
-                <span className="mt-0.5 block text-xs text-muted">Visible sur l’accueil étudiant pour cette journée.</span>
-              </span>
-            </label>
-
-            </div>
-
-            <div className="sticky bottom-0 z-10 space-y-3 rounded-b-2xl border-t border-border bg-surface px-5 py-4 sm:px-7">
-            {state.error && (
-              <p role="alert" className="rounded-lg border border-m-doctoral/30 bg-m-doctoral/10 px-3 py-2 text-[14px] text-link">
-                {state.error}
-              </p>
-            )}
-
-            <div className="flex flex-wrap justify-end gap-3">
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                className="rounded-full border border-border bg-background px-5 py-2.5 text-[15px] text-foreground transition hover:border-foreground"
-              >
-                Annuler
-              </button>
-              <button
-                type="submit"
-                disabled={pending}
-                className="rounded-full bg-accent px-5 py-2.5 text-[15px] font-medium text-on-accent transition hover:bg-[#1b2221] disabled:opacity-60"
-              >
-                {pending ? "Création…" : "Créer le brouillon"}
-              </button>
-            </div>
-            </div>
-          </form>
-        </div>
-        </div>
-        </Portal>
-      )}
-    </>
+    <CourseCreationDialog
+      context="ministry"
+      parentId={ministryId}
+      triggerLabel="Ajouter un cours"
+    />
   );
 }

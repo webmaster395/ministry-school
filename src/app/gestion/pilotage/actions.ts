@@ -39,6 +39,7 @@ export async function addSupport(formData: FormData) {
   revalidatePath("/gestion/pilotage", "layout");
   revalidatePath("/gestion/enseignement", "layout");
   revalidatePath("/gestion/pilotage");
+  revalidatePath("/gestion/projets-formations", "layout");
   revalidatePath("/etudiant", "layout");
 }
 
@@ -77,6 +78,7 @@ export async function addPilotAssignment(formData: FormData) {
   revalidatePath(`/gestion/enseignement/preparation/${sessionId}`);
   revalidatePath("/gestion/pilotage", "layout");
   revalidatePath("/gestion/pilotage");
+  revalidatePath("/gestion/projets-formations", "layout");
   revalidatePath("/etudiant", "layout");
 }
 
@@ -146,6 +148,7 @@ function refreshPrep(sessionId: string) {
   revalidatePath("/gestion/enseignement", "layout");
   revalidatePath("/gestion/pilotage");
   revalidatePath("/gestion/admin", "layout");
+  revalidatePath("/gestion/projets-formations", "layout");
   revalidatePath("/etudiant", "layout");
 }
 

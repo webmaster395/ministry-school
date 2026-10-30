@@ -45,7 +45,7 @@ test("le composant de sélection commun remplace les menus natifs des écrans pr
   for (const path of [
     "src/components/admin/MemberFilters.tsx",
     "src/components/admin/StatisticsTab.tsx",
-    "src/components/admin/QuickCourseForm.tsx",
+    "src/components/gestion/CourseCreationDialog.tsx",
     "src/components/SessionEditForm.tsx",
     "src/components/OpportunityEditForms.tsx",
   ]) assert.match(source(path), /AdminSelect/);

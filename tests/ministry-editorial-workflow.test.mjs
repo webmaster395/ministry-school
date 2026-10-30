@@ -28,11 +28,13 @@ test("la base isole les cinq sensibilités et leur visibilité étudiante", asyn
 
 test("les responsables créent un brouillon à 10 h 30 puis le soumettent", async () => {
   const migration = await source("supabase/migrations/20261029190000_ministry_editorial_workflow.sql");
-  const form = await source("src/components/gestion/AddCourseDialog.tsx");
+  const entry = await source("src/components/gestion/AddCourseDialog.tsx");
+  const form = await source("src/components/gestion/CourseCreationDialog.tsx");
   const panel = await source("src/components/MinistryCourseReviewPanel.tsx");
   assert.match(migration, /time '10:30', time '13:00'/);
   assert.match(migration, /p_session_date < date '2027-01-01'/);
   assert.match(form, /Créer le brouillon/);
+  assert.match(entry, /context="ministry"/);
   assert.doesNotMatch(form, /value="publish"/);
   assert.match(panel, /Soumettre à validation/);
   assert.match(panel, /Valider et publier maintenant/);

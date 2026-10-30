@@ -19,8 +19,8 @@ export default function WorkshopMaterialsInput({ initialValue = "" }: { initialV
 
   return (
     <fieldset className="rounded-2xl border border-border bg-surface/50 p-4 sm:p-5">
-      <legend className="px-1 text-sm font-semibold text-foreground">Matériel nécessaire à l’atelier</legend>
-      <p className="mb-3 text-xs leading-5 text-muted">Indiquez ce que Nathalie et Flora devront prévoir pour l’organisation.</p>
+      <legend className="px-1 text-sm font-semibold text-foreground">Matériel nécessaire à l’organisation</legend>
+      <p className="mb-3 text-xs leading-5 text-muted">Informations internes réservées aux super administrateurs. Elles ne sont jamais affichées aux participants.</p>
       <div className="flex flex-wrap gap-2">
         {SUGGESTIONS.map((item) => {
           const selected = items.includes(item);

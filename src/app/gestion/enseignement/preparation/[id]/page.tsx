@@ -28,6 +28,7 @@ type FullSession = PilotSession & {
   teacher_id: string | null;
   ministry_id: string | null;
   service_id: string | null;
+  opportunity_id: string | null;
 };
 
 const SECTIONS = [
@@ -54,9 +55,11 @@ export default async function PreparationPage(props: { params: Promise<{ id: str
 export async function PreparationPageContent({
   params,
   accessMode,
+  opportunityId,
 }: {
   params: Promise<{ id: string }>;
-  accessMode: "administration" | "pilotage";
+  accessMode: "administration" | "pilotage" | "opportunity";
+  opportunityId?: string;
 }) {
   const { id } = await params;
   const viewer = await getViewer();
@@ -66,7 +69,7 @@ export async function PreparationPageContent({
   const { data } = await supabase
     .from("sessions")
     .select(
-      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, show_parking_notice, session_type, course_id, day, teacher_id, ministry_id, service_id, editorial_status, publication_at, revision_of, teacher:profiles!sessions_teacher_id_fkey(full_name)" +
+      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, show_parking_notice, session_type, course_id, day, teacher_id, ministry_id, service_id, opportunity_id, editorial_status, publication_at, revision_of, teacher:profiles!sessions_teacher_id_fkey(full_name)" +
         DRAFT_COLUMN,
     )
     .eq("id", id)
@@ -93,15 +96,22 @@ export async function PreparationPageContent({
   const strictPilot = s.session_type === "ministere" &&
       !!s.ministry_id &&
       viewer.roles.steeringMinistryIds.includes(s.ministry_id);
-  const { data: pilotCanEdit } = accessMode === "pilotage"
+  const { data: scopedCanEdit } = accessMode !== "administration"
     ? await supabase.rpc("can_edit_ministry_course", { p_session: id })
+    : { data: false };
+  const { data: managedCanView } = accessMode === "opportunity"
+    ? await supabase.rpc("can_view_managed_course", { p_session: id })
     : { data: false };
   const canView = accessMode === "pilotage"
     ? strictPilot
-    : viewer.roles.admin;
+    : accessMode === "opportunity"
+      ? !!managedCanView && !!s.opportunity_id && s.opportunity_id === opportunityId
+      : viewer.roles.admin;
   const canEdit = accessMode === "pilotage"
-    ? !!pilotCanEdit
-    : viewer.roles.superAdmin;
+    ? !!scopedCanEdit
+    : accessMode === "opportunity"
+      ? !!scopedCanEdit
+      : viewer.roles.superAdmin;
   if (!canView) redirect("/etudiant");
 
   const [{ data: materials }, { data: assignments }] = await Promise.all([
@@ -158,6 +168,8 @@ export async function PreparationPageContent({
   const progress = progressOf(items);
   const back = accessMode === "pilotage"
     ? "/gestion/pilotage"
+    : accessMode === "opportunity" && s.opportunity_id
+    ? `/gestion/projets-formations/${s.opportunity_id}`
     : viewer.roles.admin
     ? "/gestion/admin?onglet=programme"
     : isPilot
@@ -165,6 +177,8 @@ export async function PreparationPageContent({
       : "/gestion/enseignement";
   const backLabel = accessMode === "pilotage"
     ? "Retour à la préparation"
+    : accessMode === "opportunity"
+    ? "Retour au projet ou à la formation"
     : viewer.roles.admin
     ? "Retour au programme"
     : isPilot
@@ -179,7 +193,7 @@ export async function PreparationPageContent({
   const color = sessionColor(s.track, "commun", "#1d2625");
   const teacher = s.speaker_name ?? s.teacher?.full_name;
   const isDraft = DRAFTS_ENABLED && !!s.is_draft;
-  const reviewState = s.session_type === "ministere"
+  const reviewState = s.session_type === "ministere" || !!s.opportunity_id
     ? await getMinistryCourseReviewState(supabase, s.id)
     : null;
   const statusLabel = reviewState
@@ -274,7 +288,7 @@ export async function PreparationPageContent({
         </section>
       )}
 
-      {isPilot && canEdit && (
+      {canEdit && (
         <section className="rounded-2xl border border-border bg-background">
           <div className="border-b border-border-soft px-6 py-5">
             <h3 className="font-title text-[20px] text-foreground">
@@ -287,13 +301,14 @@ export async function PreparationPageContent({
           <div className="px-6 pb-6 pt-2">
             <SessionEditForm
               session={{ ...s, teacherName: s.teacher?.full_name }}
+              defaultOpen
               admin={adminOptions}
             />
           </div>
         </section>
       )}
 
-      {isPilot && canEdit && (
+      {canEdit && (
         <section className="rounded-2xl border border-border bg-background">
           <div className="border-b border-border-soft px-6 py-5">
             <h3 className="font-title text-[20px] text-foreground">

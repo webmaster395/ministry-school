@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import { CalendarDays, MapPin, Settings2, UserRound } from "lucide-react";
 import { deleteSessionFromCard, updateSessionWithFeedback } from "@/lib/actions/sessions";
 import AdminSelect from "@/components/admin/AdminSelect";
 
@@ -33,7 +34,7 @@ export type AdminOptions = {
 };
 
 const field =
-  "w-full rounded-md border border-border px-3 py-2 text-sm text-foreground";
+  "min-h-11 w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-sm text-foreground outline-none transition focus:border-foreground";
 
 /** Formulaire repliable pour corriger une séance en cas de changement. */
 export default function SessionEditForm({
@@ -50,25 +51,35 @@ export default function SessionEditForm({
   const fixedMinistrySchedule = s.session_type === "ministere" && !admin;
   const standardCategories = ["Formation du cœur", "Formation du caractère", "Sensibilité ministérielle", "Mise en pratique"];
   return (
-    <details className="group mt-2" open={defaultOpen}>
-      <summary className="cursor-pointer list-none text-xs font-medium text-link hover:underline">
-        Modifier
+    <details className="group" open={defaultOpen}>
+      <summary className="inline-flex min-h-10 cursor-pointer list-none items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-semibold text-foreground transition hover:border-foreground">
+        <Settings2 size={16} /> Modifier les informations
       </summary>
 
-      <form action={formAction} className="mt-3 max-w-2xl space-y-4">
+      <form action={formAction} className="mt-4 max-w-4xl space-y-4">
         <input type="hidden" name="session_id" value={s.id} />
 
-        <label className="block text-sm font-medium text-foreground">Titre du cours<input name="description" defaultValue={s.description ?? ""} className={`${field} mt-1.5`} /></label>
+        <fieldset className="rounded-2xl border border-border bg-surface/40 p-4 sm:p-5">
+          <legend className="px-2 text-sm font-semibold text-foreground">Informations générales</legend>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="block text-sm font-medium text-foreground sm:col-span-2">Titre du cours <span className="text-link">*</span><input name="description" required defaultValue={s.description ?? ""} className={`${field} mt-1.5`} /></label>
+            <label className="block text-sm font-medium text-foreground">Catégorie<AdminSelect name="track" value={category} onValueChange={setCategory} className="mt-1.5" options={[...(s.track && !standardCategories.includes(s.track) ? [{ value: s.track, label: s.track }] : []), ...standardCategories.map((item) => ({ value: item, label: item }))]} /></label>
+            <label className="block text-sm font-medium text-foreground">Intervenant affiché <span className="font-normal text-muted">(facultatif)</span><span className="relative block"><UserRound size={16} className="pointer-events-none absolute left-3.5 top-5 text-muted" /><input name="speaker_name" defaultValue={s.speaker_name ?? ""} placeholder="Un ou plusieurs noms" className={`${field} mt-1.5 pl-10`} /></span></label>
+          </div>
+        </fieldset>
 
-        <label className="block text-sm font-medium text-foreground">Catégorie<AdminSelect name="track" value={category} onValueChange={setCategory} className="mt-1.5" options={[...(s.track && !standardCategories.includes(s.track) ? [{ value: s.track, label: s.track }] : []), ...standardCategories.map((item) => ({ value: item, label: item }))]} /></label>
+        <fieldset className="rounded-2xl border border-border bg-surface/40 p-4 sm:p-5">
+          <legend className="inline-flex items-center gap-2 px-2 text-sm font-semibold text-foreground"><CalendarDays size={16} /> Date et horaires</legend>
+          <div className="grid gap-4 sm:grid-cols-[1fr_1fr_1fr]">
+            <label className="block text-sm font-medium text-foreground">Date <span className="text-link">*</span><input type="date" name="session_date" min={fixedMinistrySchedule ? "2027-01-01" : undefined} required defaultValue={s.session_date} className={`${field} mt-1.5`} /></label>
+            {fixedMinistrySchedule ? <><input type="hidden" name="start_time" value="10:30" /><input type="hidden" name="end_time" value="13:00" /><div className="sm:col-span-2"><p className="text-sm font-medium text-foreground">Horaire ministériel</p><p className="mt-1.5 min-h-11 rounded-xl border border-border bg-background px-3.5 py-2.5 text-sm text-muted">10 h 30 – 13 h</p></div></> : <><label className="block text-sm font-medium text-foreground">Début <span className="text-link">*</span><input type="time" name="start_time" required defaultValue={s.start_time.slice(0, 5)} className={`${field} mt-1.5`} /></label><label className="block text-sm font-medium text-foreground">Fin <span className="text-link">*</span><input type="time" name="end_time" required defaultValue={s.end_time.slice(0, 5)} className={`${field} mt-1.5`} /></label></>}
+          </div>
+        </fieldset>
 
-        <div className="grid gap-3 sm:grid-cols-[1fr_1fr_1fr]">
-          <label className="block text-sm font-medium text-foreground">Date<input type="date" name="session_date" min={fixedMinistrySchedule ? "2027-01-01" : undefined} required defaultValue={s.session_date} className={`${field} mt-1.5`} /></label>
-          {fixedMinistrySchedule ? <><input type="hidden" name="start_time" value="10:30" /><input type="hidden" name="end_time" value="13:00" /><div className="sm:col-span-2"><p className="text-sm font-medium text-foreground">Horaire ministériel</p><p className="mt-1.5 rounded-md bg-surface px-3 py-2.5 text-sm text-muted">10 h 30 – 13 h</p></div></> : <><label className="block text-sm font-medium text-foreground">Début<input type="time" name="start_time" required defaultValue={s.start_time.slice(0, 5)} className={`${field} mt-1.5`} /></label><label className="block text-sm font-medium text-foreground">Fin<input type="time" name="end_time" required defaultValue={s.end_time.slice(0, 5)} className={`${field} mt-1.5`} /></label></>}
-        </div>
-
-        <input type="hidden" name="location" value={s.location} />
-        <div className="grid gap-3 sm:grid-cols-2"><div><p className="text-sm font-medium text-foreground">Lieu</p><p className="mt-1.5 rounded-md bg-surface px-3 py-2.5 text-sm text-muted">{s.location}</p></div><label className="block text-sm font-medium text-foreground">Salle <span className="font-normal text-muted">(facultatif)</span><input name="room" defaultValue={s.room ?? ""} placeholder="Ex. Giroud" className={`${field} mt-1.5`} /></label></div>
+        <fieldset className="rounded-2xl border border-border bg-surface/40 p-4 sm:p-5">
+          <legend className="inline-flex items-center gap-2 px-2 text-sm font-semibold text-foreground"><MapPin size={16} /> Lieu</legend>
+          <div className="grid gap-4 sm:grid-cols-2"><label className="block text-sm font-medium text-foreground">Lieu et adresse <span className="text-link">*</span><input name="location" required defaultValue={s.location} className={`${field} mt-1.5`} /></label><label className="block text-sm font-medium text-foreground">Salle <span className="font-normal text-muted">(facultatif)</span><input name="room" defaultValue={s.room ?? ""} placeholder="Ex. Giroud" className={`${field} mt-1.5`} /></label></div>
+        </fieldset>
 
         {admin && (
           <>
@@ -82,20 +93,9 @@ export default function SessionEditForm({
           </>
         )}
 
-        <details className="rounded-md bg-surface px-4 py-3"><summary className="cursor-pointer text-sm font-medium text-foreground">Paramètres complémentaires</summary><div className="mt-4 space-y-4"><label className="block text-sm font-medium text-foreground">Références bibliques<textarea name="bible_refs" rows={3} defaultValue={s.bible_refs ?? ""} className={`${field} mt-1.5`} /></label><label className="flex items-start gap-3 text-sm text-foreground"><input type="hidden" name="show_parking_notice" value="0" /><input type="checkbox" name="show_parking_notice" value="1" defaultChecked={s.show_parking_notice !== false} className="mt-0.5 h-4 w-4 accent-foreground" /><span><strong className="block font-semibold">Afficher l’information parking</strong><span className="text-xs text-muted">Visible sur l’accueil étudiant.</span></span></label></div></details>
+        <details className="rounded-2xl border border-border bg-surface/40 px-4 py-3"><summary className="cursor-pointer text-sm font-semibold text-foreground">Paramètres complémentaires</summary><div className="mt-4 space-y-4"><label className="block text-sm font-medium text-foreground">Références bibliques<textarea name="bible_refs" rows={3} defaultValue={s.bible_refs ?? ""} className={`${field} mt-1.5 resize-y`} /></label><label className="flex items-start gap-3 rounded-xl bg-background px-4 py-3 text-sm text-foreground"><input type="hidden" name="show_parking_notice" value="0" /><input type="checkbox" name="show_parking_notice" value="1" defaultChecked={s.show_parking_notice !== false} className="mt-0.5 h-4 w-4 accent-foreground" /><span><strong className="block font-semibold">Afficher l’information parking</strong><span className="text-xs text-muted">Visible avec les informations pratiques.</span></span></label></div></details>
 
-        <button
-          type="submit"
-          disabled={pending}
-          className="label rounded-full bg-accent px-5 py-2.5 disabled:opacity-60 text-xs tracking-[0.12em] text-on-accent transition hover:bg-[#1b2221]"
-        >
-          {pending ? "Enregistrement…" : "Enregistrer"}
-        </button>
-        {state && (
-          <p role="status" className={`text-sm sm:col-span-2 ${state.ok ? "text-foreground" : "text-link"}`}>
-            {state.ok ? "✓ " : ""}{state.message}
-          </p>
-        )}
+        <div className="sticky bottom-3 z-20 flex flex-wrap items-center justify-end gap-3 rounded-2xl border border-border bg-background/95 px-4 py-3 shadow-lg backdrop-blur"><button type="submit" disabled={pending} className="rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent transition hover:bg-[#1b2221] disabled:opacity-60">{pending ? "Enregistrement…" : "Enregistrer les informations"}</button>{state && <p role="status" className={`w-full text-right text-sm ${state.ok ? "text-foreground" : "text-link"}`}>{state.ok ? "✓ " : ""}{state.message}</p>}</div>
       </form>
       {admin && (
         <form
