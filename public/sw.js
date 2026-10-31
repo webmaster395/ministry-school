@@ -3,7 +3,7 @@
  * réseau prioritaire pour les pages et API.
  */
 
-const CACHE_NAME = "ms-v2";
+const CACHE_NAME = "ms-v3";
 
 const STATIC_ASSETS = [
   "/",
@@ -34,6 +34,10 @@ self.addEventListener("activate", (event) => {
         )
       )
       .then(() => self.clients.claim())
+      // Une PWA restée ouverte peut conserver l'ancien JavaScript pendant plusieurs
+      // déploiements. Cette navigation unique charge le nouveau build dès activation.
+      .then(() => self.clients.matchAll({ type: "window", includeUncontrolled: true }))
+      .then((clients) => Promise.all(clients.map((client) => client.navigate(client.url).catch(() => undefined))))
   );
 });
 

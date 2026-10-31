@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Geist, Jost } from "next/font/google";
 import "./globals.css";
 import InstallBanner from "@/components/InstallBanner";
+import DeploymentUpdateGuard from "@/components/DeploymentUpdateGuard";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -52,6 +53,7 @@ export const metadata: Metadata = {
 // Titres : Etna quand elle est disponible (fichier local ou Adobe Fonts : renseigner
 // NEXT_PUBLIC_ADOBE_FONTS_URL), sinon Bricolage Grotesque, libre de droits.
 const adobeFontsUrl = process.env.NEXT_PUBLIC_ADOBE_FONTS_URL;
+const deploymentCommit = process.env.VERCEL_GIT_COMMIT_SHA ?? "local";
 
 export default function RootLayout({
   children,
@@ -74,12 +76,17 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
         {children}
         <InstallBanner />
+        <DeploymentUpdateGuard currentCommit={deploymentCommit} />
         <script
           dangerouslySetInnerHTML={{
             __html: `
               if ('serviceWorker' in navigator) {
                 window.addEventListener('load', function() {
-                  if (location.hostname !== 'localhost') navigator.serviceWorker.register('/sw.js').catch(function() {});
+                  if (location.hostname !== 'localhost') {
+                    navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' })
+                      .then(function(registration) { return registration.update(); })
+                      .catch(function() {});
+                  }
                 });
               }
             `,
