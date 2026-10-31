@@ -11,27 +11,29 @@ const parisDate = (value: string) => new Intl.DateTimeFormat("fr-FR", {
   dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Paris",
 }).format(new Date(value));
 
-type TabKey = "all" | "projects" | "training" | "courses" | "history";
+type TabKey = "all" | "projects" | "training" | "both" | "courses" | "history";
 
 export default async function ValidationPage({ searchParams }: { searchParams: Promise<{ onglet?: string }> }) {
   const viewer = await getViewer();
   if (!viewer?.roles.superAdmin) redirect("/etudiant");
   const requested = (await searchParams).onglet;
-  const tab: TabKey = (["projects", "training", "courses", "history"] as string[]).includes(requested ?? "") ? requested as TabKey : "all";
+  const tab: TabKey = (["projects", "training", "both", "courses", "history"] as string[]).includes(requested ?? "") ? requested as TabKey : "all";
   const queue = await getValidationQueue(await createClient());
   const pending = [...queue.opportunities, ...queue.courses];
   const rows = tab === "history" ? queue.history
     : tab === "courses" ? queue.courses
-      : tab === "projects" ? queue.opportunities.filter((item) => item.contentType === "project" || item.contentType === "both")
-        : tab === "training" ? queue.opportunities.filter((item) => item.contentType === "training" || item.contentType === "both")
-          : pending;
+      : tab === "projects" ? queue.opportunities.filter((item) => item.contentType === "project")
+        : tab === "training" ? queue.opportunities.filter((item) => item.contentType === "training")
+          : tab === "both" ? queue.opportunities.filter((item) => item.contentType === "both")
+            : pending;
 
   return <div className="space-y-5">
     <ManagementPageHeader eyebrow="VALIDATION ÉDITORIALE" title="À valider" subtitle="Retrouvez les contenus en attente de publication et examinez les demandes des responsables." mobileTitleInAppBar />
-    <nav className="grid grid-cols-2 gap-1.5 rounded-2xl border border-border bg-background p-1.5 min-[430px]:grid-cols-3 lg:grid-cols-5">
+    <nav className="grid grid-cols-2 gap-1.5 rounded-2xl border border-border bg-background p-1.5 min-[430px]:grid-cols-3 lg:grid-cols-6">
       <Tab href="/gestion/a-valider" active={tab === "all"} label="Tout" count={pending.length} />
-      <Tab href="/gestion/a-valider?onglet=projects" active={tab === "projects"} label="Projets" count={queue.opportunities.filter((item) => item.contentType === "project" || item.contentType === "both").length} />
-      <Tab href="/gestion/a-valider?onglet=training" active={tab === "training"} label="Formations" count={queue.opportunities.filter((item) => item.contentType === "training" || item.contentType === "both").length} />
+      <Tab href="/gestion/a-valider?onglet=projects" active={tab === "projects"} label="Projets" count={queue.opportunities.filter((item) => item.contentType === "project").length} />
+      <Tab href="/gestion/a-valider?onglet=training" active={tab === "training"} label="Formations" count={queue.opportunities.filter((item) => item.contentType === "training").length} />
+      <Tab href="/gestion/a-valider?onglet=both" active={tab === "both"} label="Projet et formation" count={queue.opportunities.filter((item) => item.contentType === "both").length} />
       <Tab href="/gestion/a-valider?onglet=courses" active={tab === "courses"} label="Cours de ministère" count={queue.courses.length} />
       <Tab href="/gestion/a-valider?onglet=history" active={tab === "history"} label="Historique" />
     </nav>

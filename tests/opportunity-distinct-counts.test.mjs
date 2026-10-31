@@ -37,6 +37,17 @@ test("un élément mixte reste présent dans les deux filtres sans gonfler le to
   assert.doesNotMatch(page, /nProjets\s*\+\s*nFormations/);
 });
 
+test("À valider présente les trois types exclusifs sans compter un élément mixte deux fois", async () => {
+  const page = await source("src/app/gestion/a-valider/page.tsx");
+  assert.match(page, /onglet=both/);
+  assert.match(page, /label="Projet et formation"/);
+  assert.match(page, /item\.contentType === "project"\)/);
+  assert.match(page, /item\.contentType === "training"\)/);
+  assert.match(page, /item\.contentType === "both"\)/);
+  assert.doesNotMatch(page, /contentType === "project" \|\| item\.contentType === "both"/);
+  assert.doesNotMatch(page, /contentType === "training" \|\| item\.contentType === "both"/);
+});
+
 test("les compteurs SQL utilisent les identifiants distincts", async () => {
   const migration = await source("supabase/migrations/20261030270000_distinct_opportunity_counts.sql");
   assert.match(migration, /count\(distinct request\.opportunity_id\)/);

@@ -54,3 +54,13 @@ test("les actions et grilles de gestion se replient avant de déborder", () => {
   assert.match(detail, /min-\[390px\]:grid-cols-2/);
   assert.match(form, /lg:grid-cols-\[1\.2fr_\.7fr_\.7fr_\.7fr_auto\]/);
 });
+
+test("les types de projet et formation sont présentés un par ligne", () => {
+  const create = source("src/components/admin/OpportunityCreateForm.tsx");
+  const edit = source("src/components/OpportunityEditForms.tsx");
+  for (const form of [create, edit]) {
+    const typeBlock = form.slice(form.indexOf('<fieldset'), form.indexOf('</fieldset>') + 11);
+    assert.match(typeBlock, /<div className="grid gap-2">/);
+    assert.doesNotMatch(typeBlock, /grid-cols-3/);
+  }
+});
