@@ -53,7 +53,7 @@ export default function NotificationSettingsForm({
 
   return (
     <div className="space-y-6">
-      <ManagementPageHeader eyebrow="MESSAGES ÉTUDIANTS" title="Notifications" subtitle="Programmez le récapitulatif unique qui regroupe les contenus réellement devenus accessibles." actions={<span className={`inline-flex w-fit items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold ${enabled ? "bg-[#E7F1E8] text-[#315D38]" : "bg-surface text-muted"}`}>
+      <ManagementPageHeader eyebrow="MESSAGES ÉTUDIANTS" title="Notifications" subtitle="Programmez le récapitulatif unique qui regroupe les contenus réellement devenus accessibles." mobileTitleInAppBar actions={<span className={`inline-flex w-fit items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold ${enabled ? "bg-[#E7F1E8] text-[#315D38]" : "bg-surface text-muted"}`}>
           <span className={`h-2 w-2 rounded-full ${enabled ? "bg-[#4D8A58]" : "bg-muted"}`} />
           {enabled ? "Récapitulatifs actifs" : "Récapitulatifs désactivés"}
         </span>} />

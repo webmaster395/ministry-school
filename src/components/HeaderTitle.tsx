@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useSpace } from "@/components/SpaceProvider";
 
 // Titre affiché dans l'en-tête selon la page. Les tableaux de bord affichent la salutation.
@@ -33,15 +33,55 @@ const TITLES: Record<string, string> = {
   "/gestion/admin/profil": "Profil",
 };
 
+const ADMIN_TABS: Record<string, string> = {
+  pilotage: "Pilotage",
+  vue: "Vue d’ensemble",
+  statistiques: "Statistiques",
+  programme: "Programme",
+  membres: "Membres",
+  permissions: "Permissions",
+  roles: "Permissions",
+  notifications: "Notifications",
+};
+
+/**
+ * Le titre de la barre supérieure doit décrire la page réellement ouverte, comme dans
+ * l’espace étudiant. Les routes historiques restent volontairement prises en charge :
+ * leur nom technique ne doit pas réapparaître dans l’interface.
+ */
+function adminPageTitle(pathname: string, tab: string | null) {
+  if (pathname === "/gestion/admin") return (tab && ADMIN_TABS[tab]) || "Admin";
+  if (pathname.startsWith("/gestion/admin/cours-formations")) return "Cours et formations";
+  if (pathname.startsWith("/gestion/admin/ministeres")) return "Sensibilités ministérielles";
+  if (pathname.startsWith("/gestion/admin/membres/")) return "Membre";
+  if (pathname.startsWith("/gestion/admin/programme") || pathname.startsWith("/gestion/admin/seances")) return "Programme";
+  if (pathname.startsWith("/gestion/admin/cours")) return "Cours et formations";
+  if (pathname.startsWith("/gestion/admin/profil")) return "Profil";
+  if (pathname.startsWith("/gestion/a-valider") || pathname.startsWith("/gestion/super-admin/a-valider")) return "À valider";
+  if (pathname.startsWith("/gestion/super-admin/pilotage")) return "Pilotage global";
+  if (pathname.startsWith("/gestion/super-admin/ministeres")) return "Sensibilités ministérielles";
+  if (pathname.startsWith("/gestion/super-admin/membres")) return "Membres";
+  if (pathname.startsWith("/gestion/super-admin/roles")) return "Permissions";
+  if (pathname.startsWith("/gestion/super-admin/cours")) return "Cours et formations";
+  if (pathname.startsWith("/gestion/projets-formations")) return "Projets et formations";
+  if (pathname.startsWith("/gestion/enseignement/preparation/")) return "Cours et formations";
+  return "Admin";
+}
+
 export default function HeaderTitle({ greeting }: { greeting: string }) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { current } = useSpace();
 
   // Dans un espace de gestion, l'en-tête porte le nom de l'espace, pas la salutation étudiante
   if (current) {
-    // L'espace Admin possède déjà un en-tête de page et, dans ses sous-pages, un fil d'Ariane.
-    // Ne pas répéter son nom dans la barre globale.
-    if (current.key === "admin") return null;
+    if (current.key === "admin") {
+      return (
+        <h1 className="font-title truncate text-[20px] leading-tight text-foreground">
+          {adminPageTitle(pathname, searchParams.get("onglet"))}
+        </h1>
+      );
+    }
     return (
       <div className="min-w-0">
         <h1 className="font-title truncate text-[20px] leading-tight text-foreground">

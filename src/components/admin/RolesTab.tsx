@@ -80,7 +80,7 @@ export default async function RolesTab({ q, category, canManageAccess, basePath,
   ] as const;
 
   return <div className="space-y-5">
-    <ManagementPageHeader eyebrow="PERMISSIONS" title="Rôles et périmètres" subtitle="Uniquement les personnes disposant d’une responsabilité administrative, ministérielle ou liée à un projet ou une formation." />
+    <ManagementPageHeader eyebrow="PERMISSIONS" title="Rôles et périmètres" subtitle="Uniquement les personnes disposant d’une responsabilité administrative, ministérielle ou liée à un projet ou une formation." mobileTitleInAppBar />
 
     <form method="get" action={basePath} className="grid gap-2 rounded-xl border border-border bg-background p-3 sm:grid-cols-[minmax(0,1fr)_240px_auto]">
       {isAdminPath && <input type="hidden" name="onglet" value="permissions" />}

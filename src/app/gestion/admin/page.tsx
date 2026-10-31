@@ -101,7 +101,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
       )}
       {tab === "membres" && (
         <div className="space-y-5">
-          <ManagementPageHeader eyebrow="ADMIN" title="Membres" subtitle="Consultez l’annuaire et les informations disponibles pour chaque membre." />
+          <ManagementPageHeader eyebrow="ADMIN" title="Membres" subtitle="Consultez l’annuaire et les informations disponibles pour chaque membre." mobileTitleInAppBar />
           <MembersTab
             q={p.q ?? ""}
             role={p.role ?? "tous"}

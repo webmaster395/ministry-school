@@ -27,7 +27,7 @@ export default async function ValidationPage({ searchParams }: { searchParams: P
           : pending;
 
   return <div className="space-y-5">
-    <ManagementPageHeader eyebrow="VALIDATION ÉDITORIALE" title="À valider" subtitle="Retrouvez les contenus en attente de publication et examinez les demandes des responsables." />
+    <ManagementPageHeader eyebrow="VALIDATION ÉDITORIALE" title="À valider" subtitle="Retrouvez les contenus en attente de publication et examinez les demandes des responsables." mobileTitleInAppBar />
     <nav className="grid grid-cols-2 gap-1.5 rounded-2xl border border-border bg-background p-1.5 min-[430px]:grid-cols-3 lg:grid-cols-5">
       <Tab href="/gestion/a-valider" active={tab === "all"} label="Tout" count={pending.length} />
       <Tab href="/gestion/a-valider?onglet=projects" active={tab === "projects"} label="Projets" count={queue.opportunities.filter((item) => item.contentType === "project" || item.contentType === "both").length} />

@@ -46,6 +46,7 @@ export default async function ProjectsTrainingManagementPage({ searchParams }: {
       title="Projets et formations"
       subtitle={globalScope ? "Supervisez les initiatives et leurs statuts de publication." : "Uniquement les éléments auxquels vous êtes affecté."}
       actions={createAction}
+      mobileTitleInAppBar={globalScope}
     />
     <nav className="grid grid-cols-2 gap-2 rounded-2xl border border-border bg-background p-1.5 min-[430px]:grid-cols-3 sm:grid-cols-5">{[
       ["all", "Tous"], ["draft", "Brouillons"], ["pending", "Soumis"], ["published", "Publiés"], ["past", "Passés"],

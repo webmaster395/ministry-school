@@ -16,13 +16,20 @@ test("le fil d’Ariane Admin est centralisé, cliquable et absent des autres es
   assert.match(breadcrumbs, /Sensibilités ministérielles/);
 });
 
-test("l’en-tête Admin ne répète plus Administration", () => {
+test("l’en-tête Admin affiche le titre réel dans la barre supérieure sans répétition mobile", () => {
   const home = source("src/components/admin/AdminHome.tsx");
   const title = source("src/components/HeaderTitle.tsx");
+  const pageHeader = source("src/components/management/ManagementPageHeader.tsx");
   assert.match(home, />\{viewer\.roles\.superAdmin \? "Super admin" : "Admin"\}</);
   assert.match(home, />Admin<\/h1>/);
   assert.doesNotMatch(home, />Administration<\/h1>/);
-  assert.match(title, /current\.key === "admin"\) return null/);
+  assert.match(title, /adminPageTitle\(pathname, searchParams\.get\("onglet"\)\)/);
+  assert.match(title, /"Projets et formations"/);
+  assert.match(title, /"Sensibilités ministérielles"/);
+  assert.match(title, /"À valider"/);
+  assert.doesNotMatch(title, /current\.key === "admin"\) return null/);
+  assert.match(pageHeader, /mobileTitleInAppBar/);
+  assert.match(pageHeader, /sr-only sm:not-sr-only/);
 });
 
 test("Permissions utilise une liste dépliable unique par membre", () => {

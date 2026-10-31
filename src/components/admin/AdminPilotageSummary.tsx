@@ -31,7 +31,7 @@ export default async function AdminPilotageSummary() {
     { value: currentProjects, label: "Projets", detail: `${currentProjects} actuel${currentProjects > 1 ? "s" : ""} · ${finishedProjects} terminé${finishedProjects > 1 ? "s" : ""}` },
   ];
   return <div className="space-y-5">
-    <ManagementPageHeader eyebrow="ADMIN" title="Pilotage" subtitle="Les cinq indicateurs essentiels, calculés à partir des données réelles." />
+    <ManagementPageHeader eyebrow="ADMIN" title="Pilotage" subtitle="Les cinq indicateurs essentiels, calculés à partir des données réelles." mobileTitleInAppBar />
     <section className="grid grid-cols-2 gap-2.5 sm:gap-3 lg:grid-cols-5">{cards.map((card) => <article key={card.label} className="min-w-0 rounded-lg border border-border bg-background p-3.5 sm:p-5"><p className="font-title break-words text-[25px] leading-none text-foreground sm:text-[30px]">{card.value}</p><p className="mt-2 text-[12px] leading-snug text-muted sm:mt-3 sm:text-sm">{card.label}</p>{card.detail && <p className="mt-1 text-[11px] leading-snug text-muted">{card.detail}</p>}</article>)}</section>
   </div>;
 }
