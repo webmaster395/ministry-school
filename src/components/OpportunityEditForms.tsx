@@ -190,7 +190,10 @@ export default function OpportunityEditForms({
   };
 
   if (!editing) {
-    const canStartWorkspaceEdit = !!workspaceHeader && !workspaceHeader.readOnly && canEdit && workspaceHeader.workflow.key === "published";
+    const canStartWorkspaceEdit = !!workspaceHeader
+      && !workspaceHeader.readOnly
+      && canEdit
+      && (workspaceHeader.workflow.key === "pending" || workspaceHeader.workflow.key === "published");
     const consultation = <Consultation
         opportunity={o}
         dates={initialDates}

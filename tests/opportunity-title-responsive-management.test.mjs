@@ -37,6 +37,8 @@ test("l’en-tête opérationnel adapte le rôle, le type, le statut et les droi
   assert.match(form, /\{workflow\.label\}/);
   assert.match(form, /Plus d’options/);
   assert.match(form, /Soumettre à validation/);
+  assert.match(form, /workspaceHeader\.workflow\.key === "pending" \|\| workspaceHeader\.workflow\.key === "published"/);
+  assert.match(form, /<Pencil size=\{15\} \/> Modifier/);
   assert.match(detail, /\{globalScope && <section/);
   assert.doesNotMatch(workspace, /Préparer ce projet|Préparer cette formation|Préparation du projet|ESPACE PROJETS ET FORMATIONS/);
 });
