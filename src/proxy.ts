@@ -49,6 +49,7 @@ export async function proxy(request: NextRequest) {
   // Pages ouvertes à tous : la landing et ses annexes, même sans compte.
   const isPublicPage =
     request.nextUrl.pathname === "/" ||
+    request.nextUrl.pathname === "/api/deployment-version" ||
     request.nextUrl.pathname === "/mentions-legales" ||
     request.nextUrl.pathname === "/mot-de-passe-oublie" ||
     // Lien d'abonnement au calendrier : personnel et secret, vérifié par la route elle-même.
