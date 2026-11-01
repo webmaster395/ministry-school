@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowUpRight, Sparkles } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { useMemo, useState } from "react";
 import styles from "./apps.module.css";
 
@@ -96,7 +96,10 @@ export default function AppsPortal() {
 
       <section className={styles.content} aria-labelledby="apps-title">
         <header className={styles.intro}>
-          <p className={styles.eyebrow}><Sparkles size={15} strokeWidth={1.8} /> MINISTRY SCHOOL</p>
+          <div className={styles.brand} aria-label="Ministry School">
+            <Image className={styles.ministryMarks} src="/landing/ministry-icons-transparent.png" alt="" width={126} height={42} priority />
+            <span>Ministry School</span>
+          </div>
           <h1 id="apps-title">Des outils pour aller plus loin.</h1>
           <p className={styles.subtitle}>Des expériences interactives pour apprendre, explorer et aller plus loin dans votre parcours.</p>
         </header>
