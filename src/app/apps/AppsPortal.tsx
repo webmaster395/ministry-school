@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
 import { useMemo, useState } from "react";
 import styles from "./apps.module.css";
 import type { CatalogApp } from "@/lib/apps/catalog";
@@ -11,7 +10,7 @@ function AppIcon({ app }: { app: CatalogApp }) {
     return (
       <span className={`${styles.appIcon} ${app.slug === "generopoly" ? styles.generopolyIcon : styles.generosityIcon}`}>
         {app.iconUrl.startsWith("/") ? (
-          <Image src={app.iconUrl} alt="" width={app.slug === "generopoly" ? 132 : 72} height={app.slug === "generopoly" ? 132 : 72} priority />
+          <Image src={app.iconUrl} alt="" width={app.slug === "generopoly" ? 104 : 62} height={app.slug === "generopoly" ? 104 : 62} priority />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element -- URL gérée par les super administrateurs du catalogue
           <img src={app.iconUrl} alt="" />
@@ -72,7 +71,7 @@ export default function AppsPortal({ applications }: { applications: CatalogApp[
           {visibleApps.map((app) => (
             <a className={styles.appLink} href={app.url} key={app.id}>
               <AppIcon app={app} />
-              <span className={styles.appName}>{app.name}<ArrowUpRight size={13} aria-hidden="true" /></span>
+              <span className={styles.appName}>{app.name}</span>
             </a>
           ))}
         </div>

@@ -4,6 +4,8 @@
   color: #fff;
   background: #173f45;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+  display:flex;
+  flex-direction:column;
 }
 
 .header { display:flex; height:86px; align-items:center; justify-content:space-between; gap:20px; border-bottom:1px solid rgba(255,255,255,.09); padding:0 clamp(22px,5vw,82px); }
@@ -15,36 +17,36 @@
 .loginLink:hover { color:#fff; }
 .loginLink:focus-visible,.filter:focus-visible,.appLink:focus-visible,.footer a:focus-visible { outline:3px solid #8dd9d4; outline-offset:5px; }
 
-.content { width:min(100%,1240px); margin:0 auto; padding:clamp(52px,7vh,86px) 28px 100px; text-align:center; }
+.content { width:min(100%,1120px); flex:1; margin:0 auto; padding:clamp(38px,5vh,60px) 28px 72px; text-align:center; }
 .intro { margin:0 auto; }
-.eyebrow { margin:0 0 18px; color:#9ac5c3; font-size:12px; font-weight:400; letter-spacing:.24em; }
-.intro h1 { margin:0 0 12px; font-size:clamp(34px,4vw,55px); font-weight:450; letter-spacing:-.045em; line-height:1.08; }
-.subtitle { margin:0; color:#c1d7d5; font-size:16px; font-weight:350; line-height:1.5; }
+.eyebrow { margin:0 0 9px; color:#9ac5c3; font-size:10px; font-weight:450; letter-spacing:.25em; }
+.intro h1 { margin:0 0 8px; font-size:clamp(32px,3.2vw,42px); font-weight:450; letter-spacing:-.045em; line-height:1.1; }
+.subtitle { margin:0; color:#c1d7d5; font-size:14px; font-weight:350; line-height:1.45; }
 
-.filters { display:inline-flex; gap:4px; margin:37px auto 57px; border:1px solid rgba(255,255,255,.14); border-radius:40px; padding:5px; background:rgba(255,255,255,.075); backdrop-filter:blur(10px); }
-.filter { border:0; border-radius:30px; padding:10px 23px; color:#c9dddc; background:transparent; font:400 13px/1 inherit; cursor:pointer; transition:background-color .18s ease,color .18s ease,box-shadow .18s ease; }
+.filters { display:inline-flex; gap:3px; margin:22px auto 34px; border:1px solid rgba(255,255,255,.14); border-radius:40px; padding:4px; background:rgba(255,255,255,.075); backdrop-filter:blur(10px); }
+.filter { border:0; border-radius:30px; padding:8px 18px; color:#c9dddc; background:transparent; font:400 12px/1 inherit; cursor:pointer; transition:background-color .18s ease,color .18s ease,box-shadow .18s ease; }
 .filterActive { color:#173f45; background:#f5f8f7; font-weight:600; box-shadow:0 2px 12px rgba(0,0,0,.13); }
 
-.appGrid { display:grid; max-width:1080px; margin:auto; grid-template-columns:repeat(5,minmax(0,1fr)); justify-items:center; gap:52px 20px; }
-.appLink { display:flex; width:100%; max-width:170px; align-items:center; flex-direction:column; gap:13px; color:#fff; text-decoration:none; transition:transform .2s ease; }
+.appGrid { display:flex; max-width:780px; margin:0 auto; align-items:flex-start; justify-content:center; flex-wrap:wrap; gap:38px 40px; }
+.appLink { display:flex; width:120px; flex:0 0 120px; align-items:center; flex-direction:column; gap:11px; color:#fff; text-decoration:none; transition:transform .2s ease; }
 .appLink:hover { transform:translateY(-5px); }
-.appIcon { display:flex; width:132px; height:132px; align-items:center; justify-content:center; overflow:hidden; border-radius:29px; background:#f7eee0; box-shadow:0 12px 28px rgba(3,31,37,.25),inset 0 1px rgba(255,255,255,.33); }
+.appIcon { display:flex; width:104px; height:104px; align-items:center; justify-content:center; overflow:hidden; border-radius:23px; background:#f7eee0; box-shadow:0 10px 24px rgba(3,31,37,.22),inset 0 1px rgba(255,255,255,.33); }
 .appIcon img { width:100%; height:100%; object-fit:cover; }
 .generosityIcon img { width:62%; height:auto; object-fit:contain; }
-.generopolyIcon img { width:100%; height:100%; object-fit:contain; transform:translateY(5%); }
-.mappIcon { color:#fff; background:linear-gradient(145deg,#e8a9c3,#ad719b 62%,#7a537d); font-size:72px; font-weight:300; letter-spacing:-.09em; }
+.generopolyIcon img { width:100%; height:100%; object-fit:contain; }
+.mappIcon { color:#fff; background:linear-gradient(145deg,#e8a9c3,#ad719b 62%,#7a537d); font-size:52px; font-weight:300; letter-spacing:-.09em; }
 .mappIcon span:not(:first-child) { display:none; }
-.appName { display:inline-flex; align-items:center; gap:3px; color:#fff; font-size:15px; font-weight:550; line-height:1.2; white-space:nowrap; }
+.appName { display:block; max-width:120px; color:#fff; font-size:14px; font-weight:520; line-height:1.25; text-align:center; }
 .appLink:hover .appName { text-decoration:underline; text-underline-offset:4px; }
 .appDescription,.appCategory { display:none; }
 
 .footer { display:flex; justify-content:center; gap:10px; padding:0 20px 28px; color:#8fb4b4; font-size:12px; letter-spacing:.03em; }
 .footer a { color:inherit; text-decoration:none; }.footer a:hover { color:#fff; text-decoration:underline; text-underline-offset:3px; }
 
-@media (max-width:850px) { .appGrid { grid-template-columns:repeat(3,1fr); gap:40px 14px; }.appIcon { width:120px; height:120px; } }
+@media (max-width:850px) { .appGrid { max-width:570px; gap:34px 32px; }.appLink { width:116px; flex-basis:116px; }.appIcon { width:96px; height:96px; border-radius:22px; }.appName { max-width:116px; } }
 @media (max-width:560px) {
   .header { height:68px; padding:0 18px; }.headerBrand { gap:9px; }.ministryMarks { width:75px; }.brandDivider { height:15px; }.formation { font-size:9px; letter-spacing:.1em; }.loginLink { font-size:12px; white-space:nowrap; }
-  .content { padding:55px 16px 72px; }.eyebrow { margin-bottom:14px; font-size:10px; }.intro h1 { font-size:36px; }.subtitle { font-size:14px; }.filters { margin:30px auto 44px; }.filter { padding:10px 17px; }
-  .appGrid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:37px 12px; }.appIcon { width:min(36vw,135px); height:min(36vw,135px); border-radius:27px; }.appName { font-size:14px; }.footer { padding-bottom:24px; font-size:11px; }
+  .content { padding:38px 16px 60px; }.eyebrow { margin-bottom:8px; font-size:9px; }.intro h1 { margin-bottom:7px; font-size:32px; }.subtitle { font-size:13px; }.filters { margin:19px auto 30px; }.filter { padding:8px 14px; }
+  .appGrid { max-width:300px; gap:30px 30px; }.appLink { width:110px; flex-basis:110px; gap:10px; }.appIcon { width:84px; height:84px; border-radius:19px; }.appName { max-width:110px; font-size:13px; }.mappIcon { font-size:42px; }.footer { padding-bottom:24px; font-size:11px; }
 }
 @media (prefers-reduced-motion:reduce) { .appLink { transition:none; } }
