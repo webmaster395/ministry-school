@@ -23,7 +23,7 @@ export default function AppCatalogManager({ apps, archivedApps, studentToolsEnab
         <button type="button" onClick={() => setAdding((open) => !open)} className="inline-flex items-center justify-center gap-2 rounded-full bg-[#20302e] px-5 py-3 text-sm font-semibold text-[#fbeeda]"><Plus size={16} /> Ajouter une application</button>
       </div>
       {adding && <div className="mb-5"><AppForm /></div>}
-      <div className="grid gap-4 xl:grid-cols-2">{apps.map((app) => <AppForm app={app} key={app.id} />)}</div>
+      <div className="grid gap-4 xl:grid-cols-2">{apps.map((app) => <AppForm app={app} studentToolsEnabled={studentToolsEnabled} key={app.id} />)}</div>
       {!apps.length && !adding && <div className="rounded-[24px] border border-dashed border-[#20302e]/15 bg-white p-8 text-center text-[#697572]">Aucune application dans le catalogue.</div>}
     </section>
     {!!archivedApps.length && <section><h2 className="mb-4 font-title text-xl">Applications archivées</h2><div className="grid gap-3 sm:grid-cols-2">{archivedApps.map((app) => <div key={app.id} className="flex items-center gap-4 rounded-[20px] border border-[#20302e]/10 bg-white p-4"><AppIcon app={app} /><div className="min-w-0 flex-1"><strong className="block truncate">{app.name}</strong><span className="text-xs text-[#75807d]">Retirée du catalogue</span></div><form action={restoreCatalogApp}><input type="hidden" name="id" value={app.id} /><button className="inline-flex items-center gap-2 rounded-full border border-[#20302e]/15 px-3 py-2 text-xs font-semibold"><RotateCcw size={13} /> Restaurer</button></form></div>)}</div></section>}
@@ -37,14 +37,14 @@ function StudentToolsSetting({ enabled }: { enabled: boolean }) {
   </form>;
 }
 
-function AppForm({ app }: { app?: CatalogApp }) {
+function AppForm({ app, studentToolsEnabled = false }: { app?: CatalogApp; studentToolsEnabled?: boolean }) {
   const [name, setName] = useState(app?.name ?? "");
   const [category, setCategory] = useState(app?.category ?? "");
   const [preview, setPreview] = useState(app?.iconUrl ?? null);
   return <details className="group rounded-[24px] border border-[#20302e]/10 bg-white shadow-[0_16px_50px_rgba(32,48,46,.05)]" open={!app}>
     <summary className="flex cursor-pointer list-none items-center gap-4 p-5 sm:p-6">
       <AppIcon app={app} />
-      <span className="min-w-0 flex-1"><strong className="block truncate text-lg">{app?.name ?? "Nouvelle application"}</strong><span className="mt-1 flex flex-wrap gap-2 text-xs text-[#75807d]">{app ? <><StatusBadge status={app.effectiveStatus} /><VisibilityBadge visible={app.publicVisible} label="Public" /><VisibilityBadge visible={app.studentVisible} label="Étudiants" /></> : "Configurer sa publication"}</span></span>
+      <span className="min-w-0 flex-1"><strong className="block truncate text-lg">{app?.name ?? "Nouvelle application"}</strong><span className="mt-1 flex flex-wrap gap-2 text-xs text-[#75807d]">{app ? <><StatusBadge status={app.effectiveStatus} /><VisibilityBadge visible={app.publicVisible} label="Public" /><VisibilityBadge visible={studentToolsEnabled && app.studentVisible} label={studentToolsEnabled ? "Étudiants" : "Mes outils désactivé"} /></> : "Configurer sa publication"}</span></span>
       {app && <a href={app.url} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()} className="rounded-full p-2 text-[#687572] hover:bg-[#f1f4f1]" aria-label={`Ouvrir ${app.name}`}><ExternalLink size={17} /></a>}
       <span className="hidden rounded-full border border-[#20302e]/12 px-3 py-2 text-xs font-semibold sm:inline">Modifier</span><ChevronDown className="transition group-open:rotate-180" size={19} />
     </summary>
