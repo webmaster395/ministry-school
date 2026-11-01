@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   // sensible sur les premiers chargements/cold starts Vercel.
   experimental: {
     inlineCss: true,
+    serverActions: { bodySizeLimit: "5mb" },
   },
   // Adresses courtes prévues pour ministryschool.fr : /connexion (l'accueil « / » est la
   // landing publique, et « /app » une page qui oriente chacun vers son espace)
@@ -14,7 +15,8 @@ const nextConfig: NextConfig = {
       { source: "/connexion", destination: "/login", permanent: false },
       // Anciennes adresses des pages de fonction, déplacées sous /gestion (signets, e-mails)
       { source: "/admin", destination: "/gestion/admin", permanent: false },
-      { source: "/admin/:path*", destination: "/gestion/admin/:path*", permanent: false },
+      // /admin/apps est le studio indépendant des applications. Les pages historiques
+      // d'administration gardent leur redirection exacte ci-dessus.
       { source: "/etudiant/pilotage", destination: "/gestion/pilotage", permanent: false },
       { source: "/etudiant/enseignement", destination: "/gestion/enseignement", permanent: false },
       { source: "/etudiant/preparation/:id", destination: "/gestion/enseignement/preparation/:id", permanent: false },

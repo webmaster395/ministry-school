@@ -4,87 +4,36 @@ import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { useMemo, useState } from "react";
 import styles from "./apps.module.css";
+import type { CatalogApp } from "@/lib/apps/catalog";
 
-type Category = "Tout" | "Finance" | "Identité";
-
-type MinistryApp = {
-  id: string;
-  name: string;
-  description: string;
-  category: Exclude<Category, "Tout">;
-  url: string;
-  published: boolean;
-  order: number;
-  icon: "generosity" | "generopoly" | "mapp";
-};
-
-// Ajouter une application revient à compléter cette liste : les filtres et la grille se mettent à jour seuls.
-const applications: MinistryApp[] = [
-  {
-    id: "ma-generosite",
-    name: "Ma générosité",
-    description: "Explorez votre rapport à l'argent et au don.",
-    category: "Finance",
-    url: "https://generosite.jeveuxdonner.fr/",
-    published: true,
-    order: 1,
-    icon: "generosity",
-  },
-  {
-    id: "generopoly",
-    name: "Généropoly",
-    description: "Le jeu où chaque choix compte.",
-    category: "Finance",
-    url: "https://ma-generosite.vercel.app/",
-    published: true,
-    order: 2,
-    icon: "generopoly",
-  },
-  {
-    id: "profil-mapp",
-    name: "Profil MAPP",
-    description: "Découvrez votre profil et votre manière de fonctionner.",
-    category: "Identité",
-    url: "https://profil-mapp.vercel.app/",
-    published: true,
-    order: 3,
-    icon: "mapp",
-  },
-];
-
-const filters: Category[] = ["Tout", "Finance", "Identité"];
-
-function AppIcon({ icon, name }: Pick<MinistryApp, "icon" | "name">) {
-  if (icon === "generosity") {
+function AppIcon({ app }: { app: CatalogApp }) {
+  if (app.iconUrl) {
     return (
-      <span className={`${styles.appIcon} ${styles.generosityIcon}`}>
-        <Image src="/apps/ma-generosite.png" alt="" width={72} height={72} priority />
+      <span className={`${styles.appIcon} ${app.slug === "generopoly" ? styles.generopolyIcon : styles.generosityIcon}`}>
+        {app.iconUrl.startsWith("/") ? (
+          <Image src={app.iconUrl} alt="" width={app.slug === "generopoly" ? 132 : 72} height={app.slug === "generopoly" ? 132 : 72} priority />
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element -- URL gérée par les super administrateurs du catalogue
+          <img src={app.iconUrl} alt="" />
+        )}
       </span>
     );
   }
-
-  if (icon === "generopoly") {
-    return (
-      <span className={`${styles.appIcon} ${styles.generopolyIcon}`}>
-        <Image src="/apps/generopoly.png" alt="" width={132} height={132} priority />
-      </span>
-    );
-  }
-
   return (
-    <span className={`${styles.appIcon} ${styles.mappIcon}`} aria-label={`${name}, application identité`}>
-      <span>M</span><span>A</span><span>P</span><span>P</span>
+    <span className={`${styles.appIcon} ${styles.mappIcon}`} aria-label={`${app.name}, application ${app.category}`}>
+      {app.name.slice(0, 4).toUpperCase().split("").map((letter, index) => <span key={`${letter}-${index}`}>{letter}</span>)}
     </span>
   );
 }
 
-export default function AppsPortal() {
-  const [activeFilter, setActiveFilter] = useState<Category>("Tout");
+export default function AppsPortal({ applications }: { applications: CatalogApp[] }) {
+  const filters = useMemo(() => ["Tout", ...Array.from(new Set(applications.map((app) => app.category)))], [applications]);
+  const [activeFilter, setActiveFilter] = useState("Tout");
   const visibleApps = useMemo(
     () => applications
-      .filter((app) => app.published && (activeFilter === "Tout" || app.category === activeFilter))
+      .filter((app) => activeFilter === "Tout" || app.category === activeFilter)
       .sort((a, b) => a.order - b.order),
-    [activeFilter]
+    [activeFilter, applications]
   );
 
   return (
@@ -121,8 +70,8 @@ export default function AppsPortal() {
 
         <div className={styles.appGrid} aria-live="polite">
           {visibleApps.map((app) => (
-            <a className={styles.appLink} href={app.url} key={app.id} target="_blank" rel="noreferrer">
-              <AppIcon icon={app.icon} name={app.name} />
+            <a className={styles.appLink} href={app.url} key={app.id}>
+              <AppIcon app={app} />
               <span className={styles.appName}>{app.name}<ArrowUpRight size={13} aria-hidden="true" /></span>
             </a>
           ))}

@@ -19,6 +19,7 @@ import {
   NotebookPen,
   ChartNoAxesColumnIncreasing,
   BadgeCheck,
+  PanelsTopLeft,
 } from "lucide-react";
 import { isPlainStudent, type ViewerRoles } from "@/lib/roles";
 import { QUESTIONS_ENABLED } from "@/lib/questions";
@@ -58,6 +59,7 @@ const icons = {
   adminSessions: <CalendarClock {...iconProps} />,
   functions: <Briefcase {...iconProps} />,
   validate: <BadgeCheck {...iconProps} />,
+  apps: <PanelsTopLeft {...iconProps} />,
 };
 
 /** Le menu étudiant, toujours affiché : celui de la maquette de Rose Alice. */
@@ -117,7 +119,7 @@ export function profileTabs(roles: ViewerRoles): ProfileTab[] {
   return tabs;
 }
 
-export type SpaceKey = "admin" | "steering" | "projectsTraining";
+export type SpaceKey = "admin" | "steering" | "projectsTraining" | "apps";
 
 /** Une « casquette » : un ensemble d'entrées de menu que la personne choisit d'afficher. */
 export type Space = {
@@ -194,6 +196,22 @@ export function navSpaces(roles: ViewerRoles): Space[] {
               icon: icons.propose,
             },
           ],
+        },
+      ],
+    });
+  }
+
+  if (roles.superAdmin) {
+    spaces.push({
+      key: "apps",
+      label: "Les Apps",
+      icon: icons.apps,
+      title: "Les Apps",
+      subtitle: "Pilotez les applications pédagogiques Ministry School.",
+      sections: [
+        {
+          title: "Les Apps",
+          items: [{ label: "Studio", href: "/admin/apps", icon: icons.apps }],
         },
       ],
     });
