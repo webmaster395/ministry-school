@@ -158,3 +158,15 @@ test("projection is independent and refreshes secure snapshots", () => {
   assert.match(projection, /setInterval\(\(\) => void load\(\), 5000\)/);
 });
 
+test("les erreurs Généropoly restent compréhensibles sans exposer le secret", () => {
+  const page = read("src/app/admin/apps/generopoly/results/page.tsx");
+  const route = read("src/app/api/admin/apps/generopoly/snapshot/route.ts");
+  const connector = read("src/lib/apps/generopoly.ts");
+  assert.match(page, /Impossible de charger les résultats pour le moment/);
+  assert.match(page, /Réessayer/);
+  assert.match(route, /!viewer\?\.roles\.superAdmin/);
+  assert.match(route, /status: cause instanceof GeneropolyIntegrationError/);
+  assert.match(connector, /"x-admin-token": config\.admin_token/);
+  assert.doesNotMatch(page, /admin_token|x-admin-token/);
+});
+

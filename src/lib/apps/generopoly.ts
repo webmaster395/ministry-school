@@ -37,6 +37,17 @@ export type GeneropolyContentPayload = { draft: GeneropolyContentVersion; publis
 
 type IntegrationRow = { endpoint_url: string; admin_token: string | null };
 
+export class GeneropolyIntegrationError extends Error {
+  constructor(
+    public readonly status: number,
+    public readonly endpoint: string,
+    public readonly path: string,
+  ) {
+    super(`Généropoly a répondu avec le statut ${status}.`);
+    this.name = "GeneropolyIntegrationError";
+  }
+}
+
 async function integration(): Promise<{ endpoint_url: string; admin_token: string }> {
   const service = createServiceClient();
   const { data, error } = await service.from("app_integrations").select("endpoint_url,admin_token").eq("app_slug", "generopoly").maybeSingle();
@@ -62,7 +73,7 @@ async function generopolyFetch<T>(path: string, init: RequestInit = {}): Promise
     lastStatus = response.status;
     if (response.status !== 404) break;
   }
-  throw new Error(`Généropoly a répondu avec le statut ${lastStatus}.`);
+  throw new GeneropolyIntegrationError(lastStatus, endpoint, path);
 }
 
 export async function getGeneropolyContent(): Promise<GeneropolyContentPayload> {
