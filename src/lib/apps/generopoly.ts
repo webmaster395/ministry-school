@@ -10,6 +10,9 @@ export type GeneropolySession = {
   status: "open" | "closed";
   is_test?: boolean;
   created_at: number;
+  groupCount: number;
+  participantCount: number;
+  lastValidationAt?: number | null;
 };
 export type GeneropolyTable = {
   id: string;
@@ -17,6 +20,7 @@ export type GeneropolyTable = {
   participantCount: number | null;
   step: number;
   completed: boolean;
+  completedAt?: number | null;
   financeCard: string | null;
   timeCard: string | null;
   state: Record<string, unknown>;
@@ -93,8 +97,13 @@ export async function restoreGeneropolyVersion(id: string): Promise<{ ok: boolea
 }
 
 export async function getGeneropolySessions(): Promise<GeneropolySession[]> {
-  const data = await generopolyFetch<{ sessions: GeneropolySession[] }>("/api/admin/sessions");
-  return data.sessions.filter((session) => !session.is_test);
+  const data = await generopolyFetch<{ sessions: Array<Omit<GeneropolySession, "groupCount" | "participantCount" | "lastValidationAt"> & { group_count?: number; participant_count?: number; last_validation_at?: number | null }> }>("/api/admin/sessions");
+  return data.sessions.filter((session) => !session.is_test).map((session) => ({
+    ...session,
+    groupCount: Number(session.group_count ?? 0),
+    participantCount: Number(session.participant_count ?? 0),
+    lastValidationAt: session.last_validation_at ?? null,
+  })).filter((session) => session.groupCount > 0).sort((left, right) => String(right.session_date ?? "").localeCompare(String(left.session_date ?? "")));
 }
 
 export async function getGeneropolySnapshot(sessionId: string): Promise<GeneropolySnapshot> {

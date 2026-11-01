@@ -170,3 +170,17 @@ test("les erreurs Généropoly restent compréhensibles sans exposer le secret",
   assert.doesNotMatch(page, /admin_token|x-admin-token/);
 });
 
+test("les résultats Généropoly sont regroupés par journées validées sans session manuelle", () => {
+  const connector = read("src/lib/apps/generopoly.ts");
+  const results = read("src/components/apps-studio/GeneropolyResults.tsx");
+  const projection = read("src/app/admin/apps/generopoly/projection/page.tsx");
+  assert.match(connector, /filter\(\(session\) => session\.groupCount > 0\)/);
+  assert.match(connector, /String\(right\.session_date/);
+  assert.match(results, /Journées disponibles/);
+  assert.match(results, /Voir les résultats/);
+  assert.match(results, /Projeter/);
+  assert.match(results, /date de validation finale, en heure de Paris/);
+  assert.match(projection, /sessions\.find\(\(session\) => session\.id === requested\)/);
+  assert.doesNotMatch(results, /Créer une session|Démarrer un atelier|code de participation/);
+});
+

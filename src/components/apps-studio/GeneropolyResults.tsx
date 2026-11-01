@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Search } from "lucide-react";
+import { ExternalLink, Presentation, Search } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { GeneropolySession, GeneropolySnapshot, GeneropolyTable } from "@/lib/apps/generopoly";
 import { averageAllocation, completedTables, evolutionSummary, extractAnswers, financeCategories, timeCategories } from "@/lib/apps/generopoly-results";
@@ -18,9 +19,13 @@ export default function GeneropolyResults({ sessions, snapshot }: { sessions: Ge
   const participants = completed.reduce((sum, table) => sum + Number(table.participantCount ?? 0), 0);
   const lastUpdate = completed.length ? Math.max(...completed.map((table) => table.updatedAt)) : snapshot.syncedAt;
   return <div className="space-y-5">
-    <section className="grid gap-4 rounded-2xl border border-border bg-background p-4 sm:grid-cols-2 sm:p-5">
-      <Select label="Journée" value={snapshot.session?.id ?? ""} onChange={(value) => router.push(`/admin/apps/generopoly/results?session=${encodeURIComponent(value)}`)}>{sessions.map((session) => <option value={session.id} key={session.id}>{formatDate(session.session_date) || session.title}</option>)}</Select>
-      <Select label="Groupe" value={group} onChange={setGroup}><option value="all">Tous les groupes validés</option>{completed.map((table) => <option key={table.id} value={table.id}>{table.name}</option>)}</Select>
+    <section className="overflow-hidden rounded-2xl border border-border bg-background">
+      <div className="border-b border-border px-4 py-4 sm:px-5"><h2 className="font-title text-xl font-normal">Journées disponibles</h2><p className="mt-1 text-xs text-muted">Chaque participation est classée selon sa date de validation finale, en heure de Paris.</p></div>
+      <div className="divide-y divide-border">{sessions.map((session) => { const active = session.id === snapshot.session?.id; return <div className={`grid gap-3 px-4 py-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:px-5 ${active ? "bg-surface" : ""}`} key={session.id}><div><strong className="text-sm font-semibold">{formatDate(session.session_date) || session.title}</strong><p className="mt-1 text-xs text-muted">{session.groupCount} groupe{session.groupCount > 1 ? "s" : ""} validé{session.groupCount > 1 ? "s" : ""} · {session.participantCount} participant{session.participantCount > 1 ? "s" : ""}</p></div><div className="flex flex-wrap gap-2"><button type="button" disabled={active} onClick={() => router.push(`/admin/apps/generopoly/results?session=${encodeURIComponent(session.id)}`)} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-border bg-background px-4 text-xs font-medium disabled:border-transparent disabled:bg-foreground disabled:text-on-accent"><ExternalLink size={14} />{active ? "Résultats affichés" : "Voir les résultats"}</button><Link href={`/admin/apps/generopoly/projection?session=${encodeURIComponent(session.id)}`} target="_blank" className="inline-flex min-h-10 items-center gap-2 rounded-full border border-border bg-background px-4 text-xs font-medium"><Presentation size={14} /> Projeter</Link></div></div>; })}</div>
+      {!sessions.length && <p className="px-5 py-8 text-center text-sm text-muted">Aucune participation définitivement validée pour le moment.</p>}
+    </section>
+    <section className="rounded-2xl border border-border bg-background p-4 sm:p-5">
+      <Select label="Afficher" value={group} onChange={setGroup}><option value="all">Tous les groupes validés de cette journée</option>{completed.map((table) => <option key={table.id} value={table.id}>{table.name}</option>)}</Select>
     </section>
     <dl className="grid grid-cols-2 gap-x-5 gap-y-4 border-y border-border py-4 lg:grid-cols-4"><Metric label="Groupes validés" value={completed.length} /><Metric label="Participants" value={participants} /><Metric label="Réponses complètes" value={completed.length} /><Metric label="Dernière mise à jour" value={lastUpdate ? formatTime(lastUpdate) : "—"} /></dl>
     <nav className="flex gap-2 overflow-x-auto pb-1" aria-label="Analyser les résultats">{views.map((item) => <button key={item.key} type="button" onClick={() => setView(item.key)} className={`shrink-0 rounded-full px-4 py-2 text-xs font-medium ${view === item.key ? "bg-foreground text-on-accent" : "bg-background text-muted hover:text-foreground"}`}>{item.label}</button>)}</nav>
