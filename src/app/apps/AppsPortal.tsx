@@ -98,7 +98,7 @@ export default function AppsPortal() {
         <header className={styles.intro}>
           <p className={styles.eyebrow}><Sparkles size={15} strokeWidth={1.8} /> MINISTRY SCHOOL</p>
           <h1 id="apps-title">Des outils pour aller plus loin.</h1>
-          <p className={styles.subtitle}>Des outils conçus pour vous.</p>
+          <p className={styles.subtitle}>Des expériences interactives pour apprendre, explorer et aller plus loin dans votre parcours.</p>
         </header>
 
         <nav className={styles.filters} aria-label="Filtrer les applications">
@@ -115,7 +115,7 @@ export default function AppsPortal() {
           ))}
         </nav>
 
-        <div className={styles.appGrid} aria-live="polite">
+        <div className={`${styles.appGrid} ${styles[`appGrid${visibleApps.length}`] ?? ""}`} aria-live="polite">
           {visibleApps.map((app) => (
             <a className={styles.appLink} href={app.url} key={app.id} target="_blank" rel="noreferrer">
               <AppIcon icon={app.icon} name={app.name} />
