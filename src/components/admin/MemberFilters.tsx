@@ -104,7 +104,7 @@ export default function MemberFilters({ initial, ministries }: { initial: Member
         <Portal>
       <div className="fixed inset-0 z-50">
         <button type="button" aria-label="Fermer les filtres" onClick={() => setOpen(false)} className="absolute inset-0 bg-foreground/35 backdrop-blur-[1px]" />
-        <aside role="dialog" aria-modal="true" aria-labelledby="member-filter-title" className="absolute inset-x-0 bottom-0 flex h-fit max-h-[calc(100dvh-1rem)] w-full flex-col overflow-hidden rounded-t-2xl bg-background shadow-2xl sm:inset-x-auto sm:bottom-auto sm:right-6 sm:top-1/2 sm:h-fit sm:max-h-[calc(100dvh-3rem)] sm:w-[430px] sm:-translate-y-1/2 sm:rounded-2xl">
+        <aside role="dialog" aria-modal="true" aria-labelledby="member-filter-title" className="absolute inset-x-0 bottom-0 flex h-[min(88dvh,760px)] w-full flex-col overflow-hidden rounded-t-2xl bg-background shadow-2xl sm:inset-x-auto sm:bottom-auto sm:right-6 sm:top-1/2 sm:h-fit sm:max-h-[calc(100dvh-3rem)] sm:w-[430px] sm:-translate-y-1/2 sm:rounded-2xl">
           <header className="flex shrink-0 items-center justify-between border-b border-border px-5 py-3.5 sm:px-6">
             <div><p className="label text-[10px] tracking-[0.16em] text-muted">MEMBRES</p><h2 id="member-filter-title" className="font-title mt-1 text-[24px] text-foreground">Tous les filtres</h2></div>
             <button type="button" onClick={() => setOpen(false)} aria-label="Fermer" className="grid h-10 w-10 place-items-center rounded-full text-muted hover:bg-surface hover:text-foreground"><X size={20} /></button>
@@ -112,22 +112,22 @@ export default function MemberFilters({ initial, ministries }: { initial: Member
           <div className="min-h-0 flex-1 space-y-5 overflow-y-auto overscroll-contain px-5 py-4 sm:px-6 sm:py-5">
             <fieldset className="space-y-3 xl:hidden">
               <legend className="label mb-3 text-[11px] tracking-[0.14em] text-muted">ACCÈS</legend>
-              <label className="block space-y-1.5 text-sm">Rôle<AdminSelect value={values.role} onValueChange={(next) => change("role", next, false)} options={roleOptions} /></label>
-              <label className="block space-y-1.5 text-sm">Statut<AdminSelect value={values.statut} onValueChange={(next) => change("statut", next, false)} options={statusOptions} /></label>
+              <label className="block space-y-1.5 text-sm">Rôle<AdminSelect value={values.role} onValueChange={(next) => change("role", next, false)} options={roleOptions} mobileInline /></label>
+              <label className="block space-y-1.5 text-sm">Statut<AdminSelect value={values.statut} onValueChange={(next) => change("statut", next, false)} options={statusOptions} mobileInline /></label>
             </fieldset>
             <fieldset className="space-y-3">
               <legend className="label mb-3 text-[11px] tracking-[0.14em] text-muted">PROFIL ÉTUDIANT</legend>
-              <label className="block space-y-1.5 text-sm">Sensibilité<AdminSelect name="sens" value={values.sens} onValueChange={(next) => change("sens", next, false)} options={[{value:"toutes",label:"Toutes les sensibilités"},{value:"non_renseignee",label:"Non renseignée"},...ministries.map((item) => ({value:item.slug,label:item.name}))]} searchable /></label>
-              <label className="block space-y-1.5 text-sm">Implication à MLK<AdminSelect name="implication" value={values.implication} onValueChange={(next) => change("implication", next, false)} options={[{value:"toutes",label:"Toutes les implications"},{value:"aucun",label:"Aucun engagement"},{value:"equipier",label:"Équipiers MLK"},{value:"manager",label:"Managers et adjoints"},{value:"collaborateur",label:"Collaborateurs salariés"},{value:"non_renseigne",label:"Non renseignée"}]} /></label>
-              <label className="block space-y-1.5 text-sm">Genre<AdminSelect name="genre" value={values.genre} onValueChange={(next) => change("genre", next, false)} options={[{value:"tous",label:"Tous les genres"},{value:"homme",label:"Hommes"},{value:"femme",label:"Femmes"},{value:"non_renseigne",label:"Non renseigné"}]} /></label>
+              <label className="block space-y-1.5 text-sm">Sensibilité<AdminSelect name="sens" value={values.sens} onValueChange={(next) => change("sens", next, false)} options={[{value:"toutes",label:"Toutes les sensibilités"},{value:"non_renseignee",label:"Non renseignée"},...ministries.map((item) => ({value:item.slug,label:item.name}))]} searchable mobileInline /></label>
+              <label className="block space-y-1.5 text-sm">Implication à MLK<AdminSelect name="implication" value={values.implication} onValueChange={(next) => change("implication", next, false)} options={[{value:"toutes",label:"Toutes les implications"},{value:"aucun",label:"Aucun engagement"},{value:"equipier",label:"Équipiers MLK"},{value:"manager",label:"Managers et adjoints"},{value:"collaborateur",label:"Collaborateurs salariés"},{value:"non_renseigne",label:"Non renseignée"}]} mobileInline /></label>
+              <label className="block space-y-1.5 text-sm">Genre<AdminSelect name="genre" value={values.genre} onValueChange={(next) => change("genre", next, false)} options={[{value:"tous",label:"Tous les genres"},{value:"homme",label:"Hommes"},{value:"femme",label:"Femmes"},{value:"non_renseigne",label:"Non renseigné"}]} mobileInline /></label>
             </fieldset>
             <fieldset className="grid gap-3 border-t border-border-soft pt-5 sm:grid-cols-2">
               <legend className="label mb-3 text-[11px] tracking-[0.14em] text-muted sm:col-span-2">AFFICHAGE</legend>
-              <label className="block space-y-1.5 text-sm">Trier<AdminSelect name="tri" value={values.tri} onValueChange={(next) => change("tri", next, false)} options={[{value:"nom",label:"Par nom"},{value:"creation",label:"Plus récents"}]} /></label>
-              <label className="block space-y-1.5 text-sm">Par page<AdminSelect name="par" value={values.par} onValueChange={(next) => change("par", next, false)} options={[{value:"25",label:"25 membres"},{value:"50",label:"50 membres"},{value:"100",label:"100 membres"}]} /></label>
+              <label className="block space-y-1.5 text-sm">Trier<AdminSelect name="tri" value={values.tri} onValueChange={(next) => change("tri", next, false)} options={[{value:"nom",label:"Par nom"},{value:"creation",label:"Plus récents"}]} mobileInline /></label>
+              <label className="block space-y-1.5 text-sm">Par page<AdminSelect name="par" value={values.par} onValueChange={(next) => change("par", next, false)} options={[{value:"25",label:"25 membres"},{value:"50",label:"50 membres"},{value:"100",label:"100 membres"}]} mobileInline /></label>
             </fieldset>
           </div>
-          <footer className="flex shrink-0 items-center gap-3 border-t border-border bg-background px-5 py-3.5 sm:px-6">
+          <footer className="flex shrink-0 items-center gap-3 border-t border-border bg-background px-5 pb-[max(0.875rem,env(safe-area-inset-bottom))] pt-3.5 sm:px-6 sm:pb-3.5">
             {active.length > 0 && <button type="button" onClick={clearAll} className="shrink-0 text-sm text-muted underline underline-offset-4">Tout effacer</button>}
             <button type="button" onClick={() => { apply(values); setOpen(false); }} className="min-h-11 flex-1 rounded-md bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent">Appliquer les filtres</button>
           </footer>

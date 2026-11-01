@@ -50,5 +50,8 @@ test("la page Membres reste dans le flux et utilise des cartes avant le grand é
   assert.match(members, /lg:hidden/);
   assert.match(filters, /grid-cols-\[minmax\(0,1fr\)_auto\]/);
   assert.match(filters, /min-h-0 flex-1.*overflow-y-auto overscroll-contain/);
+  assert.match(filters, /h-\[min\(88dvh,760px\)\]/);
+  assert.match(filters, /safe-area-inset-bottom/);
+  assert.match(filters, /mobileInline/);
   assert.doesNotMatch(members, /\bsticky\b|\bfixed\b/);
 });
