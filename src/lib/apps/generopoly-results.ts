@@ -1,18 +1,18 @@
 import type { GeneropolyTable, GeneropolyValues } from "@/lib/apps/generopoly";
 
 export const financeCategories = [
-  ["savings", "Épargne"],
-  ["leisure", "Loisirs"],
-  ["generosity", "Générosité financière"],
-  ["projects", "Projets personnels"],
-  ["reserve", "Réserve"],
+  ["savings", "💰 Épargne"],
+  ["leisure", "🖼️ Loisirs"],
+  ["generosity", "💚 Générosité"],
+  ["projects", "🚀 Projets personnels"],
+  ["reserve", "⛑️ Réserve pour imprévus"],
 ] as const;
 export const timeCategories = [
-  ["family", "Famille et proches"],
-  ["rest", "Repos et loisirs"],
-  ["spiritual", "Vie spirituelle"],
-  ["service", "Service et solidarité"],
-  ["projects", "Projets personnels"],
+  ["family", "👫 Famille et proches"],
+  ["rest", "🧘 Repos et loisirs"],
+  ["spiritual", "✝️ Vie spirituelle"],
+  ["service", "💚 Service et solidarité"],
+  ["projects", "🚀 Projets personnels"],
 ] as const;
 
 export type Evolution = "increased" | "decreased" | "maintained" | "suspended";
@@ -26,12 +26,16 @@ export function average(numbers: number[]) {
   return numbers.length ? numbers.reduce((sum, number) => sum + number, 0) / numbers.length : 0;
 }
 
+function numericValue(table: GeneropolyTable, field: string, key: string) {
+  const value = values(table, field)[key];
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
 export function averageAllocation(tables: GeneropolyTable[], field: string, categories: readonly (readonly [string, string])[]) {
-  return categories.map(([key, label]) => ({
-    key,
-    label,
-    value: average(tables.map((table) => Number(values(table, field)[key] || 0))),
-  }));
+  return categories.map(([key, label]) => {
+    const numbers = tables.map((table) => numericValue(table, field, key)).filter((value): value is number => value !== null);
+    return { key, label, value: average(numbers), sampleCount: numbers.length };
+  });
 }
 
 export function classifyEvolution(initial: number, current: number): Evolution {
@@ -43,12 +47,35 @@ export function classifyEvolution(initial: number, current: number): Evolution {
 
 export function evolutionSummary(tables: GeneropolyTable[], initialField: string, currentField: string, key: string) {
   const counts: Record<Evolution, number> = { increased: 0, decreased: 0, maintained: 0, suspended: 0 };
+  let total = 0;
   tables.forEach((table) => {
-    const initial = Number(values(table, initialField)[key] || 0);
-    const current = Number(values(table, currentField)[key] || 0);
+    const initial = numericValue(table, initialField, key);
+    const current = numericValue(table, currentField, key);
+    if (initial === null || current === null) return;
     counts[classifyEvolution(initial, current)] += 1;
+    total += 1;
   });
-  return counts;
+  return { ...counts, total };
+}
+
+export function comparisonAllocation(tables: GeneropolyTable[], initialField: string, currentField: string, categories: readonly (readonly [string, string])[]) {
+  return categories.map(([key, label]) => {
+    const pairs = tables.map((table) => ({ initial: numericValue(table, initialField, key), current: numericValue(table, currentField, key) }))
+      .filter((pair): pair is { initial: number; current: number } => pair.initial !== null && pair.current !== null);
+    const initial = average(pairs.map((pair) => pair.initial));
+    const current = average(pairs.map((pair) => pair.current));
+    const difference = current - initial;
+    return {
+      key,
+      label,
+      initial,
+      current,
+      difference,
+      percent: initial === 0 ? null : difference / initial * 100,
+      evolution: classifyEvolution(initial, current),
+      sampleCount: pairs.length,
+    };
+  });
 }
 
 export function extractAnswers(tables: GeneropolyTable[]) {
@@ -60,15 +87,15 @@ export function extractAnswers(tables: GeneropolyTable[]) {
     ["timeAfterOneWhy", "Temps", "Arbitrage ponctuel"],
     ["timeFinalWhy", "Temps", "Choix durable"],
   ] as const;
-  const answers: { id: string; tableId: string; group: string; mission: string; question: string; text: string; selected: boolean }[] = [];
+  const answers: { id: string; tableId: string; key: string; group: string; mission: string; question: string; text: string; selected: boolean }[] = [];
   tables.forEach((table) => {
     specs.forEach(([field, mission, question]) => {
       const text = String(table.state[field] ?? "").trim();
-      if (text) answers.push({ id: `${table.id}-${field}`, tableId: table.id, group: table.name, mission, question, text, selected: table.projected.includes(field) });
+      if (text) answers.push({ id: `${table.id}-${field}`, tableId: table.id, key: field, group: table.name, mission, question, text, selected: table.projected.includes(field) });
     });
     const mirror = Array.isArray(table.state.mirror) ? table.state.mirror as string[] : [];
     mirror.forEach((text, index) => {
-      if (text?.trim()) answers.push({ id: `${table.id}-mirror-${index}`, tableId: table.id, group: table.name, mission: "Miroir", question: `Question finale ${index + 1}`, text: text.trim(), selected: table.projected.includes(`mirror-${index}`) });
+      if (text?.trim()) answers.push({ id: `${table.id}-mirror-${index}`, tableId: table.id, key: `mirror-${index}`, group: table.name, mission: "Miroir", question: `Question finale ${index + 1}`, text: text.trim(), selected: table.projected.includes(`mirror-${index}`) });
     });
   });
   return answers;

@@ -24,6 +24,6 @@ export default async function GeneropolyResultsPage({ searchParams }: { searchPa
     error = "Impossible de charger les résultats pour le moment.";
   }
   if (!payload) return <AppsStudioShell active="results" appTab="results"><StudioPageHeader eyebrow="GÉNÉROPOLY" title="Résultats" /><div className="rounded-[24px] border border-[#b83c13]/20 bg-white p-7 text-[#8f321c]"><p>{error}</p><Link href="/admin/apps/generopoly/results" className="mt-5 inline-flex min-h-10 items-center rounded-xl bg-[#173f45] px-4 text-sm font-medium text-white">Réessayer</Link></div></AppsStudioShell>;
-  return <AppsStudioShell active="results" appTab="results"><StudioPageHeader eyebrow="GÉNÉROPOLY" title="Résultats" description="Les journées sont créées automatiquement à la validation finale. Les brouillons ne sont jamais inclus." /><GeneropolyResults sessions={payload.sessions} snapshot={payload.snapshot} /></AppsStudioShell>;
+  return <AppsStudioShell active="results" appTab="results"><StudioPageHeader eyebrow="GÉNÉROPOLY" title="Résultats Généropoly" description="Retrouvez les résultats des ateliers et découvrez les choix des participants." /><GeneropolyResults sessions={payload.sessions} snapshot={payload.snapshot} /></AppsStudioShell>;
 }
 

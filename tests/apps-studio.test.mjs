@@ -155,7 +155,7 @@ test("projection is independent and refreshes secure snapshots", () => {
   const projection = read("src/components/apps-studio/GeneropolyProjection.tsx");
   assert.match(projection, /requestFullscreen/);
   assert.match(projection, /api\/admin\/apps\/generopoly\/snapshot/);
-  assert.match(projection, /setInterval\(\(\) => void load\(\), 5000\)/);
+  assert.match(projection, /await load\(\);[\s\S]*setSlide\(bounded\)/);
 });
 
 test("les erreurs Généropoly restent compréhensibles sans exposer le secret", () => {

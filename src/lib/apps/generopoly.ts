@@ -111,6 +111,11 @@ export async function getGeneropolySnapshot(sessionId: string): Promise<Generopo
   return generopolyFetch<GeneropolySnapshot>(`/api/admin/snapshot?id=${encodeURIComponent(sessionId)}`);
 }
 
+export async function setGeneropolyProjectedAnswer(tableId: string, key: string, selected: boolean): Promise<{ ok: boolean; projected: string[] }> {
+  if (!/^[a-zA-Z0-9-]{8,80}$/.test(tableId) || !/^[a-zA-Z0-9-]{1,100}$/.test(key)) throw new Error("Réponse Généropoly invalide.");
+  return generopolyFetch("/api/admin/project", { method: "PATCH", body: JSON.stringify({ tableId, key, selected }) });
+}
+
 export async function getGeneropolyOverview() {
   const sessions = await getGeneropolySessions();
   const snapshots = await Promise.all(sessions.slice(0, 20).map((session) => getGeneropolySnapshot(session.id)));
