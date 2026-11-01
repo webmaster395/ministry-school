@@ -66,6 +66,55 @@ test("le retrait archive le catalogue sans détruire les applications externes",
   assert.match(actions, /restoreCatalogApp/);
 });
 
+test("le catalogue est une liste compacte sans formulaire accordéon", () => {
+  const home = read("src/app/admin/apps/page.tsx");
+  const table = read("src/components/apps-studio/AppCatalogManager.tsx");
+  const settings = read("src/components/apps-studio/AppSettingsForm.tsx");
+  assert.match(home, /Ajouter une application/);
+  assert.match(home, /href="\/admin\/apps\/nouveau"/);
+  assert.doesNotMatch(table, /<details className="group rounded/);
+  assert.doesNotMatch(table, /saveCatalogApp/);
+  assert.match(settings, /Identité/);
+  assert.match(settings, /Publication/);
+  assert.match(settings, /Ordre d’apparition/);
+});
+
+test("chaque application possède sa fiche et ses paramètres dédiés", () => {
+  const overview = read("src/app/admin/apps/[slug]/page.tsx");
+  const settings = read("src/app/admin/apps/[slug]/settings/page.tsx");
+  const shell = read("src/components/apps-studio/AppsStudioShell.tsx");
+  assert.match(overview, /getCatalogAppBySlug/);
+  assert.match(settings, /AppSettingsForm/);
+  assert.match(shell, /Vue d’ensemble/);
+  assert.match(shell, /Contenus/);
+  assert.match(shell, /Paramètres/);
+});
+
+test("les outils s'ouvrent dans un nouvel onglet depuis les navigations Ministry School", () => {
+  const nav = read("src/lib/nav.tsx");
+  const links = read("src/components/NavBlocks.tsx");
+  const provider = read("src/components/SpaceProvider.tsx");
+  assert.match(nav, /label: "Mes outils"[\s\S]*href: "\/apps"[\s\S]*target: "_blank"/);
+  assert.match(nav, /href: "\/admin\/apps"[\s\S]*target: "_blank"/);
+  assert.match(links, /target=\{target\}/);
+  assert.match(provider, /window\.open\(destination\.href, "_blank", "noopener,noreferrer"\)/);
+});
+
+test("le tableau réordonne et regroupe les actions secondaires", () => {
+  const table = read("src/components/apps-studio/AppCatalogManager.tsx");
+  const actions = read("src/app/admin/apps/actions.ts");
+  const migration = read("supabase/migrations/20261101200000_reorder_app_catalog.sql");
+  assert.match(table, /ArrowUp/);
+  assert.match(table, /ArrowDown/);
+  assert.match(table, /MoreHorizontal/);
+  assert.match(table, /Dupliquer/);
+  assert.match(actions, /duplicateCatalogApp/);
+  assert.match(actions, /integration_key: null/);
+  assert.match(actions, /status: "draft"/);
+  assert.match(actions, /rpc\("reorder_app_catalog"/);
+  assert.match(migration, /if not public\.is_super_admin\(\)/);
+});
+
 test("projection is independent and refreshes secure snapshots", () => {
   const projection = read("src/components/apps-studio/GeneropolyProjection.tsx");
   assert.match(projection, /requestFullscreen/);

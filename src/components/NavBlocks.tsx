@@ -26,6 +26,7 @@ function NavLink({
   collapsed,
   nested = false,
   badge,
+  target,
 }: {
   href: string;
   label: string;
@@ -34,10 +35,13 @@ function NavLink({
   collapsed: boolean;
   nested?: boolean;
   badge?: number;
+  target?: "_blank";
 }) {
   return (
     <Link
       href={href}
+      target={target}
+      rel={target === "_blank" ? "noreferrer" : undefined}
       title={collapsed ? label : undefined}
       className={`flex items-center rounded-[7px] text-[15px] transition ${
         nested ? "py-2 text-[14px]" : "py-2.5"
@@ -132,6 +136,7 @@ export function NavSections({ collapsed = false }: { collapsed?: boolean }) {
                   icon={item.icon}
                   active={sameRoute(pathname, item.href)}
                   collapsed={collapsed}
+                  target={item.target}
                 />
               </li>
             ))}
@@ -174,6 +179,7 @@ export function NavSections({ collapsed = false }: { collapsed?: boolean }) {
                   active={current?.key === space.key}
                   collapsed={collapsed}
                   badge={space.key === "admin" ? pendingValidationCount : undefined}
+                  target={space.sections[0]?.items[0]?.target}
                 />
                 </li>
               ))}

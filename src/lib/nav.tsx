@@ -28,6 +28,7 @@ export type NavItem = {
   label: string;
   href: string;
   icon: React.ReactNode;
+  target?: "_blank";
 };
 
 export type NavSection = {
@@ -95,8 +96,9 @@ export const notesNavItem: NavItem = {
 
 export const toolsNavItem: NavItem = {
   label: "Mes outils",
-  href: "/etudiant/outils",
+  href: "/apps",
   icon: icons.apps,
+  target: "_blank",
 };
 
 /** Icône générique conservée pour les anciens appels qui représentent une fonction de gestion. */
@@ -217,7 +219,7 @@ export function navSpaces(roles: ViewerRoles): Space[] {
       sections: [
         {
           title: "Gestion des outils",
-          items: [{ label: "Studio", href: "/admin/apps", icon: icons.apps }],
+          items: [{ label: "Studio", href: "/admin/apps", icon: icons.apps, target: "_blank" }],
         },
       ],
     });

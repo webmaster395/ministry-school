@@ -103,6 +103,11 @@ export function SpaceProvider({
   function select(next: SpaceKey) {
     const space = spaces.find((s) => s.key === next);
     if (!space) return;
+    const destination = space.sections[0]?.items[0];
+    if (destination?.target === "_blank") {
+      window.open(destination.href, "_blank", "noopener,noreferrer");
+      return;
+    }
     setStored(next);
     try {
       localStorage.setItem(STORAGE_KEY, next);

@@ -8,10 +8,18 @@ export default function AppsStudioShell({
   children,
   active,
   appTab,
+  appSlug = "generopoly",
+  appName = "Généropoly",
+  hasResults = true,
+  hasEditor = true,
 }: {
   children: React.ReactNode;
   active: StudioTab;
   appTab?: AppTab;
+  appSlug?: string;
+  appName?: string;
+  hasResults?: boolean;
+  hasEditor?: boolean;
 }) {
   return (
     <div className="min-h-screen bg-[#f5f7f4] text-[#20302e]">
@@ -21,7 +29,7 @@ export default function AppsStudioShell({
             <span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#20302e] text-[#fbeeda]"><Grid2X2 size={21} /></span>
             <div><p className="label text-[10px] text-[#6b7270]">MINISTRY SCHOOL</p><strong className="font-title text-xl">Gestion des outils</strong></div>
           </div>
-          <Link className="inline-flex items-center gap-2 text-sm text-[#5d6b68] transition hover:text-[#20302e]" href="/gestion/admin"><ArrowLeft size={15} /> Revenir à Admin</Link>
+          <Link className="inline-flex items-center gap-2 text-sm text-[#5d6b68] transition hover:text-[#20302e]" href="/gestion/admin"><ArrowLeft size={15} /> Retour à Ministry School</Link>
         </div>
         <nav className="mx-auto flex max-w-[1440px] gap-7 overflow-x-auto px-5 sm:px-8" aria-label="Navigation du studio">
           <StudioLink href="/admin/apps" active={active === "applications"}>Applications</StudioLink>
@@ -32,11 +40,11 @@ export default function AppsStudioShell({
       {appTab && (
         <nav className="border-b border-[#20302e]/8 bg-[#fbfcfa]" aria-label="Navigation Généropoly">
           <div className="mx-auto flex max-w-[1440px] gap-2 overflow-x-auto px-5 py-3 sm:px-8">
-            <AppLink href="/admin/apps/generopoly" active={appTab === "overview"}>Vue d’ensemble</AppLink>
-            <AppLink href="/admin/apps/generopoly/results" active={appTab === "results"}>Résultats</AppLink>
-            <AppLink href="/admin/apps/generopoly/editor" active={appTab === "editor"}>Éditeur</AppLink>
-            <AppLink href="/admin/apps/generopoly/settings" active={appTab === "settings"}>Paramètres</AppLink>
-            <Link className="ml-auto inline-flex shrink-0 items-center gap-2 rounded-full bg-[#20302e] px-4 py-2 text-sm font-semibold text-[#fbeeda]" href="/admin/apps/generopoly/projection" target="_blank"><Presentation size={15} /> Projeter</Link>
+            <AppLink href={`/admin/apps/${appSlug}`} active={appTab === "overview"}>Vue d’ensemble</AppLink>
+            {hasResults && <AppLink href={`/admin/apps/${appSlug}/results`} active={appTab === "results"}>Résultats</AppLink>}
+            {hasEditor && <AppLink href={`/admin/apps/${appSlug}/editor`} active={appTab === "editor"}>Contenus</AppLink>}
+            <AppLink href={`/admin/apps/${appSlug}/settings`} active={appTab === "settings"}>Paramètres</AppLink>
+            {appSlug === "generopoly" && <Link aria-label={`Projeter les résultats de ${appName}`} className="ml-auto inline-flex shrink-0 items-center gap-2 rounded-full bg-[#20302e] px-4 py-2 text-sm font-semibold text-[#fbeeda]" href="/admin/apps/generopoly/projection" target="_blank"><Presentation size={15} /> Projeter</Link>}
           </div>
         </nav>
       )}

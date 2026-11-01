@@ -57,7 +57,7 @@ async function uploadIcon(file: File, slug: string) {
 }
 
 export async function saveCatalogApp(formData: FormData) {
-  await requireSuperAdmin();
+  const viewer = await requireSuperAdmin();
   const id = value(formData, "id", 100);
   const name = value(formData, "name", 100);
   const slug = id ? value(formData, "slug", 80) : slugify(name);
@@ -82,13 +82,16 @@ export async function saveCatalogApp(formData: FormData) {
     student_enabled: checked(formData, "studentEnabled"),
     student_publish_at: publicationDate(formData, "student"),
     archived_at: null,
+    updated_by: viewer.id,
   };
   const supabase = await createClient();
   const mutation = id ? supabase.from("app_catalog").update(payload).eq("id", id) : supabase.from("app_catalog").insert(payload);
-  const { error } = await mutation;
+  const { data, error } = await mutation.select("slug").single();
   if (error) throw new Error(`Enregistrement impossible : ${error.message}`);
   revalidateCatalog();
-  redirect("/admin/apps?saved=1");
+  const requestedReturn = value(formData, "returnTo", 300);
+  const returnTo = requestedReturn.startsWith("/admin/apps/") ? requestedReturn : `/admin/apps/${data.slug}/settings`;
+  redirect(`${returnTo}${returnTo.includes("?") ? "&" : "?"}saved=1`);
 }
 
 export async function deleteCatalogApp(formData: FormData) {
@@ -146,5 +149,54 @@ export async function saveStudentToolsSetting(formData: FormData) {
   if (error) throw new Error(`Réglage impossible : ${error.message}`);
   revalidateCatalog();
   redirect("/admin/apps?settings=1");
+}
+
+export async function moveCatalogApp(formData: FormData) {
+  await requireSuperAdmin();
+  const id = value(formData, "id", 100);
+  const direction = value(formData, "direction", 10);
+  if (!id || !["up", "down"].includes(direction)) throw new Error("Déplacement impossible.");
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("app_catalog").select("id").is("archived_at", null).order("display_order", { ascending: true }).order("name", { ascending: true });
+  if (error) throw new Error(`Chargement de l’ordre impossible : ${error.message}`);
+  const ids = (data ?? []).map((item) => item.id);
+  const index = ids.indexOf(id);
+  const target = direction === "up" ? index - 1 : index + 1;
+  if (index < 0 || target < 0 || target >= ids.length) redirect("/admin/apps");
+  [ids[index], ids[target]] = [ids[target], ids[index]];
+  const { error: reorderError } = await supabase.rpc("reorder_app_catalog", { p_ids: ids });
+  if (reorderError) throw new Error(`Réorganisation impossible : ${reorderError.message}`);
+  revalidateCatalog();
+  redirect("/admin/apps?reordered=1");
+}
+
+export async function duplicateCatalogApp(formData: FormData) {
+  const viewer = await requireSuperAdmin();
+  const id = value(formData, "id", 100);
+  if (!id) throw new Error("Application introuvable.");
+  const supabase = await createClient();
+  const { data: source, error } = await supabase.from("app_catalog").select("name,slug,short_description,category,icon_url,destination_url,display_order").eq("id", id).is("archived_at", null).single();
+  if (error || !source) throw new Error(`Duplication impossible : ${error?.message ?? "application introuvable"}`);
+  const suffix = crypto.randomUUID().slice(0, 8);
+  const slug = `${source.slug.slice(0, 65)}-copie-${suffix}`;
+  const { error: insertError } = await supabase.from("app_catalog").insert({
+    slug,
+    name: `${source.name} — copie`.slice(0, 100),
+    short_description: source.short_description,
+    category: source.category,
+    icon_url: source.icon_url,
+    destination_url: source.destination_url,
+    status: "draft",
+    display_order: source.display_order + 5,
+    integration_key: null,
+    public_enabled: false,
+    public_publish_at: null,
+    student_enabled: false,
+    student_publish_at: null,
+    updated_by: viewer.id,
+  });
+  if (insertError) throw new Error(`Duplication impossible : ${insertError.message}`);
+  revalidateCatalog();
+  redirect(`/admin/apps/${slug}/settings?duplicated=1`);
 }
 

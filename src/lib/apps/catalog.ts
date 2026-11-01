@@ -116,3 +116,8 @@ export async function getStudentTools() {
   if (!(await getStudentToolsEnabled())) return [];
   return getCatalogApps({ channel: "student" });
 }
+
+export async function getCatalogAppBySlug(slug: string) {
+  const apps = await getCatalogApps({ includeUnpublished: true, includeArchived: true, channel: "admin" });
+  return apps.find((app) => app.slug === slug) ?? null;
+}
