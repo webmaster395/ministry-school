@@ -142,6 +142,15 @@ test("l’éditeur Généropoly travaille par page, garde un brouillon et publie
   assert.match(connector, /restoreGeneropolyVersion/);
 });
 
+test("les outils acceptent un chemin Ministry School ou une URL complète", () => {
+  const settings = read("src/components/apps-studio/AppSettingsForm.tsx");
+  const actions = read("src/app/admin/apps/actions.ts");
+  assert.match(settings, /type="text" inputMode="url"/);
+  assert.match(settings, /\/apps\/mon-outil ou https:\/\//);
+  assert.match(actions, /raw\.startsWith\("\/"\) && !raw\.startsWith\("\/\/"\)/);
+  assert.match(actions, /new URL\(raw\)/);
+});
+
 test("projection is independent and refreshes secure snapshots", () => {
   const projection = read("src/components/apps-studio/GeneropolyProjection.tsx");
   assert.match(projection, /requestFullscreen/);

@@ -17,7 +17,16 @@ function value(formData: FormData, key: string, max = 500) {
 }
 
 function validUrl(raw: string) {
-  const url = new URL(raw);
+  if (raw.startsWith("/") && !raw.startsWith("//")) {
+    if (/\s|\\/.test(raw)) throw new Error("Le chemin interne contient des caractères invalides.");
+    return raw;
+  }
+  let url: URL;
+  try {
+    url = new URL(raw);
+  } catch {
+    throw new Error("Saisissez un chemin interne commençant par / ou une URL complète.");
+  }
   if (!['http:', 'https:'].includes(url.protocol)) throw new Error("L’URL doit utiliser http ou https.");
   return url.toString();
 }
