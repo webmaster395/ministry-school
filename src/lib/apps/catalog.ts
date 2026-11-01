@@ -21,6 +21,11 @@ const fallbackApps: CatalogApp[] = [
   { id: "profil-mapp", slug: "profil-mapp", name: "Profil MAPP", description: "Découvrez votre profil et votre manière de fonctionner.", category: "Identité", iconUrl: null, url: "/apps/profil-mapp", status: "published", order: 30, integrationKey: null },
 ];
 
+const ministryAppUrls: Record<string, string> = {
+  generopoly: "/apps/generopoly",
+  "profil-mapp": "/apps/profil-mapp",
+};
+
 type CatalogRow = {
   id: string;
   slug: string;
@@ -42,7 +47,9 @@ function mapRow(row: CatalogRow): CatalogApp {
     description: row.short_description,
     category: row.category,
     iconUrl: row.icon_url,
-    url: row.destination_url,
+    // Ces deux projets conservent leur déploiement et leur base propres ; le
+    // portail les ouvre toutefois par le routeur public de Ministry School.
+    url: ministryAppUrls[row.slug] ?? row.destination_url,
     status: row.status,
     order: row.display_order,
     integrationKey: row.integration_key,
