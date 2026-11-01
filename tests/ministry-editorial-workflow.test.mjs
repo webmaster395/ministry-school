@@ -53,6 +53,7 @@ test("le Pilotage présente tous les cours et une création adaptée au contenu"
   assert.match(page, /avenir: "Cours à venir"/);
   assert.match(page, /passes: "Cours passés"/);
   assert.match(page, /allCoursesView/);
+  assert.doesNotMatch(page, /Accès des contributeurs|MinistryContributorAccess|delegateRows/);
   assert.match(board, /rows\.length \? <List rows=\{rows\}/);
   assert.match(menu, /Créer un cours/);
   assert.match(menu, /type=projet/);
