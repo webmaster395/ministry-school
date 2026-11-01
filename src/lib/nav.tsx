@@ -93,6 +93,12 @@ export const notesNavItem: NavItem = {
   icon: icons.notes,
 };
 
+export const toolsNavItem: NavItem = {
+  label: "Mes outils",
+  href: "/etudiant/outils",
+  icon: icons.apps,
+};
+
 /** Icône générique conservée pour les anciens appels qui représentent une fonction de gestion. */
 export const functionsIcon = icons.functions;
 
@@ -204,13 +210,13 @@ export function navSpaces(roles: ViewerRoles): Space[] {
   if (roles.superAdmin) {
     spaces.push({
       key: "apps",
-      label: "Les Apps",
+      label: "Gestion des outils",
       icon: icons.apps,
-      title: "Les Apps",
+      title: "Gestion des outils",
       subtitle: "Pilotez les applications pédagogiques Ministry School.",
       sections: [
         {
-          title: "Les Apps",
+          title: "Gestion des outils",
           items: [{ label: "Studio", href: "/admin/apps", icon: icons.apps }],
         },
       ],

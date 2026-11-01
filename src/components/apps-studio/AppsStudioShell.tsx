@@ -19,7 +19,7 @@ export default function AppsStudioShell({
         <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-4 px-5 py-5 sm:px-8">
           <div className="flex items-center gap-4">
             <span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#20302e] text-[#fbeeda]"><Grid2X2 size={21} /></span>
-            <div><p className="label text-[10px] text-[#6b7270]">MINISTRY SCHOOL</p><strong className="font-title text-xl">Les Apps</strong></div>
+            <div><p className="label text-[10px] text-[#6b7270]">MINISTRY SCHOOL</p><strong className="font-title text-xl">Gestion des outils</strong></div>
           </div>
           <Link className="inline-flex items-center gap-2 text-sm text-[#5d6b68] transition hover:text-[#20302e]" href="/gestion/admin"><ArrowLeft size={15} /> Revenir à Admin</Link>
         </div>

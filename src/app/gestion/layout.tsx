@@ -7,6 +7,7 @@ import SpaceTabs from "@/components/SpaceTabs";
 import AdminBreadcrumbs from "@/components/admin/AdminBreadcrumbs";
 import { getViewer } from "@/lib/data/viewer";
 import { navSpaces } from "@/lib/nav";
+import { getStudentToolsEnabled } from "@/lib/apps/catalog";
 
 /**
  * Le côté « fonctions » de la plateforme : pilotage, enseignement, services, projets, administration.
@@ -16,9 +17,10 @@ export default async function ManagementLayout({ children }: { children: React.R
   const viewer = await getViewer();
   if (viewer?.deactivated) redirect("/auth/desactive");
   if (!viewer || navSpaces(viewer.roles).length === 0) redirect("/etudiant");
+  const studentToolsEnabled = await getStudentToolsEnabled();
 
   return (
-    <SpaceProvider roles={viewer.roles} unread={viewer.unreadMessages} pendingValidationCount={viewer.pendingValidationCount}>
+    <SpaceProvider roles={viewer.roles} unread={viewer.unreadMessages} studentToolsEnabled={studentToolsEnabled} pendingValidationCount={viewer.pendingValidationCount}>
       <div className="app-shell flex min-h-screen w-full">
         <Sidebar fullName={viewer.fullName} avatarUrl={viewer.avatarUrl} ministrySlug={viewer.ministrySlug} />
         <div className="flex min-h-screen min-w-0 flex-1 flex-col bg-surface">

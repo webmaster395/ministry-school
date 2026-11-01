@@ -11,6 +11,7 @@ import {
   profileTabs,
   spaceHome,
   studentSections,
+  toolsNavItem,
 } from "@/lib/nav";
 import { getMinistry } from "@/lib/ministry";
 
@@ -73,7 +74,7 @@ function NavLink({
  */
 export function NavSections({ collapsed = false }: { collapsed?: boolean }) {
   const pathname = usePathname();
-  const { spaces, current, notesEnabled, pendingValidationCount } = useSpace();
+  const { spaces, current, notesEnabled, studentToolsEnabled, pendingValidationCount } = useSpace();
   const multiple = spaces.length > 1;
   const [adminOpen, setAdminOpen] = useState(!!current);
 
@@ -117,6 +118,9 @@ export function NavSections({ collapsed = false }: { collapsed?: boolean }) {
           <ul className="space-y-0.5">
             {[
               ...section.items,
+              ...(studentToolsEnabled && section.title === "Mon parcours"
+                ? [toolsNavItem]
+                : []),
               ...(notesEnabled && section.title === "Mon parcours"
                 ? [notesNavItem]
                 : []),

@@ -9,6 +9,7 @@ import { getViewer } from "@/lib/data/viewer";
 import WelcomeModal from "@/components/WelcomeModal";
 import MlkEngagementModal from "@/components/MlkEngagementModal";
 import StudentUsageTracker from "@/components/StudentUsageTracker";
+import { getStudentToolsEnabled } from "@/lib/apps/catalog";
 
 export default async function StudentLayout({
   children,
@@ -19,12 +20,14 @@ export default async function StudentLayout({
   if (!viewer) redirect("/login");
   if (viewer?.deactivated) redirect("/auth/desactive");
   const notesEnabled = viewer?.courseNotesEnabled ?? false;
+  const studentToolsEnabled = await getStudentToolsEnabled();
 
   return (
     <SpaceProvider
       roles={viewer.roles}
       unread={viewer.unreadMessages}
       notesEnabled={notesEnabled}
+      studentToolsEnabled={studentToolsEnabled}
       pendingValidationCount={viewer.pendingValidationCount}
     >
       <StudentUsageTracker />

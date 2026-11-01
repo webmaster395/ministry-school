@@ -16,6 +16,7 @@ type SpaceContext = {
   /** Messages non lus, pour les pastilles du menu et l'onglet Messagerie */
   unread: number;
   notesEnabled: boolean;
+  studentToolsEnabled: boolean;
   pendingValidationCount: number;
   /** Les espaces de gestion de la personne ; vide pour un étudiant simple */
   spaces: Space[];
@@ -38,12 +39,14 @@ export function SpaceProvider({
   roles,
   unread = 0,
   notesEnabled = false,
+  studentToolsEnabled = false,
   pendingValidationCount = 0,
   children,
 }: {
   roles: ViewerRoles;
   unread?: number;
   notesEnabled?: boolean;
+  studentToolsEnabled?: boolean;
   pendingValidationCount?: number;
   children: React.ReactNode;
 }) {
@@ -115,6 +118,7 @@ export function SpaceProvider({
         roles,
         unread,
         notesEnabled,
+        studentToolsEnabled,
         pendingValidationCount,
         spaces,
         current: shown,

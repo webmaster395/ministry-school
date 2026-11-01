@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 
-export type AppStatus = "draft" | "published" | "hidden";
+export type AppStatus = "draft" | "scheduled" | "published" | "disabled";
+export type CatalogChannel = "public" | "student" | "admin";
 
 export type CatalogApp = {
   id: string;
@@ -10,16 +11,19 @@ export type CatalogApp = {
   category: string;
   iconUrl: string | null;
   url: string;
+  destinationUrl: string;
   status: AppStatus;
+  effectiveStatus: AppStatus;
   order: number;
   integrationKey: string | null;
+  publicEnabled: boolean;
+  publicPublishAt: string | null;
+  publicVisible: boolean;
+  studentEnabled: boolean;
+  studentPublishAt: string | null;
+  studentVisible: boolean;
+  archivedAt: string | null;
 };
-
-const fallbackApps: CatalogApp[] = [
-  { id: "ma-generosite", slug: "ma-generosite", name: "Ma générosité", description: "Explorez votre rapport à l'argent et au don.", category: "Finance", iconUrl: "/apps/ma-generosite.png", url: "https://generosite.jeveuxdonner.fr/", status: "published", order: 10, integrationKey: null },
-  { id: "generopoly", slug: "generopoly", name: "Généropoly", description: "Le jeu où chaque choix compte.", category: "Finance", iconUrl: "/apps/generopoly.png", url: "/apps/generopoly", status: "published", order: 20, integrationKey: "generopoly" },
-  { id: "profil-mapp", slug: "profil-mapp", name: "Profil MAPP", description: "Découvrez votre profil et votre manière de fonctionner.", category: "Identité", iconUrl: null, url: "/apps/profil-mapp", status: "published", order: 30, integrationKey: null },
-];
 
 const ministryAppUrls: Record<string, string> = {
   generopoly: "/apps/generopoly",
@@ -37,9 +41,18 @@ type CatalogRow = {
   status: AppStatus;
   display_order: number;
   integration_key: string | null;
+  public_enabled: boolean;
+  public_publish_at: string | null;
+  student_enabled: boolean;
+  student_publish_at: string | null;
+  archived_at: string | null;
 };
 
-function mapRow(row: CatalogRow): CatalogApp {
+const isDue = (enabled: boolean, date: string | null, now: number) => enabled && (!date || new Date(date).getTime() <= now);
+
+function mapRow(row: CatalogRow, now: number): CatalogApp {
+  const publicVisible = isDue(row.public_enabled, row.public_publish_at, now);
+  const studentVisible = isDue(row.student_enabled, row.student_publish_at, now);
   return {
     id: row.id,
     slug: row.slug,
@@ -47,24 +60,59 @@ function mapRow(row: CatalogRow): CatalogApp {
     description: row.short_description,
     category: row.category,
     iconUrl: row.icon_url,
-    // Ces deux projets conservent leur déploiement et leur base propres ; le
-    // portail les ouvre toutefois par le routeur public de Ministry School.
     url: ministryAppUrls[row.slug] ?? row.destination_url,
+    destinationUrl: row.destination_url,
     status: row.status,
+    effectiveStatus: row.status === "scheduled" && (publicVisible || studentVisible) ? "published" : row.status,
     order: row.display_order,
     integrationKey: row.integration_key,
+    publicEnabled: row.public_enabled,
+    publicPublishAt: row.public_publish_at,
+    publicVisible,
+    studentEnabled: row.student_enabled,
+    studentPublishAt: row.student_publish_at,
+    studentVisible,
+    archivedAt: row.archived_at,
   };
 }
 
-export async function getCatalogApps({ includeUnpublished = false } = {}): Promise<CatalogApp[]> {
+export async function getCatalogApps({
+  includeUnpublished = false,
+  includeArchived = false,
+  channel = includeUnpublished ? "admin" : "public",
+}: {
+  includeUnpublished?: boolean;
+  includeArchived?: boolean;
+  channel?: CatalogChannel;
+} = {}): Promise<CatalogApp[]> {
   const supabase = await createClient();
-  let query = supabase.from("app_catalog").select("id,slug,name,short_description,category,icon_url,destination_url,status,display_order,integration_key");
-  if (!includeUnpublished) query = query.eq("status", "published");
+  const now = new Date();
+  const nowIso = now.toISOString();
+  let query = supabase.from("app_catalog").select("id,slug,name,short_description,category,icon_url,destination_url,status,display_order,integration_key,public_enabled,public_publish_at,student_enabled,student_publish_at,archived_at");
+  if (!includeArchived) query = query.is("archived_at", null);
+  if (channel === "public") {
+    query = query.in("status", ["scheduled", "published"]).eq("public_enabled", true).or(`public_publish_at.is.null,public_publish_at.lte.${nowIso}`);
+  } else if (channel === "student") {
+    query = query.in("status", ["scheduled", "published"]).eq("student_enabled", true).or(`student_publish_at.is.null,student_publish_at.lte.${nowIso}`);
+  } else if (!includeUnpublished) {
+    query = query.eq("status", "published");
+  }
   const { data, error } = await query.order("display_order", { ascending: true }).order("name", { ascending: true });
   if (error) {
-    if (!includeUnpublished) return fallbackApps;
+    if (channel !== "admin") return [];
     throw new Error(`Chargement du catalogue impossible : ${error.message}`);
   }
-  return (data as CatalogRow[]).map(mapRow);
+  return (data as CatalogRow[]).map((row) => mapRow(row, now.getTime()));
 }
 
+export async function getStudentToolsEnabled() {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("app_studio_settings").select("student_tools_enabled").eq("singleton", true).maybeSingle();
+  if (error) return false;
+  return Boolean(data?.student_tools_enabled);
+}
+
+export async function getStudentTools() {
+  if (!(await getStudentToolsEnabled())) return [];
+  return getCatalogApps({ channel: "student" });
+}
