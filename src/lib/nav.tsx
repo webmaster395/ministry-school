@@ -219,7 +219,7 @@ export function navSpaces(roles: ViewerRoles): Space[] {
       sections: [
         {
           title: "Gestion des outils",
-          items: [{ label: "Studio", href: "/admin/apps", icon: icons.apps, target: "_blank" }],
+          items: [{ label: "Gestion des outils", href: "/admin/apps", icon: icons.apps }],
         },
       ],
     });

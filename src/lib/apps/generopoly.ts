@@ -29,6 +29,11 @@ export type GeneropolySnapshot = {
   tables: GeneropolyTable[];
   syncedAt: number;
 };
+export type GeneropolyContentPage = { id: string; label: string; title: string; subtitle: string; instruction: string; scenario: string; amount?: number; unit?: "€" | "h"; minimumCharacters?: number; questions?: string[] };
+export type GeneropolyContentCategory = { key: string; name: string; description: string; emoji: string };
+export type GeneropolyContent = { pages: GeneropolyContentPage[]; financeCategories: GeneropolyContentCategory[]; timeCategories: GeneropolyContentCategory[] };
+export type GeneropolyContentVersion = { id: string; version: number; status: "draft" | "published" | "archived"; content: GeneropolyContent; createdAt: number; publishedAt: number | null };
+export type GeneropolyContentPayload = { draft: GeneropolyContentVersion; published: GeneropolyContentVersion; history: GeneropolyContentVersion[] };
 
 type IntegrationRow = { endpoint_url: string; admin_token: string | null };
 
@@ -41,14 +46,15 @@ async function integration(): Promise<{ endpoint_url: string; admin_token: strin
   return { endpoint_url: row.endpoint_url, admin_token: row.admin_token };
 }
 
-async function generopolyFetch<T>(path: string): Promise<T> {
+async function generopolyFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
   const config = await integration();
   const endpoint = config.endpoint_url.replace(/\/$/, "");
   const candidates = endpoint.endsWith("/apps/generopoly") ? [endpoint] : [endpoint, `${endpoint}/apps/generopoly`];
   let lastStatus = 502;
   for (const base of candidates) {
     const response = await fetch(`${base}${path}`, {
-      headers: { "x-admin-token": config.admin_token },
+      ...init,
+      headers: { "content-type": "application/json", "x-admin-token": config.admin_token, ...init.headers },
       cache: "no-store",
       signal: AbortSignal.timeout(12000),
     });
@@ -57,6 +63,22 @@ async function generopolyFetch<T>(path: string): Promise<T> {
     if (response.status !== 404) break;
   }
   throw new Error(`Généropoly a répondu avec le statut ${lastStatus}.`);
+}
+
+export async function getGeneropolyContent(): Promise<GeneropolyContentPayload> {
+  return generopolyFetch<GeneropolyContentPayload>("/api/admin/content");
+}
+
+export async function saveGeneropolyDraft(content: GeneropolyContent): Promise<{ ok: boolean; id: string }> {
+  return generopolyFetch("/api/admin/content", { method: "PUT", body: JSON.stringify({ content }) });
+}
+
+export async function publishGeneropolyDraft(): Promise<{ ok: boolean; id: string }> {
+  return generopolyFetch("/api/admin/content", { method: "POST", body: JSON.stringify({ action: "publish" }) });
+}
+
+export async function restoreGeneropolyVersion(id: string): Promise<{ ok: boolean; id: string }> {
+  return generopolyFetch("/api/admin/content", { method: "POST", body: JSON.stringify({ action: "restore", id }) });
 }
 
 export async function getGeneropolySessions(): Promise<GeneropolySession[]> {

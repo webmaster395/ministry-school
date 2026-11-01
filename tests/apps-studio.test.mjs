@@ -71,13 +71,14 @@ test("le catalogue est une liste compacte sans formulaire accordéon", () => {
   const table = read("src/components/apps-studio/AppCatalogManager.tsx");
   const settings = read("src/components/apps-studio/AppSettingsForm.tsx");
   assert.match(home, /Gestion des outils/);
-  assert.match(table, /Ajouter une application/);
-  assert.match(table, /href="\/admin\/apps\/nouveau"/);
+  assert.match(home, /Ajouter un outil/);
+  assert.match(home, /href="\/admin\/apps\/nouveau"/);
+  assert.match(table, /<span>Outil<\/span><span>URL<\/span><span>Statut<\/span><span>Modifier<\/span>/);
   assert.doesNotMatch(table, /<details className="group rounded/);
   assert.doesNotMatch(table, /saveCatalogApp/);
   assert.match(settings, /Identité/);
   assert.match(settings, /Publication/);
-  assert.match(settings, /Ordre d’apparition/);
+  assert.match(settings, /Zone de danger/);
 });
 
 test("chaque application possède sa fiche et ses paramètres dédiés", () => {
@@ -89,7 +90,7 @@ test("chaque application possède sa fiche et ses paramètres dédiés", () => {
   assert.doesNotMatch(shell, /Navigation du studio/);
   assert.doesNotMatch(shell, /Vue d’ensemble/);
   assert.match(shell, /Résultats/);
-  assert.match(shell, /Éditeur/);
+  assert.match(shell, /Édition/);
   assert.match(shell, /Paramètres/);
 });
 
@@ -103,29 +104,42 @@ test("le Launchpad centre le nombre réel d’applications sans colonnes fantôm
   assert.match(styles, /\.appName \{[^}]*text-align:center/);
 });
 
-test("les outils s'ouvrent dans un nouvel onglet depuis les navigations Ministry School", () => {
+test("Gestion des outils reste dans Ministry School tandis que Mes outils ouvre le portail public", () => {
   const nav = read("src/lib/nav.tsx");
   const links = read("src/components/NavBlocks.tsx");
   const provider = read("src/components/SpaceProvider.tsx");
   assert.match(nav, /label: "Mes outils"[\s\S]*href: "\/apps"[\s\S]*target: "_blank"/);
-  assert.match(nav, /href: "\/admin\/apps"[\s\S]*target: "_blank"/);
+  assert.match(nav, /label: "Gestion des outils"[\s\S]*href: "\/admin\/apps"/);
+  assert.doesNotMatch(nav, /href: "\/admin\/apps"[\s\S]{0,120}target: "_blank"/);
   assert.match(links, /target=\{target\}/);
   assert.match(provider, /window\.open\(destination\.href, "_blank", "noopener,noreferrer"\)/);
 });
 
-test("le tableau réordonne et regroupe les actions secondaires", () => {
+test("le tableau compact réordonne directement les outils", () => {
   const table = read("src/components/apps-studio/AppCatalogManager.tsx");
   const actions = read("src/app/admin/apps/actions.ts");
   const migration = read("supabase/migrations/20261101200000_reorder_app_catalog.sql");
   assert.match(table, /ArrowUp/);
   assert.match(table, /ArrowDown/);
-  assert.match(table, /MoreHorizontal/);
-  assert.match(table, /Dupliquer/);
-  assert.match(actions, /duplicateCatalogApp/);
-  assert.match(actions, /integration_key: null/);
-  assert.match(actions, /status: "draft"/);
+  assert.match(table, /Modifier/);
+  assert.doesNotMatch(table, /MoreHorizontal/);
   assert.match(actions, /rpc\("reorder_app_catalog"/);
   assert.match(migration, /if not public\.is_super_admin\(\)/);
+});
+
+test("l’éditeur Généropoly travaille par page, garde un brouillon et publie explicitement", () => {
+  const editor = read("src/components/apps-studio/GeneropolyEditor.tsx");
+  const route = read("src/app/api/admin/apps/generopoly/content/route.ts");
+  const connector = read("src/lib/apps/generopoly.ts");
+  assert.match(editor, /Pages du parcours/);
+  assert.match(editor, /Enregistrer le brouillon/);
+  assert.match(editor, /Aperçu/);
+  assert.match(editor, /Historique/);
+  assert.match(editor, /Publier/);
+  assert.match(route, /viewer\?\.roles\.superAdmin/);
+  assert.match(connector, /saveGeneropolyDraft/);
+  assert.match(connector, /publishGeneropolyDraft/);
+  assert.match(connector, /restoreGeneropolyVersion/);
 });
 
 test("projection is independent and refreshes secure snapshots", () => {

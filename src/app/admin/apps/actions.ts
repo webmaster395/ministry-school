@@ -30,9 +30,9 @@ function checked(formData: FormData, key: string) {
   return formData.get(key) === "on";
 }
 
-function publicationDate(formData: FormData, prefix: "public" | "student") {
-  if (value(formData, `${prefix}Mode`, 20) !== "scheduled") return null;
-  const raw = value(formData, `${prefix}DateTime`, 40);
+function publicationDate(formData: FormData) {
+  if (value(formData, "publicationMode", 20) !== "scheduled") return null;
+  const raw = value(formData, "publicationDateTime", 40);
   const [date, time] = raw.split("T");
   return parisLocalToIso(date, time);
 }
@@ -62,8 +62,10 @@ export async function saveCatalogApp(formData: FormData) {
   const name = value(formData, "name", 100);
   const slug = id ? value(formData, "slug", 80) : slugify(name);
   const category = value(formData, "category", 80);
-  const status = value(formData, "status", 20);
-  if (!name || !slug || !category || !["draft", "scheduled", "published", "disabled"].includes(status)) throw new Error("Vérifiez les champs obligatoires.");
+  const requestedStatus = value(formData, "status", 20);
+  if (!name || !slug || !category || !["draft", "published", "disabled"].includes(requestedStatus)) throw new Error("Vérifiez les champs obligatoires.");
+  const publishAt = publicationDate(formData);
+  const status = requestedStatus === "published" && publishAt && new Date(publishAt).getTime() > Date.now() ? "scheduled" : requestedStatus;
   const currentIcon = value(formData, "currentIcon", 1000) || null;
   const file = formData.get("icon");
   const iconUrl = file instanceof File && file.size ? await uploadIcon(file, slug) : currentIcon;
@@ -78,9 +80,9 @@ export async function saveCatalogApp(formData: FormData) {
     display_order: Number.parseInt(value(formData, "order", 8), 10) || 0,
     integration_key: value(formData, "integrationKey", 80) || null,
     public_enabled: checked(formData, "publicEnabled"),
-    public_publish_at: publicationDate(formData, "public"),
+    public_publish_at: checked(formData, "publicEnabled") ? publishAt : null,
     student_enabled: checked(formData, "studentEnabled"),
-    student_publish_at: publicationDate(formData, "student"),
+    student_publish_at: checked(formData, "studentEnabled") ? publishAt : null,
     archived_at: null,
     updated_by: viewer.id,
   };

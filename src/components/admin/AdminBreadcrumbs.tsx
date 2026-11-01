@@ -51,6 +51,17 @@ export default function AdminBreadcrumbs() {
   }, [pathname, query]);
 
   const crumbs = useMemo<Crumb[]>(() => {
+    if (current?.key === "apps" && pathname.startsWith("/admin/apps")) {
+      const root: Crumb[] = [{ label: "Gestion des outils", href: "/admin/apps" }];
+      if (pathname === "/admin/apps") return [];
+      if (pathname.endsWith("/nouveau")) return [...root, { label: "Ajouter un outil" }];
+      const segments = pathname.split("/").filter(Boolean);
+      const slug = segments[2];
+      const tab = segments[3];
+      const toolLabel = pageTitle && !["Paramètres", "Résultats", "Édition"].includes(pageTitle) ? pageTitle : slug === "generopoly" ? "Généropoly" : "Outil";
+      return [...root, { label: toolLabel, href: `/admin/apps/${slug}` }, ...(tab ? [{ label: tab === "settings" ? "Paramètres" : tab === "results" ? "Résultats" : "Édition" }] : [])];
+    }
+
     if (current?.key === "projectsTraining" && pathname.startsWith("/gestion/projets-formations")) {
       const root: Crumb[] = [{ label: "Projets et formations", href: "/gestion/projets-formations" }];
       if (pathname === "/gestion/projets-formations") return [];
