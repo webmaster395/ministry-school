@@ -10,7 +10,7 @@ function AppIcon({ app }: { app: CatalogApp }) {
     return (
       <span className={`${styles.appIcon} ${app.slug === "generopoly" ? styles.generopolyIcon : styles.generosityIcon}`}>
         {app.iconUrl.startsWith("/") ? (
-          <Image src={app.iconUrl} alt="" width={app.slug === "generopoly" ? 104 : 62} height={app.slug === "generopoly" ? 104 : 62} priority />
+          <Image src={app.iconUrl} alt="" width={app.slug === "generopoly" ? 90 : 56} height={app.slug === "generopoly" ? 90 : 56} priority />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element -- URL gérée par les super administrateurs du catalogue
           <img src={app.iconUrl} alt="" />

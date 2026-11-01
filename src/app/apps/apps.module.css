@@ -27,26 +27,26 @@
 .filter { border:0; border-radius:30px; padding:8px 18px; color:#c9dddc; background:transparent; font:400 12px/1 inherit; cursor:pointer; transition:background-color .18s ease,color .18s ease,box-shadow .18s ease; }
 .filterActive { color:#173f45; background:#f5f8f7; font-weight:600; box-shadow:0 2px 12px rgba(0,0,0,.13); }
 
-.appGrid { display:flex; max-width:780px; margin:0 auto; align-items:flex-start; justify-content:center; flex-wrap:wrap; gap:38px 40px; }
-.appLink { display:flex; width:120px; flex:0 0 120px; align-items:center; flex-direction:column; gap:11px; color:#fff; text-decoration:none; transition:transform .2s ease; }
+.appGrid { display:flex; max-width:720px; margin:0 auto; align-items:flex-start; justify-content:center; flex-wrap:wrap; gap:34px 36px; }
+.appLink { display:flex; width:108px; flex:0 0 108px; align-items:center; flex-direction:column; gap:10px; color:#fff; text-decoration:none; transition:transform .2s ease; }
 .appLink:hover { transform:translateY(-5px); }
-.appIcon { display:flex; width:104px; height:104px; align-items:center; justify-content:center; overflow:hidden; border-radius:23px; background:#f7eee0; box-shadow:0 10px 24px rgba(3,31,37,.22),inset 0 1px rgba(255,255,255,.33); }
+.appIcon { display:flex; width:90px; height:90px; align-items:center; justify-content:center; overflow:hidden; border-radius:21px; background:#f7eee0; box-shadow:0 10px 24px rgba(3,31,37,.22),inset 0 1px rgba(255,255,255,.33); }
 .appIcon img { width:100%; height:100%; object-fit:cover; }
 .generosityIcon img { width:62%; height:auto; object-fit:contain; }
 .generopolyIcon img { width:100%; height:100%; object-fit:contain; }
 .mappIcon { color:#fff; background:linear-gradient(145deg,#e8a9c3,#ad719b 62%,#7a537d); font-size:52px; font-weight:300; letter-spacing:-.09em; }
 .mappIcon span:not(:first-child) { display:none; }
-.appName { display:block; max-width:120px; color:#fff; font-size:14px; font-weight:520; line-height:1.25; text-align:center; }
+.appName { display:block; max-width:108px; color:#fff; font-size:13px; font-weight:520; line-height:1.25; text-align:center; }
 .appLink:hover .appName { text-decoration:underline; text-underline-offset:4px; }
 .appDescription,.appCategory { display:none; }
 
 .footer { display:flex; justify-content:center; gap:10px; padding:0 20px 28px; color:#8fb4b4; font-size:12px; letter-spacing:.03em; }
 .footer a { color:inherit; text-decoration:none; }.footer a:hover { color:#fff; text-decoration:underline; text-underline-offset:3px; }
 
-@media (max-width:850px) { .appGrid { max-width:570px; gap:34px 32px; }.appLink { width:116px; flex-basis:116px; }.appIcon { width:96px; height:96px; border-radius:22px; }.appName { max-width:116px; } }
+@media (max-width:850px) { .appGrid { max-width:620px; gap:32px 30px; }.appLink { width:106px; flex-basis:106px; }.appIcon { width:90px; height:90px; border-radius:21px; }.appName { max-width:106px; } }
 @media (max-width:560px) {
   .header { height:68px; padding:0 18px; }.headerBrand { gap:9px; }.ministryMarks { width:75px; }.brandDivider { height:15px; }.formation { font-size:9px; letter-spacing:.1em; }.loginLink { font-size:12px; white-space:nowrap; }
   .content { padding:38px 16px 60px; }.eyebrow { margin-bottom:8px; font-size:9px; }.intro h1 { margin-bottom:7px; font-size:32px; }.subtitle { font-size:13px; }.filters { margin:19px auto 30px; }.filter { padding:8px 14px; }
-  .appGrid { max-width:300px; gap:30px 30px; }.appLink { width:110px; flex-basis:110px; gap:10px; }.appIcon { width:84px; height:84px; border-radius:19px; }.appName { max-width:110px; font-size:13px; }.mappIcon { font-size:42px; }.footer { padding-bottom:24px; font-size:11px; }
+  .appGrid { max-width:260px; gap:28px 24px; }.appLink { width:100px; flex-basis:100px; gap:9px; }.appIcon { width:76px; height:76px; border-radius:18px; }.appName { max-width:100px; font-size:12px; }.mappIcon { font-size:38px; }.footer { padding-bottom:24px; font-size:11px; }
 }
 @media (prefers-reduced-motion:reduce) { .appLink { transition:none; } }

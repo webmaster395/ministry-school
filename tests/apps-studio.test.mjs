@@ -70,8 +70,9 @@ test("le catalogue est une liste compacte sans formulaire accordéon", () => {
   const home = read("src/app/admin/apps/page.tsx");
   const table = read("src/components/apps-studio/AppCatalogManager.tsx");
   const settings = read("src/components/apps-studio/AppSettingsForm.tsx");
-  assert.match(home, /Ajouter une application/);
-  assert.match(home, /href="\/admin\/apps\/nouveau"/);
+  assert.match(home, /Gestion des outils/);
+  assert.match(table, /Ajouter une application/);
+  assert.match(table, /href="\/admin\/apps\/nouveau"/);
   assert.doesNotMatch(table, /<details className="group rounded/);
   assert.doesNotMatch(table, /saveCatalogApp/);
   assert.match(settings, /Identité/);
@@ -85,9 +86,21 @@ test("chaque application possède sa fiche et ses paramètres dédiés", () => {
   const shell = read("src/components/apps-studio/AppsStudioShell.tsx");
   assert.match(overview, /getCatalogAppBySlug/);
   assert.match(settings, /AppSettingsForm/);
-  assert.match(shell, /Vue d’ensemble/);
-  assert.match(shell, /Contenus/);
+  assert.doesNotMatch(shell, /Navigation du studio/);
+  assert.doesNotMatch(shell, /Vue d’ensemble/);
+  assert.match(shell, /Résultats/);
+  assert.match(shell, /Éditeur/);
   assert.match(shell, /Paramètres/);
+});
+
+test("le Launchpad centre le nombre réel d’applications sans colonnes fantômes", () => {
+  const portal = read("src/app/apps/AppsPortal.tsx");
+  const styles = read("src/app/apps/apps.module.css");
+  assert.doesNotMatch(portal, /ArrowUpRight/);
+  assert.match(styles, /\.appGrid \{ display:flex;[\s\S]*justify-content:center;[\s\S]*flex-wrap:wrap/);
+  assert.match(styles, /\.appIcon \{[^}]*width:90px; height:90px/);
+  assert.match(styles, /@media \(max-width:560px\)[\s\S]*\.appIcon \{ width:76px; height:76px/);
+  assert.match(styles, /\.appName \{[^}]*text-align:center/);
 });
 
 test("les outils s'ouvrent dans un nouvel onglet depuis les navigations Ministry School", () => {

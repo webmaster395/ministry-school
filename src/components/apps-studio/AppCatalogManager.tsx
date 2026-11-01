@@ -3,7 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowDown, ArrowUp, Copy, ExternalLink, MoreHorizontal, Pencil, Power, RotateCcw, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, Copy, ExternalLink, MoreHorizontal, Pencil, Plus, Power, RotateCcw, Trash2 } from "lucide-react";
 import type { CatalogApp } from "@/lib/apps/catalog";
 import { formatParisSchedule } from "@/lib/apps/publication";
 import {
@@ -17,15 +17,17 @@ import {
 
 export default function AppCatalogManager({ apps, archivedApps, studentToolsEnabled }: { apps: CatalogApp[]; archivedApps: CatalogApp[]; studentToolsEnabled: boolean }) {
   return <div className="space-y-7">
-    <StudentToolsSetting enabled={studentToolsEnabled} />
-    <section className="rounded-[24px] border border-[#20302e]/10 bg-white shadow-[0_16px_50px_rgba(32,48,46,.05)]">
-      <div className="hidden grid-cols-[minmax(240px,2fr)_120px_160px_minmax(160px,1fr)_84px_92px] gap-4 border-b border-[#20302e]/8 px-6 py-3 text-[10px] font-semibold uppercase tracking-[.13em] text-[#7a8582] xl:grid">
+    <section>
+      <div className="mb-4 flex flex-col justify-between gap-3 sm:flex-row sm:items-center"><div><h2 className="font-title text-2xl font-normal">Applications</h2><p className="mt-1 text-sm text-[#75807d]">Sélectionnez une application pour accéder à son espace.</p></div><Link href="/admin/apps/nouveau" className="inline-flex items-center justify-center gap-2 rounded-full bg-[#20302e] px-5 py-3 text-sm font-semibold text-[#fbeeda]"><Plus size={16} /> Ajouter une application</Link></div>
+      <div className="rounded-[24px] border border-[#20302e]/10 bg-white shadow-[0_16px_50px_rgba(32,48,46,.05)]"><div className="hidden grid-cols-[minmax(240px,2fr)_120px_160px_minmax(160px,1fr)_84px_92px] gap-4 border-b border-[#20302e]/8 px-6 py-3 text-[10px] font-semibold uppercase tracking-[.13em] text-[#7a8582] xl:grid">
         <span>Application</span><span>Statut</span><span>Publication</span><span>URL</span><span>Ordre</span><span className="text-right">Actions</span>
       </div>
       <div className="divide-y divide-[#20302e]/8">{apps.map((app, index) => <AppRow key={app.id} app={app} first={index === 0} last={index === apps.length - 1} studentToolsEnabled={studentToolsEnabled} />)}</div>
       {!apps.length && <div className="p-10 text-center text-sm text-[#697572]">Aucune application dans le catalogue.</div>}
+      </div>
     </section>
     {!!archivedApps.length && <section><h2 className="mb-3 font-title text-xl font-normal">Applications archivées</h2><div className="divide-y divide-[#20302e]/8 rounded-[20px] border border-[#20302e]/10 bg-white">{archivedApps.map((app) => <div key={app.id} className="flex items-center gap-4 p-4"><AppIcon app={app} /><div className="min-w-0 flex-1"><strong className="block truncate font-medium">{app.name}</strong><span className="text-xs text-[#75807d]">Retirée du catalogue, données conservées</span></div><form action={restoreCatalogApp}><input type="hidden" name="id" value={app.id} /><button className="inline-flex items-center gap-2 rounded-full border border-[#20302e]/15 px-3 py-2 text-xs font-semibold"><RotateCcw size={13} /> Restaurer</button></form></div>)}</div></section>}
+    <div id="parametres-generaux" className="scroll-mt-6"><StudentToolsSetting enabled={studentToolsEnabled} /></div>
   </div>;
 }
 
