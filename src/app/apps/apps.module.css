@@ -27,7 +27,7 @@
 .filter { border:0; border-radius:30px; padding:8px 18px; color:#c9dddc; background:transparent; font:400 12px/1 inherit; cursor:pointer; transition:background-color .18s ease,color .18s ease,box-shadow .18s ease; }
 .filterActive { color:#173f45; background:#f5f8f7; font-weight:600; box-shadow:0 2px 12px rgba(0,0,0,.13); }
 
-.appGrid { display:flex; max-width:720px; margin:0 auto; align-items:flex-start; justify-content:center; flex-wrap:wrap; gap:34px 36px; }
+.appGrid { display:flex; max-width:760px; margin:0 auto; align-items:flex-start; justify-content:center; flex-wrap:wrap; gap:34px 48px; }
 .appLink { display:flex; width:108px; flex:0 0 108px; align-items:center; flex-direction:column; gap:10px; color:#fff; text-decoration:none; transition:transform .2s ease; }
 .appLink:hover { transform:translateY(-5px); }
 .appIcon { display:flex; width:90px; height:90px; align-items:center; justify-content:center; overflow:hidden; border-radius:21px; background:#f7eee0; box-shadow:0 10px 24px rgba(3,31,37,.22),inset 0 1px rgba(255,255,255,.33); }
