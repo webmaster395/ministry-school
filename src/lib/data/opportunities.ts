@@ -260,10 +260,10 @@ export async function getProjectsTrainingRights(supabase: SupabaseClient, userId
   const [{ data: superAdmin }, assignments, { data: profile }] = await Promise.all([
     supabase.rpc("is_super_admin", { p_user: userId }),
     getMyAssignments(supabase, userId),
-    supabase.from("profiles").select("can_create_opportunities").eq("id", userId).single(),
+    supabase.from("profiles").select("can_create_opportunities, ministry_lead_of").eq("id", userId).single(),
   ]);
   const managesAtLeastOne = [...assignments.responsibilities.values()].some((role) => role === "manager");
-  return { admin: !!superAdmin, member: assignments.responsibilities.size > 0, assignments: assignments.responsibilities, editableAssignments: assignments.editable, canCreate: !!profile?.can_create_opportunities || managesAtLeastOne };
+  return { admin: !!superAdmin, member: assignments.responsibilities.size > 0, assignments: assignments.responsibilities, editableAssignments: assignments.editable, canCreate: !!profile?.can_create_opportunities || !!profile?.ministry_lead_of || managesAtLeastOne };
 }
 
 /** La création est réservée aux super administrateurs et responsables habilités. */

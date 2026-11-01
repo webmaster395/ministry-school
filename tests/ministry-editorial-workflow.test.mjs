@@ -41,6 +41,26 @@ test("les responsables créent un brouillon à 10 h 30 puis le soumettent", asyn
   assert.match(panel, /Valider et programmer/);
 });
 
+test("le Pilotage présente tous les cours et une création adaptée au contenu", async () => {
+  const [page, board, menu, opportunityForm, migration] = await Promise.all([
+    source("src/app/gestion/pilotage/page.tsx"),
+    source("src/components/PrepBoard.tsx"),
+    source("src/components/gestion/PilotageCreateMenu.tsx"),
+    source("src/components/admin/OpportunityCreateForm.tsx"),
+    source("supabase/migrations/20261101090000_ministry_leads_can_propose_opportunities.sql"),
+  ]);
+  assert.match(page, /prochain: "Tous les cours"/);
+  assert.match(page, /avenir: "Cours à venir"/);
+  assert.match(page, /passes: "Cours passés"/);
+  assert.match(page, /allCoursesView/);
+  assert.match(board, /rows\.length \? <List rows=\{rows\}/);
+  assert.match(menu, /Créer un cours/);
+  assert.match(menu, /type=projet/);
+  assert.match(menu, /type=formation/);
+  assert.match(opportunityForm, /initialType = "projet"/);
+  assert.match(migration, /profile\.ministry_lead_of is not null/);
+});
+
 test("À valider reste nominatif, unifié et conserve les annotations privées", async () => {
   const migration = await source("supabase/migrations/20261029190000_ministry_editorial_workflow.sql");
   const spacesMigration = await source("supabase/migrations/20261030120000_admin_spaces_and_super_admins.sql");

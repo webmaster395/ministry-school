@@ -8,14 +8,14 @@ import MinistryPicto from "@/components/MinistryPicto";
 import PrepBoard, { type PrepTab } from "@/components/PrepBoard";
 import MinistryContributorAccess from "@/components/gestion/MinistryContributorAccess";
 import ManagementPageHeader from "@/components/management/ManagementPageHeader";
+import PilotageCreateMenu from "@/components/gestion/PilotageCreateMenu";
 
 export default async function PilotagePage({
   searchParams,
 }: {
   searchParams: Promise<{ onglet?: string; m?: string; filtre?: string }>;
 }) {
-  const { onglet, m, filtre } = await searchParams;
-  const filter = filtre === "a-completer" || filtre === "prets" || filtre === "sans-formateur" ? filtre : "tous";
+  const { onglet, m } = await searchParams;
   const tab: PrepTab = onglet === "avenir" || onglet === "passes" ? onglet : "prochain";
 
   const viewer = await getViewer();
@@ -53,10 +53,9 @@ export default async function PilotagePage({
   const percent = requiredTotal ? Math.round((requiredDone / requiredTotal) * 100) : 0;
   const color = getMinistry(ministry.slug)?.color ?? "var(--border)";
 
-  const hrefFor = (t: PrepTab, f?: string) => {
+  const hrefFor = (t: PrepTab) => {
     const q = new URLSearchParams();
     if (t !== "prochain") q.set("onglet", t);
-    if (f && f !== "tous") q.set("filtre", f);
     if (steered.length > 1) q.set("m", ministry.slug);
     const s = q.toString();
     return `/gestion/pilotage${s ? `?${s}` : ""}`;
@@ -64,7 +63,12 @@ export default async function PilotagePage({
 
   return (
     <div className="space-y-5">
-      <ManagementPageHeader eyebrow="ESPACE OPÉRATIONNEL" title="Pilotage du ministère" subtitle="Préparez les cours et suivez uniquement les sensibilités qui vous sont attribuées." />
+      <ManagementPageHeader
+        eyebrow="ESPACE OPÉRATIONNEL"
+        title="Pilotage du ministère"
+        subtitle="Préparez les cours et suivez uniquement les sensibilités qui vous sont attribuées."
+        actions={canCreateCourse ? <PilotageCreateMenu ministryId={ministry.id} ministrySlug={ministry.slug} /> : undefined}
+      />
       {steered.length > 1 && (
         <div className="flex flex-wrap gap-2">
           {steered.map((x) => (
@@ -110,14 +114,9 @@ export default async function PilotagePage({
       <PrepBoard
         tab={tab}
         hrefFor={(t) => hrefFor(t)}
-        labels={{ avenir: "Cours à venir", passes: "Cours passés" }}
+        labels={{ prochain: "Tous les cours", avenir: "Cours à venir", passes: "Cours passés" }}
         ministry={{ slug: ministry.slug, name: ministry.name, id: ministry.id }}
-        canCreateCourse={canCreateCourse}
-        upcomingFilter={{
-          current: filter,
-          hrefFor: (f) => hrefFor("avenir", f),
-          options: ["tous", "a-completer", "prets", "sans-formateur"],
-        }}
+        allCoursesView
         rows={rows}
         ministryColor={color}
         today={new Date().toISOString().slice(0, 10)}

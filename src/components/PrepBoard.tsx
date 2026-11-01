@@ -47,6 +47,7 @@ export default function PrepBoard({
   upcomingFilter,
   ministry,
   canCreateCourse = false,
+  allCoursesView = false,
   panels,
 }: {
   /** Contenu des lignes dépliables de la préparation (espace formateur) : édition sur place */
@@ -55,6 +56,8 @@ export default function PrepBoard({
   ministry?: { slug: string; name: string; id?: string };
   /** Seuls le responsable du ministère et les super administratrices créent un cours. */
   canCreateCourse?: boolean;
+  /** Pilotage : remplace « Prochain cours » par une vue exhaustive, sans sous-filtres. */
+  allCoursesView?: boolean;
   /** Libellés des onglets « à venir » et « passés », propres à chaque espace */
   labels?: Partial<Record<PrepTab, string>>;
   /** Si présent, l'onglet « à venir » devient un tableau filtrable de tous les cours (espace enseignant) */
@@ -87,13 +90,17 @@ export default function PrepBoard({
       </nav>
 
       {tab === "prochain" &&
-        (next ? (
+        (allCoursesView ? (
+          rows.length ? <List rows={rows} pilot={!!ministry} /> : <Empty text="Aucun cours pour le moment." />
+        ) : next ? (
           <Next row={next} today={today} ministryColor={ministryColor} pilot={!!ministry} panels={panels} />
         ) : (
           <Empty text="Aucun cours à venir." />
         ))}
       {tab === "avenir" &&
-        (upcomingFilter ? (
+        (allCoursesView ? (
+          upcoming.length ? <List rows={upcoming} pilot={!!ministry} /> : <Empty text="Aucun cours à venir." />
+        ) : upcomingFilter ? (
           <UpcomingTable rows={upcoming} filter={upcomingFilter} ministryColor={ministryColor} ministry={ministry} canCreateCourse={canCreateCourse} />
         ) : later.length ? (
           <List rows={later} pilot={!!ministry} />

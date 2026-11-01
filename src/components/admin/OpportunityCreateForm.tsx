@@ -18,7 +18,7 @@ type Member = { id: string; full_name: string; email: string };
 type DateRow = { date: string; start: string; end: string };
 const field = "min-h-12 w-full rounded-xl border border-border bg-background px-3 text-[15px] text-foreground outline-none focus:border-accent focus:ring-2 focus:ring-accent/10";
 
-export default function OpportunityCreateForm({ creationToken, members, services, suggestedSaturdays, canManageInternalMaterial, canAssignMembers, adminScope = false }: {
+export default function OpportunityCreateForm({ creationToken, members, services, suggestedSaturdays, canManageInternalMaterial, canAssignMembers, adminScope = false, initialType = "projet" }: {
   creationToken: string;
   members: Member[];
   services: { id: string; name: string }[];
@@ -26,13 +26,14 @@ export default function OpportunityCreateForm({ creationToken, members, services
   canManageInternalMaterial: boolean;
   canAssignMembers: boolean;
   adminScope?: boolean;
+  initialType?: "projet" | "formation" | "both";
 }) {
   const [dates, setDates] = useState<DateRow[]>([]);
   const [query, setQuery] = useState("");
   const [managers, setManagers] = useState(new Set<string>());
   const [contributors, setContributors] = useState(new Set<string>());
   const [title, setTitle] = useState("");
-  const [type, setType] = useState("projet");
+  const [type, setType] = useState(initialType);
   const [emoji, setEmoji] = useState(DEFAULT_OPPORTUNITY_EMOJI);
   const [serviceName, setServiceName] = useState("");
   const shown = useMemo(() => {
@@ -77,7 +78,7 @@ export default function OpportunityCreateForm({ creationToken, members, services
           <section className="lg:col-span-2 rounded-2xl border border-border-soft bg-surface p-4 sm:p-5">
             <p className="label text-[10px] tracking-[.14em] text-muted sm:text-xs">PERSONNALISATION DE LA BANNIÈRE</p>
             <div className="mt-4 grid min-w-0 gap-5 xl:grid-cols-[minmax(0,1fr)_390px] xl:items-start">
-              <fieldset><legend className="mb-2 text-sm font-semibold">Type</legend><div className="grid gap-2">{[["projet","Projet"],["formation","Formation"],["both","Projet et formation"]].map(([value,label]) => <label key={value} className="cursor-pointer"><input type="radio" name="type" value={value} checked={type === value} onChange={() => setType(value)} className="peer sr-only" /><span className="block rounded-xl border border-border bg-background px-4 py-3 text-center text-sm font-medium peer-checked:border-accent peer-checked:bg-accent peer-checked:text-on-accent">{label}</span></label>)}</div></fieldset>
+              <fieldset><legend className="mb-2 text-sm font-semibold">Type</legend><div className="grid gap-2">{([["projet","Projet"],["formation","Formation"],["both","Projet et formation"]] as const).map(([value,label]) => <label key={value} className="cursor-pointer"><input type="radio" name="type" value={value} checked={type === value} onChange={() => setType(value)} className="peer sr-only" /><span className="block rounded-xl border border-border bg-background px-4 py-3 text-center text-sm font-medium peer-checked:border-accent peer-checked:bg-accent peer-checked:text-on-accent">{label}</span></label>)}</div></fieldset>
               <OpportunityEmojiPicker value={emoji} onChange={setEmoji} />
             </div>
           </section>
