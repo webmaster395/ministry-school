@@ -9,10 +9,11 @@
 }
 
 .header { display:flex; height:86px; align-items:center; justify-content:space-between; gap:20px; border-bottom:1px solid rgba(255,255,255,.09); padding:0 clamp(22px,5vw,82px); }
-.headerBrand { display:flex; min-width:0; align-items:center; gap:14px; }
-.ministryMarks { display:block; width:102px; height:auto; object-fit:contain; }
-.brandDivider { width:1px; height:18px; flex:0 0 1px; background:rgba(255,255,255,.36); }
-.formation { color:#fff; font-size:11px; font-weight:500; letter-spacing:.14em; white-space:nowrap; }
+.headerBrand { display:flex; min-width:0; align-items:center; gap:14px; color:inherit; text-decoration:none; }
+.ministryMarks { display:block; width:116px; height:38px; object-fit:contain; }
+.brandCopy { display:flex; min-width:0; align-items:flex-start; flex-direction:column; gap:4px; }
+.brandName { color:#fbf0dc; font-family:Georgia, "Times New Roman", serif; font-size:26px; font-weight:400; letter-spacing:-.025em; line-height:.95; white-space:nowrap; }
+.formation { color:rgba(255,255,255,.76); font-size:9px; font-weight:600; letter-spacing:.14em; line-height:1; white-space:nowrap; }
 .loginLink { color:#c3d8d8; font-size:13px; text-decoration:none; transition:color .18s ease; }
 .loginLink:hover { color:#fff; }
 .loginLink:focus-visible,.filter:focus-visible,.appLink:focus-visible,.footer a:focus-visible { outline:3px solid #8dd9d4; outline-offset:5px; }
@@ -23,7 +24,7 @@
 .intro h1 { margin:0 0 8px; font-size:clamp(32px,3.2vw,42px); font-weight:450; letter-spacing:-.045em; line-height:1.1; }
 .subtitle { margin:0; color:#c1d7d5; font-size:14px; font-weight:350; line-height:1.45; }
 
-.filters { display:inline-flex; gap:3px; margin:22px auto 34px; border:1px solid rgba(255,255,255,.14); border-radius:40px; padding:4px; background:rgba(255,255,255,.075); backdrop-filter:blur(10px); }
+.filters { display:inline-flex; gap:3px; margin:22px auto 74px; border:1px solid rgba(255,255,255,.14); border-radius:40px; padding:4px; background:rgba(255,255,255,.075); backdrop-filter:blur(10px); }
 .filter { border:0; border-radius:30px; padding:8px 18px; color:#c9dddc; background:transparent; font:400 12px/1 inherit; cursor:pointer; transition:background-color .18s ease,color .18s ease,box-shadow .18s ease; }
 .filterActive { color:#173f45; background:#f5f8f7; font-weight:600; box-shadow:0 2px 12px rgba(0,0,0,.13); }
 
@@ -45,8 +46,8 @@
 
 @media (max-width:850px) { .appGrid { max-width:620px; gap:32px 30px; }.appLink { width:106px; flex-basis:106px; }.appIcon { width:90px; height:90px; border-radius:21px; }.appName { max-width:106px; } }
 @media (max-width:560px) {
-  .header { height:68px; padding:0 18px; }.headerBrand { gap:9px; }.ministryMarks { width:75px; }.brandDivider { height:15px; }.formation { font-size:9px; letter-spacing:.1em; }.loginLink { font-size:12px; white-space:nowrap; }
-  .content { padding:38px 16px 60px; }.eyebrow { margin-bottom:8px; font-size:9px; }.intro h1 { margin-bottom:7px; font-size:32px; }.subtitle { font-size:13px; }.filters { margin:19px auto 30px; }.filter { padding:8px 14px; }
+  .header { height:68px; padding:0 18px; }.headerBrand { gap:8px; }.ministryMarks { width:65px; height:22px; }.brandCopy { gap:2px; }.brandName { font-size:17px; }.formation { font-size:6px; letter-spacing:.12em; }.loginLink { font-size:12px; white-space:nowrap; }
+  .content { padding:38px 16px 60px; }.eyebrow { margin-bottom:8px; font-size:9px; }.intro h1 { margin-bottom:7px; font-size:32px; }.subtitle { font-size:13px; }.filters { margin:19px auto 65px; }.filter { padding:8px 14px; }
   .appGrid { max-width:260px; gap:28px 24px; }.appLink { width:100px; flex-basis:100px; gap:9px; }.appIcon { width:76px; height:76px; border-radius:18px; }.appName { max-width:100px; font-size:12px; }.mappIcon { font-size:38px; }.footer { padding-bottom:24px; font-size:11px; }
 }
 @media (prefers-reduced-motion:reduce) { .appLink { transition:none; } }

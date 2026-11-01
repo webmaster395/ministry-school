@@ -38,11 +38,13 @@ export default function AppsPortal({ applications }: { applications: CatalogApp[
   return (
     <main className={styles.portal}>
       <header className={styles.header}>
-        <div className={styles.headerBrand} aria-label="Ministry School, MLK Formation">
-          <Image className={styles.ministryMarks} src="/landing/ministry-icons-transparent.png" alt="" width={126} height={42} priority />
-          <span className={styles.brandDivider} aria-hidden="true" />
-          <span className={styles.formation}>MLK FORMATION</span>
-        </div>
+        <a className={styles.headerBrand} href="/" aria-label="Ministry School — accueil">
+          <Image className={styles.ministryMarks} src="/landing/ministry-icons-transparent.png" alt="" width={116} height={38} priority />
+          <span className={styles.brandCopy}>
+            <span className={styles.brandName}>Ministry School</span>
+            <span className={styles.formation}>MLK FORMATION</span>
+          </span>
+        </a>
         <a className={styles.loginLink} href="/login">Se connecter</a>
       </header>
 
