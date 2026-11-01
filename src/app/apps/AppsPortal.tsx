@@ -50,8 +50,7 @@ export default function AppsPortal({ applications }: { applications: CatalogApp[
 
       <section className={styles.content} aria-labelledby="apps-title">
         <header className={styles.intro}>
-          <p className={styles.eyebrow}>VOS APPS MINISTRY SCHOOL</p>
-          <h1 id="apps-title">Mes applications.</h1>
+          <h1 id="apps-title">LES APPS MINISTRY SCHOOL</h1>
           <p className={styles.subtitle}>Conçues pour vous aider à aller plus loin.</p>
         </header>
 
