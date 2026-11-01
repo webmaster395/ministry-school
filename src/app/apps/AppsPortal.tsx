@@ -89,19 +89,20 @@ export default function AppsPortal() {
 
   return (
     <main className={styles.portal}>
-      <div className={styles.orbOne} aria-hidden="true" />
-      <div className={styles.orbTwo} aria-hidden="true" />
-      <div className={styles.orbThree} aria-hidden="true" />
-      <div className={styles.grain} aria-hidden="true" />
+      <header className={styles.header}>
+        <div className={styles.headerBrand} aria-label="Ministry School, MLK Formation">
+          <Image className={styles.ministryMarks} src="/landing/ministry-icons-transparent.png" alt="" width={126} height={42} priority />
+          <span className={styles.brandDivider} aria-hidden="true" />
+          <span className={styles.formation}>MLK FORMATION</span>
+        </div>
+        <a className={styles.loginLink} href="/login">Se connecter</a>
+      </header>
 
       <section className={styles.content} aria-labelledby="apps-title">
         <header className={styles.intro}>
-          <div className={styles.brand} aria-label="Ministry School">
-            <Image className={styles.ministryMarks} src="/landing/ministry-icons-transparent.png" alt="" width={126} height={42} priority />
-            <span>Ministry School</span>
-          </div>
-          <h1 id="apps-title">Des outils pour aller plus loin.</h1>
-          <p className={styles.subtitle}>Des expériences interactives pour apprendre, explorer et aller plus loin dans votre parcours.</p>
+          <p className={styles.eyebrow}>VOS APPS MINISTRY SCHOOL</p>
+          <h1 id="apps-title">Mes applications.</h1>
+          <p className={styles.subtitle}>Conçues pour vous aider à aller plus loin.</p>
         </header>
 
         <nav className={styles.filters} aria-label="Filtrer les applications">
@@ -118,19 +119,19 @@ export default function AppsPortal() {
           ))}
         </nav>
 
-        <div className={`${styles.appGrid} ${styles[`appGrid${visibleApps.length}`] ?? ""}`} aria-live="polite">
+        <div className={styles.appGrid} aria-live="polite">
           {visibleApps.map((app) => (
             <a className={styles.appLink} href={app.url} key={app.id} target="_blank" rel="noreferrer">
               <AppIcon icon={app.icon} name={app.name} />
-              <span className={styles.appName}>{app.name}<ArrowUpRight size={15} aria-hidden="true" /></span>
-              <span className={styles.appDescription}>{app.description}</span>
-              <span className={styles.appCategory}>{app.category}</span>
+              <span className={styles.appName}>{app.name}<ArrowUpRight size={13} aria-hidden="true" /></span>
             </a>
           ))}
         </div>
       </section>
 
-      <footer className={styles.footer}>Ministry School · Des outils au service de votre parcours</footer>
+      <footer className={styles.footer}>
+        <a href="/mentions-legales">Mentions légales</a><span aria-hidden="true">|</span><a href="/mentions-legales#donnees-personnelles">Politique de confidentialité</a>
+      </footer>
     </main>
   );
 }
