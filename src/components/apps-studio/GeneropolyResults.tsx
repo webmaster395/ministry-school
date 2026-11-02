@@ -5,7 +5,7 @@ import { Check, ExternalLink, Eye, EyeOff, Presentation, RefreshCw, Search } fro
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { GeneropolySession, GeneropolySnapshot, GeneropolyTable } from "@/lib/apps/generopoly";
-import { averageAllocation, comparisonAllocation, completedTables, evolutionSummary, extractAnswers, financeCategories, timeCategories } from "@/lib/apps/generopoly-results";
+import { averageAllocation, comparisonAllocation, completedTables, evolutionSummary, extractAnswers, financeCategories, resultMarkers, sortAllocationRows, timeCategories, type ResultMarker } from "@/lib/apps/generopoly-results";
 
 const palette = { normal: "#2c6d65", event: "#ef8c24", durable: "#c97992" };
 
@@ -82,14 +82,23 @@ function ResultSection({ number, title, question, children }: { number: string; 
 
 type AverageRow = { key: string; label: string; value: number; sampleCount: number };
 function AverageChart({ title, amount, unit, color, rows }: { title: string; amount: string; unit: string; color: string; rows: AverageRow[] }) {
-  const maximum = Math.max(...rows.map((row) => row.value), 1);
-  return <article><div className="mb-5 flex items-end justify-between gap-4"><h3 className="text-base font-semibold">{title}</h3><strong className="font-title text-2xl font-normal" style={{ color }}>{amount}</strong></div><div className="space-y-5">{rows.map((row) => <div key={row.key}><div className="mb-2 flex items-end justify-between gap-4 text-sm"><span className="min-w-0 text-muted">{row.label}</span><strong>{row.sampleCount ? `${formatNumber(row.value)} ${unit}` : "—"}</strong></div><div className="h-3 overflow-hidden rounded-full bg-surface"><div className="h-full rounded-full transition-[width] duration-700" style={{ width: row.sampleCount ? `${row.value / maximum * 100}%` : "0%", backgroundColor: color }} /></div></div>)}</div></article>;
+  const ordered = sortAllocationRows(rows);
+  const maximum = Math.max(...ordered.map((row) => row.value), 1);
+  return <article><div className="mb-5 flex items-end justify-between gap-4"><h3 className="text-base font-semibold">{title}</h3><strong className="font-title text-2xl font-normal" style={{ color }}>{amount}</strong></div><div className="space-y-5">{ordered.map((row, index) => <div className="transition-all duration-700 motion-reduce:transition-none" style={{ transitionDelay: `${index * 45}ms` }} key={row.key}><div className="mb-2 flex items-end justify-between gap-4 text-sm"><span className="min-w-0 text-muted">{row.label}</span><strong>{row.sampleCount ? `${formatNumber(row.value)} ${unit}` : "—"}</strong></div><div className="h-3 overflow-hidden rounded-full bg-surface"><div className="h-full rounded-full transition-[width] duration-700 motion-reduce:transition-none" style={{ width: row.sampleCount ? `${row.value / maximum * 100}%` : "0%", backgroundColor: color }} /></div></div>)}</div></article>;
 }
 
 type ComparisonRow = ReturnType<typeof comparisonAllocation>[number];
 function ComparisonChart({ title, amount, unit, color, rows }: { title: string; amount: string; unit: string; color: string; rows: ComparisonRow[] }) {
-  const maximum = Math.max(...rows.flatMap((row) => [row.initial, row.current]), 1);
-  return <article><div className="mb-5 flex items-end justify-between gap-4"><h3 className="text-base font-semibold">{title}</h3><strong className="font-title text-2xl font-normal" style={{ color }}>{amount}</strong></div><div className="space-y-6">{rows.map((row) => <div key={row.key}><div className="mb-2 flex flex-wrap items-end justify-between gap-2 text-sm"><span className="text-muted">{row.label}</span><span className="flex items-center gap-2"><strong>{row.sampleCount ? `${formatNumber(row.current)} ${unit}` : "—"}</strong>{row.sampleCount > 0 && <Variation difference={row.difference} percent={row.percent} unit={unit} evolution={row.evolution} />}</span></div><div className="relative h-4 overflow-hidden rounded-full bg-surface"><div className="absolute inset-y-0 left-0 rounded-full bg-[#d9ddda]" style={{ width: row.sampleCount ? `${row.initial / maximum * 100}%` : "0%" }} /><div className="absolute inset-y-[3px] left-0 rounded-full transition-[width] duration-700" style={{ width: row.sampleCount ? `${row.current / maximum * 100}%` : "0%", backgroundColor: color }} /></div><p className="mt-1.5 text-[10px] text-muted">Référence : {row.sampleCount ? `${formatNumber(row.initial)} ${unit}` : "donnée manquante"}</p></div>)}</div></article>;
+  const ordered = sortAllocationRows(rows);
+  const markers = resultMarkers(rows);
+  const maximum = Math.max(...ordered.flatMap((row) => [row.initial, row.current]), 1);
+  return <article><div className="mb-5 flex items-end justify-between gap-4"><h3 className="text-base font-semibold">{title}</h3><strong className="font-title text-2xl font-normal" style={{ color }}>{amount}</strong></div><div className="space-y-6">{ordered.map((row, index) => <div className="transition-all duration-700 motion-reduce:transition-none" style={{ transitionDelay: `${index * 45}ms` }} key={row.key}><div className="mb-2 flex flex-wrap items-end justify-between gap-2 text-sm"><span className="flex min-w-0 flex-wrap items-center gap-1.5 text-muted"><span>{row.label}</span>{(markers.get(row.key) ?? []).map((marker) => <MarkerBadge marker={marker} key={marker} />)}</span><span className="flex items-center gap-2"><strong>{row.sampleCount ? `${formatNumber(row.current)} ${unit}` : "—"}</strong>{row.sampleCount > 0 && <Variation difference={row.difference} percent={row.percent} unit={unit} evolution={row.evolution} />}</span></div><div className="relative h-4 overflow-hidden rounded-full bg-surface"><div className="absolute inset-y-0 left-0 rounded-full bg-[#d9ddda]" style={{ width: row.sampleCount ? `${row.initial / maximum * 100}%` : "0%" }} /><div className="absolute inset-y-[3px] left-0 rounded-full transition-[width] duration-700 motion-reduce:transition-none" style={{ width: row.sampleCount ? `${row.current / maximum * 100}%` : "0%", backgroundColor: color }} /></div><p className="mt-1.5 text-[10px] text-muted">Référence : {row.sampleCount ? `${formatNumber(row.initial)} ${unit}` : "donnée manquante"}</p></div>)}</div></article>;
+}
+
+function MarkerBadge({ marker }: { marker: ResultMarker }) {
+  const labels: Record<ResultMarker, string> = { decrease: "↘ Plus forte baisse", preserved: "✓ La plus préservée", increase: "↗ Plus forte hausse" };
+  const tones: Record<ResultMarker, string> = { decrease: "bg-[#fbe8e5] text-[#a63832]", preserved: "bg-[#e3f2e9] text-[#23704b]", increase: "bg-[#e3f2e9] text-[#23704b]" };
+  return <span className={`rounded-full px-1.5 py-0.5 text-[9px] font-semibold ${tones[marker]}`}>{labels[marker]}</span>;
 }
 
 function Variation({ difference, percent, unit, evolution }: { difference: number; percent: number | null; unit: string; evolution: string }) {

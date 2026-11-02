@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Eye, Maximize2, RefreshCw, RotateCcw, X } from "lucide-react";
 import type { GeneropolySession, GeneropolySnapshot, GeneropolyTable } from "@/lib/apps/generopoly";
-import { averageAllocation, comparisonAllocation, completedTables, evolutionSummary, extractAnswers, financeCategories, timeCategories } from "@/lib/apps/generopoly-results";
+import { averageAllocation, comparisonAllocation, completedTables, evolutionSummary, extractAnswers, financeCategories, resultMarkers, sortAllocationRows, timeCategories, type ResultMarker } from "@/lib/apps/generopoly-results";
 
 const slides = [
   "Quand tout va bien · Votre argent",
@@ -99,21 +99,30 @@ export default function GeneropolyProjection({ sessions, initial }: { sessions: 
 
 type AverageRow = { key: string; label: string; value: number; sampleCount: number };
 function AverageSlide({ title, subtitle, amount, unit, color, rows, revealed }: { title: string; subtitle: string; amount: string; unit: string; color: string; rows: AverageRow[]; revealed: boolean }) {
-  const maximum = Math.max(...rows.map((row) => row.value), 1);
-  return <div><SlideTitle title={title} subtitle={subtitle} amount={amount} /><div className="mt-7 max-w-5xl space-y-4 sm:mt-9">{rows.map((row, index) => <div className="transition-all duration-500" style={{ opacity: revealed ? 1 : 0, transform: revealed ? "translateY(0)" : "translateY(10px)", transitionDelay: `${index * 90}ms` }} key={row.key}><div className="mb-1.5 flex items-end justify-between gap-5"><span className="text-sm text-white/70 sm:text-base">{row.label}</span><strong className="text-lg font-semibold sm:text-xl">{row.sampleCount ? `${format(row.value)} ${unit}` : "—"}</strong></div><div className="h-3 overflow-hidden rounded-full bg-white/10 sm:h-4"><div className="h-full rounded-full transition-[width] duration-1000 ease-out" style={{ width: revealed && row.sampleCount ? `${row.value / maximum * 100}%` : "0%", backgroundColor: color, transitionDelay: `${index * 90}ms` }} /></div></div>)}</div></div>;
+  const ordered = sortAllocationRows(rows);
+  const maximum = Math.max(...ordered.map((row) => row.value), 1);
+  return <div><SlideTitle title={title} subtitle={subtitle} amount={amount} /><div className="mt-7 max-w-5xl space-y-4 sm:mt-9">{ordered.map((row, index) => <div className="transition-all duration-700 motion-reduce:transition-none" style={{ opacity: revealed ? 1 : 0, transform: revealed ? "translateY(0)" : "translateY(10px)", transitionDelay: `${index * 90}ms` }} key={row.key}><div className="mb-1.5 flex items-end justify-between gap-5"><span className="text-sm font-medium text-white sm:text-base">{row.label}</span><strong className="text-lg font-medium text-white sm:text-xl">{row.sampleCount ? `${format(row.value)} ${unit}` : "—"}</strong></div><div className="h-3 overflow-hidden rounded-full bg-white/10 sm:h-4"><div className="h-full rounded-full transition-[width] duration-1000 ease-out motion-reduce:transition-none" style={{ width: revealed && row.sampleCount ? `${row.value / maximum * 100}%` : "0%", backgroundColor: color, transitionDelay: `${index * 90}ms` }} /></div></div>)}</div></div>;
 }
 
 type ComparisonRow = ReturnType<typeof comparisonAllocation>[number];
 function ComparisonSlide({ title, subtitle, amount, unit, color, rows, revealed }: { title: string; subtitle: string; amount: string; unit: string; color: string; rows: ComparisonRow[]; revealed: boolean }) {
-  const maximum = Math.max(...rows.flatMap((row) => [row.initial, row.current]), 1);
-  return <div><SlideTitle title={title} subtitle={subtitle} amount={amount} /><p className="mt-2 text-sm text-white/45">Comparaison avec la situation normale</p><div className="mt-6 max-w-5xl space-y-4 sm:mt-8">{rows.map((row, index) => <div className="transition-all duration-500" style={{ opacity: revealed ? 1 : 0, transform: revealed ? "translateY(0)" : "translateY(10px)", transitionDelay: `${index * 90}ms` }} key={row.key}><div className="mb-1.5 flex flex-wrap items-end justify-between gap-2"><span className="text-sm text-white/70 sm:text-base">{row.label}</span><span className="flex items-center gap-3"><strong className="text-lg sm:text-xl">{row.sampleCount ? `${format(row.current)} ${unit}` : "—"}</strong>{row.sampleCount > 0 && <ProjectionVariation row={row} unit={unit} />}</span></div><div className="relative h-4 overflow-hidden rounded-full bg-white/8 sm:h-5"><div className="absolute inset-y-0 left-0 rounded-full bg-white/20" style={{ width: row.sampleCount ? `${row.initial / maximum * 100}%` : "0%" }} /><div className="absolute inset-y-[3px] left-0 rounded-full transition-[width] duration-1000 ease-out" style={{ width: revealed && row.sampleCount ? `${row.current / maximum * 100}%` : "0%", backgroundColor: color, transitionDelay: `${index * 90}ms` }} /></div><p className="mt-1 text-[10px] text-white/35">Initial : {row.sampleCount ? `${format(row.initial)} ${unit}` : "donnée manquante"}</p></div>)}</div></div>;
+  const ordered = sortAllocationRows(rows);
+  const markers = resultMarkers(rows);
+  const maximum = Math.max(...ordered.flatMap((row) => [row.initial, row.current]), 1);
+  return <div><SlideTitle title={title} subtitle={subtitle} amount={amount} /><p className="mt-2 text-sm text-white/60">Comparaison avec la situation normale</p><div className="mt-6 max-w-5xl space-y-4 sm:mt-8">{ordered.map((row, index) => <div className="transition-all duration-700 motion-reduce:transition-none" style={{ opacity: revealed ? 1 : 0, transform: revealed ? "translateY(0)" : "translateY(10px)", transitionDelay: `${index * 90}ms` }} key={row.key}><div className="mb-1.5 flex flex-wrap items-end justify-between gap-2"><span className="flex flex-wrap items-center gap-1.5 text-sm font-medium text-white sm:text-base"><span>{row.label}</span>{(markers.get(row.key) ?? []).map((marker) => <ProjectionMarker marker={marker} key={marker} />)}</span><span className="flex items-center gap-3"><strong className="text-lg font-medium text-white sm:text-xl">{row.sampleCount ? `${format(row.current)} ${unit}` : "—"}</strong>{row.sampleCount > 0 && <ProjectionVariation row={row} unit={unit} />}</span></div><div className="relative h-4 overflow-hidden rounded-full bg-white/8 sm:h-5"><div className="absolute inset-y-0 left-0 rounded-full bg-white/20" style={{ width: row.sampleCount ? `${row.initial / maximum * 100}%` : "0%" }} /><div className="absolute inset-y-[3px] left-0 rounded-full transition-[width] duration-1000 ease-out motion-reduce:transition-none" style={{ width: revealed && row.sampleCount ? `${row.current / maximum * 100}%` : "0%", backgroundColor: color, transitionDelay: `${index * 90}ms` }} /></div><p className="mt-1 text-[10px] text-white/55">Initial : {row.sampleCount ? `${format(row.initial)} ${unit}` : "donnée manquante"}</p></div>)}</div></div>;
+}
+
+function ProjectionMarker({ marker }: { marker: ResultMarker }) {
+  const labels: Record<ResultMarker, string> = { decrease: "↘ Plus forte baisse", preserved: "✓ La plus préservée", increase: "↗ Plus forte hausse" };
+  const tones: Record<ResultMarker, string> = { decrease: "bg-[#8d302d] text-white", preserved: "bg-[#2c7158] text-white", increase: "bg-[#2c7158] text-white" };
+  return <span className={`rounded-full px-2 py-0.5 text-[9px] font-semibold tracking-normal ${tones[marker]}`}>{labels[marker]}</span>;
 }
 
 function SlideTitle({ title, subtitle, amount }: { title: string; subtitle: string; amount: string }) { return <div className="mt-3 flex flex-wrap items-end justify-between gap-5"><div><h1 className="font-title text-3xl font-normal leading-tight sm:text-5xl">{title}</h1><p className="mt-2 text-xl text-[#a9c5be] sm:text-2xl">{subtitle}</p></div><strong className="font-title text-3xl font-normal text-[#fbeeda] sm:text-5xl">{amount}</strong></div>; }
 
 function ProjectionVariation({ row, unit }: { row: ComparisonRow; unit: string }) {
   const colorsByEvolution: Record<string, string> = { increased: "#8bd4a7", decreased: "#ff9f91", suspended: "#ff9f91", maintained: "#b8c9c5" };
-  const text = row.evolution === "suspended" ? "Suspendu" : `${signed(row.difference)} ${unit}${row.percent === null ? "" : ` · ${signed(row.percent)} %`}`;
+  const text = row.evolution === "suspended" ? "↘ −100 % · Suspendu" : row.evolution === "maintained" ? "= Maintenu" : `${signed(row.difference)} ${unit}${row.percent === null ? "" : ` · ${signed(row.percent)} %`}`;
   return <span className="text-xs font-semibold sm:text-sm" style={{ color: colorsByEvolution[row.evolution] }}>{text}</span>;
 }
 

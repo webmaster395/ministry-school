@@ -78,6 +78,29 @@ export function comparisonAllocation(tables: GeneropolyTable[], initialField: st
   });
 }
 
+export function sortAllocationRows<T extends { key: string; value?: number; current?: number }>(rows: T[]) {
+  return rows.map((row, stableIndex) => ({ row, stableIndex }))
+    .sort((a, b) => (b.row.current ?? b.row.value ?? 0) - (a.row.current ?? a.row.value ?? 0) || a.stableIndex - b.stableIndex)
+    .map(({ row }) => row);
+}
+
+export type ResultMarker = "decrease" | "preserved" | "increase";
+
+export function resultMarkers(rows: ReturnType<typeof comparisonAllocation>) {
+  const comparable = rows.filter((row) => row.sampleCount > 0 && row.percent !== null);
+  const variations = new Set(comparable.map((row) => row.percent));
+  const markers = new Map<string, ResultMarker[]>();
+  if (comparable.length < 2 || variations.size < 2) return markers;
+  const decreases = comparable.filter((row) => Number(row.percent) < 0);
+  const increases = comparable.filter((row) => Number(row.percent) > 0);
+  const priorities: Array<{ kind: ResultMarker; value: number }> = [];
+  if (decreases.length) priorities.push({ kind: "decrease", value: Math.min(...decreases.map((row) => Number(row.percent))) });
+  if (increases.length) priorities.push({ kind: "increase", value: Math.max(...increases.map((row) => Number(row.percent))) });
+  else priorities.push({ kind: "preserved", value: Math.max(...comparable.map((row) => Number(row.percent))) });
+  priorities.slice(0, 2).forEach(({ kind, value }) => comparable.filter((row) => row.percent === value).forEach((row) => markers.set(row.key, [...(markers.get(row.key) ?? []), kind])));
+  return markers;
+}
+
 export function extractAnswers(tables: GeneropolyTable[]) {
   const specs = [
     ["financeCardWhy", "Argent", "Choix face à l’imprévu"],
