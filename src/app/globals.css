@@ -314,10 +314,13 @@ html,body{max-width:100%;overflow-x:clip}
 @media (max-width: 767px) {
   .app-header__inner {
     min-height: 64px;
+    flex-wrap: nowrap;
   }
 
   .app-header__actions {
-    width: 100%;
+    width: auto;
+    margin-left: auto;
+    flex-wrap: nowrap;
     justify-content: flex-end;
   }
 
