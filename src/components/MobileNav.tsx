@@ -35,24 +35,57 @@ export default function MobileNav({
     if (open) setOpen(false);
   }
 
-  // Pendant l'ouverture : la page ne défile plus derrière, Échap referme,
-  // et le focus part dans le panneau puis revient sur le bouton.
+  // Pendant l'ouverture : le document est figé à sa position exacte. Le
+  // positionnement fixe est nécessaire sur Safari iOS : `overflow: hidden`
+  // seul laisse encore le contenu derrière le tiroir se déplacer.
   useEffect(() => {
     if (!open) return;
 
     const opener = trigger.current;
-    const { overflow } = document.body.style;
-    document.body.style.overflow = "hidden";
+    const body = document.body;
+    const root = document.documentElement;
+    const scrollY = window.scrollY;
+    const bodyStyle = {
+      overflow: body.style.overflow,
+      position: body.style.position,
+      top: body.style.top,
+      left: body.style.left,
+      right: body.style.right,
+      width: body.style.width,
+    };
+    const rootStyle = { overflow: root.style.overflow, overscrollBehavior: root.style.overscrollBehavior };
+
+    root.style.overflow = "hidden";
+    root.style.overscrollBehavior = "none";
+    body.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.width = "100%";
     panel.current?.focus();
 
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") setOpen(false);
     }
+    function preventBackgroundTouch(event: TouchEvent) {
+      if (!panel.current?.contains(event.target as Node)) event.preventDefault();
+    }
     document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("touchmove", preventBackgroundTouch, { passive: false });
 
     return () => {
-      document.body.style.overflow = overflow;
+      body.style.overflow = bodyStyle.overflow;
+      body.style.position = bodyStyle.position;
+      body.style.top = bodyStyle.top;
+      body.style.left = bodyStyle.left;
+      body.style.right = bodyStyle.right;
+      body.style.width = bodyStyle.width;
+      root.style.overflow = rootStyle.overflow;
+      root.style.overscrollBehavior = rootStyle.overscrollBehavior;
+      window.scrollTo(0, scrollY);
       document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("touchmove", preventBackgroundTouch);
       opener?.focus();
     };
   }, [open]);
@@ -76,7 +109,7 @@ export default function MobileNav({
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex h-[100dvh]">
+        <div className="fixed inset-0 z-50 flex h-[100dvh] overscroll-none">
           <button
             type="button"
             aria-label="Fermer le menu"
@@ -90,7 +123,7 @@ export default function MobileNav({
             aria-modal="true"
             aria-label="Menu"
             tabIndex={-1}
-            className="mobile-nav-panel relative flex h-full w-[286px] max-w-[85vw] flex-col overflow-y-auto overscroll-contain bg-background shadow-[0_0_40px_rgba(0,0,0,0.25)] outline-none"
+            className="mobile-nav-panel relative flex h-full w-[286px] max-w-[85vw] flex-col overflow-hidden bg-background shadow-[0_0_40px_rgba(0,0,0,0.25)] outline-none"
           >
             <div className="mobile-nav-panel__head relative flex min-h-[88px] shrink-0 items-center justify-center bg-foreground">
               <LogoCompact />
@@ -104,12 +137,12 @@ export default function MobileNav({
               </button>
             </div>
 
-            <nav className="mobile-nav-panel__nav flex-1 space-y-6 px-4 pb-6 pt-5">
-              <NavSections />
+            <nav className="mobile-nav-panel__nav min-h-0 flex-1 space-y-6 overflow-y-auto overscroll-contain px-4 pb-6 pt-5">
+              <NavSections onNavigate={() => setOpen(false)} />
             </nav>
 
             <div className="mobile-nav-panel__profile shrink-0 border-t border-border-soft px-3 py-3">
-              <ProfileLink fullName={fullName} avatarUrl={avatarUrl} ministrySlug={ministrySlug} />
+              <ProfileLink fullName={fullName} avatarUrl={avatarUrl} ministrySlug={ministrySlug} onNavigate={() => setOpen(false)} />
             </div>
           </div>
         </div>

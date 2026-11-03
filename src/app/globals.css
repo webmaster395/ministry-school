@@ -272,6 +272,12 @@ html,body{max-width:100%;overflow-x:clip}
   padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
 }
 
+/* Le tiroir est le seul élément qui peut défiler quand le menu téléphone est ouvert. */
+.mobile-nav-panel__nav {
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
 .app-modal-layer {
   padding-top: max(0.75rem, env(safe-area-inset-top, 0px));
   padding-right: max(0.75rem, env(safe-area-inset-right, 0px));

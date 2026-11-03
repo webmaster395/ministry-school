@@ -27,6 +27,7 @@ function NavLink({
   nested = false,
   badge,
   target,
+  onNavigate,
 }: {
   href: string;
   label: string;
@@ -36,12 +37,14 @@ function NavLink({
   nested?: boolean;
   badge?: number;
   target?: "_blank";
+  onNavigate?: () => void;
 }) {
   return (
     <Link
       href={href}
       target={target}
       rel={target === "_blank" ? "noreferrer" : undefined}
+      onClick={onNavigate}
       title={collapsed ? label : undefined}
       className={`flex items-center rounded-[7px] text-[15px] transition ${
         nested ? "py-2 text-[14px]" : "py-2.5"
@@ -76,7 +79,7 @@ function NavLink({
  * Le menu commun à la barre latérale et au tiroir du téléphone : le menu étudiant, toujours
  * le même, puis le bloc administratif pour ceux qui ont des responsabilités de gestion.
  */
-export function NavSections({ collapsed = false }: { collapsed?: boolean }) {
+export function NavSections({ collapsed = false, onNavigate }: { collapsed?: boolean; onNavigate?: () => void }) {
   const pathname = usePathname();
   const { spaces, current, notesEnabled, studentToolsEnabled, pendingValidationCount } = useSpace();
   const multiple = spaces.length > 1;
@@ -137,6 +140,7 @@ export function NavSections({ collapsed = false }: { collapsed?: boolean }) {
                   active={sameRoute(pathname, item.href)}
                   collapsed={collapsed}
                   target={item.target}
+                  onNavigate={onNavigate}
                 />
               </li>
             ))}
@@ -180,6 +184,7 @@ export function NavSections({ collapsed = false }: { collapsed?: boolean }) {
                   collapsed={collapsed}
                   badge={space.key === "admin" ? pendingValidationCount : undefined}
                   target={space.sections[0]?.items[0]?.target}
+                  onNavigate={onNavigate}
                 />
                 </li>
               ))}
@@ -197,11 +202,13 @@ export function ProfileLink({
   avatarUrl,
   ministrySlug,
   collapsed = false,
+  onNavigate,
 }: {
   fullName: string;
   avatarUrl: string | null;
   ministrySlug?: string | null;
   collapsed?: boolean;
+  onNavigate?: () => void;
 }) {
   const pathname = usePathname();
   const { roles, unread } = useSpace();
@@ -213,6 +220,7 @@ export function ProfileLink({
   return (
     <Link
       href="/etudiant/profil"
+      onClick={onNavigate}
       title={collapsed ? "Mon profil" : undefined}
       className={`flex items-center gap-3 rounded-[7px] py-1.5 transition ${collapsed ? "justify-center px-1" : "px-2"} ${
         active ? "bg-foreground/[0.08]" : "hover:bg-foreground/[0.04]"
