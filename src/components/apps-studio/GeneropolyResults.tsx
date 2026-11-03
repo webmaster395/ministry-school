@@ -5,7 +5,7 @@ import { Check, ExternalLink, Eye, EyeOff, Presentation, RefreshCw, Search } fro
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { GeneropolySession, GeneropolySnapshot, GeneropolyTable } from "@/lib/apps/generopoly";
-import { averageAllocation, comparisonAllocation, completedTables, evolutionSummary, extractAnswers, financeCategories, resultMarkers, sortAllocationRows, timeCategories, type ResultMarker } from "@/lib/apps/generopoly-results";
+import { averageAllocation, comparisonAllocation, completedTables, extractAnswers, financeCategories, resultMarkers, sortAllocationRows, timeCategories, type ResultMarker } from "@/lib/apps/generopoly-results";
 
 const palette = { normal: "#2c6d65", event: "#ef8c24", durable: "#c97992" };
 
@@ -119,18 +119,47 @@ function Trend({ title, rows, empty = "Aucune donnée comparable." }: { title: s
   return <div><h3 className="text-sm font-semibold">{title}</h3>{rows.length ? <ol className="mt-3 space-y-2">{rows.map((row, index) => <li className="flex gap-3 text-sm text-muted" key={`${row.key}-${row.unit}`}><span className="text-foreground/35">0{index + 1}</span><span>{row.label} · {signed(row.difference)} {row.unit}</span></li>)}</ol> : <p className="mt-3 text-sm text-muted">{empty}</p>}</div>;
 }
 
+const focusSituations = [
+  { label: "Situation normale", financeAvailable: 750, timeAvailable: 28 },
+  { label: "Imprévu ponctuel", financeAvailable: 450, timeAvailable: 22 },
+  { label: "Baisse durable", financeAvailable: 500, timeAvailable: 18 },
+] as const;
+const focusDimensions = [
+  { emoji: "💚", title: "Générosité financière", key: "generosity", fields: ["financeInitial", "financeAfterOne", "financeFinal"], categories: financeCategories, unit: "€", ring: "#83DDAE", kind: "finance" },
+  { emoji: "✝️", title: "Vie spirituelle", key: "spiritual", fields: ["timeInitial", "timeAfterOne", "timeFinal"], categories: timeCategories, unit: "h", ring: "#E9A3B3", kind: "time" },
+  { emoji: "🤝", title: "Service et solidarité", key: "service", fields: ["timeInitial", "timeAfterOne", "timeFinal"], categories: timeCategories, unit: "h", ring: "#F4A340", kind: "time" },
+] as const;
+
 function Focus({ tables }: { tables: GeneropolyTable[] }) {
-  const dimensions = [
-    { emoji: "💚", title: "Générosité financière", description: "Dîme, offrandes, dons aux associations, etc.", key: "generosity", fields: ["financeInitial", "financeAfterOne", "financeFinal"], unit: "€" },
-    { emoji: "✝️", title: "Vie spirituelle", description: "Prière, lecture de la Bible, études bibliques.", key: "spiritual", fields: ["timeInitial", "timeAfterOne", "timeFinal"], unit: "h" },
-    { emoji: "🤝", title: "Service et solidarité", description: "Église locale, associations, bénévolat, etc.", key: "service", fields: ["timeInitial", "timeAfterOne", "timeFinal"], unit: "h" },
-  ];
-  return <div className="grid gap-4 lg:grid-cols-3">{dimensions.map((dimension) => {
-    const categories = dimension.unit === "€" ? financeCategories : timeCategories;
-    const averages = dimension.fields.map((field) => averageAllocation(tables, field, categories).find((row) => row.key === dimension.key));
-    const counts = evolutionSummary(tables, dimension.fields[0], dimension.fields[2], dimension.key);
-    return <article className="rounded-2xl bg-foreground p-5 text-on-accent" key={dimension.title}><span className="text-2xl">{dimension.emoji}</span><h3 className="mt-3 text-sm font-semibold">{dimension.title}</h3><p className="mt-1 text-xs leading-5 text-white/55">{dimension.description}</p><div className="mt-5 grid grid-cols-3 gap-2 text-center">{averages.map((row, index) => <div key={dimension.fields[index]}><strong className="block text-lg">{row?.sampleCount ? `${formatNumber(row.value)}${dimension.unit}` : "—"}</strong><span className="text-[9px] text-white/50">{["Normal", "Imprévu", "Durable"][index]}</span></div>)}</div><ul className="mt-5 grid grid-cols-2 gap-2 text-[11px] text-white/65"><li>{percent(counts.increased, counts.total)} augmenté</li><li>{percent(counts.decreased, counts.total)} diminué</li><li>{percent(counts.maintained, counts.total)} maintenu</li><li>{percent(counts.suspended, counts.total)} suspendu</li></ul></article>;
-  })}</div>;
+  const [situation, setSituation] = useState(0);
+  const current = focusSituations[situation];
+  return <div className="rounded-[22px] bg-[#173F45] p-5 text-white sm:p-7"><div className="flex flex-wrap gap-2" role="tablist" aria-label="Situation des priorités">{focusSituations.map((item, index) => <button type="button" role="tab" aria-selected={situation === index} onClick={() => setSituation(index)} key={item.label} className={`rounded-full border px-3 py-1.5 text-xs transition ${situation === index ? "border-white/50 bg-white text-[#173F45]" : "border-white/20 bg-white/5 text-white/75 hover:bg-white/10"}`}>{item.label}</button>)}</div>{situation === 2 && <p className="mt-4 text-sm leading-6 text-white/75">Vos ressources diminuent durablement. En parallèle, votre église locale a besoin de soutien financier et recherche des bénévoles.</p>}<div className="mt-6 grid gap-4 lg:grid-cols-3">{focusDimensions.map((dimension) => {
+    const values = dimension.fields.map((field) => averageAllocation(tables, field, dimension.categories).find((row) => row.key === dimension.key));
+    const normal = values[0];
+    const value = values[situation];
+    const available = dimension.kind === "finance" ? current.financeAvailable : current.timeAvailable;
+    return <FocusRing key={dimension.key} dimension={dimension} normal={normal} value={value} available={available} comparison={situation > 0} />;
+  })}</div></div>;
+}
+
+type FocusDimension = typeof focusDimensions[number];
+type FocusValue = ReturnType<typeof averageAllocation>[number] | undefined;
+function FocusRing({ dimension, normal, value, available, comparison }: { dimension: FocusDimension; normal: FocusValue; value: FocusValue; available: number; comparison: boolean }) {
+  const hasValue = Boolean(value?.sampleCount);
+  const hasNormal = Boolean(normal?.sampleCount);
+  const share = hasValue ? Math.max(0, Math.min(100, value!.value / available * 100)) : null;
+  const percentChange = hasValue && hasNormal && normal!.value > 0 ? (value!.value - normal!.value) / normal!.value * 100 : null;
+  const circumference = 289.03;
+  const dash = share === null ? 0 : circumference * share / 100;
+  return <article className="rounded-2xl border border-white/10 bg-white/[.075] p-5 text-center"><div className="flex items-center justify-center gap-2"><span className="text-xl">{dimension.emoji}</span><h3 className="text-sm font-medium sm:text-base">{dimension.title}</h3></div><div className="relative mx-auto mt-5 grid h-36 w-36 place-items-center"><svg viewBox="0 0 112 112" className="h-36 w-36 -rotate-90" aria-hidden><circle cx="56" cy="56" r="46" fill="none" stroke="rgba(255,255,255,.12)" strokeWidth="9"/><circle cx="56" cy="56" r="46" fill="none" stroke={dimension.ring} strokeWidth="9" strokeLinecap="round" strokeDasharray={`${dash} ${circumference}`} className="transition-all duration-1000 ease-out motion-reduce:transition-none"/></svg><div className="absolute inset-0 grid place-items-center"><div><strong className="block text-2xl font-medium leading-none">{share === null ? "—" : `${formatNumber(share)} %`}</strong><span className="mt-1 block text-[9px] uppercase tracking-[.1em] text-white/55">du {dimension.kind === "finance" ? "budget" : "temps"}</span></div></div></div><p className="mt-4 text-sm text-white/65">{hasValue ? `${formatNumber(value!.value)} ${dimension.unit}` : "Donnée indisponible"}</p>{comparison && <div className="mt-3 min-h-10 text-xs">{hasValue && hasNormal ? <><p className="text-white/50">vs {formatNumber(normal!.value)} {dimension.unit} en temps normal</p><p className="mt-1 font-semibold" style={{ color: percentChange === null ? "#c6d5d3" : percentChange > 0 ? "#83DDAE" : percentChange < 0 ? "#ff9f91" : "#c6d5d3" }}>{focusEvolution(percentChange, normal!.value, value!.value)}</p></> : <p className="text-white/45">Comparaison indisponible</p>}</div>}</article>;
+}
+
+function focusEvolution(percentChange: number | null, initial: number, current: number) {
+  if (initial === 0 && current === 0) return "= Resté à zéro";
+  if (percentChange === null) return current > initial ? "↗ Augmenté" : "= Maintenu";
+  if (percentChange === 0) return "= Maintenu";
+  if (current === 0) return "↘ −100 % · Suspendu";
+  return `${percentChange > 0 ? "↗" : "↘"} ${signed(percentChange)} %`;
 }
 
 function GroupAnswers({ tables }: { tables: GeneropolyTable[] }) {

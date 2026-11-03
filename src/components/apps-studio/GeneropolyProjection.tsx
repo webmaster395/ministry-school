@@ -4,16 +4,13 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Eye, Maximize2, RefreshCw, RotateCcw, X } from "lucide-react";
 import type { GeneropolySession, GeneropolySnapshot, GeneropolyTable } from "@/lib/apps/generopoly";
-import { averageAllocation, comparisonAllocation, completedTables, evolutionSummary, extractAnswers, financeCategories, resultMarkers, sortAllocationRows, timeCategories, type ResultMarker } from "@/lib/apps/generopoly-results";
+import { averageAllocation, comparisonAllocation, completedTables, extractAnswers, financeCategories, resultMarkers, sortAllocationRows, timeCategories, type ResultMarker } from "@/lib/apps/generopoly-results";
 
 const slides = [
-  "Quand tout va bien · Votre argent",
-  "Face à l’imprévu · Votre argent",
-  "Face à la baisse durable · Votre argent",
-  "Quand tout va bien · Votre temps",
-  "Face à l’imprévu · Votre temps",
-  "Face à la baisse durable · Votre temps",
-  "Votre vie spirituelle, votre église locale et les autres",
+  "Quand tout va bien",
+  "Face à l’imprévu",
+  "Face à la baisse durable",
+  "Quelle place dans nos priorités ?",
   "Question finale",
 ];
 const colors = { normal: "#75b5a9", event: "#f39a42", durable: "#d88aa1" };
@@ -78,15 +75,12 @@ export default function GeneropolyProjection({ sessions, initial }: { sessions: 
     </header>
 
     <section key={`${slide}-${animationKey}`} className="mx-auto flex min-h-[calc(100vh-118px)] max-w-[1380px] flex-col justify-center px-5 pb-24 pt-7 sm:px-9 lg:px-12">
-      <p className="label text-[10px] tracking-[.2em] text-[#a9c5be]">{String(slide + 1).padStart(2, "0")} / 08</p>
-      {slide === 0 && <AverageSlide title="Quand tout va bien" subtitle="Votre argent" amount="750 €" available={750} unit="€" color={colors.normal} rows={averageAllocation(tables, "financeInitial", financeCategories)} revealed={revealed} />}
-      {slide === 1 && <ComparisonSlide title="Face à l’imprévu" subtitle="Votre argent" amount="450 €" available={450} unit="€" color={colors.event} rows={comparisonAllocation(tables, "financeInitial", "financeAfterOne", financeCategories)} revealed={revealed} />}
-      {slide === 2 && <ComparisonSlide title="Face à la baisse durable" subtitle="Votre argent" amount="500 €" available={500} unit="€" color={colors.durable} rows={comparisonAllocation(tables, "financeInitial", "financeFinal", financeCategories)} revealed={revealed} />}
-      {slide === 3 && <AverageSlide title="Quand tout va bien" subtitle="Votre temps" amount="28 h" available={28} unit="h" color={colors.normal} rows={averageAllocation(tables, "timeInitial", timeCategories)} revealed={revealed} />}
-      {slide === 4 && <ComparisonSlide title="Face à l’imprévu" subtitle="Votre temps" amount="22 h" available={22} unit="h" color={colors.event} rows={comparisonAllocation(tables, "timeInitial", "timeAfterOne", timeCategories)} revealed={revealed} />}
-      {slide === 5 && <ComparisonSlide title="Face à la baisse durable" subtitle="Votre temps" amount="18 h" available={18} unit="h" color={colors.durable} rows={comparisonAllocation(tables, "timeInitial", "timeFinal", timeCategories)} revealed={revealed} />}
-      {slide === 6 && <FocusSlide tables={tables} revealed={revealed} />}
-      {slide === 7 && <AnswersSlide answers={selectedAnswers} revealed={revealed} />}
+      <p className="label text-[10px] tracking-[.2em] text-[#a9c5be]">{String(slide + 1).padStart(2, "0")} / 05</p>
+      {slide === 0 && <SituationSlide title="Quand tout va bien" eyebrow="Situation normale" financeAmount="750 €" timeAmount="28 h" color={colors.normal} financeRows={averageAllocation(tables, "financeInitial", financeCategories)} timeRows={averageAllocation(tables, "timeInitial", timeCategories)} revealed={revealed} />}
+      {slide === 1 && <SituationSlide title="Face à l’imprévu" eyebrow="Vos ressources diminuent ponctuellement" financeAmount="450 €" timeAmount="22 h" color={colors.event} financeRows={comparisonAllocation(tables, "financeInitial", "financeAfterOne", financeCategories)} timeRows={comparisonAllocation(tables, "timeInitial", "timeAfterOne", timeCategories)} revealed={revealed} />}
+      {slide === 2 && <SituationSlide title="Face à la baisse durable" eyebrow="Vos ressources diminuent durablement" financeAmount="500 €" timeAmount="18 h" color={colors.durable} financeRows={comparisonAllocation(tables, "financeInitial", "financeFinal", financeCategories)} timeRows={comparisonAllocation(tables, "timeInitial", "timeFinal", timeCategories)} revealed={revealed} durableContext />}
+      {slide === 3 && <FocusSlide tables={tables} revealed={revealed} />}
+      {slide === 4 && <AnswersSlide answers={selectedAnswers} revealed={revealed} />}
     </section>
 
     <footer className="fixed inset-x-0 bottom-0 z-10 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 border-t border-white/10 bg-[#173F45]/95 px-4 py-3 backdrop-blur sm:px-6">
@@ -98,24 +92,25 @@ export default function GeneropolyProjection({ sessions, initial }: { sessions: 
 }
 
 type AverageRow = { key: string; label: string; value: number; sampleCount: number };
-function AverageSlide({ title, subtitle, amount, available, unit, color, rows, revealed }: { title: string; subtitle: string; amount: string; available: number; unit: string; color: string; rows: AverageRow[]; revealed: boolean }) {
-  const ordered = sortAllocationRows(rows);
-  const maximum = Math.max(...ordered.map((row) => row.value), 1);
-  return <div><SlideTitle title={title} subtitle={subtitle} amount={amount} /><div className="mt-7 grid max-w-6xl gap-7 lg:grid-cols-[minmax(0,1fr)_250px] lg:items-center sm:mt-9"><div className="space-y-4">{ordered.map((row, index) => <div className="transition-all duration-700 motion-reduce:transition-none" style={{ opacity: revealed ? 1 : 0, transform: revealed ? "translateY(0)" : "translateY(10px)", transitionDelay: `${index * 90}ms` }} key={row.key}><div className="mb-1.5 flex items-end justify-between gap-5"><span className="text-sm font-medium text-white sm:text-base">{row.label}</span><strong className="text-lg font-medium text-white sm:text-xl">{row.sampleCount ? `${format(row.value)} ${unit}` : "—"}</strong></div><div className="h-3 overflow-hidden rounded-full bg-white/10 sm:h-4"><div className="h-full rounded-full transition-[width] duration-1000 ease-out motion-reduce:transition-none" style={{ width: revealed && row.sampleCount ? `${row.value / maximum * 100}%` : "0%", backgroundColor: color, transitionDelay: `${index * 90}ms` }} /></div></div>)}</div><TopCategoryInsight row={ordered[0]} available={available} unit={unit} revealed={revealed} /></div></div>;
-}
-
 type ComparisonRow = ReturnType<typeof comparisonAllocation>[number];
-function ComparisonSlide({ title, subtitle, amount, available, unit, color, rows, revealed }: { title: string; subtitle: string; amount: string; available: number; unit: string; color: string; rows: ComparisonRow[]; revealed: boolean }) {
-  const ordered = sortAllocationRows(rows);
-  const markers = resultMarkers(rows);
-  const maximum = Math.max(...ordered.flatMap((row) => [row.initial, row.current]), 1);
-  return <div><SlideTitle title={title} subtitle={subtitle} amount={amount} /><p className="mt-2 text-sm text-white/60">Comparaison avec la situation normale</p><div className="mt-6 grid max-w-6xl gap-7 lg:grid-cols-[minmax(0,1fr)_250px] lg:items-center sm:mt-8"><div className="space-y-4">{ordered.map((row, index) => <div className="transition-all duration-700 motion-reduce:transition-none" style={{ opacity: revealed ? 1 : 0, transform: revealed ? "translateY(0)" : "translateY(10px)", transitionDelay: `${index * 90}ms` }} key={row.key}><div className="mb-1.5 flex flex-wrap items-end justify-between gap-2"><span className="flex flex-wrap items-center gap-1.5 text-sm font-medium text-white sm:text-base"><span>{row.label}</span>{(markers.get(row.key) ?? []).map((marker) => <ProjectionMarker marker={marker} key={marker} />)}</span><span className="flex items-center gap-3"><strong className="text-lg font-medium text-white sm:text-xl">{row.sampleCount ? `${format(row.current)} ${unit}` : "—"}</strong>{row.sampleCount > 0 && <ProjectionVariation row={row} unit={unit} />}</span></div><div className="relative h-4 overflow-hidden rounded-full bg-white/8 sm:h-5"><div className="absolute inset-y-0 left-0 rounded-full bg-white/20" style={{ width: row.sampleCount ? `${row.initial / maximum * 100}%` : "0%" }} /><div className="absolute inset-y-[3px] left-0 rounded-full transition-[width] duration-1000 ease-out motion-reduce:transition-none" style={{ width: revealed && row.sampleCount ? `${row.current / maximum * 100}%` : "0%", backgroundColor: color, transitionDelay: `${index * 90}ms` }} /></div><p className="mt-1 text-[10px] text-white/55">Initial : {row.sampleCount ? `${format(row.initial)} ${unit}` : "donnée manquante"}</p></div>)}</div><TopCategoryInsight row={ordered[0]} available={available} unit={unit} revealed={revealed} current /></div></div>;
+function SituationSlide({ title, eyebrow, financeAmount, timeAmount, color, financeRows, timeRows, revealed, durableContext = false }: { title: string; eyebrow: string; financeAmount: string; timeAmount: string; color: string; financeRows: AverageRow[] | ComparisonRow[]; timeRows: AverageRow[] | ComparisonRow[]; revealed: boolean; durableContext?: boolean }) {
+  const comparison = "current" in financeRows[0];
+  return <div className="w-full"><p className="mt-3 text-[11px] font-semibold uppercase tracking-[.2em] text-[#a9c5be]">{eyebrow}</p><h1 className="mt-3 font-title text-3xl font-normal leading-tight text-[#fbeeda] sm:text-5xl">{title}</h1>{comparison && <p className="mt-2 text-sm text-white/60">Comparaison avec la situation normale</p>}{durableContext && <p className="mt-5 max-w-4xl rounded-2xl border border-white/10 bg-white/[.07] px-4 py-3 text-sm leading-6 text-white/80">Vos ressources diminuent durablement. En parallèle, votre église locale a besoin de soutien financier et recherche des bénévoles.</p>}<div className="mt-7 grid gap-8 xl:grid-cols-2"><ProjectionAllocation title="Votre argent" amount={financeAmount} unit="€" color={color} rows={financeRows} revealed={revealed} /><ProjectionAllocation title="Votre temps" amount={timeAmount} unit="h" color={color} rows={timeRows} revealed={revealed} /></div></div>;
 }
 
-function TopCategoryInsight({ row, available, unit, revealed, current = false }: { row?: AverageRow | ComparisonRow; available: number; unit: string; revealed: boolean; current?: boolean }) {
-  const value = row ? (current ? (row as ComparisonRow).current : (row as AverageRow).value) : 0;
-  const percentage = available > 0 && row?.sampleCount ? Math.round(value / available * 100) : null;
-  return <aside className="rounded-[20px] bg-[#24575d] p-5 text-white transition-all duration-700 motion-reduce:transition-none" style={{ opacity: revealed ? 1 : 0, transform: revealed ? "translateY(0)" : "translateY(12px)", transitionDelay: "260ms" }}><p className="text-[10px] font-semibold uppercase tracking-[.16em] text-white/60">La priorité principale</p>{row?.sampleCount ? <><strong className="mt-4 block font-title text-4xl font-normal leading-none">{format(value)} {unit}</strong><p className="mt-3 text-base font-medium leading-snug text-white">{row.label}</p><p className="mt-4 text-xs leading-5 text-white/70">{percentage ?? "—"} % du {unit === "€" ? "budget" : "temps"} disponible</p></> : <p className="mt-4 text-sm leading-6 text-white/70">Aucune donnée validée pour cette situation.</p>}</aside>;
+function ProjectionAllocation({ title, amount, unit, color, rows, revealed }: { title: string; amount: string; unit: string; color: string; rows: AverageRow[] | ComparisonRow[]; revealed: boolean }) {
+  const comparison = "current" in rows[0];
+  const comparisonRows = comparison ? rows as ComparisonRow[] : [];
+  const normalized = comparison ? comparisonRows : (rows as AverageRow[]).map((row) => ({ ...row, initial: row.value, current: row.value, difference: 0, percent: null, evolution: "maintained" as const }));
+  const ordered = sortAllocationRows(normalized);
+  const markers = comparison ? resultMarkers(comparisonRows) : new Map<string, ResultMarker[]>();
+  const maximum = Math.max(...ordered.flatMap((row) => comparison ? [row.initial, row.current] : [row.current]), 1);
+  return <article className="rounded-[22px] border border-white/10 bg-white/[.055] p-5 sm:p-6"><div className="mb-6 flex items-end justify-between gap-4"><h2 className="text-lg font-medium text-white">{title}</h2><strong className="font-title text-3xl font-normal text-[#fbeeda]">{amount}</strong></div><div className="space-y-4">{ordered.map((row, index) => {
+    const current = row.current;
+    const initial = row.initial;
+    const sampleCount = row.sampleCount;
+    return <div className="transition-all duration-700 motion-reduce:transition-none" style={{ opacity: revealed ? 1 : 0, transform: revealed ? "translateY(0)" : "translateY(10px)", transitionDelay: `${index * 80}ms` }} key={row.key}><div className="mb-1.5 flex flex-wrap items-end justify-between gap-x-3 gap-y-1"><span className="flex flex-wrap items-center gap-1.5 text-sm font-medium text-white"><span>{row.label}</span>{(markers.get(row.key) ?? []).map((marker) => <ProjectionMarker marker={marker} key={marker} />)}</span><span className="flex items-center gap-2"><strong className="text-base font-medium text-white">{sampleCount ? `${format(current)} ${unit}` : "—"}</strong>{comparison && sampleCount > 0 && <ProjectionVariation row={row} unit={unit} />}</span></div><div className="relative h-3 overflow-hidden rounded-full bg-white/10">{comparison && <div className="absolute inset-y-0 left-0 rounded-full bg-white/20" style={{ width: sampleCount ? `${initial / maximum * 100}%` : "0%" }} />}<div className="absolute inset-y-0 left-0 rounded-full transition-[width] duration-1000 ease-out motion-reduce:transition-none" style={{ width: revealed && sampleCount ? `${current / maximum * 100}%` : "0%", backgroundColor: color, transitionDelay: `${index * 80}ms` }} /></div>{comparison && <p className="mt-1 text-[10px] text-white/50">Situation normale : {sampleCount ? `${format(initial)} ${unit}` : "donnée manquante"}</p>}</div>;
+  })}</div></article>;
 }
 
 function ProjectionMarker({ marker }: { marker: ResultMarker }) {
@@ -132,18 +127,69 @@ function ProjectionVariation({ row, unit }: { row: ComparisonRow; unit: string }
   return <span className="text-xs font-semibold sm:text-sm" style={{ color: colorsByEvolution[row.evolution] }}>{text}</span>;
 }
 
+const focusSituations = [
+  { label: "Situation normale", financeAvailable: 750, timeAvailable: 28 },
+  { label: "Imprévu ponctuel", financeAvailable: 450, timeAvailable: 22 },
+  { label: "Baisse durable", financeAvailable: 500, timeAvailable: 18 },
+] as const;
+
+const focusCards = [
+  { emoji: "💚", title: "Générosité financière", key: "generosity", fields: ["financeInitial", "financeAfterOne", "financeFinal"], categories: financeCategories, unit: "€", ring: "#83DDAE", kind: "finance" },
+  { emoji: "✝️", title: "Vie spirituelle", key: "spiritual", fields: ["timeInitial", "timeAfterOne", "timeFinal"], categories: timeCategories, unit: "h", ring: "#E9A3B3", kind: "time" },
+  { emoji: "🤝", title: "Service et solidarité", key: "service", fields: ["timeInitial", "timeAfterOne", "timeFinal"], categories: timeCategories, unit: "h", ring: "#F4A340", kind: "time" },
+] as const;
+
 function FocusSlide({ tables, revealed }: { tables: GeneropolyTable[]; revealed: boolean }) {
-  const cards = [
-    ["💚", "Générosité financière", "generosity", "financeInitial", "financeAfterOne", "financeFinal", "€"],
-    ["✝️", "Vie spirituelle", "spiritual", "timeInitial", "timeAfterOne", "timeFinal", "h"],
-    ["🤝", "Service et solidarité", "service", "timeInitial", "timeAfterOne", "timeFinal", "h"],
-  ] as const;
-  return <div><h1 className="mt-3 max-w-5xl font-title text-3xl font-normal leading-tight sm:text-5xl">Votre vie spirituelle, votre église locale et les autres</h1><div className="mt-8 grid gap-4 lg:grid-cols-3">{cards.map(([emoji, title, key, initial, event, durable, unit], cardIndex) => {
-    const categories = unit === "€" ? financeCategories : timeCategories;
-    const values = [initial, event, durable].map((field) => averageAllocation(tables, field, categories).find((row) => row.key === key));
-    const counts = evolutionSummary(tables, initial, durable, key);
-    return <article className="rounded-[22px] bg-white/8 p-5 transition-all duration-700 sm:p-6" style={{ opacity: revealed ? 1 : 0, transform: revealed ? "translateY(0)" : "translateY(16px)", transitionDelay: `${cardIndex * 120}ms` }} key={title}><span className="text-3xl">{emoji}</span><h2 className="mt-3 text-lg font-semibold">{title}</h2><div className="mt-6 grid grid-cols-3 gap-2">{values.map((row, index) => <div key={index}><strong className="block text-xl sm:text-2xl">{row?.sampleCount ? `${format(row.value)}${unit}` : "—"}</strong><span className="text-[9px] text-white/40">{["Normal", "Imprévu", "Durable"][index]}</span></div>)}</div><div className="mt-6 grid grid-cols-2 gap-2 text-[10px] text-white/60"><span>{percentage(counts.increased, counts.total)} augmenté</span><span>{percentage(counts.decreased, counts.total)} diminué</span><span>{percentage(counts.maintained, counts.total)} maintenu</span><span>{percentage(counts.suspended, counts.total)} suspendu</span></div></article>;
-  })}</div><p className="mt-5 max-w-4xl text-xs leading-5 text-white/40">Ces évolutions décrivent des arbitrages collectifs. Elles ne constituent pas une mesure de la foi des participants.</p></div>;
+  const [situation, setSituation] = useState(0);
+  const [run, setRun] = useState(0);
+  useEffect(() => {
+    setSituation(0);
+    const eventTimer = window.setTimeout(() => setSituation(1), 3000);
+    const durableTimer = window.setTimeout(() => setSituation(2), 6000);
+    return () => { window.clearTimeout(eventTimer); window.clearTimeout(durableTimer); };
+  }, [run]);
+  const current = focusSituations[situation];
+  const replayFocus = () => setRun((value) => value + 1);
+  return <div className="mx-auto w-full max-w-6xl">
+    <p className="mt-3 text-[11px] font-semibold uppercase tracking-[.2em] text-[#a9c5be]">Focus final</p>
+    <h1 className="mt-3 font-title text-3xl font-normal leading-tight text-[#fbeeda] sm:text-5xl">Quelle place dans nos priorités&nbsp;?</h1>
+    <p className="mt-3 max-w-3xl text-sm leading-6 text-white/65 sm:text-base">Face aux changements, quelle part de leurs ressources les groupes ont-ils choisi de consacrer à Dieu, à l’église locale et aux autres&nbsp;?</p>
+    <div className="mt-7 flex flex-wrap items-center gap-2" role="tablist" aria-label="Situation projetée">{focusSituations.map((item, index) => <button type="button" key={item.label} role="tab" aria-selected={situation === index} onClick={() => setSituation(index)} className={`rounded-full border px-3 py-1.5 text-xs transition ${situation === index ? "border-white/45 bg-white text-[#173F45]" : "border-white/20 bg-white/5 text-white/75 hover:bg-white/10"}`}>{item.label}</button>)}<button type="button" onClick={replayFocus} className="ml-1 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs text-white/70 hover:bg-white/10"><RotateCcw size={13} /> Rejouer</button></div>
+    <div className="mt-5 min-h-11 rounded-2xl border border-white/10 bg-white/[.06] px-4 py-3 text-sm leading-5 text-white/78 sm:px-5">{situation === 2 ? "Vos ressources diminuent durablement. En parallèle, votre église locale a besoin de soutien financier et recherche des bénévoles." : situation === 1 ? "Un imprévu ponctuel réduit les ressources disponibles : les groupes doivent réorganiser leurs priorités." : "Voici les choix des groupes lorsque leurs ressources sont pleinement disponibles."}</div>
+    <div className="mt-6 grid gap-4 lg:grid-cols-3">{focusCards.map((card, index) => {
+      const values = card.fields.map((field) => averageAllocation(tables, field, card.categories).find((row) => row.key === card.key));
+      const normal = values[0];
+      const value = values[situation];
+      const available = card.kind === "finance" ? current.financeAvailable : current.timeAvailable;
+      return <FocusRingCard key={card.key} card={card} normal={normal} value={value} available={available} compare={situation > 0} revealed={revealed} delay={index * 100} />;
+    })}</div>
+    <p className="mt-5 text-xs leading-5 text-white/45">Les évolutions comparent les moyennes réelles des participations validées à la situation normale. Elles décrivent des arbitrages, sans juger les choix des groupes.</p>
+  </div>;
+}
+
+type FocusCard = typeof focusCards[number];
+type AllocationResult = ReturnType<typeof averageAllocation>[number] | undefined;
+function FocusRingCard({ card, normal, value, available, compare, revealed, delay }: { card: FocusCard; normal: AllocationResult; value: AllocationResult; available: number; compare: boolean; revealed: boolean; delay: number }) {
+  const hasValue = Boolean(value?.sampleCount);
+  const hasNormal = Boolean(normal?.sampleCount);
+  const resourceShare = hasValue && available > 0 ? Math.max(0, Math.min(100, value!.value / available * 100)) : null;
+  const percent = hasNormal && hasValue && normal!.value > 0 ? (value!.value - normal!.value) / normal!.value * 100 : null;
+  const circumference = 289.03;
+  const dash = resourceShare === null ? 0 : circumference * resourceShare / 100;
+  return <article className="rounded-[24px] border border-white/10 bg-white/[.075] p-5 text-center transition-all duration-700 sm:p-6" style={{ opacity: revealed ? 1 : 0, transform: revealed ? "translateY(0)" : "translateY(14px)", transitionDelay: `${delay}ms` }}>
+    <div className="flex items-center justify-center gap-2"><span className="text-2xl" aria-hidden>{card.emoji}</span><h2 className="text-base font-medium text-white sm:text-lg">{card.title}</h2></div>
+    <div className="relative mx-auto mt-5 grid h-40 w-40 place-items-center"><svg className="h-40 w-40 -rotate-90" viewBox="0 0 112 112" aria-hidden><circle cx="56" cy="56" r="46" fill="none" stroke="rgba(255,255,255,.12)" strokeWidth="9" /><circle cx="56" cy="56" r="46" fill="none" stroke={card.ring} strokeLinecap="round" strokeWidth="9" strokeDasharray={`${dash} ${circumference}`} className="transition-all duration-[1200ms] ease-out motion-reduce:transition-none" /></svg><div className="absolute inset-0 grid place-items-center"><div><strong className="block text-3xl font-medium leading-none text-white">{resourceShare === null ? "—" : `${format(resourceShare)} %`}</strong><span className="mt-1 block text-[10px] uppercase tracking-[.11em] text-white/60">du {card.kind === "finance" ? "budget" : "temps"}</span></div></div></div>
+    <p className="mt-4 text-sm text-white/65">{hasValue ? `${format(value!.value)} ${card.unit} ${compare ? "maintenus" : "attribués"}` : "Donnée indisponible"}</p>
+    {compare && <div className="mt-3 min-h-10 text-sm">{hasValue && hasNormal ? <><p className="text-white/58">{format(value!.value)} {card.unit} <span className="text-white/35">vs {format(normal!.value)} {card.unit} en temps normal</span></p><p className="mt-1 font-medium" style={{ color: percent === null ? "#c6d5d3" : percent > 0 ? "#83DDAE" : percent < 0 ? "#ff9f91" : "#c6d5d3" }}>{focusChange(percent, normal!.value, value!.value)}</p></> : <p className="text-white/45">Comparaison indisponible</p>}</div>}
+  </article>;
+}
+
+function focusChange(percent: number | null, initial: number, current: number) {
+  if (initial === 0 && current === 0) return "= Resté à zéro";
+  if (percent === null) return current > initial ? "↗ Augmenté" : "= Maintenu";
+  if (percent === 0) return "= Maintenu";
+  if (current === 0) return "↘ −100 % · Suspendu";
+  return `${percent > 0 ? "↗" : "↘"} ${signed(percent)} %`;
 }
 
 function AnswersSlide({ answers, revealed }: { answers: ReturnType<typeof extractAnswers>; revealed: boolean }) {

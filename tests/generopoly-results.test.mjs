@@ -34,7 +34,7 @@ test("les répartitions augmenté diminué maintenu suspendu excluent les groupe
   assert.deepEqual(counts, { increased: 1, decreased: 0, maintained: 0, suspended: 1, total: 2 });
 });
 
-test("la page Admin déroule toutes les sections et la projection comporte huit écrans animés", () => {
+test("la page Admin déroule les situations complètes et la projection comporte cinq écrans animés", () => {
   const results = read("src/components/apps-studio/GeneropolyResults.tsx");
   const projection = read("src/components/apps-studio/GeneropolyProjection.tsx");
   assert.match(results, /Quand tout va bien/);
@@ -43,7 +43,13 @@ test("la page Admin déroule toutes les sections et la projection comporte huit 
   assert.match(results, /Votre vie spirituelle, votre église locale et les autres dans vos priorités/);
   assert.match(results, /Les réponses des groupes/);
   assert.doesNotMatch(results, /type View|setView/);
-  assert.match(projection, /padStart\(2, "0"\)\} \/ 08/);
+  assert.match(projection, /SituationSlide/);
+  assert.match(projection, /financeRows/);
+  assert.match(projection, /timeRows/);
+  assert.match(projection, /padStart\(2, "0"\)\} \/ 05/);
+  assert.match(projection, /Vos ressources diminuent durablement\. En parallèle, votre église locale a besoin de soutien financier et recherche des bénévoles\./);
+  assert.match(projection, /setSituation\(1\).*3000/s);
+  assert.match(projection, /setSituation\(2\).*6000/s);
   assert.match(projection, /Révéler/);
   assert.match(projection, /Rejouer/);
   assert.match(projection, /requestFullscreen/);
