@@ -35,9 +35,9 @@ export default function MobileNav({
     if (open) setOpen(false);
   }
 
-  // Pendant l'ouverture : le document est figé à sa position exacte. Le
-  // positionnement fixe est nécessaire sur Safari iOS : `overflow: hidden`
-  // seul laisse encore le contenu derrière le tiroir se déplacer.
+  // Pendant l'ouverture, seul le panneau peut recevoir un geste de
+  // défilement. On ne met pas le `body` en position fixe : dans l'application
+  // ce déplacement de repère faisait sauter le tiroir sur certains iPhone.
   useEffect(() => {
     if (!open) return;
 
@@ -47,22 +47,21 @@ export default function MobileNav({
     const scrollY = window.scrollY;
     const bodyStyle = {
       overflow: body.style.overflow,
-      position: body.style.position,
-      top: body.style.top,
-      left: body.style.left,
-      right: body.style.right,
-      width: body.style.width,
+      height: body.style.height,
+      overscrollBehavior: body.style.overscrollBehavior,
     };
-    const rootStyle = { overflow: root.style.overflow, overscrollBehavior: root.style.overscrollBehavior };
+    const rootStyle = {
+      overflow: root.style.overflow,
+      height: root.style.height,
+      overscrollBehavior: root.style.overscrollBehavior,
+    };
 
     root.style.overflow = "hidden";
+    root.style.height = "100%";
     root.style.overscrollBehavior = "none";
     body.style.overflow = "hidden";
-    body.style.position = "fixed";
-    body.style.top = `-${scrollY}px`;
-    body.style.left = "0";
-    body.style.right = "0";
-    body.style.width = "100%";
+    body.style.height = "100%";
+    body.style.overscrollBehavior = "none";
     panel.current?.focus();
 
     function onKeyDown(event: KeyboardEvent) {
@@ -71,21 +70,24 @@ export default function MobileNav({
     function preventBackgroundTouch(event: TouchEvent) {
       if (!panel.current?.contains(event.target as Node)) event.preventDefault();
     }
+    function preventBackgroundWheel(event: WheelEvent) {
+      if (!panel.current?.contains(event.target as Node)) event.preventDefault();
+    }
     document.addEventListener("keydown", onKeyDown);
     document.addEventListener("touchmove", preventBackgroundTouch, { passive: false });
+    document.addEventListener("wheel", preventBackgroundWheel, { passive: false });
 
     return () => {
       body.style.overflow = bodyStyle.overflow;
-      body.style.position = bodyStyle.position;
-      body.style.top = bodyStyle.top;
-      body.style.left = bodyStyle.left;
-      body.style.right = bodyStyle.right;
-      body.style.width = bodyStyle.width;
+      body.style.height = bodyStyle.height;
+      body.style.overscrollBehavior = bodyStyle.overscrollBehavior;
       root.style.overflow = rootStyle.overflow;
+      root.style.height = rootStyle.height;
       root.style.overscrollBehavior = rootStyle.overscrollBehavior;
       window.scrollTo(0, scrollY);
       document.removeEventListener("keydown", onKeyDown);
       document.removeEventListener("touchmove", preventBackgroundTouch);
+      document.removeEventListener("wheel", preventBackgroundWheel);
       opener?.focus();
     };
   }, [open]);
