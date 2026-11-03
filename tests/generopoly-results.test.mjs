@@ -47,10 +47,11 @@ test("les répartitions augmenté diminué maintenu suspendu excluent les groupe
   assert.deepEqual(counts, { increased: 1, decreased: 0, maintained: 0, suspended: 1, total: 2 });
 });
 
-test("la page Admin déroule les situations complètes et la projection comporte cinq écrans animés", () => {
+test("la page Admin déroule les situations complètes et la projection comporte cinq écrans avec focus manuel", () => {
   const results = read("src/components/apps-studio/GeneropolyResults.tsx");
   const projection = read("src/components/apps-studio/GeneropolyProjection.tsx");
   const focus = read("src/components/apps-studio/GeneropolyFocusRings.tsx");
+  const charts = read("src/components/apps-studio/GeneropolySituationCharts.tsx");
   assert.match(results, /Quand tout va bien/);
   assert.match(results, /Face à l’imprévu ponctuel/);
   assert.match(results, /Face à la baisse durable/);
@@ -64,8 +65,9 @@ test("la page Admin déroule les situations complètes et la projection comporte
   assert.match(projection, /Vos ressources diminuent durablement\. En parallèle, votre église locale a besoin de soutien financier et recherche des bénévoles\./);
   assert.match(projection, /GeneropolyFocusRings/);
   assert.match(results, /GeneropolyFocusRings/);
-  assert.match(focus, /setSituation\(1\).*3000/s);
-  assert.match(focus, /setSituation\(2\).*6000/s);
+  assert.match(focus, /onClick=\{\(\) => setSituation\(index\)\}/);
+  assert.doesNotMatch(focus, /setTimeout/);
+  assert.match(charts, /Priorité n° 1/);
   assert.match(projection, /Révéler/);
   assert.match(projection, /Rejouer/);
   assert.match(projection, /requestFullscreen/);

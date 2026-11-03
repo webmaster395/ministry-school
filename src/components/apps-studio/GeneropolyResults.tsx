@@ -80,7 +80,7 @@ function ResultSection({ number, title, question, children }: { number: string; 
 }
 
 function Focus({ tables }: { tables: GeneropolyTable[] }) {
-  return <GeneropolyFocusRings tables={tables} autoPlay />;
+  return <GeneropolyFocusRings tables={tables} />;
 }
 
 function GroupAnswers({ tables }: { tables: GeneropolyTable[] }) {

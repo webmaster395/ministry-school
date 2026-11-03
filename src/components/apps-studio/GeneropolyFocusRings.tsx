@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { GeneropolyTable } from "@/lib/apps/generopoly";
 import { averageAllocation, financeCategories, timeCategories } from "@/lib/apps/generopoly-results";
 
@@ -19,19 +19,11 @@ const dimensions = [
 type Dimension = typeof dimensions[number];
 type AllocationValue = ReturnType<typeof averageAllocation>[number] | undefined;
 
-export default function GeneropolyFocusRings({ tables, autoPlay = false }: { tables: GeneropolyTable[]; autoPlay?: boolean }) {
+export default function GeneropolyFocusRings({ tables }: { tables: GeneropolyTable[] }) {
   const [situation, setSituation] = useState(0);
-  const [run, setRun] = useState(0);
-  useEffect(() => {
-    if (!autoPlay) return;
-    setSituation(0);
-    const eventTimer = window.setTimeout(() => setSituation(1), 3000);
-    const durableTimer = window.setTimeout(() => setSituation(2), 6000);
-    return () => { window.clearTimeout(eventTimer); window.clearTimeout(durableTimer); };
-  }, [autoPlay, run]);
   const current = situations[situation];
   return <div className="rounded-[24px] bg-[#173F45] p-5 text-white sm:p-7">
-    <div className="flex flex-wrap gap-2" role="tablist" aria-label="Situation des priorités">{situations.map((item, index) => <button type="button" role="tab" aria-selected={situation === index} onClick={() => setSituation(index)} key={item.label} className={`rounded-full border px-3 py-1.5 text-xs transition ${situation === index ? "border-white/50 bg-white text-[#173F45]" : "border-white/20 bg-white/5 text-white/75 hover:bg-white/10"}`}>{item.label}</button>)}{autoPlay && <button type="button" onClick={() => setRun((value) => value + 1)} className="ml-1 rounded-full px-2.5 py-1.5 text-xs text-white/70 hover:bg-white/10">↻ Rejouer</button>}</div>
+    <div className="flex flex-wrap gap-2" role="tablist" aria-label="Situation des priorités">{situations.map((item, index) => <button type="button" role="tab" aria-selected={situation === index} onClick={() => setSituation(index)} key={item.label} className={`rounded-full border px-3 py-1.5 text-xs transition ${situation === index ? "border-white/50 bg-white text-[#173F45]" : "border-white/20 bg-white/5 text-white/75 hover:bg-white/10"}`}>{item.label}</button>)}</div>
     <p className="mt-4 min-h-11 rounded-2xl border border-white/10 bg-white/[.06] px-4 py-3 text-sm leading-5 text-white/78">{situation === 2 ? "Vos ressources diminuent durablement. En parallèle, votre église locale a besoin de soutien financier et recherche des bénévoles." : situation === 1 ? "Un imprévu ponctuel réduit les ressources disponibles : les groupes doivent réorganiser leurs priorités." : "Voici les choix des groupes lorsque leurs ressources sont pleinement disponibles."}</p>
     <div className="mt-6 grid gap-4 lg:grid-cols-3">{dimensions.map((dimension) => {
       const values = dimension.fields.map((field) => averageAllocation(tables, field, dimension.categories).find((row) => row.key === dimension.key));

@@ -101,7 +101,7 @@ function FocusSlide({ tables, revealed }: { tables: GeneropolyTable[]; revealed:
     <p className="mt-3 text-[11px] font-semibold uppercase tracking-[.2em] text-[#a9c5be]">Focus final</p>
     <h1 className="mt-3 font-title text-3xl font-normal leading-tight text-[#fbeeda] sm:text-5xl">Quelle place dans nos priorités&nbsp;?</h1>
     <p className="mt-3 max-w-3xl text-sm leading-6 text-white/65 sm:text-base">Face aux changements, quelle part de leurs ressources les groupes ont-ils choisi de consacrer à Dieu, à l’église locale et aux autres&nbsp;?</p>
-    <div className={`mt-7 transition-opacity duration-700 ${revealed ? "opacity-100" : "opacity-0"}`}><GeneropolyFocusRings tables={tables} autoPlay /></div>
+    <div className={`mt-7 transition-opacity duration-700 ${revealed ? "opacity-100" : "opacity-0"}`}><GeneropolyFocusRings tables={tables} /></div>
     <p className="mt-5 text-xs leading-5 text-white/45">Les évolutions comparent les moyennes réelles des participations validées à la situation normale. Elles décrivent des arbitrages, sans juger les choix des groupes.</p>
   </div>;
 }
