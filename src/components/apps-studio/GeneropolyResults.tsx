@@ -5,10 +5,9 @@ import { Check, ExternalLink, Eye, EyeOff, Presentation, RefreshCw, Search } fro
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { GeneropolySession, GeneropolySnapshot, GeneropolyTable } from "@/lib/apps/generopoly";
-import { averageAllocation, comparisonAllocation, completedTables, extractAnswers, financeCategories, resultMarkers, sortAllocationRows, timeCategories, type ResultMarker } from "@/lib/apps/generopoly-results";
+import { completedTables, extractAnswers } from "@/lib/apps/generopoly-results";
 import GeneropolyFocusRings from "@/components/apps-studio/GeneropolyFocusRings";
-
-const palette = { normal: "#2c6d65", event: "#ef8c24", durable: "#c97992" };
+import GeneropolySituationCharts from "@/components/apps-studio/GeneropolySituationCharts";
 
 export default function GeneropolyResults({ sessions, snapshot }: { sessions: GeneropolySession[]; snapshot: GeneropolySnapshot }) {
   const router = useRouter();
@@ -61,14 +60,13 @@ export default function GeneropolyResults({ sessions, snapshot }: { sessions: Ge
 
       {!tables.length ? <div className="rounded-2xl border border-dashed border-border bg-background p-10 text-center text-sm text-muted">Aucune participation définitivement enregistrée pour ce filtre.</div> : <>
         <ResultSection number="01" title="Quand tout va bien" question="Comment les groupes répartissent-ils leurs ressources en situation normale ?">
-          <div className="grid gap-8 xl:grid-cols-2"><AverageChart title="Votre argent" amount="750 €" unit="€" color={palette.normal} rows={averageAllocation(tables, "financeInitial", financeCategories)} /><AverageChart title="Votre temps" amount="28 h" unit="h" color={palette.normal} rows={averageAllocation(tables, "timeInitial", timeCategories)} /></div>
+          <GeneropolySituationCharts tables={tables} situation="normal" />
         </ResultSection>
         <ResultSection number="02" title="Face à l’imprévu ponctuel" question="Que changent les groupes lorsqu’un imprévu survient ?">
-          <div className="grid gap-8 xl:grid-cols-2"><ComparisonChart title="Votre argent" amount="450 €" unit="€" color={palette.event} rows={comparisonAllocation(tables, "financeInitial", "financeAfterOne", financeCategories)} /><ComparisonChart title="Votre temps" amount="22 h" unit="h" color={palette.event} rows={comparisonAllocation(tables, "timeInitial", "timeAfterOne", timeCategories)} /></div>
+          <GeneropolySituationCharts tables={tables} situation="event" />
         </ResultSection>
         <ResultSection number="03" title="Face à la baisse durable" question="Quelles priorités les groupes conservent-ils lorsque leur situation se dégrade durablement ?">
-          <div className="grid gap-8 xl:grid-cols-2"><ComparisonChart title="Votre argent" amount="500 €" unit="€" color={palette.durable} rows={comparisonAllocation(tables, "financeInitial", "financeFinal", financeCategories)} /><ComparisonChart title="Votre temps" amount="18 h" unit="h" color={palette.durable} rows={comparisonAllocation(tables, "timeInitial", "timeFinal", timeCategories)} /></div>
-          <DurableTrends tables={tables} />
+          <GeneropolySituationCharts tables={tables} situation="durable" />
         </ResultSection>
         <ResultSection number="04" title="Votre vie spirituelle, votre église locale et les autres dans vos priorités" question="Une lecture descriptive des arbitrages collectifs, sans mesurer ni qualifier la foi des participants."><Focus tables={tables} /></ResultSection>
         <ResultSection number="05" title="Les réponses des groupes" question="Les formulations sont restituées telles qu’elles ont été saisies."><GroupAnswers tables={tables} /></ResultSection>
@@ -79,45 +77,6 @@ export default function GeneropolyResults({ sessions, snapshot }: { sessions: Ge
 
 function ResultSection({ number, title, question, children }: { number: string; title: string; question: string; children: React.ReactNode }) {
   return <section className="scroll-mt-24 rounded-2xl border border-border bg-background p-5 sm:p-7"><div className="mb-7 max-w-4xl"><p className="label text-[10px] text-link">{number}</p><h2 className="mt-2 font-title text-2xl font-normal sm:text-3xl">{title}</h2><p className="mt-2 text-sm leading-6 text-muted">{question}</p></div>{children}</section>;
-}
-
-type AverageRow = { key: string; label: string; value: number; sampleCount: number };
-function AverageChart({ title, amount, unit, color, rows }: { title: string; amount: string; unit: string; color: string; rows: AverageRow[] }) {
-  const ordered = sortAllocationRows(rows);
-  const maximum = Math.max(...ordered.map((row) => row.value), 1);
-  return <article><div className="mb-5 flex items-end justify-between gap-4"><h3 className="text-base font-semibold">{title}</h3><strong className="font-title text-2xl font-normal" style={{ color }}>{amount}</strong></div><div className="space-y-5">{ordered.map((row, index) => <div className="transition-all duration-700 motion-reduce:transition-none" style={{ transitionDelay: `${index * 45}ms` }} key={row.key}><div className="mb-2 flex items-end justify-between gap-4 text-sm"><span className="min-w-0 text-muted">{row.label}</span><strong>{row.sampleCount ? `${formatNumber(row.value)} ${unit}` : "—"}</strong></div><div className="h-3 overflow-hidden rounded-full bg-surface"><div className="h-full rounded-full transition-[width] duration-700 motion-reduce:transition-none" style={{ width: row.sampleCount ? `${row.value / maximum * 100}%` : "0%", backgroundColor: color }} /></div></div>)}</div></article>;
-}
-
-type ComparisonRow = ReturnType<typeof comparisonAllocation>[number];
-function ComparisonChart({ title, amount, unit, color, rows }: { title: string; amount: string; unit: string; color: string; rows: ComparisonRow[] }) {
-  const ordered = sortAllocationRows(rows);
-  const markers = resultMarkers(rows);
-  const maximum = Math.max(...ordered.flatMap((row) => [row.initial, row.current]), 1);
-  return <article><div className="mb-5 flex items-end justify-between gap-4"><h3 className="text-base font-semibold">{title}</h3><strong className="font-title text-2xl font-normal" style={{ color }}>{amount}</strong></div><div className="space-y-6">{ordered.map((row, index) => <div className="transition-all duration-700 motion-reduce:transition-none" style={{ transitionDelay: `${index * 45}ms` }} key={row.key}><div className="mb-2 flex flex-wrap items-end justify-between gap-2 text-sm"><span className="flex min-w-0 flex-wrap items-center gap-1.5 text-muted"><span>{row.label}</span>{(markers.get(row.key) ?? []).map((marker) => <MarkerBadge marker={marker} key={marker} />)}</span><span className="flex items-center gap-2"><strong>{row.sampleCount ? `${formatNumber(row.current)} ${unit}` : "—"}</strong>{row.sampleCount > 0 && <Variation difference={row.difference} percent={row.percent} unit={unit} evolution={row.evolution} />}</span></div><div className="relative h-4 overflow-hidden rounded-full bg-surface"><div className="absolute inset-y-0 left-0 rounded-full bg-[#d9ddda]" style={{ width: row.sampleCount ? `${row.initial / maximum * 100}%` : "0%" }} /><div className="absolute inset-y-[3px] left-0 rounded-full transition-[width] duration-700 motion-reduce:transition-none" style={{ width: row.sampleCount ? `${row.current / maximum * 100}%` : "0%", backgroundColor: color }} /></div><p className="mt-1.5 text-[10px] text-muted">Référence : {row.sampleCount ? `${formatNumber(row.initial)} ${unit}` : "donnée manquante"}</p></div>)}</div></article>;
-}
-
-function MarkerBadge({ marker }: { marker: ResultMarker }) {
-  const labels: Record<ResultMarker, string> = { decrease: "↘ Plus forte baisse", preserved: "✓ La plus préservée", increase: "↗ Plus forte hausse" };
-  const tones: Record<ResultMarker, string> = { decrease: "bg-[#fbe8e5] text-[#a63832]", preserved: "bg-[#e3f2e9] text-[#23704b]", increase: "bg-[#e3f2e9] text-[#23704b]" };
-  return <span className={`rounded-full px-1.5 py-0.5 text-[9px] font-semibold ${tones[marker]}`}>{labels[marker]}</span>;
-}
-
-function Variation({ difference, percent, unit, evolution }: { difference: number; percent: number | null; unit: string; evolution: string }) {
-  const tones: Record<string, string> = { increased: "text-[#28704c]", decreased: "text-[#b23b35]", suspended: "text-[#b23b35]", maintained: "text-[#60736f]" };
-  const label = evolution === "suspended" ? "Suspendu" : `${signed(difference)} ${unit}${percent === null ? "" : ` · ${signed(percent)} %`}`;
-  return <span className={`text-[11px] font-semibold ${tones[evolution] ?? tones.maintained}`}>{label}</span>;
-}
-
-function DurableTrends({ tables }: { tables: GeneropolyTable[] }) {
-  const rows = [...comparisonAllocation(tables, "financeInitial", "financeFinal", financeCategories).map((row) => ({ ...row, unit: "€" })), ...comparisonAllocation(tables, "timeInitial", "timeFinal", timeCategories).map((row) => ({ ...row, unit: "h" }))].filter((row) => row.sampleCount > 0);
-  const reduced = [...rows].sort((a, b) => a.difference - b.difference).slice(0, 3);
-  const preserved = [...rows].sort((a, b) => Math.abs(a.difference) - Math.abs(b.difference)).slice(0, 3);
-  const increased = [...rows].filter((row) => row.difference > 0).sort((a, b) => b.difference - a.difference).slice(0, 3);
-  return <div className="mt-8 grid gap-5 border-t border-border pt-7 lg:grid-cols-3"><Trend title="Plus réduites" rows={reduced} /><Trend title="Plus préservées" rows={preserved} /><Trend title="Plus augmentées" rows={increased} empty="Aucune catégorie en augmentation." /></div>;
-}
-
-function Trend({ title, rows, empty = "Aucune donnée comparable." }: { title: string; rows: Array<{ key: string; label: string; difference: number; unit: string }>; empty?: string }) {
-  return <div><h3 className="text-sm font-semibold">{title}</h3>{rows.length ? <ol className="mt-3 space-y-2">{rows.map((row, index) => <li className="flex gap-3 text-sm text-muted" key={`${row.key}-${row.unit}`}><span className="text-foreground/35">0{index + 1}</span><span>{row.label} · {signed(row.difference)} {row.unit}</span></li>)}</ol> : <p className="mt-3 text-sm text-muted">{empty}</p>}</div>;
 }
 
 function Focus({ tables }: { tables: GeneropolyTable[] }) {
@@ -140,8 +99,5 @@ function GroupAnswers({ tables }: { tables: GeneropolyTable[] }) {
 }
 
 function Metric({ label, value }: { label: string; value: string | number }) { return <div><dt className="text-[11px] text-muted">{label}</dt><dd className="mt-1 font-title text-2xl font-normal">{value}</dd></div>; }
-function signed(value: number) { return `${value > 0 ? "+" : value < 0 ? "−" : ""}${formatNumber(Math.abs(value))}`; }
-function percent(value: number, total: number) { return total ? `${Math.round(value / total * 100)} %` : "—"; }
-function formatNumber(value: number) { return Number.isInteger(value) ? String(value) : value.toFixed(1).replace(".", ","); }
 function formatDate(value?: string) { return value ? new Date(`${value}T12:00:00Z`).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" }) : ""; }
 function formatTime(value: number) { return new Date(value).toLocaleString("fr-FR", { timeZone: "Europe/Paris", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }); }

@@ -25,6 +25,19 @@ test("une référence nulle ne produit jamais de pourcentage inventé", () => {
   assert.equal(rows[0].evolution, "increased");
 });
 
+test("les zéros saisis sont des réponses valides dans les moyennes et les évolutions", () => {
+  const rows = comparisonAllocation([
+    table({ financeInitial: { generosity: 0 }, financeFinal: { generosity: 0 } }),
+    table({ financeInitial: { generosity: 100 }, financeFinal: { generosity: 0 } }),
+  ], "financeInitial", "financeFinal", [["generosity", "Générosité"]]);
+  assert.equal(rows[0].initial, 50);
+  assert.equal(rows[0].current, 0);
+  assert.equal(rows[0].difference, -50);
+  assert.equal(rows[0].percent, -100);
+  assert.equal(rows[0].sampleCount, 2);
+  assert.equal(evolutionSummary([table({ financeInitial: { generosity: 0 }, financeFinal: { generosity: 0 } })], "financeInitial", "financeFinal", "generosity").maintained, 1);
+});
+
 test("les répartitions augmenté diminué maintenu suspendu excluent les groupes incomplets", () => {
   const counts = evolutionSummary([
     table({ financeInitial: { generosity: 100 }, financeFinal: { generosity: 0 } }),
@@ -45,8 +58,8 @@ test("la page Admin déroule les situations complètes et la projection comporte
   assert.match(results, /Les réponses des groupes/);
   assert.doesNotMatch(results, /type View|setView/);
   assert.match(projection, /SituationSlide/);
-  assert.match(projection, /financeRows/);
-  assert.match(projection, /timeRows/);
+  assert.match(projection, /GeneropolySituationCharts/);
+  assert.match(results, /GeneropolySituationCharts/);
   assert.match(projection, /padStart\(2, "0"\)\} \/ 05/);
   assert.match(projection, /Vos ressources diminuent durablement\. En parallèle, votre église locale a besoin de soutien financier et recherche des bénévoles\./);
   assert.match(projection, /GeneropolyFocusRings/);
