@@ -37,6 +37,7 @@ test("les répartitions augmenté diminué maintenu suspendu excluent les groupe
 test("la page Admin déroule les situations complètes et la projection comporte cinq écrans animés", () => {
   const results = read("src/components/apps-studio/GeneropolyResults.tsx");
   const projection = read("src/components/apps-studio/GeneropolyProjection.tsx");
+  const focus = read("src/components/apps-studio/GeneropolyFocusRings.tsx");
   assert.match(results, /Quand tout va bien/);
   assert.match(results, /Face à l’imprévu ponctuel/);
   assert.match(results, /Face à la baisse durable/);
@@ -48,8 +49,10 @@ test("la page Admin déroule les situations complètes et la projection comporte
   assert.match(projection, /timeRows/);
   assert.match(projection, /padStart\(2, "0"\)\} \/ 05/);
   assert.match(projection, /Vos ressources diminuent durablement\. En parallèle, votre église locale a besoin de soutien financier et recherche des bénévoles\./);
-  assert.match(projection, /setSituation\(1\).*3000/s);
-  assert.match(projection, /setSituation\(2\).*6000/s);
+  assert.match(projection, /GeneropolyFocusRings/);
+  assert.match(results, /GeneropolyFocusRings/);
+  assert.match(focus, /setSituation\(1\).*3000/s);
+  assert.match(focus, /setSituation\(2\).*6000/s);
   assert.match(projection, /Révéler/);
   assert.match(projection, /Rejouer/);
   assert.match(projection, /requestFullscreen/);

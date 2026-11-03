@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight, Eye, Maximize2, RefreshCw, RotateCcw, X } from "lucide-react";
 import type { GeneropolySession, GeneropolySnapshot, GeneropolyTable } from "@/lib/apps/generopoly";
 import { averageAllocation, comparisonAllocation, completedTables, extractAnswers, financeCategories, resultMarkers, sortAllocationRows, timeCategories, type ResultMarker } from "@/lib/apps/generopoly-results";
+import GeneropolyFocusRings from "@/components/apps-studio/GeneropolyFocusRings";
 
 const slides = [
   "Quand tout va bien",
@@ -127,69 +128,14 @@ function ProjectionVariation({ row, unit }: { row: ComparisonRow; unit: string }
   return <span className="text-xs font-semibold sm:text-sm" style={{ color: colorsByEvolution[row.evolution] }}>{text}</span>;
 }
 
-const focusSituations = [
-  { label: "Situation normale", financeAvailable: 750, timeAvailable: 28 },
-  { label: "Imprévu ponctuel", financeAvailable: 450, timeAvailable: 22 },
-  { label: "Baisse durable", financeAvailable: 500, timeAvailable: 18 },
-] as const;
-
-const focusCards = [
-  { emoji: "💚", title: "Générosité financière", key: "generosity", fields: ["financeInitial", "financeAfterOne", "financeFinal"], categories: financeCategories, unit: "€", ring: "#83DDAE", kind: "finance" },
-  { emoji: "✝️", title: "Vie spirituelle", key: "spiritual", fields: ["timeInitial", "timeAfterOne", "timeFinal"], categories: timeCategories, unit: "h", ring: "#E9A3B3", kind: "time" },
-  { emoji: "🤝", title: "Service et solidarité", key: "service", fields: ["timeInitial", "timeAfterOne", "timeFinal"], categories: timeCategories, unit: "h", ring: "#F4A340", kind: "time" },
-] as const;
-
 function FocusSlide({ tables, revealed }: { tables: GeneropolyTable[]; revealed: boolean }) {
-  const [situation, setSituation] = useState(0);
-  const [run, setRun] = useState(0);
-  useEffect(() => {
-    setSituation(0);
-    const eventTimer = window.setTimeout(() => setSituation(1), 3000);
-    const durableTimer = window.setTimeout(() => setSituation(2), 6000);
-    return () => { window.clearTimeout(eventTimer); window.clearTimeout(durableTimer); };
-  }, [run]);
-  const current = focusSituations[situation];
-  const replayFocus = () => setRun((value) => value + 1);
   return <div className="mx-auto w-full max-w-6xl">
     <p className="mt-3 text-[11px] font-semibold uppercase tracking-[.2em] text-[#a9c5be]">Focus final</p>
     <h1 className="mt-3 font-title text-3xl font-normal leading-tight text-[#fbeeda] sm:text-5xl">Quelle place dans nos priorités&nbsp;?</h1>
     <p className="mt-3 max-w-3xl text-sm leading-6 text-white/65 sm:text-base">Face aux changements, quelle part de leurs ressources les groupes ont-ils choisi de consacrer à Dieu, à l’église locale et aux autres&nbsp;?</p>
-    <div className="mt-7 flex flex-wrap items-center gap-2" role="tablist" aria-label="Situation projetée">{focusSituations.map((item, index) => <button type="button" key={item.label} role="tab" aria-selected={situation === index} onClick={() => setSituation(index)} className={`rounded-full border px-3 py-1.5 text-xs transition ${situation === index ? "border-white/45 bg-white text-[#173F45]" : "border-white/20 bg-white/5 text-white/75 hover:bg-white/10"}`}>{item.label}</button>)}<button type="button" onClick={replayFocus} className="ml-1 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs text-white/70 hover:bg-white/10"><RotateCcw size={13} /> Rejouer</button></div>
-    <div className="mt-5 min-h-11 rounded-2xl border border-white/10 bg-white/[.06] px-4 py-3 text-sm leading-5 text-white/78 sm:px-5">{situation === 2 ? "Vos ressources diminuent durablement. En parallèle, votre église locale a besoin de soutien financier et recherche des bénévoles." : situation === 1 ? "Un imprévu ponctuel réduit les ressources disponibles : les groupes doivent réorganiser leurs priorités." : "Voici les choix des groupes lorsque leurs ressources sont pleinement disponibles."}</div>
-    <div className="mt-6 grid gap-4 lg:grid-cols-3">{focusCards.map((card, index) => {
-      const values = card.fields.map((field) => averageAllocation(tables, field, card.categories).find((row) => row.key === card.key));
-      const normal = values[0];
-      const value = values[situation];
-      const available = card.kind === "finance" ? current.financeAvailable : current.timeAvailable;
-      return <FocusRingCard key={card.key} card={card} normal={normal} value={value} available={available} compare={situation > 0} revealed={revealed} delay={index * 100} />;
-    })}</div>
+    <div className={`mt-7 transition-opacity duration-700 ${revealed ? "opacity-100" : "opacity-0"}`}><GeneropolyFocusRings tables={tables} autoPlay /></div>
     <p className="mt-5 text-xs leading-5 text-white/45">Les évolutions comparent les moyennes réelles des participations validées à la situation normale. Elles décrivent des arbitrages, sans juger les choix des groupes.</p>
   </div>;
-}
-
-type FocusCard = typeof focusCards[number];
-type AllocationResult = ReturnType<typeof averageAllocation>[number] | undefined;
-function FocusRingCard({ card, normal, value, available, compare, revealed, delay }: { card: FocusCard; normal: AllocationResult; value: AllocationResult; available: number; compare: boolean; revealed: boolean; delay: number }) {
-  const hasValue = Boolean(value?.sampleCount);
-  const hasNormal = Boolean(normal?.sampleCount);
-  const resourceShare = hasValue && available > 0 ? Math.max(0, Math.min(100, value!.value / available * 100)) : null;
-  const percent = hasNormal && hasValue && normal!.value > 0 ? (value!.value - normal!.value) / normal!.value * 100 : null;
-  const circumference = 289.03;
-  const dash = resourceShare === null ? 0 : circumference * resourceShare / 100;
-  return <article className="rounded-[24px] border border-white/10 bg-white/[.075] p-5 text-center transition-all duration-700 sm:p-6" style={{ opacity: revealed ? 1 : 0, transform: revealed ? "translateY(0)" : "translateY(14px)", transitionDelay: `${delay}ms` }}>
-    <div className="flex items-center justify-center gap-2"><span className="text-2xl" aria-hidden>{card.emoji}</span><h2 className="text-base font-medium text-white sm:text-lg">{card.title}</h2></div>
-    <div className="relative mx-auto mt-5 grid h-40 w-40 place-items-center"><svg className="h-40 w-40 -rotate-90" viewBox="0 0 112 112" aria-hidden><circle cx="56" cy="56" r="46" fill="none" stroke="rgba(255,255,255,.12)" strokeWidth="9" /><circle cx="56" cy="56" r="46" fill="none" stroke={card.ring} strokeLinecap="round" strokeWidth="9" strokeDasharray={`${dash} ${circumference}`} className="transition-all duration-[1200ms] ease-out motion-reduce:transition-none" /></svg><div className="absolute inset-0 grid place-items-center"><div><strong className="block text-3xl font-medium leading-none text-white">{resourceShare === null ? "—" : `${format(resourceShare)} %`}</strong><span className="mt-1 block text-[10px] uppercase tracking-[.11em] text-white/60">du {card.kind === "finance" ? "budget" : "temps"}</span></div></div></div>
-    <p className="mt-4 text-sm text-white/65">{hasValue ? `${format(value!.value)} ${card.unit} ${compare ? "maintenus" : "attribués"}` : "Donnée indisponible"}</p>
-    {compare && <div className="mt-3 min-h-10 text-sm">{hasValue && hasNormal ? <><p className="text-white/58">{format(value!.value)} {card.unit} <span className="text-white/35">vs {format(normal!.value)} {card.unit} en temps normal</span></p><p className="mt-1 font-medium" style={{ color: percent === null ? "#c6d5d3" : percent > 0 ? "#83DDAE" : percent < 0 ? "#ff9f91" : "#c6d5d3" }}>{focusChange(percent, normal!.value, value!.value)}</p></> : <p className="text-white/45">Comparaison indisponible</p>}</div>}
-  </article>;
-}
-
-function focusChange(percent: number | null, initial: number, current: number) {
-  if (initial === 0 && current === 0) return "= Resté à zéro";
-  if (percent === null) return current > initial ? "↗ Augmenté" : "= Maintenu";
-  if (percent === 0) return "= Maintenu";
-  if (current === 0) return "↘ −100 % · Suspendu";
-  return `${percent > 0 ? "↗" : "↘"} ${signed(percent)} %`;
 }
 
 function AnswersSlide({ answers, revealed }: { answers: ReturnType<typeof extractAnswers>; revealed: boolean }) {
