@@ -11,7 +11,7 @@ export default async function GeneropolyResultsPage({ searchParams }: { searchPa
   try {
     const sessions = await getGeneropolySessions();
     const requested = (await searchParams).session;
-    const session = sessions.find((item) => item.id === requested) ?? sessions[0];
+    const session = requested === "all" ? { id: "all" } : sessions.find((item) => item.id === requested) ?? sessions[0];
     const snapshot = session ? await getGeneropolySnapshot(session.id) : { session: null, tables: [], syncedAt: 0 };
     payload = { sessions, snapshot };
   } catch (cause) {

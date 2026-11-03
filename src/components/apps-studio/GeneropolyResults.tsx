@@ -29,6 +29,7 @@ export default function GeneropolyResults({ sessions, snapshot }: { sessions: Ge
   }, [refresh]);
 
   const completed = completedTables(activeSnapshot);
+  const selectedScope = activeSnapshot.session?.id === "all" ? "all" : activeSnapshot.session?.id ?? "";
   const selectedGroup = completed.some((table) => table.id === group) ? group : "all";
   const tables = selectedGroup === "all" ? completed : completed.filter((table) => table.id === selectedGroup);
   const participants = completed.reduce((sum, table) => sum + Number(table.participantCount ?? 0), 0);
@@ -39,6 +40,7 @@ export default function GeneropolyResults({ sessions, snapshot }: { sessions: Ge
   return <div className="space-y-8">
     <section className="overflow-hidden rounded-2xl border border-border bg-background">
       <div className="border-b border-border px-4 py-4 sm:px-5"><h2 className="font-title text-xl font-normal">Journées disponibles</h2><p className="mt-1 text-xs text-muted">Chaque participation est classée selon sa date de validation finale, en heure de Paris.</p></div>
+      <div className="border-b border-border bg-surface/50 px-4 py-4 sm:px-5"><label className="grid max-w-lg gap-2 text-xs font-semibold">Périmètre analysé<select aria-label="Périmètre analysé" className="min-h-11 rounded-xl border border-border bg-background px-3 text-sm font-normal" value={selectedScope} onChange={(event) => router.push(event.target.value === "all" ? "/admin/apps/generopoly/results?session=all" : `/admin/apps/generopoly/results?session=${encodeURIComponent(event.target.value)}`)}><option value="all">Toutes les sessions</option>{sessions.map((session) => <option key={session.id} value={session.id}>Atelier du {formatDate(session.session_date)}</option>)}</select></label></div>
       <div className="divide-y divide-border">{sessions.map((session) => {
         const active = session.id === activeSnapshot.session?.id;
         const today = session.session_date === currentParisDay;
@@ -52,7 +54,7 @@ export default function GeneropolyResults({ sessions, snapshot }: { sessions: Ge
 
     {activeSnapshot.session && <>
       <header className="grid gap-5 border-b border-border pb-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
-        <div><p className="label text-[10px] text-link">ATELIER DU {formatDate(activeSnapshot.session.session_date).toLocaleUpperCase("fr-FR")}</p><h2 className="mt-2 font-title text-3xl font-normal">Résultats de la journée</h2><p className="mt-2 text-sm text-muted">Moyennes calculées par groupe, uniquement à partir des participations définitivement validées.</p></div>
+        <div><p className="label text-[10px] text-link">{activeSnapshot.session.id === "all" ? "TOUTES LES SESSIONS" : `ATELIER DU ${formatDate(activeSnapshot.session.session_date).toLocaleUpperCase("fr-FR")}`}</p><h2 className="mt-2 font-title text-3xl font-normal">{activeSnapshot.session.id === "all" ? "Résultats cumulés" : "Résultats de la journée"}</h2><p className="mt-2 text-sm text-muted">Moyennes calculées par groupe, uniquement à partir des participations définitivement validées.</p></div>
         <div className="flex flex-wrap gap-2"><button type="button" onClick={() => void refresh()} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-border bg-background px-4 text-xs font-medium"><RefreshCw size={14} className={refreshing ? "animate-spin" : ""} /> Actualiser</button><Link href={`/admin/apps/generopoly/projection?session=${encodeURIComponent(activeSnapshot.session.id)}`} target="_blank" className="inline-flex min-h-10 items-center gap-2 rounded-full bg-foreground px-4 text-xs font-medium text-on-accent"><Presentation size={14} /> Projeter</Link></div>
       </header>
       <dl className="grid grid-cols-2 gap-x-5 gap-y-4 border-b border-border pb-6 lg:grid-cols-4"><Metric label="Groupes validés" value={completed.length} /><Metric label="Participants" value={participants} /><Metric label="Réponses finales complètes" value={completeAnswers} /><Metric label="Dernière mise à jour" value={lastUpdate ? formatTime(lastUpdate) : "—"} /></dl>

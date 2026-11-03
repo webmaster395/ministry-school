@@ -107,6 +107,25 @@ export async function getGeneropolySessions(): Promise<GeneropolySession[]> {
 }
 
 export async function getGeneropolySnapshot(sessionId: string): Promise<GeneropolySnapshot> {
+  if (sessionId === "all") {
+    const sessions = await getGeneropolySessions();
+    const snapshots = await Promise.all(sessions.map((session) => getGeneropolySnapshot(session.id)));
+    const tables = snapshots.flatMap((snapshot) => snapshot.tables);
+    return {
+      session: {
+        id: "all",
+        code: "all",
+        title: "Toutes les sessions",
+        status: "closed",
+        created_at: 0,
+        groupCount: tables.length,
+        participantCount: tables.reduce((sum, table) => sum + Number(table.participantCount ?? 0), 0),
+        lastValidationAt: tables.length ? Math.max(...tables.map((table) => Number(table.completedAt ?? table.updatedAt ?? 0))) : null,
+      },
+      tables,
+      syncedAt: Date.now(),
+    };
+  }
   if (!/^[a-zA-Z0-9-]{8,80}$/.test(sessionId)) throw new Error("Identifiant de journée invalide.");
   return generopolyFetch<GeneropolySnapshot>(`/api/admin/snapshot?id=${encodeURIComponent(sessionId)}`);
 }

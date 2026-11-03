@@ -52,6 +52,7 @@ test("la page Admin déroule les situations complètes et la projection comporte
   const projection = read("src/components/apps-studio/GeneropolyProjection.tsx");
   const focus = read("src/components/apps-studio/GeneropolyFocusRings.tsx");
   const charts = read("src/components/apps-studio/GeneropolySituationCharts.tsx");
+  const integration = read("src/lib/apps/generopoly.ts");
   assert.match(results, /Quand tout va bien/);
   assert.match(results, /Face à l’imprévu ponctuel/);
   assert.match(results, /Face à la baisse durable/);
@@ -68,6 +69,7 @@ test("la page Admin déroule les situations complètes et la projection comporte
   assert.match(focus, /onClick=\{\(\) => setSituation\(index\)\}/);
   assert.doesNotMatch(focus, /setTimeout/);
   assert.match(charts, /Priorité n° 1/);
+  assert.match(integration, /sessionId === "all"/);
   assert.match(projection, /Révéler/);
   assert.match(projection, /Rejouer/);
   assert.match(projection, /requestFullscreen/);

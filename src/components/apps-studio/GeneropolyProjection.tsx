@@ -66,10 +66,11 @@ export default function GeneropolyProjection({ sessions, initial }: { sessions: 
   const tables = completedTables(snapshot);
   const selectedAnswers = useMemo(() => extractAnswers(tables).filter((answer) => answer.selected && answer.mission === "Miroir"), [tables]);
   const participants = tables.reduce((sum, table) => sum + Number(table.participantCount ?? 0), 0);
+  const scopeLabel = snapshot.session?.id === "all" ? "Toutes les sessions" : `Atelier du ${formatDate(snapshot.session?.session_date)}`;
   return <main className="min-h-screen overflow-x-hidden bg-[#173F45] text-white">
     <header className="flex flex-wrap items-center gap-3 border-b border-white/10 px-4 py-3 sm:px-6">
-      <div><strong className="font-title text-lg font-normal">Généropoly</strong><p className="text-[10px] text-white/50">{formatDate(snapshot.session?.session_date)} · {tables.length} groupes · {participants} participants</p></div>
-      <select aria-label="Journée projetée" className="ml-auto min-h-9 max-w-[190px] rounded-full border border-white/15 bg-white/10 px-3 text-xs" value={sessionId} onChange={(event) => void selectSession(event.target.value)}>{sessions.map((session) => <option className="text-black" value={session.id} key={session.id}>{formatDate(session.session_date)}</option>)}</select>
+      <div><strong className="font-title text-lg font-normal">Généropoly</strong><p className="text-[10px] text-white/50">{scopeLabel} · {tables.length} groupes · {participants} participants</p></div>
+      <select aria-label="Périmètre projeté" className="ml-auto min-h-9 max-w-[210px] rounded-full border border-white/15 bg-white/10 px-3 text-xs" value={sessionId} onChange={(event) => void selectSession(event.target.value)}><option className="text-black" value="all">Toutes les sessions</option>{sessions.map((session) => <option className="text-black" value={session.id} key={session.id}>Atelier du {formatDate(session.session_date)}</option>)}</select>
       <button type="button" onClick={() => void load()} className="rounded-full p-2 hover:bg-white/10" aria-label="Actualiser"><RefreshCw size={17} className={refreshing ? "animate-spin" : ""} /></button>
       <button type="button" onClick={() => document.documentElement.requestFullscreen()} className="rounded-full p-2 hover:bg-white/10" aria-label="Plein écran"><Maximize2 size={17} /></button>
       <Link href="/admin/apps/generopoly/results" className="rounded-full p-2 hover:bg-white/10" aria-label="Quitter"><X size={19} /></Link>
