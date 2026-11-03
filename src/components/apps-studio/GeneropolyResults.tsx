@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Check, ExternalLink, Eye, EyeOff, Presentation, RefreshCw, Search } from "lucide-react";
+import { Check, ExternalLink, Eye, EyeOff, MoreHorizontal, Presentation, RefreshCw, Search } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { GeneropolySession, GeneropolySnapshot, GeneropolyTable } from "@/lib/apps/generopoly";
@@ -14,6 +14,13 @@ export default function GeneropolyResults({ sessions, snapshot }: { sessions: Ge
   const [liveSnapshot, setLiveSnapshot] = useState(snapshot);
   const [group, setGroup] = useState("all");
   const [refreshing, setRefreshing] = useState(false);
+  const [menuSession, setMenuSession] = useState<string | null>(null);
+  const [deletingSession, setDeletingSession] = useState<GeneropolySession | null>(null);
+  const [deleteStep, setDeleteStep] = useState(1);
+  const [deleteConfirmation, setDeleteConfirmation] = useState("");
+  const [sessionActionError, setSessionActionError] = useState("");
+  const [sessionActionLoading, setSessionActionLoading] = useState(false);
+  useEffect(() => { setLiveSnapshot(snapshot); }, [snapshot]);
   const activeSnapshot = liveSnapshot.session?.id === snapshot.session?.id ? liveSnapshot : snapshot;
   const refresh = useCallback(async () => {
     if (!activeSnapshot.session?.id) return;
@@ -36,19 +43,33 @@ export default function GeneropolyResults({ sessions, snapshot }: { sessions: Ge
   const completeAnswers = completed.filter((table) => Array.isArray(table.state.mirror) && table.state.mirror.filter((answer) => String(answer).trim()).length >= 4).length;
   const lastUpdate = completed.length ? Math.max(...completed.map((table) => table.updatedAt)) : activeSnapshot.syncedAt;
   const currentParisDay = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+  const includedSessions = sessions.filter((session) => !session.isExcluded);
+  const excludedSessions = sessions.filter((session) => session.isExcluded);
+  async function updateSession(session: GeneropolySession, action: "exclude" | "include" | "delete", confirmation?: string) {
+    setSessionActionLoading(true); setSessionActionError("");
+    try {
+      const response = await fetch("/api/admin/apps/generopoly/sessions", { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify({ id: session.id, action, confirmation }) });
+      const result = await response.json() as { error?: string };
+      if (!response.ok) throw new Error(result.error ?? "Action impossible.");
+      setMenuSession(null); setDeletingSession(null); setDeleteConfirmation(""); setDeleteStep(1);
+      if (action === "delete" && selectedScope === session.id) router.push("/admin/apps/generopoly/results"); else router.refresh();
+    } catch (cause) { setSessionActionError(cause instanceof Error ? cause.message : "Action impossible."); }
+    finally { setSessionActionLoading(false); }
+  }
 
   return <div className="space-y-8">
     <section className="overflow-hidden rounded-2xl border border-border bg-background">
       <div className="border-b border-border px-4 py-4 sm:px-5"><h2 className="font-title text-xl font-normal">Journées disponibles</h2><p className="mt-1 text-xs text-muted">Chaque participation est classée selon sa date de validation finale, en heure de Paris.</p></div>
-      <div className="border-b border-border bg-surface/50 px-4 py-4 sm:px-5"><label className="grid max-w-lg gap-2 text-xs font-semibold">Périmètre analysé<select aria-label="Périmètre analysé" className="min-h-11 rounded-xl border border-border bg-background px-3 text-sm font-normal" value={selectedScope} onChange={(event) => router.push(event.target.value === "all" ? "/admin/apps/generopoly/results?session=all" : `/admin/apps/generopoly/results?session=${encodeURIComponent(event.target.value)}`)}><option value="all">Toutes les sessions</option>{sessions.map((session) => <option key={session.id} value={session.id}>Atelier du {formatDate(session.session_date)}</option>)}</select></label></div>
-      <div className="divide-y divide-border">{sessions.map((session) => {
+      <div className="border-b border-border bg-surface/50 px-4 py-4 sm:px-5"><label className="grid max-w-lg gap-2 text-xs font-semibold">Périmètre analysé<select aria-label="Périmètre analysé" className="min-h-11 rounded-xl border border-border bg-background px-3 text-sm font-normal" value={selectedScope} onChange={(event) => router.push(event.target.value === "all" ? "/admin/apps/generopoly/results?session=all" : `/admin/apps/generopoly/results?session=${encodeURIComponent(event.target.value)}`)}><option value="all">Toutes les sessions</option><optgroup label="Sessions incluses">{includedSessions.map((session) => <option key={session.id} value={session.id}>Atelier du {formatDate(session.session_date)}</option>)}</optgroup>{excludedSessions.length > 0 && <optgroup label="Sessions exclues">{excludedSessions.map((session) => <option key={session.id} value={session.id}>Atelier du {formatDate(session.session_date)} — exclue</option>)}</optgroup>}</select></label></div>
+      <div className="divide-y divide-border">{includedSessions.map((session) => {
         const active = session.id === activeSnapshot.session?.id;
         const today = session.session_date === currentParisDay;
         return <div className={`grid gap-3 px-4 py-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:px-5 ${active ? "bg-surface" : ""}`} key={session.id}>
           <div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><strong className="text-sm font-semibold">{formatDate(session.session_date) || session.title}</strong>{today && <span className="rounded-full bg-[#dcece7] px-2 py-1 text-[10px] font-semibold text-[#245e57]">Aujourd’hui</span>}</div><p className="mt-1 text-xs text-muted">{session.groupCount} groupe{session.groupCount > 1 ? "s" : ""} validé{session.groupCount > 1 ? "s" : ""} · {session.participantCount} participant{session.participantCount > 1 ? "s" : ""}</p></div>
-          <div className="flex flex-wrap gap-2"><button type="button" disabled={active} onClick={() => router.push(`/admin/apps/generopoly/results?session=${encodeURIComponent(session.id)}`)} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-border bg-background px-4 text-xs font-medium disabled:border-transparent disabled:bg-foreground disabled:text-on-accent"><ExternalLink size={14} />{active ? "Résultats affichés" : "Voir les résultats"}</button><Link href={`/admin/apps/generopoly/projection?session=${encodeURIComponent(session.id)}`} target="_blank" className="inline-flex min-h-10 items-center gap-2 rounded-full border border-border bg-background px-4 text-xs font-medium"><Presentation size={14} /> Projeter</Link></div>
+          <div className="relative flex flex-wrap gap-2"><button type="button" disabled={active} onClick={() => router.push(`/admin/apps/generopoly/results?session=${encodeURIComponent(session.id)}`)} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-border bg-background px-4 text-xs font-medium disabled:border-transparent disabled:bg-foreground disabled:text-on-accent"><ExternalLink size={14} />{active ? "Résultats affichés" : "Voir les résultats"}</button><Link href={`/admin/apps/generopoly/projection?session=${encodeURIComponent(session.id)}`} target="_blank" className="inline-flex min-h-10 items-center gap-2 rounded-full border border-border bg-background px-4 text-xs font-medium"><Presentation size={14} /> Projeter</Link><button type="button" onClick={() => setMenuSession(menuSession === session.id ? null : session.id)} aria-label={`Actions pour ${formatDate(session.session_date)}`} className="grid min-h-10 min-w-10 place-items-center rounded-full border border-border bg-background"><MoreHorizontal size={17} /></button>{menuSession === session.id && <SessionMenu session={session} onView={() => router.push(`/admin/apps/generopoly/results?session=${encodeURIComponent(session.id)}`)} onExclude={() => void updateSession(session, "exclude")} onDelete={() => { setDeletingSession(session); setDeleteStep(1); setSessionActionError(""); setMenuSession(null); }} />}</div>
         </div>;
       })}</div>
+      {excludedSessions.length > 0 && <div className="border-t border-border"><div className="bg-[#f9f5ee] px-4 py-3 text-xs font-semibold text-muted sm:px-5">Sessions exclues</div><div className="divide-y divide-border">{excludedSessions.map((session) => <div className="grid gap-3 px-4 py-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:px-5" key={session.id}><div><div className="flex flex-wrap items-center gap-2"><strong className="text-sm font-semibold">{formatDate(session.session_date) || session.title}</strong><span className="rounded-full bg-[#efe5d6] px-2 py-1 text-[10px] font-semibold text-[#775c36]">Exclue des statistiques</span></div><p className="mt-1 text-xs text-muted">{session.groupCount} groupe{session.groupCount > 1 ? "s" : ""} · {session.participantCount} participant{session.participantCount > 1 ? "s" : ""}</p></div><div className="relative flex flex-wrap gap-2"><button type="button" onClick={() => router.push(`/admin/apps/generopoly/results?session=${encodeURIComponent(session.id)}`)} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-border bg-background px-4 text-xs font-medium"><ExternalLink size={14} /> Voir les résultats</button><button type="button" onClick={() => setMenuSession(menuSession === session.id ? null : session.id)} aria-label={`Actions pour ${formatDate(session.session_date)}`} className="grid min-h-10 min-w-10 place-items-center rounded-full border border-border bg-background"><MoreHorizontal size={17} /></button>{menuSession === session.id && <SessionMenu session={session} onView={() => router.push(`/admin/apps/generopoly/results?session=${encodeURIComponent(session.id)}`)} onExclude={() => void updateSession(session, "include")} onDelete={() => { setDeletingSession(session); setDeleteStep(1); setSessionActionError(""); setMenuSession(null); }} />}</div></div>)}</div></div>}
       {!sessions.length && <p className="px-5 py-8 text-center text-sm text-muted">Aucune participation définitivement validée pour le moment.</p>}
     </section>
 
@@ -74,7 +95,16 @@ export default function GeneropolyResults({ sessions, snapshot }: { sessions: Ge
         <ResultSection number="05" title="Les réponses des groupes" question="Les formulations sont restituées telles qu’elles ont été saisies."><GroupAnswers tables={tables} /></ResultSection>
       </>}
     </>}
-  </div>;
+  {deletingSession && <DeleteSessionDialog session={deletingSession} step={deleteStep} value={deleteConfirmation} error={sessionActionError} loading={sessionActionLoading} onClose={() => { if (!sessionActionLoading) { setDeletingSession(null); setDeleteConfirmation(""); setDeleteStep(1); setSessionActionError(""); } }} onContinue={() => setDeleteStep(2)} onValueChange={setDeleteConfirmation} onDelete={() => void updateSession(deletingSession, "delete", deleteConfirmation)} />}</div>;
+}
+
+function SessionMenu({ session, onView, onExclude, onDelete }: { session: GeneropolySession; onView: () => void; onExclude: () => void; onDelete: () => void }) {
+  return <div className="absolute right-0 top-12 z-20 w-56 rounded-xl border border-border bg-background p-1.5 shadow-lg"><button type="button" onClick={onView} className="w-full rounded-lg px-3 py-2 text-left text-xs hover:bg-surface">Voir les résultats</button><Link href={`/admin/apps/generopoly/projection?session=${encodeURIComponent(session.id)}`} target="_blank" className="block rounded-lg px-3 py-2 text-xs hover:bg-surface">Projeter</Link><button type="button" onClick={onExclude} className="w-full rounded-lg px-3 py-2 text-left text-xs hover:bg-surface">{session.isExcluded ? "Réintégrer aux statistiques" : "Exclure des statistiques"}</button><button type="button" onClick={onDelete} className="w-full rounded-lg px-3 py-2 text-left text-xs text-[#a63832] hover:bg-[#fbe8e5]">Supprimer définitivement</button></div>;
+}
+
+function DeleteSessionDialog({ session, step, value, error, loading, onClose, onContinue, onValueChange, onDelete }: { session: GeneropolySession; step: number; value: string; error: string; loading: boolean; onClose: () => void; onContinue: () => void; onValueChange: (value: string) => void; onDelete: () => void }) {
+  const phrase = `SUPPRIMER ${session.session_date}`;
+  return <div className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4" role="dialog" aria-modal="true" aria-label="Supprimer une journée"><div className="w-full max-w-md rounded-2xl bg-background p-6 shadow-xl"><h2 className="font-title text-2xl font-normal">Supprimer définitivement&nbsp;?</h2>{step === 1 ? <><p className="mt-3 text-sm leading-6 text-muted">Cette action supprimera l’atelier du {formatDate(session.session_date)} et ses {session.groupCount} groupe{session.groupCount > 1 ? "s" : ""} validé{session.groupCount > 1 ? "s" : ""}. Cette opération est irréversible.</p><div className="mt-6 flex justify-end gap-3"><button type="button" onClick={onClose} className="min-h-10 rounded-xl border border-border px-4 text-sm">Annuler</button><button type="button" onClick={onContinue} className="min-h-10 rounded-xl bg-[#a63832] px-4 text-sm text-white">Continuer</button></div></> : <><p className="mt-3 text-sm leading-6 text-muted">Pour confirmer, saisissez exactement <strong>{phrase}</strong>.</p><input autoFocus value={value} onChange={(event) => onValueChange(event.target.value)} className="mt-4 min-h-11 w-full rounded-xl border border-border bg-background px-3 text-sm" aria-label="Confirmation de suppression" />{error && <p className="mt-2 text-xs text-[#a63832]">{error}</p>}<div className="mt-6 flex justify-end gap-3"><button type="button" disabled={loading} onClick={onClose} className="min-h-10 rounded-xl border border-border px-4 text-sm">Annuler</button><button type="button" disabled={loading || value !== phrase} onClick={onDelete} className="min-h-10 rounded-xl bg-[#a63832] px-4 text-sm text-white disabled:opacity-40">{loading ? "Suppression…" : "Supprimer définitivement"}</button></div></>}</div></div>;
 }
 
 function ResultSection({ number, title, question, children }: { number: string; title: string; question: string; children: React.ReactNode }) {

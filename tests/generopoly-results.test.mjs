@@ -79,8 +79,11 @@ test("la page Admin déroule les situations complètes et la projection comporte
 
 test("la sélection des réponses projetées est protégée par le rôle Super admin", () => {
   const route = read("src/app/api/admin/apps/generopoly/project/route.ts");
+  const sessionRoute = read("src/app/api/admin/apps/generopoly/sessions/route.ts");
   const connector = read("src/lib/apps/generopoly.ts");
   assert.match(route, /!viewer\?\.roles\.superAdmin/);
+  assert.match(sessionRoute, /!viewer\?\.roles\.superAdmin/);
   assert.match(connector, /generopolyFetch\("\/api\/admin\/project", \{ method: "PATCH"/);
+  assert.match(connector, /generopolyFetch\("\/api\/admin\/session", \{ method: "PATCH"/);
   assert.match(connector, /import "server-only"/);
 });

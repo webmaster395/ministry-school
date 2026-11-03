@@ -9,6 +9,7 @@ export type GeneropolySession = {
   title: string;
   status: "open" | "closed";
   is_test?: boolean;
+  isExcluded?: boolean;
   created_at: number;
   groupCount: number;
   participantCount: number;
@@ -97,19 +98,20 @@ export async function restoreGeneropolyVersion(id: string): Promise<{ ok: boolea
 }
 
 export async function getGeneropolySessions(): Promise<GeneropolySession[]> {
-  const data = await generopolyFetch<{ sessions: Array<Omit<GeneropolySession, "groupCount" | "participantCount" | "lastValidationAt"> & { group_count?: number; participant_count?: number; last_validation_at?: number | null }> }>("/api/admin/sessions");
+  const data = await generopolyFetch<{ sessions: Array<Omit<GeneropolySession, "groupCount" | "participantCount" | "lastValidationAt" | "isExcluded"> & { group_count?: number; participant_count?: number; last_validation_at?: number | null; is_excluded?: boolean }> }>("/api/admin/sessions");
   return data.sessions.filter((session) => !session.is_test).map((session) => ({
     ...session,
     groupCount: Number(session.group_count ?? 0),
     participantCount: Number(session.participant_count ?? 0),
     lastValidationAt: session.last_validation_at ?? null,
+    isExcluded: session.is_excluded === true,
   })).filter((session) => session.groupCount > 0).sort((left, right) => String(right.session_date ?? "").localeCompare(String(left.session_date ?? "")));
 }
 
 export async function getGeneropolySnapshot(sessionId: string): Promise<GeneropolySnapshot> {
   if (sessionId === "all") {
     const sessions = await getGeneropolySessions();
-    const snapshots = await Promise.all(sessions.map((session) => getGeneropolySnapshot(session.id)));
+    const snapshots = await Promise.all(sessions.filter((session) => !session.isExcluded).map((session) => getGeneropolySnapshot(session.id)));
     const tables = snapshots.flatMap((snapshot) => snapshot.tables);
     return {
       session: {
@@ -133,6 +135,11 @@ export async function getGeneropolySnapshot(sessionId: string): Promise<Generopo
 export async function setGeneropolyProjectedAnswer(tableId: string, key: string, selected: boolean): Promise<{ ok: boolean; projected: string[] }> {
   if (!/^[a-zA-Z0-9-]{8,80}$/.test(tableId) || !/^[a-zA-Z0-9-]{1,100}$/.test(key)) throw new Error("Réponse Généropoly invalide.");
   return generopolyFetch("/api/admin/project", { method: "PATCH", body: JSON.stringify({ tableId, key, selected }) });
+}
+
+export async function manageGeneropolySession(id: string, action: "exclude" | "include" | "delete", confirmation?: string): Promise<{ ok: boolean; is_excluded?: boolean; deletedGroups?: number }> {
+  if (!/^[a-zA-Z0-9-]{8,80}$/.test(id)) throw new Error("Identifiant de journée invalide.");
+  return generopolyFetch("/api/admin/session", { method: "PATCH", body: JSON.stringify({ id, action, confirmation }) });
 }
 
 export async function getGeneropolyOverview() {
