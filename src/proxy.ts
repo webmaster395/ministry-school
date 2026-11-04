@@ -50,8 +50,10 @@ export async function proxy(request: NextRequest) {
   const isPublicPage =
     request.nextUrl.pathname === "/" ||
     request.nextUrl.pathname === "/apps" ||
+    request.nextUrl.pathname.startsWith("/apps/je-suis-par-la-grace-de-dieu/evaluation/") ||
     request.nextUrl.pathname.startsWith("/apps/generopoly") ||
     request.nextUrl.pathname.startsWith("/apps/profil-mapp") ||
+    request.nextUrl.pathname.startsWith("/api/apps/grace-identity/reviews/") ||
     request.nextUrl.pathname === "/api/deployment-version" ||
     request.nextUrl.pathname === "/mentions-legales" ||
     request.nextUrl.pathname === "/mot-de-passe-oublie" ||
