@@ -17,7 +17,10 @@ export default async function GraceIdentityPage() {
   const app = viewer.roles.superAdmin
     ? await getCatalogAppBySlug(graceIdentitySlug)
     : (await getStudentTools()).find((item) => item.slug === graceIdentitySlug) ?? null;
-  if (!app) notFound();
+  // Sur une prévisualisation de branche, la migration catalogue peut ne pas
+  // encore avoir été appliquée. Le brouillon reste néanmoins testable par un
+  // Super admin, sans jamais ouvrir l’URL aux étudiants.
+  if (!app && !viewer.roles.superAdmin) notFound();
 
   const supabase = await createClient();
   const { data } = await supabase
@@ -25,5 +28,5 @@ export default async function GraceIdentityPage() {
     .select("test_key,answers,results,completed_at,updated_at")
     .eq("user_id", viewer.id);
 
-  return <GraceIdentityTool initial={(data ?? []) as never[]} preview={viewer.roles.superAdmin && !app.studentVisible} />;
+  return <GraceIdentityTool initial={(data ?? []) as never[]} preview={viewer.roles.superAdmin && (!app || !app.studentVisible)} />;
 }
