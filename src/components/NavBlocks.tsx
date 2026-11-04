@@ -7,7 +7,6 @@ import { usePathname } from "next/navigation";
 import MinistryPicto from "@/components/MinistryPicto";
 import { useSpace } from "@/components/SpaceProvider";
 import {
-  notesNavItem,
   profileTabs,
   spaceHome,
   studentSections,
@@ -81,7 +80,7 @@ function NavLink({
  */
 export function NavSections({ collapsed = false, onNavigate }: { collapsed?: boolean; onNavigate?: () => void }) {
   const pathname = usePathname();
-  const { spaces, current, notesEnabled, studentToolsEnabled, pendingValidationCount } = useSpace();
+  const { spaces, current, pendingValidationCount } = useSpace();
   const multiple = spaces.length > 1;
   const [adminOpen, setAdminOpen] = useState(!!current);
 
@@ -125,11 +124,8 @@ export function NavSections({ collapsed = false, onNavigate }: { collapsed?: boo
           <ul className="space-y-0.5">
             {[
               ...section.items,
-              ...(studentToolsEnabled && section.title === "Mon parcours"
+              ...(section.title === "Mon parcours"
                 ? [toolsNavItem]
-                : []),
-              ...(notesEnabled && section.title === "Mon parcours"
-                ? [notesNavItem]
                 : []),
             ].map((item) => (
               <li key={item.label}>

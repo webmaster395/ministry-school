@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 /* eslint-disable @next/next/no-img-element -- icônes du catalogue importées par les administrateurs */
 import { ArrowUpRight, PanelsTopLeft } from "lucide-react";
 import { getStudentTools, getStudentToolsEnabled } from "@/lib/apps/catalog";
@@ -6,8 +5,8 @@ import { getStudentTools, getStudentToolsEnabled } from "@/lib/apps/catalog";
 export const dynamic = "force-dynamic";
 
 export default async function StudentToolsPage() {
-  if (!(await getStudentToolsEnabled())) redirect("/etudiant");
-  const apps = await getStudentTools();
+  const enabled = await getStudentToolsEnabled();
+  const apps = enabled ? await getStudentTools() : [];
 
   return <div className="space-y-7">
     <header>
@@ -24,6 +23,6 @@ export default async function StudentToolsPage() {
         <span className="mt-6 flex items-start justify-between gap-4"><span><span className="label text-[10px] text-muted">{app.category}</span><strong className="mt-1 block font-title text-2xl">{app.name}</strong></span><ArrowUpRight className="mt-1 shrink-0 text-muted transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" size={18} /></span>
         {app.description && <span className="mt-3 block text-sm leading-6 text-muted">{app.description}</span>}
       </a>)}
-    </div> : <div className="rounded-[24px] border border-dashed border-border bg-background p-8 text-center sm:p-12"><PanelsTopLeft className="mx-auto text-muted" size={28} strokeWidth={1.4} /><h2 className="mt-4 font-title text-2xl">Aucun outil disponible</h2><p className="mt-2 text-sm text-muted">Les applications destinées à ton espace apparaîtront ici lorsqu’elles seront publiées.</p></div>}
+    </div> : <div className="rounded-[24px] border border-dashed border-border bg-background p-8 text-center sm:p-12"><PanelsTopLeft className="mx-auto text-muted" size={28} strokeWidth={1.4} /><h2 className="mt-4 font-title text-2xl">Aucun outil disponible pour le moment.</h2></div>}
   </div>;
 }

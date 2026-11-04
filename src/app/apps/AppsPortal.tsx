@@ -69,6 +69,7 @@ export default function AppsPortal({ applications }: { applications: CatalogApp[
         </nav>
 
         <div className={styles.appGrid} aria-live="polite">
+          {visibleApps.length === 0 && <p className={styles.emptyState}>Aucun outil disponible pour le moment.</p>}
           {visibleApps.map((app) => (
             <a className={styles.appLink} href={app.url} key={app.id}>
               <AppIcon app={app} />
