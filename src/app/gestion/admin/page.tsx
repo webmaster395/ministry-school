@@ -112,6 +112,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
             genre={p.genre ?? "tous"}
             page={p.page ?? "1"}
             par={p.par ?? "50"}
+            canManageAccess={viewer.roles.superAdmin}
           />
         </div>
       )}

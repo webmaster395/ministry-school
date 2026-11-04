@@ -1,13 +1,14 @@
-import { ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight, Plus } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getMinistries } from "@/lib/data/admin";
-import { getServices } from "@/lib/data/opportunities";
+import { getOpportunities, getServices } from "@/lib/data/opportunities";
 import { getMembers, memberStatus, type Member } from "@/lib/data/admin-hub";
 import { signedAvatarUrls } from "@/lib/avatars";
 import { getMinistry } from "@/lib/ministry";
 import MinistryPicto from "@/components/MinistryPicto";
 import MemberFilters from "@/components/admin/MemberFilters";
+import RoleAssignmentForm from "@/components/admin/RoleAssignmentForm";
 import { parseMlkEngagement } from "@/lib/mlk-engagement";
 
 const STATUS_LABEL = { actif: "Actif", a_confirmer: "À confirmer", desactive: "Désactivé" };
@@ -41,6 +42,7 @@ export default async function MembersTab({
   page,
   par,
   basePath = "/gestion/admin",
+  canManageAccess = false,
 }: {
   q: string;
   role: string;
@@ -52,12 +54,15 @@ export default async function MembersTab({
   page: string;
   par: string;
   basePath?: string;
+  /** Le formulaire reste absent pour tout rôle autre que Super admin. */
+  canManageAccess?: boolean;
 }) {
   const supabase = await createClient();
-  const [members, ministries, services] = await Promise.all([
+  const [members, ministries, services, opportunities] = await Promise.all([
     getMembers(supabase),
     getMinistries(supabase),
     getServices(supabase),
+    getOpportunities(supabase),
   ]);
 
   const serviceName = new Map(services.map((s) => [s.id, s.name]));
@@ -164,6 +169,23 @@ export default async function MembersTab({
         </a>
       </div>
       </section>
+
+      {canManageAccess && (
+        <details className="group relative rounded-xl border border-border bg-background focus-within:z-30">
+          <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm font-semibold text-foreground transition hover:bg-surface sm:px-5 [&::-webkit-details-marker]:hidden">
+            <span className="inline-flex items-center gap-2"><Plus size={17} /> Attribuer un rôle</span>
+            <ChevronDown size={17} className="text-muted transition group-open:rotate-180" />
+          </summary>
+          <div className="border-t border-border-soft">
+            <RoleAssignmentForm
+              members={members.filter((member) => !member.deactivated).map((member) => ({ id: member.id, label: `${member.full_name} · ${member.email}` }))}
+              ministries={ministries.map((ministry) => ({ id: ministry.id, label: ministry.name }))}
+              opportunities={opportunities.map((opportunity) => ({ id: opportunity.id, label: opportunity.title }))}
+              embedded
+            />
+          </div>
+        </details>
+      )}
 
       {pager}
 

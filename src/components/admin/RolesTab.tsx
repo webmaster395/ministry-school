@@ -96,7 +96,7 @@ export default async function RolesTab({ q, category, canManageAccess, basePath,
       })}
     </nav>
 
-    {canManageAccess && <details id="attribuer-role" open={!!selectedMemberId} className="group overflow-hidden rounded-xl border border-border bg-background">
+    {canManageAccess && <details id="attribuer-role" open={!!selectedMemberId} className="group relative rounded-xl border border-border bg-background focus-within:z-30">
       <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm font-semibold text-foreground transition hover:bg-surface sm:px-5 [&::-webkit-details-marker]:hidden"><span className="inline-flex items-center gap-2"><Plus size={17} /> Attribuer un rôle</span><ChevronDown size={17} className="text-muted transition group-open:rotate-180" /></summary>
       <div className="border-t border-border-soft"><RoleAssignmentForm key={selectedMemberId || "new-role"} members={members.filter((item) => !item.deactivated).map((item) => ({ id: item.id, label: `${item.full_name} · ${item.email}` }))} ministries={ministries.map((item) => ({ id: item.id, label: item.name }))} opportunities={opportunities.map((item) => ({ id: item.id, label: item.title }))} defaultMemberId={selectedMemberId} embedded /></div>
     </details>}
