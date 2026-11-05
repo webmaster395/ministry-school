@@ -27,6 +27,28 @@ export async function proxy(request: NextRequest) {
   // Le layout résout ensuite l'utilisateur complet une seule fois pour le rendu.
   const { data: auth } = await supabase.auth.getClaims();
   const isAuthenticated = !!auth?.claims?.sub;
+  const isProfilMappRoute = request.nextUrl.pathname.startsWith("/apps/profil-mapp");
+
+  // Profil MAPP est en préouverture. Le masquer dans le catalogue ne suffit
+  // pas : cette vérification protège aussi les URL copiées et les routes API
+  // servies sous le même préfixe. Le droit vient de la base Ministry, jamais
+  // d'un rôle simplement affiché dans l'interface.
+  if (isProfilMappRoute) {
+    if (!isAuthenticated) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      return NextResponse.redirect(url);
+    }
+
+    const { data: viewer, error: viewerError } = await supabase.rpc("student_viewer_context");
+    const isSuperAdmin = !viewerError && Boolean((viewer as { super_admin?: boolean } | null)?.super_admin);
+    if (!isSuperAdmin) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/etudiant";
+      url.search = "";
+      return NextResponse.redirect(url);
+    }
+  }
 
   // La création de compte n'est pas publique : son lien n'est communiqué qu'après le paiement.
   // « /inscription » lui-même reste fermé à tous ; seule l'adresse secrète INSCRIPTION_CHEMIN
@@ -52,7 +74,7 @@ export async function proxy(request: NextRequest) {
     request.nextUrl.pathname === "/apps" ||
     request.nextUrl.pathname.startsWith("/apps/je-suis-par-la-grace-de-dieu/evaluation/") ||
     request.nextUrl.pathname.startsWith("/apps/generopoly") ||
-    request.nextUrl.pathname.startsWith("/apps/profil-mapp") ||
+    isProfilMappRoute ||
     request.nextUrl.pathname.startsWith("/api/apps/grace-identity/reviews/") ||
     request.nextUrl.pathname === "/api/deployment-version" ||
     request.nextUrl.pathname === "/mentions-legales" ||

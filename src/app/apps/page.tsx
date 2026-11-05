@@ -17,9 +17,13 @@ export const metadata: Metadata = {
 
 export default async function AppsPage() {
   const viewer = await getViewer();
-  // Depuis la navigation étudiante, /apps devient la liste personnelle : elle
-  // n’expose que les outils effectivement publiés pour cet espace et cette date.
-  // Sans session, le portail public conserve son comportement existant.
-  const apps = viewer && !viewer.roles.superAdmin ? await getStudentTools() : await getCatalogApps();
+  // Profil MAPP reste en préouverture : seul un super administrateur peut le
+  // voir dans le catalogue et l'ouvrir. Le filtrage ici complète le contrôle
+  // serveur de /apps/profil-mapp effectué dans proxy.ts.
+  const apps = viewer?.roles.superAdmin
+    ? await getCatalogApps({ includeUnpublished: true, channel: "admin" })
+    : (viewer ? await getStudentTools() : await getCatalogApps()).filter(
+        (app) => app.slug !== "profil-mapp",
+      );
   return <AppsPortal applications={apps} />;
 }
