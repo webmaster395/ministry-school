@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, Check, Heart, Lightbulb, Save, Sparkles, UsersRound } from "lucide-react";
 import { fruitTraits, naturalSkillCategories, spiritualGifts, type GraceTestKey } from "@/lib/apps/grace-identity";
 import SkillReviewLink from "@/components/apps/SkillReviewLink";
@@ -27,6 +27,7 @@ export default function GraceIdentityTool({ initial, preview }: { initial: Recor
     if (close) setActive(null);
   };
   if (active === "fruit") return <FruitJourney initial={byKey.get("fruit")?.answers ?? {}} saving={saving} onBack={() => setActive(null)} onSave={(answers) => save("fruit", answers, false)} />;
+  if (active === "gifts") return <GiftsJourney initial={byKey.get("gifts")?.answers ?? {}} saving={saving} onBack={() => setActive(null)} onSave={(answers) => save("gifts", answers)} />;
   if (active) return <TestScreen testKey={active} initial={byKey.get(active)?.answers ?? {}} saving={saving} onBack={() => setActive(null)} onSave={save} />;
   return <div className="mx-auto max-w-5xl space-y-7 pb-10">
     <header className="max-w-3xl"><p className="label text-[11px] text-muted">MES OUTILS</p><h1 className="mt-2 font-title text-4xl tracking-tight sm:text-5xl">Je suis ce que je suis par la grâce de Dieu</h1><p className="mt-4 text-base leading-7 text-muted">Découvre le fruit de l’Esprit, explore tes dons spirituels et identifie tes compétences naturelles. Avance à ton rythme et prends le temps de mieux te connaître.</p>{preview && <p className="mt-4 inline-flex rounded-full bg-[#f8e7bd] px-3 py-1.5 text-xs font-medium text-[#765311]">Aperçu Super admin — cet outil reste invisible aux étudiants.</p>}</header>
@@ -34,13 +35,41 @@ export default function GraceIdentityTool({ initial, preview }: { initial: Recor
   </div>;
 }
 
-function TestScreen({ testKey, initial, saving, onBack, onSave }: { testKey: Exclude<GraceTestKey, "fruit">; initial: Record<string, unknown>; saving: boolean; onBack: () => void; onSave: (key: GraceTestKey, answers: Record<string, unknown>) => Promise<void> }) {
+function TestScreen({ testKey, initial, saving, onBack, onSave }: { testKey: "skills"; initial: Record<string, unknown>; saving: boolean; onBack: () => void; onSave: (key: GraceTestKey, answers: Record<string, unknown>) => Promise<void> }) {
   const [answers, setAnswers] = useState<Record<string, unknown>>(initial);
   const [error, setError] = useState("");
   const set = (key: string, value: unknown) => setAnswers((current) => ({ ...current, [key]: value }));
   const submit = async () => { setError(""); try { await onSave(testKey, answers); } catch (reason) { setError(reason instanceof Error ? reason.message : "Enregistrement impossible."); } };
   const meta = testMeta[testKey];
-  return <div className="mx-auto max-w-4xl space-y-6 pb-10"><button type="button" onClick={onBack} className="inline-flex min-h-10 items-center gap-2 text-sm text-muted hover:text-foreground"><ArrowLeft size={16} /> Tous les tests</button><header><p className="label text-[11px] text-muted">AUTOÉVALUATION PERSONNELLE</p><h1 className="mt-2 font-title text-4xl tracking-tight">{meta.title}</h1></header>{testKey === "gifts" ? <Gifts answers={answers} set={set} /> : <Skills answers={answers} set={set} />}<div className="sticky bottom-3 flex flex-wrap items-center justify-end gap-3 rounded-2xl border border-border bg-background/95 p-3 shadow-lg backdrop-blur"><span className="mr-auto text-xs text-muted">Tes réponses restent personnelles et peuvent être modifiées.</span>{error && <span className="text-xs text-red-700">{error}</span>}<button type="button" disabled={saving} onClick={submit} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-foreground px-5 text-sm font-medium text-on-accent disabled:opacity-50"><Save size={16} />{saving ? "Enregistrement…" : "Enregistrer mes réponses"}</button></div></div>;
+  return <div className="mx-auto max-w-4xl space-y-6 pb-10"><button type="button" onClick={onBack} className="inline-flex min-h-10 items-center gap-2 text-sm text-muted hover:text-foreground"><ArrowLeft size={16} /> Tous les tests</button><header><p className="label text-[11px] text-muted">AUTOÉVALUATION PERSONNELLE</p><h1 className="mt-2 font-title text-4xl tracking-tight">{meta.title}</h1></header><Skills answers={answers} set={set} /><div className="sticky bottom-3 flex flex-wrap items-center justify-end gap-3 rounded-2xl border border-border bg-background/95 p-3 shadow-lg backdrop-blur"><span className="mr-auto text-xs text-muted">Tes réponses restent personnelles et peuvent être modifiées.</span>{error && <span className="text-xs text-red-700">{error}</span>}<button type="button" disabled={saving} onClick={submit} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-foreground px-5 text-sm font-medium text-on-accent disabled:opacity-50"><Save size={16} />{saving ? "Enregistrement…" : "Enregistrer mes réponses"}</button></div></div>;
+}
+
+function GiftsJourney({ initial, saving, onBack, onSave }: { initial: Record<string, unknown>; saving: boolean; onBack: () => void; onSave: (answers: Record<string, unknown>) => Promise<void> }) {
+  const completed = spiritualGifts.every(([key]) => ["Oui", "Peut-être", "Non"].includes(String(initial[key] ?? "")));
+  const [step, setStep] = useState(completed ? spiritualGifts.length : 0);
+  const [answers, setAnswers] = useState<Record<string, unknown>>(initial);
+  const [error, setError] = useState("");
+
+  useEffect(() => { window.scrollTo({ top: 0, behavior: "smooth" }); }, [step]);
+
+  const answer = (value: "Oui" | "Peut-être" | "Non") => {
+    const [key] = spiritualGifts[step];
+    setAnswers((current) => ({ ...current, [key]: value }));
+    if (step < spiritualGifts.length - 1) setStep((current) => current + 1);
+  };
+  const finish = async () => {
+    setError("");
+    try { await onSave(answers); setStep(spiritualGifts.length); }
+    catch (reason) { setError(reason instanceof Error ? reason.message : "Enregistrement impossible."); setStep(spiritualGifts.length - 1); }
+  };
+
+  if (step === spiritualGifts.length) {
+    return <div className="mx-auto max-w-4xl space-y-7 pb-10"><button type="button" onClick={onBack} className="inline-flex min-h-10 items-center gap-2 text-sm text-muted hover:text-foreground"><ArrowLeft size={16} /> Tous les tests</button><header className="max-w-2xl"><p className="label text-[11px] text-muted">MES DONS SPIRITUELS</p><h1 className="mt-2 font-title text-4xl tracking-tight sm:text-5xl">Ce que tu reconnais aujourd’hui</h1><p className="mt-3 leading-7 text-muted">Cette autoévaluation est une invitation à prier, à mettre en pratique et à échanger avec d’autres chrétiens — pas une certitude définitive.</p></header><section className="grid gap-4 md:grid-cols-2">{spiritualGifts.map(([key, name, definition, , , guidance]) => { const value = answers[key]; const highlighted = value === "Oui"; return <article key={key} className={`rounded-[22px] border p-5 ${highlighted ? "border-[#b6d4d1] bg-[#edf6f4]" : "border-border bg-background"}`}><div className="flex items-start justify-between gap-3"><h2 className="font-title text-2xl">{name}</h2><span className={`shrink-0 rounded-full px-3 py-1 text-xs ${highlighted ? "bg-[#173f45] text-white" : value === "Peut-être" ? "bg-[#f8e7bd] text-[#765311]" : "bg-surface text-muted"}`}>{highlighted ? "Je le reconnais" : value === "Peut-être" ? "À explorer" : "À discerner"}</span></div><p className="mt-2 text-sm leading-6 text-muted">{definition}</p><p className="mt-5 border-l-[3px] border-[#d8ec6a] pl-3 text-sm leading-6">{guidance}</p></article>; })}</section><div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-background p-4"><button type="button" onClick={() => setStep(0)} className="inline-flex min-h-10 items-center gap-2 text-sm text-muted hover:text-foreground"><ArrowLeft size={16} /> Modifier mes réponses</button><button type="button" onClick={onBack} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-foreground px-5 text-sm font-medium text-on-accent"><Sparkles size={16} /> Faire les autres tests</button></div></div>;
+  }
+
+  const [, name, , , question] = spiritualGifts[step];
+  const choice = answers[spiritualGifts[step][0]];
+  return <div className="mx-auto flex min-h-[72vh] max-w-3xl flex-col justify-center py-8"><div className="mb-9 flex items-center justify-between"><button type="button" onClick={() => step === 0 ? onBack() : setStep((current) => current - 1)} className="inline-flex min-h-10 items-center gap-2 text-sm text-muted hover:text-foreground"><ArrowLeft size={16} /> {step === 0 ? "Tous les tests" : "Retour"}</button><span className="text-sm text-muted">Question {step + 1} sur {spiritualGifts.length}</span></div><div className="h-1 overflow-hidden rounded-full bg-surface"><span className="block h-full rounded-full bg-[#173f45] transition-all duration-500" style={{ width: `${((step + 1) / spiritualGifts.length) * 100}%` }} /></div><p className="label mt-9 text-[11px] text-muted">MES DONS SPIRITUELS</p><h1 className="mt-3 font-title text-3xl leading-tight tracking-tight sm:text-5xl">{question}</h1><p className="mt-5 text-sm text-muted">Il n’y a pas de bonne ou de mauvaise réponse.</p><div className="mt-9 grid gap-3"><button type="button" aria-pressed={choice === "Oui"} onClick={() => answer("Oui")} className="min-h-16 rounded-2xl border border-[#173f45] bg-[#173f45] px-5 text-left text-base font-medium text-white transition-transform hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#173f45]">Oui, ça me ressemble</button><button type="button" aria-pressed={choice === "Peut-être"} onClick={() => answer("Peut-être")} className="min-h-16 rounded-2xl border border-[#e2c684] bg-[#fffaf0] px-5 text-left text-base font-medium text-foreground transition-transform hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a65e16]">Peut-être, parfois</button><button type="button" aria-pressed={choice === "Non"} onClick={() => answer("Non")} className="min-h-16 rounded-2xl border border-border bg-background px-5 text-left text-base font-medium text-foreground transition-transform hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#173f45]">Non, pas vraiment</button></div>{step === spiritualGifts.length - 1 && <div className="mt-6 flex flex-wrap items-center gap-3"><button type="button" disabled={!choice || saving} onClick={finish} className="min-h-11 rounded-full bg-foreground px-5 text-sm font-medium text-on-accent disabled:opacity-50">{saving ? "Enregistrement…" : "Voir mes résultats"}</button>{error && <span className="text-sm text-red-700">{error}</span>}</div>}</div>;
 }
 
 function FruitJourney({ initial, saving, onBack, onSave }: { initial: Record<string, unknown>; saving: boolean; onBack: () => void; onSave: (answers: Record<string, unknown>) => Promise<void> }) {
