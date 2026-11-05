@@ -9,5 +9,6 @@ export default async function CatalogAppSettingsPage({ params }: { params: Promi
   const { slug } = await params;
   const app = await getCatalogAppBySlug(slug);
   if (!app || app.archivedAt) notFound();
-  return <AppsStudioShell active="applications" appTab="settings" appSlug={app.slug} appName={app.name} appIconUrl={app.iconUrl} hasResults={false} hasEditor={false}><StudioPageHeader eyebrow={app.name.toUpperCase()} title="Paramètres" description="Identité, accès, publication et affichage." /><AppSettingsForm app={app} returnTo={`/admin/apps/${app.slug}/settings`} cancelHref="/admin/apps" /></AppsStudioShell>;
+  const isProfilMapp = app.slug === "profil-mapp";
+  return <AppsStudioShell active="applications" appTab="settings" appSlug={app.slug} appName={app.name} appIconUrl={app.iconUrl} hasResults={false} hasEditor={isProfilMapp}><StudioPageHeader eyebrow={app.name.toUpperCase()} title="Paramètres" description="Identité, accès, publication et affichage." /><AppSettingsForm app={app} returnTo={`/admin/apps/${app.slug}/settings`} cancelHref="/admin/apps" /></AppsStudioShell>;
 }
