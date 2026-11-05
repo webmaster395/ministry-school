@@ -84,6 +84,8 @@ export const studentSections: NavSection[] = [
       // Le ministère reste masqué tant que son espace n'est pas prêt.
       // { label: "Mon ministère", href: "/etudiant/formation", icon: icons.ministries },
       { label: "Projets et formations", href: "/etudiant/services", icon: icons.services },
+      // Toujours visible : le portail décide ensuite quels outils sont réellement publiés.
+      { label: "Mes outils", href: "/apps", icon: icons.apps, target: "_blank" },
     ],
   },
 ];

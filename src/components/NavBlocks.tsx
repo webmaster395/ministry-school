@@ -10,7 +10,6 @@ import {
   profileTabs,
   spaceHome,
   studentSections,
-  toolsNavItem,
 } from "@/lib/nav";
 import { getMinistry } from "@/lib/ministry";
 
@@ -122,12 +121,7 @@ export function NavSections({ collapsed = false, onNavigate }: { collapsed?: boo
             </p>
           )}
           <ul className="space-y-0.5">
-            {[
-              ...section.items,
-              ...(section.title === "Mon parcours"
-                ? [toolsNavItem]
-                : []),
-            ].map((item) => (
+            {section.items.map((item) => (
               <li key={item.label}>
                 <NavLink
                   href={item.href}
