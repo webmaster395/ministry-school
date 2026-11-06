@@ -13,7 +13,7 @@ test("Mes outils montre les brouillons aux seuls super-administrateurs", () => {
 
 test("la route MAPP reste fermée aux étudiants avant publication", () => {
   const page = read("src/app/apps/profil-mapp/page.tsx");
-  assert.match(page, /if \(!published && !viewer\.roles\.superAdmin\) notFound\(\)/);
+  assert.match(page, /if \(!viewer\.roles\.superAdmin\) notFound\(\)/);
 });
 
 test("la porte SQL contrôle publication étudiante et aperçu super-admin", () => {

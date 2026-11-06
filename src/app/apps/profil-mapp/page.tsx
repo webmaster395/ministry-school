@@ -11,17 +11,19 @@ export default async function ProfilMappPage() {
 
   if (!viewer.roles.superAdmin) notFound();
 
+  let destination: string;
   try {
     const questionnaire = await openMappQuestionnaire();
     if (questionnaire.engine !== "hybrid-44") throw new Error("MAPP_OFFICIAL_SESSION_REQUIRED");
     if (questionnaire.status === "completed") {
       const result = await getMappResultBundle(questionnaire.attemptId);
       const unresolved = result.rankings.some((ranking) => ranking.tie_break_required && !ranking.resolved_order);
-      redirect(unresolved
+      destination = unresolved
         ? `/apps/profil-mapp/test/${questionnaire.attemptId}/departage?revision=${result.resultRevisionId}`
-        : `/apps/profil-mapp/test/${questionnaire.attemptId}/resultat?revision=${result.resultRevisionId}`);
+        : `/apps/profil-mapp/test/${questionnaire.attemptId}/resultat?revision=${result.resultRevisionId}`;
+    } else {
+      destination = `/apps/profil-mapp/test/${questionnaire.attemptId}`;
     }
-    redirect(`/apps/profil-mapp/test/${questionnaire.attemptId}`);
   } catch (cause) {
     const technicalMessage = cause instanceof Error ? cause.message : "Accès impossible";
     const denied = technicalMessage.includes("MAPP_ACCESS_DENIED");
@@ -42,4 +44,5 @@ export default async function ProfilMappPage() {
       </main>
     );
   }
+  redirect(destination);
 }
