@@ -5,7 +5,7 @@ import type { MappQuestionnaireContext, MappResultBundle } from "./types";
 
 export async function openMappQuestionnaire() {
   const supabase = await createClient();
-  const { data, error } = await supabase.rpc("mapp_open_questionnaire");
+  const { data, error } = await supabase.rpc("mapp_open_official_questionnaire");
   if (error) throw new Error(`Ouverture de Profil MAPP impossible : ${error.message}`);
   return data as MappQuestionnaireContext;
 }

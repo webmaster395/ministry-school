@@ -11,6 +11,17 @@ export type MappQuestion = {
   position: number;
   prompt: string;
   options: MappQuestionOption[];
+  metadata?: {
+    mapp_kind?: "natural_duel" | "natural_likert" | "pressure_duel";
+    source_id?: string;
+    dimension_code?: string;
+  };
+  questionOptions?: Array<{
+    id: string;
+    key: string;
+    label: string;
+    position: number;
+  }>;
 };
 
 export type MappStoredAnswer = {
@@ -28,6 +39,12 @@ export type MappQuestionnaireContext = {
   expectedAnswerCount: number;
   questions: MappQuestion[];
   answers: MappStoredAnswer[];
+  duelAnswers?: Array<{
+    questionId: string;
+    optionId: string;
+    clientSequence: number;
+  }>;
+  engine?: "legacy" | "hybrid-44";
 };
 
 export type MappAnswerMutation = {

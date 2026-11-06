@@ -30,6 +30,22 @@ export async function saveMappAnswerBatch(mutation: MappAnswerMutation) {
   return data as MappSaveAcknowledgement;
 }
 
+export async function saveMappDuelAnswer(
+  attemptId: string,
+  questionId: string,
+  optionId: string,
+  clientSequence: number,
+) {
+  const supabase = createClient();
+  const { error } = await supabase.rpc("mapp_save_duel_answer", {
+    p_attempt_id: attemptId,
+    p_question_id: questionId,
+    p_option_id: optionId,
+    p_client_sequence: clientSequence,
+  });
+  if (error) throw rpcError("Sauvegarde Profil MAPP impossible", error.message);
+}
+
 export async function getMappResultBundle(attemptId: string) {
   const supabase = createClient();
   const { data, error } = await supabase.rpc("mapp_get_results", {

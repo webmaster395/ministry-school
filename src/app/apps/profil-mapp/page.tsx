@@ -3,6 +3,7 @@ import { getStudentTools } from "@/lib/apps/catalog";
 import { getViewer } from "@/lib/data/viewer";
 import { getMappResultBundle, openMappQuestionnaire } from "@/lib/mapp/server";
 import MappNativeExperience from "./MappNativeExperience";
+import MappOfficialHybridExperience from "./MappOfficialHybridExperience";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,9 @@ export default async function ProfilMappPage() {
     const result = questionnaire.status === "completed"
       ? await getMappResultBundle(questionnaire.attemptId)
       : null;
+    if (questionnaire.engine === "hybrid-44" && !result) {
+      return <MappOfficialHybridExperience questionnaire={questionnaire} />;
+    }
     return <MappNativeExperience initialQuestionnaire={questionnaire} initialResult={result} />;
   } catch (cause) {
     const technicalMessage = cause instanceof Error ? cause.message : "Accès impossible";

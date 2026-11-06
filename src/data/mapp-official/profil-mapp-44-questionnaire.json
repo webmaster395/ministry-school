@@ -1,0 +1,1030 @@
+{
+  "schema_version": "1.0",
+  "questionnaire_id": "profil-mapp-com-hybrid-44",
+  "status": "draft",
+  "psychometric_status": "experimental_not_validated",
+  "language": "fr",
+  "question_count": 44,
+  "natural": {
+    "duels": [
+      {
+        "id": "N01",
+        "number": 1,
+        "type": "duel",
+        "prompt": "Dans un groupe, je contribue surtout en…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Définissant une direction et les actions à mener.",
+            "dimension": "D"
+          },
+          {
+            "id": "B",
+            "text": "Donnant envie aux autres de participer et de s’impliquer.",
+            "dimension": "I"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": false
+      },
+      {
+        "id": "N02",
+        "number": 2,
+        "type": "duel",
+        "prompt": "Ce qui me stimule le plus, c’est…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Partager une idée qui suscite l’enthousiasme autour de moi.",
+            "dimension": "I"
+          },
+          {
+            "id": "B",
+            "text": "Me fixer un défi ambitieux et chercher à le relever.",
+            "dimension": "D"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": true
+      },
+      {
+        "id": "N03",
+        "number": 3,
+        "type": "duel",
+        "prompt": "Dans ma façon de communiquer, je préfère…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Exprimer directement l’essentiel de mon message.",
+            "dimension": "D"
+          },
+          {
+            "id": "B",
+            "text": "Développer mes idées et rendre l’échange vivant.",
+            "dimension": "I"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": false
+      },
+      {
+        "id": "N04",
+        "number": 4,
+        "type": "duel",
+        "prompt": "Dans ce que j’entreprends, j’apprécie particulièrement…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Pouvoir convaincre et entraîner les autres autour de mes idées.",
+            "dimension": "I"
+          },
+          {
+            "id": "B",
+            "text": "Pouvoir décider librement de la direction à prendre.",
+            "dimension": "D"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": true
+      },
+      {
+        "id": "N05",
+        "number": 5,
+        "type": "duel",
+        "prompt": "Dans mon quotidien, j’apprécie davantage…",
+        "options": [
+          {
+            "id": "A",
+            "text": "La possibilité de prendre des initiatives et de découvrir de nouvelles possibilités.",
+            "dimension": "D"
+          },
+          {
+            "id": "B",
+            "text": "La possibilité de m’appuyer sur des habitudes et des repères stables.",
+            "dimension": "S"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": false
+      },
+      {
+        "id": "N06",
+        "number": 6,
+        "type": "duel",
+        "prompt": "Dans un travail collectif, ce qui compte le plus pour moi, c’est…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Que chacun se sente écouté et puisse contribuer à sa manière.",
+            "dimension": "S"
+          },
+          {
+            "id": "B",
+            "text": "Que chacun sache ce qu’il doit accomplir pour atteindre l’objectif.",
+            "dimension": "D"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": true
+      },
+      {
+        "id": "N07",
+        "number": 7,
+        "type": "duel",
+        "prompt": "Pour prendre une décision qui concerne plusieurs personnes, je préfère…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Assumer la responsabilité du choix et définir une direction.",
+            "dimension": "D"
+          },
+          {
+            "id": "B",
+            "text": "Prendre le temps de consulter les personnes concernées.",
+            "dimension": "S"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": false
+      },
+      {
+        "id": "N08",
+        "number": 8,
+        "type": "duel",
+        "prompt": "Ce qui me motive le plus dans un engagement de longue durée, c’est…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Pouvoir contribuer avec constance à quelque chose qui dure.",
+            "dimension": "S"
+          },
+          {
+            "id": "B",
+            "text": "Pouvoir relever régulièrement de nouveaux défis.",
+            "dimension": "D"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": true
+      },
+      {
+        "id": "N09",
+        "number": 9,
+        "type": "duel",
+        "prompt": "Dans ma façon de travailler, je préfère…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Avoir la liberté de choisir mes propres méthodes.",
+            "dimension": "D"
+          },
+          {
+            "id": "B",
+            "text": "M’appuyer sur des méthodes éprouvées et fiables.",
+            "dimension": "C"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": false
+      },
+      {
+        "id": "N10",
+        "number": 10,
+        "type": "duel",
+        "prompt": "Dans une discussion, j’ai plutôt tendance à…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Examiner la solidité des arguments présentés.",
+            "dimension": "C"
+          },
+          {
+            "id": "B",
+            "text": "Défendre clairement ma position.",
+            "dimension": "D"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": true
+      },
+      {
+        "id": "N11",
+        "number": 11,
+        "type": "duel",
+        "prompt": "Face à une opportunité qui comporte une part d’incertitude…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Je suis prêt à prendre un risque pour saisir cette opportunité.",
+            "dimension": "D"
+          },
+          {
+            "id": "B",
+            "text": "Je préfère évaluer les risques avant de m’engager.",
+            "dimension": "C"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": false
+      },
+      {
+        "id": "N12",
+        "number": 12,
+        "type": "duel",
+        "prompt": "Dans un travail, je suis particulièrement attentif…",
+        "options": [
+          {
+            "id": "A",
+            "text": "À l’exactitude des informations et des détails.",
+            "dimension": "C"
+          },
+          {
+            "id": "B",
+            "text": "Aux résultats obtenus et aux objectifs atteints.",
+            "dimension": "D"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": true
+      },
+      {
+        "id": "N13",
+        "number": 13,
+        "type": "duel",
+        "prompt": "Avec de nouvelles personnes…",
+        "options": [
+          {
+            "id": "A",
+            "text": "J’engage spontanément la conversation.",
+            "dimension": "I"
+          },
+          {
+            "id": "B",
+            "text": "Je prends le temps de créer un lien progressivement.",
+            "dimension": "S"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": false
+      },
+      {
+        "id": "N14",
+        "number": 14,
+        "type": "duel",
+        "prompt": "Dans une discussion…",
+        "options": [
+          {
+            "id": "A",
+            "text": "J’écoute attentivement avant de donner mon avis.",
+            "dimension": "S"
+          },
+          {
+            "id": "B",
+            "text": "Je partage facilement mes idées et mes réactions.",
+            "dimension": "I"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": true
+      },
+      {
+        "id": "N15",
+        "number": 15,
+        "type": "duel",
+        "prompt": "Dans un groupe…",
+        "options": [
+          {
+            "id": "A",
+            "text": "J’aime animer les échanges.",
+            "dimension": "I"
+          },
+          {
+            "id": "B",
+            "text": "J’aime veiller à ce que chacun se sente à l’aise.",
+            "dimension": "S"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": false
+      },
+      {
+        "id": "N16",
+        "number": 16,
+        "type": "duel",
+        "prompt": "Pour entretenir une relation…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Je reste présent et prends régulièrement des nouvelles.",
+            "dimension": "S"
+          },
+          {
+            "id": "B",
+            "text": "Je propose spontanément des moments à partager.",
+            "dimension": "I"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": true
+      },
+      {
+        "id": "N17",
+        "number": 17,
+        "type": "duel",
+        "prompt": "Pour faire comprendre une idée…",
+        "options": [
+          {
+            "id": "A",
+            "text": "J’utilise des exemples vivants et engageants.",
+            "dimension": "I"
+          },
+          {
+            "id": "B",
+            "text": "Je présente des arguments précis et structurés.",
+            "dimension": "C"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": false
+      },
+      {
+        "id": "N18",
+        "number": 18,
+        "type": "duel",
+        "prompt": "Quand je découvre un nouveau sujet…",
+        "options": [
+          {
+            "id": "A",
+            "text": "J’aime l’approfondir et en comprendre les détails.",
+            "dimension": "C"
+          },
+          {
+            "id": "B",
+            "text": "J’aime en discuter avec d’autres.",
+            "dimension": "I"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": true
+      },
+      {
+        "id": "N19",
+        "number": 19,
+        "type": "duel",
+        "prompt": "Pour développer une idée…",
+        "options": [
+          {
+            "id": "A",
+            "text": "J’échange avec d’autres pour faire émerger des possibilités.",
+            "dimension": "I"
+          },
+          {
+            "id": "B",
+            "text": "Je prends le temps de structurer mon raisonnement.",
+            "dimension": "C"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": false
+      },
+      {
+        "id": "N20",
+        "number": 20,
+        "type": "duel",
+        "prompt": "Avant de partager une information importante…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Je vérifie son exactitude et les détails qui la soutiennent.",
+            "dimension": "C"
+          },
+          {
+            "id": "B",
+            "text": "Je réfléchis à la manière de la rendre intéressante et accessible.",
+            "dimension": "I"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": true
+      },
+      {
+        "id": "N21",
+        "number": 21,
+        "type": "duel",
+        "prompt": "Dans mon quotidien, j’apprécie…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Des habitudes stables et familières.",
+            "dimension": "S"
+          },
+          {
+            "id": "B",
+            "text": "Une organisation précise et structurée.",
+            "dimension": "C"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": false
+      },
+      {
+        "id": "N22",
+        "number": 22,
+        "type": "duel",
+        "prompt": "Dans ma manière de travailler…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Je privilégie la précision et la rigueur.",
+            "dimension": "C"
+          },
+          {
+            "id": "B",
+            "text": "Je privilégie la régularité et la constance.",
+            "dimension": "S"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": true
+      },
+      {
+        "id": "N23",
+        "number": 23,
+        "type": "duel",
+        "prompt": "Quand quelqu’un me demande de l’aide…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Je l’écoute et cherche à le soutenir.",
+            "dimension": "S"
+          },
+          {
+            "id": "B",
+            "text": "Je cherche à comprendre précisément le problème.",
+            "dimension": "C"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": false
+      },
+      {
+        "id": "N24",
+        "number": 24,
+        "type": "duel",
+        "prompt": "Ce qui me rassure le plus…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Des informations précises et vérifiables.",
+            "dimension": "C"
+          },
+          {
+            "id": "B",
+            "text": "Des relations fiables et durables.",
+            "dimension": "S"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": true
+      }
+    ],
+    "affirmations": [
+      {
+        "id": "E01",
+        "number": 25,
+        "type": "likert",
+        "statement": "Je suis à l’aise pour prendre une responsabilité importante.",
+        "dimension": "D",
+        "required": true,
+        "options": [
+          {
+            "value": 1,
+            "label": "Pas du tout d’accord",
+            "points": 0
+          },
+          {
+            "value": 2,
+            "label": "Plutôt pas d’accord",
+            "points": 1
+          },
+          {
+            "value": 3,
+            "label": "Plutôt d’accord",
+            "points": 2
+          },
+          {
+            "value": 4,
+            "label": "Tout à fait d’accord",
+            "points": 3
+          }
+        ]
+      },
+      {
+        "id": "E02",
+        "number": 26,
+        "type": "likert",
+        "statement": "J’ose défendre mon avis même lorsque la majorité pense autrement.",
+        "dimension": "D",
+        "required": true,
+        "options": [
+          {
+            "value": 1,
+            "label": "Pas du tout d’accord",
+            "points": 0
+          },
+          {
+            "value": 2,
+            "label": "Plutôt pas d’accord",
+            "points": 1
+          },
+          {
+            "value": 3,
+            "label": "Plutôt d’accord",
+            "points": 2
+          },
+          {
+            "value": 4,
+            "label": "Tout à fait d’accord",
+            "points": 3
+          }
+        ]
+      },
+      {
+        "id": "E03",
+        "number": 27,
+        "type": "likert",
+        "statement": "Je communique facilement mon enthousiasme aux autres.",
+        "dimension": "I",
+        "required": true,
+        "options": [
+          {
+            "value": 1,
+            "label": "Pas du tout d’accord",
+            "points": 0
+          },
+          {
+            "value": 2,
+            "label": "Plutôt pas d’accord",
+            "points": 1
+          },
+          {
+            "value": 3,
+            "label": "Plutôt d’accord",
+            "points": 2
+          },
+          {
+            "value": 4,
+            "label": "Tout à fait d’accord",
+            "points": 3
+          }
+        ]
+      },
+      {
+        "id": "E04",
+        "number": 28,
+        "type": "likert",
+        "statement": "J’aime aller à la rencontre de nouvelles personnes.",
+        "dimension": "I",
+        "required": true,
+        "options": [
+          {
+            "value": 1,
+            "label": "Pas du tout d’accord",
+            "points": 0
+          },
+          {
+            "value": 2,
+            "label": "Plutôt pas d’accord",
+            "points": 1
+          },
+          {
+            "value": 3,
+            "label": "Plutôt d’accord",
+            "points": 2
+          },
+          {
+            "value": 4,
+            "label": "Tout à fait d’accord",
+            "points": 3
+          }
+        ]
+      },
+      {
+        "id": "E05",
+        "number": 29,
+        "type": "likert",
+        "statement": "Les autres peuvent compter sur moi dans la durée.",
+        "dimension": "S",
+        "required": true,
+        "options": [
+          {
+            "value": 1,
+            "label": "Pas du tout d’accord",
+            "points": 0
+          },
+          {
+            "value": 2,
+            "label": "Plutôt pas d’accord",
+            "points": 1
+          },
+          {
+            "value": 3,
+            "label": "Plutôt d’accord",
+            "points": 2
+          },
+          {
+            "value": 4,
+            "label": "Tout à fait d’accord",
+            "points": 3
+          }
+        ]
+      },
+      {
+        "id": "E06",
+        "number": 30,
+        "type": "likert",
+        "statement": "Je prends naturellement le temps d’écouter les autres.",
+        "dimension": "S",
+        "required": true,
+        "options": [
+          {
+            "value": 1,
+            "label": "Pas du tout d’accord",
+            "points": 0
+          },
+          {
+            "value": 2,
+            "label": "Plutôt pas d’accord",
+            "points": 1
+          },
+          {
+            "value": 3,
+            "label": "Plutôt d’accord",
+            "points": 2
+          },
+          {
+            "value": 4,
+            "label": "Tout à fait d’accord",
+            "points": 3
+          }
+        ]
+      },
+      {
+        "id": "E07",
+        "number": 31,
+        "type": "likert",
+        "statement": "Je repère facilement les incohérences dans un raisonnement.",
+        "dimension": "C",
+        "required": true,
+        "options": [
+          {
+            "value": 1,
+            "label": "Pas du tout d’accord",
+            "points": 0
+          },
+          {
+            "value": 2,
+            "label": "Plutôt pas d’accord",
+            "points": 1
+          },
+          {
+            "value": 3,
+            "label": "Plutôt d’accord",
+            "points": 2
+          },
+          {
+            "value": 4,
+            "label": "Tout à fait d’accord",
+            "points": 3
+          }
+        ]
+      },
+      {
+        "id": "E08",
+        "number": 32,
+        "type": "likert",
+        "statement": "J’aime comprendre les causes profondes d’un problème.",
+        "dimension": "C",
+        "required": true,
+        "options": [
+          {
+            "value": 1,
+            "label": "Pas du tout d’accord",
+            "points": 0
+          },
+          {
+            "value": 2,
+            "label": "Plutôt pas d’accord",
+            "points": 1
+          },
+          {
+            "value": 3,
+            "label": "Plutôt d’accord",
+            "points": 2
+          },
+          {
+            "value": 4,
+            "label": "Tout à fait d’accord",
+            "points": 3
+          }
+        ]
+      }
+    ]
+  },
+  "under_pressure": {
+    "duels": [
+      {
+        "id": "P01",
+        "number": 33,
+        "type": "duel",
+        "prompt": "Face à une urgence…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Je prends rapidement les choses en main.",
+            "dimension": "D"
+          },
+          {
+            "id": "B",
+            "text": "Je cherche à mobiliser les personnes pour agir ensemble.",
+            "dimension": "I"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": false
+      },
+      {
+        "id": "P02",
+        "number": 34,
+        "type": "duel",
+        "prompt": "Quand les événements s’accélèrent…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Je tranche rapidement pour avancer.",
+            "dimension": "D"
+          },
+          {
+            "id": "B",
+            "text": "Je veille à préserver le calme et les repères de chacun.",
+            "dimension": "S"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": false
+      },
+      {
+        "id": "P03",
+        "number": 35,
+        "type": "duel",
+        "prompt": "Sous une forte contrainte de temps…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Je décide avec les informations disponibles.",
+            "dimension": "D"
+          },
+          {
+            "id": "B",
+            "text": "Je vérifie les points essentiels pour limiter les erreurs.",
+            "dimension": "C"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": false
+      },
+      {
+        "id": "P04",
+        "number": 36,
+        "type": "duel",
+        "prompt": "Quand la pression monte dans un groupe…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Je parle davantage pour relancer la dynamique.",
+            "dimension": "I"
+          },
+          {
+            "id": "B",
+            "text": "Je prends le temps d’écouter et d’apaiser les échanges.",
+            "dimension": "S"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": false
+      },
+      {
+        "id": "P05",
+        "number": 37,
+        "type": "duel",
+        "prompt": "Quand je dois expliquer une difficulté…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Je cherche à rassurer et à susciter la confiance par mon discours.",
+            "dimension": "I"
+          },
+          {
+            "id": "B",
+            "text": "Je présente les faits et les éléments précis.",
+            "dimension": "C"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": false
+      },
+      {
+        "id": "P06",
+        "number": 38,
+        "type": "duel",
+        "prompt": "Face à une tension entre plusieurs personnes…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Je cherche à préserver les relations.",
+            "dimension": "S"
+          },
+          {
+            "id": "B",
+            "text": "Je clarifie les faits pour comprendre le désaccord.",
+            "dimension": "C"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": false
+      },
+      {
+        "id": "P07",
+        "number": 39,
+        "type": "duel",
+        "prompt": "Quand un projet prend du retard…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Je mobilise les autres pour retrouver de l’énergie.",
+            "dimension": "I"
+          },
+          {
+            "id": "B",
+            "text": "Je fixe rapidement de nouvelles priorités.",
+            "dimension": "D"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": true
+      },
+      {
+        "id": "P08",
+        "number": 40,
+        "type": "duel",
+        "prompt": "Quand quelqu’un ne suit pas le rythme…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Je prends le temps de comprendre ses difficultés.",
+            "dimension": "S"
+          },
+          {
+            "id": "B",
+            "text": "Je clarifie les actions attendues.",
+            "dimension": "D"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": true
+      },
+      {
+        "id": "P09",
+        "number": 41,
+        "type": "duel",
+        "prompt": "Quand une décision présente des risques…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Je préfère analyser les conséquences avant de décider.",
+            "dimension": "C"
+          },
+          {
+            "id": "B",
+            "text": "Je préfère agir et ajuster ensuite.",
+            "dimension": "D"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": true
+      },
+      {
+        "id": "P10",
+        "number": 42,
+        "type": "duel",
+        "prompt": "Quand une situation devient émotionnellement difficile…",
+        "options": [
+          {
+            "id": "A",
+            "text": "J’ai besoin de retrouver du calme et de la stabilité.",
+            "dimension": "S"
+          },
+          {
+            "id": "B",
+            "text": "J’ai besoin d’en parler pour avancer.",
+            "dimension": "I"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": true
+      },
+      {
+        "id": "P11",
+        "number": 43,
+        "type": "duel",
+        "prompt": "Quand les informations sont contradictoires…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Je vérifie les éléments avant de me prononcer.",
+            "dimension": "C"
+          },
+          {
+            "id": "B",
+            "text": "J’échange avec les autres pour faire émerger une direction.",
+            "dimension": "I"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": true
+      },
+      {
+        "id": "P12",
+        "number": 44,
+        "type": "duel",
+        "prompt": "Quand un changement important survient sans prévenir…",
+        "options": [
+          {
+            "id": "A",
+            "text": "Je cherche à comprendre précisément ce qui change et pourquoi.",
+            "dimension": "C"
+          },
+          {
+            "id": "B",
+            "text": "Je cherche à retrouver des repères stables.",
+            "dimension": "S"
+          }
+        ],
+        "required": true,
+        "source_order_swapped": true
+      }
+    ]
+  },
+  "dimensions": {
+    "D": "Conquérant",
+    "I": "Communiquant",
+    "S": "Facilitateur",
+    "C": "Analyste"
+  },
+  "scoring": {
+    "natural": {
+      "duel": "1 point to selected option dimension",
+      "likert": "value - 1 points to statement dimension (0..3)",
+      "raw": "sum of 24 duel points and 8 Likert item points by dimension",
+      "max_total": 48,
+      "note": "Actual total is 24 plus sum of eight (value-1), varies by participant; no fixed denominator. Equal weight per raw point is experimental and requires validation."
+    },
+    "under_pressure": {
+      "duel": "1 point to selected option dimension",
+      "total_before_tiebreak": 12
+    },
+    "tiebreak": {
+      "trigger": "Exact tie affecting first or second rank, evaluated separately for natural and pressure",
+      "question": "Parmi ces descriptions, laquelle te correspond le mieux ?",
+      "descriptions": {
+        "D": "J’aime avoir de l’autonomie, relever des défis et obtenir des résultats.",
+        "I": "J’aime créer du lien, partager mon enthousiasme et entraîner les autres.",
+        "S": "J’aime la stabilité, la continuité et les relations de confiance.",
+        "C": "J’aime comprendre en profondeur, être précis et faire les choses avec méthode."
+      },
+      "options": "Only tied candidates, one mandatory selection",
+      "award_points": 1,
+      "three_or_four_tied_first": "First choice for primary; second choice among remaining tied candidates for secondary, +1 point each",
+      "history": "Preserve pre-tiebreak raw scores and answers; display after-tiebreak percentages",
+      "note": "Tie choice is a preference declaration, not additional psychometric evidence"
+    },
+    "percentages": {
+      "method": "score_dimension / sum_of_four_scores * 100",
+      "rounding": "largest remainder to one decimal place, ensuring displayed sum = 100.0%",
+      "zero_total": "indeterminate, no fabricated percentage"
+    },
+    "rank": "Sort descending after tiebreak; never silently resolve consequential exact ties by fixed D/I/S/C order"
+  },
+  "display": {
+    "preserve_existing_design": true,
+    "natural_and_pressure_separate": true,
+    "show_four_percentages_each": true,
+    "show_primary_and_secondary": true
+  },
+  "versioning": {
+    "immutable_new_version": true,
+    "do_not_modify_historical_results": true,
+    "production_activation": "requires explicit approval after tests"
+  }
+}
+
