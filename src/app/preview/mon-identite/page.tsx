@@ -3,7 +3,7 @@ import IdentityExperience, { type IdentityStoryGroup } from "@/app/etudiant/iden
 
 const stories: IdentityStoryGroup[] = [
   { key: "identity", label: "Identité", image: "/identity/stories/identity.webp", items: [
-    { key: "mapp", name: "Profil MAPP", href: "#", iconUrl: null }, { key: "fruits", name: "Fruits de l’Esprit", href: "#", iconUrl: null },
+    { key: "mapp", name: "Profil MAPP", href: "#", iconUrl: null }, { key: "fruits", name: "Fruit de l’Esprit", href: "#", iconUrl: null },
     { key: "dons", name: "Dons spirituels", href: "#", iconUrl: null }, { key: "competences", name: "Compétences naturelles", href: "#", iconUrl: null },
   ] },
   { key: "finance", label: "Finance", image: "/identity/stories/finance.webp", items: [{ key: "generopoly", name: "Généropoly", href: "#", iconUrl: "/apps/generopoly.png" }] },

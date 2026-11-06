@@ -12,7 +12,6 @@ import {
   Lightbulb,
   Network,
   Sparkles,
-  Sprout,
   X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -58,7 +57,6 @@ const mappImages: Record<string, string> = {
 };
 
 const resultContent = {
-  fruit: { eyebrow: "Je suis ce que je suis", title: "Fruits de l’Esprit", icon: Sprout },
   gifts: { eyebrow: "Je suis ce que je suis", title: "Dons spirituels", icon: Sparkles },
   skills: { eyebrow: "Je suis ce que je suis", title: "Compétences naturelles", icon: Lightbulb },
   generopoly: { eyebrow: "Généropoly", title: "Mon profil financier", icon: Compass },
@@ -87,9 +85,23 @@ function ResultPost({ result }: { result: IdentityResult }) {
     );
   }
 
+  if (result.kind === "fruit") {
+    return (
+      <Link className={`${styles.post} ${styles.imagePost}`} href="/apps/je-suis-par-la-grace-de-dieu" aria-label="Ouvrir mon résultat Fruit de l’Esprit">
+        <Image
+          className={styles.postImage}
+          src="/identity/posts/fruit-de-lesprit.png"
+          alt="Fruit de l’Esprit"
+          fill
+          sizes="(max-width: 767px) 33vw, 320px"
+        />
+      </Link>
+    );
+  }
+
   const content = resultContent[result.kind];
   const Icon = content.icon;
-  const href = result.kind === "fruit" || result.kind === "gifts" || result.kind === "skills"
+  const href = result.kind === "gifts" || result.kind === "skills"
     ? "/apps/je-suis-par-la-grace-de-dieu"
     : result.kind === "generopoly" ? "/apps/generopoly" : "/apps";
   return (

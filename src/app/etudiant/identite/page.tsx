@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 function toolItems(tool: CatalogApp): IdentityStoryItem[] {
   if (tool.slug === "je-suis-par-la-grace-de-dieu") return [
-    { key: `${tool.id}-fruit`, name: "Fruits de l’Esprit", href: tool.url, iconUrl: tool.iconUrl },
+    { key: `${tool.id}-fruit`, name: "Fruit de l’Esprit", href: tool.url, iconUrl: tool.iconUrl },
     { key: `${tool.id}-gifts`, name: "Dons spirituels", href: tool.url, iconUrl: tool.iconUrl },
     { key: `${tool.id}-skills`, name: "Compétences naturelles", href: tool.url, iconUrl: tool.iconUrl },
   ];
