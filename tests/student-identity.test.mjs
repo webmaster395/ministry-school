@@ -4,11 +4,15 @@ import { readFileSync } from "node:fs";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("Mon identité possède une seule entrée de navigation et aucune rubrique Mes ressources", () => {
+test("Mon identité possède une seule entrée réservée aux super administrateurs", () => {
   const nav = read("src/lib/nav.tsx");
+  const navBlocks = read("src/components/NavBlocks.tsx");
+  const page = read("src/app/etudiant/identite/page.tsx");
   assert.equal((nav.match(/label: "Mon identité"/g) ?? []).length, 1);
   assert.match(nav, /href: "\/etudiant\/identite"/);
   assert.doesNotMatch(nav, /label: "Mes ressources"/);
+  assert.match(navBlocks, /item\.label !== "Mon identité" \|\| isSuperAdmin/);
+  assert.match(page, /!viewer\?\.roles\.superAdmin[\s\S]*redirect\("\/etudiant"\)/);
 });
 
 test("le tableau de bord privé consolide ses lectures et ne rapproche jamais par e-mail", () => {

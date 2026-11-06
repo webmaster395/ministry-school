@@ -4,6 +4,7 @@ import { getIdentityDashboard } from "@/lib/identity/dashboard";
 import IdentityExperience, { type IdentityStoryGroup, type IdentityStoryItem } from "./IdentityExperience";
 import { GuestMappAutoClaim } from "./GuestMappAutoClaim";
 import { getGuestCredential } from "@/lib/mapp/guest";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
@@ -40,7 +41,9 @@ function monthsTogether(memberSince: string | null) {
 }
 
 export default async function StudentIdentityPage() {
-  const [viewer, dashboard, tools, guestMapp] = await Promise.all([getViewer(), getIdentityDashboard(), getStudentTools(), getGuestCredential()]);
+  const viewer = await getViewer();
+  if (!viewer?.roles.superAdmin || viewer.deactivated) redirect("/etudiant");
+  const [dashboard, tools, guestMapp] = await Promise.all([getIdentityDashboard(), getStudentTools(), getGuestCredential()]);
   const firstName = dashboard.profile.firstName || viewer?.fullName.split(" ")[0] || "Mon identité";
   return <>{guestMapp ? <GuestMappAutoClaim /> : null}<IdentityExperience
     firstName={firstName}
