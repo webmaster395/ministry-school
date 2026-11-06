@@ -272,6 +272,10 @@
   transition: transform 420ms var(--ease-out-soft);
 }
 
+.imagePost {
+  background: #f3dcc2;
+}
+
 .postShade {
   position: absolute;
   z-index: -1;
