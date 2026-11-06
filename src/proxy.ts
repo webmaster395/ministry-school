@@ -51,9 +51,11 @@ export async function proxy(request: NextRequest) {
   }
 
   const isAuthRoute = request.nextUrl.pathname === "/login" || isSecretSignupLink;
+  const isDevelopmentPreview = request.nextUrl.pathname.startsWith("/preview/") && process.env.VERCEL_ENV !== "production";
   // Pages ouvertes à tous : la landing et ses annexes, même sans compte.
   const isPublicPage =
     request.nextUrl.pathname === "/" ||
+    isDevelopmentPreview ||
     request.nextUrl.pathname === "/apps" ||
     request.nextUrl.pathname.startsWith("/apps/je-suis-par-la-grace-de-dieu/evaluation/") ||
     request.nextUrl.pathname.startsWith("/apps/generopoly") ||

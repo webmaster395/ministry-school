@@ -18,5 +18,9 @@ export default async function IdentityPreviewPage({ searchParams }: { searchPara
     { kind: "fruit" as const, completedAt: "2026-11-05T12:00:00Z" },
     { kind: "skills" as const, completedAt: "2026-11-04T12:00:00Z" },
   ];
-  return <div style={{ minHeight: "100vh", background: "#f7f0e5", padding: "clamp(16px,4vw,56px)" }}><div style={{ maxWidth: 1040, margin: "0 auto" }}><IdentityExperience firstName="Rose" avatarUrl={null} gender="femme" certified={false} studentCount={337} months={2} completedTests={results.length} stories={stories} results={results} /></div></div>;
+  const upcoming = state === "empty" ? [] : [
+    { key: "gifts", name: "Dons spirituels", href: "#", iconUrl: null, category: "Identité" },
+    { key: "generopoly", name: "Généropoly", href: "#", iconUrl: "/apps/generopoly.png", category: "Finance" },
+  ];
+  return <div style={{ minHeight: "100vh", background: "var(--surface)", padding: "clamp(16px,4vw,56px)" }}><div style={{ maxWidth: 1040, margin: "0 auto" }}><IdentityExperience fullName="Rose Martin" status="Étudiante" avatarUrl={null} studentCount={337} months={2} completedTests={results.length} stories={stories} results={results} upcoming={upcoming} /></div></div>;
 }

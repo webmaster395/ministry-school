@@ -21,9 +21,8 @@ function buildStories(tools: CatalogApp[], recommendations: Array<{ id: string; 
   const identity: IdentityStoryItem[] = [];
   const finance: IdentityStoryItem[] = [];
   for (const tool of tools) {
-    const category = tool.category.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-    if (category.includes("finance") || tool.slug === "generopoly") finance.push(...toolItems(tool));
-    else identity.push(...toolItems(tool));
+    if (tool.slug === "generopoly") finance.push(...toolItems(tool));
+    if (tool.slug === "profil-mapp" || tool.slug === "je-suis-par-la-grace-de-dieu") identity.push(...toolItems(tool));
   }
   const groups: IdentityStoryGroup[] = [
     { key: "identity", label: "Identité", image: "/identity/stories/identity.webp", items: identity },
@@ -40,20 +39,54 @@ function monthsTogether(memberSince: string | null) {
   return Math.max(0, (now.getUTCFullYear() - start.getUTCFullYear()) * 12 + now.getUTCMonth() - start.getUTCMonth());
 }
 
+function accountStatus(role: "student" | "admin", gender: "homme" | "femme" | null | undefined) {
+  if (role === "admin") return gender === "femme" ? "Administratrice" : gender === "homme" ? "Administrateur" : "Administration";
+  return gender === "femme" ? "Étudiante" : gender === "homme" ? "Étudiant" : "Étudiant·e";
+}
+
+function resultKindForItem(item: IdentityStoryItem) {
+  if (item.key.endsWith("-fruit")) return "fruit";
+  if (item.key.endsWith("-gifts")) return "gifts";
+  if (item.key.endsWith("-skills")) return "skills";
+  return null;
+}
+
+function buildUpcoming(tools: CatalogApp[], completedKinds: Set<string>) {
+  return tools.flatMap((tool) => {
+    if (tool.slug === "profil-mapp") return completedKinds.has("mapp") ? [] : [{ key: tool.id, name: "Profil MAPP", href: tool.url, iconUrl: tool.iconUrl, category: "Identité" }];
+    if (tool.slug === "je-suis-par-la-grace-de-dieu") return toolItems(tool).flatMap((item) => {
+      const kind = resultKindForItem(item);
+      return kind && !completedKinds.has(kind) ? [{ ...item, category: "Identité" }] : [];
+    });
+    if (tool.slug === "generopoly") return completedKinds.has("generopoly") ? [] : [{ key: tool.id, name: "Généropoly", href: tool.url, iconUrl: tool.iconUrl, category: "Finance" }];
+    if (tool.slug.includes("apest")) return completedKinds.has("apest") ? [] : [{ key: tool.id, name: tool.name, href: tool.url, iconUrl: tool.iconUrl, category: "Identité" }];
+    return [];
+  });
+}
+
 export default async function StudentIdentityPage() {
   const viewer = await getViewer();
-  if (!viewer?.roles.superAdmin || viewer.deactivated) redirect("/etudiant");
+  if (!viewer) redirect("/login");
+  if (viewer.deactivated) redirect("/auth/desactive");
   const [dashboard, tools, guestMapp] = await Promise.all([getIdentityDashboard(), getStudentTools(), getGuestCredential()]);
-  const firstName = dashboard.profile.firstName || viewer?.fullName.split(" ")[0] || "Mon identité";
+  const allResults = [...dashboard.identityResults, ...dashboard.financeResults]
+    .sort((left, right) => new Date(right.completedAt).getTime() - new Date(left.completedAt).getTime());
+  const completedKinds = new Set(allResults.map((result) => result.kind));
+  const seenKinds = new Set<string>();
+  const results = allResults.filter((result) => {
+    if (seenKinds.has(result.kind)) return false;
+    seenKinds.add(result.kind);
+    return true;
+  });
   return <>{guestMapp ? <GuestMappAutoClaim /> : null}<IdentityExperience
-    firstName={firstName}
-    avatarUrl={viewer?.avatarUrl ?? null}
-    gender={dashboard.profile.gender ?? null}
-    certified={dashboard.profile.certified}
+    fullName={viewer.fullName || dashboard.profile.firstName || "Mon identité"}
+    status={accountStatus(viewer.role, dashboard.profile.gender)}
+    avatarUrl={viewer.avatarUrl}
     studentCount={dashboard.metrics.studentCount}
     months={monthsTogether(dashboard.profile.memberSince)}
     completedTests={dashboard.metrics.completedTests}
     stories={buildStories(tools, dashboard.recommendations)}
-    results={[...dashboard.identityResults, ...dashboard.financeResults]}
+    results={results}
+    upcoming={buildUpcoming(tools, completedKinds)}
   /></>;
 }
