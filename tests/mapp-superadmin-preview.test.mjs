@@ -13,8 +13,10 @@ test("Mes outils montre les brouillons aux seuls super-administrateurs", () => {
 
 test("la route MAPP propose directement le parcours invité", () => {
   const page = read("src/app/apps/profil-mapp/page.tsx");
+  const vercel = read("vercel.json");
   assert.match(page, /<GuestMappEntry/);
   assert.doesNotMatch(page, /isMappGuestOpen/);
+  assert.doesNotMatch(vercel, /profil-mapp\.vercel\.app/);
 });
 
 test("les tentatives invitées gardent leur secret hors du navigateur Supabase", () => {

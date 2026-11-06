@@ -8,14 +8,6 @@
     {
       "source": "/apps/generopoly/:path*",
       "destination": "https://ma-generosite.vercel.app/apps/generopoly/:path*"
-    },
-    {
-      "source": "/apps/profil-mapp",
-      "destination": "https://profil-mapp.vercel.app/apps/profil-mapp"
-    },
-    {
-      "source": "/apps/profil-mapp/:path*",
-      "destination": "https://profil-mapp.vercel.app/apps/profil-mapp/:path*"
     }
   ]
 }
