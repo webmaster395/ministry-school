@@ -1,10 +1,10 @@
 "use client";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { saveMappAnswerBatch, saveMappDuelAnswer } from "@/lib/mapp/client";
+import { saveMappStep } from "@/lib/mapp/client";
 import type { MappAnswerValue as AnswerValue, MappQuestionnaireContext } from "@/lib/mapp/types";
 import { AnswerScale } from "./OfficialAnswerScale";
 
@@ -37,31 +37,30 @@ export function Hybrid44Runner({ questionnaire }: { questionnaire: MappQuestionn
   const [state, setState] = useState<"saved" | "saving" | "error">("saved");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  const [localReady, setLocalReady] = useState(false);
   const sequence = useRef(Math.max(0, ...questionnaire.answers.map((row) => row.clientSequence), ...(questionnaire.duelAnswers ?? []).map((row) => row.clientSequence)));
+  const serverRevision = useRef(questionnaire.serverRevision);
 
   const pageQuestions = useMemo(() => questions.slice(pageIndex * pageSize, pageIndex * pageSize + pageSize), [pageIndex, questions]);
   const complete = pageQuestions.length === pageSize && pageQuestions.every((question) => question.metadata.mapp_kind === "natural_likert" ? scales[question.id] !== undefined : Boolean(duels[question.id]));
   const answered = questions.filter((question) => question.metadata.mapp_kind === "natural_likert" ? scales[question.id] !== undefined : Boolean(duels[question.id])).length;
 
-  async function saveDuel(question: Question, optionId: string) {
-    await saveMappDuelAnswer(attemptId, question.id, optionId, ++sequence.current);
-  }
+  const localKey = `ministry:mapp:hybrid44:${attemptId}`;
+  useEffect(() => {
+    try {
+      const local = JSON.parse(localStorage.getItem(localKey) ?? "null") as { duels?: Record<string,string>; scales?: Record<string,AnswerValue> } | null;
+      if (local?.duels) setDuels((current) => ({ ...current, ...local.duels }));
+      if (local?.scales) setScales((current) => ({ ...current, ...local.scales }));
+    } catch { /* stockage indisponible ou invalide */ }
+    setLocalReady(true);
+  }, [localKey]);
+  useEffect(() => { if (!localReady) return; try { localStorage.setItem(localKey, JSON.stringify({ duels, scales })); } catch { /* navigation toujours utilisable */ } }, [duels, scales, localKey, localReady]);
+
   async function choose(question: Question, optionId: string) {
-    setDuels((current) => ({ ...current, [question.id]: optionId })); setState("saving");
-    try { await saveDuel(question, optionId); setMessage(""); setState("saved"); } catch { setMessage("Impossible d’enregistrer cette réponse. Elle reste affichée : réessaie."); setState("error"); }
+    setDuels((current) => ({ ...current, [question.id]: optionId })); setMessage(""); setState("saved");
   }
   async function answerScale(question: Question, value: AnswerValue) {
-    setScales((current) => ({ ...current, [question.id]: value })); setState("saving");
-    try {
-      await saveMappAnswerBatch({
-        attemptId,
-        mutationId: crypto.randomUUID(),
-        expectedRevision: questionnaire.serverRevision,
-        clientSequence: ++sequence.current,
-        answers: [{ questionId: question.id, value }],
-      });
-      setMessage(""); setState("saved");
-    } catch { setMessage("Impossible d’enregistrer cette réponse. Elle reste affichée : réessaie."); setState("error"); }
+    setScales((current) => ({ ...current, [question.id]: value })); setMessage(""); setState("saved");
   }
   function revealMissing() {
     const missing = pageQuestions.find((question) => question.metadata.mapp_kind === "natural_likert" ? scales[question.id] === undefined : !duels[question.id]);
@@ -72,7 +71,13 @@ export function Hybrid44Runner({ questionnaire }: { questionnaire: MappQuestionn
   async function savePage() {
     setState("saving"); setMessage("");
     try {
-      // Les réponses sont déjà confirmées au fil de la saisie. Ne pas les écrire une seconde fois.
+      const ack = await saveMappStep({
+        attemptId, mutationId: crypto.randomUUID(), expectedRevision: serverRevision.current,
+        clientSequence: ++sequence.current,
+        scaleAnswers: pageQuestions.filter((question) => question.metadata.mapp_kind === "natural_likert").map((question) => ({ questionId: question.id, value: Number(scales[question.id]) })),
+        duelAnswers: pageQuestions.filter((question) => question.metadata.mapp_kind !== "natural_likert").map((question) => ({ questionId: question.id, optionId: duels[question.id] })),
+      });
+      serverRevision.current = ack.serverRevision;
       setState("saved"); return true;
     } catch { setState("error"); setMessage("Impossible d’enregistrer cette étape. Tes réponses restent affichées : vérifie ta connexion et réessaie."); return false; }
   }
@@ -91,6 +96,7 @@ export function Hybrid44Runner({ questionnaire }: { questionnaire: MappQuestionn
       const response = await fetch(`/api/mapp/hybrid-44/attempts/${attemptId}/finalize`, { method: "POST" });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.error ?? "Finalisation impossible");
+      try { localStorage.removeItem(localKey); } catch { /* sans effet */ }
       router.push(`/apps/profil-mapp/test/${attemptId}/departage?revision=${payload.revisionId}`);
     } catch { setMessage("Impossible de calculer le résultat. Tes réponses sont conservées : réessaie."); setBusy(false); }
   }

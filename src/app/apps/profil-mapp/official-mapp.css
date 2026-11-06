@@ -794,6 +794,10 @@ body:has(.assessment-pages), body:has(.entry-experience) { background: #f5f7fa; 
 .entry-landing .entry-signature b { color: #16394a; font-size: 17px; font-weight: 750; }
 .mapp-wordmark { display: inline-flex; align-items: baseline; gap: 4px; color: inherit; font-size: 17px; font-style: normal; font-weight: 760; letter-spacing: -.045em; }
 .mapp-wordmark span { color: inherit !important; font-size: 1em !important; font-weight: 390; letter-spacing: -.035em; }
+.recovery-code { position:relative; z-index:5; width:min(92%,720px); margin:24px auto 48px; padding:20px; border:1px solid #dfe4ef; border-radius:16px; background:#fff; text-align:center; color:#27313d; box-shadow:0 10px 30px rgba(39,49,61,.08); }
+.recovery-code strong,.recovery-code code,.recovery-code p { display:block; }
+.recovery-code code { margin:12px 0; font-size:1.35rem; font-weight:800; letter-spacing:.12em; }
+.recovery-code p { margin:0; color:#687385; font-size:.85rem; line-height:1.5; }
 .mapp-wordmark i { color: var(--brand-profile-color,#268b99); font-style: normal; }
 .home-wordmark { --brand-profile-color:#268b99; display:flex; align-items:center; gap:8px; margin:0 0 2rem; color:#16394a; }
 .home-wordmark .brand-mark { margin:0; }.home-wordmark .signature-separator,.result-wordmark .signature-separator{width:1px;height:18px;background:currentColor;opacity:.25}.home-wordmark>span:last-child{color:#8a9aa5;font-size:12px}

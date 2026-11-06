@@ -94,7 +94,7 @@ try {
 
   const migrationDirectory = resolve(projectDirectory, "supabase/migrations");
   const migrations = (await readdir(migrationDirectory))
-    .filter((name) => /_mapp_port_|native_mapp_ministry_access_and_batching|student_identity_dashboard/.test(name) && name.endsWith(".sql"))
+    .filter((name) => /_mapp_port_|native_mapp_ministry_access_and_batching|student_identity_dashboard|mapp_secure_guest_attempts/.test(name) && name.endsWith(".sql"))
     .sort();
 
   for (const migration of migrations) {

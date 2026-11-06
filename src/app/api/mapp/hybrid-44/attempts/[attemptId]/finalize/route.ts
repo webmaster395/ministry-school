@@ -1,13 +1,15 @@
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { HYBRID_44_VERSION, scoreHybrid44 } from "@/lib/mapp/hybrid44";
+import { guestOwnsAttempt } from "@/lib/mapp/guest";
 
 type RelatedQuestion = { metadata?: { source_id?: string } } | Array<{ metadata?: { source_id?: string } }> | null;
 
 export async function POST(_: Request, { params }: { params: Promise<{ attemptId: string }> }) {
   const { attemptId } = await params;
+  const guestAllowed = await guestOwnsAttempt(attemptId);
   const userDb = await createClient();
-  const { data: access, error: accessError } = await userDb.rpc("mapp_hybrid_attempt_access", { p_attempt_id: attemptId });
+  const { data: access, error: accessError } = guestAllowed ? { data: { allowed: true, status: "in_progress", revisionId: null }, error: null } : await userDb.rpc("mapp_hybrid_attempt_access", { p_attempt_id: attemptId });
   if (accessError || !access?.allowed) return Response.json({ error: "Tentative indisponible." }, { status: 404 });
   if (access.status === "completed") return Response.json({ revisionId: access.revisionId });
 

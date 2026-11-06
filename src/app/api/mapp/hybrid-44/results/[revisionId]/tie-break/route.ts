@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { applyHybridTieBreak, dimensions, type HybridDimension, type HybridScores } from "@/lib/mapp/hybrid44";
+import { guestOwnsAttempt } from "@/lib/mapp/guest";
 
 const version = "profile-descriptions-v1.0.0";
 const question = "Parmi ces descriptions, laquelle te correspond le mieux ?";
@@ -15,6 +16,7 @@ async function authorize(revisionId: string) {
   const admin = createServiceClient().schema("mapp");
   const { data: revision } = await admin.from("result_revisions").select("attempt_id").eq("id", revisionId).single();
   if (!revision) return false;
+  if (await guestOwnsAttempt(revision.attempt_id)) return true;
   const user = await createClient();
   const { data } = await user.rpc("mapp_hybrid_attempt_access", { p_attempt_id: revision.attempt_id });
   return Boolean(data?.allowed);

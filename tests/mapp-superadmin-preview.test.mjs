@@ -11,9 +11,22 @@ test("Mes outils montre les brouillons aux seuls super-administrateurs", () => {
   assert.match(page, /enabled \? await getStudentTools\(\) : \[\]/);
 });
 
-test("la route MAPP reste fermée aux étudiants avant publication", () => {
+test("la route MAPP reste fermée avant l'ouverture puis propose le parcours invité", () => {
   const page = read("src/app/apps/profil-mapp/page.tsx");
-  assert.match(page, /if \(!viewer\.roles\.superAdmin\) notFound\(\)/);
+  const guest = read("src/lib/mapp/access-window.ts");
+  assert.match(page, /if \(!isMappGuestOpen\(\)\)/);
+  assert.match(page, /<GuestMappEntry/);
+  assert.match(guest, /2026-11-07T06:00:00\.000Z/);
+});
+
+test("les tentatives invitées gardent leur secret hors du navigateur Supabase", () => {
+  const migration = read("supabase/migrations/20261106203000_mapp_secure_guest_attempts.sql");
+  const start = read("src/app/api/mapp/guest/start/route.ts");
+  assert.match(migration, /token_hash text not null unique/);
+  assert.match(migration, /revoke all on mapp\.guest_attempt_access from public, anon, authenticated/);
+  assert.match(migration, /now\(\) < timestamptz '2026-11-07 06:00:00\+00'/);
+  assert.match(start, /setGuestCredential/);
+  assert.doesNotMatch(start, /SUPABASE_SERVICE_ROLE_KEY/);
 });
 
 test("la porte SQL contrôle publication étudiante et aperçu super-admin", () => {

@@ -18,15 +18,12 @@ export async function openMappQuestionnaire() {
 }
 
 export async function saveMappAnswerBatch(mutation: MappAnswerMutation) {
-  const supabase = createClient();
-  const { data, error } = await supabase.rpc("mapp_save_answer_batch", {
-    p_attempt_id: mutation.attemptId,
-    p_mutation_id: mutation.mutationId,
-    p_expected_revision: mutation.expectedRevision,
-    p_client_sequence: mutation.clientSequence,
-    p_answers: mutation.answers,
+  const response = await fetch(`/api/mapp/attempts/${mutation.attemptId}/answers`, {
+    method: "POST", headers: { "content-type": "application/json" },
+    body: JSON.stringify({ kind: "scale", ...mutation }),
   });
-  if (error) throw rpcError("Sauvegarde Profil MAPP impossible", error.message);
+  const data = await response.json();
+  if (!response.ok) throw rpcError("Sauvegarde Profil MAPP impossible", data.error ?? "Erreur serveur");
   return data as MappSaveAcknowledgement;
 }
 
@@ -36,14 +33,28 @@ export async function saveMappDuelAnswer(
   optionId: string,
   clientSequence: number,
 ) {
-  const supabase = createClient();
-  const { error } = await supabase.rpc("mapp_save_duel_answer", {
-    p_attempt_id: attemptId,
-    p_question_id: questionId,
-    p_option_id: optionId,
-    p_client_sequence: clientSequence,
+  const response = await fetch(`/api/mapp/attempts/${attemptId}/answers`, {
+    method: "POST", headers: { "content-type": "application/json" },
+    body: JSON.stringify({ kind: "duel", questionId, optionId, clientSequence }),
   });
-  if (error) throw rpcError("Sauvegarde Profil MAPP impossible", error.message);
+  if (!response.ok) throw rpcError("Sauvegarde Profil MAPP impossible", "Erreur serveur");
+}
+
+export async function saveMappStep(input: {
+  attemptId: string;
+  mutationId: string;
+  expectedRevision: number;
+  clientSequence: number;
+  scaleAnswers: Array<{ questionId: string; value: number }>;
+  duelAnswers: Array<{ questionId: string; optionId: string }>;
+}) {
+  const response = await fetch(`/api/mapp/attempts/${input.attemptId}/answers`, {
+    method: "POST", headers: { "content-type": "application/json" },
+    body: JSON.stringify({ kind: "step", ...input }),
+  });
+  const data = await response.json();
+  if (!response.ok) throw rpcError("Sauvegarde Profil MAPP impossible", data.error ?? "Erreur serveur");
+  return data as MappSaveAcknowledgement;
 }
 
 export async function getMappResultBundle(attemptId: string) {

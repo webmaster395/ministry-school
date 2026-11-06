@@ -1,15 +1,24 @@
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { getViewer } from "@/lib/data/viewer";
 import { getMappResultBundle, openMappQuestionnaire } from "@/lib/mapp/server";
+import { getGuestCredential, isMappGuestOpen, openGuestQuestionnaire } from "@/lib/mapp/guest";
+import { GuestMappEntry } from "./GuestMappEntry";
 
 export const dynamic = "force-dynamic";
 
 export default async function ProfilMappPage() {
   const viewer = await getViewer();
-  if (!viewer) redirect("/login?next=/apps/profil-mapp");
+  const guest = await getGuestCredential();
+  if (guest) {
+    const questionnaire = await openGuestQuestionnaire(guest.attemptId);
+    if (questionnaire?.status === "completed") redirect(`/apps/profil-mapp/test/${guest.attemptId}/resultat`);
+    if (questionnaire) redirect(`/apps/profil-mapp/test/${guest.attemptId}`);
+  }
+  if (!viewer?.roles.superAdmin) {
+    if (!isMappGuestOpen()) return <main className="center-shell"><h1>Profil MAPP ouvre bientôt</h1><p>Le questionnaire sera accessible le 7 novembre 2026 à 07h00, heure de Paris.</p></main>;
+    return <GuestMappEntry />;
+  }
   if (viewer.deactivated) redirect("/auth/desactive");
-
-  if (!viewer.roles.superAdmin) notFound();
 
   let destination: string;
   try {
