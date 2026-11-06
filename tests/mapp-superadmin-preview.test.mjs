@@ -16,6 +16,8 @@ test("la route MAPP propose directement le parcours invité", () => {
   const vercel = read("vercel.json");
   assert.match(page, /<GuestMappEntry/);
   assert.doesNotMatch(page, /isMappGuestOpen/);
+  assert.doesNotMatch(page, /redirect\(/);
+  assert.doesNotMatch(page, /openGuestQuestionnaire/);
   assert.doesNotMatch(vercel, /profil-mapp\.vercel\.app/);
 });
 
