@@ -1,23 +1,31 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Geist, Jost } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import InstallBanner from "@/components/InstallBanner";
 import DeploymentUpdateGuard from "@/components/DeploymentUpdateGuard";
 
-const geistSans = Geist({
+const geistSans = localFont({
+  src: "./fonts/geist-latin.woff2",
   variable: "--font-geist-sans",
-  subsets: ["latin"],
+  weight: "100 900",
+  display: "swap",
+  fallback: ["Arial", "sans-serif"],
 });
 
-const jost = Jost({
+const jost = localFont({
+  src: "./fonts/jost-latin.woff2",
   variable: "--font-jost",
-  subsets: ["latin"],
-  weight: ["500", "600"],
+  weight: "500 600",
+  display: "swap",
+  fallback: ["Arial", "sans-serif"],
 });
 
-const bricolage = Bricolage_Grotesque({
+const bricolage = localFont({
+  src: "./fonts/bricolage-grotesque-latin.woff2",
   variable: "--font-bricolage",
-  subsets: ["latin"],
+  weight: "200 800",
+  display: "swap",
+  fallback: ["Arial", "sans-serif"],
 });
 
 /** Écran calé sur la largeur du téléphone, sans zoom de départ (évite l'effet « page trop large » en web app). */
