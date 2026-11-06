@@ -18,7 +18,7 @@ test("la route MAPP propose directement le parcours invité", () => {
   assert.doesNotMatch(page, /isMappGuestOpen/);
   assert.doesNotMatch(page, /redirect\(/);
   assert.doesNotMatch(page, /openGuestQuestionnaire/);
-  assert.doesNotMatch(vercel, /profil-mapp\.vercel\.app/);
+  assert.match(vercel, /profil-mapp\.vercel\.app\/apps\/profil-mapp/);
 });
 
 test("les tentatives invitées gardent leur secret hors du navigateur Supabase", () => {
