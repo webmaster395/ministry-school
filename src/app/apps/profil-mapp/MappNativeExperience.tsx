@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import dynamic from "next/dynamic";
+import PreviewShell from "@/app/preview/resultat/preview-shell";
 import {
   createMappLocalStoragePersistence,
   MappAnswerQueue,
@@ -23,10 +23,6 @@ import type {
 import styles from "./profil-mapp.module.css";
 
 const pageSize = 5;
-const PreviewShell = dynamic(() => import("@/app/preview/resultat/preview-shell"), {
-  ssr: false,
-  loading: () => <main className={styles.resultShell}><p>Chargement de votre restitution…</p></main>,
-});
 const fallbackOptions = [
   { value: 1, label: "Pas du tout vrai" },
   { value: 2, label: "Plutôt faux" },
