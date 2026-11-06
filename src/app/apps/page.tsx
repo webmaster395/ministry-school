@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import AppsPortal from "./AppsPortal";
-import { getCatalogApps, getPublicToolsPortal } from "@/lib/apps/catalog";
+import { getCatalogApps, getPublicToolsPortal, isToolVisibleInPortals } from "@/lib/apps/catalog";
 import { getViewer } from "@/lib/data/viewer";
 
 export const dynamic = "force-dynamic";
@@ -19,8 +19,8 @@ export default async function AppsPage() {
   const viewer = await getViewer();
   // URL publique unique de « Mes outils ». La page de chaque outil conserve
   // ses propres règles d'ouverture et de sécurité.
-  const apps = viewer?.roles.superAdmin
+  const apps = (viewer?.roles.superAdmin
     ? await getCatalogApps({ includeUnpublished: true, channel: "admin" })
-    : await getPublicToolsPortal();
+    : await getPublicToolsPortal()).filter(isToolVisibleInPortals);
   return <AppsPortal applications={apps} />;
 }

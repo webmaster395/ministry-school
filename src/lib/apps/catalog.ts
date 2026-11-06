@@ -6,6 +6,12 @@ import { createServiceClient } from "@/lib/supabase/service";
 export type AppStatus = "draft" | "scheduled" | "published" | "disabled";
 export type CatalogChannel = "public" | "student" | "admin";
 
+const temporarilyHiddenPortalSlugs = new Set(["je-suis-par-la-grace-de-dieu"]);
+
+export function isToolVisibleInPortals(app: Pick<CatalogApp, "slug">) {
+  return !temporarilyHiddenPortalSlugs.has(app.slug);
+}
+
 export type CatalogApp = {
   id: string;
   slug: string;
@@ -161,9 +167,9 @@ export async function getStudentTools() {
     const now = Date.now();
     return (await getCachedStudentCatalogRows())
       .map((row) => mapRow(row, now))
-      .filter((app) => app.studentVisible);
+      .filter((app) => app.studentVisible && isToolVisibleInPortals(app));
   }
-  return getCatalogApps({ channel: "student" });
+  return (await getCatalogApps({ channel: "student" })).filter(isToolVisibleInPortals);
 }
 
 /** Portail public unique « Mes outils », alimenté par les fiches existantes. */
@@ -179,7 +185,7 @@ export async function getPublicToolsPortal() {
   if (error) return [];
   return (data as CatalogRow[])
     .map((row) => mapRow(row, now))
-    .filter((app) => app.publicVisible || app.slug === "profil-mapp");
+    .filter((app) => (app.publicVisible || app.slug === "profil-mapp") && isToolVisibleInPortals(app));
 }
 
 export async function getCatalogAppBySlug(slug: string) {

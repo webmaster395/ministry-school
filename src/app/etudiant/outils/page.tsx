@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element -- icônes du catalogue importées par les administrateurs */
 import { ArrowUpRight, PanelsTopLeft } from "lucide-react";
-import { getCatalogApps, getStudentTools, getStudentToolsEnabled } from "@/lib/apps/catalog";
+import { getCatalogApps, getStudentTools, getStudentToolsEnabled, isToolVisibleInPortals } from "@/lib/apps/catalog";
 import { getViewer } from "@/lib/data/viewer";
 
 export const dynamic = "force-dynamic";
@@ -9,9 +9,9 @@ export default async function StudentToolsPage() {
   const viewer = await getViewer();
   const isSuperAdmin = Boolean(viewer?.roles.superAdmin);
   const enabled = isSuperAdmin || await getStudentToolsEnabled();
-  const apps = isSuperAdmin
+  const apps = (isSuperAdmin
     ? await getCatalogApps({ includeUnpublished: true, channel: "admin" })
-    : enabled ? await getStudentTools() : [];
+    : enabled ? await getStudentTools() : []).filter(isToolVisibleInPortals);
 
   return <div className="space-y-7">
     <header>
