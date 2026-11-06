@@ -1,5 +1,6 @@
+import { NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/service";
-import { newGuestSecrets, setGuestCredential, sha256 } from "@/lib/mapp/guest";
+import { MAPP_GUEST_COOKIE, newGuestSecrets, serializeGuestCredential, setGuestCredential, sha256 } from "@/lib/mapp/guest";
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => ({})) as { firstName?: string; lastName?: string; email?: string };
@@ -18,6 +19,16 @@ export async function POST(request: Request) {
   });
   if (error || !data?.attemptId) return Response.json({ error: "Le questionnaire ne peut pas être démarré." }, { status: 503 });
   await setGuestCredential({ attemptId: data.attemptId, secret, recoveryCode });
-  return Response.json({ attemptId: data.attemptId });
+  // Attache explicitement le jeton à la réponse HTTP. Cela garantit que le
+  // navigateur l'a enregistré avant que le client ouvre la page du test.
+  const response = NextResponse.json({ attemptId: data.attemptId });
+  response.cookies.set(MAPP_GUEST_COOKIE, serializeGuestCredential({ attemptId: data.attemptId, secret, recoveryCode }), {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 30,
+  });
+  return response;
 }
 

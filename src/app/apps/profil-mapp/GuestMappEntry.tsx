@@ -66,7 +66,6 @@ export function GuestMappEntry() {
         <label>E-mail<input type="email" required autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} /></label>
         {error && <p className="form-error" role="alert">{error}</p>}
         <button className="primary-button entry-start" disabled={busy}>{busy ? <><LoaderCircle className="spin"/> Préparation…</> : <>Commencer le test <ArrowRight size={18}/></>}</button>
-        <p className="entry-privacy">Aucun mot de passe, code ou e-mail de confirmation ne sera demandé. Tes réponses sont sauvegardées automatiquement.</p>
       </form>
     </div>}
   </main>;

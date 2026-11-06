@@ -7,9 +7,13 @@ import type { MappQuestionnaireContext, MappResultBundle } from "./types";
 export { MAPP_GUEST_OPENS_AT, isMappGuestOpen } from "./access-window";
 import { isMappGuestOpen } from "./access-window";
 
-const COOKIE = "ministry_mapp_guest";
+export const MAPP_GUEST_COOKIE = "ministry_mapp_guest";
 
 type GuestCredential = { attemptId: string; secret: string; recoveryCode: string };
+
+export function serializeGuestCredential(value: GuestCredential) {
+  return `${value.attemptId}.${value.secret}.${value.recoveryCode}`;
+}
 
 export function sha256(value: string) {
   return createHash("sha256").update(value).digest("hex");
@@ -23,7 +27,7 @@ export function newGuestSecrets() {
 
 export async function setGuestCredential(value: GuestCredential) {
   const jar = await cookies();
-  jar.set(COOKIE, `${value.attemptId}.${value.secret}.${value.recoveryCode}`, {
+  jar.set(MAPP_GUEST_COOKIE, serializeGuestCredential(value), {
     httpOnly: true,
     secure: true,
     sameSite: "lax",
@@ -35,11 +39,11 @@ export async function setGuestCredential(value: GuestCredential) {
 
 export async function clearGuestCredential() {
   const jar = await cookies();
-  jar.delete(COOKIE);
+  jar.delete(MAPP_GUEST_COOKIE);
 }
 
 export async function getGuestCredential(attemptId?: string): Promise<GuestCredential | null> {
-  const raw = (await cookies()).get(COOKIE)?.value;
+  const raw = (await cookies()).get(MAPP_GUEST_COOKIE)?.value;
   if (!raw) return null;
   const [storedAttemptId, secret, recoveryCode] = raw.split(".");
   if (!storedAttemptId || !secret || !recoveryCode || (attemptId && storedAttemptId !== attemptId)) return null;
