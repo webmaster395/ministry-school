@@ -7,16 +7,23 @@ export async function POST(request: Request, { params }: { params: Promise<{ att
   const body = await request.json();
   const guest = await getGuestCredential(attemptId);
   if (body.kind === "step") {
-    let allowed = false;
     if (guest) {
-      const { data } = await createServiceClient().schema("mapp").rpc("guest_access_allowed", { p_attempt_id: attemptId, p_token_hash: sha256(guest.secret) });
-      allowed = data === true;
-    } else {
-      const user = await createClient();
-      const { data } = await user.rpc("mapp_hybrid_attempt_access", { p_attempt_id: attemptId });
-      allowed = data?.allowed === true && data?.status === "in_progress";
+      const { data, error } = await createServiceClient().schema("mapp").rpc("save_guest_hybrid_step", {
+        p_attempt_id: attemptId,
+        p_token_hash: sha256(guest.secret),
+        p_mutation_id: body.mutationId,
+        p_expected_revision: body.expectedRevision,
+        p_client_sequence: body.clientSequence,
+        p_scale_answers: body.scaleAnswers,
+        p_duel_answers: body.duelAnswers,
+      });
+      if (error) return Response.json({ error: "Conflit de sauvegarde." }, { status: error.code === "42501" ? 403 : 409 });
+      return Response.json(data);
     }
-    if (!allowed) return Response.json({ error: "Sauvegarde refusée." }, { status: 403 });
+
+    const user = await createClient();
+    const { data: access } = await user.rpc("mapp_hybrid_attempt_access", { p_attempt_id: attemptId });
+    if (access?.allowed !== true || access?.status !== "in_progress") return Response.json({ error: "Sauvegarde refusée." }, { status: 403 });
     const { data, error } = await createServiceClient().schema("mapp").rpc("save_hybrid_step", {
       p_attempt_id: attemptId, p_mutation_id: body.mutationId, p_expected_revision: body.expectedRevision,
       p_client_sequence: body.clientSequence, p_scale_answers: body.scaleAnswers, p_duel_answers: body.duelAnswers,
