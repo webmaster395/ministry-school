@@ -10,7 +10,7 @@ export default async function OfficialMappResultPage({ params }: { params: Promi
   const { attemptId } = await params;
   const guest = await getGuestCredential(attemptId);
   const viewer = guest ? null : await getViewer();
-  if (!guest && (!viewer || viewer.deactivated || !viewer.roles.superAdmin)) notFound();
+  if (!guest && (!viewer || viewer.deactivated)) notFound();
   const bundle = guest ? await getGuestResult(attemptId) : await getMappResultBundle(attemptId).catch(() => null);
   if (!bundle) notFound();
   if (bundle.rankings.some((ranking) => ranking.tie_break_required && !ranking.resolved_order)) {

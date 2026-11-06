@@ -1,13 +1,17 @@
 import { createServiceClient } from "@/lib/supabase/service";
-import { isMappGuestOpen, newGuestSecrets, setGuestCredential, sha256 } from "@/lib/mapp/guest";
+import { newGuestSecrets, setGuestCredential, sha256 } from "@/lib/mapp/guest";
 
 export async function POST(request: Request) {
-  if (!isMappGuestOpen()) return Response.json({ error: "Profil MAPP ouvrira le 7 novembre à 07h00." }, { status: 403 });
-  const body = await request.json().catch(() => ({})) as { email?: string };
+  const body = await request.json().catch(() => ({})) as { firstName?: string; lastName?: string; email?: string };
+  const firstName = String(body.firstName ?? "").trim();
+  const lastName = String(body.lastName ?? "").trim();
   const email = String(body.email ?? "").trim().toLowerCase();
+  if (firstName.length < 2 || firstName.length > 80 || lastName.length < 2 || lastName.length > 80) return Response.json({ error: "Prénom ou nom invalide." }, { status: 400 });
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) return Response.json({ error: "Adresse e-mail invalide." }, { status: 400 });
   const { secret, recoveryCode } = newGuestSecrets();
-  const { data, error } = await createServiceClient().schema("mapp").rpc("start_guest_hybrid_44", {
+  const { data, error } = await createServiceClient().schema("mapp").rpc("start_guest_hybrid_44_profile", {
+    p_first_name: firstName,
+    p_last_name: lastName,
     p_email: email,
     p_token_hash: sha256(secret),
     p_recovery_hash: sha256(recoveryCode),

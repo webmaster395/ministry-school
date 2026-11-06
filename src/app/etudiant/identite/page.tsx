@@ -2,6 +2,8 @@ import { getStudentTools, type CatalogApp } from "@/lib/apps/catalog";
 import { getViewer } from "@/lib/data/viewer";
 import { getIdentityDashboard } from "@/lib/identity/dashboard";
 import IdentityExperience, { type IdentityStoryGroup, type IdentityStoryItem } from "./IdentityExperience";
+import { GuestMappAutoClaim } from "./GuestMappAutoClaim";
+import { getGuestCredential } from "@/lib/mapp/guest";
 
 export const dynamic = "force-dynamic";
 
@@ -38,9 +40,9 @@ function monthsTogether(memberSince: string | null) {
 }
 
 export default async function StudentIdentityPage() {
-  const [viewer, dashboard, tools] = await Promise.all([getViewer(), getIdentityDashboard(), getStudentTools()]);
+  const [viewer, dashboard, tools, guestMapp] = await Promise.all([getViewer(), getIdentityDashboard(), getStudentTools(), getGuestCredential()]);
   const firstName = dashboard.profile.firstName || viewer?.fullName.split(" ")[0] || "Mon identité";
-  return <IdentityExperience
+  return <>{guestMapp ? <GuestMappAutoClaim /> : null}<IdentityExperience
     firstName={firstName}
     avatarUrl={viewer?.avatarUrl ?? null}
     gender={dashboard.profile.gender ?? null}
@@ -50,5 +52,5 @@ export default async function StudentIdentityPage() {
     completedTests={dashboard.metrics.completedTests}
     stories={buildStories(tools, dashboard.recommendations)}
     results={[...dashboard.identityResults, ...dashboard.financeResults]}
-  />;
+  /></>;
 }

@@ -31,7 +31,7 @@ test("les stories ouvrent les outils publiés et les publications viennent des r
   const experience = read("src/app/etudiant/identite/IdentityExperience.tsx");
   assert.match(experience, /props\.certified \?/);
   assert.match(experience, /Les résultats apparaîtront après la finalisation d’un test/);
-  assert.match(experience, /href="\/apps\/profil-mapp#resultat"/);
+  assert.match(experience, /result\.attemptId[\s\S]*\/apps\/profil-mapp\/test\/\$\{result\.attemptId\}\/resultat/);
   assert.doesNotMatch(experience, /Retrouve les réponses et résultats enregistrés par l’outil/);
 });
 

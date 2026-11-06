@@ -11,20 +11,21 @@ test("Mes outils montre les brouillons aux seuls super-administrateurs", () => {
   assert.match(page, /enabled \? await getStudentTools\(\) : \[\]/);
 });
 
-test("la route MAPP reste fermée avant l'ouverture puis propose le parcours invité", () => {
+test("la route MAPP propose directement le parcours invité", () => {
   const page = read("src/app/apps/profil-mapp/page.tsx");
-  const guest = read("src/lib/mapp/access-window.ts");
-  assert.match(page, /if \(!isMappGuestOpen\(\)\)/);
   assert.match(page, /<GuestMappEntry/);
-  assert.match(guest, /2026-11-07T06:00:00\.000Z/);
+  assert.doesNotMatch(page, /isMappGuestOpen/);
 });
 
 test("les tentatives invitées gardent leur secret hors du navigateur Supabase", () => {
   const migration = read("supabase/migrations/20261106203000_mapp_secure_guest_attempts.sql");
+  const profileMigration = read("supabase/migrations/20261106220000_mapp_guest_profile_and_immediate_access.sql");
   const start = read("src/app/api/mapp/guest/start/route.ts");
   assert.match(migration, /token_hash text not null unique/);
   assert.match(migration, /revoke all on mapp\.guest_attempt_access from public, anon, authenticated/);
-  assert.match(migration, /now\(\) < timestamptz '2026-11-07 06:00:00\+00'/);
+  assert.match(profileMigration, /start_guest_hybrid_44_profile/);
+  assert.match(profileMigration, /first_name,last_name,email/);
+  assert.doesNotMatch(profileMigration, /MAPP_GUEST_NOT_OPEN/);
   assert.match(start, /setGuestCredential/);
   assert.doesNotMatch(start, /SUPABASE_SERVICE_ROLE_KEY/);
 });

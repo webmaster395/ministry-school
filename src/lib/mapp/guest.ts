@@ -33,6 +33,11 @@ export async function setGuestCredential(value: GuestCredential) {
   });
 }
 
+export async function clearGuestCredential() {
+  const jar = await cookies();
+  jar.delete(COOKIE);
+}
+
 export async function getGuestCredential(attemptId?: string): Promise<GuestCredential | null> {
   const raw = (await cookies()).get(COOKIE)?.value;
   if (!raw) return null;

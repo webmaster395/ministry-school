@@ -7,7 +7,7 @@ export default async function OfficialTieBreakPage({ params, searchParams }: { p
   const [{ attemptId }, query] = await Promise.all([params, searchParams]);
   const guest = await guestOwnsAttempt(attemptId);
   const viewer = guest ? null : await getViewer();
-  if (!guest && (!viewer || viewer.deactivated || !viewer.roles.superAdmin)) notFound();
+  if (!guest && (!viewer || viewer.deactivated)) notFound();
   if (!query.revision) notFound();
   return <OfficialTieBreakForm attemptId={attemptId} revisionId={query.revision} />;
 }

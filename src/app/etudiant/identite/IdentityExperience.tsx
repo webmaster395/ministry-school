@@ -34,7 +34,8 @@ function ResultPost({ result }: { result: IdentityResult }) {
     const primary = result.primaryCode ? profileNames[result.primaryCode] ?? result.primaryCode : "Profil MAPP";
     const secondary = result.secondaryCode ? profileNames[result.secondaryCode] ?? result.secondaryCode : null;
     const image = result.primaryCode ? mappImages[result.primaryCode] : null;
-    return <Link className={`${styles.post} ${styles.mappPost}`} href="/apps/profil-mapp#resultat" aria-label="Ouvrir mon résultat Profil MAPP">
+    const resultHref = result.attemptId ? `/apps/profil-mapp/test/${result.attemptId}/resultat${result.resultRevisionId ? `?revision=${result.resultRevisionId}` : ""}` : "/apps/profil-mapp";
+    return <Link className={`${styles.post} ${styles.mappPost}`} href={resultHref} aria-label="Ouvrir mon résultat Profil MAPP">
       {image ? <Image className={styles.postImage} src={image} alt="" fill sizes="(max-width: 700px) 50vw, 320px" /> : null}<span className={styles.postShade} />
       <span className={styles.postCopy}><span className={styles.postKicker}>Mon profil MAPP</span><strong>{primary}</strong>{secondary ? <small>avec {secondary}</small> : null}<span className={styles.openPost}>Voir mon résultat <ArrowRight size={15} /></span></span>
     </Link>;
