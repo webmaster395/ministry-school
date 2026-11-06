@@ -17,13 +17,13 @@ export const metadata: Metadata = {
 
 export default async function AppsPage() {
   const viewer = await getViewer();
-  // Profil MAPP reste en préouverture : seul un super administrateur peut le
-  // voir dans le catalogue et l'ouvrir. Le filtrage ici complète le contrôle
-  // serveur de /apps/profil-mapp effectué dans proxy.ts.
+  // Le catalogue public ne révèle pas MAPP. Une personne connectée retrouve
+  // l'outil publié ; la RPC d'ouverture décide ensuite si son profil Ministry
+  // actif et confirmé est autorisé à commencer le questionnaire.
   const apps = viewer?.roles.superAdmin
     ? await getCatalogApps({ includeUnpublished: true, channel: "admin" })
-    : (viewer ? await getStudentTools() : await getCatalogApps()).filter(
-        (app) => app.slug !== "profil-mapp",
-      );
+    : viewer
+      ? await getStudentTools()
+      : (await getCatalogApps()).filter((app) => app.slug !== "profil-mapp");
   return <AppsPortal applications={apps} />;
 }

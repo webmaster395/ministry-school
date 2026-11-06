@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./mapp-results-design-system.css";
 
 @font-face {
   font-family: "Etna Local";

@@ -1,0 +1,774 @@
+{
+  "schemaVersion": "1.0.0",
+  "contentVersion": "profil-mapp-communication-interactions-2026-10-12-v1",
+  "locale": "fr-FR",
+  "status": "draft-editorial-review-required",
+  "source": {
+    "references": [
+      "a4_memento_disc_dominant_fr_v1.1.pdf",
+      "a4_memento_disc_influent_fr_v1.1.pdf",
+      "a4_memento_disc_stable_fr_v1.1.pdf",
+      "a4_memento_disc_consciencieux_fr_v1.1.pdf"
+    ],
+    "method": "Adaptations éditoriales originales à partir des catégories et tendances MAPP. Les nuances secondaires sont des propositions rédactionnelles, pas des mesures individuelles.",
+    "limitations": "Les habitudes vocales, visuelles et d'e-mails ne sont pas directement observées par les 44 questions MAPP. Ne pas publier sans relecture de conformité aux fiches."
+  },
+  "profiles": {
+    "D": {
+      "name": "Conquérant",
+      "colorReference": "#D94334",
+      "texts": {
+        "intro": "Tu privilégies une communication directe, tournée vers les faits et les résultats. Tu apprécies de savoir rapidement où va l'échange.",
+        "expression": "Tu tends à annoncer ton avis ou ta conclusion sans détour, avec des formulations affirmées et des questions qui vont à l'essentiel. Ton débit peut être soutenu, ta voix ferme et ton ton plus pressant lorsque tu veux obtenir une réponse. Tu peux interrompre si la discussion s'éloigne de son objectif.",
+        "nonverbal": "Dans les descriptions classiques du profil, le regard est franc, la poignée de main ferme et la gestuelle assurée. Tu peux occuper l'espace avec une posture déterminée et peu de gestes hésitants. Ces signes restent des tendances possibles, non observées par le questionnaire.",
+        "ecoute": "Tu recherches rapidement le point essentiel d'une intervention et peux perdre patience devant les longues explications. Quand une solution te semble évidente, tu peux reprendre la parole avant que l'autre ait terminé. Tu accordes volontiers de l'attention aux recommandations concrètes.",
+        "emails": "Tu peux privilégier des e-mails courts, directs et orientés vers une demande précise. Les formules de politesse sont parfois réduites au nécessaire, tandis que l'objet et la conclusion vont à l'essentiel. Les longs développements ou les détails secondaires peuvent te sembler superflus.",
+        "approche": "Aborde le sujet franchement et annonce rapidement le résultat recherché. Évite les longues introductions et laisse une marge de décision réelle.",
+        "convaincre": "Présente les faits déterminants, les bénéfices concrets et les résultats attendus. Prépare des réponses précises aux objections, sans multiplier les détours.",
+        "feedback": "Fais un retour clair et factuel, sans tourner autour du problème. Reconnais les résultats obtenus et discute des améliorations avec des propositions concrètes.",
+        "collaboration": "Confie un objectif explicite et une autonomie adaptée, plutôt qu'une succession de consignes détaillées. Précise les responsabilités, les échéances et les décisions à prendre."
+      }
+    },
+    "I": {
+      "name": "Communiquant",
+      "colorReference": "#E6B800",
+      "texts": {
+        "intro": "Tu donnes volontiers une dimension chaleureuse et expressive aux échanges. Le contact humain, les idées partagées et les réactions des autres peuvent nourrir ta communication.",
+        "expression": "Tu peux raconter, illustrer tes idées par des anecdotes et passer spontanément d'un sujet à un autre. Le ton est souvent vivant, le débit animé et l'intonation varie avec l'enthousiasme. Tu peux développer longuement un sujet qui te passionne et interrompre pour rebondir sur une idée.",
+        "nonverbal": "Le profil est souvent décrit avec des sourires, des expressions du visage marquées et des gestes spontanés. Le regard et la proximité peuvent servir à créer rapidement le contact. Ce sont des possibilités descriptives, pas des comportements mesurés chez toi.",
+        "ecoute": "Tu peux écouter avec enthousiasme lorsque la conversation est vivante et participative. Il t'arrive de rebondir rapidement sur un propos ou d'apporter ta propre anecdote avant la fin. Les échanges impersonnels ou monotones peuvent moins retenir ton attention.",
+        "emails": "Tu peux aimer personnaliser les salutations et ajouter des formules chaleureuses à tes e-mails. Tes messages peuvent être longs, expressifs, mêler anecdotes et informations personnelles, avec une ponctuation variée ou une signature soignée et colorée. Tu peux moins apprécier les e-mails froids et impersonnels.",
+        "approche": "Commence par un contact chaleureux et laisse de la place à l'échange. Une attitude ouverte et une conversation vivante facilitent la relation.",
+        "convaincre": "Présente une vision stimulante, illustre-la par des exemples et invite à participer. La reconnaissance et la possibilité de partager les idées comptent autant que l'argumentaire.",
+        "feedback": "Commence par reconnaître l'investissement et formule les remarques avec tact. Privilégie un échange personnel qui permet de préserver l'enthousiasme et la relation.",
+        "collaboration": "Favorise les échanges, les idées partagées et la reconnaissance des contributions. Clarifie les engagements et les échéances sans transformer la collaboration en procédure rigide."
+      }
+    },
+    "S": {
+      "name": "Facilitateur",
+      "colorReference": "#55A675",
+      "texts": {
+        "intro": "Tu peux rechercher des échanges calmes, respectueux et rassurants. L'écoute, la confiance et la continuité des relations occupent une place importante.",
+        "expression": "Tu peux choisir des mots mesurés et vérifier l'effet de tes propos sur l'autre. Ta voix est souvent décrite comme posée, avec un débit régulier et peu de brusques changements de ton. Tu peux t'interrompre dès qu'une autre personne souhaite parler.",
+        "nonverbal": "Les descriptions du profil évoquent une gestuelle discrète, des mouvements mesurés et une expression du visage plutôt calme. Tu peux éviter un regard trop insistant et préserver une distance confortable. Le test ne mesure toutefois ni tes gestes ni ton regard.",
+        "ecoute": "Tu accordes généralement beaucoup d'importance à ce que l'autre souhaite dire et lui laisses du temps. Tu peux hésiter à interrompre ou à imposer ton point de vue. Une discussion tendue peut te conduire à écouter davantage avant de répondre.",
+        "emails": "Tu peux apprécier les salutations nominatives, les formules de politesse et un ton courtois. Tes e-mails peuvent être de longueur moyenne, prendre des nouvelles avant d'aborder la demande et comporter une signature avec les coordonnées. Tu peux prendre du temps pour répondre afin de bien faire.",
+        "approche": "Prends le temps de créer un climat de confiance et explique pourquoi tu sollicites cette personne. Respecte son espace et évite une entrée en matière brusque.",
+        "convaincre": "Montre les effets de la proposition sur les personnes concernées et explique les étapes. Laisse du temps pour poser des questions et se préparer au changement.",
+        "feedback": "Privilégie un échange en privé, calme et respectueux. Souligne l'apport à l'équipe et laisse un temps de recul avant de demander une réaction.",
+        "collaboration": "Explique le contexte, les attentes et les raisons de la tâche confiée. Anticipe les changements et donne du temps pour préparer les échanges avec les autres."
+      }
+    },
+    "C": {
+      "name": "Analyste",
+      "colorReference": "#4E79C9",
+      "texts": {
+        "intro": "Tu peux privilégier une communication précise, réfléchie et structurée. La cohérence des informations et la possibilité de vérifier les détails comptent beaucoup.",
+        "expression": "Tu peux choisir soigneusement tes mots, poser des questions précises et distinguer les faits des impressions. Ton ton est souvent décrit comme réservé, ton débit maîtrisé et tes interventions organisées. Tu peux demander des précisions avant de prendre position.",
+        "nonverbal": "Le profil est souvent associé à une gestuelle contenue, une posture réservée et une expression faciale peu démonstrative. Tu peux garder une distance physique et préférer des signes sobres. Ces observations générales ne sont pas établies individuellement par MAPP.",
+        "ecoute": "Tu peux écouter pour vérifier la logique, les détails et les preuves avancées. Tu prends parfois un temps de réflexion avant de répondre ou de formuler une objection précise. Les affirmations approximatives peuvent retenir ton attention davantage que l'effet produit par le discours.",
+        "emails": "Tu peux privilégier des e-mails structurés, précis et documentés. Les informations utiles, les références et les pièces jointes peuvent prendre une place importante, avec un ton plutôt formel et peu de digressions personnelles. Tu peux relire attentivement le contenu avant l'envoi.",
+        "approche": "Expose clairement l'objet de l'échange et donne les éléments nécessaires à l'analyse. Évite la pression pour obtenir une réponse immédiate.",
+        "convaincre": "Appuie la proposition sur des données fiables, des critères explicites et des explications vérifiables. Prévois du temps pour examiner les détails et les risques.",
+        "feedback": "Présente des observations précises et étayées, sans jugement vague. Laisse un espace pour vérifier les faits et discuter des améliorations possibles.",
+        "collaboration": "Clarifie les critères de qualité, les méthodes et les responsabilités. Fournis les documents utiles et laisse le temps de préparer un travail rigoureux."
+      }
+    }
+  },
+  "ui": {
+    "context": "natural",
+    "columns": "left title + introduction + existing MLK portrait / right accordion only",
+    "accordionDefault": "expression",
+    "singleOpen": true,
+    "openInline": true,
+    "photoCommunication": "Utiliser la photo MLK déjà intégrée : femme en veste verte avec tablette",
+    "photoCommunicatingWithYou": "Utiliser la photo MLK déjà intégrée : femme blonde avec tasse",
+    "colorRule": "Réutiliser les couleurs officielles du projet pour le profil principal, sans couleur arbitraire par rubrique"
+  },
+  "orderedCombinations": {
+    "DI": {
+      "primary": "D",
+      "secondary": "I",
+      "label": "Conquérant + Communiquant",
+      "communication": {
+        "title": "Comment tu communiques.",
+        "intro": "Tu privilégies une communication directe, tournée vers les faits et les résultats. Tu apprécies de savoir rapidement où va l'échange. Ta tendance secondaire apporte davantage de spontanéité et d'énergie relationnelle.",
+        "accordions": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t'exprimer",
+            "text": "Tu tends à annoncer ton avis ou ta conclusion sans détour, avec des formulations affirmées et des questions qui vont à l'essentiel. Ton débit peut être soutenu, ta voix ferme et ton ton plus pressant lorsque tu veux obtenir une réponse. Tu peux interrompre si la discussion s'éloigne de son objectif. Ton côté Communiquant peut ajouter des anecdotes, des réactions spontanées et davantage de variations dans la voix."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Dans les descriptions classiques du profil, le regard est franc, la poignée de main ferme et la gestuelle assurée. Tu peux occuper l'espace avec une posture déterminée et peu de gestes hésitants. Ces signes restent des tendances possibles, non observées par le questionnaire. L'expressivité du Communiquant peut se traduire par des sourires et des gestes plus spontanés."
+          },
+          {
+            "id": "ecoute",
+            "title": "Ta manière d'écouter",
+            "text": "Tu recherches rapidement le point essentiel d'une intervention et peux perdre patience devant les longues explications. Quand une solution te semble évidente, tu peux reprendre la parole avant que l'autre ait terminé. Tu accordes volontiers de l'attention aux recommandations concrètes. Le plaisir de participer peut aussi t'amener à relancer et à rebondir sur les propos."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tu peux privilégier des e-mails courts, directs et orientés vers une demande précise. Les formules de politesse sont parfois réduites au nécessaire, tandis que l'objet et la conclusion vont à l'essentiel. Les longs développements ou les détails secondaires peuvent te sembler superflus. Une touche personnelle, une salutation chaleureuse ou un développement plus vivant peut nuancer ce style."
+          }
+        ]
+      },
+      "communicatingWithYou": {
+        "title": "Comment communiquer avec toi.",
+        "intro": "Pour échanger efficacement avec toi, il est utile de tenir compte de ton besoin principal : aller vers un objectif clair. Ta tendance secondaire apporte une autre manière d'aborder la relation.",
+        "accordions": [
+          {
+            "id": "approche",
+            "title": "Comment t'aborder",
+            "text": "Aborde le sujet franchement et annonce rapidement le résultat recherché. Évite les longues introductions et laisse une marge de décision réelle. Prends aussi le temps de créer un contact humain et vivant."
+          },
+          {
+            "id": "convaincre",
+            "title": "Comment te convaincre",
+            "text": "Présente les faits déterminants, les bénéfices concrets et les résultats attendus. Prépare des réponses précises aux objections, sans multiplier les détours. Donne envie de participer et illustre l'idée par des exemples parlants."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment te faire un retour",
+            "text": "Fais un retour clair et factuel, sans tourner autour du problème. Reconnais les résultats obtenus et discute des améliorations avec des propositions concrètes. Reconnais la contribution et préserve l'élan de la relation."
+          },
+          {
+            "id": "collaboration",
+            "title": "Comment travailler avec toi",
+            "text": "Confie un objectif explicite et une autonomie adaptée, plutôt qu'une succession de consignes détaillées. Précise les responsabilités, les échéances et les décisions à prendre. Laisse de la place aux échanges et à la reconnaissance des contributions."
+          }
+        ]
+      }
+    },
+    "DS": {
+      "primary": "D",
+      "secondary": "S",
+      "label": "Conquérant + Facilitateur",
+      "communication": {
+        "title": "Comment tu communiques.",
+        "intro": "Tu privilégies une communication directe, tournée vers les faits et les résultats. Tu apprécies de savoir rapidement où va l'échange. Ta tendance secondaire peut apporter plus d'attention au rythme et aux besoins des autres.",
+        "accordions": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t'exprimer",
+            "text": "Tu tends à annoncer ton avis ou ta conclusion sans détour, avec des formulations affirmées et des questions qui vont à l'essentiel. Ton débit peut être soutenu, ta voix ferme et ton ton plus pressant lorsque tu veux obtenir une réponse. Tu peux interrompre si la discussion s'éloigne de son objectif. Ton côté Facilitateur peut t'amener à adoucir tes formulations et à ménager davantage les réactions des autres."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Dans les descriptions classiques du profil, le regard est franc, la poignée de main ferme et la gestuelle assurée. Tu peux occuper l'espace avec une posture déterminée et peu de gestes hésitants. Ces signes restent des tendances possibles, non observées par le questionnaire. Une attitude plus calme et moins démonstrative peut nuancer cette présence."
+          },
+          {
+            "id": "ecoute",
+            "title": "Ta manière d'écouter",
+            "text": "Tu recherches rapidement le point essentiel d'une intervention et peux perdre patience devant les longues explications. Quand une solution te semble évidente, tu peux reprendre la parole avant que l'autre ait terminé. Tu accordes volontiers de l'attention aux recommandations concrètes. Le souci d'accueillir l'autre peut te conduire à laisser davantage de place aux réponses."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tu peux privilégier des e-mails courts, directs et orientés vers une demande précise. Les formules de politesse sont parfois réduites au nécessaire, tandis que l'objet et la conclusion vont à l'essentiel. Les longs développements ou les détails secondaires peuvent te sembler superflus. La courtoisie, les nouvelles personnelles et une formulation attentionnée peuvent enrichir tes e-mails."
+          }
+        ]
+      },
+      "communicatingWithYou": {
+        "title": "Comment communiquer avec toi.",
+        "intro": "Pour échanger efficacement avec toi, il est utile de tenir compte de ton besoin principal : aller vers un objectif clair. Ta tendance secondaire apporte une autre manière d'aborder la relation.",
+        "accordions": [
+          {
+            "id": "approche",
+            "title": "Comment t'aborder",
+            "text": "Aborde le sujet franchement et annonce rapidement le résultat recherché. Évite les longues introductions et laisse une marge de décision réelle. Prends le temps de rassurer et de créer un climat de confiance."
+          },
+          {
+            "id": "convaincre",
+            "title": "Comment te convaincre",
+            "text": "Présente les faits déterminants, les bénéfices concrets et les résultats attendus. Prépare des réponses précises aux objections, sans multiplier les détours. Explique les conséquences pour les personnes et donne du temps pour réfléchir."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment te faire un retour",
+            "text": "Fais un retour clair et factuel, sans tourner autour du problème. Reconnais les résultats obtenus et discute des améliorations avec des propositions concrètes. Formule les remarques avec tact et privilégie un cadre privé."
+          },
+          {
+            "id": "collaboration",
+            "title": "Comment travailler avec toi",
+            "text": "Confie un objectif explicite et une autonomie adaptée, plutôt qu'une succession de consignes détaillées. Précise les responsabilités, les échéances et les décisions à prendre. Prends soin de la continuité des relations et prépare les changements."
+          }
+        ]
+      }
+    },
+    "DC": {
+      "primary": "D",
+      "secondary": "C",
+      "label": "Conquérant + Analyste",
+      "communication": {
+        "title": "Comment tu communiques.",
+        "intro": "Tu privilégies une communication directe, tournée vers les faits et les résultats. Tu apprécies de savoir rapidement où va l'échange. Ta tendance secondaire peut renforcer ton souci de précision et de cohérence.",
+        "accordions": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t'exprimer",
+            "text": "Tu tends à annoncer ton avis ou ta conclusion sans détour, avec des formulations affirmées et des questions qui vont à l'essentiel. Ton débit peut être soutenu, ta voix ferme et ton ton plus pressant lorsque tu veux obtenir une réponse. Tu peux interrompre si la discussion s'éloigne de son objectif. Ton côté Analyste peut rendre le discours plus précis, plus structuré et attentif aux preuves."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Dans les descriptions classiques du profil, le regard est franc, la poignée de main ferme et la gestuelle assurée. Tu peux occuper l'espace avec une posture déterminée et peu de gestes hésitants. Ces signes restent des tendances possibles, non observées par le questionnaire. Une posture plus réservée et une gestuelle maîtrisée peuvent également apparaître."
+          },
+          {
+            "id": "ecoute",
+            "title": "Ta manière d'écouter",
+            "text": "Tu recherches rapidement le point essentiel d'une intervention et peux perdre patience devant les longues explications. Quand une solution te semble évidente, tu peux reprendre la parole avant que l'autre ait terminé. Tu accordes volontiers de l'attention aux recommandations concrètes. Le besoin de vérifier les informations peut t'amener à poser des questions de fond."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tu peux privilégier des e-mails courts, directs et orientés vers une demande précise. Les formules de politesse sont parfois réduites au nécessaire, tandis que l'objet et la conclusion vont à l'essentiel. Les longs développements ou les détails secondaires peuvent te sembler superflus. Une structure détaillée, des références et des pièces jointes peuvent compléter ton style écrit."
+          }
+        ]
+      },
+      "communicatingWithYou": {
+        "title": "Comment communiquer avec toi.",
+        "intro": "Pour échanger efficacement avec toi, il est utile de tenir compte de ton besoin principal : aller vers un objectif clair. Ta tendance secondaire apporte une autre manière d'aborder la relation.",
+        "accordions": [
+          {
+            "id": "approche",
+            "title": "Comment t'aborder",
+            "text": "Aborde le sujet franchement et annonce rapidement le résultat recherché. Évite les longues introductions et laisse une marge de décision réelle. Donne aussi des informations vérifiables et laisse le temps de les examiner."
+          },
+          {
+            "id": "convaincre",
+            "title": "Comment te convaincre",
+            "text": "Présente les faits déterminants, les bénéfices concrets et les résultats attendus. Prépare des réponses précises aux objections, sans multiplier les détours. Présente des faits solides et les risques à considérer."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment te faire un retour",
+            "text": "Fais un retour clair et factuel, sans tourner autour du problème. Reconnais les résultats obtenus et discute des améliorations avec des propositions concrètes. Appuie tes remarques sur des observations précises."
+          },
+          {
+            "id": "collaboration",
+            "title": "Comment travailler avec toi",
+            "text": "Confie un objectif explicite et une autonomie adaptée, plutôt qu'une succession de consignes détaillées. Précise les responsabilités, les échéances et les décisions à prendre. Clarifie les critères de qualité et les étapes de vérification."
+          }
+        ]
+      }
+    },
+    "ID": {
+      "primary": "I",
+      "secondary": "D",
+      "label": "Communiquant + Conquérant",
+      "communication": {
+        "title": "Comment tu communiques.",
+        "intro": "Tu donnes volontiers une dimension chaleureuse et expressive aux échanges. Le contact humain, les idées partagées et les réactions des autres peuvent nourrir ta communication. Ta tendance secondaire peut renforcer ton goût pour les échanges qui débouchent sur une décision.",
+        "accordions": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t'exprimer",
+            "text": "Tu peux raconter, illustrer tes idées par des anecdotes et passer spontanément d'un sujet à un autre. Le ton est souvent vivant, le débit animé et l'intonation varie avec l'enthousiasme. Tu peux développer longuement un sujet qui te passionne et interrompre pour rebondir sur une idée. Cette franchise reste le fil conducteur, même lorsque l'échange prend d'autres formes."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Le profil est souvent décrit avec des sourires, des expressions du visage marquées et des gestes spontanés. Le regard et la proximité peuvent servir à créer rapidement le contact. Ce sont des possibilités descriptives, pas des comportements mesurés chez toi. L'assurance reste possible, sans être une caractéristique certaine."
+          },
+          {
+            "id": "ecoute",
+            "title": "Ta manière d'écouter",
+            "text": "Tu peux écouter avec enthousiasme lorsque la conversation est vivante et participative. Il t'arrive de rebondir rapidement sur un propos ou d'apporter ta propre anecdote avant la fin. Les échanges impersonnels ou monotones peuvent moins retenir ton attention. Le besoin d'avancer peut rester présent même dans un échange attentif."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tu peux aimer personnaliser les salutations et ajouter des formules chaleureuses à tes e-mails. Tes messages peuvent être longs, expressifs, mêler anecdotes et informations personnelles, avec une ponctuation variée ou une signature soignée et colorée. Tu peux moins apprécier les e-mails froids et impersonnels. L'objectif concret reste souvent au premier plan."
+          }
+        ]
+      },
+      "communicatingWithYou": {
+        "title": "Comment communiquer avec toi.",
+        "intro": "Pour échanger efficacement avec toi, il est utile de tenir compte de ton besoin principal : créer un échange vivant et humain. Ta tendance secondaire apporte une autre manière d'aborder la relation.",
+        "accordions": [
+          {
+            "id": "approche",
+            "title": "Comment t'aborder",
+            "text": "Commence par un contact chaleureux et laisse de la place à l'échange. Une attitude ouverte et une conversation vivante facilitent la relation. Garde un objectif clair tout au long de la conversation."
+          },
+          {
+            "id": "convaincre",
+            "title": "Comment te convaincre",
+            "text": "Présente une vision stimulante, illustre-la par des exemples et invite à participer. La reconnaissance et la possibilité de partager les idées comptent autant que l'argumentaire. Relie toujours les arguments à une décision possible."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment te faire un retour",
+            "text": "Commence par reconnaître l'investissement et formule les remarques avec tact. Privilégie un échange personnel qui permet de préserver l'enthousiasme et la relation. Relie le retour à un résultat observable."
+          },
+          {
+            "id": "collaboration",
+            "title": "Comment travailler avec toi",
+            "text": "Favorise les échanges, les idées partagées et la reconnaissance des contributions. Clarifie les engagements et les échéances sans transformer la collaboration en procédure rigide. Préserve une autonomie réelle dans l'exécution."
+          }
+        ]
+      }
+    },
+    "IS": {
+      "primary": "I",
+      "secondary": "S",
+      "label": "Communiquant + Facilitateur",
+      "communication": {
+        "title": "Comment tu communiques.",
+        "intro": "Tu donnes volontiers une dimension chaleureuse et expressive aux échanges. Le contact humain, les idées partagées et les réactions des autres peuvent nourrir ta communication. Ta tendance secondaire peut apporter plus d'attention au rythme et aux besoins des autres.",
+        "accordions": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t'exprimer",
+            "text": "Tu peux raconter, illustrer tes idées par des anecdotes et passer spontanément d'un sujet à un autre. Le ton est souvent vivant, le débit animé et l'intonation varie avec l'enthousiasme. Tu peux développer longuement un sujet qui te passionne et interrompre pour rebondir sur une idée. Ton côté Facilitateur peut t'amener à adoucir tes formulations et à ménager davantage les réactions des autres."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Le profil est souvent décrit avec des sourires, des expressions du visage marquées et des gestes spontanés. Le regard et la proximité peuvent servir à créer rapidement le contact. Ce sont des possibilités descriptives, pas des comportements mesurés chez toi. Une attitude plus calme et moins démonstrative peut nuancer cette présence."
+          },
+          {
+            "id": "ecoute",
+            "title": "Ta manière d'écouter",
+            "text": "Tu peux écouter avec enthousiasme lorsque la conversation est vivante et participative. Il t'arrive de rebondir rapidement sur un propos ou d'apporter ta propre anecdote avant la fin. Les échanges impersonnels ou monotones peuvent moins retenir ton attention. Le souci d'accueillir l'autre peut te conduire à laisser davantage de place aux réponses."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tu peux aimer personnaliser les salutations et ajouter des formules chaleureuses à tes e-mails. Tes messages peuvent être longs, expressifs, mêler anecdotes et informations personnelles, avec une ponctuation variée ou une signature soignée et colorée. Tu peux moins apprécier les e-mails froids et impersonnels. La courtoisie, les nouvelles personnelles et une formulation attentionnée peuvent enrichir tes e-mails."
+          }
+        ]
+      },
+      "communicatingWithYou": {
+        "title": "Comment communiquer avec toi.",
+        "intro": "Pour échanger efficacement avec toi, il est utile de tenir compte de ton besoin principal : créer un échange vivant et humain. Ta tendance secondaire apporte une autre manière d'aborder la relation.",
+        "accordions": [
+          {
+            "id": "approche",
+            "title": "Comment t'aborder",
+            "text": "Commence par un contact chaleureux et laisse de la place à l'échange. Une attitude ouverte et une conversation vivante facilitent la relation. Prends le temps de rassurer et de créer un climat de confiance."
+          },
+          {
+            "id": "convaincre",
+            "title": "Comment te convaincre",
+            "text": "Présente une vision stimulante, illustre-la par des exemples et invite à participer. La reconnaissance et la possibilité de partager les idées comptent autant que l'argumentaire. Explique les conséquences pour les personnes et donne du temps pour réfléchir."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment te faire un retour",
+            "text": "Commence par reconnaître l'investissement et formule les remarques avec tact. Privilégie un échange personnel qui permet de préserver l'enthousiasme et la relation. Formule les remarques avec tact et privilégie un cadre privé."
+          },
+          {
+            "id": "collaboration",
+            "title": "Comment travailler avec toi",
+            "text": "Favorise les échanges, les idées partagées et la reconnaissance des contributions. Clarifie les engagements et les échéances sans transformer la collaboration en procédure rigide. Prends soin de la continuité des relations et prépare les changements."
+          }
+        ]
+      }
+    },
+    "IC": {
+      "primary": "I",
+      "secondary": "C",
+      "label": "Communiquant + Analyste",
+      "communication": {
+        "title": "Comment tu communiques.",
+        "intro": "Tu donnes volontiers une dimension chaleureuse et expressive aux échanges. Le contact humain, les idées partagées et les réactions des autres peuvent nourrir ta communication. Ta tendance secondaire peut renforcer ton souci de précision et de cohérence.",
+        "accordions": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t'exprimer",
+            "text": "Tu peux raconter, illustrer tes idées par des anecdotes et passer spontanément d'un sujet à un autre. Le ton est souvent vivant, le débit animé et l'intonation varie avec l'enthousiasme. Tu peux développer longuement un sujet qui te passionne et interrompre pour rebondir sur une idée. Ton côté Analyste peut rendre le discours plus précis, plus structuré et attentif aux preuves."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Le profil est souvent décrit avec des sourires, des expressions du visage marquées et des gestes spontanés. Le regard et la proximité peuvent servir à créer rapidement le contact. Ce sont des possibilités descriptives, pas des comportements mesurés chez toi. Une posture plus réservée et une gestuelle maîtrisée peuvent également apparaître."
+          },
+          {
+            "id": "ecoute",
+            "title": "Ta manière d'écouter",
+            "text": "Tu peux écouter avec enthousiasme lorsque la conversation est vivante et participative. Il t'arrive de rebondir rapidement sur un propos ou d'apporter ta propre anecdote avant la fin. Les échanges impersonnels ou monotones peuvent moins retenir ton attention. Le besoin de vérifier les informations peut t'amener à poser des questions de fond."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tu peux aimer personnaliser les salutations et ajouter des formules chaleureuses à tes e-mails. Tes messages peuvent être longs, expressifs, mêler anecdotes et informations personnelles, avec une ponctuation variée ou une signature soignée et colorée. Tu peux moins apprécier les e-mails froids et impersonnels. Une structure détaillée, des références et des pièces jointes peuvent compléter ton style écrit."
+          }
+        ]
+      },
+      "communicatingWithYou": {
+        "title": "Comment communiquer avec toi.",
+        "intro": "Pour échanger efficacement avec toi, il est utile de tenir compte de ton besoin principal : créer un échange vivant et humain. Ta tendance secondaire apporte une autre manière d'aborder la relation.",
+        "accordions": [
+          {
+            "id": "approche",
+            "title": "Comment t'aborder",
+            "text": "Commence par un contact chaleureux et laisse de la place à l'échange. Une attitude ouverte et une conversation vivante facilitent la relation. Donne aussi des informations vérifiables et laisse le temps de les examiner."
+          },
+          {
+            "id": "convaincre",
+            "title": "Comment te convaincre",
+            "text": "Présente une vision stimulante, illustre-la par des exemples et invite à participer. La reconnaissance et la possibilité de partager les idées comptent autant que l'argumentaire. Présente des faits solides et les risques à considérer."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment te faire un retour",
+            "text": "Commence par reconnaître l'investissement et formule les remarques avec tact. Privilégie un échange personnel qui permet de préserver l'enthousiasme et la relation. Appuie tes remarques sur des observations précises."
+          },
+          {
+            "id": "collaboration",
+            "title": "Comment travailler avec toi",
+            "text": "Favorise les échanges, les idées partagées et la reconnaissance des contributions. Clarifie les engagements et les échéances sans transformer la collaboration en procédure rigide. Clarifie les critères de qualité et les étapes de vérification."
+          }
+        ]
+      }
+    },
+    "SD": {
+      "primary": "S",
+      "secondary": "D",
+      "label": "Facilitateur + Conquérant",
+      "communication": {
+        "title": "Comment tu communiques.",
+        "intro": "Tu peux rechercher des échanges calmes, respectueux et rassurants. L'écoute, la confiance et la continuité des relations occupent une place importante. Ta tendance secondaire peut renforcer ton goût pour les échanges qui débouchent sur une décision.",
+        "accordions": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t'exprimer",
+            "text": "Tu peux choisir des mots mesurés et vérifier l'effet de tes propos sur l'autre. Ta voix est souvent décrite comme posée, avec un débit régulier et peu de brusques changements de ton. Tu peux t'interrompre dès qu'une autre personne souhaite parler. Cette franchise reste le fil conducteur, même lorsque l'échange prend d'autres formes."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Les descriptions du profil évoquent une gestuelle discrète, des mouvements mesurés et une expression du visage plutôt calme. Tu peux éviter un regard trop insistant et préserver une distance confortable. Le test ne mesure toutefois ni tes gestes ni ton regard. L'assurance reste possible, sans être une caractéristique certaine."
+          },
+          {
+            "id": "ecoute",
+            "title": "Ta manière d'écouter",
+            "text": "Tu accordes généralement beaucoup d'importance à ce que l'autre souhaite dire et lui laisses du temps. Tu peux hésiter à interrompre ou à imposer ton point de vue. Une discussion tendue peut te conduire à écouter davantage avant de répondre. Le besoin d'avancer peut rester présent même dans un échange attentif."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tu peux apprécier les salutations nominatives, les formules de politesse et un ton courtois. Tes e-mails peuvent être de longueur moyenne, prendre des nouvelles avant d'aborder la demande et comporter une signature avec les coordonnées. Tu peux prendre du temps pour répondre afin de bien faire. L'objectif concret reste souvent au premier plan."
+          }
+        ]
+      },
+      "communicatingWithYou": {
+        "title": "Comment communiquer avec toi.",
+        "intro": "Pour échanger efficacement avec toi, il est utile de tenir compte de ton besoin principal : installer la confiance et préserver l'écoute. Ta tendance secondaire apporte une autre manière d'aborder la relation.",
+        "accordions": [
+          {
+            "id": "approche",
+            "title": "Comment t'aborder",
+            "text": "Prends le temps de créer un climat de confiance et explique pourquoi tu sollicites cette personne. Respecte son espace et évite une entrée en matière brusque. Garde un objectif clair tout au long de la conversation."
+          },
+          {
+            "id": "convaincre",
+            "title": "Comment te convaincre",
+            "text": "Montre les effets de la proposition sur les personnes concernées et explique les étapes. Laisse du temps pour poser des questions et se préparer au changement. Relie toujours les arguments à une décision possible."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment te faire un retour",
+            "text": "Privilégie un échange en privé, calme et respectueux. Souligne l'apport à l'équipe et laisse un temps de recul avant de demander une réaction. Relie le retour à un résultat observable."
+          },
+          {
+            "id": "collaboration",
+            "title": "Comment travailler avec toi",
+            "text": "Explique le contexte, les attentes et les raisons de la tâche confiée. Anticipe les changements et donne du temps pour préparer les échanges avec les autres. Préserve une autonomie réelle dans l'exécution."
+          }
+        ]
+      }
+    },
+    "SI": {
+      "primary": "S",
+      "secondary": "I",
+      "label": "Facilitateur + Communiquant",
+      "communication": {
+        "title": "Comment tu communiques.",
+        "intro": "Tu peux rechercher des échanges calmes, respectueux et rassurants. L'écoute, la confiance et la continuité des relations occupent une place importante. Ta tendance secondaire apporte davantage de spontanéité et d'énergie relationnelle.",
+        "accordions": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t'exprimer",
+            "text": "Tu peux choisir des mots mesurés et vérifier l'effet de tes propos sur l'autre. Ta voix est souvent décrite comme posée, avec un débit régulier et peu de brusques changements de ton. Tu peux t'interrompre dès qu'une autre personne souhaite parler. Ton côté Communiquant peut ajouter des anecdotes, des réactions spontanées et davantage de variations dans la voix."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Les descriptions du profil évoquent une gestuelle discrète, des mouvements mesurés et une expression du visage plutôt calme. Tu peux éviter un regard trop insistant et préserver une distance confortable. Le test ne mesure toutefois ni tes gestes ni ton regard. L'expressivité du Communiquant peut se traduire par des sourires et des gestes plus spontanés."
+          },
+          {
+            "id": "ecoute",
+            "title": "Ta manière d'écouter",
+            "text": "Tu accordes généralement beaucoup d'importance à ce que l'autre souhaite dire et lui laisses du temps. Tu peux hésiter à interrompre ou à imposer ton point de vue. Une discussion tendue peut te conduire à écouter davantage avant de répondre. Le plaisir de participer peut aussi t'amener à relancer et à rebondir sur les propos."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tu peux apprécier les salutations nominatives, les formules de politesse et un ton courtois. Tes e-mails peuvent être de longueur moyenne, prendre des nouvelles avant d'aborder la demande et comporter une signature avec les coordonnées. Tu peux prendre du temps pour répondre afin de bien faire. Une touche personnelle, une salutation chaleureuse ou un développement plus vivant peut nuancer ce style."
+          }
+        ]
+      },
+      "communicatingWithYou": {
+        "title": "Comment communiquer avec toi.",
+        "intro": "Pour échanger efficacement avec toi, il est utile de tenir compte de ton besoin principal : installer la confiance et préserver l'écoute. Ta tendance secondaire apporte une autre manière d'aborder la relation.",
+        "accordions": [
+          {
+            "id": "approche",
+            "title": "Comment t'aborder",
+            "text": "Prends le temps de créer un climat de confiance et explique pourquoi tu sollicites cette personne. Respecte son espace et évite une entrée en matière brusque. Prends aussi le temps de créer un contact humain et vivant."
+          },
+          {
+            "id": "convaincre",
+            "title": "Comment te convaincre",
+            "text": "Montre les effets de la proposition sur les personnes concernées et explique les étapes. Laisse du temps pour poser des questions et se préparer au changement. Donne envie de participer et illustre l'idée par des exemples parlants."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment te faire un retour",
+            "text": "Privilégie un échange en privé, calme et respectueux. Souligne l'apport à l'équipe et laisse un temps de recul avant de demander une réaction. Reconnais la contribution et préserve l'élan de la relation."
+          },
+          {
+            "id": "collaboration",
+            "title": "Comment travailler avec toi",
+            "text": "Explique le contexte, les attentes et les raisons de la tâche confiée. Anticipe les changements et donne du temps pour préparer les échanges avec les autres. Laisse de la place aux échanges et à la reconnaissance des contributions."
+          }
+        ]
+      }
+    },
+    "SC": {
+      "primary": "S",
+      "secondary": "C",
+      "label": "Facilitateur + Analyste",
+      "communication": {
+        "title": "Comment tu communiques.",
+        "intro": "Tu peux rechercher des échanges calmes, respectueux et rassurants. L'écoute, la confiance et la continuité des relations occupent une place importante. Ta tendance secondaire peut renforcer ton souci de précision et de cohérence.",
+        "accordions": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t'exprimer",
+            "text": "Tu peux choisir des mots mesurés et vérifier l'effet de tes propos sur l'autre. Ta voix est souvent décrite comme posée, avec un débit régulier et peu de brusques changements de ton. Tu peux t'interrompre dès qu'une autre personne souhaite parler. Ton côté Analyste peut rendre le discours plus précis, plus structuré et attentif aux preuves."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Les descriptions du profil évoquent une gestuelle discrète, des mouvements mesurés et une expression du visage plutôt calme. Tu peux éviter un regard trop insistant et préserver une distance confortable. Le test ne mesure toutefois ni tes gestes ni ton regard. Une posture plus réservée et une gestuelle maîtrisée peuvent également apparaître."
+          },
+          {
+            "id": "ecoute",
+            "title": "Ta manière d'écouter",
+            "text": "Tu accordes généralement beaucoup d'importance à ce que l'autre souhaite dire et lui laisses du temps. Tu peux hésiter à interrompre ou à imposer ton point de vue. Une discussion tendue peut te conduire à écouter davantage avant de répondre. Le besoin de vérifier les informations peut t'amener à poser des questions de fond."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tu peux apprécier les salutations nominatives, les formules de politesse et un ton courtois. Tes e-mails peuvent être de longueur moyenne, prendre des nouvelles avant d'aborder la demande et comporter une signature avec les coordonnées. Tu peux prendre du temps pour répondre afin de bien faire. Une structure détaillée, des références et des pièces jointes peuvent compléter ton style écrit."
+          }
+        ]
+      },
+      "communicatingWithYou": {
+        "title": "Comment communiquer avec toi.",
+        "intro": "Pour échanger efficacement avec toi, il est utile de tenir compte de ton besoin principal : installer la confiance et préserver l'écoute. Ta tendance secondaire apporte une autre manière d'aborder la relation.",
+        "accordions": [
+          {
+            "id": "approche",
+            "title": "Comment t'aborder",
+            "text": "Prends le temps de créer un climat de confiance et explique pourquoi tu sollicites cette personne. Respecte son espace et évite une entrée en matière brusque. Donne aussi des informations vérifiables et laisse le temps de les examiner."
+          },
+          {
+            "id": "convaincre",
+            "title": "Comment te convaincre",
+            "text": "Montre les effets de la proposition sur les personnes concernées et explique les étapes. Laisse du temps pour poser des questions et se préparer au changement. Présente des faits solides et les risques à considérer."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment te faire un retour",
+            "text": "Privilégie un échange en privé, calme et respectueux. Souligne l'apport à l'équipe et laisse un temps de recul avant de demander une réaction. Appuie tes remarques sur des observations précises."
+          },
+          {
+            "id": "collaboration",
+            "title": "Comment travailler avec toi",
+            "text": "Explique le contexte, les attentes et les raisons de la tâche confiée. Anticipe les changements et donne du temps pour préparer les échanges avec les autres. Clarifie les critères de qualité et les étapes de vérification."
+          }
+        ]
+      }
+    },
+    "CD": {
+      "primary": "C",
+      "secondary": "D",
+      "label": "Analyste + Conquérant",
+      "communication": {
+        "title": "Comment tu communiques.",
+        "intro": "Tu peux privilégier une communication précise, réfléchie et structurée. La cohérence des informations et la possibilité de vérifier les détails comptent beaucoup. Ta tendance secondaire peut renforcer ton goût pour les échanges qui débouchent sur une décision.",
+        "accordions": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t'exprimer",
+            "text": "Tu peux choisir soigneusement tes mots, poser des questions précises et distinguer les faits des impressions. Ton ton est souvent décrit comme réservé, ton débit maîtrisé et tes interventions organisées. Tu peux demander des précisions avant de prendre position. Cette franchise reste le fil conducteur, même lorsque l'échange prend d'autres formes."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Le profil est souvent associé à une gestuelle contenue, une posture réservée et une expression faciale peu démonstrative. Tu peux garder une distance physique et préférer des signes sobres. Ces observations générales ne sont pas établies individuellement par MAPP. L'assurance reste possible, sans être une caractéristique certaine."
+          },
+          {
+            "id": "ecoute",
+            "title": "Ta manière d'écouter",
+            "text": "Tu peux écouter pour vérifier la logique, les détails et les preuves avancées. Tu prends parfois un temps de réflexion avant de répondre ou de formuler une objection précise. Les affirmations approximatives peuvent retenir ton attention davantage que l'effet produit par le discours. Le besoin d'avancer peut rester présent même dans un échange attentif."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tu peux privilégier des e-mails structurés, précis et documentés. Les informations utiles, les références et les pièces jointes peuvent prendre une place importante, avec un ton plutôt formel et peu de digressions personnelles. Tu peux relire attentivement le contenu avant l'envoi. L'objectif concret reste souvent au premier plan."
+          }
+        ]
+      },
+      "communicatingWithYou": {
+        "title": "Comment communiquer avec toi.",
+        "intro": "Pour échanger efficacement avec toi, il est utile de tenir compte de ton besoin principal : disposer d'informations précises et cohérentes. Ta tendance secondaire apporte une autre manière d'aborder la relation.",
+        "accordions": [
+          {
+            "id": "approche",
+            "title": "Comment t'aborder",
+            "text": "Expose clairement l'objet de l'échange et donne les éléments nécessaires à l'analyse. Évite la pression pour obtenir une réponse immédiate. Garde un objectif clair tout au long de la conversation."
+          },
+          {
+            "id": "convaincre",
+            "title": "Comment te convaincre",
+            "text": "Appuie la proposition sur des données fiables, des critères explicites et des explications vérifiables. Prévois du temps pour examiner les détails et les risques. Relie toujours les arguments à une décision possible."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment te faire un retour",
+            "text": "Présente des observations précises et étayées, sans jugement vague. Laisse un espace pour vérifier les faits et discuter des améliorations possibles. Relie le retour à un résultat observable."
+          },
+          {
+            "id": "collaboration",
+            "title": "Comment travailler avec toi",
+            "text": "Clarifie les critères de qualité, les méthodes et les responsabilités. Fournis les documents utiles et laisse le temps de préparer un travail rigoureux. Préserve une autonomie réelle dans l'exécution."
+          }
+        ]
+      }
+    },
+    "CI": {
+      "primary": "C",
+      "secondary": "I",
+      "label": "Analyste + Communiquant",
+      "communication": {
+        "title": "Comment tu communiques.",
+        "intro": "Tu peux privilégier une communication précise, réfléchie et structurée. La cohérence des informations et la possibilité de vérifier les détails comptent beaucoup. Ta tendance secondaire apporte davantage de spontanéité et d'énergie relationnelle.",
+        "accordions": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t'exprimer",
+            "text": "Tu peux choisir soigneusement tes mots, poser des questions précises et distinguer les faits des impressions. Ton ton est souvent décrit comme réservé, ton débit maîtrisé et tes interventions organisées. Tu peux demander des précisions avant de prendre position. Ton côté Communiquant peut ajouter des anecdotes, des réactions spontanées et davantage de variations dans la voix."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Le profil est souvent associé à une gestuelle contenue, une posture réservée et une expression faciale peu démonstrative. Tu peux garder une distance physique et préférer des signes sobres. Ces observations générales ne sont pas établies individuellement par MAPP. L'expressivité du Communiquant peut se traduire par des sourires et des gestes plus spontanés."
+          },
+          {
+            "id": "ecoute",
+            "title": "Ta manière d'écouter",
+            "text": "Tu peux écouter pour vérifier la logique, les détails et les preuves avancées. Tu prends parfois un temps de réflexion avant de répondre ou de formuler une objection précise. Les affirmations approximatives peuvent retenir ton attention davantage que l'effet produit par le discours. Le plaisir de participer peut aussi t'amener à relancer et à rebondir sur les propos."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tu peux privilégier des e-mails structurés, précis et documentés. Les informations utiles, les références et les pièces jointes peuvent prendre une place importante, avec un ton plutôt formel et peu de digressions personnelles. Tu peux relire attentivement le contenu avant l'envoi. Une touche personnelle, une salutation chaleureuse ou un développement plus vivant peut nuancer ce style."
+          }
+        ]
+      },
+      "communicatingWithYou": {
+        "title": "Comment communiquer avec toi.",
+        "intro": "Pour échanger efficacement avec toi, il est utile de tenir compte de ton besoin principal : disposer d'informations précises et cohérentes. Ta tendance secondaire apporte une autre manière d'aborder la relation.",
+        "accordions": [
+          {
+            "id": "approche",
+            "title": "Comment t'aborder",
+            "text": "Expose clairement l'objet de l'échange et donne les éléments nécessaires à l'analyse. Évite la pression pour obtenir une réponse immédiate. Prends aussi le temps de créer un contact humain et vivant."
+          },
+          {
+            "id": "convaincre",
+            "title": "Comment te convaincre",
+            "text": "Appuie la proposition sur des données fiables, des critères explicites et des explications vérifiables. Prévois du temps pour examiner les détails et les risques. Donne envie de participer et illustre l'idée par des exemples parlants."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment te faire un retour",
+            "text": "Présente des observations précises et étayées, sans jugement vague. Laisse un espace pour vérifier les faits et discuter des améliorations possibles. Reconnais la contribution et préserve l'élan de la relation."
+          },
+          {
+            "id": "collaboration",
+            "title": "Comment travailler avec toi",
+            "text": "Clarifie les critères de qualité, les méthodes et les responsabilités. Fournis les documents utiles et laisse le temps de préparer un travail rigoureux. Laisse de la place aux échanges et à la reconnaissance des contributions."
+          }
+        ]
+      }
+    },
+    "CS": {
+      "primary": "C",
+      "secondary": "S",
+      "label": "Analyste + Facilitateur",
+      "communication": {
+        "title": "Comment tu communiques.",
+        "intro": "Tu peux privilégier une communication précise, réfléchie et structurée. La cohérence des informations et la possibilité de vérifier les détails comptent beaucoup. Ta tendance secondaire peut apporter plus d'attention au rythme et aux besoins des autres.",
+        "accordions": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t'exprimer",
+            "text": "Tu peux choisir soigneusement tes mots, poser des questions précises et distinguer les faits des impressions. Ton ton est souvent décrit comme réservé, ton débit maîtrisé et tes interventions organisées. Tu peux demander des précisions avant de prendre position. Ton côté Facilitateur peut t'amener à adoucir tes formulations et à ménager davantage les réactions des autres."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Le profil est souvent associé à une gestuelle contenue, une posture réservée et une expression faciale peu démonstrative. Tu peux garder une distance physique et préférer des signes sobres. Ces observations générales ne sont pas établies individuellement par MAPP. Une attitude plus calme et moins démonstrative peut nuancer cette présence."
+          },
+          {
+            "id": "ecoute",
+            "title": "Ta manière d'écouter",
+            "text": "Tu peux écouter pour vérifier la logique, les détails et les preuves avancées. Tu prends parfois un temps de réflexion avant de répondre ou de formuler une objection précise. Les affirmations approximatives peuvent retenir ton attention davantage que l'effet produit par le discours. Le souci d'accueillir l'autre peut te conduire à laisser davantage de place aux réponses."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tu peux privilégier des e-mails structurés, précis et documentés. Les informations utiles, les références et les pièces jointes peuvent prendre une place importante, avec un ton plutôt formel et peu de digressions personnelles. Tu peux relire attentivement le contenu avant l'envoi. La courtoisie, les nouvelles personnelles et une formulation attentionnée peuvent enrichir tes e-mails."
+          }
+        ]
+      },
+      "communicatingWithYou": {
+        "title": "Comment communiquer avec toi.",
+        "intro": "Pour échanger efficacement avec toi, il est utile de tenir compte de ton besoin principal : disposer d'informations précises et cohérentes. Ta tendance secondaire apporte une autre manière d'aborder la relation.",
+        "accordions": [
+          {
+            "id": "approche",
+            "title": "Comment t'aborder",
+            "text": "Expose clairement l'objet de l'échange et donne les éléments nécessaires à l'analyse. Évite la pression pour obtenir une réponse immédiate. Prends le temps de rassurer et de créer un climat de confiance."
+          },
+          {
+            "id": "convaincre",
+            "title": "Comment te convaincre",
+            "text": "Appuie la proposition sur des données fiables, des critères explicites et des explications vérifiables. Prévois du temps pour examiner les détails et les risques. Explique les conséquences pour les personnes et donne du temps pour réfléchir."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment te faire un retour",
+            "text": "Présente des observations précises et étayées, sans jugement vague. Laisse un espace pour vérifier les faits et discuter des améliorations possibles. Formule les remarques avec tact et privilégie un cadre privé."
+          },
+          {
+            "id": "collaboration",
+            "title": "Comment travailler avec toi",
+            "text": "Clarifie les critères de qualité, les méthodes et les responsabilités. Fournis les documents utiles et laisse le temps de préparer un travail rigoureux. Prends soin de la continuité des relations et prépare les changements."
+          }
+        ]
+      }
+    }
+  }
+}

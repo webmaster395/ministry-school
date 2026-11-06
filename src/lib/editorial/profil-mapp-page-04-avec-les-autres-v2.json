@@ -1,0 +1,2189 @@
+{
+  "version": "4.0",
+  "locale": "fr-FR",
+  "status": "editorial_review",
+  "page": "04 / Avec les autres",
+  "sourceVersion": "3.0",
+  "editorialRule": "Le profil principal détermine la lecture de départ, le secondaire apporte une nuance réelle, et le profil présenté est toujours le sujet de l'analyse. Les descriptions restent des tendances, non des diagnostics.",
+  "design": {
+    "introDesign": "Reproduire exactement le bandeau scindé de la capture : texte personnalisé à gauche sur fond neutre, motif orbital à droite sur fond teinté de la couleur principale.",
+    "profileSections": "Quatre blocs unis colorés, chacun avec titre seul en haut, photo MLK existante 1/3 avec filtre très léger et mots-clés, huit accordéons 2/3 directement sur le fond; conserver les photos déjà sélectionnées.",
+    "anchors": [
+      "profil-d",
+      "profil-i",
+      "profil-s",
+      "profil-c"
+    ],
+    "images": "Utiliser exclusivement les quatre photos MLK fournies par l’utilisatrice, sans inventer de chemin ni utiliser de personnages bibliques.",
+    "caution": "Les citations sont des phrases illustratives inventées, pas des citations de personnes réelles. Les profils décrivent des tendances, jamais un diagnostic ni une étiquette.",
+    "editorial": "Chaque portrait distingue la tendance principale du participant, son éventuelle secondaire, et le profil de l’interlocuteur. Même profil traité explicitement. Ce sont des hypothèses comportementales, non des diagnostics. À valider avant publication.",
+    "design": "Ne pas remplacer les photographies existantes. Pas de sous-titre sous les titres des quatre blocs visuels ; les textes descriptifs restent dans les données pour usage éditorial et accordéons."
+  },
+  "profiles": {
+    "D": {
+      "name": "Conquérant",
+      "color": "#D94334",
+      "anchor": "profil-d",
+      "illustrativeQuote": "« Quel résultat voulons-nous atteindre ? »",
+      "photo": null
+    },
+    "I": {
+      "name": "Communiquant",
+      "color": "#F2C94C",
+      "anchor": "profil-i",
+      "illustrativeQuote": "« Et si on en parlait ensemble ? »",
+      "photo": null
+    },
+    "S": {
+      "name": "Facilitateur",
+      "color": "#57A773",
+      "anchor": "profil-s",
+      "illustrativeQuote": "« Comment faire pour que chacun trouve sa place ? »",
+      "photo": null
+    },
+    "C": {
+      "name": "Analyste",
+      "color": "#477CB9",
+      "anchor": "profil-c",
+      "illustrativeQuote": "« Sur quels faits pouvons-nous nous appuyer ? »",
+      "photo": null
+    }
+  },
+  "accordionOrder": [
+    "functioning",
+    "connection",
+    "friction",
+    "communication",
+    "relationship"
+  ],
+  "configurations": {
+    "D": {
+      "primary": "D",
+      "secondary": null,
+      "label": "Conquérant",
+      "intro": {
+        "eyebrow": "Conquérant",
+        "title": "Avancer ensemble, sans perdre le lien.",
+        "text": "Tu abordes souvent les relations en cherchant à aller droit au but et fixer une direction. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
+        "orbitLabel": "Ensemble."
+      },
+      "portraits": {
+        "D": {
+          "heading": "Avec un conquérant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Tout comme toi, un autre Conquérant apprécie généralement les objectifs clairs, la décision et l'autonomie. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. S'il demande rapidement ce qu'il faut décider ou quel résultat obtenir, il exprime peut-être une préférence pour l'efficacité. Vérifie-le en lui demandant ce qui lui donne le sentiment d'avancer."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Vous partagez l'envie de prendre des initiatives et de voir rapidement des résultats. Vous pouvez vous comprendre sans devoir justifier longtemps votre besoin d'autonomie. Votre ressemblance ou votre différence ne suffit pas à prédire votre entente."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Vous pouvez chacun vouloir décider ou imposer votre rythme. Si vos objectifs divergent, clarifiez les responsabilités avant que le désaccord ne devienne une compétition. Vérifie ce que l'autre attend réellement avant de tirer des conclusions."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Présente l'enjeu dès le début, puis la décision ou l'action attendue. Une question directe sur ses priorités peut être plus utile qu'un long préambule. Annonce l'objet, la demande et l'échéance dès les premières lignes. Ajoute les informations nécessaires à la décision sans cacher l'essentiel dans un long texte. Adapte la forme à ses préférences réelles plutôt qu'à une étiquette."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, clarifier les responsabilités et l'autonomie peut prévenir les rapports de force. Dans la vie personnelle, prends aussi le temps d'écouter ce qui compte pour lui au-delà des solutions. La confiance se construit aussi en demandant ce qui lui convient."
+            }
+          ]
+        },
+        "I": {
+          "heading": "Avec un communiquant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il aime souvent créer du lien, partager des idées et entraîner les autres dans un échange vivant. Son enthousiasme ne signifie pas qu'il manque de sérieux ou qu'il cherche toujours à attirer l'attention. S'il lance spontanément la conversation, raconte des exemples ou cherche les réactions du groupe, il apprécie peut-être l'interaction. Demande-lui s'il préfère réfléchir en échangeant ou seul."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Ton sens de la décision peut donner une direction à ses idées et à son enthousiasme. Son aisance relationnelle peut aider ton projet à rencontrer l'adhésion des autres. Votre ressemblance ou votre différence ne suffit pas à prédire votre entente."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Tu peux vouloir conclure alors qu'il souhaite prolonger l'échange. Prévoyez un temps pour explorer les idées puis un moment explicite pour choisir. Vérifie ce que l'autre attend réellement avant de tirer des conclusions."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Commence par un contact chaleureux et laisse de la place à la conversation. Quand une décision est nécessaire, reformule ensemble les idées et la prochaine étape. Personnalise l'ouverture et garde un ton humain, puis distingue clairement l'information et l'action attendue. Un message chaleureux reste plus utile lorsqu'il est facile à parcourir. Adapte la forme à ses préférences réelles plutôt qu'à une étiquette."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, laisse une place aux idées collectives tout en précisant les engagements. En famille ou entre amis, l'écoute et les signes de reconnaissance peuvent compter autant que l'activité partagée. La confiance se construit aussi en demandant ce qui lui convient."
+            }
+          ]
+        },
+        "S": {
+          "heading": "Avec un facilitateur.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il accorde souvent de la valeur à la confiance, à la stabilité et à l'attention portée aux personnes. Sa réserve éventuelle ne signifie ni absence d'avis ni manque d'initiative. S'il écoute longtemps, cherche l'avis des autres ou demande comment le changement affectera l'équipe, il privilégie peut-être l'harmonie. Vérifie ses préférences sans interpréter son silence."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Ton envie de faire avancer les choses peut compléter sa capacité à soutenir le collectif dans la durée. Ensemble, vous pouvez allier initiative et continuité. Votre ressemblance ou votre différence ne suffit pas à prédire votre entente."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Tu peux accélérer un changement qu'il aurait préféré préparer. Explique le pourquoi et laisse-lui le temps de signaler les conséquences humaines. Vérifie ce que l'autre attend réellement avant de tirer des conclusions."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Installe un échange calme et laisse le temps de répondre. Explique ce qui change, demande son avis et ne confonds pas un temps de réflexion avec un accord. Donne le contexte, les étapes et les personnes concernées dans un ton courtois. Évite d'annoncer un changement important sans possibilité de poser des questions. Adapte la forme à ses préférences réelles plutôt qu'à une étiquette."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, prépare les changements et reconnais sa contribution à l'équipe. Dans les relations personnelles, la constance et la possibilité de parler sans pression peuvent nourrir la confiance. La confiance se construit aussi en demandant ce qui lui convient."
+            }
+          ]
+        },
+        "C": {
+          "heading": "Avec un analyste.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il cherche souvent à comprendre les faits, les critères et les risques avant de conclure. Son besoin de précision ne signifie pas qu'il refuse le changement ou qu'il manque d'émotions. S'il demande des sources, vérifie les détails ou prend du temps avant de répondre, il apprécie peut-être l'analyse. Demande-lui quelles informations sont réellement nécessaires pour décider."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu apportes l'impulsion et il apporte un regard attentif aux détails et aux risques. Cette complémentarité peut transformer une décision rapide en action plus solide. Votre ressemblance ou votre différence ne suffit pas à prédire votre entente."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Tu peux considérer ses vérifications comme un retard, tandis qu'il peut juger ta décision prématurée. Convenez des trois informations indispensables et d'une échéance pour trancher. Vérifie ce que l'autre attend réellement avant de tirer des conclusions."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Annonce le sujet, distingue faits et hypothèses et laisse un temps pour les questions. Évite de lui demander une conclusion immédiate lorsque les critères ne sont pas clairs. Structure le message avec les faits, les références utiles et la décision attendue. Des pièces jointes pertinentes peuvent aider, à condition d'indiquer précisément ce qu'il faut examiner. Adapte la forme à ses préférences réelles plutôt qu'à une étiquette."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, convenez des critères de qualité et d'un moment pour décider. En famille ou entre amis, respecte son besoin de réfléchir sans réduire la relation à une discussion de preuves. La confiance se construit aussi en demandant ce qui lui convient."
+            }
+          ]
+        }
+      }
+    },
+    "DI": {
+      "primary": "D",
+      "secondary": "I",
+      "label": "Conquérant + Communiquant",
+      "intro": {
+        "eyebrow": "Conquérant + Communiquant",
+        "title": "Avancer ensemble, sans perdre le lien.",
+        "text": "Tu abordes souvent les relations en cherchant à aller droit au but et fixer une direction. Ton profil secondaire Communiquant ajoute une attention à le lien, l’enthousiasme et la participation. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
+        "orbitLabel": "Ensemble."
+      },
+      "portraits": {
+        "D": {
+          "heading": "Avec un conquérant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Tout comme toi, un autre Conquérant apprécie généralement les objectifs clairs, la décision et l'autonomie. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. Ton côté Communiquant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Vous partagez l'envie de prendre des initiatives et de voir rapidement des résultats. Vous pouvez vous comprendre sans devoir justifier longtemps votre besoin d'autonomie. Ton secondaire Communiquant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Vous pouvez chacun vouloir décider ou imposer votre rythme. Si vos objectifs divergent, clarifiez les responsabilités avant que le désaccord ne devienne une compétition. Ton secondaire Communiquant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Présente l'enjeu dès le début, puis la décision ou l'action attendue. Une question directe sur ses priorités peut être plus utile qu'un long préambule. Annonce l'objet, la demande et l'échéance dès les premières lignes. Ajoute les informations nécessaires à la décision sans cacher l'essentiel dans un long texte. Avec ton secondaire Communiquant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, clarifier les responsabilités et l'autonomie peut prévenir les rapports de force. Dans la vie personnelle, prends aussi le temps d'écouter ce qui compte pour lui au-delà des solutions. Ton secondaire Communiquant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
+            }
+          ]
+        },
+        "I": {
+          "heading": "Avec un communiquant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il aime souvent créer du lien, partager des idées et entraîner les autres dans un échange vivant. Son enthousiasme ne signifie pas qu'il manque de sérieux ou qu'il cherche toujours à attirer l'attention. Ton côté Communiquant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Ton sens de la décision peut donner une direction à ses idées et à son enthousiasme. Son aisance relationnelle peut aider ton projet à rencontrer l'adhésion des autres. Ton secondaire Communiquant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Tu peux vouloir conclure alors qu'il souhaite prolonger l'échange. Prévoyez un temps pour explorer les idées puis un moment explicite pour choisir. Ton secondaire Communiquant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Commence par un contact chaleureux et laisse de la place à la conversation. Quand une décision est nécessaire, reformule ensemble les idées et la prochaine étape. Personnalise l'ouverture et garde un ton humain, puis distingue clairement l'information et l'action attendue. Un message chaleureux reste plus utile lorsqu'il est facile à parcourir. Avec ton secondaire Communiquant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, laisse une place aux idées collectives tout en précisant les engagements. En famille ou entre amis, l'écoute et les signes de reconnaissance peuvent compter autant que l'activité partagée. Ton secondaire Communiquant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
+            }
+          ]
+        },
+        "S": {
+          "heading": "Avec un facilitateur.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il accorde souvent de la valeur à la confiance, à la stabilité et à l'attention portée aux personnes. Sa réserve éventuelle ne signifie ni absence d'avis ni manque d'initiative. Ton côté Communiquant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Ton envie de faire avancer les choses peut compléter sa capacité à soutenir le collectif dans la durée. Ensemble, vous pouvez allier initiative et continuité. Ton secondaire Communiquant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Tu peux accélérer un changement qu'il aurait préféré préparer. Explique le pourquoi et laisse-lui le temps de signaler les conséquences humaines. Ton secondaire Communiquant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Installe un échange calme et laisse le temps de répondre. Explique ce qui change, demande son avis et ne confonds pas un temps de réflexion avec un accord. Donne le contexte, les étapes et les personnes concernées dans un ton courtois. Évite d'annoncer un changement important sans possibilité de poser des questions. Avec ton secondaire Communiquant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, prépare les changements et reconnais sa contribution à l'équipe. Dans les relations personnelles, la constance et la possibilité de parler sans pression peuvent nourrir la confiance. Ton secondaire Communiquant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
+            }
+          ]
+        },
+        "C": {
+          "heading": "Avec un analyste.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il cherche souvent à comprendre les faits, les critères et les risques avant de conclure. Son besoin de précision ne signifie pas qu'il refuse le changement ou qu'il manque d'émotions. Ton côté Communiquant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu apportes l'impulsion et il apporte un regard attentif aux détails et aux risques. Cette complémentarité peut transformer une décision rapide en action plus solide. Ton secondaire Communiquant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Tu peux considérer ses vérifications comme un retard, tandis qu'il peut juger ta décision prématurée. Convenez des trois informations indispensables et d'une échéance pour trancher. Ton secondaire Communiquant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Annonce le sujet, distingue faits et hypothèses et laisse un temps pour les questions. Évite de lui demander une conclusion immédiate lorsque les critères ne sont pas clairs. Structure le message avec les faits, les références utiles et la décision attendue. Des pièces jointes pertinentes peuvent aider, à condition d'indiquer précisément ce qu'il faut examiner. Avec ton secondaire Communiquant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, convenez des critères de qualité et d'un moment pour décider. En famille ou entre amis, respecte son besoin de réfléchir sans réduire la relation à une discussion de preuves. Ton secondaire Communiquant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
+            }
+          ]
+        }
+      }
+    },
+    "DS": {
+      "primary": "D",
+      "secondary": "S",
+      "label": "Conquérant + Facilitateur",
+      "intro": {
+        "eyebrow": "Conquérant + Facilitateur",
+        "title": "Avancer ensemble, sans perdre le lien.",
+        "text": "Tu abordes souvent les relations en cherchant à aller droit au but et fixer une direction. Ton profil secondaire Facilitateur ajoute une attention à la confiance, l’écoute et la stabilité. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
+        "orbitLabel": "Ensemble."
+      },
+      "portraits": {
+        "D": {
+          "heading": "Avec un conquérant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Tout comme toi, un autre Conquérant apprécie généralement les objectifs clairs, la décision et l'autonomie. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. Ton côté Facilitateur peut t'amener à remarquer davantage ses besoins de confiance et sa façon d'accueillir les autres."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Vous partagez l'envie de prendre des initiatives et de voir rapidement des résultats. Vous pouvez vous comprendre sans devoir justifier longtemps votre besoin d'autonomie. Ton secondaire Facilitateur peut t'aider à consolider la confiance et à veiller à ce que chacun soit entendu."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Vous pouvez chacun vouloir décider ou imposer votre rythme. Si vos objectifs divergent, clarifiez les responsabilités avant que le désaccord ne devienne une compétition. Ton secondaire Facilitateur peut te pousser à éviter un désaccord pourtant nécessaire pour clarifier la situation."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Présente l'enjeu dès le début, puis la décision ou l'action attendue. Une question directe sur ses priorités peut être plus utile qu'un long préambule. Annonce l'objet, la demande et l'échéance dès les premières lignes. Ajoute les informations nécessaires à la décision sans cacher l'essentiel dans un long texte. Avec ton secondaire Facilitateur, prends soin de la relation sans renoncer à exprimer clairement ton point de vue."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, clarifier les responsabilités et l'autonomie peut prévenir les rapports de force. Dans la vie personnelle, prends aussi le temps d'écouter ce qui compte pour lui au-delà des solutions. Ton secondaire Facilitateur peut apporter de la constance, tout en t'invitant à formuler tes propres besoins."
+            }
+          ]
+        },
+        "I": {
+          "heading": "Avec un communiquant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il aime souvent créer du lien, partager des idées et entraîner les autres dans un échange vivant. Son enthousiasme ne signifie pas qu'il manque de sérieux ou qu'il cherche toujours à attirer l'attention. Ton côté Facilitateur peut t'amener à remarquer davantage ses besoins de confiance et sa façon d'accueillir les autres."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Ton sens de la décision peut donner une direction à ses idées et à son enthousiasme. Son aisance relationnelle peut aider ton projet à rencontrer l'adhésion des autres. Ton secondaire Facilitateur peut t'aider à consolider la confiance et à veiller à ce que chacun soit entendu."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Tu peux vouloir conclure alors qu'il souhaite prolonger l'échange. Prévoyez un temps pour explorer les idées puis un moment explicite pour choisir. Ton secondaire Facilitateur peut te pousser à éviter un désaccord pourtant nécessaire pour clarifier la situation."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Commence par un contact chaleureux et laisse de la place à la conversation. Quand une décision est nécessaire, reformule ensemble les idées et la prochaine étape. Personnalise l'ouverture et garde un ton humain, puis distingue clairement l'information et l'action attendue. Un message chaleureux reste plus utile lorsqu'il est facile à parcourir. Avec ton secondaire Facilitateur, prends soin de la relation sans renoncer à exprimer clairement ton point de vue."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, laisse une place aux idées collectives tout en précisant les engagements. En famille ou entre amis, l'écoute et les signes de reconnaissance peuvent compter autant que l'activité partagée. Ton secondaire Facilitateur peut apporter de la constance, tout en t'invitant à formuler tes propres besoins."
+            }
+          ]
+        },
+        "S": {
+          "heading": "Avec un facilitateur.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il accorde souvent de la valeur à la confiance, à la stabilité et à l'attention portée aux personnes. Sa réserve éventuelle ne signifie ni absence d'avis ni manque d'initiative. Ton côté Facilitateur peut t'amener à remarquer davantage ses besoins de confiance et sa façon d'accueillir les autres."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Ton envie de faire avancer les choses peut compléter sa capacité à soutenir le collectif dans la durée. Ensemble, vous pouvez allier initiative et continuité. Ton secondaire Facilitateur peut t'aider à consolider la confiance et à veiller à ce que chacun soit entendu."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Tu peux accélérer un changement qu'il aurait préféré préparer. Explique le pourquoi et laisse-lui le temps de signaler les conséquences humaines. Ton secondaire Facilitateur peut te pousser à éviter un désaccord pourtant nécessaire pour clarifier la situation."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Installe un échange calme et laisse le temps de répondre. Explique ce qui change, demande son avis et ne confonds pas un temps de réflexion avec un accord. Donne le contexte, les étapes et les personnes concernées dans un ton courtois. Évite d'annoncer un changement important sans possibilité de poser des questions. Avec ton secondaire Facilitateur, prends soin de la relation sans renoncer à exprimer clairement ton point de vue."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, prépare les changements et reconnais sa contribution à l'équipe. Dans les relations personnelles, la constance et la possibilité de parler sans pression peuvent nourrir la confiance. Ton secondaire Facilitateur peut apporter de la constance, tout en t'invitant à formuler tes propres besoins."
+            }
+          ]
+        },
+        "C": {
+          "heading": "Avec un analyste.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il cherche souvent à comprendre les faits, les critères et les risques avant de conclure. Son besoin de précision ne signifie pas qu'il refuse le changement ou qu'il manque d'émotions. Ton côté Facilitateur peut t'amener à remarquer davantage ses besoins de confiance et sa façon d'accueillir les autres."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu apportes l'impulsion et il apporte un regard attentif aux détails et aux risques. Cette complémentarité peut transformer une décision rapide en action plus solide. Ton secondaire Facilitateur peut t'aider à consolider la confiance et à veiller à ce que chacun soit entendu."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Tu peux considérer ses vérifications comme un retard, tandis qu'il peut juger ta décision prématurée. Convenez des trois informations indispensables et d'une échéance pour trancher. Ton secondaire Facilitateur peut te pousser à éviter un désaccord pourtant nécessaire pour clarifier la situation."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Annonce le sujet, distingue faits et hypothèses et laisse un temps pour les questions. Évite de lui demander une conclusion immédiate lorsque les critères ne sont pas clairs. Structure le message avec les faits, les références utiles et la décision attendue. Des pièces jointes pertinentes peuvent aider, à condition d'indiquer précisément ce qu'il faut examiner. Avec ton secondaire Facilitateur, prends soin de la relation sans renoncer à exprimer clairement ton point de vue."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, convenez des critères de qualité et d'un moment pour décider. En famille ou entre amis, respecte son besoin de réfléchir sans réduire la relation à une discussion de preuves. Ton secondaire Facilitateur peut apporter de la constance, tout en t'invitant à formuler tes propres besoins."
+            }
+          ]
+        }
+      }
+    },
+    "DC": {
+      "primary": "D",
+      "secondary": "C",
+      "label": "Conquérant + Analyste",
+      "intro": {
+        "eyebrow": "Conquérant + Analyste",
+        "title": "Avancer ensemble, sans perdre le lien.",
+        "text": "Tu abordes souvent les relations en cherchant à aller droit au but et fixer une direction. Ton profil secondaire Analyste ajoute une attention à la précision, la cohérence et la fiabilité. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
+        "orbitLabel": "Ensemble."
+      },
+      "portraits": {
+        "D": {
+          "heading": "Avec un conquérant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Tout comme toi, un autre Conquérant apprécie généralement les objectifs clairs, la décision et l'autonomie. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. Ton côté Analyste peut te rendre sensible aux arguments, aux critères et aux informations qu'il utilise."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Vous partagez l'envie de prendre des initiatives et de voir rapidement des résultats. Vous pouvez vous comprendre sans devoir justifier longtemps votre besoin d'autonomie. Ton secondaire Analyste peut aider à rendre votre coopération plus rigoureuse et vos décisions plus solides."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Vous pouvez chacun vouloir décider ou imposer votre rythme. Si vos objectifs divergent, clarifiez les responsabilités avant que le désaccord ne devienne une compétition. Ton secondaire Analyste peut t'amener à multiplier les vérifications quand l'autre souhaite déjà avancer."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Présente l'enjeu dès le début, puis la décision ou l'action attendue. Une question directe sur ses priorités peut être plus utile qu'un long préambule. Annonce l'objet, la demande et l'échéance dès les premières lignes. Ajoute les informations nécessaires à la décision sans cacher l'essentiel dans un long texte. Avec ton secondaire Analyste, apporte de la précision sans transformer chaque échange en examen détaillé."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, clarifier les responsabilités et l'autonomie peut prévenir les rapports de force. Dans la vie personnelle, prends aussi le temps d'écouter ce qui compte pour lui au-delà des solutions. Ton secondaire Analyste peut sécuriser vos engagements, à condition de ne pas réduire la relation à ses aspects pratiques."
+            }
+          ]
+        },
+        "I": {
+          "heading": "Avec un communiquant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il aime souvent créer du lien, partager des idées et entraîner les autres dans un échange vivant. Son enthousiasme ne signifie pas qu'il manque de sérieux ou qu'il cherche toujours à attirer l'attention. Ton côté Analyste peut te rendre sensible aux arguments, aux critères et aux informations qu'il utilise."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Ton sens de la décision peut donner une direction à ses idées et à son enthousiasme. Son aisance relationnelle peut aider ton projet à rencontrer l'adhésion des autres. Ton secondaire Analyste peut aider à rendre votre coopération plus rigoureuse et vos décisions plus solides."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Tu peux vouloir conclure alors qu'il souhaite prolonger l'échange. Prévoyez un temps pour explorer les idées puis un moment explicite pour choisir. Ton secondaire Analyste peut t'amener à multiplier les vérifications quand l'autre souhaite déjà avancer."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Commence par un contact chaleureux et laisse de la place à la conversation. Quand une décision est nécessaire, reformule ensemble les idées et la prochaine étape. Personnalise l'ouverture et garde un ton humain, puis distingue clairement l'information et l'action attendue. Un message chaleureux reste plus utile lorsqu'il est facile à parcourir. Avec ton secondaire Analyste, apporte de la précision sans transformer chaque échange en examen détaillé."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, laisse une place aux idées collectives tout en précisant les engagements. En famille ou entre amis, l'écoute et les signes de reconnaissance peuvent compter autant que l'activité partagée. Ton secondaire Analyste peut sécuriser vos engagements, à condition de ne pas réduire la relation à ses aspects pratiques."
+            }
+          ]
+        },
+        "S": {
+          "heading": "Avec un facilitateur.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il accorde souvent de la valeur à la confiance, à la stabilité et à l'attention portée aux personnes. Sa réserve éventuelle ne signifie ni absence d'avis ni manque d'initiative. Ton côté Analyste peut te rendre sensible aux arguments, aux critères et aux informations qu'il utilise."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Ton envie de faire avancer les choses peut compléter sa capacité à soutenir le collectif dans la durée. Ensemble, vous pouvez allier initiative et continuité. Ton secondaire Analyste peut aider à rendre votre coopération plus rigoureuse et vos décisions plus solides."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Tu peux accélérer un changement qu'il aurait préféré préparer. Explique le pourquoi et laisse-lui le temps de signaler les conséquences humaines. Ton secondaire Analyste peut t'amener à multiplier les vérifications quand l'autre souhaite déjà avancer."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Installe un échange calme et laisse le temps de répondre. Explique ce qui change, demande son avis et ne confonds pas un temps de réflexion avec un accord. Donne le contexte, les étapes et les personnes concernées dans un ton courtois. Évite d'annoncer un changement important sans possibilité de poser des questions. Avec ton secondaire Analyste, apporte de la précision sans transformer chaque échange en examen détaillé."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, prépare les changements et reconnais sa contribution à l'équipe. Dans les relations personnelles, la constance et la possibilité de parler sans pression peuvent nourrir la confiance. Ton secondaire Analyste peut sécuriser vos engagements, à condition de ne pas réduire la relation à ses aspects pratiques."
+            }
+          ]
+        },
+        "C": {
+          "heading": "Avec un analyste.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il cherche souvent à comprendre les faits, les critères et les risques avant de conclure. Son besoin de précision ne signifie pas qu'il refuse le changement ou qu'il manque d'émotions. Ton côté Analyste peut te rendre sensible aux arguments, aux critères et aux informations qu'il utilise."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu apportes l'impulsion et il apporte un regard attentif aux détails et aux risques. Cette complémentarité peut transformer une décision rapide en action plus solide. Ton secondaire Analyste peut aider à rendre votre coopération plus rigoureuse et vos décisions plus solides."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Tu peux considérer ses vérifications comme un retard, tandis qu'il peut juger ta décision prématurée. Convenez des trois informations indispensables et d'une échéance pour trancher. Ton secondaire Analyste peut t'amener à multiplier les vérifications quand l'autre souhaite déjà avancer."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Annonce le sujet, distingue faits et hypothèses et laisse un temps pour les questions. Évite de lui demander une conclusion immédiate lorsque les critères ne sont pas clairs. Structure le message avec les faits, les références utiles et la décision attendue. Des pièces jointes pertinentes peuvent aider, à condition d'indiquer précisément ce qu'il faut examiner. Avec ton secondaire Analyste, apporte de la précision sans transformer chaque échange en examen détaillé."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, convenez des critères de qualité et d'un moment pour décider. En famille ou entre amis, respecte son besoin de réfléchir sans réduire la relation à une discussion de preuves. Ton secondaire Analyste peut sécuriser vos engagements, à condition de ne pas réduire la relation à ses aspects pratiques."
+            }
+          ]
+        }
+      }
+    },
+    "I": {
+      "primary": "I",
+      "secondary": null,
+      "label": "Communiquant",
+      "intro": {
+        "eyebrow": "Communiquant",
+        "title": "Créer du lien, accueillir les différences.",
+        "text": "Tu abordes souvent les relations en cherchant à faire circuler les idées et créer un échange vivant. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
+        "orbitLabel": "Ensemble."
+      },
+      "portraits": {
+        "D": {
+          "heading": "Avec un conquérant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il cherche volontiers un objectif clair, une décision et la liberté de passer à l'action. Il peut aller droit au but sans que cela signifie qu'il veut toujours diriger. S'il demande rapidement ce qu'il faut décider ou quel résultat obtenir, il exprime peut-être une préférence pour l'efficacité. Vérifie-le en lui demandant ce qui lui donne le sentiment d'avancer."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux créer l'adhésion autour de ses objectifs et lui donner une dimension collective. Son sens de la décision peut aider vos idées à devenir des actions. Votre ressemblance ou votre différence ne suffit pas à prédire votre entente."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Tu peux vouloir échanger davantage alors qu'il souhaite déjà agir. Annonce clairement quand vous cherchez des idées et quand vous devez décider. Vérifie ce que l'autre attend réellement avant de tirer des conclusions."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Présente l'enjeu dès le début, puis la décision ou l'action attendue. Une question directe sur ses priorités peut être plus utile qu'un long préambule. Annonce l'objet, la demande et l'échéance dès les premières lignes. Ajoute les informations nécessaires à la décision sans cacher l'essentiel dans un long texte. Adapte la forme à ses préférences réelles plutôt qu'à une étiquette."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, clarifier les responsabilités et l'autonomie peut prévenir les rapports de force. Dans la vie personnelle, prends aussi le temps d'écouter ce qui compte pour lui au-delà des solutions. La confiance se construit aussi en demandant ce qui lui convient."
+            }
+          ]
+        },
+        "I": {
+          "heading": "Avec un communiquant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Tout comme toi, un autre Communiquant accorde souvent de l'importance aux échanges, aux idées partagées et au contact humain. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. S'il lance spontanément la conversation, raconte des exemples ou cherche les réactions du groupe, il apprécie peut-être l'interaction. Demande-lui s'il préfère réfléchir en échangeant ou seul."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Vous partagez le plaisir d'échanger, de proposer et de mobiliser. Votre enthousiasme mutuel peut donner beaucoup d'énergie à une initiative. Votre ressemblance ou votre différence ne suffit pas à prédire votre entente."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Vos idées peuvent se multiplier sans qu'une décision soit prise. Avant de conclure la discussion, choisissez une priorité, un responsable et une date. Vérifie ce que l'autre attend réellement avant de tirer des conclusions."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Commence par un contact chaleureux et laisse de la place à la conversation. Quand une décision est nécessaire, reformule ensemble les idées et la prochaine étape. Personnalise l'ouverture et garde un ton humain, puis distingue clairement l'information et l'action attendue. Un message chaleureux reste plus utile lorsqu'il est facile à parcourir. Adapte la forme à ses préférences réelles plutôt qu'à une étiquette."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, laisse une place aux idées collectives tout en précisant les engagements. En famille ou entre amis, l'écoute et les signes de reconnaissance peuvent compter autant que l'activité partagée. La confiance se construit aussi en demandant ce qui lui convient."
+            }
+          ]
+        },
+        "S": {
+          "heading": "Avec un facilitateur.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il accorde souvent de la valeur à la confiance, à la stabilité et à l'attention portée aux personnes. Sa réserve éventuelle ne signifie ni absence d'avis ni manque d'initiative. S'il écoute longtemps, cherche l'avis des autres ou demande comment le changement affectera l'équipe, il privilégie peut-être l'harmonie. Vérifie ses préférences sans interpréter son silence."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux apporter de la spontanéité à son sens de l'écoute et de la continuité. Il peut t'aider à préserver les liens quand l'enthousiasme entraîne beaucoup de changements. Votre ressemblance ou votre différence ne suffit pas à prédire votre entente."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Ton envie de nouveauté peut déstabiliser ses repères. Préviens-le des changements et demande ce qui lui permettrait d'y prendre part sereinement. Vérifie ce que l'autre attend réellement avant de tirer des conclusions."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Installe un échange calme et laisse le temps de répondre. Explique ce qui change, demande son avis et ne confonds pas un temps de réflexion avec un accord. Donne le contexte, les étapes et les personnes concernées dans un ton courtois. Évite d'annoncer un changement important sans possibilité de poser des questions. Adapte la forme à ses préférences réelles plutôt qu'à une étiquette."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, prépare les changements et reconnais sa contribution à l'équipe. Dans les relations personnelles, la constance et la possibilité de parler sans pression peuvent nourrir la confiance. La confiance se construit aussi en demandant ce qui lui convient."
+            }
+          ]
+        },
+        "C": {
+          "heading": "Avec un analyste.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il cherche souvent à comprendre les faits, les critères et les risques avant de conclure. Son besoin de précision ne signifie pas qu'il refuse le changement ou qu'il manque d'émotions. S'il demande des sources, vérifie les détails ou prend du temps avant de répondre, il apprécie peut-être l'analyse. Demande-lui quelles informations sont réellement nécessaires pour décider."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux ouvrir de nouvelles pistes qu'il aidera à examiner avec rigueur. Son analyse peut donner de la crédibilité à tes idées sans éteindre leur créativité. Votre ressemblance ou votre différence ne suffit pas à prédire votre entente."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Tu peux réfléchir à voix haute et changer rapidement de piste, tandis qu'il cherche à stabiliser les faits. Distinguez les idées à explorer des décisions déjà validées. Vérifie ce que l'autre attend réellement avant de tirer des conclusions."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Annonce le sujet, distingue faits et hypothèses et laisse un temps pour les questions. Évite de lui demander une conclusion immédiate lorsque les critères ne sont pas clairs. Structure le message avec les faits, les références utiles et la décision attendue. Des pièces jointes pertinentes peuvent aider, à condition d'indiquer précisément ce qu'il faut examiner. Adapte la forme à ses préférences réelles plutôt qu'à une étiquette."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, convenez des critères de qualité et d'un moment pour décider. En famille ou entre amis, respecte son besoin de réfléchir sans réduire la relation à une discussion de preuves. La confiance se construit aussi en demandant ce qui lui convient."
+            }
+          ]
+        }
+      }
+    },
+    "ID": {
+      "primary": "I",
+      "secondary": "D",
+      "label": "Communiquant + Conquérant",
+      "intro": {
+        "eyebrow": "Communiquant + Conquérant",
+        "title": "Créer du lien, accueillir les différences.",
+        "text": "Tu abordes souvent les relations en cherchant à faire circuler les idées et créer un échange vivant. Ton profil secondaire Conquérant ajoute une attention à la décision et les résultats. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
+        "orbitLabel": "Ensemble."
+      },
+      "portraits": {
+        "D": {
+          "heading": "Avec un conquérant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il cherche volontiers un objectif clair, une décision et la liberté de passer à l'action. Il peut aller droit au but sans que cela signifie qu'il veut toujours diriger. Ton côté Conquérant peut te rendre particulièrement attentif à sa capacité à prendre une décision et à agir."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux créer l'adhésion autour de ses objectifs et lui donner une dimension collective. Son sens de la décision peut aider vos idées à devenir des actions. Ton secondaire Conquérant peut t'aider à transformer ce point commun en objectif concret et en responsabilités claires."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Tu peux vouloir échanger davantage alors qu'il souhaite déjà agir. Annonce clairement quand vous cherchez des idées et quand vous devez décider. Ton secondaire Conquérant peut accentuer ton impatience si l'échange n'aboutit pas rapidement."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Présente l'enjeu dès le début, puis la décision ou l'action attendue. Une question directe sur ses priorités peut être plus utile qu'un long préambule. Annonce l'objet, la demande et l'échéance dès les premières lignes. Ajoute les informations nécessaires à la décision sans cacher l'essentiel dans un long texte. Avec ton secondaire Conquérant, veille à ne pas accélérer la discussion avant d'avoir compris sa réponse."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, clarifier les responsabilités et l'autonomie peut prévenir les rapports de force. Dans la vie personnelle, prends aussi le temps d'écouter ce qui compte pour lui au-delà des solutions. Ton secondaire Conquérant peut t'aider à proposer un cadre clair, à condition de ne pas décider à sa place."
+            }
+          ]
+        },
+        "I": {
+          "heading": "Avec un communiquant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Tout comme toi, un autre Communiquant accorde souvent de l'importance aux échanges, aux idées partagées et au contact humain. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. Ton côté Conquérant peut te rendre particulièrement attentif à sa capacité à prendre une décision et à agir."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Vous partagez le plaisir d'échanger, de proposer et de mobiliser. Votre enthousiasme mutuel peut donner beaucoup d'énergie à une initiative. Ton secondaire Conquérant peut t'aider à transformer ce point commun en objectif concret et en responsabilités claires."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Vos idées peuvent se multiplier sans qu'une décision soit prise. Avant de conclure la discussion, choisissez une priorité, un responsable et une date. Ton secondaire Conquérant peut accentuer ton impatience si l'échange n'aboutit pas rapidement."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Commence par un contact chaleureux et laisse de la place à la conversation. Quand une décision est nécessaire, reformule ensemble les idées et la prochaine étape. Personnalise l'ouverture et garde un ton humain, puis distingue clairement l'information et l'action attendue. Un message chaleureux reste plus utile lorsqu'il est facile à parcourir. Avec ton secondaire Conquérant, veille à ne pas accélérer la discussion avant d'avoir compris sa réponse."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, laisse une place aux idées collectives tout en précisant les engagements. En famille ou entre amis, l'écoute et les signes de reconnaissance peuvent compter autant que l'activité partagée. Ton secondaire Conquérant peut t'aider à proposer un cadre clair, à condition de ne pas décider à sa place."
+            }
+          ]
+        },
+        "S": {
+          "heading": "Avec un facilitateur.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il accorde souvent de la valeur à la confiance, à la stabilité et à l'attention portée aux personnes. Sa réserve éventuelle ne signifie ni absence d'avis ni manque d'initiative. Ton côté Conquérant peut te rendre particulièrement attentif à sa capacité à prendre une décision et à agir."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux apporter de la spontanéité à son sens de l'écoute et de la continuité. Il peut t'aider à préserver les liens quand l'enthousiasme entraîne beaucoup de changements. Ton secondaire Conquérant peut t'aider à transformer ce point commun en objectif concret et en responsabilités claires."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Ton envie de nouveauté peut déstabiliser ses repères. Préviens-le des changements et demande ce qui lui permettrait d'y prendre part sereinement. Ton secondaire Conquérant peut accentuer ton impatience si l'échange n'aboutit pas rapidement."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Installe un échange calme et laisse le temps de répondre. Explique ce qui change, demande son avis et ne confonds pas un temps de réflexion avec un accord. Donne le contexte, les étapes et les personnes concernées dans un ton courtois. Évite d'annoncer un changement important sans possibilité de poser des questions. Avec ton secondaire Conquérant, veille à ne pas accélérer la discussion avant d'avoir compris sa réponse."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, prépare les changements et reconnais sa contribution à l'équipe. Dans les relations personnelles, la constance et la possibilité de parler sans pression peuvent nourrir la confiance. Ton secondaire Conquérant peut t'aider à proposer un cadre clair, à condition de ne pas décider à sa place."
+            }
+          ]
+        },
+        "C": {
+          "heading": "Avec un analyste.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il cherche souvent à comprendre les faits, les critères et les risques avant de conclure. Son besoin de précision ne signifie pas qu'il refuse le changement ou qu'il manque d'émotions. Ton côté Conquérant peut te rendre particulièrement attentif à sa capacité à prendre une décision et à agir."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux ouvrir de nouvelles pistes qu'il aidera à examiner avec rigueur. Son analyse peut donner de la crédibilité à tes idées sans éteindre leur créativité. Ton secondaire Conquérant peut t'aider à transformer ce point commun en objectif concret et en responsabilités claires."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Tu peux réfléchir à voix haute et changer rapidement de piste, tandis qu'il cherche à stabiliser les faits. Distinguez les idées à explorer des décisions déjà validées. Ton secondaire Conquérant peut accentuer ton impatience si l'échange n'aboutit pas rapidement."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Annonce le sujet, distingue faits et hypothèses et laisse un temps pour les questions. Évite de lui demander une conclusion immédiate lorsque les critères ne sont pas clairs. Structure le message avec les faits, les références utiles et la décision attendue. Des pièces jointes pertinentes peuvent aider, à condition d'indiquer précisément ce qu'il faut examiner. Avec ton secondaire Conquérant, veille à ne pas accélérer la discussion avant d'avoir compris sa réponse."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, convenez des critères de qualité et d'un moment pour décider. En famille ou entre amis, respecte son besoin de réfléchir sans réduire la relation à une discussion de preuves. Ton secondaire Conquérant peut t'aider à proposer un cadre clair, à condition de ne pas décider à sa place."
+            }
+          ]
+        }
+      }
+    },
+    "IS": {
+      "primary": "I",
+      "secondary": "S",
+      "label": "Communiquant + Facilitateur",
+      "intro": {
+        "eyebrow": "Communiquant + Facilitateur",
+        "title": "Créer du lien, accueillir les différences.",
+        "text": "Tu abordes souvent les relations en cherchant à faire circuler les idées et créer un échange vivant. Ton profil secondaire Facilitateur ajoute une attention à la confiance, l’écoute et la stabilité. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
+        "orbitLabel": "Ensemble."
+      },
+      "portraits": {
+        "D": {
+          "heading": "Avec un conquérant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il cherche volontiers un objectif clair, une décision et la liberté de passer à l'action. Il peut aller droit au but sans que cela signifie qu'il veut toujours diriger. Ton côté Facilitateur peut t'amener à remarquer davantage ses besoins de confiance et sa façon d'accueillir les autres."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux créer l'adhésion autour de ses objectifs et lui donner une dimension collective. Son sens de la décision peut aider vos idées à devenir des actions. Ton secondaire Facilitateur peut t'aider à consolider la confiance et à veiller à ce que chacun soit entendu."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Tu peux vouloir échanger davantage alors qu'il souhaite déjà agir. Annonce clairement quand vous cherchez des idées et quand vous devez décider. Ton secondaire Facilitateur peut te pousser à éviter un désaccord pourtant nécessaire pour clarifier la situation."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Présente l'enjeu dès le début, puis la décision ou l'action attendue. Une question directe sur ses priorités peut être plus utile qu'un long préambule. Annonce l'objet, la demande et l'échéance dès les premières lignes. Ajoute les informations nécessaires à la décision sans cacher l'essentiel dans un long texte. Avec ton secondaire Facilitateur, prends soin de la relation sans renoncer à exprimer clairement ton point de vue."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, clarifier les responsabilités et l'autonomie peut prévenir les rapports de force. Dans la vie personnelle, prends aussi le temps d'écouter ce qui compte pour lui au-delà des solutions. Ton secondaire Facilitateur peut apporter de la constance, tout en t'invitant à formuler tes propres besoins."
+            }
+          ]
+        },
+        "I": {
+          "heading": "Avec un communiquant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Tout comme toi, un autre Communiquant accorde souvent de l'importance aux échanges, aux idées partagées et au contact humain. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. Ton côté Facilitateur peut t'amener à remarquer davantage ses besoins de confiance et sa façon d'accueillir les autres."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Vous partagez le plaisir d'échanger, de proposer et de mobiliser. Votre enthousiasme mutuel peut donner beaucoup d'énergie à une initiative. Ton secondaire Facilitateur peut t'aider à consolider la confiance et à veiller à ce que chacun soit entendu."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Vos idées peuvent se multiplier sans qu'une décision soit prise. Avant de conclure la discussion, choisissez une priorité, un responsable et une date. Ton secondaire Facilitateur peut te pousser à éviter un désaccord pourtant nécessaire pour clarifier la situation."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Commence par un contact chaleureux et laisse de la place à la conversation. Quand une décision est nécessaire, reformule ensemble les idées et la prochaine étape. Personnalise l'ouverture et garde un ton humain, puis distingue clairement l'information et l'action attendue. Un message chaleureux reste plus utile lorsqu'il est facile à parcourir. Avec ton secondaire Facilitateur, prends soin de la relation sans renoncer à exprimer clairement ton point de vue."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, laisse une place aux idées collectives tout en précisant les engagements. En famille ou entre amis, l'écoute et les signes de reconnaissance peuvent compter autant que l'activité partagée. Ton secondaire Facilitateur peut apporter de la constance, tout en t'invitant à formuler tes propres besoins."
+            }
+          ]
+        },
+        "S": {
+          "heading": "Avec un facilitateur.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il accorde souvent de la valeur à la confiance, à la stabilité et à l'attention portée aux personnes. Sa réserve éventuelle ne signifie ni absence d'avis ni manque d'initiative. Ton côté Facilitateur peut t'amener à remarquer davantage ses besoins de confiance et sa façon d'accueillir les autres."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux apporter de la spontanéité à son sens de l'écoute et de la continuité. Il peut t'aider à préserver les liens quand l'enthousiasme entraîne beaucoup de changements. Ton secondaire Facilitateur peut t'aider à consolider la confiance et à veiller à ce que chacun soit entendu."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Ton envie de nouveauté peut déstabiliser ses repères. Préviens-le des changements et demande ce qui lui permettrait d'y prendre part sereinement. Ton secondaire Facilitateur peut te pousser à éviter un désaccord pourtant nécessaire pour clarifier la situation."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Installe un échange calme et laisse le temps de répondre. Explique ce qui change, demande son avis et ne confonds pas un temps de réflexion avec un accord. Donne le contexte, les étapes et les personnes concernées dans un ton courtois. Évite d'annoncer un changement important sans possibilité de poser des questions. Avec ton secondaire Facilitateur, prends soin de la relation sans renoncer à exprimer clairement ton point de vue."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, prépare les changements et reconnais sa contribution à l'équipe. Dans les relations personnelles, la constance et la possibilité de parler sans pression peuvent nourrir la confiance. Ton secondaire Facilitateur peut apporter de la constance, tout en t'invitant à formuler tes propres besoins."
+            }
+          ]
+        },
+        "C": {
+          "heading": "Avec un analyste.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il cherche souvent à comprendre les faits, les critères et les risques avant de conclure. Son besoin de précision ne signifie pas qu'il refuse le changement ou qu'il manque d'émotions. Ton côté Facilitateur peut t'amener à remarquer davantage ses besoins de confiance et sa façon d'accueillir les autres."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux ouvrir de nouvelles pistes qu'il aidera à examiner avec rigueur. Son analyse peut donner de la crédibilité à tes idées sans éteindre leur créativité. Ton secondaire Facilitateur peut t'aider à consolider la confiance et à veiller à ce que chacun soit entendu."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Tu peux réfléchir à voix haute et changer rapidement de piste, tandis qu'il cherche à stabiliser les faits. Distinguez les idées à explorer des décisions déjà validées. Ton secondaire Facilitateur peut te pousser à éviter un désaccord pourtant nécessaire pour clarifier la situation."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Annonce le sujet, distingue faits et hypothèses et laisse un temps pour les questions. Évite de lui demander une conclusion immédiate lorsque les critères ne sont pas clairs. Structure le message avec les faits, les références utiles et la décision attendue. Des pièces jointes pertinentes peuvent aider, à condition d'indiquer précisément ce qu'il faut examiner. Avec ton secondaire Facilitateur, prends soin de la relation sans renoncer à exprimer clairement ton point de vue."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, convenez des critères de qualité et d'un moment pour décider. En famille ou entre amis, respecte son besoin de réfléchir sans réduire la relation à une discussion de preuves. Ton secondaire Facilitateur peut apporter de la constance, tout en t'invitant à formuler tes propres besoins."
+            }
+          ]
+        }
+      }
+    },
+    "IC": {
+      "primary": "I",
+      "secondary": "C",
+      "label": "Communiquant + Analyste",
+      "intro": {
+        "eyebrow": "Communiquant + Analyste",
+        "title": "Créer du lien, accueillir les différences.",
+        "text": "Tu abordes souvent les relations en cherchant à faire circuler les idées et créer un échange vivant. Ton profil secondaire Analyste ajoute une attention à la précision, la cohérence et la fiabilité. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
+        "orbitLabel": "Ensemble."
+      },
+      "portraits": {
+        "D": {
+          "heading": "Avec un conquérant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il cherche volontiers un objectif clair, une décision et la liberté de passer à l'action. Il peut aller droit au but sans que cela signifie qu'il veut toujours diriger. Ton côté Analyste peut te rendre sensible aux arguments, aux critères et aux informations qu'il utilise."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux créer l'adhésion autour de ses objectifs et lui donner une dimension collective. Son sens de la décision peut aider vos idées à devenir des actions. Ton secondaire Analyste peut aider à rendre votre coopération plus rigoureuse et vos décisions plus solides."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Tu peux vouloir échanger davantage alors qu'il souhaite déjà agir. Annonce clairement quand vous cherchez des idées et quand vous devez décider. Ton secondaire Analyste peut t'amener à multiplier les vérifications quand l'autre souhaite déjà avancer."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Présente l'enjeu dès le début, puis la décision ou l'action attendue. Une question directe sur ses priorités peut être plus utile qu'un long préambule. Annonce l'objet, la demande et l'échéance dès les premières lignes. Ajoute les informations nécessaires à la décision sans cacher l'essentiel dans un long texte. Avec ton secondaire Analyste, apporte de la précision sans transformer chaque échange en examen détaillé."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, clarifier les responsabilités et l'autonomie peut prévenir les rapports de force. Dans la vie personnelle, prends aussi le temps d'écouter ce qui compte pour lui au-delà des solutions. Ton secondaire Analyste peut sécuriser vos engagements, à condition de ne pas réduire la relation à ses aspects pratiques."
+            }
+          ]
+        },
+        "I": {
+          "heading": "Avec un communiquant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Tout comme toi, un autre Communiquant accorde souvent de l'importance aux échanges, aux idées partagées et au contact humain. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. Ton côté Analyste peut te rendre sensible aux arguments, aux critères et aux informations qu'il utilise."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Vous partagez le plaisir d'échanger, de proposer et de mobiliser. Votre enthousiasme mutuel peut donner beaucoup d'énergie à une initiative. Ton secondaire Analyste peut aider à rendre votre coopération plus rigoureuse et vos décisions plus solides."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Vos idées peuvent se multiplier sans qu'une décision soit prise. Avant de conclure la discussion, choisissez une priorité, un responsable et une date. Ton secondaire Analyste peut t'amener à multiplier les vérifications quand l'autre souhaite déjà avancer."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Commence par un contact chaleureux et laisse de la place à la conversation. Quand une décision est nécessaire, reformule ensemble les idées et la prochaine étape. Personnalise l'ouverture et garde un ton humain, puis distingue clairement l'information et l'action attendue. Un message chaleureux reste plus utile lorsqu'il est facile à parcourir. Avec ton secondaire Analyste, apporte de la précision sans transformer chaque échange en examen détaillé."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, laisse une place aux idées collectives tout en précisant les engagements. En famille ou entre amis, l'écoute et les signes de reconnaissance peuvent compter autant que l'activité partagée. Ton secondaire Analyste peut sécuriser vos engagements, à condition de ne pas réduire la relation à ses aspects pratiques."
+            }
+          ]
+        },
+        "S": {
+          "heading": "Avec un facilitateur.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il accorde souvent de la valeur à la confiance, à la stabilité et à l'attention portée aux personnes. Sa réserve éventuelle ne signifie ni absence d'avis ni manque d'initiative. Ton côté Analyste peut te rendre sensible aux arguments, aux critères et aux informations qu'il utilise."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux apporter de la spontanéité à son sens de l'écoute et de la continuité. Il peut t'aider à préserver les liens quand l'enthousiasme entraîne beaucoup de changements. Ton secondaire Analyste peut aider à rendre votre coopération plus rigoureuse et vos décisions plus solides."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Ton envie de nouveauté peut déstabiliser ses repères. Préviens-le des changements et demande ce qui lui permettrait d'y prendre part sereinement. Ton secondaire Analyste peut t'amener à multiplier les vérifications quand l'autre souhaite déjà avancer."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Installe un échange calme et laisse le temps de répondre. Explique ce qui change, demande son avis et ne confonds pas un temps de réflexion avec un accord. Donne le contexte, les étapes et les personnes concernées dans un ton courtois. Évite d'annoncer un changement important sans possibilité de poser des questions. Avec ton secondaire Analyste, apporte de la précision sans transformer chaque échange en examen détaillé."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, prépare les changements et reconnais sa contribution à l'équipe. Dans les relations personnelles, la constance et la possibilité de parler sans pression peuvent nourrir la confiance. Ton secondaire Analyste peut sécuriser vos engagements, à condition de ne pas réduire la relation à ses aspects pratiques."
+            }
+          ]
+        },
+        "C": {
+          "heading": "Avec un analyste.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il cherche souvent à comprendre les faits, les critères et les risques avant de conclure. Son besoin de précision ne signifie pas qu'il refuse le changement ou qu'il manque d'émotions. Ton côté Analyste peut te rendre sensible aux arguments, aux critères et aux informations qu'il utilise."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux ouvrir de nouvelles pistes qu'il aidera à examiner avec rigueur. Son analyse peut donner de la crédibilité à tes idées sans éteindre leur créativité. Ton secondaire Analyste peut aider à rendre votre coopération plus rigoureuse et vos décisions plus solides."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Tu peux réfléchir à voix haute et changer rapidement de piste, tandis qu'il cherche à stabiliser les faits. Distinguez les idées à explorer des décisions déjà validées. Ton secondaire Analyste peut t'amener à multiplier les vérifications quand l'autre souhaite déjà avancer."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Annonce le sujet, distingue faits et hypothèses et laisse un temps pour les questions. Évite de lui demander une conclusion immédiate lorsque les critères ne sont pas clairs. Structure le message avec les faits, les références utiles et la décision attendue. Des pièces jointes pertinentes peuvent aider, à condition d'indiquer précisément ce qu'il faut examiner. Avec ton secondaire Analyste, apporte de la précision sans transformer chaque échange en examen détaillé."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, convenez des critères de qualité et d'un moment pour décider. En famille ou entre amis, respecte son besoin de réfléchir sans réduire la relation à une discussion de preuves. Ton secondaire Analyste peut sécuriser vos engagements, à condition de ne pas réduire la relation à ses aspects pratiques."
+            }
+          ]
+        }
+      }
+    },
+    "S": {
+      "primary": "S",
+      "secondary": null,
+      "label": "Facilitateur",
+      "intro": {
+        "eyebrow": "Facilitateur",
+        "title": "Préserver le lien, sans t’effacer.",
+        "text": "Tu abordes souvent les relations en cherchant à prendre le temps de comprendre les personnes et leurs besoins. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
+        "orbitLabel": "Ensemble."
+      },
+      "portraits": {
+        "D": {
+          "heading": "Avec un conquérant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il cherche volontiers un objectif clair, une décision et la liberté de passer à l'action. Il peut aller droit au but sans que cela signifie qu'il veut toujours diriger. S'il demande rapidement ce qu'il faut décider ou quel résultat obtenir, il exprime peut-être une préférence pour l'efficacité. Vérifie-le en lui demandant ce qui lui donne le sentiment d'avancer."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux apporter l'écoute et la continuité dont ses initiatives ont besoin. Sa capacité à trancher peut aider un projet collectif à ne pas rester dans l'attente. Votre ressemblance ou votre différence ne suffit pas à prédire votre entente."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Il peut aller trop vite pour toi et prendre ton silence pour un accord. Exprime clairement tes réserves avant la décision et convenez d'un rythme. Vérifie ce que l'autre attend réellement avant de tirer des conclusions."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Présente l'enjeu dès le début, puis la décision ou l'action attendue. Une question directe sur ses priorités peut être plus utile qu'un long préambule. Annonce l'objet, la demande et l'échéance dès les premières lignes. Ajoute les informations nécessaires à la décision sans cacher l'essentiel dans un long texte. Adapte la forme à ses préférences réelles plutôt qu'à une étiquette."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, clarifier les responsabilités et l'autonomie peut prévenir les rapports de force. Dans la vie personnelle, prends aussi le temps d'écouter ce qui compte pour lui au-delà des solutions. La confiance se construit aussi en demandant ce qui lui convient."
+            }
+          ]
+        },
+        "I": {
+          "heading": "Avec un communiquant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il aime souvent créer du lien, partager des idées et entraîner les autres dans un échange vivant. Son enthousiasme ne signifie pas qu'il manque de sérieux ou qu'il cherche toujours à attirer l'attention. S'il lance spontanément la conversation, raconte des exemples ou cherche les réactions du groupe, il apprécie peut-être l'interaction. Demande-lui s'il préfère réfléchir en échangeant ou seul."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux apporter de la stabilité à ses idées et soutenir les personnes qu'il mobilise. Son enthousiasme peut t'encourager à essayer des approches nouvelles. Votre ressemblance ou votre différence ne suffit pas à prédire votre entente."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Il peut multiplier les propositions alors que tu cherches à préserver un cadre fiable. Explique les conditions nécessaires pour que le groupe suive. Vérifie ce que l'autre attend réellement avant de tirer des conclusions."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Commence par un contact chaleureux et laisse de la place à la conversation. Quand une décision est nécessaire, reformule ensemble les idées et la prochaine étape. Personnalise l'ouverture et garde un ton humain, puis distingue clairement l'information et l'action attendue. Un message chaleureux reste plus utile lorsqu'il est facile à parcourir. Adapte la forme à ses préférences réelles plutôt qu'à une étiquette."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, laisse une place aux idées collectives tout en précisant les engagements. En famille ou entre amis, l'écoute et les signes de reconnaissance peuvent compter autant que l'activité partagée. La confiance se construit aussi en demandant ce qui lui convient."
+            }
+          ]
+        },
+        "S": {
+          "heading": "Avec un facilitateur.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Tout comme toi, un autre Facilitateur recherche volontiers la confiance, l'écoute et des repères stables. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. S'il écoute longtemps, cherche l'avis des autres ou demande comment le changement affectera l'équipe, il privilégie peut-être l'harmonie. Vérifie ses préférences sans interpréter son silence."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Vous partagez l'importance de la confiance, de la fiabilité et de l'attention aux autres. Vous pouvez construire une relation patiente et solide. Votre ressemblance ou votre différence ne suffit pas à prédire votre entente."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Vous pouvez tous les deux éviter un désaccord pour préserver l'harmonie. Osez nommer les attentes différentes avant qu'une frustration silencieuse ne s'installe. Vérifie ce que l'autre attend réellement avant de tirer des conclusions."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Installe un échange calme et laisse le temps de répondre. Explique ce qui change, demande son avis et ne confonds pas un temps de réflexion avec un accord. Donne le contexte, les étapes et les personnes concernées dans un ton courtois. Évite d'annoncer un changement important sans possibilité de poser des questions. Adapte la forme à ses préférences réelles plutôt qu'à une étiquette."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, prépare les changements et reconnais sa contribution à l'équipe. Dans les relations personnelles, la constance et la possibilité de parler sans pression peuvent nourrir la confiance. La confiance se construit aussi en demandant ce qui lui convient."
+            }
+          ]
+        },
+        "C": {
+          "heading": "Avec un analyste.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il cherche souvent à comprendre les faits, les critères et les risques avant de conclure. Son besoin de précision ne signifie pas qu'il refuse le changement ou qu'il manque d'émotions. S'il demande des sources, vérifie les détails ou prend du temps avant de répondre, il apprécie peut-être l'analyse. Demande-lui quelles informations sont réellement nécessaires pour décider."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Ton attention aux personnes complète son exigence de précision. Ensemble, vous pouvez préparer des décisions à la fois fiables et acceptables pour le collectif. Votre ressemblance ou votre différence ne suffit pas à prédire votre entente."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Vous pouvez hésiter longtemps, toi pour préserver l'équilibre et lui pour vérifier les détails. Fixez une date et les critères suffisants pour avancer. Vérifie ce que l'autre attend réellement avant de tirer des conclusions."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Annonce le sujet, distingue faits et hypothèses et laisse un temps pour les questions. Évite de lui demander une conclusion immédiate lorsque les critères ne sont pas clairs. Structure le message avec les faits, les références utiles et la décision attendue. Des pièces jointes pertinentes peuvent aider, à condition d'indiquer précisément ce qu'il faut examiner. Adapte la forme à ses préférences réelles plutôt qu'à une étiquette."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, convenez des critères de qualité et d'un moment pour décider. En famille ou entre amis, respecte son besoin de réfléchir sans réduire la relation à une discussion de preuves. La confiance se construit aussi en demandant ce qui lui convient."
+            }
+          ]
+        }
+      }
+    },
+    "SD": {
+      "primary": "S",
+      "secondary": "D",
+      "label": "Facilitateur + Conquérant",
+      "intro": {
+        "eyebrow": "Facilitateur + Conquérant",
+        "title": "Préserver le lien, sans t’effacer.",
+        "text": "Tu abordes souvent les relations en cherchant à prendre le temps de comprendre les personnes et leurs besoins. Ton profil secondaire Conquérant ajoute une attention à la décision et les résultats. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
+        "orbitLabel": "Ensemble."
+      },
+      "portraits": {
+        "D": {
+          "heading": "Avec un conquérant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il cherche volontiers un objectif clair, une décision et la liberté de passer à l'action. Il peut aller droit au but sans que cela signifie qu'il veut toujours diriger. Ton côté Conquérant peut te rendre particulièrement attentif à sa capacité à prendre une décision et à agir."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux apporter l'écoute et la continuité dont ses initiatives ont besoin. Sa capacité à trancher peut aider un projet collectif à ne pas rester dans l'attente. Ton secondaire Conquérant peut t'aider à transformer ce point commun en objectif concret et en responsabilités claires."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Il peut aller trop vite pour toi et prendre ton silence pour un accord. Exprime clairement tes réserves avant la décision et convenez d'un rythme. Ton secondaire Conquérant peut accentuer ton impatience si l'échange n'aboutit pas rapidement."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Présente l'enjeu dès le début, puis la décision ou l'action attendue. Une question directe sur ses priorités peut être plus utile qu'un long préambule. Annonce l'objet, la demande et l'échéance dès les premières lignes. Ajoute les informations nécessaires à la décision sans cacher l'essentiel dans un long texte. Avec ton secondaire Conquérant, veille à ne pas accélérer la discussion avant d'avoir compris sa réponse."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, clarifier les responsabilités et l'autonomie peut prévenir les rapports de force. Dans la vie personnelle, prends aussi le temps d'écouter ce qui compte pour lui au-delà des solutions. Ton secondaire Conquérant peut t'aider à proposer un cadre clair, à condition de ne pas décider à sa place."
+            }
+          ]
+        },
+        "I": {
+          "heading": "Avec un communiquant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il aime souvent créer du lien, partager des idées et entraîner les autres dans un échange vivant. Son enthousiasme ne signifie pas qu'il manque de sérieux ou qu'il cherche toujours à attirer l'attention. Ton côté Conquérant peut te rendre particulièrement attentif à sa capacité à prendre une décision et à agir."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux apporter de la stabilité à ses idées et soutenir les personnes qu'il mobilise. Son enthousiasme peut t'encourager à essayer des approches nouvelles. Ton secondaire Conquérant peut t'aider à transformer ce point commun en objectif concret et en responsabilités claires."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Il peut multiplier les propositions alors que tu cherches à préserver un cadre fiable. Explique les conditions nécessaires pour que le groupe suive. Ton secondaire Conquérant peut accentuer ton impatience si l'échange n'aboutit pas rapidement."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Commence par un contact chaleureux et laisse de la place à la conversation. Quand une décision est nécessaire, reformule ensemble les idées et la prochaine étape. Personnalise l'ouverture et garde un ton humain, puis distingue clairement l'information et l'action attendue. Un message chaleureux reste plus utile lorsqu'il est facile à parcourir. Avec ton secondaire Conquérant, veille à ne pas accélérer la discussion avant d'avoir compris sa réponse."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, laisse une place aux idées collectives tout en précisant les engagements. En famille ou entre amis, l'écoute et les signes de reconnaissance peuvent compter autant que l'activité partagée. Ton secondaire Conquérant peut t'aider à proposer un cadre clair, à condition de ne pas décider à sa place."
+            }
+          ]
+        },
+        "S": {
+          "heading": "Avec un facilitateur.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Tout comme toi, un autre Facilitateur recherche volontiers la confiance, l'écoute et des repères stables. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. Ton côté Conquérant peut te rendre particulièrement attentif à sa capacité à prendre une décision et à agir."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Vous partagez l'importance de la confiance, de la fiabilité et de l'attention aux autres. Vous pouvez construire une relation patiente et solide. Ton secondaire Conquérant peut t'aider à transformer ce point commun en objectif concret et en responsabilités claires."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Vous pouvez tous les deux éviter un désaccord pour préserver l'harmonie. Osez nommer les attentes différentes avant qu'une frustration silencieuse ne s'installe. Ton secondaire Conquérant peut accentuer ton impatience si l'échange n'aboutit pas rapidement."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Installe un échange calme et laisse le temps de répondre. Explique ce qui change, demande son avis et ne confonds pas un temps de réflexion avec un accord. Donne le contexte, les étapes et les personnes concernées dans un ton courtois. Évite d'annoncer un changement important sans possibilité de poser des questions. Avec ton secondaire Conquérant, veille à ne pas accélérer la discussion avant d'avoir compris sa réponse."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, prépare les changements et reconnais sa contribution à l'équipe. Dans les relations personnelles, la constance et la possibilité de parler sans pression peuvent nourrir la confiance. Ton secondaire Conquérant peut t'aider à proposer un cadre clair, à condition de ne pas décider à sa place."
+            }
+          ]
+        },
+        "C": {
+          "heading": "Avec un analyste.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il cherche souvent à comprendre les faits, les critères et les risques avant de conclure. Son besoin de précision ne signifie pas qu'il refuse le changement ou qu'il manque d'émotions. Ton côté Conquérant peut te rendre particulièrement attentif à sa capacité à prendre une décision et à agir."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Ton attention aux personnes complète son exigence de précision. Ensemble, vous pouvez préparer des décisions à la fois fiables et acceptables pour le collectif. Ton secondaire Conquérant peut t'aider à transformer ce point commun en objectif concret et en responsabilités claires."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Vous pouvez hésiter longtemps, toi pour préserver l'équilibre et lui pour vérifier les détails. Fixez une date et les critères suffisants pour avancer. Ton secondaire Conquérant peut accentuer ton impatience si l'échange n'aboutit pas rapidement."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Annonce le sujet, distingue faits et hypothèses et laisse un temps pour les questions. Évite de lui demander une conclusion immédiate lorsque les critères ne sont pas clairs. Structure le message avec les faits, les références utiles et la décision attendue. Des pièces jointes pertinentes peuvent aider, à condition d'indiquer précisément ce qu'il faut examiner. Avec ton secondaire Conquérant, veille à ne pas accélérer la discussion avant d'avoir compris sa réponse."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, convenez des critères de qualité et d'un moment pour décider. En famille ou entre amis, respecte son besoin de réfléchir sans réduire la relation à une discussion de preuves. Ton secondaire Conquérant peut t'aider à proposer un cadre clair, à condition de ne pas décider à sa place."
+            }
+          ]
+        }
+      }
+    },
+    "SI": {
+      "primary": "S",
+      "secondary": "I",
+      "label": "Facilitateur + Communiquant",
+      "intro": {
+        "eyebrow": "Facilitateur + Communiquant",
+        "title": "Préserver le lien, sans t’effacer.",
+        "text": "Tu abordes souvent les relations en cherchant à prendre le temps de comprendre les personnes et leurs besoins. Ton profil secondaire Communiquant ajoute une attention à le lien, l’enthousiasme et la participation. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
+        "orbitLabel": "Ensemble."
+      },
+      "portraits": {
+        "D": {
+          "heading": "Avec un conquérant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il cherche volontiers un objectif clair, une décision et la liberté de passer à l'action. Il peut aller droit au but sans que cela signifie qu'il veut toujours diriger. Ton côté Communiquant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux apporter l'écoute et la continuité dont ses initiatives ont besoin. Sa capacité à trancher peut aider un projet collectif à ne pas rester dans l'attente. Ton secondaire Communiquant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Il peut aller trop vite pour toi et prendre ton silence pour un accord. Exprime clairement tes réserves avant la décision et convenez d'un rythme. Ton secondaire Communiquant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Présente l'enjeu dès le début, puis la décision ou l'action attendue. Une question directe sur ses priorités peut être plus utile qu'un long préambule. Annonce l'objet, la demande et l'échéance dès les premières lignes. Ajoute les informations nécessaires à la décision sans cacher l'essentiel dans un long texte. Avec ton secondaire Communiquant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, clarifier les responsabilités et l'autonomie peut prévenir les rapports de force. Dans la vie personnelle, prends aussi le temps d'écouter ce qui compte pour lui au-delà des solutions. Ton secondaire Communiquant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
+            }
+          ]
+        },
+        "I": {
+          "heading": "Avec un communiquant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il aime souvent créer du lien, partager des idées et entraîner les autres dans un échange vivant. Son enthousiasme ne signifie pas qu'il manque de sérieux ou qu'il cherche toujours à attirer l'attention. Ton côté Communiquant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux apporter de la stabilité à ses idées et soutenir les personnes qu'il mobilise. Son enthousiasme peut t'encourager à essayer des approches nouvelles. Ton secondaire Communiquant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Il peut multiplier les propositions alors que tu cherches à préserver un cadre fiable. Explique les conditions nécessaires pour que le groupe suive. Ton secondaire Communiquant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Commence par un contact chaleureux et laisse de la place à la conversation. Quand une décision est nécessaire, reformule ensemble les idées et la prochaine étape. Personnalise l'ouverture et garde un ton humain, puis distingue clairement l'information et l'action attendue. Un message chaleureux reste plus utile lorsqu'il est facile à parcourir. Avec ton secondaire Communiquant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, laisse une place aux idées collectives tout en précisant les engagements. En famille ou entre amis, l'écoute et les signes de reconnaissance peuvent compter autant que l'activité partagée. Ton secondaire Communiquant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
+            }
+          ]
+        },
+        "S": {
+          "heading": "Avec un facilitateur.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Tout comme toi, un autre Facilitateur recherche volontiers la confiance, l'écoute et des repères stables. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. Ton côté Communiquant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Vous partagez l'importance de la confiance, de la fiabilité et de l'attention aux autres. Vous pouvez construire une relation patiente et solide. Ton secondaire Communiquant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Vous pouvez tous les deux éviter un désaccord pour préserver l'harmonie. Osez nommer les attentes différentes avant qu'une frustration silencieuse ne s'installe. Ton secondaire Communiquant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Installe un échange calme et laisse le temps de répondre. Explique ce qui change, demande son avis et ne confonds pas un temps de réflexion avec un accord. Donne le contexte, les étapes et les personnes concernées dans un ton courtois. Évite d'annoncer un changement important sans possibilité de poser des questions. Avec ton secondaire Communiquant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, prépare les changements et reconnais sa contribution à l'équipe. Dans les relations personnelles, la constance et la possibilité de parler sans pression peuvent nourrir la confiance. Ton secondaire Communiquant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
+            }
+          ]
+        },
+        "C": {
+          "heading": "Avec un analyste.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il cherche souvent à comprendre les faits, les critères et les risques avant de conclure. Son besoin de précision ne signifie pas qu'il refuse le changement ou qu'il manque d'émotions. Ton côté Communiquant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Ton attention aux personnes complète son exigence de précision. Ensemble, vous pouvez préparer des décisions à la fois fiables et acceptables pour le collectif. Ton secondaire Communiquant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Vous pouvez hésiter longtemps, toi pour préserver l'équilibre et lui pour vérifier les détails. Fixez une date et les critères suffisants pour avancer. Ton secondaire Communiquant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Annonce le sujet, distingue faits et hypothèses et laisse un temps pour les questions. Évite de lui demander une conclusion immédiate lorsque les critères ne sont pas clairs. Structure le message avec les faits, les références utiles et la décision attendue. Des pièces jointes pertinentes peuvent aider, à condition d'indiquer précisément ce qu'il faut examiner. Avec ton secondaire Communiquant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, convenez des critères de qualité et d'un moment pour décider. En famille ou entre amis, respecte son besoin de réfléchir sans réduire la relation à une discussion de preuves. Ton secondaire Communiquant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
+            }
+          ]
+        }
+      }
+    },
+    "SC": {
+      "primary": "S",
+      "secondary": "C",
+      "label": "Facilitateur + Analyste",
+      "intro": {
+        "eyebrow": "Facilitateur + Analyste",
+        "title": "Préserver le lien, sans t’effacer.",
+        "text": "Tu abordes souvent les relations en cherchant à prendre le temps de comprendre les personnes et leurs besoins. Ton profil secondaire Analyste ajoute une attention à la précision, la cohérence et la fiabilité. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
+        "orbitLabel": "Ensemble."
+      },
+      "portraits": {
+        "D": {
+          "heading": "Avec un conquérant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il cherche volontiers un objectif clair, une décision et la liberté de passer à l'action. Il peut aller droit au but sans que cela signifie qu'il veut toujours diriger. Ton côté Analyste peut te rendre sensible aux arguments, aux critères et aux informations qu'il utilise."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux apporter l'écoute et la continuité dont ses initiatives ont besoin. Sa capacité à trancher peut aider un projet collectif à ne pas rester dans l'attente. Ton secondaire Analyste peut aider à rendre votre coopération plus rigoureuse et vos décisions plus solides."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Il peut aller trop vite pour toi et prendre ton silence pour un accord. Exprime clairement tes réserves avant la décision et convenez d'un rythme. Ton secondaire Analyste peut t'amener à multiplier les vérifications quand l'autre souhaite déjà avancer."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Présente l'enjeu dès le début, puis la décision ou l'action attendue. Une question directe sur ses priorités peut être plus utile qu'un long préambule. Annonce l'objet, la demande et l'échéance dès les premières lignes. Ajoute les informations nécessaires à la décision sans cacher l'essentiel dans un long texte. Avec ton secondaire Analyste, apporte de la précision sans transformer chaque échange en examen détaillé."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, clarifier les responsabilités et l'autonomie peut prévenir les rapports de force. Dans la vie personnelle, prends aussi le temps d'écouter ce qui compte pour lui au-delà des solutions. Ton secondaire Analyste peut sécuriser vos engagements, à condition de ne pas réduire la relation à ses aspects pratiques."
+            }
+          ]
+        },
+        "I": {
+          "heading": "Avec un communiquant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il aime souvent créer du lien, partager des idées et entraîner les autres dans un échange vivant. Son enthousiasme ne signifie pas qu'il manque de sérieux ou qu'il cherche toujours à attirer l'attention. Ton côté Analyste peut te rendre sensible aux arguments, aux critères et aux informations qu'il utilise."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux apporter de la stabilité à ses idées et soutenir les personnes qu'il mobilise. Son enthousiasme peut t'encourager à essayer des approches nouvelles. Ton secondaire Analyste peut aider à rendre votre coopération plus rigoureuse et vos décisions plus solides."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Il peut multiplier les propositions alors que tu cherches à préserver un cadre fiable. Explique les conditions nécessaires pour que le groupe suive. Ton secondaire Analyste peut t'amener à multiplier les vérifications quand l'autre souhaite déjà avancer."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Commence par un contact chaleureux et laisse de la place à la conversation. Quand une décision est nécessaire, reformule ensemble les idées et la prochaine étape. Personnalise l'ouverture et garde un ton humain, puis distingue clairement l'information et l'action attendue. Un message chaleureux reste plus utile lorsqu'il est facile à parcourir. Avec ton secondaire Analyste, apporte de la précision sans transformer chaque échange en examen détaillé."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, laisse une place aux idées collectives tout en précisant les engagements. En famille ou entre amis, l'écoute et les signes de reconnaissance peuvent compter autant que l'activité partagée. Ton secondaire Analyste peut sécuriser vos engagements, à condition de ne pas réduire la relation à ses aspects pratiques."
+            }
+          ]
+        },
+        "S": {
+          "heading": "Avec un facilitateur.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Tout comme toi, un autre Facilitateur recherche volontiers la confiance, l'écoute et des repères stables. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. Ton côté Analyste peut te rendre sensible aux arguments, aux critères et aux informations qu'il utilise."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Vous partagez l'importance de la confiance, de la fiabilité et de l'attention aux autres. Vous pouvez construire une relation patiente et solide. Ton secondaire Analyste peut aider à rendre votre coopération plus rigoureuse et vos décisions plus solides."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Vous pouvez tous les deux éviter un désaccord pour préserver l'harmonie. Osez nommer les attentes différentes avant qu'une frustration silencieuse ne s'installe. Ton secondaire Analyste peut t'amener à multiplier les vérifications quand l'autre souhaite déjà avancer."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Installe un échange calme et laisse le temps de répondre. Explique ce qui change, demande son avis et ne confonds pas un temps de réflexion avec un accord. Donne le contexte, les étapes et les personnes concernées dans un ton courtois. Évite d'annoncer un changement important sans possibilité de poser des questions. Avec ton secondaire Analyste, apporte de la précision sans transformer chaque échange en examen détaillé."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, prépare les changements et reconnais sa contribution à l'équipe. Dans les relations personnelles, la constance et la possibilité de parler sans pression peuvent nourrir la confiance. Ton secondaire Analyste peut sécuriser vos engagements, à condition de ne pas réduire la relation à ses aspects pratiques."
+            }
+          ]
+        },
+        "C": {
+          "heading": "Avec un analyste.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il cherche souvent à comprendre les faits, les critères et les risques avant de conclure. Son besoin de précision ne signifie pas qu'il refuse le changement ou qu'il manque d'émotions. Ton côté Analyste peut te rendre sensible aux arguments, aux critères et aux informations qu'il utilise."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Ton attention aux personnes complète son exigence de précision. Ensemble, vous pouvez préparer des décisions à la fois fiables et acceptables pour le collectif. Ton secondaire Analyste peut aider à rendre votre coopération plus rigoureuse et vos décisions plus solides."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Vous pouvez hésiter longtemps, toi pour préserver l'équilibre et lui pour vérifier les détails. Fixez une date et les critères suffisants pour avancer. Ton secondaire Analyste peut t'amener à multiplier les vérifications quand l'autre souhaite déjà avancer."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Annonce le sujet, distingue faits et hypothèses et laisse un temps pour les questions. Évite de lui demander une conclusion immédiate lorsque les critères ne sont pas clairs. Structure le message avec les faits, les références utiles et la décision attendue. Des pièces jointes pertinentes peuvent aider, à condition d'indiquer précisément ce qu'il faut examiner. Avec ton secondaire Analyste, apporte de la précision sans transformer chaque échange en examen détaillé."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, convenez des critères de qualité et d'un moment pour décider. En famille ou entre amis, respecte son besoin de réfléchir sans réduire la relation à une discussion de preuves. Ton secondaire Analyste peut sécuriser vos engagements, à condition de ne pas réduire la relation à ses aspects pratiques."
+            }
+          ]
+        }
+      }
+    },
+    "C": {
+      "primary": "C",
+      "secondary": null,
+      "label": "Analyste",
+      "intro": {
+        "eyebrow": "Analyste",
+        "title": "Comprendre avant de conclure.",
+        "text": "Tu abordes souvent les relations en cherchant à examiner les informations avant de conclure. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
+        "orbitLabel": "Ensemble."
+      },
+      "portraits": {
+        "D": {
+          "heading": "Avec un conquérant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il cherche volontiers un objectif clair, une décision et la liberté de passer à l'action. Il peut aller droit au but sans que cela signifie qu'il veut toujours diriger. S'il demande rapidement ce qu'il faut décider ou quel résultat obtenir, il exprime peut-être une préférence pour l'efficacité. Vérifie-le en lui demandant ce qui lui donne le sentiment d'avancer."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux sécuriser ses décisions en identifiant les risques utiles à examiner. Sa capacité à agir peut aider ton analyse à déboucher sur un résultat. Votre ressemblance ou votre différence ne suffit pas à prédire votre entente."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Il peut réclamer une réponse avant que tu aies terminé tes vérifications. Explique quelles données sont indispensables et quand tu pourras conclure. Vérifie ce que l'autre attend réellement avant de tirer des conclusions."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Présente l'enjeu dès le début, puis la décision ou l'action attendue. Une question directe sur ses priorités peut être plus utile qu'un long préambule. Annonce l'objet, la demande et l'échéance dès les premières lignes. Ajoute les informations nécessaires à la décision sans cacher l'essentiel dans un long texte. Adapte la forme à ses préférences réelles plutôt qu'à une étiquette."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, clarifier les responsabilités et l'autonomie peut prévenir les rapports de force. Dans la vie personnelle, prends aussi le temps d'écouter ce qui compte pour lui au-delà des solutions. La confiance se construit aussi en demandant ce qui lui convient."
+            }
+          ]
+        },
+        "I": {
+          "heading": "Avec un communiquant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il aime souvent créer du lien, partager des idées et entraîner les autres dans un échange vivant. Son enthousiasme ne signifie pas qu'il manque de sérieux ou qu'il cherche toujours à attirer l'attention. S'il lance spontanément la conversation, raconte des exemples ou cherche les réactions du groupe, il apprécie peut-être l'interaction. Demande-lui s'il préfère réfléchir en échangeant ou seul."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux donner de la structure à ses idées et lui permettre de mieux les présenter. Son enthousiasme peut ouvrir des perspectives auxquelles tu n'aurais pas pensé seul. Votre ressemblance ou votre différence ne suffit pas à prédire votre entente."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Tu peux rechercher la précision alors qu'il explore librement plusieurs pistes. Accordez-vous sur le moment où l'on brainstorme et celui où l'on valide. Vérifie ce que l'autre attend réellement avant de tirer des conclusions."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Commence par un contact chaleureux et laisse de la place à la conversation. Quand une décision est nécessaire, reformule ensemble les idées et la prochaine étape. Personnalise l'ouverture et garde un ton humain, puis distingue clairement l'information et l'action attendue. Un message chaleureux reste plus utile lorsqu'il est facile à parcourir. Adapte la forme à ses préférences réelles plutôt qu'à une étiquette."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, laisse une place aux idées collectives tout en précisant les engagements. En famille ou entre amis, l'écoute et les signes de reconnaissance peuvent compter autant que l'activité partagée. La confiance se construit aussi en demandant ce qui lui convient."
+            }
+          ]
+        },
+        "S": {
+          "heading": "Avec un facilitateur.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il accorde souvent de la valeur à la confiance, à la stabilité et à l'attention portée aux personnes. Sa réserve éventuelle ne signifie ni absence d'avis ni manque d'initiative. S'il écoute longtemps, cherche l'avis des autres ou demande comment le changement affectera l'équipe, il privilégie peut-être l'harmonie. Vérifie ses préférences sans interpréter son silence."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux clarifier les méthodes tandis qu'il veille à la continuité et à l'impact humain. Vos approches peuvent rendre un changement plus fiable et mieux accepté. Votre ressemblance ou votre différence ne suffit pas à prédire votre entente."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Vous pouvez tous les deux préférer attendre, pour des raisons différentes. Distinguez les vérifications indispensables des inquiétudes à discuter. Vérifie ce que l'autre attend réellement avant de tirer des conclusions."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Installe un échange calme et laisse le temps de répondre. Explique ce qui change, demande son avis et ne confonds pas un temps de réflexion avec un accord. Donne le contexte, les étapes et les personnes concernées dans un ton courtois. Évite d'annoncer un changement important sans possibilité de poser des questions. Adapte la forme à ses préférences réelles plutôt qu'à une étiquette."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, prépare les changements et reconnais sa contribution à l'équipe. Dans les relations personnelles, la constance et la possibilité de parler sans pression peuvent nourrir la confiance. La confiance se construit aussi en demandant ce qui lui convient."
+            }
+          ]
+        },
+        "C": {
+          "heading": "Avec un analyste.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Tout comme toi, un autre Analyste privilégie souvent les faits, la précision et le temps nécessaire pour réfléchir. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. S'il demande des sources, vérifie les détails ou prend du temps avant de répondre, il apprécie peut-être l'analyse. Demande-lui quelles informations sont réellement nécessaires pour décider."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Vous partagez le souci des faits, de la qualité et de la cohérence. Vous pouvez approfondir ensemble une question complexe sans négliger les détails. Votre ressemblance ou votre différence ne suffit pas à prédire votre entente."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Vous pouvez prolonger les vérifications et multiplier les objections. Définissez à l'avance ce qui constituera une information suffisante pour décider. Vérifie ce que l'autre attend réellement avant de tirer des conclusions."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Annonce le sujet, distingue faits et hypothèses et laisse un temps pour les questions. Évite de lui demander une conclusion immédiate lorsque les critères ne sont pas clairs. Structure le message avec les faits, les références utiles et la décision attendue. Des pièces jointes pertinentes peuvent aider, à condition d'indiquer précisément ce qu'il faut examiner. Adapte la forme à ses préférences réelles plutôt qu'à une étiquette."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, convenez des critères de qualité et d'un moment pour décider. En famille ou entre amis, respecte son besoin de réfléchir sans réduire la relation à une discussion de preuves. La confiance se construit aussi en demandant ce qui lui convient."
+            }
+          ]
+        }
+      }
+    },
+    "CD": {
+      "primary": "C",
+      "secondary": "D",
+      "label": "Analyste + Conquérant",
+      "intro": {
+        "eyebrow": "Analyste + Conquérant",
+        "title": "Comprendre avant de conclure.",
+        "text": "Tu abordes souvent les relations en cherchant à examiner les informations avant de conclure. Ton profil secondaire Conquérant ajoute une attention à la décision et les résultats. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
+        "orbitLabel": "Ensemble."
+      },
+      "portraits": {
+        "D": {
+          "heading": "Avec un conquérant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il cherche volontiers un objectif clair, une décision et la liberté de passer à l'action. Il peut aller droit au but sans que cela signifie qu'il veut toujours diriger. Ton côté Conquérant peut te rendre particulièrement attentif à sa capacité à prendre une décision et à agir."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux sécuriser ses décisions en identifiant les risques utiles à examiner. Sa capacité à agir peut aider ton analyse à déboucher sur un résultat. Ton secondaire Conquérant peut t'aider à transformer ce point commun en objectif concret et en responsabilités claires."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Il peut réclamer une réponse avant que tu aies terminé tes vérifications. Explique quelles données sont indispensables et quand tu pourras conclure. Ton secondaire Conquérant peut accentuer ton impatience si l'échange n'aboutit pas rapidement."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Présente l'enjeu dès le début, puis la décision ou l'action attendue. Une question directe sur ses priorités peut être plus utile qu'un long préambule. Annonce l'objet, la demande et l'échéance dès les premières lignes. Ajoute les informations nécessaires à la décision sans cacher l'essentiel dans un long texte. Avec ton secondaire Conquérant, veille à ne pas accélérer la discussion avant d'avoir compris sa réponse."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, clarifier les responsabilités et l'autonomie peut prévenir les rapports de force. Dans la vie personnelle, prends aussi le temps d'écouter ce qui compte pour lui au-delà des solutions. Ton secondaire Conquérant peut t'aider à proposer un cadre clair, à condition de ne pas décider à sa place."
+            }
+          ]
+        },
+        "I": {
+          "heading": "Avec un communiquant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il aime souvent créer du lien, partager des idées et entraîner les autres dans un échange vivant. Son enthousiasme ne signifie pas qu'il manque de sérieux ou qu'il cherche toujours à attirer l'attention. Ton côté Conquérant peut te rendre particulièrement attentif à sa capacité à prendre une décision et à agir."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux donner de la structure à ses idées et lui permettre de mieux les présenter. Son enthousiasme peut ouvrir des perspectives auxquelles tu n'aurais pas pensé seul. Ton secondaire Conquérant peut t'aider à transformer ce point commun en objectif concret et en responsabilités claires."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Tu peux rechercher la précision alors qu'il explore librement plusieurs pistes. Accordez-vous sur le moment où l'on brainstorme et celui où l'on valide. Ton secondaire Conquérant peut accentuer ton impatience si l'échange n'aboutit pas rapidement."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Commence par un contact chaleureux et laisse de la place à la conversation. Quand une décision est nécessaire, reformule ensemble les idées et la prochaine étape. Personnalise l'ouverture et garde un ton humain, puis distingue clairement l'information et l'action attendue. Un message chaleureux reste plus utile lorsqu'il est facile à parcourir. Avec ton secondaire Conquérant, veille à ne pas accélérer la discussion avant d'avoir compris sa réponse."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, laisse une place aux idées collectives tout en précisant les engagements. En famille ou entre amis, l'écoute et les signes de reconnaissance peuvent compter autant que l'activité partagée. Ton secondaire Conquérant peut t'aider à proposer un cadre clair, à condition de ne pas décider à sa place."
+            }
+          ]
+        },
+        "S": {
+          "heading": "Avec un facilitateur.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il accorde souvent de la valeur à la confiance, à la stabilité et à l'attention portée aux personnes. Sa réserve éventuelle ne signifie ni absence d'avis ni manque d'initiative. Ton côté Conquérant peut te rendre particulièrement attentif à sa capacité à prendre une décision et à agir."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux clarifier les méthodes tandis qu'il veille à la continuité et à l'impact humain. Vos approches peuvent rendre un changement plus fiable et mieux accepté. Ton secondaire Conquérant peut t'aider à transformer ce point commun en objectif concret et en responsabilités claires."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Vous pouvez tous les deux préférer attendre, pour des raisons différentes. Distinguez les vérifications indispensables des inquiétudes à discuter. Ton secondaire Conquérant peut accentuer ton impatience si l'échange n'aboutit pas rapidement."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Installe un échange calme et laisse le temps de répondre. Explique ce qui change, demande son avis et ne confonds pas un temps de réflexion avec un accord. Donne le contexte, les étapes et les personnes concernées dans un ton courtois. Évite d'annoncer un changement important sans possibilité de poser des questions. Avec ton secondaire Conquérant, veille à ne pas accélérer la discussion avant d'avoir compris sa réponse."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, prépare les changements et reconnais sa contribution à l'équipe. Dans les relations personnelles, la constance et la possibilité de parler sans pression peuvent nourrir la confiance. Ton secondaire Conquérant peut t'aider à proposer un cadre clair, à condition de ne pas décider à sa place."
+            }
+          ]
+        },
+        "C": {
+          "heading": "Avec un analyste.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Tout comme toi, un autre Analyste privilégie souvent les faits, la précision et le temps nécessaire pour réfléchir. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. Ton côté Conquérant peut te rendre particulièrement attentif à sa capacité à prendre une décision et à agir."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Vous partagez le souci des faits, de la qualité et de la cohérence. Vous pouvez approfondir ensemble une question complexe sans négliger les détails. Ton secondaire Conquérant peut t'aider à transformer ce point commun en objectif concret et en responsabilités claires."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Vous pouvez prolonger les vérifications et multiplier les objections. Définissez à l'avance ce qui constituera une information suffisante pour décider. Ton secondaire Conquérant peut accentuer ton impatience si l'échange n'aboutit pas rapidement."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Annonce le sujet, distingue faits et hypothèses et laisse un temps pour les questions. Évite de lui demander une conclusion immédiate lorsque les critères ne sont pas clairs. Structure le message avec les faits, les références utiles et la décision attendue. Des pièces jointes pertinentes peuvent aider, à condition d'indiquer précisément ce qu'il faut examiner. Avec ton secondaire Conquérant, veille à ne pas accélérer la discussion avant d'avoir compris sa réponse."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, convenez des critères de qualité et d'un moment pour décider. En famille ou entre amis, respecte son besoin de réfléchir sans réduire la relation à une discussion de preuves. Ton secondaire Conquérant peut t'aider à proposer un cadre clair, à condition de ne pas décider à sa place."
+            }
+          ]
+        }
+      }
+    },
+    "CI": {
+      "primary": "C",
+      "secondary": "I",
+      "label": "Analyste + Communiquant",
+      "intro": {
+        "eyebrow": "Analyste + Communiquant",
+        "title": "Comprendre avant de conclure.",
+        "text": "Tu abordes souvent les relations en cherchant à examiner les informations avant de conclure. Ton profil secondaire Communiquant ajoute une attention à le lien, l’enthousiasme et la participation. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
+        "orbitLabel": "Ensemble."
+      },
+      "portraits": {
+        "D": {
+          "heading": "Avec un conquérant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il cherche volontiers un objectif clair, une décision et la liberté de passer à l'action. Il peut aller droit au but sans que cela signifie qu'il veut toujours diriger. Ton côté Communiquant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux sécuriser ses décisions en identifiant les risques utiles à examiner. Sa capacité à agir peut aider ton analyse à déboucher sur un résultat. Ton secondaire Communiquant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Il peut réclamer une réponse avant que tu aies terminé tes vérifications. Explique quelles données sont indispensables et quand tu pourras conclure. Ton secondaire Communiquant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Présente l'enjeu dès le début, puis la décision ou l'action attendue. Une question directe sur ses priorités peut être plus utile qu'un long préambule. Annonce l'objet, la demande et l'échéance dès les premières lignes. Ajoute les informations nécessaires à la décision sans cacher l'essentiel dans un long texte. Avec ton secondaire Communiquant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, clarifier les responsabilités et l'autonomie peut prévenir les rapports de force. Dans la vie personnelle, prends aussi le temps d'écouter ce qui compte pour lui au-delà des solutions. Ton secondaire Communiquant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
+            }
+          ]
+        },
+        "I": {
+          "heading": "Avec un communiquant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il aime souvent créer du lien, partager des idées et entraîner les autres dans un échange vivant. Son enthousiasme ne signifie pas qu'il manque de sérieux ou qu'il cherche toujours à attirer l'attention. Ton côté Communiquant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux donner de la structure à ses idées et lui permettre de mieux les présenter. Son enthousiasme peut ouvrir des perspectives auxquelles tu n'aurais pas pensé seul. Ton secondaire Communiquant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Tu peux rechercher la précision alors qu'il explore librement plusieurs pistes. Accordez-vous sur le moment où l'on brainstorme et celui où l'on valide. Ton secondaire Communiquant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Commence par un contact chaleureux et laisse de la place à la conversation. Quand une décision est nécessaire, reformule ensemble les idées et la prochaine étape. Personnalise l'ouverture et garde un ton humain, puis distingue clairement l'information et l'action attendue. Un message chaleureux reste plus utile lorsqu'il est facile à parcourir. Avec ton secondaire Communiquant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, laisse une place aux idées collectives tout en précisant les engagements. En famille ou entre amis, l'écoute et les signes de reconnaissance peuvent compter autant que l'activité partagée. Ton secondaire Communiquant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
+            }
+          ]
+        },
+        "S": {
+          "heading": "Avec un facilitateur.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il accorde souvent de la valeur à la confiance, à la stabilité et à l'attention portée aux personnes. Sa réserve éventuelle ne signifie ni absence d'avis ni manque d'initiative. Ton côté Communiquant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux clarifier les méthodes tandis qu'il veille à la continuité et à l'impact humain. Vos approches peuvent rendre un changement plus fiable et mieux accepté. Ton secondaire Communiquant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Vous pouvez tous les deux préférer attendre, pour des raisons différentes. Distinguez les vérifications indispensables des inquiétudes à discuter. Ton secondaire Communiquant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Installe un échange calme et laisse le temps de répondre. Explique ce qui change, demande son avis et ne confonds pas un temps de réflexion avec un accord. Donne le contexte, les étapes et les personnes concernées dans un ton courtois. Évite d'annoncer un changement important sans possibilité de poser des questions. Avec ton secondaire Communiquant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, prépare les changements et reconnais sa contribution à l'équipe. Dans les relations personnelles, la constance et la possibilité de parler sans pression peuvent nourrir la confiance. Ton secondaire Communiquant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
+            }
+          ]
+        },
+        "C": {
+          "heading": "Avec un analyste.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Tout comme toi, un autre Analyste privilégie souvent les faits, la précision et le temps nécessaire pour réfléchir. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. Ton côté Communiquant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Vous partagez le souci des faits, de la qualité et de la cohérence. Vous pouvez approfondir ensemble une question complexe sans négliger les détails. Ton secondaire Communiquant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Vous pouvez prolonger les vérifications et multiplier les objections. Définissez à l'avance ce qui constituera une information suffisante pour décider. Ton secondaire Communiquant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Annonce le sujet, distingue faits et hypothèses et laisse un temps pour les questions. Évite de lui demander une conclusion immédiate lorsque les critères ne sont pas clairs. Structure le message avec les faits, les références utiles et la décision attendue. Des pièces jointes pertinentes peuvent aider, à condition d'indiquer précisément ce qu'il faut examiner. Avec ton secondaire Communiquant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, convenez des critères de qualité et d'un moment pour décider. En famille ou entre amis, respecte son besoin de réfléchir sans réduire la relation à une discussion de preuves. Ton secondaire Communiquant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
+            }
+          ]
+        }
+      }
+    },
+    "CS": {
+      "primary": "C",
+      "secondary": "S",
+      "label": "Analyste + Facilitateur",
+      "intro": {
+        "eyebrow": "Analyste + Facilitateur",
+        "title": "Comprendre avant de conclure.",
+        "text": "Tu abordes souvent les relations en cherchant à examiner les informations avant de conclure. Ton profil secondaire Facilitateur ajoute une attention à la confiance, l’écoute et la stabilité. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
+        "orbitLabel": "Ensemble."
+      },
+      "portraits": {
+        "D": {
+          "heading": "Avec un conquérant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il cherche volontiers un objectif clair, une décision et la liberté de passer à l'action. Il peut aller droit au but sans que cela signifie qu'il veut toujours diriger. Ton côté Facilitateur peut t'amener à remarquer davantage ses besoins de confiance et sa façon d'accueillir les autres."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux sécuriser ses décisions en identifiant les risques utiles à examiner. Sa capacité à agir peut aider ton analyse à déboucher sur un résultat. Ton secondaire Facilitateur peut t'aider à consolider la confiance et à veiller à ce que chacun soit entendu."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Il peut réclamer une réponse avant que tu aies terminé tes vérifications. Explique quelles données sont indispensables et quand tu pourras conclure. Ton secondaire Facilitateur peut te pousser à éviter un désaccord pourtant nécessaire pour clarifier la situation."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Présente l'enjeu dès le début, puis la décision ou l'action attendue. Une question directe sur ses priorités peut être plus utile qu'un long préambule. Annonce l'objet, la demande et l'échéance dès les premières lignes. Ajoute les informations nécessaires à la décision sans cacher l'essentiel dans un long texte. Avec ton secondaire Facilitateur, prends soin de la relation sans renoncer à exprimer clairement ton point de vue."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, clarifier les responsabilités et l'autonomie peut prévenir les rapports de force. Dans la vie personnelle, prends aussi le temps d'écouter ce qui compte pour lui au-delà des solutions. Ton secondaire Facilitateur peut apporter de la constance, tout en t'invitant à formuler tes propres besoins."
+            }
+          ]
+        },
+        "I": {
+          "heading": "Avec un communiquant.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il aime souvent créer du lien, partager des idées et entraîner les autres dans un échange vivant. Son enthousiasme ne signifie pas qu'il manque de sérieux ou qu'il cherche toujours à attirer l'attention. Ton côté Facilitateur peut t'amener à remarquer davantage ses besoins de confiance et sa façon d'accueillir les autres."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux donner de la structure à ses idées et lui permettre de mieux les présenter. Son enthousiasme peut ouvrir des perspectives auxquelles tu n'aurais pas pensé seul. Ton secondaire Facilitateur peut t'aider à consolider la confiance et à veiller à ce que chacun soit entendu."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Tu peux rechercher la précision alors qu'il explore librement plusieurs pistes. Accordez-vous sur le moment où l'on brainstorme et celui où l'on valide. Ton secondaire Facilitateur peut te pousser à éviter un désaccord pourtant nécessaire pour clarifier la situation."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Commence par un contact chaleureux et laisse de la place à la conversation. Quand une décision est nécessaire, reformule ensemble les idées et la prochaine étape. Personnalise l'ouverture et garde un ton humain, puis distingue clairement l'information et l'action attendue. Un message chaleureux reste plus utile lorsqu'il est facile à parcourir. Avec ton secondaire Facilitateur, prends soin de la relation sans renoncer à exprimer clairement ton point de vue."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, laisse une place aux idées collectives tout en précisant les engagements. En famille ou entre amis, l'écoute et les signes de reconnaissance peuvent compter autant que l'activité partagée. Ton secondaire Facilitateur peut apporter de la constance, tout en t'invitant à formuler tes propres besoins."
+            }
+          ]
+        },
+        "S": {
+          "heading": "Avec un facilitateur.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Il accorde souvent de la valeur à la confiance, à la stabilité et à l'attention portée aux personnes. Sa réserve éventuelle ne signifie ni absence d'avis ni manque d'initiative. Ton côté Facilitateur peut t'amener à remarquer davantage ses besoins de confiance et sa façon d'accueillir les autres."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Tu peux clarifier les méthodes tandis qu'il veille à la continuité et à l'impact humain. Vos approches peuvent rendre un changement plus fiable et mieux accepté. Ton secondaire Facilitateur peut t'aider à consolider la confiance et à veiller à ce que chacun soit entendu."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Vous pouvez tous les deux préférer attendre, pour des raisons différentes. Distinguez les vérifications indispensables des inquiétudes à discuter. Ton secondaire Facilitateur peut te pousser à éviter un désaccord pourtant nécessaire pour clarifier la situation."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Installe un échange calme et laisse le temps de répondre. Explique ce qui change, demande son avis et ne confonds pas un temps de réflexion avec un accord. Donne le contexte, les étapes et les personnes concernées dans un ton courtois. Évite d'annoncer un changement important sans possibilité de poser des questions. Avec ton secondaire Facilitateur, prends soin de la relation sans renoncer à exprimer clairement ton point de vue."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Dans un projet, prépare les changements et reconnais sa contribution à l'équipe. Dans les relations personnelles, la constance et la possibilité de parler sans pression peuvent nourrir la confiance. Ton secondaire Facilitateur peut apporter de la constance, tout en t'invitant à formuler tes propres besoins."
+            }
+          ]
+        },
+        "C": {
+          "heading": "Avec un analyste.",
+          "accordions": [
+            {
+              "id": "functioning",
+              "title": "Comprendre son fonctionnement",
+              "text": "Tout comme toi, un autre Analyste privilégie souvent les faits, la précision et le temps nécessaire pour réfléchir. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. Ton côté Facilitateur peut t'amener à remarquer davantage ses besoins de confiance et sa façon d'accueillir les autres."
+            },
+            {
+              "id": "connection",
+              "title": "Ce qui vous rapproche",
+              "text": "Vous partagez le souci des faits, de la qualité et de la cohérence. Vous pouvez approfondir ensemble une question complexe sans négliger les détails. Ton secondaire Facilitateur peut t'aider à consolider la confiance et à veiller à ce que chacun soit entendu."
+            },
+            {
+              "id": "friction",
+              "title": "Ce qui peut coincer",
+              "text": "Vous pouvez prolonger les vérifications et multiplier les objections. Définissez à l'avance ce qui constituera une information suffisante pour décider. Ton secondaire Facilitateur peut te pousser à éviter un désaccord pourtant nécessaire pour clarifier la situation."
+            },
+            {
+              "id": "communication",
+              "title": "Comment bien communiquer",
+              "text": "Annonce le sujet, distingue faits et hypothèses et laisse un temps pour les questions. Évite de lui demander une conclusion immédiate lorsque les critères ne sont pas clairs. Structure le message avec les faits, les références utiles et la décision attendue. Des pièces jointes pertinentes peuvent aider, à condition d'indiquer précisément ce qu'il faut examiner. Avec ton secondaire Facilitateur, prends soin de la relation sans renoncer à exprimer clairement ton point de vue."
+            },
+            {
+              "id": "relationship",
+              "title": "Construire une bonne relation",
+              "text": "Au travail, convenez des critères de qualité et d'un moment pour décider. En famille ou entre amis, respecte son besoin de réfléchir sans réduire la relation à une discussion de preuves. Ton secondaire Facilitateur peut apporter de la constance, tout en t'invitant à formuler tes propres besoins."
+            }
+          ]
+        }
+      }
+    }
+  }
+}

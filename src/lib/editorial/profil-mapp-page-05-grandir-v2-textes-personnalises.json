@@ -1,0 +1,1904 @@
+{
+  "schemaVersion": "2.0",
+  "page": "05-grandir",
+  "locale": "fr-FR",
+  "status": "editorial-review",
+  "profiles": {
+    "D": "Conquérant",
+    "I": "Communiquant",
+    "S": "Facilitateur",
+    "C": "Analyste"
+  },
+  "layout": {
+    "sections": [
+      "nextCap",
+      "levers",
+      "sevenDayChallenge",
+      "reflection"
+    ],
+    "images": {
+      "nextCap": "photo MLK au comptoir fournie par l'utilisateur",
+      "sevenDayChallenge": "photo MLK femme veste orange fournie par l'utilisateur"
+    },
+    "photoTreatment": {
+      "nextCap": {
+        "saturate": 0.35
+      },
+      "sevenDayChallenge": {
+        "saturate": 0.65
+      }
+    }
+  },
+  "contentRules": {
+    "primary": "Détermine les cinq leviers, le cap et les questions de réflexion",
+    "secondary": "Nuance les situations, les risques, les gestes et les exemples de chaque levier",
+    "tone": "Tutoiement, précis, concret, sans déterminisme psychologique",
+    "length": "Sous-titres de section : 2 à 3 phrases utiles ; leviers : 5 champs explicatifs"
+  },
+  "configurations": {
+    "D": {
+      "primary": "D",
+      "secondary": null,
+      "pageIntro": {
+        "title": "Grandir.",
+        "subtitle": "Tu sais décider, prendre des initiatives et relancer un projet qui stagne. Ta capacité à donner une direction peut rassurer une équipe et l’aider à avancer. Mais décider vite peut aussi laisser peu de place aux idées, aux contraintes ou au rythme des autres. Le défi est de partager une responsabilité réelle sans renoncer à ton courage d’agir."
+      },
+      "nextCap": {
+        "eyebrow": "01 / TON PROCHAIN CAP",
+        "title": "Faire de ton énergie une force qui fait grandir les autres.",
+        "subtitle": "Tu sais décider, prendre des initiatives et relancer un projet qui stagne. Ta capacité à donner une direction peut rassurer une équipe et l’aider à avancer. Mais décider vite peut aussi laisser peu de place aux idées, aux contraintes ou au rythme des autres. Le défi est de partager une responsabilité réelle sans renoncer à ton courage d’agir.",
+        "paragraphs": [
+          "Tu sais décider, prendre des initiatives et relancer un projet qui stagne. Ta capacité à donner une direction peut rassurer une équipe et l’aider à avancer.",
+          "Mais décider vite peut aussi laisser peu de place aux idées, aux contraintes ou au rythme des autres. Le défi est de partager une responsabilité réelle sans renoncer à ton courage d’agir."
+        ],
+        "goal": "Faire avancer une décision importante tout en laissant aux autres une vraie marge de contribution."
+      },
+      "leversSection": {
+        "eyebrow": "02 / TES CINQ LEVIERS",
+        "title": "Ce que tu peux faire évoluer.",
+        "subtitle": "Cinq situations pour faire de ton sens de l’initiative un atout durable : consulter sans ralentir, déléguer sans reprendre la main et distinguer l’urgence réelle de l’impatience."
+      },
+      "levers": [
+        {
+          "id": "01",
+          "title": "Écouter avant de trancher",
+          "situation": "Quand une solution te paraît évidente, tu peux vouloir décider avant d'avoir entendu les personnes concernées.",
+          "whyItMatters": "Une décision rapide peut ensuite susciter des résistances ou révéler un obstacle que quelqu'un avait repéré.",
+          "alternative": "Avant de conclure, demande qui sera touché par la décision et sollicite au moins un point de vue différent. Fixe ensuite un moment précis pour trancher.",
+          "example": "Pour modifier un planning, tu consultes la personne qui assurera la permanence avant de valider les nouveaux horaires.",
+          "action": "Demande deux avis distincts avant ta prochaine décision collective.",
+          "shortDescription": "Quand une solution te paraît évidente, tu peux vouloir décider avant d'avoir entendu les personnes concernées."
+        },
+        {
+          "id": "02",
+          "title": "Partager la responsabilité",
+          "situation": "Tu peux reprendre naturellement la main lorsque le projet ralentit.",
+          "whyItMatters": "Cela fait avancer à court terme, mais risque de rendre l'équipe dépendante de toi ou de décourager les initiatives.",
+          "alternative": "Définis le résultat attendu, puis confie un véritable espace de décision. Prévois un point de suivi sans reprendre chaque détail.",
+          "example": "Tu confies l'organisation d'une réunion à un collègue et le laisses choisir son format.",
+          "action": "Délègue une décision réversible avec des critères clairs.",
+          "shortDescription": "Tu peux reprendre naturellement la main lorsque le projet ralentit."
+        },
+        {
+          "id": "03",
+          "title": "Adapter ton rythme",
+          "situation": "Tu avances vite et peux considérer une hésitation comme un frein.",
+          "whyItMatters": "Les autres n'ont pas toujours les mêmes informations, ressources ou contraintes. Un rythme imposé peut fragiliser la qualité et la confiance.",
+          "alternative": "Demande ce qui manque pour avancer et distingue l'urgence réelle de ton impatience. Ajuste l'échéance quand la situation le justifie.",
+          "example": "Avant de lancer une nouvelle tâche, tu vérifies la charge actuelle de chacun.",
+          "action": "Demande à une personne ce qui rendrait ton calendrier réaliste.",
+          "shortDescription": "Tu avances vite et peux considérer une hésitation comme un frein."
+        },
+        {
+          "id": "04",
+          "title": "Faire de la place aux objections",
+          "situation": "Une réserve peut te sembler contester ta décision ou ralentir ton projet.",
+          "whyItMatters": "Certaines objections révèlent un risque réel ou une meilleure façon d'atteindre l'objectif.",
+          "alternative": "Reformule l'objection sans la réfuter immédiatement. Demande quelle modification concrète la rendrait moins préoccupante.",
+          "example": "Une collègue signale un problème d'accueil : tu testes son idée avant de maintenir ton organisation.",
+          "action": "Reformule une objection et demande ce qu'elle permet d'améliorer.",
+          "shortDescription": "Une réserve peut te sembler contester ta décision ou ralentir ton projet."
+        },
+        {
+          "id": "05",
+          "title": "Choisir tes batailles",
+          "situation": "Tu peux investir beaucoup d'énergie dans plusieurs sujets que tu juges importants.",
+          "whyItMatters": "Tout traiter comme prioritaire fatigue le groupe et dilue ton impact. Certaines décisions méritent davantage d'attention que d'autres.",
+          "alternative": "Choisis une priorité déterminante et identifie les sujets que tu peux reporter, simplifier ou confier.",
+          "example": "Sur quatre initiatives, tu en lances une, en planifies une autre et mets les deux restantes en attente.",
+          "action": "Écarte ou reporte une initiative cette semaine pour terminer l'essentiel.",
+          "shortDescription": "Tu peux investir beaucoup d'énergie dans plusieurs sujets que tu juges importants."
+        }
+      ],
+      "sevenDayChallenge": {
+        "title": "Un changement. Une situation réelle.",
+        "intro": "Choisis une piste, expérimente-la pendant une semaine et observe ce que cette expérience t'apprend.",
+        "steps": [
+          {
+            "day": "Jour 1",
+            "title": "Prépare",
+            "description": "Choisis une situation réelle, un levier et un signe observable qui montrera que tu as agi autrement."
+          },
+          {
+            "day": "Jours 2 à 6",
+            "title": "Expérimente",
+            "description": "Teste ce comportement au moins une fois. Note ce qui a changé dans ton action et dans la réaction des autres, sans chercher la perfection."
+          },
+          {
+            "day": "Jour 7",
+            "title": "Fais le point",
+            "description": "Compare ton intention à ce qui s’est réellement passé. Choisis ce que tu conserveras et ce que tu ajusteras lors du prochain essai."
+          }
+        ],
+        "actionSource": "selectedLever.action",
+        "eyebrow": "03 / TON DÉFI DE 7 JOURS",
+        "subtitle": "Choisis une décision ou une responsabilité que tu portes actuellement. Pendant une semaine, teste une manière de faire avancer les choses qui donne aussi une place réelle aux autres."
+      },
+      "reflection": {
+        "title": "Trois questions pour aller plus loin.",
+        "questions": [
+          "Quelle décision as-tu prise trop vite alors qu'un avis complémentaire aurait été utile ?",
+          "Quand ton rythme devient-il difficile à suivre pour les autres ?",
+          "Quelle responsabilité pourrais-tu réellement confier cette semaine ?"
+        ],
+        "eyebrow": "04 / PRENDRE DU RECUL",
+        "subtitle": "Reviens sur une décision, un désaccord et une responsabilité récente. Cherche un ajustement concret que tu pourrais essayer, pas un défaut à corriger."
+      }
+    },
+    "DI": {
+      "primary": "D",
+      "secondary": "I",
+      "pageIntro": {
+        "title": "Grandir.",
+        "subtitle": "Tu sais décider, prendre des initiatives et relancer un projet qui stagne. Ta capacité à donner une direction peut rassurer une équipe et l’aider à avancer. Ton côté Communiquant apporte de la spontanéité, des idées et une capacité à mobiliser. Les pistes qui suivent t’aident à faire évoluer tes habitudes sans perdre ce qui fait ta force."
+      },
+      "nextCap": {
+        "eyebrow": "01 / TON PROCHAIN CAP",
+        "title": "Faire de ton énergie une force qui fait grandir les autres.",
+        "subtitle": "Ton côté Communiquant apporte de la spontanéité, des idées et une capacité à mobiliser. L’envie d’entraîner les autres peut parfois précéder la clarification des engagements.",
+        "paragraphs": [
+          "Tu sais décider, prendre des initiatives et relancer un projet qui stagne. Ta capacité à donner une direction peut rassurer une équipe et l’aider à avancer. Ton côté Communiquant apporte de la spontanéité, des idées et une capacité à mobiliser.",
+          "Mais décider vite peut aussi laisser peu de place aux idées, aux contraintes ou au rythme des autres. Le défi est de partager une responsabilité réelle sans renoncer à ton courage d’agir. L’envie d’entraîner les autres peut parfois précéder la clarification des engagements."
+        ],
+        "goal": "Utilise ton aisance relationnelle pour solliciter un avis, puis conclus par une action explicite."
+      },
+      "leversSection": {
+        "eyebrow": "02 / TES CINQ LEVIERS",
+        "title": "Ce que tu peux faire évoluer.",
+        "subtitle": "Cinq situations pour faire de ton sens de l’initiative un atout durable : consulter sans ralentir, déléguer sans reprendre la main et distinguer l’urgence réelle de l’impatience. Ton côté Communiquant apporte de la spontanéité, des idées et une capacité à mobiliser."
+      },
+      "levers": [
+        {
+          "id": "01",
+          "title": "Écouter avant de trancher",
+          "situation": "Quand une solution te paraît évidente, tu peux vouloir décider avant d'avoir entendu les personnes concernées.",
+          "whyItMatters": "Une décision rapide peut ensuite susciter des résistances ou révéler un obstacle que quelqu'un avait repéré.",
+          "alternative": "Avant de conclure, demande qui sera touché par la décision et sollicite au moins un point de vue différent. Fixe ensuite un moment précis pour trancher. Invite un avis contradictoire avant d’utiliser ton enthousiasme pour rallier le groupe.",
+          "example": "Pour modifier un planning, tu consultes la personne qui assurera la permanence avant de valider les nouveaux horaires.",
+          "action": "Demande deux avis distincts avant ta prochaine décision collective.",
+          "shortDescription": "Quand une solution te paraît évidente, tu peux vouloir décider avant d'avoir entendu les personnes concernées.",
+          "secondaryContribution": "Invite un avis contradictoire avant d’utiliser ton enthousiasme pour rallier le groupe.",
+          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "02",
+          "title": "Partager la responsabilité",
+          "situation": "Tu peux reprendre naturellement la main lorsque le projet ralentit.",
+          "whyItMatters": "Cela fait avancer à court terme, mais risque de rendre l'équipe dépendante de toi ou de décourager les initiatives.",
+          "alternative": "Définis le résultat attendu, puis confie un véritable espace de décision. Prévois un point de suivi sans reprendre chaque détail. Encourage publiquement la personne responsable, mais laisse-la présenter elle-même sa solution.",
+          "example": "Tu confies l'organisation d'une réunion à un collègue et le laisses choisir son format.",
+          "action": "Délègue une décision réversible avec des critères clairs.",
+          "shortDescription": "Tu peux reprendre naturellement la main lorsque le projet ralentit.",
+          "secondaryContribution": "Encourage publiquement la personne responsable, mais laisse-la présenter elle-même sa solution.",
+          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "03",
+          "title": "Adapter ton rythme",
+          "situation": "Tu avances vite et peux considérer une hésitation comme un frein.",
+          "whyItMatters": "Les autres n'ont pas toujours les mêmes informations, ressources ou contraintes. Un rythme imposé peut fragiliser la qualité et la confiance.",
+          "alternative": "Demande ce qui manque pour avancer et distingue l'urgence réelle de ton impatience. Ajuste l'échéance quand la situation le justifie. Quand tu mobilises les autres, distingue l’urgence réelle de l’énergie du moment.",
+          "example": "Avant de lancer une nouvelle tâche, tu vérifies la charge actuelle de chacun.",
+          "action": "Demande à une personne ce qui rendrait ton calendrier réaliste.",
+          "shortDescription": "Tu avances vite et peux considérer une hésitation comme un frein.",
+          "secondaryContribution": "Quand tu mobilises les autres, distingue l’urgence réelle de l’énergie du moment.",
+          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "04",
+          "title": "Faire de la place aux objections",
+          "situation": "Une réserve peut te sembler contester ta décision ou ralentir ton projet.",
+          "whyItMatters": "Certaines objections révèlent un risque réel ou une meilleure façon d'atteindre l'objectif.",
+          "alternative": "Reformule l'objection sans la réfuter immédiatement. Demande quelle modification concrète la rendrait moins préoccupante. Écoute la réserve jusqu’au bout avant de chercher à convaincre.",
+          "example": "Une collègue signale un problème d'accueil : tu testes son idée avant de maintenir ton organisation.",
+          "action": "Reformule une objection et demande ce qu'elle permet d'améliorer.",
+          "shortDescription": "Une réserve peut te sembler contester ta décision ou ralentir ton projet.",
+          "secondaryContribution": "Écoute la réserve jusqu’au bout avant de chercher à convaincre.",
+          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "05",
+          "title": "Choisir tes batailles",
+          "situation": "Tu peux investir beaucoup d'énergie dans plusieurs sujets que tu juges importants.",
+          "whyItMatters": "Tout traiter comme prioritaire fatigue le groupe et dilue ton impact. Certaines décisions méritent davantage d'attention que d'autres.",
+          "alternative": "Choisis une priorité déterminante et identifie les sujets que tu peux reporter, simplifier ou confier. Ton talent pour enthousiasmer peut ouvrir trop de projets : choisis-en un à terminer.",
+          "example": "Sur quatre initiatives, tu en lances une, en planifies une autre et mets les deux restantes en attente.",
+          "action": "Écarte ou reporte une initiative cette semaine pour terminer l'essentiel.",
+          "shortDescription": "Tu peux investir beaucoup d'énergie dans plusieurs sujets que tu juges importants.",
+          "secondaryContribution": "Ton talent pour enthousiasmer peut ouvrir trop de projets : choisis-en un à terminer.",
+          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        }
+      ],
+      "sevenDayChallenge": {
+        "title": "Un changement. Une situation réelle.",
+        "intro": "Choisis une piste, expérimente-la pendant une semaine et observe ce que cette expérience t'apprend.",
+        "steps": [
+          {
+            "day": "Jour 1",
+            "title": "Prépare",
+            "description": "Choisis une situation réelle, un levier et un signe observable qui montrera que tu as agi autrement."
+          },
+          {
+            "day": "Jours 2 à 6",
+            "title": "Expérimente",
+            "description": "Teste ce comportement au moins une fois. Note ce qui a changé dans ton action et dans la réaction des autres, sans chercher la perfection."
+          },
+          {
+            "day": "Jour 7",
+            "title": "Fais le point",
+            "description": "Compare ton intention à ce qui s’est réellement passé. Choisis ce que tu conserveras et ce que tu ajusteras lors du prochain essai."
+          }
+        ],
+        "actionSource": "selectedLever.action",
+        "eyebrow": "03 / TON DÉFI DE 7 JOURS",
+        "subtitle": "Choisis une décision ou une responsabilité que tu portes actuellement. Pendant une semaine, teste une manière de faire avancer les choses qui donne aussi une place réelle aux autres. Utilise ton aisance relationnelle pour solliciter un avis, puis conclus par une action explicite."
+      },
+      "reflection": {
+        "title": "Trois questions pour aller plus loin.",
+        "questions": [
+          "Quelle décision as-tu prise trop vite alors qu'un avis complémentaire aurait été utile ?",
+          "Quand ton rythme devient-il difficile à suivre pour les autres ?",
+          "Quelle responsabilité pourrais-tu réellement confier cette semaine ? Comment ton côté Communiquant pourrait-il t’aider à passer à l’action sans renforcer tes automatismes ?"
+        ],
+        "eyebrow": "04 / PRENDRE DU RECUL",
+        "subtitle": "Reviens sur une décision, un désaccord et une responsabilité récente. Cherche un ajustement concret que tu pourrais essayer, pas un défaut à corriger. L’envie d’entraîner les autres peut parfois précéder la clarification des engagements."
+      }
+    },
+    "DS": {
+      "primary": "D",
+      "secondary": "S",
+      "pageIntro": {
+        "title": "Grandir.",
+        "subtitle": "Tu sais décider, prendre des initiatives et relancer un projet qui stagne. Ta capacité à donner une direction peut rassurer une équipe et l’aider à avancer. Ton côté Facilitateur t’aide à percevoir les besoins et à préserver la confiance. Les pistes qui suivent t’aident à faire évoluer tes habitudes sans perdre ce qui fait ta force."
+      },
+      "nextCap": {
+        "eyebrow": "01 / TON PROCHAIN CAP",
+        "title": "Faire de ton énergie une force qui fait grandir les autres.",
+        "subtitle": "Ton côté Facilitateur t’aide à percevoir les besoins et à préserver la confiance. Le souci de ne décevoir personne peut te faire différer une décision nécessaire.",
+        "paragraphs": [
+          "Tu sais décider, prendre des initiatives et relancer un projet qui stagne. Ta capacité à donner une direction peut rassurer une équipe et l’aider à avancer. Ton côté Facilitateur t’aide à percevoir les besoins et à préserver la confiance.",
+          "Mais décider vite peut aussi laisser peu de place aux idées, aux contraintes ou au rythme des autres. Le défi est de partager une responsabilité réelle sans renoncer à ton courage d’agir. Le souci de ne décevoir personne peut te faire différer une décision nécessaire."
+        ],
+        "goal": "Écoute les réserves, puis formule clairement ton propre choix."
+      },
+      "leversSection": {
+        "eyebrow": "02 / TES CINQ LEVIERS",
+        "title": "Ce que tu peux faire évoluer.",
+        "subtitle": "Cinq situations pour faire de ton sens de l’initiative un atout durable : consulter sans ralentir, déléguer sans reprendre la main et distinguer l’urgence réelle de l’impatience. Ton côté Facilitateur t’aide à percevoir les besoins et à préserver la confiance."
+      },
+      "levers": [
+        {
+          "id": "01",
+          "title": "Écouter avant de trancher",
+          "situation": "Quand une solution te paraît évidente, tu peux vouloir décider avant d'avoir entendu les personnes concernées.",
+          "whyItMatters": "Une décision rapide peut ensuite susciter des résistances ou révéler un obstacle que quelqu'un avait repéré.",
+          "alternative": "Avant de conclure, demande qui sera touché par la décision et sollicite au moins un point de vue différent. Fixe ensuite un moment précis pour trancher. Ton écoute peut faire émerger les réserves silencieuses, sans exiger l’unanimité.",
+          "example": "Pour modifier un planning, tu consultes la personne qui assurera la permanence avant de valider les nouveaux horaires.",
+          "action": "Demande deux avis distincts avant ta prochaine décision collective.",
+          "shortDescription": "Quand une solution te paraît évidente, tu peux vouloir décider avant d'avoir entendu les personnes concernées.",
+          "secondaryContribution": "Ton écoute peut faire émerger les réserves silencieuses, sans exiger l’unanimité.",
+          "reflectionPrompt": "Avec ton côté Facilitateur, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "02",
+          "title": "Partager la responsabilité",
+          "situation": "Tu peux reprendre naturellement la main lorsque le projet ralentit.",
+          "whyItMatters": "Cela fait avancer à court terme, mais risque de rendre l'équipe dépendante de toi ou de décourager les initiatives.",
+          "alternative": "Définis le résultat attendu, puis confie un véritable espace de décision. Prévois un point de suivi sans reprendre chaque détail. Soutiens la personne à qui tu délègues sans décider discrètement à sa place.",
+          "example": "Tu confies l'organisation d'une réunion à un collègue et le laisses choisir son format.",
+          "action": "Délègue une décision réversible avec des critères clairs.",
+          "shortDescription": "Tu peux reprendre naturellement la main lorsque le projet ralentit.",
+          "secondaryContribution": "Soutiens la personne à qui tu délègues sans décider discrètement à sa place.",
+          "reflectionPrompt": "Avec ton côté Facilitateur, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "03",
+          "title": "Adapter ton rythme",
+          "situation": "Tu avances vite et peux considérer une hésitation comme un frein.",
+          "whyItMatters": "Les autres n'ont pas toujours les mêmes informations, ressources ou contraintes. Un rythme imposé peut fragiliser la qualité et la confiance.",
+          "alternative": "Demande ce qui manque pour avancer et distingue l'urgence réelle de ton impatience. Ajuste l'échéance quand la situation le justifie. Explique au groupe pourquoi une échéance change au lieu d’éviter la conversation.",
+          "example": "Avant de lancer une nouvelle tâche, tu vérifies la charge actuelle de chacun.",
+          "action": "Demande à une personne ce qui rendrait ton calendrier réaliste.",
+          "shortDescription": "Tu avances vite et peux considérer une hésitation comme un frein.",
+          "secondaryContribution": "Explique au groupe pourquoi une échéance change au lieu d’éviter la conversation.",
+          "reflectionPrompt": "Avec ton côté Facilitateur, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "04",
+          "title": "Faire de la place aux objections",
+          "situation": "Une réserve peut te sembler contester ta décision ou ralentir ton projet.",
+          "whyItMatters": "Certaines objections révèlent un risque réel ou une meilleure façon d'atteindre l'objectif.",
+          "alternative": "Reformule l'objection sans la réfuter immédiatement. Demande quelle modification concrète la rendrait moins préoccupante. Cherche derrière l’objection un besoin concret ou une difficulté à anticiper.",
+          "example": "Une collègue signale un problème d'accueil : tu testes son idée avant de maintenir ton organisation.",
+          "action": "Reformule une objection et demande ce qu'elle permet d'améliorer.",
+          "shortDescription": "Une réserve peut te sembler contester ta décision ou ralentir ton projet.",
+          "secondaryContribution": "Cherche derrière l’objection un besoin concret ou une difficulté à anticiper.",
+          "reflectionPrompt": "Avec ton côté Facilitateur, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "05",
+          "title": "Choisir tes batailles",
+          "situation": "Tu peux investir beaucoup d'énergie dans plusieurs sujets que tu juges importants.",
+          "whyItMatters": "Tout traiter comme prioritaire fatigue le groupe et dilue ton impact. Certaines décisions méritent davantage d'attention que d'autres.",
+          "alternative": "Choisis une priorité déterminante et identifie les sujets que tu peux reporter, simplifier ou confier. Explique ce que tu protèges en refusant une nouvelle priorité.",
+          "example": "Sur quatre initiatives, tu en lances une, en planifies une autre et mets les deux restantes en attente.",
+          "action": "Écarte ou reporte une initiative cette semaine pour terminer l'essentiel.",
+          "shortDescription": "Tu peux investir beaucoup d'énergie dans plusieurs sujets que tu juges importants.",
+          "secondaryContribution": "Explique ce que tu protèges en refusant une nouvelle priorité.",
+          "reflectionPrompt": "Avec ton côté Facilitateur, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        }
+      ],
+      "sevenDayChallenge": {
+        "title": "Un changement. Une situation réelle.",
+        "intro": "Choisis une piste, expérimente-la pendant une semaine et observe ce que cette expérience t'apprend.",
+        "steps": [
+          {
+            "day": "Jour 1",
+            "title": "Prépare",
+            "description": "Choisis une situation réelle, un levier et un signe observable qui montrera que tu as agi autrement."
+          },
+          {
+            "day": "Jours 2 à 6",
+            "title": "Expérimente",
+            "description": "Teste ce comportement au moins une fois. Note ce qui a changé dans ton action et dans la réaction des autres, sans chercher la perfection."
+          },
+          {
+            "day": "Jour 7",
+            "title": "Fais le point",
+            "description": "Compare ton intention à ce qui s’est réellement passé. Choisis ce que tu conserveras et ce que tu ajusteras lors du prochain essai."
+          }
+        ],
+        "actionSource": "selectedLever.action",
+        "eyebrow": "03 / TON DÉFI DE 7 JOURS",
+        "subtitle": "Choisis une décision ou une responsabilité que tu portes actuellement. Pendant une semaine, teste une manière de faire avancer les choses qui donne aussi une place réelle aux autres. Écoute les réserves, puis formule clairement ton propre choix."
+      },
+      "reflection": {
+        "title": "Trois questions pour aller plus loin.",
+        "questions": [
+          "Quelle décision as-tu prise trop vite alors qu'un avis complémentaire aurait été utile ?",
+          "Quand ton rythme devient-il difficile à suivre pour les autres ?",
+          "Quelle responsabilité pourrais-tu réellement confier cette semaine ? Comment ton côté Facilitateur pourrait-il t’aider à passer à l’action sans renforcer tes automatismes ?"
+        ],
+        "eyebrow": "04 / PRENDRE DU RECUL",
+        "subtitle": "Reviens sur une décision, un désaccord et une responsabilité récente. Cherche un ajustement concret que tu pourrais essayer, pas un défaut à corriger. Le souci de ne décevoir personne peut te faire différer une décision nécessaire."
+      }
+    },
+    "DC": {
+      "primary": "D",
+      "secondary": "C",
+      "pageIntro": {
+        "title": "Grandir.",
+        "subtitle": "Tu sais décider, prendre des initiatives et relancer un projet qui stagne. Ta capacité à donner une direction peut rassurer une équipe et l’aider à avancer. Ton côté Analyste apporte de la précision, de la méthode et une attention aux risques. Les pistes qui suivent t’aident à faire évoluer tes habitudes sans perdre ce qui fait ta force."
+      },
+      "nextCap": {
+        "eyebrow": "01 / TON PROCHAIN CAP",
+        "title": "Faire de ton énergie une force qui fait grandir les autres.",
+        "subtitle": "Ton côté Analyste apporte de la précision, de la méthode et une attention aux risques. Tu peux prolonger les vérifications alors qu’un premier essai serait possible.",
+        "paragraphs": [
+          "Tu sais décider, prendre des initiatives et relancer un projet qui stagne. Ta capacité à donner une direction peut rassurer une équipe et l’aider à avancer. Ton côté Analyste apporte de la précision, de la méthode et une attention aux risques.",
+          "Mais décider vite peut aussi laisser peu de place aux idées, aux contraintes ou au rythme des autres. Le défi est de partager une responsabilité réelle sans renoncer à ton courage d’agir. Tu peux prolonger les vérifications alors qu’un premier essai serait possible."
+        ],
+        "goal": "Définis trois critères indispensables et une date de décision."
+      },
+      "leversSection": {
+        "eyebrow": "02 / TES CINQ LEVIERS",
+        "title": "Ce que tu peux faire évoluer.",
+        "subtitle": "Cinq situations pour faire de ton sens de l’initiative un atout durable : consulter sans ralentir, déléguer sans reprendre la main et distinguer l’urgence réelle de l’impatience. Ton côté Analyste apporte de la précision, de la méthode et une attention aux risques."
+      },
+      "levers": [
+        {
+          "id": "01",
+          "title": "Écouter avant de trancher",
+          "situation": "Quand une solution te paraît évidente, tu peux vouloir décider avant d'avoir entendu les personnes concernées.",
+          "whyItMatters": "Une décision rapide peut ensuite susciter des résistances ou révéler un obstacle que quelqu'un avait repéré.",
+          "alternative": "Avant de conclure, demande qui sera touché par la décision et sollicite au moins un point de vue différent. Fixe ensuite un moment précis pour trancher. Demande ce que les autres ont observé avant d’évaluer leurs arguments.",
+          "example": "Pour modifier un planning, tu consultes la personne qui assurera la permanence avant de valider les nouveaux horaires.",
+          "action": "Demande deux avis distincts avant ta prochaine décision collective.",
+          "shortDescription": "Quand une solution te paraît évidente, tu peux vouloir décider avant d'avoir entendu les personnes concernées.",
+          "secondaryContribution": "Demande ce que les autres ont observé avant d’évaluer leurs arguments.",
+          "reflectionPrompt": "Avec ton côté Analyste, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "02",
+          "title": "Partager la responsabilité",
+          "situation": "Tu peux reprendre naturellement la main lorsque le projet ralentit.",
+          "whyItMatters": "Cela fait avancer à court terme, mais risque de rendre l'équipe dépendante de toi ou de décourager les initiatives.",
+          "alternative": "Définis le résultat attendu, puis confie un véritable espace de décision. Prévois un point de suivi sans reprendre chaque détail. Fixe les critères de qualité, puis accepte une autre méthode pour les atteindre.",
+          "example": "Tu confies l'organisation d'une réunion à un collègue et le laisses choisir son format.",
+          "action": "Délègue une décision réversible avec des critères clairs.",
+          "shortDescription": "Tu peux reprendre naturellement la main lorsque le projet ralentit.",
+          "secondaryContribution": "Fixe les critères de qualité, puis accepte une autre méthode pour les atteindre.",
+          "reflectionPrompt": "Avec ton côté Analyste, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "03",
+          "title": "Adapter ton rythme",
+          "situation": "Tu avances vite et peux considérer une hésitation comme un frein.",
+          "whyItMatters": "Les autres n'ont pas toujours les mêmes informations, ressources ou contraintes. Un rythme imposé peut fragiliser la qualité et la confiance.",
+          "alternative": "Demande ce qui manque pour avancer et distingue l'urgence réelle de ton impatience. Ajuste l'échéance quand la situation le justifie. Sépare les risques à vérifier des détails qui peuvent attendre.",
+          "example": "Avant de lancer une nouvelle tâche, tu vérifies la charge actuelle de chacun.",
+          "action": "Demande à une personne ce qui rendrait ton calendrier réaliste.",
+          "shortDescription": "Tu avances vite et peux considérer une hésitation comme un frein.",
+          "secondaryContribution": "Sépare les risques à vérifier des détails qui peuvent attendre.",
+          "reflectionPrompt": "Avec ton côté Analyste, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "04",
+          "title": "Faire de la place aux objections",
+          "situation": "Une réserve peut te sembler contester ta décision ou ralentir ton projet.",
+          "whyItMatters": "Certaines objections révèlent un risque réel ou une meilleure façon d'atteindre l'objectif.",
+          "alternative": "Reformule l'objection sans la réfuter immédiatement. Demande quelle modification concrète la rendrait moins préoccupante. Classe les objections entre risques bloquants et points à suivre après le lancement.",
+          "example": "Une collègue signale un problème d'accueil : tu testes son idée avant de maintenir ton organisation.",
+          "action": "Reformule une objection et demande ce qu'elle permet d'améliorer.",
+          "shortDescription": "Une réserve peut te sembler contester ta décision ou ralentir ton projet.",
+          "secondaryContribution": "Classe les objections entre risques bloquants et points à suivre après le lancement.",
+          "reflectionPrompt": "Avec ton côté Analyste, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "05",
+          "title": "Choisir tes batailles",
+          "situation": "Tu peux investir beaucoup d'énergie dans plusieurs sujets que tu juges importants.",
+          "whyItMatters": "Tout traiter comme prioritaire fatigue le groupe et dilue ton impact. Certaines décisions méritent davantage d'attention que d'autres.",
+          "alternative": "Choisis une priorité déterminante et identifie les sujets que tu peux reporter, simplifier ou confier. Compare l’impact et le coût de chaque chantier avant d’en ajouter un.",
+          "example": "Sur quatre initiatives, tu en lances une, en planifies une autre et mets les deux restantes en attente.",
+          "action": "Écarte ou reporte une initiative cette semaine pour terminer l'essentiel.",
+          "shortDescription": "Tu peux investir beaucoup d'énergie dans plusieurs sujets que tu juges importants.",
+          "secondaryContribution": "Compare l’impact et le coût de chaque chantier avant d’en ajouter un.",
+          "reflectionPrompt": "Avec ton côté Analyste, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        }
+      ],
+      "sevenDayChallenge": {
+        "title": "Un changement. Une situation réelle.",
+        "intro": "Choisis une piste, expérimente-la pendant une semaine et observe ce que cette expérience t'apprend.",
+        "steps": [
+          {
+            "day": "Jour 1",
+            "title": "Prépare",
+            "description": "Choisis une situation réelle, un levier et un signe observable qui montrera que tu as agi autrement."
+          },
+          {
+            "day": "Jours 2 à 6",
+            "title": "Expérimente",
+            "description": "Teste ce comportement au moins une fois. Note ce qui a changé dans ton action et dans la réaction des autres, sans chercher la perfection."
+          },
+          {
+            "day": "Jour 7",
+            "title": "Fais le point",
+            "description": "Compare ton intention à ce qui s’est réellement passé. Choisis ce que tu conserveras et ce que tu ajusteras lors du prochain essai."
+          }
+        ],
+        "actionSource": "selectedLever.action",
+        "eyebrow": "03 / TON DÉFI DE 7 JOURS",
+        "subtitle": "Choisis une décision ou une responsabilité que tu portes actuellement. Pendant une semaine, teste une manière de faire avancer les choses qui donne aussi une place réelle aux autres. Définis trois critères indispensables et une date de décision."
+      },
+      "reflection": {
+        "title": "Trois questions pour aller plus loin.",
+        "questions": [
+          "Quelle décision as-tu prise trop vite alors qu'un avis complémentaire aurait été utile ?",
+          "Quand ton rythme devient-il difficile à suivre pour les autres ?",
+          "Quelle responsabilité pourrais-tu réellement confier cette semaine ? Comment ton côté Analyste pourrait-il t’aider à passer à l’action sans renforcer tes automatismes ?"
+        ],
+        "eyebrow": "04 / PRENDRE DU RECUL",
+        "subtitle": "Reviens sur une décision, un désaccord et une responsabilité récente. Cherche un ajustement concret que tu pourrais essayer, pas un défaut à corriger. Tu peux prolonger les vérifications alors qu’un premier essai serait possible."
+      }
+    },
+    "I": {
+      "primary": "I",
+      "secondary": null,
+      "pageIntro": {
+        "title": "Grandir.",
+        "subtitle": "Tu sais créer du lien, faire émerger des idées et donner envie de participer. Cette énergie ouvre des possibilités et peut mobiliser les personnes autour de toi. Mais l’enthousiasme initial ne garantit pas que les engagements seront tenus. Grandir consiste à transformer une conversation stimulante en action suivie, sans perdre ta spontanéité."
+      },
+      "nextCap": {
+        "eyebrow": "01 / TON PROCHAIN CAP",
+        "title": "Donner une suite concrète à ton enthousiasme.",
+        "subtitle": "Tu sais créer du lien, faire émerger des idées et donner envie de participer. Cette énergie ouvre des possibilités et peut mobiliser les personnes autour de toi. Mais l’enthousiasme initial ne garantit pas que les engagements seront tenus. Grandir consiste à transformer une conversation stimulante en action suivie, sans perdre ta spontanéité.",
+        "paragraphs": [
+          "Tu sais créer du lien, faire émerger des idées et donner envie de participer. Cette énergie ouvre des possibilités et peut mobiliser les personnes autour de toi.",
+          "Mais l’enthousiasme initial ne garantit pas que les engagements seront tenus. Grandir consiste à transformer une conversation stimulante en action suivie, sans perdre ta spontanéité."
+        ],
+        "goal": "Transformer une idée enthousiasmante en engagement précis et réalisable."
+      },
+      "leversSection": {
+        "eyebrow": "02 / TES CINQ LEVIERS",
+        "title": "Ce que tu peux faire évoluer.",
+        "subtitle": "Cinq façons de donner une suite à ton énergie relationnelle : transformer les idées en étapes, écouter au-delà de l’enthousiasme et tenir tes engagements."
+      },
+      "levers": [
+        {
+          "id": "01",
+          "title": "Transformer une idée en prochaine étape",
+          "situation": "Tu peux lancer plusieurs idées stimulantes au cours d'un échange.",
+          "whyItMatters": "L'énergie du moment retombe si personne ne sait ce qui doit être fait ensuite.",
+          "alternative": "À la fin de la discussion, choisis une priorité, un responsable et une date. Garde les autres idées dans une liste séparée.",
+          "example": "Après un brainstorming, tu conclus par une action testable cette semaine.",
+          "action": "Termine un échange collectif par une action et une échéance écrites.",
+          "shortDescription": "Tu peux lancer plusieurs idées stimulantes au cours d'un échange."
+        },
+        {
+          "id": "02",
+          "title": "Écouter au-delà de l'enthousiasme",
+          "situation": "Tu peux réagir vite, raconter un exemple ou proposer une idée dès qu'une personne parle.",
+          "whyItMatters": "L'autre peut se sentir interrompu alors même que tu souhaitais montrer ton intérêt.",
+          "alternative": "Laisse la personne terminer et reformule son point avant d'ajouter le tien. Pose une question qui ne ramène pas immédiatement la conversation à ton expérience.",
+          "example": "Une amie partage une difficulté : tu demandes ce dont elle a besoin avant de raconter une situation similaire.",
+          "action": "Dans une conversation, reformule avant de proposer une solution.",
+          "shortDescription": "Tu peux réagir vite, raconter un exemple ou proposer une idée dès qu'une personne parle."
+        },
+        {
+          "id": "03",
+          "title": "Tenir tes engagements",
+          "situation": "Tu peux accepter spontanément une nouvelle demande parce qu'elle te motive sur le moment.",
+          "whyItMatters": "L'accumulation d'engagements peut créer du stress et décevoir ceux qui comptent sur toi.",
+          "alternative": "Avant de dire oui, vérifie ton agenda et définis précisément ce que tu peux livrer. Autorise-toi à proposer une version plus petite.",
+          "example": "On te propose d'animer un événement : tu confirmes après avoir évalué la préparation nécessaire.",
+          "action": "Avant ton prochain oui, vérifie le temps et les ressources disponibles.",
+          "shortDescription": "Tu peux accepter spontanément une nouvelle demande parce qu'elle te motive sur le moment."
+        },
+        {
+          "id": "04",
+          "title": "Accueillir les retours difficiles",
+          "situation": "Tu peux être sensible au ton d'une critique ou à une réaction moins enthousiaste que prévu.",
+          "whyItMatters": "Tu risques de te concentrer sur le sentiment de rejet plutôt que sur l'information utile contenue dans le retour.",
+          "alternative": "Demande un exemple précis et distingue la qualité de ton travail de ta valeur personnelle. Réponds après avoir compris ce qui peut être amélioré.",
+          "example": "Après une présentation, tu demandes quel passage était peu clair au lieu de conclure que l'ensemble a déplu.",
+          "action": "Demande un exemple concret lors d'un retour critique.",
+          "shortDescription": "Tu peux être sensible au ton d'une critique ou à une réaction moins enthousiaste que prévu."
+        },
+        {
+          "id": "05",
+          "title": "Donner de la profondeur à tes idées",
+          "situation": "Tu peux préférer explorer des possibilités plutôt que rester longtemps sur les détails.",
+          "whyItMatters": "Une idée séduisante peut perdre sa crédibilité si les contraintes essentielles ne sont pas vérifiées.",
+          "alternative": "Associe ton enthousiasme à une courte vérification : objectif, coût, faisabilité et prochain test. Demande l'aide d'une personne complémentaire si nécessaire.",
+          "example": "Avant de proposer un nouvel atelier, tu vérifies le budget et le nombre de bénévoles disponibles.",
+          "action": "Passe une idée au filtre de trois contraintes concrètes.",
+          "shortDescription": "Tu peux préférer explorer des possibilités plutôt que rester longtemps sur les détails."
+        }
+      ],
+      "sevenDayChallenge": {
+        "title": "Un changement. Une situation réelle.",
+        "intro": "Choisis une piste, expérimente-la pendant une semaine et observe ce que cette expérience t'apprend.",
+        "steps": [
+          {
+            "day": "Jour 1",
+            "title": "Prépare",
+            "description": "Choisis une situation réelle, un levier et un signe observable qui montrera que tu as agi autrement."
+          },
+          {
+            "day": "Jours 2 à 6",
+            "title": "Expérimente",
+            "description": "Teste ce comportement au moins une fois. Note ce qui a changé dans ton action et dans la réaction des autres, sans chercher la perfection."
+          },
+          {
+            "day": "Jour 7",
+            "title": "Fais le point",
+            "description": "Compare ton intention à ce qui s’est réellement passé. Choisis ce que tu conserveras et ce que tu ajusteras lors du prochain essai."
+          }
+        ],
+        "actionSource": "selectedLever.action",
+        "eyebrow": "03 / TON DÉFI DE 7 JOURS",
+        "subtitle": "Choisis une idée ou une promesse récente. Pendant sept jours, transforme ton élan en une action observable, avec une personne concernée et une échéance."
+      },
+      "reflection": {
+        "title": "Trois questions pour aller plus loin.",
+        "questions": [
+          "Quelle idée récente t'a enthousiasmé sans déboucher sur une action ?",
+          "Quand as-tu écouté pour comprendre plutôt que pour répondre ?",
+          "Quel engagement mériterait d'être terminé avant d'en accepter un autre ?"
+        ],
+        "eyebrow": "04 / PRENDRE DU RECUL",
+        "subtitle": "Observe ce qui se passe après l’enthousiasme du départ : ce que tu as entendu, ce que tu as promis et ce que tu as réellement accompli."
+      }
+    },
+    "ID": {
+      "primary": "I",
+      "secondary": "D",
+      "pageIntro": {
+        "title": "Grandir.",
+        "subtitle": "Tu sais créer du lien, faire émerger des idées et donner envie de participer. Cette énergie ouvre des possibilités et peut mobiliser les personnes autour de toi. Ton côté Conquérant te pousse à prendre les devants et à donner une direction concrète. Les pistes qui suivent t’aident à faire évoluer tes habitudes sans perdre ce qui fait ta force."
+      },
+      "nextCap": {
+        "eyebrow": "01 / TON PROCHAIN CAP",
+        "title": "Donner une suite concrète à ton enthousiasme.",
+        "subtitle": "Ton côté Conquérant te pousse à prendre les devants et à donner une direction concrète. Tu peux vouloir accélérer avant que chacun ait compris ce qui est attendu.",
+        "paragraphs": [
+          "Tu sais créer du lien, faire émerger des idées et donner envie de participer. Cette énergie ouvre des possibilités et peut mobiliser les personnes autour de toi. Ton côté Conquérant te pousse à prendre les devants et à donner une direction concrète.",
+          "Mais l’enthousiasme initial ne garantit pas que les engagements seront tenus. Grandir consiste à transformer une conversation stimulante en action suivie, sans perdre ta spontanéité. Tu peux vouloir accélérer avant que chacun ait compris ce qui est attendu."
+        ],
+        "goal": "Annonce le résultat visé, puis demande qui doit participer à la décision."
+      },
+      "leversSection": {
+        "eyebrow": "02 / TES CINQ LEVIERS",
+        "title": "Ce que tu peux faire évoluer.",
+        "subtitle": "Cinq façons de donner une suite à ton énergie relationnelle : transformer les idées en étapes, écouter au-delà de l’enthousiasme et tenir tes engagements. Ton côté Conquérant te pousse à prendre les devants et à donner une direction concrète."
+      },
+      "levers": [
+        {
+          "id": "01",
+          "title": "Transformer une idée en prochaine étape",
+          "situation": "Tu peux lancer plusieurs idées stimulantes au cours d'un échange.",
+          "whyItMatters": "L'énergie du moment retombe si personne ne sait ce qui doit être fait ensuite.",
+          "alternative": "À la fin de la discussion, choisis une priorité, un responsable et une date. Garde les autres idées dans une liste séparée. Ton envie de résultat peut aider à choisir une étape, mais ne coupe pas trop tôt la phase d’idées.",
+          "example": "Après un brainstorming, tu conclus par une action testable cette semaine.",
+          "action": "Termine un échange collectif par une action et une échéance écrites.",
+          "shortDescription": "Tu peux lancer plusieurs idées stimulantes au cours d'un échange.",
+          "secondaryContribution": "Ton envie de résultat peut aider à choisir une étape, mais ne coupe pas trop tôt la phase d’idées.",
+          "reflectionPrompt": "Avec ton côté Conquérant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "02",
+          "title": "Écouter au-delà de l'enthousiasme",
+          "situation": "Tu peux réagir vite, raconter un exemple ou proposer une idée dès qu'une personne parle.",
+          "whyItMatters": "L'autre peut se sentir interrompu alors même que tu souhaitais montrer ton intérêt.",
+          "alternative": "Laisse la personne terminer et reformule son point avant d'ajouter le tien. Pose une question qui ne ramène pas immédiatement la conversation à ton expérience. Ne promets pas de prendre en charge toutes les demandes : désigne un responsable et un délai.",
+          "example": "Une amie partage une difficulté : tu demandes ce dont elle a besoin avant de raconter une situation similaire.",
+          "action": "Dans une conversation, reformule avant de proposer une solution.",
+          "shortDescription": "Tu peux réagir vite, raconter un exemple ou proposer une idée dès qu'une personne parle.",
+          "secondaryContribution": "Ne promets pas de prendre en charge toutes les demandes : désigne un responsable et un délai.",
+          "reflectionPrompt": "Avec ton côté Conquérant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "03",
+          "title": "Tenir tes engagements",
+          "situation": "Tu peux accepter spontanément une nouvelle demande parce qu'elle te motive sur le moment.",
+          "whyItMatters": "L'accumulation d'engagements peut créer du stress et décevoir ceux qui comptent sur toi.",
+          "alternative": "Avant de dire oui, vérifie ton agenda et définis précisément ce que tu peux livrer. Autorise-toi à proposer une version plus petite. Utilise ton énergie de décision pour terminer, pas seulement pour lancer.",
+          "example": "On te propose d'animer un événement : tu confirmes après avoir évalué la préparation nécessaire.",
+          "action": "Avant ton prochain oui, vérifie le temps et les ressources disponibles.",
+          "shortDescription": "Tu peux accepter spontanément une nouvelle demande parce qu'elle te motive sur le moment.",
+          "secondaryContribution": "Utilise ton énergie de décision pour terminer, pas seulement pour lancer.",
+          "reflectionPrompt": "Avec ton côté Conquérant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "04",
+          "title": "Accueillir les retours difficiles",
+          "situation": "Tu peux être sensible au ton d'une critique ou à une réaction moins enthousiaste que prévu.",
+          "whyItMatters": "Tu risques de te concentrer sur le sentiment de rejet plutôt que sur l'information utile contenue dans le retour.",
+          "alternative": "Demande un exemple précis et distingue la qualité de ton travail de ta valeur personnelle. Réponds après avoir compris ce qui peut être amélioré. Résiste à l’envie de gagner le débat lorsque quelqu’un critique une idée.",
+          "example": "Après une présentation, tu demandes quel passage était peu clair au lieu de conclure que l'ensemble a déplu.",
+          "action": "Demande un exemple concret lors d'un retour critique.",
+          "shortDescription": "Tu peux être sensible au ton d'une critique ou à une réaction moins enthousiaste que prévu.",
+          "secondaryContribution": "Résiste à l’envie de gagner le débat lorsque quelqu’un critique une idée.",
+          "reflectionPrompt": "Avec ton côté Conquérant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "05",
+          "title": "Donner de la profondeur à tes idées",
+          "situation": "Tu peux préférer explorer des possibilités plutôt que rester longtemps sur les détails.",
+          "whyItMatters": "Une idée séduisante peut perdre sa crédibilité si les contraintes essentielles ne sont pas vérifiées.",
+          "alternative": "Associe ton enthousiasme à une courte vérification : objectif, coût, faisabilité et prochain test. Demande l'aide d'une personne complémentaire si nécessaire. Choisis un critère de réussite plutôt que de chercher à convaincre par l’enthousiasme.",
+          "example": "Avant de proposer un nouvel atelier, tu vérifies le budget et le nombre de bénévoles disponibles.",
+          "action": "Passe une idée au filtre de trois contraintes concrètes.",
+          "shortDescription": "Tu peux préférer explorer des possibilités plutôt que rester longtemps sur les détails.",
+          "secondaryContribution": "Choisis un critère de réussite plutôt que de chercher à convaincre par l’enthousiasme.",
+          "reflectionPrompt": "Avec ton côté Conquérant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        }
+      ],
+      "sevenDayChallenge": {
+        "title": "Un changement. Une situation réelle.",
+        "intro": "Choisis une piste, expérimente-la pendant une semaine et observe ce que cette expérience t'apprend.",
+        "steps": [
+          {
+            "day": "Jour 1",
+            "title": "Prépare",
+            "description": "Choisis une situation réelle, un levier et un signe observable qui montrera que tu as agi autrement."
+          },
+          {
+            "day": "Jours 2 à 6",
+            "title": "Expérimente",
+            "description": "Teste ce comportement au moins une fois. Note ce qui a changé dans ton action et dans la réaction des autres, sans chercher la perfection."
+          },
+          {
+            "day": "Jour 7",
+            "title": "Fais le point",
+            "description": "Compare ton intention à ce qui s’est réellement passé. Choisis ce que tu conserveras et ce que tu ajusteras lors du prochain essai."
+          }
+        ],
+        "actionSource": "selectedLever.action",
+        "eyebrow": "03 / TON DÉFI DE 7 JOURS",
+        "subtitle": "Choisis une idée ou une promesse récente. Pendant sept jours, transforme ton élan en une action observable, avec une personne concernée et une échéance. Annonce le résultat visé, puis demande qui doit participer à la décision."
+      },
+      "reflection": {
+        "title": "Trois questions pour aller plus loin.",
+        "questions": [
+          "Quelle idée récente t'a enthousiasmé sans déboucher sur une action ?",
+          "Quand as-tu écouté pour comprendre plutôt que pour répondre ?",
+          "Quel engagement mériterait d'être terminé avant d'en accepter un autre ? Comment ton côté Conquérant pourrait-il t’aider à passer à l’action sans renforcer tes automatismes ?"
+        ],
+        "eyebrow": "04 / PRENDRE DU RECUL",
+        "subtitle": "Observe ce qui se passe après l’enthousiasme du départ : ce que tu as entendu, ce que tu as promis et ce que tu as réellement accompli. Tu peux vouloir accélérer avant que chacun ait compris ce qui est attendu."
+      }
+    },
+    "IS": {
+      "primary": "I",
+      "secondary": "S",
+      "pageIntro": {
+        "title": "Grandir.",
+        "subtitle": "Tu sais créer du lien, faire émerger des idées et donner envie de participer. Cette énergie ouvre des possibilités et peut mobiliser les personnes autour de toi. Ton côté Facilitateur t’aide à percevoir les besoins et à préserver la confiance. Les pistes qui suivent t’aident à faire évoluer tes habitudes sans perdre ce qui fait ta force."
+      },
+      "nextCap": {
+        "eyebrow": "01 / TON PROCHAIN CAP",
+        "title": "Donner une suite concrète à ton enthousiasme.",
+        "subtitle": "Ton côté Facilitateur t’aide à percevoir les besoins et à préserver la confiance. Le souci de ne décevoir personne peut te faire différer une décision nécessaire.",
+        "paragraphs": [
+          "Tu sais créer du lien, faire émerger des idées et donner envie de participer. Cette énergie ouvre des possibilités et peut mobiliser les personnes autour de toi. Ton côté Facilitateur t’aide à percevoir les besoins et à préserver la confiance.",
+          "Mais l’enthousiasme initial ne garantit pas que les engagements seront tenus. Grandir consiste à transformer une conversation stimulante en action suivie, sans perdre ta spontanéité. Le souci de ne décevoir personne peut te faire différer une décision nécessaire."
+        ],
+        "goal": "Écoute les réserves, puis formule clairement ton propre choix."
+      },
+      "leversSection": {
+        "eyebrow": "02 / TES CINQ LEVIERS",
+        "title": "Ce que tu peux faire évoluer.",
+        "subtitle": "Cinq façons de donner une suite à ton énergie relationnelle : transformer les idées en étapes, écouter au-delà de l’enthousiasme et tenir tes engagements. Ton côté Facilitateur t’aide à percevoir les besoins et à préserver la confiance."
+      },
+      "levers": [
+        {
+          "id": "01",
+          "title": "Transformer une idée en prochaine étape",
+          "situation": "Tu peux lancer plusieurs idées stimulantes au cours d'un échange.",
+          "whyItMatters": "L'énergie du moment retombe si personne ne sait ce qui doit être fait ensuite.",
+          "alternative": "À la fin de la discussion, choisis une priorité, un responsable et une date. Garde les autres idées dans une liste séparée. Ta qualité d’écoute peut aider à choisir une idée que chacun pourra réellement soutenir.",
+          "example": "Après un brainstorming, tu conclus par une action testable cette semaine.",
+          "action": "Termine un échange collectif par une action et une échéance écrites.",
+          "shortDescription": "Tu peux lancer plusieurs idées stimulantes au cours d'un échange.",
+          "secondaryContribution": "Ta qualité d’écoute peut aider à choisir une idée que chacun pourra réellement soutenir.",
+          "reflectionPrompt": "Avec ton côté Facilitateur, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "02",
+          "title": "Écouter au-delà de l'enthousiasme",
+          "situation": "Tu peux réagir vite, raconter un exemple ou proposer une idée dès qu'une personne parle.",
+          "whyItMatters": "L'autre peut se sentir interrompu alors même que tu souhaitais montrer ton intérêt.",
+          "alternative": "Laisse la personne terminer et reformule son point avant d'ajouter le tien. Pose une question qui ne ramène pas immédiatement la conversation à ton expérience. Ton souci de ne décevoir personne peut te faire accepter trop de demandes.",
+          "example": "Une amie partage une difficulté : tu demandes ce dont elle a besoin avant de raconter une situation similaire.",
+          "action": "Dans une conversation, reformule avant de proposer une solution.",
+          "shortDescription": "Tu peux réagir vite, raconter un exemple ou proposer une idée dès qu'une personne parle.",
+          "secondaryContribution": "Ton souci de ne décevoir personne peut te faire accepter trop de demandes.",
+          "reflectionPrompt": "Avec ton côté Facilitateur, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "03",
+          "title": "Tenir tes engagements",
+          "situation": "Tu peux accepter spontanément une nouvelle demande parce qu'elle te motive sur le moment.",
+          "whyItMatters": "L'accumulation d'engagements peut créer du stress et décevoir ceux qui comptent sur toi.",
+          "alternative": "Avant de dire oui, vérifie ton agenda et définis précisément ce que tu peux livrer. Autorise-toi à proposer une version plus petite. Préviens les personnes concernées lorsque tu dois revoir un engagement.",
+          "example": "On te propose d'animer un événement : tu confirmes après avoir évalué la préparation nécessaire.",
+          "action": "Avant ton prochain oui, vérifie le temps et les ressources disponibles.",
+          "shortDescription": "Tu peux accepter spontanément une nouvelle demande parce qu'elle te motive sur le moment.",
+          "secondaryContribution": "Préviens les personnes concernées lorsque tu dois revoir un engagement.",
+          "reflectionPrompt": "Avec ton côté Facilitateur, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "04",
+          "title": "Accueillir les retours difficiles",
+          "situation": "Tu peux être sensible au ton d'une critique ou à une réaction moins enthousiaste que prévu.",
+          "whyItMatters": "Tu risques de te concentrer sur le sentiment de rejet plutôt que sur l'information utile contenue dans le retour.",
+          "alternative": "Demande un exemple précis et distingue la qualité de ton travail de ta valeur personnelle. Réponds après avoir compris ce qui peut être amélioré. Une critique n’est pas un rejet de la relation : demande un exemple précis.",
+          "example": "Après une présentation, tu demandes quel passage était peu clair au lieu de conclure que l'ensemble a déplu.",
+          "action": "Demande un exemple concret lors d'un retour critique.",
+          "shortDescription": "Tu peux être sensible au ton d'une critique ou à une réaction moins enthousiaste que prévu.",
+          "secondaryContribution": "Une critique n’est pas un rejet de la relation : demande un exemple précis.",
+          "reflectionPrompt": "Avec ton côté Facilitateur, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "05",
+          "title": "Donner de la profondeur à tes idées",
+          "situation": "Tu peux préférer explorer des possibilités plutôt que rester longtemps sur les détails.",
+          "whyItMatters": "Une idée séduisante peut perdre sa crédibilité si les contraintes essentielles ne sont pas vérifiées.",
+          "alternative": "Associe ton enthousiasme à une courte vérification : objectif, coût, faisabilité et prochain test. Demande l'aide d'une personne complémentaire si nécessaire. Écoute les points de vue, puis nomme les deux critères qui guideront le choix.",
+          "example": "Avant de proposer un nouvel atelier, tu vérifies le budget et le nombre de bénévoles disponibles.",
+          "action": "Passe une idée au filtre de trois contraintes concrètes.",
+          "shortDescription": "Tu peux préférer explorer des possibilités plutôt que rester longtemps sur les détails.",
+          "secondaryContribution": "Écoute les points de vue, puis nomme les deux critères qui guideront le choix.",
+          "reflectionPrompt": "Avec ton côté Facilitateur, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        }
+      ],
+      "sevenDayChallenge": {
+        "title": "Un changement. Une situation réelle.",
+        "intro": "Choisis une piste, expérimente-la pendant une semaine et observe ce que cette expérience t'apprend.",
+        "steps": [
+          {
+            "day": "Jour 1",
+            "title": "Prépare",
+            "description": "Choisis une situation réelle, un levier et un signe observable qui montrera que tu as agi autrement."
+          },
+          {
+            "day": "Jours 2 à 6",
+            "title": "Expérimente",
+            "description": "Teste ce comportement au moins une fois. Note ce qui a changé dans ton action et dans la réaction des autres, sans chercher la perfection."
+          },
+          {
+            "day": "Jour 7",
+            "title": "Fais le point",
+            "description": "Compare ton intention à ce qui s’est réellement passé. Choisis ce que tu conserveras et ce que tu ajusteras lors du prochain essai."
+          }
+        ],
+        "actionSource": "selectedLever.action",
+        "eyebrow": "03 / TON DÉFI DE 7 JOURS",
+        "subtitle": "Choisis une idée ou une promesse récente. Pendant sept jours, transforme ton élan en une action observable, avec une personne concernée et une échéance. Écoute les réserves, puis formule clairement ton propre choix."
+      },
+      "reflection": {
+        "title": "Trois questions pour aller plus loin.",
+        "questions": [
+          "Quelle idée récente t'a enthousiasmé sans déboucher sur une action ?",
+          "Quand as-tu écouté pour comprendre plutôt que pour répondre ?",
+          "Quel engagement mériterait d'être terminé avant d'en accepter un autre ? Comment ton côté Facilitateur pourrait-il t’aider à passer à l’action sans renforcer tes automatismes ?"
+        ],
+        "eyebrow": "04 / PRENDRE DU RECUL",
+        "subtitle": "Observe ce qui se passe après l’enthousiasme du départ : ce que tu as entendu, ce que tu as promis et ce que tu as réellement accompli. Le souci de ne décevoir personne peut te faire différer une décision nécessaire."
+      }
+    },
+    "IC": {
+      "primary": "I",
+      "secondary": "C",
+      "pageIntro": {
+        "title": "Grandir.",
+        "subtitle": "Tu sais créer du lien, faire émerger des idées et donner envie de participer. Cette énergie ouvre des possibilités et peut mobiliser les personnes autour de toi. Ton côté Analyste apporte de la précision, de la méthode et une attention aux risques. Les pistes qui suivent t’aident à faire évoluer tes habitudes sans perdre ce qui fait ta force."
+      },
+      "nextCap": {
+        "eyebrow": "01 / TON PROCHAIN CAP",
+        "title": "Donner une suite concrète à ton enthousiasme.",
+        "subtitle": "Ton côté Analyste apporte de la précision, de la méthode et une attention aux risques. Tu peux prolonger les vérifications alors qu’un premier essai serait possible.",
+        "paragraphs": [
+          "Tu sais créer du lien, faire émerger des idées et donner envie de participer. Cette énergie ouvre des possibilités et peut mobiliser les personnes autour de toi. Ton côté Analyste apporte de la précision, de la méthode et une attention aux risques.",
+          "Mais l’enthousiasme initial ne garantit pas que les engagements seront tenus. Grandir consiste à transformer une conversation stimulante en action suivie, sans perdre ta spontanéité. Tu peux prolonger les vérifications alors qu’un premier essai serait possible."
+        ],
+        "goal": "Définis trois critères indispensables et une date de décision."
+      },
+      "leversSection": {
+        "eyebrow": "02 / TES CINQ LEVIERS",
+        "title": "Ce que tu peux faire évoluer.",
+        "subtitle": "Cinq façons de donner une suite à ton énergie relationnelle : transformer les idées en étapes, écouter au-delà de l’enthousiasme et tenir tes engagements. Ton côté Analyste apporte de la précision, de la méthode et une attention aux risques."
+      },
+      "levers": [
+        {
+          "id": "01",
+          "title": "Transformer une idée en prochaine étape",
+          "situation": "Tu peux lancer plusieurs idées stimulantes au cours d'un échange.",
+          "whyItMatters": "L'énergie du moment retombe si personne ne sait ce qui doit être fait ensuite.",
+          "alternative": "À la fin de la discussion, choisis une priorité, un responsable et une date. Garde les autres idées dans une liste séparée. Structure tes idées autour d’une prochaine étape, sans construire tout le plan avant de commencer.",
+          "example": "Après un brainstorming, tu conclus par une action testable cette semaine.",
+          "action": "Termine un échange collectif par une action et une échéance écrites.",
+          "shortDescription": "Tu peux lancer plusieurs idées stimulantes au cours d'un échange.",
+          "secondaryContribution": "Structure tes idées autour d’une prochaine étape, sans construire tout le plan avant de commencer.",
+          "reflectionPrompt": "Avec ton côté Analyste, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "02",
+          "title": "Écouter au-delà de l'enthousiasme",
+          "situation": "Tu peux réagir vite, raconter un exemple ou proposer une idée dès qu'une personne parle.",
+          "whyItMatters": "L'autre peut se sentir interrompu alors même que tu souhaitais montrer ton intérêt.",
+          "alternative": "Laisse la personne terminer et reformule son point avant d'ajouter le tien. Pose une question qui ne ramène pas immédiatement la conversation à ton expérience. Note les engagements et leurs échéances pour éviter les promesses floues.",
+          "example": "Une amie partage une difficulté : tu demandes ce dont elle a besoin avant de raconter une situation similaire.",
+          "action": "Dans une conversation, reformule avant de proposer une solution.",
+          "shortDescription": "Tu peux réagir vite, raconter un exemple ou proposer une idée dès qu'une personne parle.",
+          "secondaryContribution": "Note les engagements et leurs échéances pour éviter les promesses floues.",
+          "reflectionPrompt": "Avec ton côté Analyste, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "03",
+          "title": "Tenir tes engagements",
+          "situation": "Tu peux accepter spontanément une nouvelle demande parce qu'elle te motive sur le moment.",
+          "whyItMatters": "L'accumulation d'engagements peut créer du stress et décevoir ceux qui comptent sur toi.",
+          "alternative": "Avant de dire oui, vérifie ton agenda et définis précisément ce que tu peux livrer. Autorise-toi à proposer une version plus petite. Définis ce qui signifie « terminé » avant de perfectionner les détails.",
+          "example": "On te propose d'animer un événement : tu confirmes après avoir évalué la préparation nécessaire.",
+          "action": "Avant ton prochain oui, vérifie le temps et les ressources disponibles.",
+          "shortDescription": "Tu peux accepter spontanément une nouvelle demande parce qu'elle te motive sur le moment.",
+          "secondaryContribution": "Définis ce qui signifie « terminé » avant de perfectionner les détails.",
+          "reflectionPrompt": "Avec ton côté Analyste, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "04",
+          "title": "Accueillir les retours difficiles",
+          "situation": "Tu peux être sensible au ton d'une critique ou à une réaction moins enthousiaste que prévu.",
+          "whyItMatters": "Tu risques de te concentrer sur le sentiment de rejet plutôt que sur l'information utile contenue dans le retour.",
+          "alternative": "Demande un exemple précis et distingue la qualité de ton travail de ta valeur personnelle. Réponds après avoir compris ce qui peut être amélioré. Traite le retour comme une information utile, pas comme un examen technique à réussir.",
+          "example": "Après une présentation, tu demandes quel passage était peu clair au lieu de conclure que l'ensemble a déplu.",
+          "action": "Demande un exemple concret lors d'un retour critique.",
+          "shortDescription": "Tu peux être sensible au ton d'une critique ou à une réaction moins enthousiaste que prévu.",
+          "secondaryContribution": "Traite le retour comme une information utile, pas comme un examen technique à réussir.",
+          "reflectionPrompt": "Avec ton côté Analyste, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "05",
+          "title": "Donner de la profondeur à tes idées",
+          "situation": "Tu peux préférer explorer des possibilités plutôt que rester longtemps sur les détails.",
+          "whyItMatters": "Une idée séduisante peut perdre sa crédibilité si les contraintes essentielles ne sont pas vérifiées.",
+          "alternative": "Associe ton enthousiasme à une courte vérification : objectif, coût, faisabilité et prochain test. Demande l'aide d'une personne complémentaire si nécessaire. Sépare le temps pour imaginer du temps pour vérifier la faisabilité.",
+          "example": "Avant de proposer un nouvel atelier, tu vérifies le budget et le nombre de bénévoles disponibles.",
+          "action": "Passe une idée au filtre de trois contraintes concrètes.",
+          "shortDescription": "Tu peux préférer explorer des possibilités plutôt que rester longtemps sur les détails.",
+          "secondaryContribution": "Sépare le temps pour imaginer du temps pour vérifier la faisabilité.",
+          "reflectionPrompt": "Avec ton côté Analyste, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        }
+      ],
+      "sevenDayChallenge": {
+        "title": "Un changement. Une situation réelle.",
+        "intro": "Choisis une piste, expérimente-la pendant une semaine et observe ce que cette expérience t'apprend.",
+        "steps": [
+          {
+            "day": "Jour 1",
+            "title": "Prépare",
+            "description": "Choisis une situation réelle, un levier et un signe observable qui montrera que tu as agi autrement."
+          },
+          {
+            "day": "Jours 2 à 6",
+            "title": "Expérimente",
+            "description": "Teste ce comportement au moins une fois. Note ce qui a changé dans ton action et dans la réaction des autres, sans chercher la perfection."
+          },
+          {
+            "day": "Jour 7",
+            "title": "Fais le point",
+            "description": "Compare ton intention à ce qui s’est réellement passé. Choisis ce que tu conserveras et ce que tu ajusteras lors du prochain essai."
+          }
+        ],
+        "actionSource": "selectedLever.action",
+        "eyebrow": "03 / TON DÉFI DE 7 JOURS",
+        "subtitle": "Choisis une idée ou une promesse récente. Pendant sept jours, transforme ton élan en une action observable, avec une personne concernée et une échéance. Définis trois critères indispensables et une date de décision."
+      },
+      "reflection": {
+        "title": "Trois questions pour aller plus loin.",
+        "questions": [
+          "Quelle idée récente t'a enthousiasmé sans déboucher sur une action ?",
+          "Quand as-tu écouté pour comprendre plutôt que pour répondre ?",
+          "Quel engagement mériterait d'être terminé avant d'en accepter un autre ? Comment ton côté Analyste pourrait-il t’aider à passer à l’action sans renforcer tes automatismes ?"
+        ],
+        "eyebrow": "04 / PRENDRE DU RECUL",
+        "subtitle": "Observe ce qui se passe après l’enthousiasme du départ : ce que tu as entendu, ce que tu as promis et ce que tu as réellement accompli. Tu peux prolonger les vérifications alors qu’un premier essai serait possible."
+      }
+    },
+    "S": {
+      "primary": "S",
+      "secondary": null,
+      "pageIntro": {
+        "title": "Grandir.",
+        "subtitle": "Tu sais écouter, soutenir et construire la confiance dans la durée. Ta constance peut aider les autres à traverser une période incertaine. Mais vouloir préserver la relation peut te conduire à taire un désaccord ou accepter une charge excessive. Grandir consiste à exprimer tes besoins assez tôt pour protéger la relation autant que toi-même."
+      },
+      "nextCap": {
+        "eyebrow": "01 / TON PROCHAIN CAP",
+        "title": "Prendre ta place sans perdre ton sens des autres.",
+        "subtitle": "Tu sais écouter, soutenir et construire la confiance dans la durée. Ta constance peut aider les autres à traverser une période incertaine. Mais vouloir préserver la relation peut te conduire à taire un désaccord ou accepter une charge excessive. Grandir consiste à exprimer tes besoins assez tôt pour protéger la relation autant que toi-même.",
+        "paragraphs": [
+          "Tu sais écouter, soutenir et construire la confiance dans la durée. Ta constance peut aider les autres à traverser une période incertaine.",
+          "Mais vouloir préserver la relation peut te conduire à taire un désaccord ou accepter une charge excessive. Grandir consiste à exprimer tes besoins assez tôt pour protéger la relation autant que toi-même."
+        ],
+        "goal": "Exprimer un besoin ou une limite clairement, même lorsque les autres ne partagent pas ton avis."
+      },
+      "leversSection": {
+        "eyebrow": "02 / TES CINQ LEVIERS",
+        "title": "Ce que tu peux faire évoluer.",
+        "subtitle": "Cinq gestes pour préserver la qualité de tes relations sans t’effacer : exprimer tes besoins, accueillir les désaccords et poser des limites avec respect."
+      },
+      "levers": [
+        {
+          "id": "01",
+          "title": "Exprimer tes besoins clairement",
+          "situation": "Tu peux t'adapter aux autres et éviter de demander quelque chose pour toi.",
+          "whyItMatters": "À force de t'ajuster, tes besoins deviennent invisibles et une frustration peut s'installer.",
+          "alternative": "Formule une demande simple, précise et sans t'excuser d'avoir une préférence. Donne à l'autre une vraie possibilité de répondre.",
+          "example": "Tu expliques que tu as besoin de deux jours de préparation plutôt que d'accepter un délai impossible.",
+          "action": "Exprime une préférence claire dans une décision partagée.",
+          "shortDescription": "Tu peux t'adapter aux autres et éviter de demander quelque chose pour toi."
+        },
+        {
+          "id": "02",
+          "title": "Oser un désaccord respectueux",
+          "situation": "Tu peux garder une réserve pour ne pas créer de tension.",
+          "whyItMatters": "Un désaccord non exprimé peut fragiliser une décision ou laisser les autres croire que tu es d'accord.",
+          "alternative": "Décris le fait qui t'inquiète et son effet, puis propose une solution. Le désaccord peut être calme sans être effacé.",
+          "example": "En réunion, tu expliques pourquoi un changement de planning risque de pénaliser certains membres.",
+          "action": "Exprime une réserve avec un fait et une proposition.",
+          "shortDescription": "Tu peux garder une réserve pour ne pas créer de tension."
+        },
+        {
+          "id": "03",
+          "title": "Accueillir un changement progressif",
+          "situation": "Tu peux préférer les repères connus lorsque de nouvelles habitudes sont proposées.",
+          "whyItMatters": "Une prudence utile peut devenir un frein si tu attends que tout le monde soit prêt avant d'essayer.",
+          "alternative": "Demande ce qui restera stable, puis accepte une expérimentation limitée dans le temps. Fais un bilan après l'essai.",
+          "example": "Tu testes un nouveau mode de coordination pendant deux semaines sans abandonner immédiatement l'ancien.",
+          "action": "Essaie une nouvelle méthode pendant une durée définie.",
+          "shortDescription": "Tu peux préférer les repères connus lorsque de nouvelles habitudes sont proposées."
+        },
+        {
+          "id": "04",
+          "title": "Prendre ta place dans les décisions",
+          "situation": "Tu peux soutenir les propositions des autres avant d'exprimer la tienne.",
+          "whyItMatters": "Ton regard sur les besoins du groupe peut manquer à la décision si tu restes en retrait.",
+          "alternative": "Prépare un avis en une phrase et partage-le avant la conclusion. Tu peux être ferme tout en restant attentif.",
+          "example": "Avant qu'un groupe choisisse un horaire, tu signales l'effet sur les personnes absentes.",
+          "action": "Exprime ton avis avant qu'une décision collective soit arrêtée.",
+          "shortDescription": "Tu peux soutenir les propositions des autres avant d'exprimer la tienne."
+        },
+        {
+          "id": "05",
+          "title": "Poser des limites sans rompre le lien",
+          "situation": "Tu peux accepter une demande supplémentaire pour aider ou préserver la relation.",
+          "whyItMatters": "En disant oui à tout, tu risques de t'épuiser ou de ne plus tenir tes engagements.",
+          "alternative": "Reconnais le besoin de l'autre, puis annonce ce que tu peux réellement faire. Une limite claire peut rendre ton aide plus fiable.",
+          "example": "Tu proposes une heure d'aide plutôt qu'une journée que tu ne peux pas offrir.",
+          "action": "Pose une limite précise à une demande cette semaine.",
+          "shortDescription": "Tu peux accepter une demande supplémentaire pour aider ou préserver la relation."
+        }
+      ],
+      "sevenDayChallenge": {
+        "title": "Un changement. Une situation réelle.",
+        "intro": "Choisis une piste, expérimente-la pendant une semaine et observe ce que cette expérience t'apprend.",
+        "steps": [
+          {
+            "day": "Jour 1",
+            "title": "Prépare",
+            "description": "Choisis une situation réelle, un levier et un signe observable qui montrera que tu as agi autrement."
+          },
+          {
+            "day": "Jours 2 à 6",
+            "title": "Expérimente",
+            "description": "Teste ce comportement au moins une fois. Note ce qui a changé dans ton action et dans la réaction des autres, sans chercher la perfection."
+          },
+          {
+            "day": "Jour 7",
+            "title": "Fais le point",
+            "description": "Compare ton intention à ce qui s’est réellement passé. Choisis ce que tu conserveras et ce que tu ajusteras lors du prochain essai."
+          }
+        ],
+        "actionSource": "selectedLever.action",
+        "eyebrow": "03 / TON DÉFI DE 7 JOURS",
+        "subtitle": "Choisis une situation où tu as tendance à te mettre en retrait. Pendant une semaine, expérimente une manière simple de prendre ta place tout en restant attentif aux autres."
+      },
+      "reflection": {
+        "title": "Trois questions pour aller plus loin.",
+        "questions": [
+          "Quelle préférence as-tu tue pour préserver la paix ?",
+          "Quel changement pourrais-tu essayer sans mettre en danger l'essentiel ?",
+          "À quelle demande pourrais-tu poser une limite claire et respectueuse ?"
+        ],
+        "eyebrow": "04 / PRENDRE DU RECUL",
+        "subtitle": "Pense à une attente non exprimée, un changement repoussé et une limite difficile à poser. Cherche une petite action réalisable dès cette semaine."
+      }
+    },
+    "SD": {
+      "primary": "S",
+      "secondary": "D",
+      "pageIntro": {
+        "title": "Grandir.",
+        "subtitle": "Tu sais écouter, soutenir et construire la confiance dans la durée. Ta constance peut aider les autres à traverser une période incertaine. Ton côté Conquérant te pousse à prendre les devants et à donner une direction concrète. Les pistes qui suivent t’aident à faire évoluer tes habitudes sans perdre ce qui fait ta force."
+      },
+      "nextCap": {
+        "eyebrow": "01 / TON PROCHAIN CAP",
+        "title": "Prendre ta place sans perdre ton sens des autres.",
+        "subtitle": "Ton côté Conquérant te pousse à prendre les devants et à donner une direction concrète. Tu peux vouloir accélérer avant que chacun ait compris ce qui est attendu.",
+        "paragraphs": [
+          "Tu sais écouter, soutenir et construire la confiance dans la durée. Ta constance peut aider les autres à traverser une période incertaine. Ton côté Conquérant te pousse à prendre les devants et à donner une direction concrète.",
+          "Mais vouloir préserver la relation peut te conduire à taire un désaccord ou accepter une charge excessive. Grandir consiste à exprimer tes besoins assez tôt pour protéger la relation autant que toi-même. Tu peux vouloir accélérer avant que chacun ait compris ce qui est attendu."
+        ],
+        "goal": "Annonce le résultat visé, puis demande qui doit participer à la décision."
+      },
+      "leversSection": {
+        "eyebrow": "02 / TES CINQ LEVIERS",
+        "title": "Ce que tu peux faire évoluer.",
+        "subtitle": "Cinq gestes pour préserver la qualité de tes relations sans t’effacer : exprimer tes besoins, accueillir les désaccords et poser des limites avec respect. Ton côté Conquérant te pousse à prendre les devants et à donner une direction concrète."
+      },
+      "levers": [
+        {
+          "id": "01",
+          "title": "Exprimer tes besoins clairement",
+          "situation": "Tu peux t'adapter aux autres et éviter de demander quelque chose pour toi.",
+          "whyItMatters": "À force de t'ajuster, tes besoins deviennent invisibles et une frustration peut s'installer.",
+          "alternative": "Formule une demande simple, précise et sans t'excuser d'avoir une préférence. Donne à l'autre une vraie possibilité de répondre. Ton assurance peut t’aider à exprimer un besoin avant que la frustration s’accumule.",
+          "example": "Tu expliques que tu as besoin de deux jours de préparation plutôt que d'accepter un délai impossible.",
+          "action": "Exprime une préférence claire dans une décision partagée.",
+          "shortDescription": "Tu peux t'adapter aux autres et éviter de demander quelque chose pour toi.",
+          "secondaryContribution": "Ton assurance peut t’aider à exprimer un besoin avant que la frustration s’accumule.",
+          "reflectionPrompt": "Avec ton côté Conquérant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "02",
+          "title": "Oser un désaccord respectueux",
+          "situation": "Tu peux garder une réserve pour ne pas créer de tension.",
+          "whyItMatters": "Un désaccord non exprimé peut fragiliser une décision ou laisser les autres croire que tu es d'accord.",
+          "alternative": "Décris le fait qui t'inquiète et son effet, puis propose une solution. Le désaccord peut être calme sans être effacé. Défends ton point de vue fermement sans chercher à remporter le désaccord.",
+          "example": "En réunion, tu expliques pourquoi un changement de planning risque de pénaliser certains membres.",
+          "action": "Exprime une réserve avec un fait et une proposition.",
+          "shortDescription": "Tu peux garder une réserve pour ne pas créer de tension.",
+          "secondaryContribution": "Défends ton point de vue fermement sans chercher à remporter le désaccord.",
+          "reflectionPrompt": "Avec ton côté Conquérant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "03",
+          "title": "Accueillir un changement progressif",
+          "situation": "Tu peux préférer les repères connus lorsque de nouvelles habitudes sont proposées.",
+          "whyItMatters": "Une prudence utile peut devenir un frein si tu attends que tout le monde soit prêt avant d'essayer.",
+          "alternative": "Demande ce qui restera stable, puis accepte une expérimentation limitée dans le temps. Fais un bilan après l'essai. Propose un premier essai limité plutôt qu’un changement imposé à tous.",
+          "example": "Tu testes un nouveau mode de coordination pendant deux semaines sans abandonner immédiatement l'ancien.",
+          "action": "Essaie une nouvelle méthode pendant une durée définie.",
+          "shortDescription": "Tu peux préférer les repères connus lorsque de nouvelles habitudes sont proposées.",
+          "secondaryContribution": "Propose un premier essai limité plutôt qu’un changement imposé à tous.",
+          "reflectionPrompt": "Avec ton côté Conquérant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "04",
+          "title": "Prendre ta place dans les décisions",
+          "situation": "Tu peux soutenir les propositions des autres avant d'exprimer la tienne.",
+          "whyItMatters": "Ton regard sur les besoins du groupe peut manquer à la décision si tu restes en retrait.",
+          "alternative": "Prépare un avis en une phrase et partage-le avant la conclusion. Tu peux être ferme tout en restant attentif. Utilise ton sens de l’initiative pour formuler une recommandation claire.",
+          "example": "Avant qu'un groupe choisisse un horaire, tu signales l'effet sur les personnes absentes.",
+          "action": "Exprime ton avis avant qu'une décision collective soit arrêtée.",
+          "shortDescription": "Tu peux soutenir les propositions des autres avant d'exprimer la tienne.",
+          "secondaryContribution": "Utilise ton sens de l’initiative pour formuler une recommandation claire.",
+          "reflectionPrompt": "Avec ton côté Conquérant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "05",
+          "title": "Poser des limites sans rompre le lien",
+          "situation": "Tu peux accepter une demande supplémentaire pour aider ou préserver la relation.",
+          "whyItMatters": "En disant oui à tout, tu risques de t'épuiser ou de ne plus tenir tes engagements.",
+          "alternative": "Reconnais le besoin de l'autre, puis annonce ce que tu peux réellement faire. Une limite claire peut rendre ton aide plus fiable. Annonce ta limite tôt, sans attendre d’être contraint de réagir brusquement.",
+          "example": "Tu proposes une heure d'aide plutôt qu'une journée que tu ne peux pas offrir.",
+          "action": "Pose une limite précise à une demande cette semaine.",
+          "shortDescription": "Tu peux accepter une demande supplémentaire pour aider ou préserver la relation.",
+          "secondaryContribution": "Annonce ta limite tôt, sans attendre d’être contraint de réagir brusquement.",
+          "reflectionPrompt": "Avec ton côté Conquérant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        }
+      ],
+      "sevenDayChallenge": {
+        "title": "Un changement. Une situation réelle.",
+        "intro": "Choisis une piste, expérimente-la pendant une semaine et observe ce que cette expérience t'apprend.",
+        "steps": [
+          {
+            "day": "Jour 1",
+            "title": "Prépare",
+            "description": "Choisis une situation réelle, un levier et un signe observable qui montrera que tu as agi autrement."
+          },
+          {
+            "day": "Jours 2 à 6",
+            "title": "Expérimente",
+            "description": "Teste ce comportement au moins une fois. Note ce qui a changé dans ton action et dans la réaction des autres, sans chercher la perfection."
+          },
+          {
+            "day": "Jour 7",
+            "title": "Fais le point",
+            "description": "Compare ton intention à ce qui s’est réellement passé. Choisis ce que tu conserveras et ce que tu ajusteras lors du prochain essai."
+          }
+        ],
+        "actionSource": "selectedLever.action",
+        "eyebrow": "03 / TON DÉFI DE 7 JOURS",
+        "subtitle": "Choisis une situation où tu as tendance à te mettre en retrait. Pendant une semaine, expérimente une manière simple de prendre ta place tout en restant attentif aux autres. Annonce le résultat visé, puis demande qui doit participer à la décision."
+      },
+      "reflection": {
+        "title": "Trois questions pour aller plus loin.",
+        "questions": [
+          "Quelle préférence as-tu tue pour préserver la paix ?",
+          "Quel changement pourrais-tu essayer sans mettre en danger l'essentiel ?",
+          "À quelle demande pourrais-tu poser une limite claire et respectueuse ? Comment ton côté Conquérant pourrait-il t’aider à passer à l’action sans renforcer tes automatismes ?"
+        ],
+        "eyebrow": "04 / PRENDRE DU RECUL",
+        "subtitle": "Pense à une attente non exprimée, un changement repoussé et une limite difficile à poser. Cherche une petite action réalisable dès cette semaine. Tu peux vouloir accélérer avant que chacun ait compris ce qui est attendu."
+      }
+    },
+    "SI": {
+      "primary": "S",
+      "secondary": "I",
+      "pageIntro": {
+        "title": "Grandir.",
+        "subtitle": "Tu sais écouter, soutenir et construire la confiance dans la durée. Ta constance peut aider les autres à traverser une période incertaine. Ton côté Communiquant apporte de la spontanéité, des idées et une capacité à mobiliser. Les pistes qui suivent t’aident à faire évoluer tes habitudes sans perdre ce qui fait ta force."
+      },
+      "nextCap": {
+        "eyebrow": "01 / TON PROCHAIN CAP",
+        "title": "Prendre ta place sans perdre ton sens des autres.",
+        "subtitle": "Ton côté Communiquant apporte de la spontanéité, des idées et une capacité à mobiliser. L’envie d’entraîner les autres peut parfois précéder la clarification des engagements.",
+        "paragraphs": [
+          "Tu sais écouter, soutenir et construire la confiance dans la durée. Ta constance peut aider les autres à traverser une période incertaine. Ton côté Communiquant apporte de la spontanéité, des idées et une capacité à mobiliser.",
+          "Mais vouloir préserver la relation peut te conduire à taire un désaccord ou accepter une charge excessive. Grandir consiste à exprimer tes besoins assez tôt pour protéger la relation autant que toi-même. L’envie d’entraîner les autres peut parfois précéder la clarification des engagements."
+        ],
+        "goal": "Utilise ton aisance relationnelle pour solliciter un avis, puis conclus par une action explicite."
+      },
+      "leversSection": {
+        "eyebrow": "02 / TES CINQ LEVIERS",
+        "title": "Ce que tu peux faire évoluer.",
+        "subtitle": "Cinq gestes pour préserver la qualité de tes relations sans t’effacer : exprimer tes besoins, accueillir les désaccords et poser des limites avec respect. Ton côté Communiquant apporte de la spontanéité, des idées et une capacité à mobiliser."
+      },
+      "levers": [
+        {
+          "id": "01",
+          "title": "Exprimer tes besoins clairement",
+          "situation": "Tu peux t'adapter aux autres et éviter de demander quelque chose pour toi.",
+          "whyItMatters": "À force de t'ajuster, tes besoins deviennent invisibles et une frustration peut s'installer.",
+          "alternative": "Formule une demande simple, précise et sans t'excuser d'avoir une préférence. Donne à l'autre une vraie possibilité de répondre. Ta spontanéité peut rendre la demande plus naturelle, à condition de ne pas la masquer derrière l’humour.",
+          "example": "Tu expliques que tu as besoin de deux jours de préparation plutôt que d'accepter un délai impossible.",
+          "action": "Exprime une préférence claire dans une décision partagée.",
+          "shortDescription": "Tu peux t'adapter aux autres et éviter de demander quelque chose pour toi.",
+          "secondaryContribution": "Ta spontanéité peut rendre la demande plus naturelle, à condition de ne pas la masquer derrière l’humour.",
+          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "02",
+          "title": "Oser un désaccord respectueux",
+          "situation": "Tu peux garder une réserve pour ne pas créer de tension.",
+          "whyItMatters": "Un désaccord non exprimé peut fragiliser une décision ou laisser les autres croire que tu es d'accord.",
+          "alternative": "Décris le fait qui t'inquiète et son effet, puis propose une solution. Le désaccord peut être calme sans être effacé. Une conversation chaleureuse peut accueillir un vrai désaccord : nomme-le.",
+          "example": "En réunion, tu expliques pourquoi un changement de planning risque de pénaliser certains membres.",
+          "action": "Exprime une réserve avec un fait et une proposition.",
+          "shortDescription": "Tu peux garder une réserve pour ne pas créer de tension.",
+          "secondaryContribution": "Une conversation chaleureuse peut accueillir un vrai désaccord : nomme-le.",
+          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "03",
+          "title": "Accueillir un changement progressif",
+          "situation": "Tu peux préférer les repères connus lorsque de nouvelles habitudes sont proposées.",
+          "whyItMatters": "Une prudence utile peut devenir un frein si tu attends que tout le monde soit prêt avant d'essayer.",
+          "alternative": "Demande ce qui restera stable, puis accepte une expérimentation limitée dans le temps. Fais un bilan après l'essai. Ton enthousiasme peut faciliter un essai, mais prends ensuite le temps de faire le point.",
+          "example": "Tu testes un nouveau mode de coordination pendant deux semaines sans abandonner immédiatement l'ancien.",
+          "action": "Essaie une nouvelle méthode pendant une durée définie.",
+          "shortDescription": "Tu peux préférer les repères connus lorsque de nouvelles habitudes sont proposées.",
+          "secondaryContribution": "Ton enthousiasme peut faciliter un essai, mais prends ensuite le temps de faire le point.",
+          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "04",
+          "title": "Prendre ta place dans les décisions",
+          "situation": "Tu peux soutenir les propositions des autres avant d'exprimer la tienne.",
+          "whyItMatters": "Ton regard sur les besoins du groupe peut manquer à la décision si tu restes en retrait.",
+          "alternative": "Prépare un avis en une phrase et partage-le avant la conclusion. Tu peux être ferme tout en restant attentif. Prends la parole même lorsque d’autres occupent déjà beaucoup l’échange.",
+          "example": "Avant qu'un groupe choisisse un horaire, tu signales l'effet sur les personnes absentes.",
+          "action": "Exprime ton avis avant qu'une décision collective soit arrêtée.",
+          "shortDescription": "Tu peux soutenir les propositions des autres avant d'exprimer la tienne.",
+          "secondaryContribution": "Prends la parole même lorsque d’autres occupent déjà beaucoup l’échange.",
+          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "05",
+          "title": "Poser des limites sans rompre le lien",
+          "situation": "Tu peux accepter une demande supplémentaire pour aider ou préserver la relation.",
+          "whyItMatters": "En disant oui à tout, tu risques de t'épuiser ou de ne plus tenir tes engagements.",
+          "alternative": "Reconnais le besoin de l'autre, puis annonce ce que tu peux réellement faire. Une limite claire peut rendre ton aide plus fiable. Préserver une bonne ambiance n’exige pas de dire oui à tout.",
+          "example": "Tu proposes une heure d'aide plutôt qu'une journée que tu ne peux pas offrir.",
+          "action": "Pose une limite précise à une demande cette semaine.",
+          "shortDescription": "Tu peux accepter une demande supplémentaire pour aider ou préserver la relation.",
+          "secondaryContribution": "Préserver une bonne ambiance n’exige pas de dire oui à tout.",
+          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        }
+      ],
+      "sevenDayChallenge": {
+        "title": "Un changement. Une situation réelle.",
+        "intro": "Choisis une piste, expérimente-la pendant une semaine et observe ce que cette expérience t'apprend.",
+        "steps": [
+          {
+            "day": "Jour 1",
+            "title": "Prépare",
+            "description": "Choisis une situation réelle, un levier et un signe observable qui montrera que tu as agi autrement."
+          },
+          {
+            "day": "Jours 2 à 6",
+            "title": "Expérimente",
+            "description": "Teste ce comportement au moins une fois. Note ce qui a changé dans ton action et dans la réaction des autres, sans chercher la perfection."
+          },
+          {
+            "day": "Jour 7",
+            "title": "Fais le point",
+            "description": "Compare ton intention à ce qui s’est réellement passé. Choisis ce que tu conserveras et ce que tu ajusteras lors du prochain essai."
+          }
+        ],
+        "actionSource": "selectedLever.action",
+        "eyebrow": "03 / TON DÉFI DE 7 JOURS",
+        "subtitle": "Choisis une situation où tu as tendance à te mettre en retrait. Pendant une semaine, expérimente une manière simple de prendre ta place tout en restant attentif aux autres. Utilise ton aisance relationnelle pour solliciter un avis, puis conclus par une action explicite."
+      },
+      "reflection": {
+        "title": "Trois questions pour aller plus loin.",
+        "questions": [
+          "Quelle préférence as-tu tue pour préserver la paix ?",
+          "Quel changement pourrais-tu essayer sans mettre en danger l'essentiel ?",
+          "À quelle demande pourrais-tu poser une limite claire et respectueuse ? Comment ton côté Communiquant pourrait-il t’aider à passer à l’action sans renforcer tes automatismes ?"
+        ],
+        "eyebrow": "04 / PRENDRE DU RECUL",
+        "subtitle": "Pense à une attente non exprimée, un changement repoussé et une limite difficile à poser. Cherche une petite action réalisable dès cette semaine. L’envie d’entraîner les autres peut parfois précéder la clarification des engagements."
+      }
+    },
+    "SC": {
+      "primary": "S",
+      "secondary": "C",
+      "pageIntro": {
+        "title": "Grandir.",
+        "subtitle": "Tu sais écouter, soutenir et construire la confiance dans la durée. Ta constance peut aider les autres à traverser une période incertaine. Ton côté Analyste apporte de la précision, de la méthode et une attention aux risques. Les pistes qui suivent t’aident à faire évoluer tes habitudes sans perdre ce qui fait ta force."
+      },
+      "nextCap": {
+        "eyebrow": "01 / TON PROCHAIN CAP",
+        "title": "Prendre ta place sans perdre ton sens des autres.",
+        "subtitle": "Ton côté Analyste apporte de la précision, de la méthode et une attention aux risques. Tu peux prolonger les vérifications alors qu’un premier essai serait possible.",
+        "paragraphs": [
+          "Tu sais écouter, soutenir et construire la confiance dans la durée. Ta constance peut aider les autres à traverser une période incertaine. Ton côté Analyste apporte de la précision, de la méthode et une attention aux risques.",
+          "Mais vouloir préserver la relation peut te conduire à taire un désaccord ou accepter une charge excessive. Grandir consiste à exprimer tes besoins assez tôt pour protéger la relation autant que toi-même. Tu peux prolonger les vérifications alors qu’un premier essai serait possible."
+        ],
+        "goal": "Définis trois critères indispensables et une date de décision."
+      },
+      "leversSection": {
+        "eyebrow": "02 / TES CINQ LEVIERS",
+        "title": "Ce que tu peux faire évoluer.",
+        "subtitle": "Cinq gestes pour préserver la qualité de tes relations sans t’effacer : exprimer tes besoins, accueillir les désaccords et poser des limites avec respect. Ton côté Analyste apporte de la précision, de la méthode et une attention aux risques."
+      },
+      "levers": [
+        {
+          "id": "01",
+          "title": "Exprimer tes besoins clairement",
+          "situation": "Tu peux t'adapter aux autres et éviter de demander quelque chose pour toi.",
+          "whyItMatters": "À force de t'ajuster, tes besoins deviennent invisibles et une frustration peut s'installer.",
+          "alternative": "Formule une demande simple, précise et sans t'excuser d'avoir une préférence. Donne à l'autre une vraie possibilité de répondre. Ne transforme pas l’expression d’un besoin en justification interminable.",
+          "example": "Tu expliques que tu as besoin de deux jours de préparation plutôt que d'accepter un délai impossible.",
+          "action": "Exprime une préférence claire dans une décision partagée.",
+          "shortDescription": "Tu peux t'adapter aux autres et éviter de demander quelque chose pour toi.",
+          "secondaryContribution": "Ne transforme pas l’expression d’un besoin en justification interminable.",
+          "reflectionPrompt": "Avec ton côté Analyste, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "02",
+          "title": "Oser un désaccord respectueux",
+          "situation": "Tu peux garder une réserve pour ne pas créer de tension.",
+          "whyItMatters": "Un désaccord non exprimé peut fragiliser une décision ou laisser les autres croire que tu es d'accord.",
+          "alternative": "Décris le fait qui t'inquiète et son effet, puis propose une solution. Le désaccord peut être calme sans être effacé. Préparer tes arguments peut aider, mais une phrase claire suffit parfois.",
+          "example": "En réunion, tu expliques pourquoi un changement de planning risque de pénaliser certains membres.",
+          "action": "Exprime une réserve avec un fait et une proposition.",
+          "shortDescription": "Tu peux garder une réserve pour ne pas créer de tension.",
+          "secondaryContribution": "Préparer tes arguments peut aider, mais une phrase claire suffit parfois.",
+          "reflectionPrompt": "Avec ton côté Analyste, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "03",
+          "title": "Accueillir un changement progressif",
+          "situation": "Tu peux préférer les repères connus lorsque de nouvelles habitudes sont proposées.",
+          "whyItMatters": "Une prudence utile peut devenir un frein si tu attends que tout le monde soit prêt avant d'essayer.",
+          "alternative": "Demande ce qui restera stable, puis accepte une expérimentation limitée dans le temps. Fais un bilan après l'essai. Fixe une condition de sécurité et une date d’essai plutôt que de tout vérifier.",
+          "example": "Tu testes un nouveau mode de coordination pendant deux semaines sans abandonner immédiatement l'ancien.",
+          "action": "Essaie une nouvelle méthode pendant une durée définie.",
+          "shortDescription": "Tu peux préférer les repères connus lorsque de nouvelles habitudes sont proposées.",
+          "secondaryContribution": "Fixe une condition de sécurité et une date d’essai plutôt que de tout vérifier.",
+          "reflectionPrompt": "Avec ton côté Analyste, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "04",
+          "title": "Prendre ta place dans les décisions",
+          "situation": "Tu peux soutenir les propositions des autres avant d'exprimer la tienne.",
+          "whyItMatters": "Ton regard sur les besoins du groupe peut manquer à la décision si tu restes en retrait.",
+          "alternative": "Prépare un avis en une phrase et partage-le avant la conclusion. Tu peux être ferme tout en restant attentif. Présente une recommandation, pas seulement une liste de risques.",
+          "example": "Avant qu'un groupe choisisse un horaire, tu signales l'effet sur les personnes absentes.",
+          "action": "Exprime ton avis avant qu'une décision collective soit arrêtée.",
+          "shortDescription": "Tu peux soutenir les propositions des autres avant d'exprimer la tienne.",
+          "secondaryContribution": "Présente une recommandation, pas seulement une liste de risques.",
+          "reflectionPrompt": "Avec ton côté Analyste, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "05",
+          "title": "Poser des limites sans rompre le lien",
+          "situation": "Tu peux accepter une demande supplémentaire pour aider ou préserver la relation.",
+          "whyItMatters": "En disant oui à tout, tu risques de t'épuiser ou de ne plus tenir tes engagements.",
+          "alternative": "Reconnais le besoin de l'autre, puis annonce ce que tu peux réellement faire. Une limite claire peut rendre ton aide plus fiable. Une limite personnelle n’a pas besoin d’être défendue comme une démonstration technique.",
+          "example": "Tu proposes une heure d'aide plutôt qu'une journée que tu ne peux pas offrir.",
+          "action": "Pose une limite précise à une demande cette semaine.",
+          "shortDescription": "Tu peux accepter une demande supplémentaire pour aider ou préserver la relation.",
+          "secondaryContribution": "Une limite personnelle n’a pas besoin d’être défendue comme une démonstration technique.",
+          "reflectionPrompt": "Avec ton côté Analyste, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        }
+      ],
+      "sevenDayChallenge": {
+        "title": "Un changement. Une situation réelle.",
+        "intro": "Choisis une piste, expérimente-la pendant une semaine et observe ce que cette expérience t'apprend.",
+        "steps": [
+          {
+            "day": "Jour 1",
+            "title": "Prépare",
+            "description": "Choisis une situation réelle, un levier et un signe observable qui montrera que tu as agi autrement."
+          },
+          {
+            "day": "Jours 2 à 6",
+            "title": "Expérimente",
+            "description": "Teste ce comportement au moins une fois. Note ce qui a changé dans ton action et dans la réaction des autres, sans chercher la perfection."
+          },
+          {
+            "day": "Jour 7",
+            "title": "Fais le point",
+            "description": "Compare ton intention à ce qui s’est réellement passé. Choisis ce que tu conserveras et ce que tu ajusteras lors du prochain essai."
+          }
+        ],
+        "actionSource": "selectedLever.action",
+        "eyebrow": "03 / TON DÉFI DE 7 JOURS",
+        "subtitle": "Choisis une situation où tu as tendance à te mettre en retrait. Pendant une semaine, expérimente une manière simple de prendre ta place tout en restant attentif aux autres. Définis trois critères indispensables et une date de décision."
+      },
+      "reflection": {
+        "title": "Trois questions pour aller plus loin.",
+        "questions": [
+          "Quelle préférence as-tu tue pour préserver la paix ?",
+          "Quel changement pourrais-tu essayer sans mettre en danger l'essentiel ?",
+          "À quelle demande pourrais-tu poser une limite claire et respectueuse ? Comment ton côté Analyste pourrait-il t’aider à passer à l’action sans renforcer tes automatismes ?"
+        ],
+        "eyebrow": "04 / PRENDRE DU RECUL",
+        "subtitle": "Pense à une attente non exprimée, un changement repoussé et une limite difficile à poser. Cherche une petite action réalisable dès cette semaine. Tu peux prolonger les vérifications alors qu’un premier essai serait possible."
+      }
+    },
+    "C": {
+      "primary": "C",
+      "secondary": null,
+      "pageIntro": {
+        "title": "Grandir.",
+        "subtitle": "Tu sais analyser les faits, identifier les incohérences et sécuriser une décision. Cette rigueur peut éviter des erreurs et rendre tes contributions particulièrement fiables. Mais chercher à tout vérifier peut retarder une action utile ou rendre ton raisonnement difficile à partager. Grandir consiste à ajuster ton exigence à l’enjeu et à agir quand les informations essentielles sont réunies."
+      },
+      "nextCap": {
+        "eyebrow": "01 / TON PROCHAIN CAP",
+        "title": "Passer de la maîtrise à la confiance.",
+        "subtitle": "Tu sais analyser les faits, identifier les incohérences et sécuriser une décision. Cette rigueur peut éviter des erreurs et rendre tes contributions particulièrement fiables. Mais chercher à tout vérifier peut retarder une action utile ou rendre ton raisonnement difficile à partager. Grandir consiste à ajuster ton exigence à l’enjeu et à agir quand les informations essentielles sont réunies.",
+        "paragraphs": [
+          "Tu sais analyser les faits, identifier les incohérences et sécuriser une décision. Cette rigueur peut éviter des erreurs et rendre tes contributions particulièrement fiables.",
+          "Mais chercher à tout vérifier peut retarder une action utile ou rendre ton raisonnement difficile à partager. Grandir consiste à ajuster ton exigence à l’enjeu et à agir quand les informations essentielles sont réunies."
+        ],
+        "goal": "Prendre une décision réversible avec des critères clairs sans attendre une certitude totale."
+      },
+      "leversSection": {
+        "eyebrow": "02 / TES CINQ LEVIERS",
+        "title": "Ce que tu peux faire évoluer.",
+        "subtitle": "Cinq façons de mettre ta rigueur au service de l’action : savoir quand l’analyse suffit, partager plus tôt et faire de tes questions un dialogue."
+      },
+      "levers": [
+        {
+          "id": "01",
+          "title": "Savoir quand ton analyse est suffisante",
+          "situation": "Tu continues parfois à chercher des informations alors que les éléments essentiels sont déjà disponibles.",
+          "whyItMatters": "Chaque vérification supplémentaire peut te rassurer sans améliorer réellement la décision. Le temps consacré à un détail mineur peut retarder une occasion d'apprendre en agissant.",
+          "alternative": "Pour un choix réversible, définis trois critères et une limite de temps. Réserve les vérifications approfondies aux décisions difficiles à corriger.",
+          "example": "Tu compares plusieurs outils pour un projet pilote : tu testes les deux options les plus prometteuses et fixes une date pour choisir.",
+          "action": "Prends une décision réversible avec trois critères et une échéance fixée à l'avance.",
+          "shortDescription": "Tu continues parfois à chercher des informations alors que les éléments essentiels sont déjà disponibles."
+        },
+        {
+          "id": "02",
+          "title": "Partager tes idées avant qu'elles soient parfaites",
+          "situation": "Tu peux attendre qu'une proposition soit entièrement aboutie avant de la présenter.",
+          "whyItMatters": "Les autres ne bénéficient pas de ton analyse en cours. Tu risques aussi de découvrir tardivement que leurs attentes sont différentes.",
+          "alternative": "Partage une version de travail en indiquant ce qui est confirmé, ce qui reste à vérifier et le retour précis que tu souhaites obtenir.",
+          "example": "Tu montres un plan de cinq diapositives avant de préparer toute la présentation.",
+          "action": "Partage une première version imparfaite et demande un avis sur une question précise.",
+          "shortDescription": "Tu peux attendre qu'une proposition soit entièrement aboutie avant de la présenter."
+        },
+        {
+          "id": "03",
+          "title": "Transformer tes questions en dialogue",
+          "situation": "Tu identifies rapidement les incohérences et poses des questions pour comprendre.",
+          "whyItMatters": "Tes questions peuvent sembler critiques si l'autre ne comprend pas ton intention. Le dialogue se ferme alors que tu voulais justement améliorer la proposition.",
+          "alternative": "Commence par reconnaître l'objectif, puis explique pourquoi une information est nécessaire. Laisse aussi l'autre décrire sa logique avant de vérifier les détails.",
+          "example": "Au lieu de demander sèchement si les chiffres ont été vérifiés, tu expliques qu'une confirmation du budget aidera à décider sereinement.",
+          "action": "Explique l'intention derrière une question importante avant de la poser.",
+          "shortDescription": "Tu identifies rapidement les incohérences et poses des questions pour comprendre."
+        },
+        {
+          "id": "04",
+          "title": "Accueillir une méthode différente",
+          "situation": "Une approche plus intuitive ou spontanée peut te sembler insuffisamment structurée.",
+          "whyItMatters": "Tu peux confondre une méthode différente avec une méthode moins fiable. Tu passes alors à côté d'une idée ou d'une compétence complémentaire.",
+          "alternative": "Distingue le résultat attendu de la manière d'y parvenir. Fixe les exigences indispensables, puis laisse une marge d'expérimentation.",
+          "example": "Tu acceptes un atelier participatif plutôt qu'une analyse écrite, à condition de documenter les décisions.",
+          "action": "Laisse quelqu'un expérimenter une autre méthode sur une tâche à faible risque.",
+          "shortDescription": "Une approche plus intuitive ou spontanée peut te sembler insuffisamment structurée."
+        },
+        {
+          "id": "05",
+          "title": "Exprimer tes convictions avec assurance",
+          "situation": "Tu peux attendre d'avoir préparé toutes les réponses avant de défendre une idée.",
+          "whyItMatters": "Ton expertise risque de rester peu visible alors qu'elle pourrait enrichir une décision. L'incertitude sur un détail ne retire pas toute valeur à ton analyse.",
+          "alternative": "Présente deux arguments solides et indique ce qui reste à vérifier. Tu peux te positionner clairement sans prétendre tout savoir.",
+          "example": "En réunion, tu proposes une recommandation avec deux arguments et un risque à surveiller.",
+          "action": "Exprime une recommandation claire même si un détail secondaire reste à confirmer.",
+          "shortDescription": "Tu peux attendre d'avoir préparé toutes les réponses avant de défendre une idée."
+        }
+      ],
+      "sevenDayChallenge": {
+        "title": "Un changement. Une situation réelle.",
+        "intro": "Choisis une piste, expérimente-la pendant une semaine et observe ce que cette expérience t'apprend.",
+        "steps": [
+          {
+            "day": "Jour 1",
+            "title": "Prépare",
+            "description": "Choisis une situation réelle, un levier et un signe observable qui montrera que tu as agi autrement."
+          },
+          {
+            "day": "Jours 2 à 6",
+            "title": "Expérimente",
+            "description": "Teste ce comportement au moins une fois. Note ce qui a changé dans ton action et dans la réaction des autres, sans chercher la perfection."
+          },
+          {
+            "day": "Jour 7",
+            "title": "Fais le point",
+            "description": "Compare ton intention à ce qui s’est réellement passé. Choisis ce que tu conserveras et ce que tu ajusteras lors du prochain essai."
+          }
+        ],
+        "actionSource": "selectedLever.action",
+        "eyebrow": "03 / TON DÉFI DE 7 JOURS",
+        "subtitle": "Choisis une situation où tu attends d’avoir tout vérifié. Pendant sept jours, essaie une action suffisamment solide pour avancer et observe ce que tu apprends."
+      },
+      "reflection": {
+        "title": "Trois questions pour aller plus loin.",
+        "questions": [
+          "Quelle décision réversible pourrait avancer avec les informations déjà disponibles ?",
+          "Quand une question pertinente a-t-elle été perçue comme une critique ?",
+          "Quelle idée pourrais-tu partager avant qu'elle soit totalement finalisée ?"
+        ],
+        "eyebrow": "04 / PRENDRE DU RECUL",
+        "subtitle": "Repense à une décision, une discussion et une proposition récente. Identifie où une précision supplémentaire a réellement aidé et où elle t’a retenu."
+      }
+    },
+    "CD": {
+      "primary": "C",
+      "secondary": "D",
+      "pageIntro": {
+        "title": "Grandir.",
+        "subtitle": "Tu sais analyser les faits, identifier les incohérences et sécuriser une décision. Cette rigueur peut éviter des erreurs et rendre tes contributions particulièrement fiables. Ton côté Conquérant te pousse à prendre les devants et à donner une direction concrète. Les pistes qui suivent t’aident à faire évoluer tes habitudes sans perdre ce qui fait ta force."
+      },
+      "nextCap": {
+        "eyebrow": "01 / TON PROCHAIN CAP",
+        "title": "Passer de la maîtrise à la confiance.",
+        "subtitle": "Ton côté Conquérant te pousse à prendre les devants et à donner une direction concrète. Tu peux vouloir accélérer avant que chacun ait compris ce qui est attendu.",
+        "paragraphs": [
+          "Tu sais analyser les faits, identifier les incohérences et sécuriser une décision. Cette rigueur peut éviter des erreurs et rendre tes contributions particulièrement fiables. Ton côté Conquérant te pousse à prendre les devants et à donner une direction concrète.",
+          "Mais chercher à tout vérifier peut retarder une action utile ou rendre ton raisonnement difficile à partager. Grandir consiste à ajuster ton exigence à l’enjeu et à agir quand les informations essentielles sont réunies. Tu peux vouloir accélérer avant que chacun ait compris ce qui est attendu."
+        ],
+        "goal": "Annonce le résultat visé, puis demande qui doit participer à la décision."
+      },
+      "leversSection": {
+        "eyebrow": "02 / TES CINQ LEVIERS",
+        "title": "Ce que tu peux faire évoluer.",
+        "subtitle": "Cinq façons de mettre ta rigueur au service de l’action : savoir quand l’analyse suffit, partager plus tôt et faire de tes questions un dialogue. Ton côté Conquérant te pousse à prendre les devants et à donner une direction concrète."
+      },
+      "levers": [
+        {
+          "id": "01",
+          "title": "Savoir quand ton analyse est suffisante",
+          "situation": "Tu continues parfois à chercher des informations alors que les éléments essentiels sont déjà disponibles.",
+          "whyItMatters": "Chaque vérification supplémentaire peut te rassurer sans améliorer réellement la décision. Le temps consacré à un détail mineur peut retarder une occasion d'apprendre en agissant.",
+          "alternative": "Pour un choix réversible, définis trois critères et une limite de temps. Réserve les vérifications approfondies aux décisions difficiles à corriger. Ton côté décisif peut t’aider à trancher, à condition de garder les critères qui justifient le choix.",
+          "example": "Tu compares plusieurs outils pour un projet pilote : tu testes les deux options les plus prometteuses et fixes une date pour choisir.",
+          "action": "Prends une décision réversible avec trois critères et une échéance fixée à l'avance.",
+          "shortDescription": "Tu continues parfois à chercher des informations alors que les éléments essentiels sont déjà disponibles.",
+          "secondaryContribution": "Ton côté décisif peut t’aider à trancher, à condition de garder les critères qui justifient le choix.",
+          "reflectionPrompt": "Avec ton côté Conquérant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "02",
+          "title": "Partager tes idées avant qu'elles soient parfaites",
+          "situation": "Tu peux attendre qu'une proposition soit entièrement aboutie avant de la présenter.",
+          "whyItMatters": "Les autres ne bénéficient pas de ton analyse en cours. Tu risques aussi de découvrir tardivement que leurs attentes sont différentes.",
+          "alternative": "Partage une version de travail en indiquant ce qui est confirmé, ce qui reste à vérifier et le retour précis que tu souhaites obtenir. Présente une première version avec assurance sans prétendre qu’elle est définitive.",
+          "example": "Tu montres un plan de cinq diapositives avant de préparer toute la présentation.",
+          "action": "Partage une première version imparfaite et demande un avis sur une question précise.",
+          "shortDescription": "Tu peux attendre qu'une proposition soit entièrement aboutie avant de la présenter.",
+          "secondaryContribution": "Présente une première version avec assurance sans prétendre qu’elle est définitive.",
+          "reflectionPrompt": "Avec ton côté Conquérant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "03",
+          "title": "Transformer tes questions en dialogue",
+          "situation": "Tu identifies rapidement les incohérences et poses des questions pour comprendre.",
+          "whyItMatters": "Tes questions peuvent sembler critiques si l'autre ne comprend pas ton intention. Le dialogue se ferme alors que tu voulais justement améliorer la proposition.",
+          "alternative": "Commence par reconnaître l'objectif, puis explique pourquoi une information est nécessaire. Laisse aussi l'autre décrire sa logique avant de vérifier les détails. Tes questions peuvent être abruptes : explique à quoi servira la réponse.",
+          "example": "Au lieu de demander sèchement si les chiffres ont été vérifiés, tu expliques qu'une confirmation du budget aidera à décider sereinement.",
+          "action": "Explique l'intention derrière une question importante avant de la poser.",
+          "shortDescription": "Tu identifies rapidement les incohérences et poses des questions pour comprendre.",
+          "secondaryContribution": "Tes questions peuvent être abruptes : explique à quoi servira la réponse.",
+          "reflectionPrompt": "Avec ton côté Conquérant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "04",
+          "title": "Accueillir une méthode différente",
+          "situation": "Une approche plus intuitive ou spontanée peut te sembler insuffisamment structurée.",
+          "whyItMatters": "Tu peux confondre une méthode différente avec une méthode moins fiable. Tu passes alors à côté d'une idée ou d'une compétence complémentaire.",
+          "alternative": "Distingue le résultat attendu de la manière d'y parvenir. Fixe les exigences indispensables, puis laisse une marge d'expérimentation. Accepte une autre méthode si les critères de résultat sont partagés.",
+          "example": "Tu acceptes un atelier participatif plutôt qu'une analyse écrite, à condition de documenter les décisions.",
+          "action": "Laisse quelqu'un expérimenter une autre méthode sur une tâche à faible risque.",
+          "shortDescription": "Une approche plus intuitive ou spontanée peut te sembler insuffisamment structurée.",
+          "secondaryContribution": "Accepte une autre méthode si les critères de résultat sont partagés.",
+          "reflectionPrompt": "Avec ton côté Conquérant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "05",
+          "title": "Exprimer tes convictions avec assurance",
+          "situation": "Tu peux attendre d'avoir préparé toutes les réponses avant de défendre une idée.",
+          "whyItMatters": "Ton expertise risque de rester peu visible alors qu'elle pourrait enrichir une décision. L'incertitude sur un détail ne retire pas toute valeur à ton analyse.",
+          "alternative": "Présente deux arguments solides et indique ce qui reste à vérifier. Tu peux te positionner clairement sans prétendre tout savoir. Prends position sans exiger que les autres adoptent immédiatement ton raisonnement.",
+          "example": "En réunion, tu proposes une recommandation avec deux arguments et un risque à surveiller.",
+          "action": "Exprime une recommandation claire même si un détail secondaire reste à confirmer.",
+          "shortDescription": "Tu peux attendre d'avoir préparé toutes les réponses avant de défendre une idée.",
+          "secondaryContribution": "Prends position sans exiger que les autres adoptent immédiatement ton raisonnement.",
+          "reflectionPrompt": "Avec ton côté Conquérant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        }
+      ],
+      "sevenDayChallenge": {
+        "title": "Un changement. Une situation réelle.",
+        "intro": "Choisis une piste, expérimente-la pendant une semaine et observe ce que cette expérience t'apprend.",
+        "steps": [
+          {
+            "day": "Jour 1",
+            "title": "Prépare",
+            "description": "Choisis une situation réelle, un levier et un signe observable qui montrera que tu as agi autrement."
+          },
+          {
+            "day": "Jours 2 à 6",
+            "title": "Expérimente",
+            "description": "Teste ce comportement au moins une fois. Note ce qui a changé dans ton action et dans la réaction des autres, sans chercher la perfection."
+          },
+          {
+            "day": "Jour 7",
+            "title": "Fais le point",
+            "description": "Compare ton intention à ce qui s’est réellement passé. Choisis ce que tu conserveras et ce que tu ajusteras lors du prochain essai."
+          }
+        ],
+        "actionSource": "selectedLever.action",
+        "eyebrow": "03 / TON DÉFI DE 7 JOURS",
+        "subtitle": "Choisis une situation où tu attends d’avoir tout vérifié. Pendant sept jours, essaie une action suffisamment solide pour avancer et observe ce que tu apprends. Annonce le résultat visé, puis demande qui doit participer à la décision."
+      },
+      "reflection": {
+        "title": "Trois questions pour aller plus loin.",
+        "questions": [
+          "Quelle décision réversible pourrait avancer avec les informations déjà disponibles ?",
+          "Quand une question pertinente a-t-elle été perçue comme une critique ?",
+          "Quelle idée pourrais-tu partager avant qu'elle soit totalement finalisée ? Comment ton côté Conquérant pourrait-il t’aider à passer à l’action sans renforcer tes automatismes ?"
+        ],
+        "eyebrow": "04 / PRENDRE DU RECUL",
+        "subtitle": "Repense à une décision, une discussion et une proposition récente. Identifie où une précision supplémentaire a réellement aidé et où elle t’a retenu. Tu peux vouloir accélérer avant que chacun ait compris ce qui est attendu."
+      }
+    },
+    "CI": {
+      "primary": "C",
+      "secondary": "I",
+      "pageIntro": {
+        "title": "Grandir.",
+        "subtitle": "Tu sais analyser les faits, identifier les incohérences et sécuriser une décision. Cette rigueur peut éviter des erreurs et rendre tes contributions particulièrement fiables. Ton côté Communiquant apporte de la spontanéité, des idées et une capacité à mobiliser. Les pistes qui suivent t’aident à faire évoluer tes habitudes sans perdre ce qui fait ta force."
+      },
+      "nextCap": {
+        "eyebrow": "01 / TON PROCHAIN CAP",
+        "title": "Passer de la maîtrise à la confiance.",
+        "subtitle": "Ton côté Communiquant apporte de la spontanéité, des idées et une capacité à mobiliser. L’envie d’entraîner les autres peut parfois précéder la clarification des engagements.",
+        "paragraphs": [
+          "Tu sais analyser les faits, identifier les incohérences et sécuriser une décision. Cette rigueur peut éviter des erreurs et rendre tes contributions particulièrement fiables. Ton côté Communiquant apporte de la spontanéité, des idées et une capacité à mobiliser.",
+          "Mais chercher à tout vérifier peut retarder une action utile ou rendre ton raisonnement difficile à partager. Grandir consiste à ajuster ton exigence à l’enjeu et à agir quand les informations essentielles sont réunies. L’envie d’entraîner les autres peut parfois précéder la clarification des engagements."
+        ],
+        "goal": "Utilise ton aisance relationnelle pour solliciter un avis, puis conclus par une action explicite."
+      },
+      "leversSection": {
+        "eyebrow": "02 / TES CINQ LEVIERS",
+        "title": "Ce que tu peux faire évoluer.",
+        "subtitle": "Cinq façons de mettre ta rigueur au service de l’action : savoir quand l’analyse suffit, partager plus tôt et faire de tes questions un dialogue. Ton côté Communiquant apporte de la spontanéité, des idées et une capacité à mobiliser."
+      },
+      "levers": [
+        {
+          "id": "01",
+          "title": "Savoir quand ton analyse est suffisante",
+          "situation": "Tu continues parfois à chercher des informations alors que les éléments essentiels sont déjà disponibles.",
+          "whyItMatters": "Chaque vérification supplémentaire peut te rassurer sans améliorer réellement la décision. Le temps consacré à un détail mineur peut retarder une occasion d'apprendre en agissant.",
+          "alternative": "Pour un choix réversible, définis trois critères et une limite de temps. Réserve les vérifications approfondies aux décisions difficiles à corriger. Demande des retours ciblés plutôt que de multiplier les échanges autour d’un détail.",
+          "example": "Tu compares plusieurs outils pour un projet pilote : tu testes les deux options les plus prometteuses et fixes une date pour choisir.",
+          "action": "Prends une décision réversible avec trois critères et une échéance fixée à l'avance.",
+          "shortDescription": "Tu continues parfois à chercher des informations alors que les éléments essentiels sont déjà disponibles.",
+          "secondaryContribution": "Demande des retours ciblés plutôt que de multiplier les échanges autour d’un détail.",
+          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "02",
+          "title": "Partager tes idées avant qu'elles soient parfaites",
+          "situation": "Tu peux attendre qu'une proposition soit entièrement aboutie avant de la présenter.",
+          "whyItMatters": "Les autres ne bénéficient pas de ton analyse en cours. Tu risques aussi de découvrir tardivement que leurs attentes sont différentes.",
+          "alternative": "Partage une version de travail en indiquant ce qui est confirmé, ce qui reste à vérifier et le retour précis que tu souhaites obtenir. Appuie-toi sur ton aisance relationnelle pour partager une ébauche plus tôt.",
+          "example": "Tu montres un plan de cinq diapositives avant de préparer toute la présentation.",
+          "action": "Partage une première version imparfaite et demande un avis sur une question précise.",
+          "shortDescription": "Tu peux attendre qu'une proposition soit entièrement aboutie avant de la présenter.",
+          "secondaryContribution": "Appuie-toi sur ton aisance relationnelle pour partager une ébauche plus tôt.",
+          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "03",
+          "title": "Transformer tes questions en dialogue",
+          "situation": "Tu identifies rapidement les incohérences et poses des questions pour comprendre.",
+          "whyItMatters": "Tes questions peuvent sembler critiques si l'autre ne comprend pas ton intention. Le dialogue se ferme alors que tu voulais justement améliorer la proposition.",
+          "alternative": "Commence par reconnaître l'objectif, puis explique pourquoi une information est nécessaire. Laisse aussi l'autre décrire sa logique avant de vérifier les détails. Ta spontanéité peut rendre tes questions vivantes : laisse aussi le temps d’y répondre.",
+          "example": "Au lieu de demander sèchement si les chiffres ont été vérifiés, tu expliques qu'une confirmation du budget aidera à décider sereinement.",
+          "action": "Explique l'intention derrière une question importante avant de la poser.",
+          "shortDescription": "Tu identifies rapidement les incohérences et poses des questions pour comprendre.",
+          "secondaryContribution": "Ta spontanéité peut rendre tes questions vivantes : laisse aussi le temps d’y répondre.",
+          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "04",
+          "title": "Accueillir une méthode différente",
+          "situation": "Une approche plus intuitive ou spontanée peut te sembler insuffisamment structurée.",
+          "whyItMatters": "Tu peux confondre une méthode différente avec une méthode moins fiable. Tu passes alors à côté d'une idée ou d'une compétence complémentaire.",
+          "alternative": "Distingue le résultat attendu de la manière d'y parvenir. Fixe les exigences indispensables, puis laisse une marge d'expérimentation. Invite l’autre à expliquer son approche avant de présenter la tienne.",
+          "example": "Tu acceptes un atelier participatif plutôt qu'une analyse écrite, à condition de documenter les décisions.",
+          "action": "Laisse quelqu'un expérimenter une autre méthode sur une tâche à faible risque.",
+          "shortDescription": "Une approche plus intuitive ou spontanée peut te sembler insuffisamment structurée.",
+          "secondaryContribution": "Invite l’autre à expliquer son approche avant de présenter la tienne.",
+          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "05",
+          "title": "Exprimer tes convictions avec assurance",
+          "situation": "Tu peux attendre d'avoir préparé toutes les réponses avant de défendre une idée.",
+          "whyItMatters": "Ton expertise risque de rester peu visible alors qu'elle pourrait enrichir une décision. L'incertitude sur un détail ne retire pas toute valeur à ton analyse.",
+          "alternative": "Présente deux arguments solides et indique ce qui reste à vérifier. Tu peux te positionner clairement sans prétendre tout savoir. Illustre ton argument avec un exemple clair au lieu d’accumuler les précisions.",
+          "example": "En réunion, tu proposes une recommandation avec deux arguments et un risque à surveiller.",
+          "action": "Exprime une recommandation claire même si un détail secondaire reste à confirmer.",
+          "shortDescription": "Tu peux attendre d'avoir préparé toutes les réponses avant de défendre une idée.",
+          "secondaryContribution": "Illustre ton argument avec un exemple clair au lieu d’accumuler les précisions.",
+          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        }
+      ],
+      "sevenDayChallenge": {
+        "title": "Un changement. Une situation réelle.",
+        "intro": "Choisis une piste, expérimente-la pendant une semaine et observe ce que cette expérience t'apprend.",
+        "steps": [
+          {
+            "day": "Jour 1",
+            "title": "Prépare",
+            "description": "Choisis une situation réelle, un levier et un signe observable qui montrera que tu as agi autrement."
+          },
+          {
+            "day": "Jours 2 à 6",
+            "title": "Expérimente",
+            "description": "Teste ce comportement au moins une fois. Note ce qui a changé dans ton action et dans la réaction des autres, sans chercher la perfection."
+          },
+          {
+            "day": "Jour 7",
+            "title": "Fais le point",
+            "description": "Compare ton intention à ce qui s’est réellement passé. Choisis ce que tu conserveras et ce que tu ajusteras lors du prochain essai."
+          }
+        ],
+        "actionSource": "selectedLever.action",
+        "eyebrow": "03 / TON DÉFI DE 7 JOURS",
+        "subtitle": "Choisis une situation où tu attends d’avoir tout vérifié. Pendant sept jours, essaie une action suffisamment solide pour avancer et observe ce que tu apprends. Utilise ton aisance relationnelle pour solliciter un avis, puis conclus par une action explicite."
+      },
+      "reflection": {
+        "title": "Trois questions pour aller plus loin.",
+        "questions": [
+          "Quelle décision réversible pourrait avancer avec les informations déjà disponibles ?",
+          "Quand une question pertinente a-t-elle été perçue comme une critique ?",
+          "Quelle idée pourrais-tu partager avant qu'elle soit totalement finalisée ? Comment ton côté Communiquant pourrait-il t’aider à passer à l’action sans renforcer tes automatismes ?"
+        ],
+        "eyebrow": "04 / PRENDRE DU RECUL",
+        "subtitle": "Repense à une décision, une discussion et une proposition récente. Identifie où une précision supplémentaire a réellement aidé et où elle t’a retenu. L’envie d’entraîner les autres peut parfois précéder la clarification des engagements."
+      }
+    },
+    "CS": {
+      "primary": "C",
+      "secondary": "S",
+      "pageIntro": {
+        "title": "Grandir.",
+        "subtitle": "Tu sais analyser les faits, identifier les incohérences et sécuriser une décision. Cette rigueur peut éviter des erreurs et rendre tes contributions particulièrement fiables. Ton côté Facilitateur t’aide à percevoir les besoins et à préserver la confiance. Les pistes qui suivent t’aident à faire évoluer tes habitudes sans perdre ce qui fait ta force."
+      },
+      "nextCap": {
+        "eyebrow": "01 / TON PROCHAIN CAP",
+        "title": "Passer de la maîtrise à la confiance.",
+        "subtitle": "Ton côté Facilitateur t’aide à percevoir les besoins et à préserver la confiance. Le souci de ne décevoir personne peut te faire différer une décision nécessaire.",
+        "paragraphs": [
+          "Tu sais analyser les faits, identifier les incohérences et sécuriser une décision. Cette rigueur peut éviter des erreurs et rendre tes contributions particulièrement fiables. Ton côté Facilitateur t’aide à percevoir les besoins et à préserver la confiance.",
+          "Mais chercher à tout vérifier peut retarder une action utile ou rendre ton raisonnement difficile à partager. Grandir consiste à ajuster ton exigence à l’enjeu et à agir quand les informations essentielles sont réunies. Le souci de ne décevoir personne peut te faire différer une décision nécessaire."
+        ],
+        "goal": "Écoute les réserves, puis formule clairement ton propre choix."
+      },
+      "leversSection": {
+        "eyebrow": "02 / TES CINQ LEVIERS",
+        "title": "Ce que tu peux faire évoluer.",
+        "subtitle": "Cinq façons de mettre ta rigueur au service de l’action : savoir quand l’analyse suffit, partager plus tôt et faire de tes questions un dialogue. Ton côté Facilitateur t’aide à percevoir les besoins et à préserver la confiance."
+      },
+      "levers": [
+        {
+          "id": "01",
+          "title": "Savoir quand ton analyse est suffisante",
+          "situation": "Tu continues parfois à chercher des informations alors que les éléments essentiels sont déjà disponibles.",
+          "whyItMatters": "Chaque vérification supplémentaire peut te rassurer sans améliorer réellement la décision. Le temps consacré à un détail mineur peut retarder une occasion d'apprendre en agissant.",
+          "alternative": "Pour un choix réversible, définis trois critères et une limite de temps. Réserve les vérifications approfondies aux décisions difficiles à corriger. Ton attention aux personnes peut te pousser à attendre leur accord : distingue consultation et unanimité.",
+          "example": "Tu compares plusieurs outils pour un projet pilote : tu testes les deux options les plus prometteuses et fixes une date pour choisir.",
+          "action": "Prends une décision réversible avec trois critères et une échéance fixée à l'avance.",
+          "shortDescription": "Tu continues parfois à chercher des informations alors que les éléments essentiels sont déjà disponibles.",
+          "secondaryContribution": "Ton attention aux personnes peut te pousser à attendre leur accord : distingue consultation et unanimité.",
+          "reflectionPrompt": "Avec ton côté Facilitateur, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "02",
+          "title": "Partager tes idées avant qu'elles soient parfaites",
+          "situation": "Tu peux attendre qu'une proposition soit entièrement aboutie avant de la présenter.",
+          "whyItMatters": "Les autres ne bénéficient pas de ton analyse en cours. Tu risques aussi de découvrir tardivement que leurs attentes sont différentes.",
+          "alternative": "Partage une version de travail en indiquant ce qui est confirmé, ce qui reste à vérifier et le retour précis que tu souhaites obtenir. Une version provisoire permet aussi aux autres de contribuer ; tu n’as pas à les protéger de toute imperfection.",
+          "example": "Tu montres un plan de cinq diapositives avant de préparer toute la présentation.",
+          "action": "Partage une première version imparfaite et demande un avis sur une question précise.",
+          "shortDescription": "Tu peux attendre qu'une proposition soit entièrement aboutie avant de la présenter.",
+          "secondaryContribution": "Une version provisoire permet aussi aux autres de contribuer ; tu n’as pas à les protéger de toute imperfection.",
+          "reflectionPrompt": "Avec ton côté Facilitateur, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "03",
+          "title": "Transformer tes questions en dialogue",
+          "situation": "Tu identifies rapidement les incohérences et poses des questions pour comprendre.",
+          "whyItMatters": "Tes questions peuvent sembler critiques si l'autre ne comprend pas ton intention. Le dialogue se ferme alors que tu voulais justement améliorer la proposition.",
+          "alternative": "Commence par reconnaître l'objectif, puis explique pourquoi une information est nécessaire. Laisse aussi l'autre décrire sa logique avant de vérifier les détails. Formule précisément l’information recherchée, même si tu crains de paraître critique.",
+          "example": "Au lieu de demander sèchement si les chiffres ont été vérifiés, tu expliques qu'une confirmation du budget aidera à décider sereinement.",
+          "action": "Explique l'intention derrière une question importante avant de la poser.",
+          "shortDescription": "Tu identifies rapidement les incohérences et poses des questions pour comprendre.",
+          "secondaryContribution": "Formule précisément l’information recherchée, même si tu crains de paraître critique.",
+          "reflectionPrompt": "Avec ton côté Facilitateur, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "04",
+          "title": "Accueillir une méthode différente",
+          "situation": "Une approche plus intuitive ou spontanée peut te sembler insuffisamment structurée.",
+          "whyItMatters": "Tu peux confondre une méthode différente avec une méthode moins fiable. Tu passes alors à côté d'une idée ou d'une compétence complémentaire.",
+          "alternative": "Distingue le résultat attendu de la manière d'y parvenir. Fixe les exigences indispensables, puis laisse une marge d'expérimentation. Laisse une méthode différente être testée sans supposer qu’elle fragilisera le groupe.",
+          "example": "Tu acceptes un atelier participatif plutôt qu'une analyse écrite, à condition de documenter les décisions.",
+          "action": "Laisse quelqu'un expérimenter une autre méthode sur une tâche à faible risque.",
+          "shortDescription": "Une approche plus intuitive ou spontanée peut te sembler insuffisamment structurée.",
+          "secondaryContribution": "Laisse une méthode différente être testée sans supposer qu’elle fragilisera le groupe.",
+          "reflectionPrompt": "Avec ton côté Facilitateur, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        },
+        {
+          "id": "05",
+          "title": "Exprimer tes convictions avec assurance",
+          "situation": "Tu peux attendre d'avoir préparé toutes les réponses avant de défendre une idée.",
+          "whyItMatters": "Ton expertise risque de rester peu visible alors qu'elle pourrait enrichir une décision. L'incertitude sur un détail ne retire pas toute valeur à ton analyse.",
+          "alternative": "Présente deux arguments solides et indique ce qui reste à vérifier. Tu peux te positionner clairement sans prétendre tout savoir. Exprime une conviction avec tact, même si quelqu’un peut être déçu.",
+          "example": "En réunion, tu proposes une recommandation avec deux arguments et un risque à surveiller.",
+          "action": "Exprime une recommandation claire même si un détail secondaire reste à confirmer.",
+          "shortDescription": "Tu peux attendre d'avoir préparé toutes les réponses avant de défendre une idée.",
+          "secondaryContribution": "Exprime une conviction avec tact, même si quelqu’un peut être déçu.",
+          "reflectionPrompt": "Avec ton côté Facilitateur, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+        }
+      ],
+      "sevenDayChallenge": {
+        "title": "Un changement. Une situation réelle.",
+        "intro": "Choisis une piste, expérimente-la pendant une semaine et observe ce que cette expérience t'apprend.",
+        "steps": [
+          {
+            "day": "Jour 1",
+            "title": "Prépare",
+            "description": "Choisis une situation réelle, un levier et un signe observable qui montrera que tu as agi autrement."
+          },
+          {
+            "day": "Jours 2 à 6",
+            "title": "Expérimente",
+            "description": "Teste ce comportement au moins une fois. Note ce qui a changé dans ton action et dans la réaction des autres, sans chercher la perfection."
+          },
+          {
+            "day": "Jour 7",
+            "title": "Fais le point",
+            "description": "Compare ton intention à ce qui s’est réellement passé. Choisis ce que tu conserveras et ce que tu ajusteras lors du prochain essai."
+          }
+        ],
+        "actionSource": "selectedLever.action",
+        "eyebrow": "03 / TON DÉFI DE 7 JOURS",
+        "subtitle": "Choisis une situation où tu attends d’avoir tout vérifié. Pendant sept jours, essaie une action suffisamment solide pour avancer et observe ce que tu apprends. Écoute les réserves, puis formule clairement ton propre choix."
+      },
+      "reflection": {
+        "title": "Trois questions pour aller plus loin.",
+        "questions": [
+          "Quelle décision réversible pourrait avancer avec les informations déjà disponibles ?",
+          "Quand une question pertinente a-t-elle été perçue comme une critique ?",
+          "Quelle idée pourrais-tu partager avant qu'elle soit totalement finalisée ? Comment ton côté Facilitateur pourrait-il t’aider à passer à l’action sans renforcer tes automatismes ?"
+        ],
+        "eyebrow": "04 / PRENDRE DU RECUL",
+        "subtitle": "Repense à une décision, une discussion et une proposition récente. Identifie où une précision supplémentaire a réellement aidé et où elle t’a retenu. Le souci de ne décevoir personne peut te faire différer une décision nécessaire."
+      }
+    }
+  }
+}

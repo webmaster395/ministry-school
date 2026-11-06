@@ -25,7 +25,7 @@ test("les filtres essentiels restent visibles et tous les filtres historiques so
 });
 
 test("la fenêtre de filtres reste compacte sur mobile et ordinateur", () => {
-  assert.match(filters, /bottom-0 flex h-fit max-h-\[calc\(100dvh-1rem\)\]/);
+  assert.match(filters, /bottom-0 flex h-\[min\(88dvh,760px\)\]/);
   assert.match(filters, /sm:top-1\/2 sm:h-fit sm:max-h-\[calc\(100dvh-3rem\)\]/);
   assert.match(filters, /sm:-translate-y-1\/2 sm:rounded-2xl/);
   assert.match(filters, /<footer className="flex shrink-0/);

@@ -1,0 +1,863 @@
+{
+  "schemaVersion": "4.0.0",
+  "locale": "fr-FR",
+  "editorialStatus": "ready_for_user_review",
+  "scope": "Comment communiquer avec toi, naturel et sous pression",
+  "rules": {
+    "narrativePerspective": "Tu préfères généralement, Pour te convaincre, Tu apprécies lorsque. Aucun impératif adressé au participant ou à un tiers.",
+    "stressCaution": "Tendances possibles, non mesures individuelles des habitudes de communication.",
+    "colors": "Couleurs officielles du projet selon profil principal du contexte",
+    "scoring": "Aucune modification",
+    "tieHandling": "Conserver les classements enregistrés; ne pas inventer de secondaire en cas d’égalité non résolue."
+  },
+  "accordionOrder": [
+    "approach",
+    "persuasion",
+    "feedback",
+    "collaboration"
+  ],
+  "profiles": {
+    "D": {
+      "name": "Conquérant",
+      "natural": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Tu préfères généralement qu’on entre directement dans le sujet avec un objectif clair. Tu apprécies qu’on respecte ton temps et tes responsabilités."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre, il vaut mieux présenter les résultats concrets et les conséquences d’un choix. Tu es plus réceptif lorsque la proposition reste concrète."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères généralement recevoir un retour franc et précis sur ce que tu as accompli. Une formulation respectueuse te permet de te concentrer sur l’amélioration."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour bien travailler avec toi, il vaut mieux définir le résultat attendu et te laisser de l’autonomie. Des attentes explicites rendent les échanges plus simples."
+          }
+        ]
+      },
+      "underPressure": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Sous pression, tu préfères qu’on expose immédiatement le problème et les décisions possibles. Un échange posé aide à garder le dialogue constructif."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre dans l’urgence, il vaut mieux proposer une solution concrète et une alternative. Tu peux avoir besoin de distinguer ce qui est urgent de ce qui peut attendre."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères alors un retour factuel qui débouche sur un ajustement rapide. Tu peux ainsi examiner le problème sans ajouter de tension inutile."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour travailler avec toi sous pression, des priorités et des responsabilités claires sont particulièrement utiles. Des points de suivi simples peuvent faciliter la coordination."
+          }
+        ]
+      }
+    },
+    "I": {
+      "name": "Communiquant",
+      "natural": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Tu préfères généralement qu’on commence par un contact chaleureux et un échange vivant. Tu apprécies qu’on respecte ton temps et tes responsabilités."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre, il vaut mieux présenter une idée stimulante et te laisser y participer. Tu es plus réceptif lorsque la proposition reste concrète."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères qu’on reconnaisse ton investissement avant d’aborder un point à améliorer. Une formulation respectueuse te permet de te concentrer sur l’amélioration."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour bien travailler avec toi, il vaut mieux favoriser les échanges d’idées et clarifier les priorités. Des attentes explicites rendent les échanges plus simples."
+          }
+        ]
+      },
+      "underPressure": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Sous pression, tu préfères qu’on garde un ton chaleureux et qu’on évite les remarques brusques. Un échange posé aide à garder le dialogue constructif."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre dans un moment tendu, une proposition encourageante et concrète peut te redonner de l’élan. Tu peux avoir besoin de distinguer ce qui est urgent de ce qui peut attendre."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères recevoir une critique en privé, avec respect et sans mise en cause personnelle. Tu peux ainsi examiner le problème sans ajouter de tension inutile."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour collaborer avec toi sous pression, des échanges réguliers et une priorité commune peuvent t’aider. Des points de suivi simples peuvent faciliter la coordination."
+          }
+        ]
+      }
+    },
+    "S": {
+      "name": "Facilitateur",
+      "natural": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Tu préfères généralement qu’on t’aborde calmement et qu’on prenne le temps de t’écouter. Tu apprécies qu’on respecte ton temps et tes responsabilités."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre, il vaut mieux expliquer les étapes et les conséquences pour les autres. Tu es plus réceptif lorsque la proposition reste concrète."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères recevoir les remarques en privé, avec tact et sans précipitation. Une formulation respectueuse te permet de te concentrer sur l’amélioration."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour bien travailler avec toi, il vaut mieux expliquer les responsabilités et préparer les changements. Des attentes explicites rendent les échanges plus simples."
+          }
+        ]
+      },
+      "underPressure": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Sous pression, tu préfères qu’on ralentisse l’échange et qu’on respecte ton besoin de recul. Un échange posé aide à garder le dialogue constructif."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre dans une situation difficile, il vaut mieux avancer par étapes rassurantes. Tu peux avoir besoin de distinguer ce qui est urgent de ce qui peut attendre."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères un retour privé et posé, avec du temps pour y réfléchir. Tu peux ainsi examiner le problème sans ajouter de tension inutile."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour travailler avec toi sous pression, des repères stables et une équipe fiable peuvent t’aider. Des points de suivi simples peuvent faciliter la coordination."
+          }
+        ]
+      }
+    },
+    "C": {
+      "name": "Analyste",
+      "natural": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Tu préfères généralement qu’on présente le sujet de façon précise et organisée. Tu apprécies qu’on respecte ton temps et tes responsabilités."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre, il vaut mieux apporter des données vérifiables et expliquer les risques. Tu es plus réceptif lorsque la proposition reste concrète."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères un retour privé, factuel et appuyé sur des exemples précis. Une formulation respectueuse te permet de te concentrer sur l’amélioration."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour bien travailler avec toi, il vaut mieux clarifier les critères de qualité et les méthodes. Des attentes explicites rendent les échanges plus simples."
+          }
+        ]
+      },
+      "underPressure": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Sous pression, tu préfères des informations fiables et une urgence clairement justifiée. Un échange posé aide à garder le dialogue constructif."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre dans ces moments, il vaut mieux comparer les options et leurs conséquences. Tu peux avoir besoin de distinguer ce qui est urgent de ce qui peut attendre."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères une remarque précise qui distingue les faits des impressions. Tu peux ainsi examiner le problème sans ajouter de tension inutile."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour collaborer avec toi sous pression, des vérifications ciblées et des délais clairs peuvent t’aider. Des points de suivi simples peuvent faciliter la coordination."
+          }
+        ]
+      }
+    }
+  },
+  "orderedCombinations": {
+    "DI": {
+      "primary": "D",
+      "secondary": "I",
+      "label": "Conquérant + Communiquant",
+      "natural": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Tu préfères qu’on aille droit au but sans rendre l’échange froid ou impersonnel. Un échange direct et vivant retient ton attention, à condition qu’il permette aussi d’avancer vers une décision."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre, il vaut mieux présenter un résultat concret et te donner envie d’y associer les autres. Une proposition peut davantage te convaincre si tu peux y contribuer, partager tes idées et entraîner les autres dans sa réalisation."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères généralement recevoir un retour franc et précis sur ce que tu as accompli. Reconnaître ce que tu as accompli, puis formuler une attente précise, rend l’échange plus utile."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour bien travailler avec toi, il vaut mieux définir le résultat attendu et te laisser de l’autonomie. Les échanges dynamiques peuvent nourrir ton énergie, mais tu préfères qu’ils débouchent sur des décisions et des engagements."
+          }
+        ]
+      },
+      "underPressure": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Sous pression, tu préfères qu’on expose immédiatement le problème et les décisions possibles. Un ton ouvert reste important pour éviter que la discussion ne tourne à l’affrontement."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre dans l’urgence, il vaut mieux proposer une solution concrète et une alternative. Tu peux aussi mieux l’accueillir si elle donne au groupe un rôle clair dans la suite."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères alors un retour factuel qui débouche sur un ajustement rapide. Reconnaître tes efforts peut aider à éviter que l’échange ne devienne un rapport de force."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour travailler avec toi sous pression, des priorités et des responsabilités claires sont particulièrement utiles. Des priorités communes, des responsabilités explicites et des échanges courts peuvent t’aider à avancer sans tout porter seul."
+          }
+        ]
+      }
+    },
+    "DS": {
+      "primary": "D",
+      "secondary": "S",
+      "label": "Conquérant + Facilitateur",
+      "natural": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Tu préfères qu’on expose clairement le sujet sans brusquer les personnes concernées. Une demande claire, présentée avec calme, te laisse à la fois la possibilité de décider et celle d'entendre les personnes concernées."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre, il vaut mieux présenter les résultats concrets et les conséquences d’un choix. L'effet de la décision sur l'équipe peut aussi compter, surtout si la proposition préserve la confiance nécessaire pour agir ensemble."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères généralement recevoir un retour franc et précis sur ce que tu as accompli. Un échange discret et respectueux aide à traiter la difficulté sans fragiliser inutilement les liens."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour bien travailler avec toi, il vaut mieux définir le résultat attendu et te laisser de l’autonomie. Tu tiens aussi à des repères stables et à la confiance du groupe."
+          }
+        ]
+      },
+      "underPressure": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Sous pression, tu préfères qu’on expose immédiatement le problème et les décisions possibles. Une entrée en matière brusque risque de rendre plus difficile la prise en compte des autres."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre dans l’urgence, il vaut mieux proposer une solution concrète et une alternative. Tu peux aussi vouloir savoir comment elle affectera les personnes qui devront la suivre."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères alors un retour factuel qui débouche sur un ajustement rapide. Tu peux alors discuter du résultat attendu sans devoir choisir entre efficacité et loyauté."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour travailler avec toi sous pression, des priorités et des responsabilités claires sont particulièrement utiles. Un rythme explicite et un appui fiable de l'équipe t'aident à garder la relation dans le travail."
+          }
+        ]
+      }
+    },
+    "DC": {
+      "primary": "D",
+      "secondary": "C",
+      "label": "Conquérant + Analyste",
+      "natural": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Tu préfères qu’on annonce le sujet sans détour, avec les faits essentiels à portée de main. Il n'est pas nécessaire de tout détailler d'emblée, mais les éléments importants doivent pouvoir être vérifiés."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre, il vaut mieux présenter les résultats concrets et les conséquences d’un choix. Des critères précis et une explication des risques renforcent ta confiance."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères généralement recevoir un retour franc et précis sur ce que tu as accompli. Des exemples factuels t’aident à comprendre ce qui doit changer."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour bien travailler avec toi, il vaut mieux définir le résultat attendu et te laisser de l’autonomie. Tu apprécies que les exigences de qualité soient explicites."
+          }
+        ]
+      },
+      "underPressure": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Sous pression, tu préfères qu’on expose immédiatement le problème et les décisions possibles. Une urgence mal définie risque d'accentuer la tension entre agir et vérifier."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre dans l’urgence, il vaut mieux proposer une solution concrète et une alternative. Les preuves utiles comptent davantage qu'une accumulation de détails secondaires."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères alors un retour factuel qui débouche sur un ajustement rapide. Des exemples factuels t’aident à comprendre ce qui doit changer."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour travailler avec toi sous pression, des priorités et des responsabilités claires sont particulièrement utiles. Tu gardes ainsi une prise sur l'action et sur les risques les plus importants."
+          }
+        ]
+      }
+    },
+    "ID": {
+      "primary": "I",
+      "secondary": "D",
+      "label": "Communiquant + Conquérant",
+      "natural": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Tu préfères qu’on crée d’abord un contact chaleureux avant de préciser l’action attendue. Une fois l'échange lancé, tu apprécies aussi de savoir quelle décision ou quelle action est en jeu."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre, il vaut mieux présenter une idée stimulante et te laisser y participer. Elle gagne en force à tes yeux lorsqu'elle débouche sur un objectif concret et laisse une possibilité d'initiative."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères qu’on reconnaisse ton investissement avant d’aborder un point à améliorer. Tu peux ensuite entendre un point d'amélioration clair, formulé sans t'exposer publiquement et relié à une action possible."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour bien travailler avec toi, il vaut mieux favoriser les échanges d’idées et clarifier les priorités. Des priorités simples et une latitude réelle te permettent de transformer l'élan collectif en décisions."
+          }
+        ]
+      },
+      "underPressure": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Sous pression, tu préfères qu’on garde un ton chaleureux et qu’on évite les remarques brusques. Tu peux néanmoins vouloir qu'on précise rapidement ce qu'il faut décider, plutôt que de prolonger un échange flou."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre dans un moment tendu, une proposition encourageante et concrète peut te redonner de l’élan. La possibilité de prendre une initiative renforce ton intérêt."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères recevoir une critique en privé, avec respect et sans mise en cause personnelle. Un échange privé, respectueux et centré sur un ajustement réalisable peut t'aider à l'entendre sans te sentir écarté."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour collaborer avec toi sous pression, des échanges réguliers et une priorité commune peuvent t’aider. Une priorité claire et un espace pour agir évitent que l'énergie de la discussion ne se disperse."
+          }
+        ]
+      }
+    },
+    "IS": {
+      "primary": "I",
+      "secondary": "S",
+      "label": "Communiquant + Facilitateur",
+      "natural": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Tu préfères qu’on te salue chaleureusement tout en respectant le rythme de chacun. Tu apprécies également un climat rassurant et une écoute attentive."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre, il vaut mieux présenter une idée stimulante et te laisser y participer. Comprendre ses étapes et son effet sur la relation peut compter autant que la promesse d'un résultat."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères qu’on reconnaisse ton investissement avant d’aborder un point à améliorer. Un cadre privé, un ton respectueux et le temps d'y réfléchir préservent la confiance nécessaire pour avancer."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour bien travailler avec toi, il vaut mieux favoriser les échanges d’idées et clarifier les priorités. Tu peux t'y engager plus sereinement si les attentes restent stables et si les changements sont annoncés assez tôt."
+          }
+        ]
+      },
+      "underPressure": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Sous pression, tu préfères qu’on garde un ton chaleureux et qu’on évite les remarques brusques. Tu peux avoir besoin de sentir que la relation reste sûre avant de discuter du problème."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre dans un moment tendu, une proposition encourageante et concrète peut te redonner de l’élan. Des étapes progressives rendent plus facile le passage de l'envie de participer à une décision."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères recevoir une critique en privé, avec respect et sans mise en cause personnelle. Une remarque privée, précise et encourageante te laisse davantage de place pour l'entendre et y revenir."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour collaborer avec toi sous pression, des échanges réguliers et une priorité commune peuvent t’aider. Tu peux apprécier qu'on clarifie ensemble une priorité, puis qu'on avance sans multiplier les urgences."
+          }
+        ]
+      }
+    },
+    "IC": {
+      "primary": "I",
+      "secondary": "C",
+      "label": "Communiquant + Analyste",
+      "natural": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Tu préfères un échange ouvert, suivi d’une présentation claire des informations à vérifier. Tu apprécies également des informations structurées et vérifiables."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre, il vaut mieux présenter une idée stimulante et te laisser y participer. Un exemple concret, quelques faits solides et la possibilité de poser des questions donnent de la consistance à l'enthousiasme."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères qu’on reconnaisse ton investissement avant d’aborder un point à améliorer. Des exemples factuels t’aident à comprendre ce qui doit changer."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour bien travailler avec toi, il vaut mieux favoriser les échanges d’idées et clarifier les priorités. Des critères clairs et un temps pour vérifier t'aident à passer de l'échange à une contribution solide."
+          }
+        ]
+      },
+      "underPressure": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Sous pression, tu préfères qu’on garde un ton chaleureux et qu’on évite les remarques brusques. Une information fiable et ordonnée peut ensuite t'aider à ne pas te perdre dans les échanges."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre dans un moment tendu, une proposition encourageante et concrète peut te redonner de l’élan. Des critères précis et une explication des risques renforcent ta confiance."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères recevoir une critique en privé, avec respect et sans mise en cause personnelle. Des exemples factuels t’aident à comprendre ce qui doit changer."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour collaborer avec toi sous pression, des échanges réguliers et une priorité commune peuvent t’aider. Tu apprécies que les exigences de qualité soient explicites."
+          }
+        ]
+      }
+    },
+    "SD": {
+      "primary": "S",
+      "secondary": "D",
+      "label": "Facilitateur + Conquérant",
+      "natural": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Tu préfères qu’on installe la confiance avant de formuler une demande concrète. Tu apprécies aussi qu’on précise rapidement la décision ou l’action attendue."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre, il vaut mieux expliquer les étapes et les conséquences pour les autres. Tu peux aussi vouloir savoir quelle action précise permettra d'avancer, une fois le changement expliqué."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères recevoir les remarques en privé, avec tact et sans précipitation. Tu peux être plus à l'aise lorsque la remarque ouvre sur une amélioration observable, sans minimiser ton engagement envers l'équipe."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour bien travailler avec toi, il vaut mieux expliquer les responsabilités et préparer les changements. Tu apprécies de conserver une vraie liberté pour agir."
+          }
+        ]
+      },
+      "underPressure": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Sous pression, tu préfères qu’on ralentisse l’échange et qu’on respecte ton besoin de recul. Une fois le problème reconnu, savoir quelle décision est réellement attendue peut t'aider à sortir de l'attente."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre dans une situation difficile, il vaut mieux avancer par étapes rassurantes. Tu peux néanmoins vouloir qu'une première action soit décidée sans prolonger indéfiniment la discussion."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères un retour privé et posé, avec du temps pour y réfléchir. Une prochaine étape concrète te permet ensuite de reprendre prise sur la situation."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour travailler avec toi sous pression, des repères stables et une équipe fiable peuvent t’aider. Tu apprécies de conserver une vraie liberté pour agir."
+          }
+        ]
+      }
+    },
+    "SI": {
+      "primary": "S",
+      "secondary": "I",
+      "label": "Facilitateur + Communiquant",
+      "natural": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Tu préfères qu’on t’accueille chaleureusement, sans te presser de répondre. Tu apprécies aussi une conversation vivante et un contact chaleureux."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre, il vaut mieux expliquer les étapes et les conséquences pour les autres. Comprendre comment elle se déroulera aide à transformer cet enthousiasme en confiance."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères recevoir les remarques en privé, avec tact et sans précipitation. La reconnaissance sincère de ton aide et de ta contribution au collectif donne davantage de portée à la remarque."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour bien travailler avec toi, il vaut mieux expliquer les responsabilités et préparer les changements. Tu peux aussi aimer partager des idées, pourvu que leur mise en œuvre ne bouleverse pas le groupe sans préparation."
+          }
+        ]
+      },
+      "underPressure": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Sous pression, tu préfères qu’on ralentisse l’échange et qu’on respecte ton besoin de recul. Une conversation pressée ou distante risque de te laisser moins de place pour répondre."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre dans une situation difficile, il vaut mieux avancer par étapes rassurantes. Un élan positif t'aide aussi, à condition qu'il ne masque pas les changements concrets à venir."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères un retour privé et posé, avec du temps pour y réfléchir. Une reconnaissance sincère de ton apport facilite l’échange."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour travailler avec toi sous pression, des repères stables et une équipe fiable peuvent t’aider. Clarifier une tâche à la fois évite que le souci du groupe et les demandes multiples ne s'accumulent."
+          }
+        ]
+      }
+    },
+    "SC": {
+      "primary": "S",
+      "secondary": "C",
+      "label": "Facilitateur + Analyste",
+      "natural": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Tu préfères une approche calme, accompagnée des faits nécessaires pour comprendre. Tu peux apprécier qu'on t'explique les faits et les étapes assez clairement pour réfléchir sans précipitation."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre, il vaut mieux expliquer les étapes et les conséquences pour les autres. Des étapes vérifiables rendent un changement moins abrupt."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères recevoir les remarques en privé, avec tact et sans précipitation. Une remarque précise, formulée avec tact et illustrée par des faits, peut être plus utile qu'une critique générale."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour bien travailler avec toi, il vaut mieux expliquer les responsabilités et préparer les changements. Tu peux aussi avoir besoin de critères clairs pour vérifier que le travail avance dans la bonne direction."
+          }
+        ]
+      },
+      "underPressure": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Sous pression, tu préfères qu’on ralentisse l’échange et qu’on respecte ton besoin de recul. Des informations fiables, données sans brusquerie, t'aident à comprendre ce qui change réellement."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre dans une situation difficile, il vaut mieux avancer par étapes rassurantes. Tu peux souhaiter un temps pour poser tes questions avant de te prononcer."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères un retour privé et posé, avec du temps pour y réfléchir. Des exemples factuels t’aident à comprendre ce qui doit changer."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour travailler avec toi sous pression, des repères stables et une équipe fiable peuvent t’aider. La confiance du groupe et des consignes précises te permettent d'avancer sans tout reprendre depuis le début."
+          }
+        ]
+      }
+    },
+    "CD": {
+      "primary": "C",
+      "secondary": "D",
+      "label": "Analyste + Conquérant",
+      "natural": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Tu préfères qu’on présente les faits dans l’ordre et qu’on précise la décision envisagée. Une demande directe t'aide à voir ce qu'il faut résoudre sans sacrifier ton temps de réflexion."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre, il vaut mieux apporter des données vérifiables et expliquer les risques. La possibilité de prendre une initiative renforce ton intérêt."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères un retour privé, factuel et appuyé sur des exemples précis. Tu peux aussi apprécier qu'il débouche sur une amélioration concrète, plutôt que sur un jugement de ta personne."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour bien travailler avec toi, il vaut mieux clarifier les critères de qualité et les méthodes. Une fois ce cadre posé, de l'autonomie peut te permettre de prendre l'initiative sans multiplier les demandes de validation."
+          }
+        ]
+      },
+      "underPressure": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Sous pression, tu préfères des informations fiables et une urgence clairement justifiée. Savoir ce qui doit être décidé maintenant t'aide à ne pas rester entre vérification et action."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre dans ces moments, il vaut mieux comparer les options et leurs conséquences. Tu peux mieux accueillir une décision rapide lorsqu'elle garde une base factuelle suffisante."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères une remarque précise qui distingue les faits des impressions. Tu peux vouloir connaître le critère non atteint et l'ajustement concret attendu, sans devoir défendre tout ton raisonnement."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour collaborer avec toi sous pression, des vérifications ciblées et des délais clairs peuvent t’aider. Tu gardes ainsi une marge d'initiative sans perdre le contrôle des risques majeurs."
+          }
+        ]
+      }
+    },
+    "CI": {
+      "primary": "C",
+      "secondary": "I",
+      "label": "Analyste + Communiquant",
+      "natural": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Tu préfères des informations claires, avec un ton suffisamment ouvert pour échanger. Un ton chaleureux laisse aussi de la place à la discussion et aux idées qui émergent en chemin."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre, il vaut mieux apporter des données vérifiables et expliquer les risques. L'échange devient plus stimulant lorsqu'il ouvre plusieurs possibilités sans confondre enthousiasme et preuve."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères un retour privé, factuel et appuyé sur des exemples précis. Reconnaître la qualité de ton travail et accueillir tes questions rend le dialogue plus constructif."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour bien travailler avec toi, il vaut mieux clarifier les critères de qualité et les méthodes. Tu peux aussi apprécier des échanges où tes idées sont entendues avant que la solution soit arrêtée."
+          }
+        ]
+      },
+      "underPressure": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Sous pression, tu préfères des informations fiables et une urgence clairement justifiée. Tu apprécies aussi une conversation vivante et un contact chaleureux."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre dans ces moments, il vaut mieux comparer les options et leurs conséquences. L’enthousiasme et la possibilité de partager tes idées renforcent ton adhésion."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères une remarque précise qui distingue les faits des impressions. Une reconnaissance sincère de ton apport facilite l’échange."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour collaborer avec toi sous pression, des vérifications ciblées et des délais clairs peuvent t’aider. Des échanges ciblés t'aident à rester en lien avec le groupe sans disperser ton attention."
+          }
+        ]
+      }
+    },
+    "CS": {
+      "primary": "C",
+      "secondary": "S",
+      "label": "Analyste + Facilitateur",
+      "natural": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Tu préfères qu’on expose les faits calmement, avec du temps pour réfléchir. Un climat de confiance et le temps nécessaire pour réfléchir t’aident à entrer dans l’échange sans pression inutile."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre, il vaut mieux apporter des données vérifiables et expliquer les risques. Tu peux aussi vouloir comprendre comment la décision affectera les personnes qui devront vivre avec elle."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères un retour privé, factuel et appuyé sur des exemples précis. Tu peux avoir besoin de temps pour y réfléchir et pour mesurer ses effets sur le travail commun."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour bien travailler avec toi, il vaut mieux clarifier les critères de qualité et les méthodes. Tu peux avancer plus sereinement lorsque les critères de qualité et les changements de cap sont annoncés clairement."
+          }
+        ]
+      },
+      "underPressure": {
+        "accordions": [
+          {
+            "id": "approach",
+            "title": "La meilleure façon de t’aborder",
+            "text": "Sous pression, tu préfères des informations fiables et une urgence clairement justifiée. Une urgence imposée sans justification risque de renforcer ta réserve."
+          },
+          {
+            "id": "persuasion",
+            "title": "Ce qui peut te convaincre",
+            "text": "Pour te convaincre dans ces moments, il vaut mieux comparer les options et leurs conséquences. Tu peux aussi vouloir savoir comment elle préservera la stabilité des personnes concernées."
+          },
+          {
+            "id": "feedback",
+            "title": "Comment tu préfères recevoir un retour",
+            "text": "Tu préfères une remarque précise qui distingue les faits des impressions. Le tact et un temps de recul comptent lorsque la pression rend chaque remarque plus lourde."
+          },
+          {
+            "id": "collaboration",
+            "title": "La meilleure façon de collaborer avec toi",
+            "text": "Pour collaborer avec toi sous pression, des vérifications ciblées et des délais clairs peuvent t’aider. Une équipe fiable et des changements annoncés à temps réduisent le besoin de tout recontrôler."
+          }
+        ]
+      }
+    }
+  }
+}

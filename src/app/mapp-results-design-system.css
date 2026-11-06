@@ -1,0 +1,93 @@
+/* Profil MAPP results design system, v1. Change values here, not in pages. */
+:root {
+  --results-font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --results-conquerant: #D94334;
+  --results-communiquant: #F2C94C;
+  --results-facilitateur: #57A773;
+  --results-analyste: #477CB9;
+  --results-text: #202124;
+  --results-muted: #626B70;
+  --results-background: #FFFFFF;
+  --results-surface: #F7F7F5;
+  --results-border: #E5E7E7;
+  --results-container: 1280px;
+  --results-gutter: 24px;
+  --results-section-gap: 112px;
+  --results-radius-large: 24px;
+  --results-radius-small: 16px;
+  --results-h1-size: 64px;
+  --results-h2-size: 44px;
+  --results-h3-size: 28px;
+  --results-page-intro-size: 22px;
+  --results-section-intro-size: 19px;
+  --results-body-size: 17px;
+  --results-accordion-size: 20px;
+  --results-eyebrow-size: 12px;
+  --results-caption-size: 13px;
+  --results-h1-line-height: 1.08;
+  --results-h2-line-height: 1.14;
+  --results-h3-line-height: 1.2;
+  --results-body-line-height: 1.6;
+}
+
+/* One typeface across the public site and the embedded result pages. This
+   intentionally outranks legacy, page-local font stacks until they are retired. */
+body, body * { font-family: var(--results-font) !important; }
+body { font-size: var(--results-body-size); line-height: var(--results-body-line-height); }
+
+/* Shared semantic scale for the landing and questionnaire. Result chapters use
+   the ds-* role components below so their validated layouts remain intact. */
+body .entry-landing .landing-hero h1 { font-size: var(--results-h1-size) !important; font-weight: 700 !important; line-height: var(--results-h1-line-height) !important; letter-spacing: -.055em !important; }
+body .entry-landing .landing-lead { font-size: var(--results-page-intro-size) !important; font-weight: 400 !important; line-height: var(--results-body-line-height) !important; }
+body .multi-question-pages .stage-heading h1,
+body .disc-question-card > h1 { font-size: var(--results-h2-size) !important; font-weight: 700 !important; line-height: var(--results-h2-line-height) !important; letter-spacing: -.045em !important; }
+body .multi-question-pages h2 { font-size: var(--results-h3-size) !important; font-weight: 600 !important; line-height: var(--results-h3-line-height) !important; letter-spacing: -.025em !important; }
+body .entry-landing :is(.entry-kicker,.entry-privacy),
+body .multi-question-pages :is(.stage-kicker,.simple-stage-title) { font-size: var(--results-eyebrow-size) !important; font-weight: 700 !important; }
+body .entry-landing :is(.landing-cta,.entry-start),
+body .multi-question-pages :is(.question-back,.question-next) { font-size: var(--results-body-size) !important; font-weight: 600 !important; }
+
+.results-design-system, body.results-design-system {
+  font-family: var(--results-font) !important;
+  color: var(--results-text);
+  background: var(--results-background);
+}
+
+.results-design-system .ds-page-title { font-family: var(--results-font) !important; font-size: var(--results-h1-size) !important; font-weight: 700 !important; line-height: var(--results-h1-line-height) !important; letter-spacing: -.055em !important; }
+.results-design-system .ds-section-title { font-family: var(--results-font) !important; font-size: var(--results-h2-size) !important; font-weight: 700 !important; letter-spacing: -.045em !important; }
+.results-design-system .ds-card-title { font-family: var(--results-font) !important; font-size: var(--results-h3-size) !important; font-weight: 600 !important; letter-spacing: -.025em !important; }
+.results-design-system .ds-page-intro { font-family: var(--results-font) !important; font-size: var(--results-page-intro-size) !important; font-weight: 400 !important; }
+.results-design-system .ds-section-intro { font-family: var(--results-font) !important; font-size: var(--results-section-intro-size) !important; font-weight: 400 !important; }
+.results-design-system .ds-body { font-family: var(--results-font) !important; font-size: var(--results-body-size) !important; font-weight: 400 !important; }
+.results-design-system .ds-accordion { font-family: var(--results-font) !important; font-size: var(--results-accordion-size) !important; font-weight: 600 !important; }
+.results-design-system .ds-eyebrow { font-family: var(--results-font) !important; font-size: var(--results-eyebrow-size) !important; font-weight: 700 !important; }
+.results-design-system .ds-caption { font-family: var(--results-font) !important; font-size: var(--results-caption-size) !important; font-weight: 400 !important; }
+.results-design-system .ds-container { width: min(calc(100% - 2 * var(--results-gutter)), var(--results-container)); margin-inline: auto; }
+.results-design-system .ds-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--results-gutter); }
+
+/* The five editorial result pages are HTML; their roles are assigned on hydration. */
+body.results-design-system :is(#page-1,#page-3,#page-4,#page-5,#page-6) :is(.ds-page-title,.ds-section-title,.ds-card-title,.ds-page-intro,.ds-section-intro,.ds-body,.ds-accordion,.ds-eyebrow,.ds-caption) { font-family: var(--results-font) !important; }
+body.results-design-system :is(#page-1,#page-3,#page-4,#page-5,#page-6) .ds-page-title { font-size: var(--results-h1-size) !important; font-weight: 700 !important; letter-spacing: -.055em !important; }
+body.results-design-system :is(#page-1,#page-3,#page-4,#page-5,#page-6) .ds-section-title { font-size: var(--results-h2-size) !important; font-weight: 700 !important; letter-spacing: -.045em !important; }
+body.results-design-system :is(#page-1,#page-3,#page-4,#page-5,#page-6) .ds-card-title { font-size: var(--results-h3-size) !important; font-weight: 600 !important; letter-spacing: -.025em !important; }
+body.results-design-system :is(#page-1,#page-3,#page-4,#page-5,#page-6) .ds-page-intro { font-size: var(--results-page-intro-size) !important; font-weight: 400 !important; }
+body.results-design-system :is(#page-1,#page-3,#page-4,#page-5,#page-6) .ds-section-intro { font-size: var(--results-section-intro-size) !important; font-weight: 400 !important; }
+body.results-design-system :is(#page-1,#page-3,#page-4,#page-5,#page-6) .ds-body { font-size: var(--results-body-size) !important; font-weight: 400 !important; }
+body.results-design-system :is(#page-1,#page-3,#page-4,#page-5,#page-6) .ds-accordion { font-size: var(--results-accordion-size) !important; font-weight: 600 !important; }
+body.results-design-system :is(#page-1,#page-3,#page-4,#page-5,#page-6) .ds-eyebrow { font-size: var(--results-eyebrow-size) !important; font-weight: 700 !important; }
+body.results-design-system :is(#page-1,#page-3,#page-4,#page-5,#page-6) .ds-caption { font-size: var(--results-caption-size) !important; font-weight: 400 !important; }
+
+@media (max-width: 650px) {
+  :root {
+    --results-section-gap: 64px;
+    --results-h1-size: 38px;
+    --results-h2-size: 30px;
+    --results-h3-size: 22px;
+    --results-page-intro-size: 18px;
+    --results-section-intro-size: 17px;
+    --results-body-size: 16px;
+    --results-accordion-size: 18px;
+    --results-eyebrow-size: 11px;
+    --results-caption-size: 12px;
+  }
+}

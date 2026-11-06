@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Bell, ChevronRight, FileText, Video } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import {
-  getStudentAssignments,
+  getStudentProgramAssignments,
   getStudentCompletedIds,
   getStudentProgram,
   getStudentWorkItems,
@@ -55,7 +55,7 @@ export default async function StudentDashboardPage() {
       )
     : 0;
   const [assignments, doneIds] = await Promise.all([
-    getStudentAssignments(
+    getStudentProgramAssignments(
       supabase,
       allSessions.map((s) => s.id)
     ),

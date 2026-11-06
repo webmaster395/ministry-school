@@ -1,0 +1,219 @@
+.page { --accent: var(--results-analyste); min-height: 0; overflow-x: clip; background: var(--results-background); color: var(--results-text); }
+.banner { display: flex; justify-content: center; gap: 6px 14px; flex-wrap: wrap; padding: 10px 20px; border-bottom: 1px solid var(--results-border); background: var(--results-surface); color: var(--results-muted); font-size: var(--results-caption-size); text-align: center; }
+.banner strong { color: var(--results-text); letter-spacing: .09em; }
+.designNav { display: flex; gap: 6px; margin-left: 12px; }
+.designNav a { display: inline-flex; min-height: 44px; padding: 8px 11px; align-items: center; justify-content: center; border: 1px solid var(--results-border); border-radius: 999px; color: var(--results-muted); font-size: 11px; font-weight: 650; text-decoration: none; }
+.designNav a[aria-current="page"] { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); }
+.shell { width: min(1080px, calc(100% - 72px)); margin-inline: auto; padding: 60px 0 44px; }
+.page :is(.header, .sectionHeading) > :global(.ds-eyebrow), .leverFocusCopy > :global(.ds-eyebrow), .challengeAction > :global(.ds-eyebrow), .experiment > :global(.ds-eyebrow) { display: inline-flex; width: fit-content; padding: 6px 9px 5px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); text-transform: uppercase; letter-spacing: .1em; }
+.header > :global(.ds-eyebrow) { margin-inline: auto; }
+.header { max-width: 760px; margin: 0 auto; text-align: center; }
+.header h1 { margin: 11px 0 14px; font-size: clamp(42px, 5vw, 56px); }
+.header p { max-width: 620px; margin: 0 auto; color: var(--results-muted); font-size: 16px; line-height: 1.5; }
+.capSection, .levers, .challengeSection, .reflection { margin-top: 62px; }
+.nextCap { display: grid; grid-template-columns: minmax(260px, 1fr) minmax(0, 2fr); align-items: center; min-height: 0; overflow: hidden; border-radius: 20px; background: #111; color: #fff; }
+.nextCapCopy { grid-column: 2; min-width: 0; padding: 24px 30px; }
+.capAccordions { border-top: 1px solid rgb(255 255 255 / 24%); }
+.capAccordion { border-bottom: 1px solid rgb(255 255 255 / 24%); }
+.capTrigger { display: grid; grid-template-columns: 34px minmax(0, 1fr) 28px; align-items: center; gap: 10px; width: 100%; min-height: 58px; padding: 3px 0; border: 0; background: transparent; color: #fff; text-align: left; cursor: pointer; }
+.capTrigger > span:first-child { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #fff; color: var(--accent); font-size: 11px; font-weight: 700; }
+.capTrigger strong { font-size: 15px; font-weight: 650; line-height: 1.25; }
+.capPlus { display: grid; place-items: center; color: var(--accent); font-size: 20px; font-weight: 400; line-height: 1; }
+.capPanel { max-width: 58ch; padding: 0 28px 17px 44px; }
+.capPanel :global(.ds-body) { color: rgb(255 255 255 / 78%); font-size: 14px; line-height: 1.5; }
+.capPanel :global(.ds-body) + :global(.ds-body) { margin-top: 10px; }
+.nextCapPhoto { position: relative; grid-column: 1; grid-row: 1; align-self: center; width: calc(100% - 48px); aspect-ratio: 1; min-width: 0; min-height: 0; margin: 24px 0 24px 24px; overflow: hidden; border-radius: 16px 0 0 16px; }
+.nextCapPhoto img { object-fit: cover; object-position: 56% center; filter: none; }
+.photoLabel { position: absolute; z-index: 2; bottom: 18px; left: 18px; display: inline-flex; align-items: center; gap: 8px; width: fit-content; padding: 9px 13px; border: 1px solid rgb(255 255 255 / 28%); border-radius: 999px; background: rgb(17 17 17 / 72%); color: #fff; box-shadow: 0 8px 24px rgb(0 0 0 / 18%); font-size: 11px; font-weight: 800; letter-spacing: .075em; line-height: 1; text-transform: uppercase; backdrop-filter: blur(10px); }
+.photoLabel::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent); }
+.sectionHeading { max-width: 720px; margin: 0 auto 24px; text-align: center; }
+.capHeading { width: auto; max-width: 720px; margin-right: auto; margin-bottom: 34px; margin-left: 0; text-align: left; }
+.sectionHeading.capHeading p { margin: 0; }
+.leverHeading { width: auto; max-width: 720px; margin-right: auto; margin-left: 0; text-align: left; }
+.sectionHeading.leverHeading p { margin: 0; }
+.reflectionHeading { width: auto; max-width: 720px; margin-right: auto; margin-left: 0; text-align: left; }
+.sectionHeading.reflectionHeading p { max-width: 680px; margin: 0; }
+.sectionHeading h2 { margin: 10px 0 10px; font-size: clamp(28px, 3.5vw, 38px); }
+.sectionHeading p { max-width: 680px; margin: 0 auto; color: var(--results-muted); font-size: 15px; line-height: 1.48; }
+.leverPicker { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); margin: 30px 0 18px; border-bottom: 1px solid #dddfe1; }
+.leverChoice { display: grid; gap: 6px; min-width: 0; padding: 0 12px 15px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: #8a8e93; text-align: left; cursor: pointer; }
+.leverChoice span { font-size: 10px; font-weight: 700; letter-spacing: .08em; }
+.leverChoice strong { overflow: hidden; font-size: 13px; font-weight: 600; line-height: 1.25; text-overflow: ellipsis; }
+.leverChoice[aria-selected="true"] { border-bottom-color: var(--accent); color: var(--results-text); }
+.leverChoice[aria-selected="true"] span { color: var(--accent); }
+.leverFocus { display: grid; grid-template-columns: minmax(210px, 260px) minmax(0, 1fr); align-items: start; min-height: 0; overflow: hidden; border-radius: 24px; background: #f5f5f3; }
+.leverFocusPhoto { position: relative; width: calc(100% - 36px); aspect-ratio: 1; min-width: 0; margin: 24px 0 24px 24px; overflow: hidden; border-radius: 20px; }
+.leverFocusPhoto img { object-fit: cover; object-position: center 30%; filter: saturate(.86) contrast(1.01); }
+.leverFocusCopy { min-width: 0; padding: 34px clamp(28px, 4vw, 50px); }
+.leverFocusCopy > :global(.ds-card-title) { margin: 8px 0 24px; font-size: clamp(25px, 3vw, 34px); letter-spacing: -.035em; }
+.leverInsight { display: grid; grid-template-columns: 145px minmax(0, 1fr); gap: 6px 22px; padding: 16px 0; border-top: 1px solid #dedfdf; }
+.leverInsight h4 { grid-row: 1 / span 2; margin: 2px 0 0; color: var(--accent); font-size: 10px; font-weight: 800; line-height: 1.35; letter-spacing: .075em; text-transform: uppercase; }
+.leverInsight p { margin: 0; color: #50555a; font-size: 14px; line-height: 1.55; }
+.leverInsight .leverSituation { color: var(--results-text); font-weight: 650; }
+.leverWhy, .leverExample { padding-top: 7px; }
+.leverInsight p strong { color: var(--results-text); font-weight: 650; }
+.leverAction { display: grid; gap: 7px; margin-top: 17px; padding: 17px 19px; border-radius: 13px; background: #fff; box-shadow: 0 1px 0 rgb(0 0 0 / 4%); }
+.leverAction span { color: var(--accent); font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.leverAction strong { font-size: 15px; line-height: 1.45; }
+.challengeHeading { width: auto; max-width: 720px; margin-right: auto; margin-left: 0; text-align: left; }
+.sectionHeading.challengeHeading p { margin: 0; }
+.challenge { display: grid; grid-template-columns: minmax(230px, 1fr) minmax(0, 2fr); align-items: start; gap: clamp(38px, 5vw, 64px); overflow: hidden; padding: 0; border: 0; border-radius: 0; background: transparent; color: var(--results-text); }
+.challengePhoto { position: relative; min-width: 0; aspect-ratio: 1; overflow: hidden; border-radius: 18px; }
+.challengePhoto img { object-fit: cover; object-position: center 24%; filter: saturate(.92) contrast(1.01); }
+.challengeCopy { min-width: 0; padding: 2px 0 0; }
+.challengeCopy > :global(.ds-eyebrow) { display: inline-flex; width: fit-content; padding: 6px 9px 5px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); }
+.challengeCopy > :global(.ds-card-title) { max-width: 22ch; margin: 9px 0 28px; }
+.selectLabel { display: block; margin-top: 17px; color: var(--results-muted); font-size: var(--results-caption-size); }
+.challengeSelect { width: 100%; margin: 8px 0 24px; padding: 12px 42px 12px 14px; border: 1px solid #d9dcdf; border-radius: 10px; background: #fff; color: var(--results-text); font: inherit; font-size: 14px; }
+.challengeAction { margin-bottom: 26px; padding: 20px 0 24px; border-top: 1px solid var(--results-border); border-bottom: 1px solid var(--results-border); }
+.challengeAction > :global(.ds-card-title) { max-width: 24ch; margin-top: 8px; font-size: 20px; line-height: 1.35; letter-spacing: -.02em; }
+.challengeLevers { display: flex; gap: 0; margin: 0 0 18px; overflow-x: auto; border-top: 1px solid #dedfdd; border-bottom: 1px solid #dedfdd; scrollbar-width: none; }
+.challengeLevers::-webkit-scrollbar { display: none; }
+.challengeLevers button { flex: 1 0 112px; padding: 13px 10px; border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: transparent; color: #74787d; font: inherit; font-size: 11px; text-align: left; cursor: pointer; }
+.challengeLevers button span { margin-right: 5px; color: var(--accent); font-size: 9px; font-weight: 700; }
+.challengeLevers button[aria-selected="true"] { border-bottom-color: var(--accent); color: #111; }
+.challengeSteps { border-top: 1px solid #dedfdd; }
+.challengeStep { display: grid; grid-template-columns: 42px minmax(0, 1fr); gap: 16px; padding: 18px 0 20px; border-bottom: 1px solid #dedfdd; }
+.challengeStep > span { padding-top: 2px; color: var(--accent); font-size: var(--results-caption-size); font-weight: 700; }
+.challengeStep :global(.ds-eyebrow) { color: var(--results-muted); font-size: 10px; }
+.challengeStep strong { display: block; margin: 3px 0 5px; font-size: 16px; }
+.challengeStep :global(.ds-body) { max-width: 56ch; color: #666a6f; font-size: 14px; line-height: 1.5; }
+.questions { max-width: 860px; margin: 38px auto 0; padding: 0; border-top: 1px solid #dedfdd; list-style: none; }
+.question { display: grid; grid-template-columns: 72px minmax(0, 1fr); align-items: start; min-width: 0; padding: 30px 0 34px; border-bottom: 1px solid #dedfdd; }
+.question + .question { border-left: 0; }
+.question > span { padding-top: 5px; color: var(--accent); font-size: var(--results-caption-size); font-weight: 700; line-height: 1; }
+.question p { max-width: 30ch; margin: 0; color: var(--results-text); font-size: 22px; font-weight: 600; line-height: 1.4; letter-spacing: -.025em; }
+.miniNav { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 64px; padding: 28px 32px; border-radius: var(--results-radius-large); background: #f5f5f7; }
+.miniNav div { display: grid; gap: 7px; }
+.miniNav small { color: #96969e; font-size: var(--results-caption-size); }
+.miniNav strong { font-size: var(--results-h3-size); font-weight: 600; }
+.miniNav a { display: inline-flex; align-items: center; justify-content: center; min-height: 50px; padding: 12px 25px; border-radius: 999px; background: #1d1d1f; color: #fff; font-weight: 600; text-decoration: none; white-space: nowrap; }
+.leverChoice:focus-visible, .stepPicker button:focus-visible, .challengeSelect:focus-visible, .miniNav a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+/* Proposition B - reprise des blocs colorés de la page 04. */
+.designPage04 .shell { width: min(var(--results-container), calc(100% - 72px)); }
+.designPage04 .nextCap, .designPage04 .leverFocus, .designPage04 .challenge { border-radius: 20px; background: var(--accent); color: var(--accent-ink); }
+.designPage04 .nextCap { grid-template-columns: minmax(260px, 1fr) minmax(0, 2fr); }
+.designPage04 .nextCapPhoto { margin: 24px 0 24px 24px; }
+.designPage04 .capTrigger, .designPage04 .capPanel :global(.ds-body), .designPage04 .leverFocusCopy :is(:global(.ds-card-title), p), .designPage04 .challengeCopy :is(:global(.ds-card-title), :global(.ds-body)), .designPage04 .challengeStep :global(.ds-body) { color: var(--accent-ink); }
+.designPage04 .capAccordions, .designPage04 .capAccordion, .designPage04 .leverInsight, .designPage04 .challengeLevers, .designPage04 .challengeSteps, .designPage04 .challengeStep { border-color: color-mix(in srgb, var(--accent-ink) 30%, transparent); }
+.designPage04 .leverFocus { grid-template-columns: minmax(260px, 1fr) minmax(0, 2fr); align-items: stretch; }
+.designPage04 .leverFocusPhoto { align-self: stretch; width: auto; aspect-ratio: auto; margin: 24px 0 24px 24px; border-radius: 16px 0 0 16px; }
+.designPage04 .challenge { padding: 24px; }
+.designPage04 .challengeLevers button { color: color-mix(in srgb, var(--accent-ink) 70%, transparent); }
+.designPage04 .challengeLevers button[aria-selected="true"] { color: var(--accent-ink); }
+
+/* Proposition C - reprise des cartes claires et accordéons de la page 02. */
+.designPage02 .shell { width: min(1120px, calc(100% - 72px)); padding-top: 88px; }
+.designPage02 .nextCap, .designPage02 .leverFocus, .designPage02 .challenge { border: 0; border-radius: var(--results-radius-large); background: #f5f6f7; color: var(--results-text); }
+.designPage02 .nextCap { padding: 14px; }
+.designPage02 .nextCapPhoto { width: 100%; margin: 0; border-radius: var(--results-radius-small); }
+.designPage02 .adviceBlock .nextCapPhoto, .designPage02 .challengeAdviceBlock .nextCapPhoto { aspect-ratio: .96; }
+@media (min-width: 701px) {
+  .designPage02 .adviceBlock .nextCapPhoto, .designPage02 .challengeAdviceBlock .nextCapPhoto { align-self: start; margin-top: 24px; }
+}
+.designPage02 .capTrigger, .designPage02 .capPanel :global(.ds-body) { color: var(--results-text); }
+.designPage02 .capAccordions, .designPage02 .capAccordion { border-color: var(--results-border); }
+.designPage02 .leverSelectBlock { position: relative; margin-bottom: 22px; padding: 16px; border: 1px solid #e3e4e6; border-radius: 16px; background: #fff; box-shadow: 0 8px 24px rgba(18,18,18,.035); }
+.designPage02 .leverSelectBadge { display: inline-flex; align-items: center; min-height: 27px; margin: 0 0 11px; padding: 5px 10px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); font-size: 10px; font-weight: 800; letter-spacing: .075em; text-transform: uppercase; }
+.designPage02 .leverSelectControl { position: relative; }
+.designPage02 .leverSelectButton { display: flex; align-items: center; justify-content: space-between; gap: 20px; width: 100%; min-height: 58px; padding: 14px 16px 14px 18px; border: 1px solid #d8dade; border-radius: 12px; background: #fff; color: #111; box-shadow: 0 1px 2px rgba(0,0,0,.025); font: inherit; font-size: 16px; font-weight: 675; line-height: 1.3; text-align: left; cursor: pointer; }
+.designPage02 .leverSelectButton:hover { border-color: color-mix(in srgb, var(--accent) 55%, #d8dade); }
+.designPage02 .leverSelectButton:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 28%, transparent); outline-offset: 2px; border-color: var(--accent); }
+.designPage02 .leverSelectChevron { flex: 0 0 auto; color: var(--accent); font-size: 18px; font-weight: 800; line-height: 1; transform: translateY(-2px); }
+.designPage02 .leverSelectButton[aria-expanded="true"] .leverSelectChevron { transform: rotate(180deg) translateY(2px); }
+.designPage02 .leverSelectMenu { position: absolute; z-index: 20; top: calc(100% + 6px); right: 0; left: 0; overflow: hidden; padding: 6px; border: 1px solid #e1e2e4; border-radius: 13px; background: #fff; box-shadow: 0 14px 34px rgba(0,0,0,.12); }
+.designPage02 .leverSelectMenu button { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%; min-height: 45px; padding: 10px 12px; border: 0; border-radius: 9px; background: #fff; color: #242426; font: inherit; font-size: 14px; font-weight: 600; line-height: 1.35; text-align: left; cursor: pointer; }
+.designPage02 .leverSelectMenu button:hover, .designPage02 .leverSelectMenu button:focus-visible { outline: 0; background: #f7f7f8; }
+.designPage02 .leverSelectMenu button[aria-selected="true"] { color: #111; font-weight: 750; }
+.designPage02 .leverSelectMenu button[aria-selected="true"] span:last-child { color: var(--accent); }
+.designPage02 .leverNavigator { display: grid; grid-template-areas: "info previous next"; grid-template-columns: minmax(0, 1fr) 38px 38px; align-items: center; gap: 8px; margin-bottom: 22px; padding: 13px 14px; border: 1px solid var(--results-border); border-radius: 13px; background: #fff; }
+.designPage02 .leverNavigator button { display: grid; place-items: center; width: 38px; height: 38px; padding: 0; border: 1px solid var(--results-border); border-radius: 50%; background: #fff; color: var(--results-text); font-size: 16px; cursor: pointer; }
+.designPage02 .leverNavigator button:first-child { grid-area: previous; }
+.designPage02 .leverNavigator button:last-child { grid-area: next; }
+.designPage02 .leverNavigator button em { display: none; }
+.designPage02 .leverNavigator button:hover { border-color: var(--accent); color: var(--accent); }
+.designPage02 .leverNavigator div { grid-area: info; min-width: 0; text-align: left; }
+.designPage02 .leverNavigator small { display: block; margin-bottom: 4px; color: var(--accent); font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.designPage02 .leverNavigator strong { display: block; overflow: hidden; color: var(--results-text); font-size: 15px; font-weight: 650; line-height: 1.3; text-overflow: ellipsis; white-space: nowrap; }
+.designPage02 .challengeGoal { margin: 0 0 18px; padding: 16px 18px; border-radius: 12px; background: #fff; }
+.designPage02 .challengeGoal span { display: block; margin-bottom: 6px; color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.designPage02 .challengeGoal strong { color: var(--results-text); font-size: 15px; line-height: 1.45; }
+.designPage02 .leverFocus { padding: 14px; }
+.designPage02 .leverFocusPhoto { width: 100%; margin: 0; border-radius: var(--results-radius-small); }
+.designPage02 .challenge { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); align-items: stretch; gap: 28px; padding: 0; overflow: visible; border-radius: 0; background: transparent; }
+.designPage02 .challengePhoto { align-self: start; min-height: 0; aspect-ratio: 1; border-radius: var(--results-radius-large); }
+.designPage02 .challengeCopy { align-self: stretch; padding: 32px; border-radius: var(--results-radius-large); background: #f5f6f7; }
+.designPage02 .challengeCopy > :global(.ds-eyebrow) { color: var(--results-text); font-size: 17px; font-weight: 650; letter-spacing: -.015em; text-transform: none; }
+.designPage02 .selectLabel { margin-top: 22px; color: #5f6569; font-size: 15px; font-weight: 600; }
+.designPage02 .challengeSelect { min-height: 56px; margin-top: 10px; padding: 14px 48px 14px 17px; appearance: none; border: 1px solid #dfe2e1; border-radius: 14px; background-color: #fff; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='m4 6 4 4 4-4' stroke='%23202527' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 17px center; color: var(--results-text); font-size: 16px; font-weight: 600; box-shadow: 0 1px 2px rgb(0 0 0 / 4%); cursor: pointer; }
+.designPage02 .challengeSelect:hover { border-color: #c8ccca; }
+.designPage02 .challengeSelect:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent); outline-offset: 2px; border-color: var(--accent); }
+.designPage02 .challengeSteps { border-top: 0; }
+.designPage02 .questions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; max-width: none; border: 0; }
+.designPage02 .question { display: block; min-height: 220px; padding: 28px; border: 0; border-radius: var(--results-radius-large); background: #f5f6f7; }
+.designPage02 .question > span { display: grid; place-items: center; width: 32px; height: 32px; margin-bottom: 18px; padding: 0; border-radius: 50%; background: #fff; color: var(--accent); font-size: 11px; font-weight: 750; line-height: 1; }
+.designPage02 .question p { font-size: 18px; }
+@media (max-width: 900px) {
+  .shell { width: min(100% - 48px, 760px); padding-top: 70px; }
+  .nextCap { grid-template-columns: minmax(230px, 1fr) minmax(0, 2fr); }
+  .nextCapCopy { padding: 22px; }
+  .leverFocus { grid-template-columns: minmax(200px, 240px) minmax(0, 1fr); }
+  .leverInsight { grid-template-columns: 120px minmax(0, 1fr); gap: 6px 16px; }
+  .challenge { grid-template-columns: minmax(210px, 250px) minmax(0, 1fr); gap: 32px; }
+  .sectionHeading p { max-width: 85%; }
+  .capHeading { width: auto; }
+  .capHeading p { max-width: none; }
+}
+@media (max-width: 700px) {
+  .shell { width: calc(100% - 36px); padding: 54px 0 28px; }
+  .header h1 { margin: 12px 0 17px; }
+  .capSection, .levers, .challengeSection, .reflection { margin-top: 54px; }
+  .sectionHeading { margin-bottom: 23px; }
+  .sectionHeading h2 { margin: 12px 0; }
+  .sectionHeading p { max-width: none; }
+  .capHeading { width: 100%; margin-bottom: 30px; margin-left: 0; }
+  .nextCap { grid-template-columns: 1fr; min-height: 0; }
+  .nextCapPhoto { grid-column: 1; grid-row: 1; width: min(260px, calc(100% - 32px)); min-height: 0; margin: 16px auto 8px; aspect-ratio: 1; border-radius: 14px; }
+  .nextCapCopy { grid-column: 1; grid-row: 2; padding: 8px 16px 18px; }
+  .capPanel { padding: 0 8px 16px 42px; }
+  .leverPicker { display: flex; gap: 0; margin-top: 24px; overflow-x: auto; }
+  .leverChoice { flex: 0 0 150px; }
+  .leverFocus { grid-template-columns: 1fr; min-height: 0; border-radius: 18px; }
+  .leverFocusPhoto { width: min(240px, calc(100% - 24px)); min-height: 0; margin: 16px auto 0; aspect-ratio: 1; border-radius: 18px; }
+  .leverFocusCopy { padding: 25px 18px 20px; }
+  .leverFocusCopy > :global(.ds-card-title) { margin-bottom: 18px; }
+  .leverInsight { grid-template-columns: 1fr; gap: 5px; }
+  .leverInsight h4 { grid-row: auto; }
+  .leverHeading { width: 100%; margin-left: 0; }
+  .challengeHeading { width: 100%; }
+  .challenge { grid-template-columns: 1fr; gap: 24px; padding: 0; }
+  .challengePhoto { width: min(280px, 100%); min-height: 0; margin-inline: auto; aspect-ratio: 1; border-radius: 18px; }
+  .challengePhoto img { object-position: center 24%; }
+  .challengeCopy { padding: 26px 16px 18px; }
+  .questions { margin-top: 24px; }
+  .question { grid-template-columns: 42px minmax(0, 1fr); gap: 12px; padding: 24px 0 27px; }
+  .question > span { padding-top: 5px; }
+  .question p { max-width: none; font-size: var(--results-accordion-size); }
+  .miniNav { align-items: flex-start; margin-top: 44px; padding: 16px; }
+  .miniNav strong { font-size: 15px; }
+  .miniNav a { min-height: 44px; padding: 10px 13px; font-size: 14px; }
+  .designNav { width: 100%; justify-content: center; margin: 3px 0 0; }
+  .designPage04 .shell, .designPage02 .shell { width: calc(100% - 28px); }
+  .designPage04 .leverFocus, .designPage04 .nextCap { grid-template-columns: 1fr; }
+  .designPage04 .leverFocusPhoto { width: calc(100% - 32px); aspect-ratio: 1; margin: 16px; border-radius: 14px; }
+  .designPage02 .nextCapPhoto, .designPage02 .adviceBlock .nextCapPhoto, .designPage02 .challengeAdviceBlock .nextCapPhoto { width: calc(100% - 32px); margin: 16px; margin-bottom: 8px; aspect-ratio: 16 / 7; }
+  .designPage02 .capSection .nextCapPhoto img { object-position: center 12%; }
+  .designPage02 .adviceBlock .nextCapPhoto img { object-position: center 24%; }
+  .designPage02 .questions { grid-template-columns: 1fr; gap: 14px; }
+  .designPage02 .question { min-height: 0; }
+  .designPage02 .challenge { grid-template-columns: 1fr; gap: 18px; }
+  .designPage02 .challengePhoto { width: 100%; aspect-ratio: 4 / 3; }
+  .designPage02 .challengeCopy { padding: 24px 20px; }
+  .designPage02 .leverNavigator { grid-template-columns: minmax(0, 1fr) 38px 38px; }
+}
+@media (max-width: 370px) {
+  .shell { width: calc(100% - 28px); }
+  .nextCapPhoto { width: min(240px, calc(100% - 28px)); min-height: 0; }
+  .nextCapCopy, .challengeCopy { padding-inline: 16px; }
+}

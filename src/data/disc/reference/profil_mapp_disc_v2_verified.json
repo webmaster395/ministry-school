@@ -1,0 +1,1304 @@
+{
+  "schema_version": "2.0.0",
+  "project": "Profil MAPP",
+  "status": "verified_ready_for_integration_not_published",
+  "change_summary": "Remplace les anciennes questions et l’ancien scoring. 28 groupes naturels + 8 affirmations sous pression; duels conditionnels. Préserver le design existant.",
+  "profiles": {
+    "D": "Conquérant",
+    "I": "Communiquant",
+    "S": "Facilitateur",
+    "C": "Analyste"
+  },
+  "natural": {
+    "instructions": "Dans chaque groupe, sélectionne un adjectif qui te représente le plus (+) et un autre qui te représente le moins (−).",
+    "questions": [
+      {
+        "id": 1,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Enthousiaste",
+            "plusCode": "I",
+            "minusCode": "I"
+          },
+          {
+            "id": "B",
+            "text": "Audacieux",
+            "plusCode": "D",
+            "minusCode": "D"
+          },
+          {
+            "id": "C",
+            "text": "Diplomatique",
+            "plusCode": "C",
+            "minusCode": "C"
+          },
+          {
+            "id": "D",
+            "text": "Satisfait",
+            "plusCode": "S",
+            "minusCode": "S"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 2,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Prudent",
+            "plusCode": "C",
+            "minusCode": "C"
+          },
+          {
+            "id": "B",
+            "text": "Déterminé",
+            "plusCode": "D",
+            "minusCode": "D"
+          },
+          {
+            "id": "C",
+            "text": "Convainquant",
+            "plusCode": "I",
+            "minusCode": "I"
+          },
+          {
+            "id": "D",
+            "text": "Facile à vivre",
+            "plusCode": "S",
+            "minusCode": "N"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 3,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Amical",
+            "plusCode": "I",
+            "minusCode": "N"
+          },
+          {
+            "id": "B",
+            "text": "Précis",
+            "plusCode": "C",
+            "minusCode": "C"
+          },
+          {
+            "id": "C",
+            "text": "Volubile",
+            "plusCode": "D",
+            "minusCode": "D"
+          },
+          {
+            "id": "D",
+            "text": "Calme",
+            "plusCode": "N",
+            "minusCode": "S"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 4,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Bavard",
+            "plusCode": "I",
+            "minusCode": "I"
+          },
+          {
+            "id": "B",
+            "text": "Mesuré",
+            "plusCode": "C",
+            "minusCode": "C"
+          },
+          {
+            "id": "C",
+            "text": "Conventionnel",
+            "plusCode": "S",
+            "minusCode": "S"
+          },
+          {
+            "id": "D",
+            "text": "Décidé",
+            "plusCode": "D",
+            "minusCode": "D"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 5,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Aventurier",
+            "plusCode": "D",
+            "minusCode": "D"
+          },
+          {
+            "id": "B",
+            "text": "Plein de discernement",
+            "plusCode": "C",
+            "minusCode": "C"
+          },
+          {
+            "id": "C",
+            "text": "Sociable",
+            "plusCode": "I",
+            "minusCode": "I"
+          },
+          {
+            "id": "D",
+            "text": "Modéré",
+            "plusCode": "S",
+            "minusCode": "S"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 6,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Gentil",
+            "plusCode": "S",
+            "minusCode": "S"
+          },
+          {
+            "id": "B",
+            "text": "Persuasif",
+            "plusCode": "I",
+            "minusCode": "N"
+          },
+          {
+            "id": "C",
+            "text": "Humble",
+            "plusCode": "N",
+            "minusCode": "C"
+          },
+          {
+            "id": "D",
+            "text": "Original",
+            "plusCode": "N",
+            "minusCode": "D"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 7,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Expressif",
+            "plusCode": "I",
+            "minusCode": "I"
+          },
+          {
+            "id": "B",
+            "text": "Consciencieux",
+            "plusCode": "C",
+            "minusCode": "C"
+          },
+          {
+            "id": "C",
+            "text": "Dominateur",
+            "plusCode": "D",
+            "minusCode": "D"
+          },
+          {
+            "id": "D",
+            "text": "Qui a du répondant",
+            "plusCode": "N",
+            "minusCode": "S"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 8,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Posé",
+            "plusCode": "I",
+            "minusCode": "I"
+          },
+          {
+            "id": "B",
+            "text": "Observateur",
+            "plusCode": "C",
+            "minusCode": "N"
+          },
+          {
+            "id": "C",
+            "text": "Modeste",
+            "plusCode": "S",
+            "minusCode": "S"
+          },
+          {
+            "id": "D",
+            "text": "Impatient",
+            "plusCode": "D",
+            "minusCode": "D"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 9,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Plein de tact",
+            "plusCode": "C",
+            "minusCode": "C"
+          },
+          {
+            "id": "B",
+            "text": "Agréable",
+            "plusCode": "S",
+            "minusCode": "S"
+          },
+          {
+            "id": "C",
+            "text": "Magnétique",
+            "plusCode": "I",
+            "minusCode": "I"
+          },
+          {
+            "id": "D",
+            "text": "Insistant",
+            "plusCode": "D",
+            "minusCode": "D"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 10,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Courageux",
+            "plusCode": "D",
+            "minusCode": "D"
+          },
+          {
+            "id": "B",
+            "text": "Influent",
+            "plusCode": "I",
+            "minusCode": "I"
+          },
+          {
+            "id": "C",
+            "text": "Soumis",
+            "plusCode": "S",
+            "minusCode": "S"
+          },
+          {
+            "id": "D",
+            "text": "Timide",
+            "plusCode": "N",
+            "minusCode": "C"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 11,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Réservé",
+            "plusCode": "C",
+            "minusCode": "C"
+          },
+          {
+            "id": "B",
+            "text": "Obséquieux",
+            "plusCode": "S",
+            "minusCode": "S"
+          },
+          {
+            "id": "C",
+            "text": "Fort caractère",
+            "plusCode": "D",
+            "minusCode": "D"
+          },
+          {
+            "id": "D",
+            "text": "Joyeux",
+            "plusCode": "I",
+            "minusCode": "I"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 12,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Stimulant",
+            "plusCode": "I",
+            "minusCode": "I"
+          },
+          {
+            "id": "B",
+            "text": "Doux",
+            "plusCode": "S",
+            "minusCode": "S"
+          },
+          {
+            "id": "C",
+            "text": "Analytique",
+            "plusCode": "C",
+            "minusCode": "C"
+          },
+          {
+            "id": "D",
+            "text": "Indépendant",
+            "plusCode": "D",
+            "minusCode": "D"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 13,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Compétitif",
+            "plusCode": "D",
+            "minusCode": "D"
+          },
+          {
+            "id": "B",
+            "text": "Considéré",
+            "plusCode": "S",
+            "minusCode": "S"
+          },
+          {
+            "id": "C",
+            "text": "Joyeux",
+            "plusCode": "I",
+            "minusCode": "I"
+          },
+          {
+            "id": "D",
+            "text": "Réservé",
+            "plusCode": "C",
+            "minusCode": "C"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 14,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Insatisfait",
+            "plusCode": "C",
+            "minusCode": "C"
+          },
+          {
+            "id": "B",
+            "text": "Obéissant",
+            "plusCode": "S",
+            "minusCode": "S"
+          },
+          {
+            "id": "C",
+            "text": "Ferme",
+            "plusCode": "D",
+            "minusCode": "D"
+          },
+          {
+            "id": "D",
+            "text": "Joueur",
+            "plusCode": "I",
+            "minusCode": "I"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 15,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Attirant",
+            "plusCode": "I",
+            "minusCode": "I"
+          },
+          {
+            "id": "B",
+            "text": "Introspectif",
+            "plusCode": "C",
+            "minusCode": "N"
+          },
+          {
+            "id": "C",
+            "text": "Têtu",
+            "plusCode": "D",
+            "minusCode": "D"
+          },
+          {
+            "id": "D",
+            "text": "Prévisible",
+            "plusCode": "S",
+            "minusCode": "S"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 16,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Logique",
+            "plusCode": "C",
+            "minusCode": "C"
+          },
+          {
+            "id": "B",
+            "text": "Audacieux",
+            "plusCode": "D",
+            "minusCode": "D"
+          },
+          {
+            "id": "C",
+            "text": "Loyal",
+            "plusCode": "S",
+            "minusCode": "S"
+          },
+          {
+            "id": "D",
+            "text": "Charmeur",
+            "plusCode": "I",
+            "minusCode": "I"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 17,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Sociable",
+            "plusCode": "I",
+            "minusCode": "I"
+          },
+          {
+            "id": "B",
+            "text": "Patient",
+            "plusCode": "S",
+            "minusCode": "S"
+          },
+          {
+            "id": "C",
+            "text": "Individualiste",
+            "plusCode": "D",
+            "minusCode": "D"
+          },
+          {
+            "id": "D",
+            "text": "Parle avec douceur",
+            "plusCode": "C",
+            "minusCode": "C"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 18,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Volontaire",
+            "plusCode": "S",
+            "minusCode": "S"
+          },
+          {
+            "id": "B",
+            "text": "Qui a envie",
+            "plusCode": "D",
+            "minusCode": "N"
+          },
+          {
+            "id": "C",
+            "text": "Jusqu’au boutiste",
+            "plusCode": "C",
+            "minusCode": "C"
+          },
+          {
+            "id": "D",
+            "text": "Sarcastique",
+            "plusCode": "I",
+            "minusCode": "I"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 19,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Agressif",
+            "plusCode": "D",
+            "minusCode": "D"
+          },
+          {
+            "id": "B",
+            "text": "Extraverti",
+            "plusCode": "I",
+            "minusCode": "I"
+          },
+          {
+            "id": "C",
+            "text": "Aimable",
+            "plusCode": "S",
+            "minusCode": "S"
+          },
+          {
+            "id": "D",
+            "text": "Plein de peur",
+            "plusCode": "N",
+            "minusCode": "C"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 20,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Confiant",
+            "plusCode": "I",
+            "minusCode": "I"
+          },
+          {
+            "id": "B",
+            "text": "Sympathique",
+            "plusCode": "S",
+            "minusCode": "S"
+          },
+          {
+            "id": "C",
+            "text": "Impartial",
+            "plusCode": "N",
+            "minusCode": "C"
+          },
+          {
+            "id": "D",
+            "text": "Plein de discernement",
+            "plusCode": "D",
+            "minusCode": "D"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 21,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Discipliné",
+            "plusCode": "C",
+            "minusCode": "C"
+          },
+          {
+            "id": "B",
+            "text": "Généreux",
+            "plusCode": "S",
+            "minusCode": "S"
+          },
+          {
+            "id": "C",
+            "text": "Actif",
+            "plusCode": "I",
+            "minusCode": "I"
+          },
+          {
+            "id": "D",
+            "text": "Persistant",
+            "plusCode": "D",
+            "minusCode": "D"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 22,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Impulsif",
+            "plusCode": "I",
+            "minusCode": "I"
+          },
+          {
+            "id": "B",
+            "text": "Introverti",
+            "plusCode": "C",
+            "minusCode": "C"
+          },
+          {
+            "id": "C",
+            "text": "Autoritaire",
+            "plusCode": "D",
+            "minusCode": "D"
+          },
+          {
+            "id": "D",
+            "text": "Facile à vivre",
+            "plusCode": "S",
+            "minusCode": "S"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 23,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Sociable",
+            "plusCode": "I",
+            "minusCode": "I"
+          },
+          {
+            "id": "B",
+            "text": "Réfléchi",
+            "plusCode": "C",
+            "minusCode": "C"
+          },
+          {
+            "id": "C",
+            "text": "Vigoureux",
+            "plusCode": "D",
+            "minusCode": "D"
+          },
+          {
+            "id": "D",
+            "text": "Flegmatique",
+            "plusCode": "S",
+            "minusCode": "S"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 24,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Captivant",
+            "plusCode": "I",
+            "minusCode": "I"
+          },
+          {
+            "id": "B",
+            "text": "Content",
+            "plusCode": "S",
+            "minusCode": "S"
+          },
+          {
+            "id": "C",
+            "text": "Exigeant",
+            "plusCode": "D",
+            "minusCode": "D"
+          },
+          {
+            "id": "D",
+            "text": "Qui se soumet",
+            "plusCode": "C",
+            "minusCode": "C"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 25,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Pinailleur",
+            "plusCode": "D",
+            "minusCode": "D"
+          },
+          {
+            "id": "B",
+            "text": "Systématique",
+            "plusCode": "C",
+            "minusCode": "C"
+          },
+          {
+            "id": "C",
+            "text": "Coopératif",
+            "plusCode": "S",
+            "minusCode": "S"
+          },
+          {
+            "id": "D",
+            "text": "Cœur léger",
+            "plusCode": "I",
+            "minusCode": "I"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 26,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Jovial",
+            "plusCode": "I",
+            "minusCode": "I"
+          },
+          {
+            "id": "B",
+            "text": "Précis",
+            "plusCode": "C",
+            "minusCode": "C"
+          },
+          {
+            "id": "C",
+            "text": "Direct",
+            "plusCode": "D",
+            "minusCode": "D"
+          },
+          {
+            "id": "D",
+            "text": "Humeur égale",
+            "plusCode": "S",
+            "minusCode": "S"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 27,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Remuant",
+            "plusCode": "D",
+            "minusCode": "D"
+          },
+          {
+            "id": "B",
+            "text": "Diplomate",
+            "plusCode": "S",
+            "minusCode": "S"
+          },
+          {
+            "id": "C",
+            "text": "Attirant",
+            "plusCode": "I",
+            "minusCode": "I"
+          },
+          {
+            "id": "D",
+            "text": "Prudent",
+            "plusCode": "C",
+            "minusCode": "C"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      },
+      {
+        "id": 28,
+        "type": "forced_choice_plus_minus",
+        "options": [
+          {
+            "id": "A",
+            "text": "Respectueux",
+            "plusCode": "C",
+            "minusCode": "C"
+          },
+          {
+            "id": "B",
+            "text": "Pionnier",
+            "plusCode": "D",
+            "minusCode": "D"
+          },
+          {
+            "id": "C",
+            "text": "Optimiste",
+            "plusCode": "I",
+            "minusCode": "I"
+          },
+          {
+            "id": "D",
+            "text": "Serviable",
+            "plusCode": "S",
+            "minusCode": "S"
+          }
+        ],
+        "required": {
+          "most": 1,
+          "least": 1,
+          "distinct": true
+        }
+      }
+    ],
+    "scoring": {
+      "source": "DISC Test IC(1).xlsx, worksheet Codage, cells specified in mapping audit",
+      "source_numeric_codes": {
+        "1": "I",
+        "2": "D",
+        "3": "C",
+        "4": "S",
+        "5": "N"
+      },
+      "dimensions": [
+        "D",
+        "I",
+        "S",
+        "C"
+      ],
+      "neutral_code": "N",
+      "plus_counts": "Pour chaque dimension, compter les options sélectionnées +.",
+      "minus_counts": "Pour chaque dimension, compter les options sélectionnées −.",
+      "net_counts": "plus_counts[dimension] - minus_counts[dimension] (graphique 3 du classeur).",
+      "rank_basis": "descending exact net score = plus_count - minus_count, D/I/S/C; ties resolved by validated duels",
+      "display_percentages": {
+        "status": "approved_display_convention_not_psychometric_scale",
+        "positive_opportunities": {
+          "D": 27,
+          "I": 28,
+          "S": 26,
+          "C": 24
+        },
+        "rate": "plus_counts[d] / positive_opportunities[d]",
+        "percentage": "100 * rate[d] / sum(rate[D],rate[I],rate[S],rate[C])",
+        "zero_opportunity": "Configuration validation error; block publication",
+        "zero_total_rates": "Indeterminate; do not invent percentages",
+        "rounding": "Largest remainder: compute exact shares, floor to 0.01 percentage point, distribute remaining 0.01 points by largest fractional remainders, stable order D,I,S,C",
+        "rank_independent": "Never use display percentages to determine primary or secondary"
+      },
+      "neutral_handling": "N est comptabilisé séparément; non utilisé dans le classement D/I/S/C."
+    }
+  },
+  "pressure": {
+    "instructions": "Indique à quel point chaque affirmation te correspond lorsque tu es sous pression.",
+    "scale": [
+      {
+        "value": 1,
+        "label": "Pas du tout d’accord"
+      },
+      {
+        "value": 2,
+        "label": "Plutôt pas d’accord"
+      },
+      {
+        "value": 3,
+        "label": "Ni d’accord ni pas d’accord"
+      },
+      {
+        "value": 4,
+        "label": "Plutôt d’accord"
+      },
+      {
+        "value": 5,
+        "label": "Tout à fait d’accord"
+      }
+    ],
+    "questions": [
+      {
+        "id": 1,
+        "dimension": "D",
+        "theme": "Urgence",
+        "text": "Dans une situation urgente, résoudre le problème compte davantage pour moi que de ménager les sentiments des autres.",
+        "required": true
+      },
+      {
+        "id": 2,
+        "dimension": "D",
+        "theme": "Opposition",
+        "text": "Lorsqu'une personne s'oppose fortement à moi, j'ai tendance à insister davantage pour défendre mon point de vue.",
+        "required": true
+      },
+      {
+        "id": 3,
+        "dimension": "I",
+        "theme": "Surcharge",
+        "text": "Lorsque j'ai trop de choses à gérer, j'ai tendance à commencer plusieurs tâches sans toujours les terminer.",
+        "required": true
+      },
+      {
+        "id": 4,
+        "dimension": "I",
+        "theme": "Difficultés personnelles",
+        "text": "Lorsque je traverse une période difficile, j'ai besoin de parler avec quelqu'un pour mettre de l'ordre dans mes idées.",
+        "required": true
+      },
+      {
+        "id": 5,
+        "dimension": "S",
+        "theme": "Conflit",
+        "text": "Lorsqu'un désaccord devient tendu, je fais attention à la manière dont je m'exprime pour ne pas blesser les autres.",
+        "required": true
+      },
+      {
+        "id": 6,
+        "dimension": "S",
+        "theme": "Changement",
+        "text": "Lorsqu'un changement important survient sans prévenir, j'ai besoin de temps pour retrouver mes repères.",
+        "required": true
+      },
+      {
+        "id": 7,
+        "dimension": "C",
+        "theme": "Incertitude",
+        "text": "Lorsque je manque d'informations, j'ai du mal à avancer sans avoir clarifié les points importants.",
+        "required": true
+      },
+      {
+        "id": 8,
+        "dimension": "C",
+        "theme": "Échec",
+        "text": "Après un échec, j'ai tendance à repenser longtemps à ce que j'aurais pu faire autrement.",
+        "required": true
+      }
+    ],
+    "scoring": {
+      "raw_sum": "Somme des 2 réponses de chaque dimension (entre 2 et 10).",
+      "intensity_0_100": "(raw_sum - 2) / 8 * 100",
+      "rank_basis": "Comparer les sommes brutes exactes, équivalentes aux intensités.",
+      "share_100": "intensity[dimension] / sum(intensity[D],intensity[I],intensity[S],intensity[C]) * 100",
+      "zero_denominator": "Si toutes les intensités sont nulles, ne pas produire de répartition; afficher les quatre intensités à 0 et un état indéterminé.",
+      "interpretation": "Scores descriptifs exploratoires, pas des mesures psychométriques validées."
+    }
+  },
+  "tie_break": {
+    "scope": "Classement naturel et classement sous pression, indépendamment.",
+    "trigger": "Ex æquo exact au rang 1 ou pour la place de rang 2, avant tout arrondi.",
+    "one_duel_one_question": true,
+    "duels": [
+      {
+        "id": "D-I",
+        "dimensions": [
+          "D",
+          "I"
+        ],
+        "options": [
+          {
+            "dimension": "D",
+            "text": "Je prends les choses en main pour obtenir rapidement un résultat."
+          },
+          {
+            "dimension": "I",
+            "text": "Je mobilise les autres pour avancer ensemble."
+          }
+        ]
+      },
+      {
+        "id": "D-S",
+        "dimensions": [
+          "D",
+          "S"
+        ],
+        "options": [
+          {
+            "dimension": "D",
+            "text": "Je préfère aborder directement une difficulté, même si cela crée des tensions."
+          },
+          {
+            "dimension": "S",
+            "text": "Je préfère préserver les relations, même si la résolution prend plus de temps."
+          }
+        ]
+      },
+      {
+        "id": "D-C",
+        "dimensions": [
+          "D",
+          "C"
+        ],
+        "options": [
+          {
+            "dimension": "D",
+            "text": "Je préfère prendre une décision rapidement et ajuster ensuite."
+          },
+          {
+            "dimension": "C",
+            "text": "Je préfère analyser les informations avant de prendre une décision."
+          }
+        ]
+      },
+      {
+        "id": "I-S",
+        "dimensions": [
+          "I",
+          "S"
+        ],
+        "options": [
+          {
+            "dimension": "I",
+            "text": "J'ai tendance à exprimer spontanément mes idées et mes émotions."
+          },
+          {
+            "dimension": "S",
+            "text": "J'ai tendance à écouter et à laisser les autres s'exprimer avant de réagir."
+          }
+        ]
+      },
+      {
+        "id": "I-C",
+        "dimensions": [
+          "I",
+          "C"
+        ],
+        "options": [
+          {
+            "dimension": "I",
+            "text": "Je préfère convaincre en partageant ma vision et mon enthousiasme."
+          },
+          {
+            "dimension": "C",
+            "text": "Je préfère convaincre en m’appuyant sur des faits et des arguments précis."
+          }
+        ]
+      },
+      {
+        "id": "S-C",
+        "dimensions": [
+          "S",
+          "C"
+        ],
+        "options": [
+          {
+            "dimension": "S",
+            "text": "Je privilégie l'harmonie et la compréhension entre les personnes."
+          },
+          {
+            "dimension": "C",
+            "text": "Je privilégie la précision et le respect des méthodes établies."
+          }
+        ]
+      }
+    ],
+    "algorithm": "Tri par insertion parmi les profils concernés, ordre initial déterministe D,I,S,C; pour chaque nouvelle dimension, comparer au classement provisoire du haut vers le bas jusqu’à sa position. Un duel binaire produit un vainqueur.",
+    "max_duels": {
+      "two_way": 1,
+      "three_way": 3,
+      "four_way": 6
+    },
+    "scores_unchanged": true,
+    "note": "Le départage classe les profils mais ne démontre pas une différence psychométriquement significative; l’ordre peut dépendre de la séquence de duels.",
+    "reuse": "Ne pas réutiliser automatiquement le résultat d’un duel naturel pour le classement sous pression."
+  },
+  "definitions": {
+    "Volubile": "Qui parle beaucoup, facilement et avec aisance.",
+    "Magnétique": "Qui attire naturellement l’attention et suscite l’intérêt.",
+    "Obséquieux": "Qui manifeste une politesse ou une soumission excessive pour plaire.",
+    "Jusqu’au boutiste": "Qui poursuit ses idées ou ses objectifs jusqu’au bout, parfois sans accepter de compromis.",
+    "Flegmatique": "Qui garde son calme et réagit peu, même dans les situations difficiles."
+  },
+  "ui": {
+    "preserve_existing_hero": true,
+    "preserve_existing_result_layout": true,
+    "natural_chart": true,
+    "pressure_chart": true,
+    "pressure_chart_title": "Sous pression",
+    "same_profile_cards_for_ties": true,
+    "show_tie_note_only_if_tiebreak": true,
+    "tie_note_template_two": "Ton profil est intéressant, car tes résultats montrent un équilibre entre {profile_a} et {profile_b}. Lors de la question complémentaire, tu as davantage reconnu ton fonctionnement dans {winner}. Cette préférence a permis de préciser le classement, sans modifier tes scores initiaux.",
+    "tie_note_template_multi": "Ton profil est intéressant, car plusieurs dimensions ressortent à égalité. Les questions complémentaires ont permis de préciser leur ordre, sans modifier les scores initiaux.",
+    "show_natural_primary_secondary": true,
+    "show_pressure_primary_secondary": true,
+    "mobile_info_icons": "Icône i accessible au clic/toucher et au clavier; tooltip court; aucun mot d’origine modifié.",
+    "no_tie_ui_redesign": true
+  },
+  "qa_tests": [
+    "28 groupes, chacun 4 options, un + et un − distincts",
+    "N comptabilisé séparément et mapping conforme au classeur",
+    "8 affirmations, deux par dimension, valeurs 1 à 5",
+    "0 ou plus de duels seulement si égalité affectant les rangs 1 ou 2",
+    "une seule question par duel, aucune égalité dans le classement final",
+    "les duels ne modifient pas les scores ou pourcentages",
+    "graphiques naturel et sous pression affichés séparément",
+    "aucune répartition sur 100 inventée si dénominateur nul ou normalisation naturelle non validée",
+    "libellés d’origine inchangés et définitions accessibles",
+    "All 224 codes verified independently from source Excel, with original cell coordinates",
+    "Zero positive opportunities block publication; zero rate sum displays indeterminate",
+    "Largest-remainder rounding totals 100.00 percent; ranking uses net scores"
+  ],
+  "validation_status": {
+    "questions": "validated_in_conversation",
+    "pressure_scoring": "agreed_as_proposed",
+    "duels": "validated_in_conversation",
+    "natural_percent_conversion": "approved display convention",
+    "scientific_validation": "not_performed",
+    "excel_plus_minus_mapping": "224 of 224 independently extracted and checked"
+  },
+  "questionnaire_version": "disc-mapp-v2.0.0",
+  "scoring_version": "disc-mapp-v2.0.0",
+  "versioning": {
+    "immutable": true,
+    "preserve_historical_results": true,
+    "historical_results": "Never recompute historical results without explicit versioned migration",
+    "save_with_each_result": [
+      "questionnaire_version",
+      "scoring_version",
+      "raw_answers",
+      "raw_scores",
+      "tie_break_answers",
+      "resolved_rank",
+      "display_percentages"
+    ],
+    "publication_gate": "All 224 codes match original Excel and all QA tests pass; deployment not performed by this artifact"
+  }
+}

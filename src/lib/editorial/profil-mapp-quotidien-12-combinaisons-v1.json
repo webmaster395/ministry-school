@@ -1,0 +1,825 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "profil-mapp-natural-daily-four-cards",
+  "locale": "fr-FR",
+  "status": "complete-12-ordered-combinations-editorial-review",
+  "scope": "02 / Ton fonctionnement > Au naturel > 01 / Dans ton quotidien",
+  "layout": {
+    "desktop": "2x2 grid",
+    "card": "text left, portrait image right",
+    "cta": false,
+    "hover": "background changes to primary natural profile accent; text switches to accessible contrast; photo remains unfiltered",
+    "mobile": "single column, photo portrait and text legible; no hover dependency",
+    "typography": "reuse existing Ton identité design tokens",
+    "spacing": "reuse project design system"
+  },
+  "profileColors": {
+    "D": {
+      "name": "Conquérant",
+      "accent": "#D94334"
+    },
+    "I": {
+      "name": "Communiquant",
+      "accent": "#E6B800"
+    },
+    "S": {
+      "name": "Facilitateur",
+      "accent": "use-existing-project-token"
+    },
+    "C": {
+      "name": "Analyste",
+      "accent": "use-existing-project-token"
+    }
+  },
+  "photographs": {
+    "source": "user-supplied MLK photos",
+    "preserveOriginals": true,
+    "optimizeWebP": true,
+    "objectFit": "cover",
+    "faceAwareCrop": true,
+    "imageReferences": "Use verified actual asset filenames, never guess missing path"
+  },
+  "combinations": {
+    "DI": {
+      "primary": "D",
+      "secondary": "I",
+      "status": "approved-for-layout-review",
+      "cards": [
+        {
+          "id": "motivation",
+          "eyebrow": "01 / Tes motivations",
+          "title": "Ce qui te motive",
+          "text": "Les défis, les responsabilités et la liberté d’agir te stimulent. Tu apprécies les objectifs ambitieux, surtout lorsqu’ils te permettent d’entraîner les autres dans un projet concret.",
+          "photo": {
+            "sourceFilename": "Ce qui te motive.jpg",
+            "description": "Homme souriant en pull orange, tenant son téléphone",
+            "status": "selected"
+          }
+        },
+        {
+          "id": "decisions",
+          "eyebrow": "02 / Tes choix",
+          "title": "Comment tu décides",
+          "text": "Tu préfères prendre une direction avec les informations essentielles plutôt que d’attendre que tout soit certain. Les échanges peuvent enrichir ta réflexion, mais tu apprécies de pouvoir trancher et avancer.",
+          "photo": {
+            "sourceFilename": null,
+            "description": "Deux femmes derrière un ordinateur, photo précédemment retenue pour Tes choix",
+            "status": "resolve-exact-upload-filename-before-implementation"
+          }
+        },
+        {
+          "id": "action",
+          "eyebrow": "03 / Ton rythme",
+          "title": "Comment tu agis",
+          "text": "Tu aimes transformer les idées en actions et constater des progrès. La nouveauté et les projets dynamiques peuvent te stimuler, tandis que l’inaction et les décisions qui s’éternisent risquent de te frustrer.",
+          "photo": {
+            "sourceFilename": "Ton rythme MLK.webp",
+            "description": "Femme blonde souriante, tenant une tasse",
+            "status": "selected"
+          }
+        },
+        {
+          "id": "relations",
+          "eyebrow": "04 / Tes relations",
+          "title": "Avec les autres",
+          "text": "Tu apprécies les échanges francs, vivants et spontanés. Tu peux naturellement prendre l’initiative dans un groupe, partager tes idées avec enthousiasme et chercher à mobiliser les autres autour d’un objectif commun.",
+          "photo": {
+            "sourceFilename": "Tes relations(1).jpg",
+            "description": "Photo de groupe MLK, à vérifier visuellement avant intégration",
+            "status": "verify-image"
+          }
+        }
+      ],
+      "existingReference": {
+        "headline": "Tu impulses une direction et sais la partager.",
+        "summary": "Tu peux décider puis mobiliser les autres autour d’un objectif.",
+        "dailyPortrait": "Tu fixes un cap et sais entraîner les autres pour le faire avancer.",
+        "motivationInterpretation": "Les défis prennent du sens lorsque tu peux fédérer autour d’un résultat.",
+        "decisionInterpretation": "Tu peux décider rapidement tout en utilisant les échanges pour faire émerger des options.",
+        "interactionPortrait": "Va à l’essentiel et clarifie les objectifs. Crée un contact humain et laisse une place à la discussion."
+      },
+      "requiredTopics": {
+        "motivation": [
+          "moteurs",
+          "besoins",
+          "freins",
+          "inconfort"
+        ],
+        "decisions": [
+          "decisions"
+        ],
+        "action": [
+          "action",
+          "rythme",
+          "changement"
+        ],
+        "relations": [
+          "relations"
+        ]
+      },
+      "editorialInstruction": "Textes de démonstration à relire avec les fiches MAPP originales avant publication."
+    },
+    "DS": {
+      "primary": "D",
+      "secondary": "S",
+      "status": "editorial-draft-for-review",
+      "cards": [
+        {
+          "id": "motivation",
+          "eyebrow": "01 / Tes motivations",
+          "title": "Ce qui te motive",
+          "text": "Les défis et les responsabilités te donnent envie d'avancer, surtout lorsque ton action apporte quelque chose de durable. Tu recherches des résultats concrets sans négliger la fiabilité des personnes qui t'accompagnent.",
+          "photoSlot": "motivation"
+        },
+        {
+          "id": "decisions",
+          "eyebrow": "02 / Tes choix",
+          "title": "Comment tu décides",
+          "text": "Tu apprécies de définir une direction et d'assumer tes choix. Avant d'engager les autres, tu peux toutefois prendre le temps d'écouter leurs besoins et de vérifier que chacun pourra suivre.",
+          "photoSlot": "decisions"
+        },
+        {
+          "id": "action",
+          "eyebrow": "03 / Ton rythme",
+          "title": "Comment tu agis",
+          "text": "Tu sais prendre l'initiative, mais tu peux aussi t'appuyer sur une progression régulière pour tenir dans la durée. Les changements ont davantage de sens lorsqu'ils servent un objectif clair sans déstabiliser inutilement l'équipe.",
+          "photoSlot": "action"
+        },
+        {
+          "id": "relations",
+          "eyebrow": "04 / Tes relations",
+          "title": "Avec les autres",
+          "text": "Tu privilégies les échanges francs et les engagements respectés. Tu peux prendre les commandes lorsque c'est nécessaire, tout en veillant à préserver des relations de confiance et une coopération stable.",
+          "photoSlot": "relations"
+        }
+      ],
+      "existingReference": {
+        "headline": "Tu avances sans perdre de vue la confiance.",
+        "summary": "Tu peux tenir un cap tout en préservant la continuité du groupe.",
+        "dailyPortrait": "Tu prends les initiatives en veillant à la continuité de l’engagement collectif.",
+        "motivationInterpretation": "Les responsabilités te stimulent quand tu peux compter sur une équipe fiable.",
+        "decisionInterpretation": "Tu peux trancher puis prendre soin de la manière dont le changement sera vécu.",
+        "interactionPortrait": "Va à l’essentiel et clarifie les objectifs. Explique le contexte et laisse du temps pour répondre."
+      },
+      "requiredTopics": {
+        "motivation": [
+          "moteurs",
+          "besoins",
+          "freins",
+          "inconfort"
+        ],
+        "decisions": [
+          "decisions"
+        ],
+        "action": [
+          "action",
+          "rythme",
+          "changement"
+        ],
+        "relations": [
+          "relations"
+        ]
+      },
+      "editorialInstruction": "Rédiger 4 textes spécifiques de 2-3 phrases à partir des fiches et du référentiel, en tenant compte de l’ordre principal/secondaire. Ne pas concaténer mécaniquement."
+    },
+    "DC": {
+      "primary": "D",
+      "secondary": "C",
+      "status": "editorial-draft-for-review",
+      "cards": [
+        {
+          "id": "motivation",
+          "eyebrow": "01 / Tes motivations",
+          "title": "Ce qui te motive",
+          "text": "Les objectifs exigeants et les résultats mesurables te stimulent. Tu apprécies l'autonomie pour avancer, tout en attachant de l'importance à la qualité du travail et à la solidité de ce que tu construis.",
+          "photoSlot": "motivation"
+        },
+        {
+          "id": "decisions",
+          "eyebrow": "02 / Tes choix",
+          "title": "Comment tu décides",
+          "text": "Tu veux pouvoir trancher et assumer la décision. Tu peux néanmoins examiner les faits, comparer les risques et demander des précisions lorsque les conséquences sont importantes.",
+          "photoSlot": "decisions"
+        },
+        {
+          "id": "action",
+          "eyebrow": "03 / Ton rythme",
+          "title": "Comment tu agis",
+          "text": "Tu recherches l'efficacité et passes à l'action lorsqu'une direction te paraît suffisamment fondée. Tu peux alterner accélération et vérification, avec une attention particulière aux erreurs qui compromettraient le résultat.",
+          "photoSlot": "action"
+        },
+        {
+          "id": "relations",
+          "eyebrow": "04 / Tes relations",
+          "title": "Avec les autres",
+          "text": "Tu apprécies les échanges directs, les responsabilités clairement définies et les arguments solides. Dans un groupe, tu peux défendre fermement un objectif tout en questionnant la cohérence des méthodes proposées.",
+          "photoSlot": "relations"
+        }
+      ],
+      "existingReference": {
+        "headline": "Tu veux avancer sur des bases solides.",
+        "summary": "Tu peux associer une recherche de résultats à une attention aux faits.",
+        "dailyPortrait": "Tu cherches des résultats tangibles sans sacrifier la rigueur.",
+        "motivationInterpretation": "Les défis complexes t’attirent lorsqu’ils demandent à la fois action et précision.",
+        "decisionInterpretation": "Tu peux avancer vite, à condition d’avoir vérifié les points déterminants.",
+        "interactionPortrait": "Va à l’essentiel et clarifie les objectifs. Présente des faits vérifiables et laisse place aux questions."
+      },
+      "requiredTopics": {
+        "motivation": [
+          "moteurs",
+          "besoins",
+          "freins",
+          "inconfort"
+        ],
+        "decisions": [
+          "decisions"
+        ],
+        "action": [
+          "action",
+          "rythme",
+          "changement"
+        ],
+        "relations": [
+          "relations"
+        ]
+      },
+      "editorialInstruction": "Rédiger 4 textes spécifiques de 2-3 phrases à partir des fiches et du référentiel, en tenant compte de l’ordre principal/secondaire. Ne pas concaténer mécaniquement."
+    },
+    "ID": {
+      "primary": "I",
+      "secondary": "D",
+      "status": "editorial-draft-for-review",
+      "cards": [
+        {
+          "id": "motivation",
+          "eyebrow": "01 / Tes motivations",
+          "title": "Ce qui te motive",
+          "text": "Les échanges, les idées partagées et la possibilité d'entraîner les autres nourrissent ton enthousiasme. Tu apprécies particulièrement les projets où cette énergie collective peut déboucher sur une réalisation ambitieuse.",
+          "photoSlot": "motivation"
+        },
+        {
+          "id": "decisions",
+          "eyebrow": "02 / Tes choix",
+          "title": "Comment tu décides",
+          "text": "Tu aimes discuter des possibilités et faire réagir les personnes concernées. Une fois une direction enthousiasmante identifiée, tu peux décider rapidement et chercher à mettre le groupe en mouvement.",
+          "photoSlot": "decisions"
+        },
+        {
+          "id": "action",
+          "eyebrow": "03 / Ton rythme",
+          "title": "Comment tu agis",
+          "text": "Tu avances volontiers par l'échange, l'expérimentation et les occasions nouvelles. Ton goût pour l'action peut t'amener à lancer une initiative avant d'en avoir défini tous les détails.",
+          "photoSlot": "action"
+        },
+        {
+          "id": "relations",
+          "eyebrow": "04 / Tes relations",
+          "title": "Avec les autres",
+          "text": "Tu crées facilement du contact et sais communiquer ton enthousiasme. Tu peux aussi prendre une position affirmée lorsque tu veux défendre une idée ou convaincre un groupe d'avancer.",
+          "photoSlot": "relations"
+        }
+      ],
+      "existingReference": {
+        "headline": "Tu inspires et cherches à concrétiser.",
+        "summary": "L’échange fait émerger des possibilités et ton côté Conquérant aide à agir.",
+        "dailyPortrait": "Tu suscites l’adhésion autour de tes idées et cherches à les concrétiser.",
+        "motivationInterpretation": "Les échanges t’animent particulièrement lorsqu’ils débouchent sur un projet.",
+        "decisionInterpretation": "Tu explores volontiers à voix haute puis peux trancher pour avancer.",
+        "interactionPortrait": "Crée un contact humain et laisse une place à la discussion. Va à l’essentiel et clarifie les objectifs."
+      },
+      "requiredTopics": {
+        "motivation": [
+          "moteurs",
+          "besoins",
+          "freins",
+          "inconfort"
+        ],
+        "decisions": [
+          "decisions"
+        ],
+        "action": [
+          "action",
+          "rythme",
+          "changement"
+        ],
+        "relations": [
+          "relations"
+        ]
+      },
+      "editorialInstruction": "Rédiger 4 textes spécifiques de 2-3 phrases à partir des fiches et du référentiel, en tenant compte de l’ordre principal/secondaire. Ne pas concaténer mécaniquement."
+    },
+    "IS": {
+      "primary": "I",
+      "secondary": "S",
+      "status": "editorial-draft-for-review",
+      "cards": [
+        {
+          "id": "motivation",
+          "eyebrow": "01 / Tes motivations",
+          "title": "Ce qui te motive",
+          "text": "Les rencontres, la participation et la reconnaissance peuvent donner beaucoup de sens à tes engagements. Tu apprécies les projets où l'enthousiasme se construit dans un climat de confiance et où chacun trouve sa place.",
+          "photoSlot": "motivation"
+        },
+        {
+          "id": "decisions",
+          "eyebrow": "02 / Tes choix",
+          "title": "Comment tu décides",
+          "text": "Tu aimes explorer les idées en échangeant avec les autres. Pour une décision qui touche le groupe, tu peux rechercher l'adhésion et tenir compte des sensibilités avant de choisir.",
+          "photoSlot": "decisions"
+        },
+        {
+          "id": "action",
+          "eyebrow": "03 / Ton rythme",
+          "title": "Comment tu agis",
+          "text": "Tu apprécies les projets vivants, les échanges spontanés et les occasions de créer du lien. Tu peux néanmoins préférer une progression qui laisse aux personnes le temps de s'approprier le changement.",
+          "photoSlot": "action"
+        },
+        {
+          "id": "relations",
+          "eyebrow": "04 / Tes relations",
+          "title": "Avec les autres",
+          "text": "Tu favorises les conversations chaleureuses et la participation. Tu peux créer rapidement une bonne ambiance tout en accordant de l'importance à la continuité des relations et à l'écoute de chacun.",
+          "photoSlot": "relations"
+        }
+      ],
+      "existingReference": {
+        "headline": "Tu rapproches les personnes et construis la confiance.",
+        "summary": "Tu associes une expression spontanée à une attention à la continuité.",
+        "dailyPortrait": "Tu crées une dynamique chaleureuse et construis la confiance dans la durée.",
+        "motivationInterpretation": "La participation et les liens solides donnent du sens à ton engagement.",
+        "decisionInterpretation": "Tu peux rechercher un accord avant de prendre une décision collective.",
+        "interactionPortrait": "Crée un contact humain et laisse une place à la discussion. Explique le contexte et laisse du temps pour répondre."
+      },
+      "requiredTopics": {
+        "motivation": [
+          "moteurs",
+          "besoins",
+          "freins",
+          "inconfort"
+        ],
+        "decisions": [
+          "decisions"
+        ],
+        "action": [
+          "action",
+          "rythme",
+          "changement"
+        ],
+        "relations": [
+          "relations"
+        ]
+      },
+      "editorialInstruction": "Rédiger 4 textes spécifiques de 2-3 phrases à partir des fiches et du référentiel, en tenant compte de l’ordre principal/secondaire. Ne pas concaténer mécaniquement."
+    },
+    "IC": {
+      "primary": "I",
+      "secondary": "C",
+      "status": "editorial-draft-for-review",
+      "cards": [
+        {
+          "id": "motivation",
+          "eyebrow": "01 / Tes motivations",
+          "title": "Ce qui te motive",
+          "text": "Les idées nouvelles, les échanges et les possibilités de convaincre peuvent te stimuler. Tu apprécies aussi de comprendre suffisamment un sujet pour présenter des arguments crédibles et défendre une proposition solide.",
+          "photoSlot": "motivation"
+        },
+        {
+          "id": "decisions",
+          "eyebrow": "02 / Tes choix",
+          "title": "Comment tu décides",
+          "text": "Tu aimes faire émerger des options en discutant et en confrontant les points de vue. Tu peux ensuite prendre le temps d'en examiner la logique, les détails et les conséquences avant de t'engager.",
+          "photoSlot": "decisions"
+        },
+        {
+          "id": "action",
+          "eyebrow": "03 / Ton rythme",
+          "title": "Comment tu agis",
+          "text": "Tu peux démarrer par l'enthousiasme et la curiosité, puis chercher à approfondir ce qui mérite d'être développé. Les projets qui combinent créativité et qualité de réalisation peuvent particulièrement retenir ton attention.",
+          "photoSlot": "action"
+        },
+        {
+          "id": "relations",
+          "eyebrow": "04 / Tes relations",
+          "title": "Avec les autres",
+          "text": "Tu apprécies les échanges vivants et les explications illustrées. Tu peux aussi poser des questions précises et revenir sur un détail lorsqu'un raisonnement te paraît incomplet ou peu cohérent.",
+          "photoSlot": "relations"
+        }
+      ],
+      "existingReference": {
+        "headline": "Tu rends les idées vivantes et précises.",
+        "summary": "Tu apprécies de transmettre tout en approfondissant les informations.",
+        "dailyPortrait": "Tu sais partager des idées enthousiasmantes et les étayer avec précision.",
+        "motivationInterpretation": "L’expression et la qualité de l’information se renforcent chez toi.",
+        "decisionInterpretation": "Tu explores plusieurs possibilités puis peux vouloir vérifier les faits.",
+        "interactionPortrait": "Crée un contact humain et laisse une place à la discussion. Présente des faits vérifiables et laisse place aux questions."
+      },
+      "requiredTopics": {
+        "motivation": [
+          "moteurs",
+          "besoins",
+          "freins",
+          "inconfort"
+        ],
+        "decisions": [
+          "decisions"
+        ],
+        "action": [
+          "action",
+          "rythme",
+          "changement"
+        ],
+        "relations": [
+          "relations"
+        ]
+      },
+      "editorialInstruction": "Rédiger 4 textes spécifiques de 2-3 phrases à partir des fiches et du référentiel, en tenant compte de l’ordre principal/secondaire. Ne pas concaténer mécaniquement."
+    },
+    "SD": {
+      "primary": "S",
+      "secondary": "D",
+      "status": "editorial-draft-for-review",
+      "cards": [
+        {
+          "id": "motivation",
+          "eyebrow": "01 / Tes motivations",
+          "title": "Ce qui te motive",
+          "text": "Tu trouves du sens dans la confiance, la continuité et la possibilité d'être utile aux autres. Lorsque la situation l'exige, tu peux aussi être motivé par la responsabilité de faire avancer concrètement un projet.",
+          "photoSlot": "motivation"
+        },
+        {
+          "id": "decisions",
+          "eyebrow": "02 / Tes choix",
+          "title": "Comment tu décides",
+          "text": "Tu préfères généralement tenir compte des personnes concernées et préserver un cadre rassurant. Mais tu peux prendre une décision ferme lorsqu'il faut protéger l'équipe ou éviter que la situation reste bloquée.",
+          "photoSlot": "decisions"
+        },
+        {
+          "id": "action",
+          "eyebrow": "03 / Ton rythme",
+          "title": "Comment tu agis",
+          "text": "Tu avances volontiers avec constance et apprécies les repères fiables. Si un objectif important le demande, tu peux sortir de tes habitudes, prendre l'initiative et accélérer le rythme.",
+          "photoSlot": "action"
+        },
+        {
+          "id": "relations",
+          "eyebrow": "04 / Tes relations",
+          "title": "Avec les autres",
+          "text": "Tu accordes de l'importance à l'écoute, à la coopération et aux engagements durables. Tu peux également exprimer clairement tes attentes et fixer une direction quand le collectif a besoin d'un cadre.",
+          "photoSlot": "relations"
+        }
+      ],
+      "existingReference": {
+        "headline": "Tu soutiens et sais prendre position.",
+        "summary": "Ta constance peut s’accompagner d’une capacité à décider.",
+        "dailyPortrait": "Tu avances avec constance tout en sachant prendre des responsabilités.",
+        "motivationInterpretation": "Tu te mobilises pour une cause utile et des résultats durables.",
+        "decisionInterpretation": "Tu écoutes d’abord puis peux décider fermement lorsque c’est nécessaire.",
+        "interactionPortrait": "Explique le contexte et laisse du temps pour répondre. Va à l’essentiel et clarifie les objectifs."
+      },
+      "requiredTopics": {
+        "motivation": [
+          "moteurs",
+          "besoins",
+          "freins",
+          "inconfort"
+        ],
+        "decisions": [
+          "decisions"
+        ],
+        "action": [
+          "action",
+          "rythme",
+          "changement"
+        ],
+        "relations": [
+          "relations"
+        ]
+      },
+      "editorialInstruction": "Rédiger 4 textes spécifiques de 2-3 phrases à partir des fiches et du référentiel, en tenant compte de l’ordre principal/secondaire. Ne pas concaténer mécaniquement."
+    },
+    "SI": {
+      "primary": "S",
+      "secondary": "I",
+      "status": "editorial-draft-for-review",
+      "cards": [
+        {
+          "id": "motivation",
+          "eyebrow": "01 / Tes motivations",
+          "title": "Ce qui te motive",
+          "text": "La qualité des relations, la stabilité et le sentiment de contribuer à quelque chose de durable comptent pour toi. Les échanges chaleureux et la participation peuvent renforcer ton envie de t'investir.",
+          "photoSlot": "motivation"
+        },
+        {
+          "id": "decisions",
+          "eyebrow": "02 / Tes choix",
+          "title": "Comment tu décides",
+          "text": "Tu préfères prendre en compte les personnes et laisser une place à la discussion. Les échanges peuvent t'aider à construire un accord avant de choisir une direction qui rassemble.",
+          "photoSlot": "decisions"
+        },
+        {
+          "id": "action",
+          "eyebrow": "03 / Ton rythme",
+          "title": "Comment tu agis",
+          "text": "Tu avances de manière régulière et apprécies de savoir sur qui compter. La nouveauté peut devenir plus attirante lorsqu'elle est portée par une équipe enthousiaste et un climat de confiance.",
+          "photoSlot": "action"
+        },
+        {
+          "id": "relations",
+          "eyebrow": "04 / Tes relations",
+          "title": "Avec les autres",
+          "text": "Tu privilégies l'écoute et la fidélité dans les relations. Une fois à l'aise, tu peux te montrer expressif, encourager les autres et contribuer à une ambiance conviviale.",
+          "photoSlot": "relations"
+        }
+      ],
+      "existingReference": {
+        "headline": "Tu crées des liens chaleureux et durables.",
+        "summary": "Tu combines une présence fiable avec des échanges vivants.",
+        "dailyPortrait": "Tu encourages les échanges tout en privilégiant des relations fiables.",
+        "motivationInterpretation": "La coopération et une atmosphère positive te donnent envie de contribuer.",
+        "decisionInterpretation": "Tu peux consulter le groupe pour préserver une décision partagée.",
+        "interactionPortrait": "Explique le contexte et laisse du temps pour répondre. Crée un contact humain et laisse une place à la discussion."
+      },
+      "requiredTopics": {
+        "motivation": [
+          "moteurs",
+          "besoins",
+          "freins",
+          "inconfort"
+        ],
+        "decisions": [
+          "decisions"
+        ],
+        "action": [
+          "action",
+          "rythme",
+          "changement"
+        ],
+        "relations": [
+          "relations"
+        ]
+      },
+      "editorialInstruction": "Rédiger 4 textes spécifiques de 2-3 phrases à partir des fiches et du référentiel, en tenant compte de l’ordre principal/secondaire. Ne pas concaténer mécaniquement."
+    },
+    "SC": {
+      "primary": "S",
+      "secondary": "C",
+      "status": "editorial-draft-for-review",
+      "cards": [
+        {
+          "id": "motivation",
+          "eyebrow": "01 / Tes motivations",
+          "title": "Ce qui te motive",
+          "text": "La confiance, la continuité et la qualité de ce que tu accomplis peuvent te motiver. Tu apprécies les environnements où les engagements sont tenus et où les méthodes permettent de travailler sereinement.",
+          "photoSlot": "motivation"
+        },
+        {
+          "id": "decisions",
+          "eyebrow": "02 / Tes choix",
+          "title": "Comment tu décides",
+          "text": "Tu préfères comprendre les attentes, examiner les informations et mesurer les conséquences avant de t'engager. Tu peux rechercher une décision à la fois juste pour les personnes et suffisamment étayée.",
+          "photoSlot": "decisions"
+        },
+        {
+          "id": "action",
+          "eyebrow": "03 / Ton rythme",
+          "title": "Comment tu agis",
+          "text": "Tu apprécies une progression régulière, des étapes claires et des méthodes fiables. Face à un changement, tu peux vouloir comprendre ce qui évolue et disposer de repères avant de modifier tes habitudes.",
+          "photoSlot": "action"
+        },
+        {
+          "id": "relations",
+          "eyebrow": "04 / Tes relations",
+          "title": "Avec les autres",
+          "text": "Tu construis la confiance par la constance et le sérieux. Tu peux écouter avec attention tout en posant des questions précises pour clarifier les attentes ou éviter les malentendus.",
+          "photoSlot": "relations"
+        }
+      ],
+      "existingReference": {
+        "headline": "Tu construis avec patience et précision.",
+        "summary": "Tu apprécies les repères fiables et le travail méthodique.",
+        "dailyPortrait": "Tu construis patiemment en cherchant des méthodes fiables.",
+        "motivationInterpretation": "La qualité et la stabilité soutiennent ton engagement.",
+        "decisionInterpretation": "Tu préfères comprendre les implications et préparer les étapes.",
+        "interactionPortrait": "Explique le contexte et laisse du temps pour répondre. Présente des faits vérifiables et laisse place aux questions."
+      },
+      "requiredTopics": {
+        "motivation": [
+          "moteurs",
+          "besoins",
+          "freins",
+          "inconfort"
+        ],
+        "decisions": [
+          "decisions"
+        ],
+        "action": [
+          "action",
+          "rythme",
+          "changement"
+        ],
+        "relations": [
+          "relations"
+        ]
+      },
+      "editorialInstruction": "Rédiger 4 textes spécifiques de 2-3 phrases à partir des fiches et du référentiel, en tenant compte de l’ordre principal/secondaire. Ne pas concaténer mécaniquement."
+    },
+    "CD": {
+      "primary": "C",
+      "secondary": "D",
+      "status": "editorial-draft-for-review",
+      "cards": [
+        {
+          "id": "motivation",
+          "eyebrow": "01 / Tes motivations",
+          "title": "Ce qui te motive",
+          "text": "La précision, la cohérence et la qualité des résultats comptent beaucoup pour toi. Tu peux aussi être stimulé par les défis qui demandent de prendre des responsabilités et d'améliorer concrètement une situation.",
+          "photoSlot": "motivation"
+        },
+        {
+          "id": "decisions",
+          "eyebrow": "02 / Tes choix",
+          "title": "Comment tu décides",
+          "text": "Tu préfères disposer d'arguments solides et examiner les risques avant de choisir. Une fois ton analyse suffisamment avancée, tu peux trancher avec assurance et défendre la direction retenue.",
+          "photoSlot": "decisions"
+        },
+        {
+          "id": "action",
+          "eyebrow": "03 / Ton rythme",
+          "title": "Comment tu agis",
+          "text": "Tu apprécies de comprendre les étapes et de vérifier les points importants avant de démarrer. Quand le cap est clair, tu peux agir avec détermination et rechercher des résultats exigeants.",
+          "photoSlot": "action"
+        },
+        {
+          "id": "relations",
+          "eyebrow": "04 / Tes relations",
+          "title": "Avec les autres",
+          "text": "Tu privilégies les échanges précis et les engagements clairement formulés. Tu peux questionner les idées avec rigueur et exprimer directement un désaccord lorsque les faits ne soutiennent pas une proposition.",
+          "photoSlot": "relations"
+        }
+      ],
+      "existingReference": {
+        "headline": "Tu réfléchis avec rigueur puis agis.",
+        "summary": "Tu peux approfondir les faits tout en cherchant une décision concrète.",
+        "dailyPortrait": "Tu analyses avec rigueur pour prendre des décisions efficaces.",
+        "motivationInterpretation": "Les problèmes exigeants te motivent lorsqu’ils appellent une solution solide.",
+        "decisionInterpretation": "Tu vérifies les faits puis peux trancher nettement.",
+        "interactionPortrait": "Présente des faits vérifiables et laisse place aux questions. Va à l’essentiel et clarifie les objectifs."
+      },
+      "requiredTopics": {
+        "motivation": [
+          "moteurs",
+          "besoins",
+          "freins",
+          "inconfort"
+        ],
+        "decisions": [
+          "decisions"
+        ],
+        "action": [
+          "action",
+          "rythme",
+          "changement"
+        ],
+        "relations": [
+          "relations"
+        ]
+      },
+      "editorialInstruction": "Rédiger 4 textes spécifiques de 2-3 phrases à partir des fiches et du référentiel, en tenant compte de l’ordre principal/secondaire. Ne pas concaténer mécaniquement."
+    },
+    "CI": {
+      "primary": "C",
+      "secondary": "I",
+      "status": "editorial-draft-for-review",
+      "cards": [
+        {
+          "id": "motivation",
+          "eyebrow": "01 / Tes motivations",
+          "title": "Ce qui te motive",
+          "text": "Comprendre un sujet, produire un travail de qualité et disposer d'informations fiables peuvent te stimuler. Tu apprécies aussi les occasions de partager ce que tu découvres et de rendre tes idées accessibles aux autres.",
+          "photoSlot": "motivation"
+        },
+        {
+          "id": "decisions",
+          "eyebrow": "02 / Tes choix",
+          "title": "Comment tu décides",
+          "text": "Tu préfères examiner les éléments disponibles et vérifier la cohérence d'une proposition. Les échanges peuvent enrichir ton analyse, faire apparaître d'autres possibilités et t'aider à formuler ton choix.",
+          "photoSlot": "decisions"
+        },
+        {
+          "id": "action",
+          "eyebrow": "03 / Ton rythme",
+          "title": "Comment tu agis",
+          "text": "Tu avances volontiers en approfondissant les sujets et en structurant tes démarches. La curiosité et les idées nouvelles peuvent t'inciter à explorer d'autres pistes, sans renoncer à ton exigence de qualité.",
+          "photoSlot": "action"
+        },
+        {
+          "id": "relations",
+          "eyebrow": "04 / Tes relations",
+          "title": "Avec les autres",
+          "text": "Tu apprécies les discussions qui apportent des informations utiles. Tu peux illustrer tes explications et rendre un sujet vivant, tout en revenant sur les détails nécessaires à sa bonne compréhension.",
+          "photoSlot": "relations"
+        }
+      ],
+      "existingReference": {
+        "headline": "Tu approfondis et sais transmettre.",
+        "summary": "Tu peux rendre une idée complexe accessible et intéressante.",
+        "dailyPortrait": "Tu rends accessibles des idées précises et argumentées.",
+        "motivationInterpretation": "La découverte et les échanges te stimulent lorsqu’ils enrichissent la compréhension.",
+        "decisionInterpretation": "Tu peux examiner les options puis en discuter pour affiner ton choix.",
+        "interactionPortrait": "Présente des faits vérifiables et laisse place aux questions. Crée un contact humain et laisse une place à la discussion."
+      },
+      "requiredTopics": {
+        "motivation": [
+          "moteurs",
+          "besoins",
+          "freins",
+          "inconfort"
+        ],
+        "decisions": [
+          "decisions"
+        ],
+        "action": [
+          "action",
+          "rythme",
+          "changement"
+        ],
+        "relations": [
+          "relations"
+        ]
+      },
+      "editorialInstruction": "Rédiger 4 textes spécifiques de 2-3 phrases à partir des fiches et du référentiel, en tenant compte de l’ordre principal/secondaire. Ne pas concaténer mécaniquement."
+    },
+    "CS": {
+      "primary": "C",
+      "secondary": "S",
+      "status": "editorial-draft-for-review",
+      "cards": [
+        {
+          "id": "motivation",
+          "eyebrow": "01 / Tes motivations",
+          "title": "Ce qui te motive",
+          "text": "La fiabilité, la qualité et la cohérence de ce que tu fais sont des sources importantes de satisfaction. Tu apprécies aussi les environnements stables où les engagements sont respectés et les relations durables.",
+          "photoSlot": "motivation"
+        },
+        {
+          "id": "decisions",
+          "eyebrow": "02 / Tes choix",
+          "title": "Comment tu décides",
+          "text": "Tu préfères prendre le temps de vérifier les informations et d'anticiper les conséquences. Tu peux également considérer l'impact de la décision sur les personnes avant de t'engager.",
+          "photoSlot": "decisions"
+        },
+        {
+          "id": "action",
+          "eyebrow": "03 / Ton rythme",
+          "title": "Comment tu agis",
+          "text": "Tu apprécies les méthodes claires, les étapes définies et un rythme qui permet de bien faire les choses. Face à la nouveauté, tu peux rechercher des repères fiables et une transition progressive.",
+          "photoSlot": "action"
+        },
+        {
+          "id": "relations",
+          "eyebrow": "04 / Tes relations",
+          "title": "Avec les autres",
+          "text": "Tu privilégies les relations de confiance et les échanges réfléchis. Tu peux écouter attentivement, poser des questions précises et chercher à éviter les malentendus plutôt que réagir dans la précipitation.",
+          "photoSlot": "relations"
+        }
+      ],
+      "existingReference": {
+        "headline": "Tu apportes de la fiabilité et de la sérénité.",
+        "summary": "Tu conjugues cohérence, méthode et continuité.",
+        "dailyPortrait": "Tu avances avec méthode dans un cadre stable et coopératif.",
+        "motivationInterpretation": "La qualité et la fiabilité des engagements te rassurent.",
+        "decisionInterpretation": "Tu peux consulter les autres tout en vérifiant les informations nécessaires.",
+        "interactionPortrait": "Présente des faits vérifiables et laisse place aux questions. Explique le contexte et laisse du temps pour répondre."
+      },
+      "requiredTopics": {
+        "motivation": [
+          "moteurs",
+          "besoins",
+          "freins",
+          "inconfort"
+        ],
+        "decisions": [
+          "decisions"
+        ],
+        "action": [
+          "action",
+          "rythme",
+          "changement"
+        ],
+        "relations": [
+          "relations"
+        ]
+      },
+      "editorialInstruction": "Rédiger 4 textes spécifiques de 2-3 phrases à partir des fiches et du référentiel, en tenant compte de l’ordre principal/secondaire. Ne pas concaténer mécaniquement."
+    }
+  },
+  "guardrails": [
+    "No changes to questionnaire, scoring, rankings or historical results",
+    "No publication of 11 unfinished combinations",
+    "No unverified assertions of measured individual behavior",
+    "No arbitrary MAPP colors per category",
+    "Only preview route until editorial and design validation"
+  ],
+  "contentVersion": "daily-four-cards-12-combinations-v2.0.0",
+  "editorialNote": "48 textes rédigés, dont 44 nouveaux. Interprétations éditoriales des tendances MAPP, non descriptions individuelles vérifiées; relecture avant publication."
+}

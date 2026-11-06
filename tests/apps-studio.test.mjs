@@ -36,13 +36,14 @@ test("public launchpad reads the persisted catalog and filters unpublished apps"
   assert.match(catalog, /\.eq\("public_enabled", true\)/);
 });
 
-test("Mes outils reste masqué par défaut et son URL applique le même réglage", () => {
+test("Mes outils reste accessible et n'affiche que le catalogue étudiant activé", () => {
   const migration = read("supabase/migrations/20261101190000_tools_visibility_and_scheduling.sql");
-  const nav = read("src/components/NavBlocks.tsx");
+  const nav = read("src/lib/nav.tsx");
   const page = read("src/app/etudiant/outils/page.tsx");
   assert.match(migration, /student_tools_enabled boolean not null default false/);
-  assert.match(nav, /studentToolsEnabled[\s\S]*toolsNavItem/);
-  assert.match(page, /if \(!\(await getStudentToolsEnabled\(\)\)\) redirect\("\/etudiant"\)/);
+  assert.match(nav, /label: "Mes outils"[\s\S]*href: "\/apps"/);
+  assert.match(page, /const apps = enabled \? await getStudentTools\(\) : \[\]/);
+  assert.match(page, /Aucun outil disponible pour le moment/);
 });
 
 test("les publications publique et étudiante sont indépendantes et programmées à l'heure réelle", () => {

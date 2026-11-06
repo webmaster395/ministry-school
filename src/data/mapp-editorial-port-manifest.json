@@ -1,0 +1,294 @@
+{
+  "generatedAt": "2026-11-06T11:57:04.173Z",
+  "source": "mapp-reference",
+  "files": [
+    {
+      "source": "app/preview/avec-les-autres-v2/preview.module.css",
+      "target": "src/app/preview/avec-les-autres-v2/preview.module.css",
+      "sha256": "8effcf48a843cf5c4dd49ebb60ac18e184c3ed94d1645cd0a5d2b3b79d1e8361",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "app/preview/avec-les-autres-v2/preview.tsx",
+      "target": "src/app/preview/avec-les-autres-v2/preview.tsx",
+      "sha256": "e34373c36ca0ce2b57da3c4f58c7faff70a5d3a5cf511190850bf28ecf8b2731",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "app/preview/fonctionnement-v2/preview.module.css",
+      "target": "src/app/preview/fonctionnement-v2/preview.module.css",
+      "sha256": "586610006b0bfe92b4108ac0602e38343aabe99e899ecd518df24d8a0af8a600",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "app/preview/fonctionnement-v2/preview.tsx",
+      "target": "src/app/preview/fonctionnement-v2/preview.tsx",
+      "sha256": "d2ee0ff42bdc812b4c719b609e06a08bcf3580e6b53979077d5c7e4562529255",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "app/preview/forces-et-defis-v2/preview.module.css",
+      "target": "src/app/preview/forces-et-defis-v2/preview.module.css",
+      "sha256": "d25d6fb1e07545e20345cb183e1fae4cee1211e9919f4ec0d419b53d44096f38",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "app/preview/forces-et-defis-v2/preview.tsx",
+      "target": "src/app/preview/forces-et-defis-v2/preview.tsx",
+      "sha256": "bec7e6449fc65adbed4b055b84551e88c084c397085443fe45c32ad5289f833c",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "app/preview/grandir-v1/preview.module.css",
+      "target": "src/app/preview/grandir-v1/preview.module.css",
+      "sha256": "99d6dd1f107f6b10b4c588835c3f165bc56bb897ed6eb8cfbcf29d417511d593",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "app/preview/grandir-v1/preview.tsx",
+      "target": "src/app/preview/grandir-v1/preview.tsx",
+      "sha256": "a3c28d553fff046c3b2d873a6dfbf9b0f87ed73b733d9621778f886641c84f01",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "app/preview/resultat/complete-experience.tsx",
+      "target": "src/app/preview/resultat/complete-experience.tsx",
+      "sha256": "c3658a74724f339821739f8e8d2bd8971ac90c5720028cc45defe3f29739a908",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "app/preview/resultat/preview-shell.tsx",
+      "target": "src/app/preview/resultat/preview-shell.tsx",
+      "sha256": "7ce8a0042a33fdcc40591648e0c6ff6852440a77b7545f05acee13a103f7d975",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "app/preview/resultat/result-preview.module.css",
+      "target": "src/app/preview/resultat/result-preview.module.css",
+      "sha256": "f3bd5f65bd890c4bdda2022ee6628424b679250c41e7ccffab39b73efadebd15",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "app/preview/resultat/save-profile-menu.tsx",
+      "target": "src/app/preview/resultat/save-profile-menu.tsx",
+      "sha256": "e15a9ea3817a2cfe8c06238c34a10047b60c84b4d9aaf99d124719423b2be376",
+      "nativeAdaptation": true
+    },
+    {
+      "source": "components/results/typography.tsx",
+      "target": "src/components/results/typography.tsx",
+      "sha256": "d016b8d475cf1ab25504c218e0663e34d4c42bec095d6315ec04c6dc66adaad9",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "data/disc/reference/profil_mapp_disc_v2_verified.json",
+      "target": "src/data/disc/reference/profil_mapp_disc_v2_verified.json",
+      "sha256": "6ababd0f0984046c7e57a61d92d735d1b2a447910f512f89be8546c20579d0db",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "data/editorial/profil-mapp-bibliotheque-integrale-v10.json",
+      "target": "src/data/editorial/profil-mapp-bibliotheque-integrale-v10.json",
+      "sha256": "9e8cb5caaa1e52086509368518e945da7566d534d0d1d24f4b6713856612f236",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "data/scoring/profil-mapp-pressure-v1.json",
+      "target": "src/data/scoring/profil-mapp-pressure-v1.json",
+      "sha256": "519c3eceee92c43ac9eca6b3984b75a28fc57382ee88679669d3bd09cd71ab5a",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/disc-v2/schema.ts",
+      "target": "src/lib/disc-v2/schema.ts",
+      "sha256": "753384982e418d8184b8c78c5f56666c4c47656d8e7311c5ebc6295c7c668e4d",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/disc-v2/source.ts",
+      "target": "src/lib/disc-v2/source.ts",
+      "sha256": "0a19c9caa91f159fc46019744e9383749e0b5c133145b52f698dcb7a4bc4bea8",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/editorial/consolidated-v4-schema.ts",
+      "target": "src/lib/editorial/consolidated-v4-schema.ts",
+      "sha256": "822296b415e73f5328a001fd24e59b053eff8d01a997d83b223a521e656a3a30",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/editorial/editorial-identifiers.ts",
+      "target": "src/lib/editorial/editorial-identifiers.ts",
+      "sha256": "c30213233dba99be620b3ff63bb778d8925a376d917a02576385a238bcc627d8",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/editorial/functioning-communication-preview-v1.ts",
+      "target": "src/lib/editorial/functioning-communication-preview-v1.ts",
+      "sha256": "55b8591a1c8708ef0d414b0e5aafd26bc4da3201de8d264eb25d37522447ad98",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/editorial/functioning-interactions-intros-preview-v2.ts",
+      "target": "src/lib/editorial/functioning-interactions-intros-preview-v2.ts",
+      "sha256": "cc32f5f4377eaa683dd6f4cfd5cf351017c38c820d4a169820d6e81eef164f3f",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/editorial/functioning-natural-intros-preview-v1.ts",
+      "target": "src/lib/editorial/functioning-natural-intros-preview-v1.ts",
+      "sha256": "6a15d0bbd2ec68a5ff3d305052803edcaef8be9cd80b45cb445b6bde577ecbe4",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/editorial/functioning-presentation-v1.ts",
+      "target": "src/lib/editorial/functioning-presentation-v1.ts",
+      "sha256": "76f2162cabbb6c48b017097433b0adcc5d24ab103caded617d8b7a32e9a4358e",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/editorial/functioning-pressure-intros-preview-v1.ts",
+      "target": "src/lib/editorial/functioning-pressure-intros-preview-v1.ts",
+      "sha256": "2ef4e61c852fa29763529b4bab5d24e986b85fff7c4ab56203bba0d9319e65e3",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/editorial/functioning-pressure-results-v1.ts",
+      "target": "src/lib/editorial/functioning-pressure-results-v1.ts",
+      "sha256": "09fcf88f3c001572c200a47ff55a2c672a708e10edd3711d6f623d08746c9ad5",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/editorial/identity-profile-presentations.ts",
+      "target": "src/lib/editorial/identity-profile-presentations.ts",
+      "sha256": "94fbd28a020740a34ebf968ffbca5d566a16913cb5ce9f3b13d6f7e7dcaa1b79",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/editorial/integral-v10-schema.ts",
+      "target": "src/lib/editorial/integral-v10-schema.ts",
+      "sha256": "15c10f84cbfbd79f59743df98fcae342a5f51d172307136ac8afc581586d7eb1",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/editorial/integral-v10.ts",
+      "target": "src/lib/editorial/integral-v10.ts",
+      "sha256": "fd9a065502402083c6e65aa803d4c90bbe8920fe31c0f011bfb431035092c02c",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/editorial/profil-mapp-comment-communiquer-avec-toi-v4.json",
+      "target": "src/lib/editorial/profil-mapp-comment-communiquer-avec-toi-v4.json",
+      "sha256": "7583efc3866097821e19e9158bf71e9b76df985e001f219dfd4ae8821c65b680",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/editorial/profil-mapp-communication-et-interactions-12-combinaisons-v1.json",
+      "target": "src/lib/editorial/profil-mapp-communication-et-interactions-12-combinaisons-v1.json",
+      "sha256": "cf7622ebf6f914c2194d1110d4b47146e9367b8d1081f2edb3d27cf973010e62",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/editorial/profil-mapp-fonctionnement-v1.json",
+      "target": "src/lib/editorial/profil-mapp-fonctionnement-v1.json",
+      "sha256": "80d848c728acac88ea1e9427af9ec35ec35684dabb806121dd2caf7cf8f8f46b",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/editorial/profil-mapp-page-03-forces-defis-v5-principal-secondaire.json",
+      "target": "src/lib/editorial/profil-mapp-page-03-forces-defis-v5-principal-secondaire.json",
+      "sha256": "32ff95caa2c9fcc5221cb9d636fd57f8a57b1479815897fd31ee054572f73e48",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/editorial/profil-mapp-page-04-avec-les-autres-v2.json",
+      "target": "src/lib/editorial/profil-mapp-page-04-avec-les-autres-v2.json",
+      "sha256": "37c60d20c748f1fd86de36bad4f15f6d8474782e817dd1a553a0f8a6aced01bc",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/editorial/profil-mapp-page-05-grandir-v2-textes-personnalises.json",
+      "target": "src/lib/editorial/profil-mapp-page-05-grandir-v2-textes-personnalises.json",
+      "sha256": "54c93b87696b0be7fc138e8cd111742c40406d9bf53e2d9f37f234caab545663",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/editorial/profil-mapp-quotidien-12-combinaisons-v1.json",
+      "target": "src/lib/editorial/profil-mapp-quotidien-12-combinaisons-v1.json",
+      "sha256": "863f2b035e8c48cd8cf8cdf4e2b54e63b21390ffcb736d3b69218331e3d4c5fd",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/editorial/profil-mapp-sous-pression-12-combinaisons-v1.json",
+      "target": "src/lib/editorial/profil-mapp-sous-pression-12-combinaisons-v1.json",
+      "sha256": "24d12f83b73e853504419eff51387cd84236e2e88d773d0b8d3ecc88f664e22e",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/editorial/scripture-references.ts",
+      "target": "src/lib/editorial/scripture-references.ts",
+      "sha256": "2ef9b1594863d78a195699f7cee8163423aaf440036986ba19bc98a8fac84c19",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/results/identity-interpretation.ts",
+      "target": "src/lib/results/identity-interpretation.ts",
+      "sha256": "0f163f8597fb37f84647419593ace8d07f09baa2ca24e7aed41c265a8d6f29c2",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/results/identity-tie-message.ts",
+      "target": "src/lib/results/identity-tie-message.ts",
+      "sha256": "cfc0f9c632becbf1423bcc0dae0ce222a5490897bb46a02e3b9e98285b550bd4",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/results/premium-result-model.ts",
+      "target": "src/lib/results/premium-result-model.ts",
+      "sha256": "5f83767b09fa4ea7bd7e7a7c89f159248ddfa01c5b51d71e358bf506c8c9ab30",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/results/provisional-classification.ts",
+      "target": "src/lib/results/provisional-classification.ts",
+      "sha256": "8b04f6e5441c5ba729b0738e756f4679f78e7c6453b84504f942d5c53474c481",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/results/relative-percentages.ts",
+      "target": "src/lib/results/relative-percentages.ts",
+      "sha256": "f65024fc608cbb8759d2fb0b2bcfd8549e128e8f5ea1c102bc7c145ef42cffab",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/results/tie-breaker.ts",
+      "target": "src/lib/results/tie-breaker.ts",
+      "sha256": "0512a19c068496f1fe7d801f8277e64344d916385db9ed84c03659de1cd3757d",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/routing/base-path.ts",
+      "target": "src/lib/routing/base-path.ts",
+      "sha256": "3e92178b60324eac6b16f23476f05cf967d838ec8b4811039db23acfcf082262",
+      "nativeAdaptation": true
+    },
+    {
+      "source": "lib/scoring/engine.ts",
+      "target": "src/lib/scoring/engine.ts",
+      "sha256": "7591ad38cc302687c43eae6fa54912ac1ec2b61c18bf23f5170fecc59c6b8eb6",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/scoring/pressure-v1.ts",
+      "target": "src/lib/scoring/pressure-v1.ts",
+      "sha256": "860238d2abd2f22a7002c98f780b727eba43d261d259fe7c7300eda21fdd69ba",
+      "nativeAdaptation": false
+    },
+    {
+      "source": "lib/scoring/types.ts",
+      "target": "src/lib/scoring/types.ts",
+      "sha256": "18caba7ef7432122bc4b991393e7eb0556f2ee8c6855f8c6481c7d3c7b145ebc",
+      "nativeAdaptation": false
+    }
+  ]
+}

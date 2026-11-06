@@ -1,11 +1,17 @@
 /* eslint-disable @next/next/no-img-element -- picto décoratif de la landing */
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import {
+  isLoginRateLimited,
+  LOGIN_RETRY_COOLDOWN_MS,
+  loginErrorMessage,
+  normalizeLoginEmail,
+} from "@/lib/auth/login-errors";
 import "../landing.css";
 
 function LoginForm() {
@@ -32,34 +38,79 @@ function LoginForm() {
         ? "Votre mot de passe a été modifié. Connectez-vous avec votre nouveau mot de passe."
         : null;
   const [loading, setLoading] = useState(false);
+  const [slowConnection, setSlowConnection] = useState(false);
+  const [retryBlocked, setRetryBlocked] = useState(false);
+  const submitInFlight = useRef(false);
+  const slowTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const retryTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => {
+    if (slowTimer.current) clearTimeout(slowTimer.current);
+    if (retryTimer.current) clearTimeout(retryTimer.current);
+  }, []);
+
+  function stopPendingState() {
+    if (slowTimer.current) clearTimeout(slowTimer.current);
+    slowTimer.current = null;
+    submitInFlight.current = false;
+    setSlowConnection(false);
+    setLoading(false);
+  }
+
+  function blockImmediateRetry() {
+    setRetryBlocked(true);
+    if (retryTimer.current) clearTimeout(retryTimer.current);
+    retryTimer.current = setTimeout(() => {
+      setRetryBlocked(false);
+      retryTimer.current = null;
+    }, LOGIN_RETRY_COOLDOWN_MS);
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    // Le state React n'est pas synchrone. Ce verrou empêche deux taps rapides de
+    // lancer deux POST /auth/v1/token avant que le bouton ne soit désactivé.
+    if (submitInFlight.current || retryBlocked) return;
+    submitInFlight.current = true;
     setError(null);
+    setSlowConnection(false);
     setLoading(true);
+    slowTimer.current = setTimeout(() => setSlowConnection(true), 8_000);
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+    try {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: normalizeLoginEmail(email),
+        password,
+      });
 
-    setLoading(false);
+      if (signInError) {
+        if (isLoginRateLimited(signInError)) blockImmediateRetry();
+        setError(loginErrorMessage(signInError));
+        stopPendingState();
+        return;
+      }
 
-    if (signInError) {
-      const message = signInError.message.toLowerCase();
-      // Supabase ne renvoie « e-mail non confirmé » qu'avec le bon mot de passe : on peut donc le dire sans risque
-      const notConfirmed = signInError.code === "email_not_confirmed" || message.includes("email not confirmed");
-      setError(
-        message.includes("banned")
-          ? "Ce compte est désactivé. Rapprochez-vous de l'équipe Ministry School."
-          : notConfirmed
-            ? "Validez votre adresse e-mail pour pouvoir vous connecter. Un lien vous a été envoyé par e-mail : pensez à vérifier vos courriers indésirables."
-            : "Identifiants incorrects. Vérifiez votre e-mail et votre mot de passe."
-      );
-      return;
+      // Le suivi statistique est écrit après l'affichage, de façon étalée, afin
+      // de ne pas alourdir la transaction Auth qui vient d'aboutir.
+      sessionStorage.setItem("ms:just-signed-in", "1");
+
+      // Les délégations saisies avant la première connexion sont rattachées une
+      // seule fois ici. Une panne de ce RPC optionnel ne doit pas détruire la
+      // session Auth qui vient d'être obtenue ni provoquer un second /token.
+      try {
+        await supabase.rpc("claim_delegations");
+      } catch {
+        // La session Auth est déjà valide. Ne jamais relancer /token parce que
+        // le rattachement optionnel a rencontré une coupure réseau.
+      }
+      if (slowTimer.current) clearTimeout(slowTimer.current);
+      slowTimer.current = null;
+      router.replace("/etudiant");
+    } catch (failure) {
+      blockImmediateRetry();
+      setError(loginErrorMessage(failure));
+      stopPendingState();
     }
-
-    // Les délégations saisies avant la première connexion ne doivent être rattachées
-    // qu'au moment où l'utilisateur s'authentifie, jamais à chaque page consultée.
-    await supabase.rpc("claim_delegations");
-    router.replace("/etudiant");
   }
 
   return (
@@ -101,6 +152,11 @@ function LoginForm() {
             {error && (
               <p className="login-error" role="alert">
                 {error}
+              </p>
+            )}
+            {loading && slowConnection && (
+              <p className="login-notice" role="status">
+                La connexion est toujours en cours. Ne recharge pas la page : aucune seconde tentative n’est envoyée.
               </p>
             )}
 
@@ -150,8 +206,8 @@ function LoginForm() {
                 <Link href="/mot-de-passe-oublie">Mot de passe oublié&nbsp;?</Link>
               </div>
 
-              <button className="login-submit" type="submit" disabled={loading}>
-                {loading ? "Connexion…" : "Se connecter"} <span aria-hidden="true">→</span>
+              <button className="login-submit" type="submit" disabled={loading || retryBlocked}>
+                {loading ? "Connexion…" : retryBlocked ? "Patiente quelques instants…" : "Se connecter"} <span aria-hidden="true">→</span>
               </button>
             </form>
 

@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { getViewer } from "@/lib/data/viewer";
 import { parisLocalToIso } from "@/lib/availability";
 import { createClient } from "@/lib/supabase/server";
+import { invalidateStudentToolsSettings } from "@/lib/cache/apps";
 
 async function requireSuperAdmin() {
   const viewer = await getViewer();
@@ -47,6 +48,7 @@ function publicationDate(formData: FormData) {
 }
 
 function revalidateCatalog() {
+  invalidateStudentToolsSettings();
   revalidatePath("/apps");
   revalidatePath("/etudiant/outils");
   revalidatePath("/etudiant", "layout");

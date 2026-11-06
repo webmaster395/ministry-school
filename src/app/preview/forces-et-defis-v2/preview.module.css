@@ -1,0 +1,45 @@
+.page { min-height: 0; background: var(--results-background); color: var(--results-text); }
+.banner { display: flex; justify-content: center; gap: 6px 14px; flex-wrap: wrap; padding: 10px 20px; border-bottom: 1px solid var(--results-border); background: var(--results-surface); color: var(--results-muted); font-size: var(--results-caption-size); text-align: center; }
+.banner strong { color: var(--results-text); letter-spacing: .09em; }
+.shell { width: min(1120px, calc(100% - 72px)); margin-inline: auto; padding: 88px 0 48px; }
+.page :is(.header, .sectionHeading, .chapterHeading) > :global(.ds-eyebrow) { display: inline-flex; width: fit-content; padding: 6px 9px 5px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); text-transform: uppercase; letter-spacing: .13em; }
+.header > :global(.ds-eyebrow) { margin-inline: auto; }
+.header { max-width: 850px; margin: 0 auto; text-align: center; }
+.header h1 { margin: 16px 0 22px; }
+.header p { max-width: 690px; margin: 0 auto; color: var(--results-muted); line-height: 1.55; }
+.characteristics { margin-top: var(--results-section-gap); }
+.sectionHeading { margin-bottom: 32px; }
+.sectionHeading h2, .chapterHeading h2 { margin: 16px 0 17px; }
+.sectionHeading p, .chapterHeading p { max-width: 75%; margin: 0; color: var(--results-muted); line-height: 1.55; }
+.cardGrid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+.card { position: relative; display: grid; grid-template-columns: minmax(0, 27%) minmax(0, 1fr); min-height: 0; padding: 14px; overflow: hidden; border-radius: var(--results-radius-large); background: #f5f6f7; transition: background-color .25s ease; }
+.cardCopy { grid-column: 2; display: flex; flex-direction: column; align-items: flex-start; min-width: 0; padding: 19px 24px; }
+.cardCopy > :global(.ds-eyebrow) { display: inline-flex; width: fit-content; padding: 5px 8px 4px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); }
+.cardCopy h3 { margin: 17px 0 14px; }
+.cardCopy p { max-width: 56ch; margin: 0; color: var(--results-muted); line-height: 1.55; }
+.cardPhoto { position: absolute; inset: 14px auto 14px 14px; display: block; width: calc(27% - 14px); height: calc(100% - 28px); border-radius: var(--results-radius-small); object-fit: cover; }
+.chapter { margin-top: var(--results-section-gap); padding-top: 40px; border-top: 1px solid var(--results-border); }
+.chapterHeading { margin-bottom: 36px; }
+.chapterLayout { display: grid; grid-template-columns: minmax(0, 315px) minmax(0, 1fr); align-items: start; gap: clamp(46px, 6vw, 84px); }
+.portrait { display: block; width: 100%; height: 430px; border-radius: var(--results-radius-large); object-fit: cover; }
+.challengePortrait { filter: grayscale(1) contrast(1.14) brightness(.82); }
+.accordions { min-width: 0; border-top: 1px solid var(--results-border); }
+.accordion { border-bottom: 1px solid var(--results-border); }
+.trigger { display: flex; align-items: center; justify-content: space-between; gap: 18px; width: 100%; min-height: 76px; padding: 5px 0; border: 0; background: transparent; color: var(--results-text); text-align: left; cursor: pointer; }
+.plus { display: grid; place-items: center; flex: none; width: 34px; height: 34px; border: 1px solid var(--results-border); border-radius: 50%; color: var(--accent); font-size: 21px; font-weight: 400; line-height: 1; }
+.trigger:focus-visible, .miniNav a:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+.panel { max-width: 60ch; padding: 0 42px 27px 0; }
+.panel > p { margin: 0; color: #526062; line-height: 1.65; }
+.detail { margin-top: 21px; }
+.detail > :global(.ds-eyebrow) { display: inline-flex; width: fit-content; padding: 5px 8px 4px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); text-transform: uppercase; letter-spacing: .08em; }
+.detail p { margin: 7px 0 0; color: #526062; line-height: 1.6; }
+.miniNav { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 64px; padding: 28px 32px; border-radius: var(--results-radius-large); background: #f5f5f7; }
+.miniNav small { display: block; margin-bottom: 7px; color: #96969e; font-size: var(--results-caption-size); }
+.miniNav strong { color: var(--results-text); font-size: var(--results-h3-size); font-weight: 600; }
+.miniNav a { display: inline-flex; align-items: center; justify-content: center; min-height: 50px; padding: 12px 25px; border-radius: 999px; background: #1d1d1f; color: #fff; font-size: var(--results-body-size); font-weight: 600; text-decoration: none; white-space: nowrap; }
+.miniNav a:hover { background: #38383b; }
+@media (hover: hover) and (pointer: fine) { .card:hover { background: var(--accent); } .card:hover .cardCopy :is(:global(.ds-eyebrow), h3, p) { color: var(--hover-ink); } }
+@media (max-width: 900px) { .shell { width: min(100% - 48px, 760px); padding-top: 70px; } .chapterLayout { grid-template-columns: minmax(0, 250px) minmax(0, 1fr); gap: 32px; } .portrait { height: 355px; } .sectionHeading p, .chapterHeading p { max-width: 85%; } }
+@media (max-width: 650px) { .shell { width: calc(100% - 36px); padding: 54px 0 28px; } .header h1 { margin: 12px 0 17px; } .header p { line-height: 1.5; } .sectionHeading, .chapterHeading { margin-bottom: 23px; } .sectionHeading h2, .chapterHeading h2 { margin: 12px 0; } .sectionHeading p, .chapterHeading p { max-width: none; } .cardGrid { gap: 16px; } .card { display: flex; flex-direction: column-reverse; min-height: 0; padding: 12px; } .cardPhoto { position: static; width: 100%; height: clamp(230px, 72vw, 320px); min-height: 0; } .cardCopy { padding: 21px 11px 17px; } .cardCopy h3 { margin: 10px 0 9px; } .chapter { padding-top: 24px; } .chapterLayout { grid-template-columns: minmax(0, 1fr); gap: 22px; } .portrait { width: 100%; height: auto; aspect-ratio: 4 / 5; } .trigger { min-height: 67px; } .panel { padding-right: 0; padding-bottom: 22px; } .miniNav { align-items: flex-start; margin-top: 44px; padding: 16px; } .miniNav strong { font-size: 15px; } .miniNav a { min-height: 44px; padding: 10px 13px; font-size: 14px; } }
+@media (max-width: 370px) { .shell { width: calc(100% - 28px); } .cardCopy { padding-inline: 8px; } .cardPhoto { height: 220px; } .trigger { gap: 12px; } }
+@media (prefers-reduced-motion: reduce) { .card { transition: none; } }

@@ -7,10 +7,11 @@ import { createClient } from "@supabase/supabase-js";
 const PROJECT_REF = process.env.SUPABASE_PROJECT_REF || "jrdjqkvagnqpchygxrkz";
 const SUPABASE_URL = process.env.SUPABASE_URL || `https://${PROJECT_REF}.supabase.co`;
 const APP_URL = (process.env.APP_URL || "https://www.ministryschool.fr").replace(/\/$/, "");
-const EMAIL_DOMAIN = process.env.LOAD_TEST_EMAIL_DOMAIN || "loadtest.invalid";
+const EMAIL_DOMAIN = process.env.LOAD_TEST_EMAIL_DOMAIN;
 const SMOKE_USER_AGENT = process.env.SMOKE_USER_AGENT || "MinistrySchool-Smoke-Test/1.0";
 const command = process.argv[2];
 const batchArg = process.argv.find((arg) => arg.startsWith("--batch="))?.slice(8);
+const countArg = Number(process.argv.find((arg) => arg.startsWith("--count="))?.slice(8) || 50);
 const batchId = batchArg || randomUUID();
 const manifestPath = `/tmp/ministry-load-test-${batchId}.json`;
 const csvPath = `/tmp/ministry-load-test-${batchId}.csv`;
@@ -87,36 +88,26 @@ async function loadManifest() {
   return JSON.parse(await readFile(manifestPath, "utf8"));
 }
 
-async function createOne() {
+function assertAuthorizedProvisioning(count) {
+  if (!EMAIL_DOMAIN) {
+    throw new Error("LOAD_TEST_EMAIL_DOMAIN est obligatoire et doit être un sous-domaine de test autorisé que vous contrôlez.");
+  }
+  if (process.env.LOAD_TEST_AUTHORIZED !== "YES") {
+    throw new Error("Garde-fou : définir LOAD_TEST_AUTHORIZED=YES uniquement pour une préproduction autorisée.");
+  }
+  if (new URL(SUPABASE_URL).hostname.startsWith("jrdjqkvagnqpchygxrkz.")) {
+    throw new Error("Garde-fou : la création de comptes de charge est interdite sur le projet Supabase de production.");
+  }
+  if (!Number.isInteger(count) || count < 1 || count > 500) {
+    throw new Error("--count doit être un entier compris entre 1 et 500.");
+  }
+}
+
+async function createBatch(count) {
+  assertAuthorizedProvisioning(count);
   const { service } = await clients();
   const representative = await selectRepresentativeSession(service);
   const suffix = batchId.replaceAll("-", "").slice(0, 12);
-  const email = `loadtest-student-${suffix}-001@${EMAIL_DOMAIN}`;
-  const secret = password();
-  const { data: created, error: authError } = await service.auth.admin.createUser({
-    email,
-    password: secret,
-    email_confirm: true,
-    user_metadata: { full_name: "LOAD TEST — 001", is_load_test: true, test_batch_id: batchId },
-  });
-  if (authError || !created.user) throw authError || new Error("Utilisateur Auth non créé.");
-
-  const profile = {
-    full_name: "LOAD TEST — 001",
-    role: "student",
-    ministry_id: representative.session.session_type === "ministere" ? representative.session.ministry_id : null,
-    preferred_day: representative.session.day || null,
-    email_confirmed: true,
-    is_test_account: true,
-    test_batch_id: batchId,
-    notification_prefs: {},
-  };
-  const { error: profileError } = await service.from("profiles").update(profile).eq("id", created.user.id);
-  if (profileError) {
-    await service.auth.admin.deleteUser(created.user.id);
-    throw profileError;
-  }
-
   const manifest = {
     batchId,
     createdAt: new Date().toISOString(),
@@ -129,18 +120,54 @@ async function createOne() {
       assignmentCount: representative.assignmentCount,
       hasVideo: !!representative.session.video_url,
     },
-    accounts: [{ id: created.user.id, email, password: secret }],
+    accounts: [],
   };
-  await writeManifest(manifest);
+
+  for (let index = 1; index <= count; index += 1) {
+    const serial = String(index).padStart(3, "0");
+    const email = `load-test-student-${suffix}-${serial}@${EMAIL_DOMAIN}`;
+    const secret = password();
+    const { data: created, error: authError } = await service.auth.admin.createUser({
+      email,
+      password: secret,
+      email_confirm: true,
+      user_metadata: { full_name: `LOAD TEST — ${serial}`, is_load_test: true, test_batch_id: batchId },
+    });
+    if (authError || !created.user) throw authError || new Error(`Utilisateur Auth ${serial} non créé.`);
+
+    const { error: profileError } = await service.from("profiles").update({
+      full_name: `LOAD TEST — ${serial}`,
+      role: "student",
+      ministry_id: representative.session.session_type === "ministere" ? representative.session.ministry_id : null,
+      preferred_day: representative.session.day || null,
+      email_confirmed: true,
+      is_test_account: true,
+      test_batch_id: batchId,
+      notification_prefs: {},
+    }).eq("id", created.user.id);
+    if (profileError) {
+      await service.auth.admin.deleteUser(created.user.id);
+      throw profileError;
+    }
+
+    manifest.accounts.push({ id: created.user.id, email, password: secret });
+    // Le manifeste est récupérable même si la création est interrompue.
+    await writeManifest(manifest);
+  }
+
   console.log(JSON.stringify({
     ok: true,
     batchId,
-    email,
+    created: manifest.accounts.length,
     session: manifest.session,
     emailConfirmedWithoutDelivery: true,
     manifestPath,
     csvPath,
   }, null, 2));
+}
+
+async function createOne() {
+  return createBatch(1);
 }
 
 function cookieHeader(session) {
@@ -286,9 +313,9 @@ async function verify() {
   if (!result.clean) process.exitCode = 2;
 }
 
-const commands = { "create-one": createOne, smoke, cleanup, verify };
+const commands = { "create-one": createOne, "create-batch": () => createBatch(countArg), smoke, cleanup, verify };
 if (!commands[command]) {
-  console.error("Usage: node scripts/load-test-accounts.mjs <create-one|smoke|cleanup|verify> --batch=<uuid>");
+  console.error("Usage: node scripts/load-test-accounts.mjs <create-one|create-batch|smoke|cleanup|verify> --batch=<uuid> [--count=500]");
   process.exit(1);
 }
 

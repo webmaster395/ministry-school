@@ -29,23 +29,15 @@ export async function proxy(request: NextRequest) {
   const isAuthenticated = !!auth?.claims?.sub;
   const isProfilMappRoute = request.nextUrl.pathname.startsWith("/apps/profil-mapp");
 
-  // Profil MAPP est en préouverture. Le masquer dans le catalogue ne suffit
-  // pas : cette vérification protège aussi les URL copiées et les routes API
-  // servies sous le même préfixe. Le droit vient de la base Ministry, jamais
-  // d'un rôle simplement affiché dans l'interface.
+  // Profil MAPP partage désormais l'identité Ministry. Le proxy vérifie
+  // seulement la présence d'une session signée ; les RPC MAPP contrôlent
+  // ensuite le profil étudiant actif, l'adresse confirmée et la propriété de
+  // chaque tentative. Cela évite une lecture student_viewer_context sur chaque
+  // document, navigation RSC ou route sous ce préfixe.
   if (isProfilMappRoute) {
     if (!isAuthenticated) {
       const url = request.nextUrl.clone();
       url.pathname = "/login";
-      return NextResponse.redirect(url);
-    }
-
-    const { data: viewer, error: viewerError } = await supabase.rpc("student_viewer_context");
-    const isSuperAdmin = !viewerError && Boolean((viewer as { super_admin?: boolean } | null)?.super_admin);
-    if (!isSuperAdmin) {
-      const url = request.nextUrl.clone();
-      url.pathname = "/etudiant";
-      url.search = "";
       return NextResponse.redirect(url);
     }
   }

@@ -1,0 +1,1185 @@
+{
+  "schemaVersion": "1.0.0",
+  "editorialVersion": "pressure-2026-10-12-v1",
+  "status": "draft_requires_editorial_review",
+  "locale": "fr-FR",
+  "definition": {
+    "title": "Quand la pression monte.",
+    "text": "Face à une urgence, un conflit ou une situation exigeante, certains réflexes peuvent prendre davantage de place. Cette lecture décrit des tendances possibles à partir de tes réponses sous pression, sans prédire tes réactions exactes."
+  },
+  "limitations": "Les mémentos MAPP décrivent des tendances générales; ils ne valident pas ces combinaisons sous pression. Les gestes, la voix et les e-mails ne sont pas directement mesurés par MAPP. Les différences de pourcentages entre naturel et pression ne mesurent pas une variation psychométrique directe.",
+  "profiles": {
+    "D": {
+      "primary": "D",
+      "secondary": null,
+      "label": "Conquérant",
+      "introduction": "Sous pression, tu peux chercher à reprendre la main, décider rapidement et obtenir des résultats. Cette détermination peut aider à débloquer la situation, mais aussi te rendre plus directif.",
+      "sections": {
+        "reactions": [
+          {
+            "id": "triggers",
+            "title": "Ce qui déclenche la pression",
+            "text": "Les obstacles, l’inaction et les décisions qui traînent peuvent accentuer ton impatience. Tu peux chercher à rétablir une direction claire."
+          },
+          {
+            "id": "decisions",
+            "title": "Comment tu décides",
+            "text": "Tu peux trancher avec les éléments disponibles plutôt que d’attendre une certitude complète. Le risque est de négliger une objection importante."
+          },
+          {
+            "id": "actions",
+            "title": "Comment tu agis",
+            "text": "Tu peux accélérer le rythme, fixer les priorités et prendre directement en charge les difficultés. Les autres peuvent avoir du mal à suivre cette cadence."
+          },
+          {
+            "id": "relationships",
+            "title": "Avec les autres",
+            "text": "Tu peux exprimer des attentes plus fermes et devenir exigeant sur les résultats. Cela peut créer de la tension avec les personnes qui ont besoin de temps."
+          }
+        ],
+        "communication": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t’exprimer",
+            "text": "Ton discours peut devenir bref, affirmatif et centré sur la conclusion. Le ton et le débit peuvent se renforcer quand tu veux accélérer."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Une posture plus assurée ou des gestes appuyés peuvent accompagner ce besoin d’agir. Ces signes ne sont pas mesurés directement par le questionnaire."
+          },
+          {
+            "id": "listening",
+            "title": "Ta manière d’écouter",
+            "text": "Tu peux rechercher immédiatement une réponse utile et interrompre les explications longues. Il devient important de laisser aussi place aux réserves."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tu peux privilégier des e-mails courts, directs et orientés vers l’action attendue. Sous tension, cette concision peut sembler brusque."
+          }
+        ],
+        "balance": [
+          {
+            "id": "signals",
+            "title": "Reconnaître les signaux",
+            "text": "Repère les moments où tu accélères, interromps ou cherches à tout reprendre en main."
+          },
+          {
+            "id": "aggravators",
+            "title": "Ce qui peut aggraver la pression",
+            "text": "Multiplier les injonctions et traiter chaque retard comme une urgence peut accentuer les tensions."
+          },
+          {
+            "id": "supports",
+            "title": "Ce qui peut t’aider",
+            "text": "Sépare les décisions urgentes de celles qui peuvent attendre. Écoute une objection essentielle et délègue une action concrète."
+          }
+        ]
+      }
+    },
+    "I": {
+      "primary": "I",
+      "secondary": null,
+      "label": "Communiquant",
+      "introduction": "Sous pression, tu peux multiplier les échanges, chercher à mobiliser les autres et maintenir l’enthousiasme. Cette énergie relationnelle peut aider, mais aussi disperser l’attention.",
+      "sections": {
+        "reactions": [
+          {
+            "id": "triggers",
+            "title": "Ce qui déclenche la pression",
+            "text": "Un climat froid, l’absence de réaction ou le sentiment de ne pas être entendu peuvent devenir difficiles. Tu peux rechercher davantage de contact."
+          },
+          {
+            "id": "decisions",
+            "title": "Comment tu décides",
+            "text": "Tu peux explorer plusieurs idées à voix haute et solliciter les avis. Une piste enthousiasmante peut te séduire avant l’examen des contraintes."
+          },
+          {
+            "id": "actions",
+            "title": "Comment tu agis",
+            "text": "Tu peux multiplier les initiatives et les contacts pour relancer la dynamique. Il peut devenir plus difficile de te concentrer sur une seule priorité."
+          },
+          {
+            "id": "relationships",
+            "title": "Avec les autres",
+            "text": "Tu peux rechercher l’adhésion et ressentir plus vivement un désaccord ou une réponse distante."
+          }
+        ],
+        "communication": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t’exprimer",
+            "text": "Ton débit peut s’accélérer, les anecdotes se multiplier et le ton devenir plus expressif. Tu peux rebondir rapidement d’une idée à l’autre."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Des gestes et expressions spontanés peuvent accompagner ton besoin de communiquer. Le test n’observe pas ces comportements individuellement."
+          },
+          {
+            "id": "listening",
+            "title": "Ta manière d’écouter",
+            "text": "Tu peux réagir immédiatement aux propos de l’autre, parfois avant qu’il ait terminé."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tu peux conserver un ton chaleureux et personnel, avec des e-mails plus expressifs ou développés. Plusieurs sujets peuvent s’y mêler."
+          }
+        ],
+        "balance": [
+          {
+            "id": "signals",
+            "title": "Reconnaître les signaux",
+            "text": "Observe les moments où tu multiplies les avis, les conversations ou les changements de piste."
+          },
+          {
+            "id": "aggravators",
+            "title": "Ce qui peut aggraver la pression",
+            "text": "Chercher l’accord de tous ou repousser un désaccord peut prolonger la tension."
+          },
+          {
+            "id": "supports",
+            "title": "Ce qui peut t’aider",
+            "text": "Formule la priorité en une phrase, choisis un interlocuteur utile et définis une prochaine action."
+          }
+        ]
+      }
+    },
+    "S": {
+      "primary": "S",
+      "secondary": null,
+      "label": "Facilitateur",
+      "introduction": "Sous pression, tu peux chercher à préserver la stabilité et la qualité des relations. Cette constance peut rassurer, mais elle peut aussi retarder une décision difficile.",
+      "sections": {
+        "reactions": [
+          {
+            "id": "triggers",
+            "title": "Ce qui déclenche la pression",
+            "text": "Les changements brusques, les conflits et les demandes contradictoires peuvent accentuer ton inconfort."
+          },
+          {
+            "id": "decisions",
+            "title": "Comment tu décides",
+            "text": "Tu peux examiner les conséquences sur les autres avant de décider. Éviter un désaccord peut retarder le choix."
+          },
+          {
+            "id": "actions",
+            "title": "Comment tu agis",
+            "text": "Tu peux maintenir tes engagements et soutenir les autres, parfois en acceptant trop de demandes."
+          },
+          {
+            "id": "relationships",
+            "title": "Avec les autres",
+            "text": "Tu peux chercher à apaiser les tensions et garder tes réserves pour toi. Les frustrations peuvent alors s’accumuler."
+          }
+        ],
+        "communication": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t’exprimer",
+            "text": "Tu peux choisir des mots prudents, un ton calme et un rythme posé. Dire clairement ton opposition peut devenir plus difficile."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Une gestuelle contenue ou une posture réservée peuvent accompagner la tension, sans être mesurées par MAPP."
+          },
+          {
+            "id": "listening",
+            "title": "Ta manière d’écouter",
+            "text": "Tu peux laisser beaucoup de place aux autres, même lorsque tu aurais besoin de parler."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tes e-mails peuvent rester courtois, attentionnés et prudents. Tu peux prendre du temps pour formuler une réponse délicate."
+          }
+        ],
+        "balance": [
+          {
+            "id": "signals",
+            "title": "Reconnaître les signaux",
+            "text": "Repère les moments où tu acceptes trop de demandes ou repousses une conversation nécessaire."
+          },
+          {
+            "id": "aggravators",
+            "title": "Ce qui peut aggraver la pression",
+            "text": "Éviter les désaccords et attendre que les autres devinent tes besoins peut aggraver la situation."
+          },
+          {
+            "id": "supports",
+            "title": "Ce qui peut t’aider",
+            "text": "Exprime une limite, demande un délai réaliste et prépare un échange calme pour clarifier la décision."
+          }
+        ]
+      }
+    },
+    "C": {
+      "primary": "C",
+      "secondary": null,
+      "label": "Analyste",
+      "introduction": "Sous pression, tu peux chercher davantage de précision, de preuves et de maîtrise des risques. Cette rigueur peut sécuriser les choix, mais ralentir l’action.",
+      "sections": {
+        "reactions": [
+          {
+            "id": "triggers",
+            "title": "Ce qui déclenche la pression",
+            "text": "Les consignes imprécises, les erreurs possibles et les décisions non vérifiées peuvent accroître ton inconfort."
+          },
+          {
+            "id": "decisions",
+            "title": "Comment tu décides",
+            "text": "Tu peux examiner les options et les conséquences en détail. Le choix peut tarder si aucune solution ne paraît suffisamment fiable."
+          },
+          {
+            "id": "actions",
+            "title": "Comment tu agis",
+            "text": "Tu peux renforcer les contrôles, structurer les étapes et corriger les incohérences. Cela peut prendre beaucoup de temps."
+          },
+          {
+            "id": "relationships",
+            "title": "Avec les autres",
+            "text": "Tu peux poser davantage de questions et souligner les points insuffisamment étayés, au risque d’être perçu comme critique."
+          }
+        ],
+        "communication": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t’exprimer",
+            "text": "Ton discours peut devenir plus précis, technique et réservé. Tu peux détailler les objections et distinguer faits et hypothèses."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Une expression contenue ou une posture réservée peuvent accompagner la concentration. Le questionnaire ne mesure pas ces signes."
+          },
+          {
+            "id": "listening",
+            "title": "Ta manière d’écouter",
+            "text": "Tu peux écouter pour vérifier la logique et les preuves, puis prendre du temps avant de répondre."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tes e-mails peuvent devenir détaillés, structurés et documentés, avec références et pièces jointes. Leur préparation peut s’allonger."
+          }
+        ],
+        "balance": [
+          {
+            "id": "signals",
+            "title": "Reconnaître les signaux",
+            "text": "Observe les vérifications répétées, les demandes de précisions supplémentaires et les réponses différées."
+          },
+          {
+            "id": "aggravators",
+            "title": "Ce qui peut aggraver la pression",
+            "text": "Chercher à éliminer toute incertitude ou contrôler chaque détail peut bloquer l’avancement."
+          },
+          {
+            "id": "supports",
+            "title": "Ce qui peut t’aider",
+            "text": "Définis les informations indispensables, limite le temps d’analyse et distingue les erreurs critiques des détails secondaires."
+          }
+        ]
+      }
+    }
+  },
+  "orderedCombinations": {
+    "DI": {
+      "primary": "D",
+      "secondary": "I",
+      "label": "Conquérant + Communiquant",
+      "introduction": "Sous pression, tu peux chercher à reprendre la main, décider rapidement et obtenir des résultats. Cette détermination peut aider à débloquer la situation, mais aussi te rendre plus directif. Ta tendance Communiquant secondaire peut ajouter une recherche de contact et d’adhésion.",
+      "sections": {
+        "reactions": [
+          {
+            "id": "triggers",
+            "title": "Ce qui déclenche la pression",
+            "text": "Les obstacles, l’inaction et les décisions qui traînent peuvent accentuer ton impatience. Tu peux chercher à rétablir une direction claire."
+          },
+          {
+            "id": "decisions",
+            "title": "Comment tu décides",
+            "text": "Tu peux trancher avec les éléments disponibles plutôt que d’attendre une certitude complète. Le risque est de négliger une objection importante."
+          },
+          {
+            "id": "actions",
+            "title": "Comment tu agis",
+            "text": "Tu peux accélérer le rythme, fixer les priorités et prendre directement en charge les difficultés. Les autres peuvent avoir du mal à suivre cette cadence. Tu peux aussi solliciter les réactions de ton entourage."
+          },
+          {
+            "id": "relationships",
+            "title": "Avec les autres",
+            "text": "Tu peux exprimer des attentes plus fermes et devenir exigeant sur les résultats. Cela peut créer de la tension avec les personnes qui ont besoin de temps."
+          }
+        ],
+        "communication": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t’exprimer",
+            "text": "Ton discours peut devenir bref, affirmatif et centré sur la conclusion. Le ton et le débit peuvent se renforcer quand tu veux accélérer. Une expression plus spontanée peut accompagner ton style principal."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Une posture plus assurée ou des gestes appuyés peuvent accompagner ce besoin d’agir. Ces signes ne sont pas mesurés directement par le questionnaire."
+          },
+          {
+            "id": "listening",
+            "title": "Ta manière d’écouter",
+            "text": "Tu peux rechercher immédiatement une réponse utile et interrompre les explications longues. Il devient important de laisser aussi place aux réserves."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tu peux privilégier des e-mails courts, directs et orientés vers l’action attendue. Sous tension, cette concision peut sembler brusque."
+          }
+        ],
+        "balance": [
+          {
+            "id": "signals",
+            "title": "Reconnaître les signaux",
+            "text": "Repère les moments où tu accélères, interromps ou cherches à tout reprendre en main."
+          },
+          {
+            "id": "aggravators",
+            "title": "Ce qui peut aggraver la pression",
+            "text": "Multiplier les injonctions et traiter chaque retard comme une urgence peut accentuer les tensions."
+          },
+          {
+            "id": "supports",
+            "title": "Ce qui peut t’aider",
+            "text": "Sépare les décisions urgentes de celles qui peuvent attendre. Écoute une objection essentielle et délègue une action concrète. Privilégie quelques échanges utiles."
+          }
+        ]
+      }
+    },
+    "DS": {
+      "primary": "D",
+      "secondary": "S",
+      "label": "Conquérant + Facilitateur",
+      "introduction": "Sous pression, tu peux chercher à reprendre la main, décider rapidement et obtenir des résultats. Cette détermination peut aider à débloquer la situation, mais aussi te rendre plus directif. Ta tendance Facilitateur secondaire peut renforcer ton souci de préserver la relation.",
+      "sections": {
+        "reactions": [
+          {
+            "id": "triggers",
+            "title": "Ce qui déclenche la pression",
+            "text": "Les obstacles, l’inaction et les décisions qui traînent peuvent accentuer ton impatience. Tu peux chercher à rétablir une direction claire."
+          },
+          {
+            "id": "decisions",
+            "title": "Comment tu décides",
+            "text": "Tu peux trancher avec les éléments disponibles plutôt que d’attendre une certitude complète. Le risque est de négliger une objection importante."
+          },
+          {
+            "id": "actions",
+            "title": "Comment tu agis",
+            "text": "Tu peux accélérer le rythme, fixer les priorités et prendre directement en charge les difficultés. Les autres peuvent avoir du mal à suivre cette cadence. L’impact sur les autres peut peser davantage."
+          },
+          {
+            "id": "relationships",
+            "title": "Avec les autres",
+            "text": "Tu peux exprimer des attentes plus fermes et devenir exigeant sur les résultats. Cela peut créer de la tension avec les personnes qui ont besoin de temps."
+          }
+        ],
+        "communication": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t’exprimer",
+            "text": "Ton discours peut devenir bref, affirmatif et centré sur la conclusion. Le ton et le débit peuvent se renforcer quand tu veux accélérer. Tu peux chercher à ménager ton interlocuteur."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Une posture plus assurée ou des gestes appuyés peuvent accompagner ce besoin d’agir. Ces signes ne sont pas mesurés directement par le questionnaire."
+          },
+          {
+            "id": "listening",
+            "title": "Ta manière d’écouter",
+            "text": "Tu peux rechercher immédiatement une réponse utile et interrompre les explications longues. Il devient important de laisser aussi place aux réserves."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tu peux privilégier des e-mails courts, directs et orientés vers l’action attendue. Sous tension, cette concision peut sembler brusque."
+          }
+        ],
+        "balance": [
+          {
+            "id": "signals",
+            "title": "Reconnaître les signaux",
+            "text": "Repère les moments où tu accélères, interromps ou cherches à tout reprendre en main."
+          },
+          {
+            "id": "aggravators",
+            "title": "Ce qui peut aggraver la pression",
+            "text": "Multiplier les injonctions et traiter chaque retard comme une urgence peut accentuer les tensions."
+          },
+          {
+            "id": "supports",
+            "title": "Ce qui peut t’aider",
+            "text": "Sépare les décisions urgentes de celles qui peuvent attendre. Écoute une objection essentielle et délègue une action concrète. Préserve la relation sans oublier tes propres limites."
+          }
+        ]
+      }
+    },
+    "DC": {
+      "primary": "D",
+      "secondary": "C",
+      "label": "Conquérant + Analyste",
+      "introduction": "Sous pression, tu peux chercher à reprendre la main, décider rapidement et obtenir des résultats. Cette détermination peut aider à débloquer la situation, mais aussi te rendre plus directif. Ta tendance Analyste secondaire peut ajouter un besoin de vérifier les faits et les risques.",
+      "sections": {
+        "reactions": [
+          {
+            "id": "triggers",
+            "title": "Ce qui déclenche la pression",
+            "text": "Les obstacles, l’inaction et les décisions qui traînent peuvent accentuer ton impatience. Tu peux chercher à rétablir une direction claire."
+          },
+          {
+            "id": "decisions",
+            "title": "Comment tu décides",
+            "text": "Tu peux trancher avec les éléments disponibles plutôt que d’attendre une certitude complète. Le risque est de négliger une objection importante."
+          },
+          {
+            "id": "actions",
+            "title": "Comment tu agis",
+            "text": "Tu peux accélérer le rythme, fixer les priorités et prendre directement en charge les difficultés. Les autres peuvent avoir du mal à suivre cette cadence. Tu peux aussi vouloir examiner les conséquences."
+          },
+          {
+            "id": "relationships",
+            "title": "Avec les autres",
+            "text": "Tu peux exprimer des attentes plus fermes et devenir exigeant sur les résultats. Cela peut créer de la tension avec les personnes qui ont besoin de temps."
+          }
+        ],
+        "communication": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t’exprimer",
+            "text": "Ton discours peut devenir bref, affirmatif et centré sur la conclusion. Le ton et le débit peuvent se renforcer quand tu veux accélérer. Tes propos peuvent devenir plus précis."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Une posture plus assurée ou des gestes appuyés peuvent accompagner ce besoin d’agir. Ces signes ne sont pas mesurés directement par le questionnaire."
+          },
+          {
+            "id": "listening",
+            "title": "Ta manière d’écouter",
+            "text": "Tu peux rechercher immédiatement une réponse utile et interrompre les explications longues. Il devient important de laisser aussi place aux réserves."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tu peux privilégier des e-mails courts, directs et orientés vers l’action attendue. Sous tension, cette concision peut sembler brusque."
+          }
+        ],
+        "balance": [
+          {
+            "id": "signals",
+            "title": "Reconnaître les signaux",
+            "text": "Repère les moments où tu accélères, interromps ou cherches à tout reprendre en main."
+          },
+          {
+            "id": "aggravators",
+            "title": "Ce qui peut aggraver la pression",
+            "text": "Multiplier les injonctions et traiter chaque retard comme une urgence peut accentuer les tensions."
+          },
+          {
+            "id": "supports",
+            "title": "Ce qui peut t’aider",
+            "text": "Sépare les décisions urgentes de celles qui peuvent attendre. Écoute une objection essentielle et délègue une action concrète. Concentre les vérifications sur l’essentiel."
+          }
+        ]
+      }
+    },
+    "ID": {
+      "primary": "I",
+      "secondary": "D",
+      "label": "Communiquant + Conquérant",
+      "introduction": "Sous pression, tu peux multiplier les échanges, chercher à mobiliser les autres et maintenir l’enthousiasme. Cette énergie relationnelle peut aider, mais aussi disperser l’attention. Ta tendance Conquérant secondaire peut ajouter un besoin d’accélérer et de trancher.",
+      "sections": {
+        "reactions": [
+          {
+            "id": "triggers",
+            "title": "Ce qui déclenche la pression",
+            "text": "Un climat froid, l’absence de réaction ou le sentiment de ne pas être entendu peuvent devenir difficiles. Tu peux rechercher davantage de contact."
+          },
+          {
+            "id": "decisions",
+            "title": "Comment tu décides",
+            "text": "Tu peux explorer plusieurs idées à voix haute et solliciter les avis. Une piste enthousiasmante peut te séduire avant l’examen des contraintes."
+          },
+          {
+            "id": "actions",
+            "title": "Comment tu agis",
+            "text": "Tu peux multiplier les initiatives et les contacts pour relancer la dynamique. Il peut devenir plus difficile de te concentrer sur une seule priorité. Tu peux aussi chercher une décision rapide."
+          },
+          {
+            "id": "relationships",
+            "title": "Avec les autres",
+            "text": "Tu peux rechercher l’adhésion et ressentir plus vivement un désaccord ou une réponse distante."
+          }
+        ],
+        "communication": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t’exprimer",
+            "text": "Ton débit peut s’accélérer, les anecdotes se multiplier et le ton devenir plus expressif. Tu peux rebondir rapidement d’une idée à l’autre. Tes propos peuvent devenir plus directs."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Des gestes et expressions spontanés peuvent accompagner ton besoin de communiquer. Le test n’observe pas ces comportements individuellement."
+          },
+          {
+            "id": "listening",
+            "title": "Ta manière d’écouter",
+            "text": "Tu peux réagir immédiatement aux propos de l’autre, parfois avant qu’il ait terminé."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tu peux conserver un ton chaleureux et personnel, avec des e-mails plus expressifs ou développés. Plusieurs sujets peuvent s’y mêler."
+          }
+        ],
+        "balance": [
+          {
+            "id": "signals",
+            "title": "Reconnaître les signaux",
+            "text": "Observe les moments où tu multiplies les avis, les conversations ou les changements de piste."
+          },
+          {
+            "id": "aggravators",
+            "title": "Ce qui peut aggraver la pression",
+            "text": "Chercher l’accord de tous ou repousser un désaccord peut prolonger la tension."
+          },
+          {
+            "id": "supports",
+            "title": "Ce qui peut t’aider",
+            "text": "Formule la priorité en une phrase, choisis un interlocuteur utile et définis une prochaine action. Identifie ce qui nécessite réellement une décision immédiate."
+          }
+        ]
+      }
+    },
+    "IS": {
+      "primary": "I",
+      "secondary": "S",
+      "label": "Communiquant + Facilitateur",
+      "introduction": "Sous pression, tu peux multiplier les échanges, chercher à mobiliser les autres et maintenir l’enthousiasme. Cette énergie relationnelle peut aider, mais aussi disperser l’attention. Ta tendance Facilitateur secondaire peut renforcer ton souci de préserver la relation.",
+      "sections": {
+        "reactions": [
+          {
+            "id": "triggers",
+            "title": "Ce qui déclenche la pression",
+            "text": "Un climat froid, l’absence de réaction ou le sentiment de ne pas être entendu peuvent devenir difficiles. Tu peux rechercher davantage de contact."
+          },
+          {
+            "id": "decisions",
+            "title": "Comment tu décides",
+            "text": "Tu peux explorer plusieurs idées à voix haute et solliciter les avis. Une piste enthousiasmante peut te séduire avant l’examen des contraintes."
+          },
+          {
+            "id": "actions",
+            "title": "Comment tu agis",
+            "text": "Tu peux multiplier les initiatives et les contacts pour relancer la dynamique. Il peut devenir plus difficile de te concentrer sur une seule priorité. L’impact sur les autres peut peser davantage."
+          },
+          {
+            "id": "relationships",
+            "title": "Avec les autres",
+            "text": "Tu peux rechercher l’adhésion et ressentir plus vivement un désaccord ou une réponse distante."
+          }
+        ],
+        "communication": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t’exprimer",
+            "text": "Ton débit peut s’accélérer, les anecdotes se multiplier et le ton devenir plus expressif. Tu peux rebondir rapidement d’une idée à l’autre. Tu peux chercher à ménager ton interlocuteur."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Des gestes et expressions spontanés peuvent accompagner ton besoin de communiquer. Le test n’observe pas ces comportements individuellement."
+          },
+          {
+            "id": "listening",
+            "title": "Ta manière d’écouter",
+            "text": "Tu peux réagir immédiatement aux propos de l’autre, parfois avant qu’il ait terminé."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tu peux conserver un ton chaleureux et personnel, avec des e-mails plus expressifs ou développés. Plusieurs sujets peuvent s’y mêler."
+          }
+        ],
+        "balance": [
+          {
+            "id": "signals",
+            "title": "Reconnaître les signaux",
+            "text": "Observe les moments où tu multiplies les avis, les conversations ou les changements de piste."
+          },
+          {
+            "id": "aggravators",
+            "title": "Ce qui peut aggraver la pression",
+            "text": "Chercher l’accord de tous ou repousser un désaccord peut prolonger la tension."
+          },
+          {
+            "id": "supports",
+            "title": "Ce qui peut t’aider",
+            "text": "Formule la priorité en une phrase, choisis un interlocuteur utile et définis une prochaine action. Préserve la relation sans oublier tes propres limites."
+          }
+        ]
+      }
+    },
+    "IC": {
+      "primary": "I",
+      "secondary": "C",
+      "label": "Communiquant + Analyste",
+      "introduction": "Sous pression, tu peux multiplier les échanges, chercher à mobiliser les autres et maintenir l’enthousiasme. Cette énergie relationnelle peut aider, mais aussi disperser l’attention. Ta tendance Analyste secondaire peut ajouter un besoin de vérifier les faits et les risques.",
+      "sections": {
+        "reactions": [
+          {
+            "id": "triggers",
+            "title": "Ce qui déclenche la pression",
+            "text": "Un climat froid, l’absence de réaction ou le sentiment de ne pas être entendu peuvent devenir difficiles. Tu peux rechercher davantage de contact."
+          },
+          {
+            "id": "decisions",
+            "title": "Comment tu décides",
+            "text": "Tu peux explorer plusieurs idées à voix haute et solliciter les avis. Une piste enthousiasmante peut te séduire avant l’examen des contraintes."
+          },
+          {
+            "id": "actions",
+            "title": "Comment tu agis",
+            "text": "Tu peux multiplier les initiatives et les contacts pour relancer la dynamique. Il peut devenir plus difficile de te concentrer sur une seule priorité. Tu peux aussi vouloir examiner les conséquences."
+          },
+          {
+            "id": "relationships",
+            "title": "Avec les autres",
+            "text": "Tu peux rechercher l’adhésion et ressentir plus vivement un désaccord ou une réponse distante."
+          }
+        ],
+        "communication": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t’exprimer",
+            "text": "Ton débit peut s’accélérer, les anecdotes se multiplier et le ton devenir plus expressif. Tu peux rebondir rapidement d’une idée à l’autre. Tes propos peuvent devenir plus précis."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Des gestes et expressions spontanés peuvent accompagner ton besoin de communiquer. Le test n’observe pas ces comportements individuellement."
+          },
+          {
+            "id": "listening",
+            "title": "Ta manière d’écouter",
+            "text": "Tu peux réagir immédiatement aux propos de l’autre, parfois avant qu’il ait terminé."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tu peux conserver un ton chaleureux et personnel, avec des e-mails plus expressifs ou développés. Plusieurs sujets peuvent s’y mêler."
+          }
+        ],
+        "balance": [
+          {
+            "id": "signals",
+            "title": "Reconnaître les signaux",
+            "text": "Observe les moments où tu multiplies les avis, les conversations ou les changements de piste."
+          },
+          {
+            "id": "aggravators",
+            "title": "Ce qui peut aggraver la pression",
+            "text": "Chercher l’accord de tous ou repousser un désaccord peut prolonger la tension."
+          },
+          {
+            "id": "supports",
+            "title": "Ce qui peut t’aider",
+            "text": "Formule la priorité en une phrase, choisis un interlocuteur utile et définis une prochaine action. Concentre les vérifications sur l’essentiel."
+          }
+        ]
+      }
+    },
+    "SD": {
+      "primary": "S",
+      "secondary": "D",
+      "label": "Facilitateur + Conquérant",
+      "introduction": "Sous pression, tu peux chercher à préserver la stabilité et la qualité des relations. Cette constance peut rassurer, mais elle peut aussi retarder une décision difficile. Ta tendance Conquérant secondaire peut ajouter un besoin d’accélérer et de trancher.",
+      "sections": {
+        "reactions": [
+          {
+            "id": "triggers",
+            "title": "Ce qui déclenche la pression",
+            "text": "Les changements brusques, les conflits et les demandes contradictoires peuvent accentuer ton inconfort."
+          },
+          {
+            "id": "decisions",
+            "title": "Comment tu décides",
+            "text": "Tu peux examiner les conséquences sur les autres avant de décider. Éviter un désaccord peut retarder le choix."
+          },
+          {
+            "id": "actions",
+            "title": "Comment tu agis",
+            "text": "Tu peux maintenir tes engagements et soutenir les autres, parfois en acceptant trop de demandes. Tu peux aussi chercher une décision rapide."
+          },
+          {
+            "id": "relationships",
+            "title": "Avec les autres",
+            "text": "Tu peux chercher à apaiser les tensions et garder tes réserves pour toi. Les frustrations peuvent alors s’accumuler."
+          }
+        ],
+        "communication": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t’exprimer",
+            "text": "Tu peux choisir des mots prudents, un ton calme et un rythme posé. Dire clairement ton opposition peut devenir plus difficile. Tes propos peuvent devenir plus directs."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Une gestuelle contenue ou une posture réservée peuvent accompagner la tension, sans être mesurées par MAPP."
+          },
+          {
+            "id": "listening",
+            "title": "Ta manière d’écouter",
+            "text": "Tu peux laisser beaucoup de place aux autres, même lorsque tu aurais besoin de parler."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tes e-mails peuvent rester courtois, attentionnés et prudents. Tu peux prendre du temps pour formuler une réponse délicate."
+          }
+        ],
+        "balance": [
+          {
+            "id": "signals",
+            "title": "Reconnaître les signaux",
+            "text": "Repère les moments où tu acceptes trop de demandes ou repousses une conversation nécessaire."
+          },
+          {
+            "id": "aggravators",
+            "title": "Ce qui peut aggraver la pression",
+            "text": "Éviter les désaccords et attendre que les autres devinent tes besoins peut aggraver la situation."
+          },
+          {
+            "id": "supports",
+            "title": "Ce qui peut t’aider",
+            "text": "Exprime une limite, demande un délai réaliste et prépare un échange calme pour clarifier la décision. Identifie ce qui nécessite réellement une décision immédiate."
+          }
+        ]
+      }
+    },
+    "SI": {
+      "primary": "S",
+      "secondary": "I",
+      "label": "Facilitateur + Communiquant",
+      "introduction": "Sous pression, tu peux chercher à préserver la stabilité et la qualité des relations. Cette constance peut rassurer, mais elle peut aussi retarder une décision difficile. Ta tendance Communiquant secondaire peut ajouter une recherche de contact et d’adhésion.",
+      "sections": {
+        "reactions": [
+          {
+            "id": "triggers",
+            "title": "Ce qui déclenche la pression",
+            "text": "Les changements brusques, les conflits et les demandes contradictoires peuvent accentuer ton inconfort."
+          },
+          {
+            "id": "decisions",
+            "title": "Comment tu décides",
+            "text": "Tu peux examiner les conséquences sur les autres avant de décider. Éviter un désaccord peut retarder le choix."
+          },
+          {
+            "id": "actions",
+            "title": "Comment tu agis",
+            "text": "Tu peux maintenir tes engagements et soutenir les autres, parfois en acceptant trop de demandes. Tu peux aussi solliciter les réactions de ton entourage."
+          },
+          {
+            "id": "relationships",
+            "title": "Avec les autres",
+            "text": "Tu peux chercher à apaiser les tensions et garder tes réserves pour toi. Les frustrations peuvent alors s’accumuler."
+          }
+        ],
+        "communication": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t’exprimer",
+            "text": "Tu peux choisir des mots prudents, un ton calme et un rythme posé. Dire clairement ton opposition peut devenir plus difficile. Une expression plus spontanée peut accompagner ton style principal."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Une gestuelle contenue ou une posture réservée peuvent accompagner la tension, sans être mesurées par MAPP."
+          },
+          {
+            "id": "listening",
+            "title": "Ta manière d’écouter",
+            "text": "Tu peux laisser beaucoup de place aux autres, même lorsque tu aurais besoin de parler."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tes e-mails peuvent rester courtois, attentionnés et prudents. Tu peux prendre du temps pour formuler une réponse délicate."
+          }
+        ],
+        "balance": [
+          {
+            "id": "signals",
+            "title": "Reconnaître les signaux",
+            "text": "Repère les moments où tu acceptes trop de demandes ou repousses une conversation nécessaire."
+          },
+          {
+            "id": "aggravators",
+            "title": "Ce qui peut aggraver la pression",
+            "text": "Éviter les désaccords et attendre que les autres devinent tes besoins peut aggraver la situation."
+          },
+          {
+            "id": "supports",
+            "title": "Ce qui peut t’aider",
+            "text": "Exprime une limite, demande un délai réaliste et prépare un échange calme pour clarifier la décision. Privilégie quelques échanges utiles."
+          }
+        ]
+      }
+    },
+    "SC": {
+      "primary": "S",
+      "secondary": "C",
+      "label": "Facilitateur + Analyste",
+      "introduction": "Sous pression, tu peux chercher à préserver la stabilité et la qualité des relations. Cette constance peut rassurer, mais elle peut aussi retarder une décision difficile. Ta tendance Analyste secondaire peut ajouter un besoin de vérifier les faits et les risques.",
+      "sections": {
+        "reactions": [
+          {
+            "id": "triggers",
+            "title": "Ce qui déclenche la pression",
+            "text": "Les changements brusques, les conflits et les demandes contradictoires peuvent accentuer ton inconfort."
+          },
+          {
+            "id": "decisions",
+            "title": "Comment tu décides",
+            "text": "Tu peux examiner les conséquences sur les autres avant de décider. Éviter un désaccord peut retarder le choix."
+          },
+          {
+            "id": "actions",
+            "title": "Comment tu agis",
+            "text": "Tu peux maintenir tes engagements et soutenir les autres, parfois en acceptant trop de demandes. Tu peux aussi vouloir examiner les conséquences."
+          },
+          {
+            "id": "relationships",
+            "title": "Avec les autres",
+            "text": "Tu peux chercher à apaiser les tensions et garder tes réserves pour toi. Les frustrations peuvent alors s’accumuler."
+          }
+        ],
+        "communication": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t’exprimer",
+            "text": "Tu peux choisir des mots prudents, un ton calme et un rythme posé. Dire clairement ton opposition peut devenir plus difficile. Tes propos peuvent devenir plus précis."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Une gestuelle contenue ou une posture réservée peuvent accompagner la tension, sans être mesurées par MAPP."
+          },
+          {
+            "id": "listening",
+            "title": "Ta manière d’écouter",
+            "text": "Tu peux laisser beaucoup de place aux autres, même lorsque tu aurais besoin de parler."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tes e-mails peuvent rester courtois, attentionnés et prudents. Tu peux prendre du temps pour formuler une réponse délicate."
+          }
+        ],
+        "balance": [
+          {
+            "id": "signals",
+            "title": "Reconnaître les signaux",
+            "text": "Repère les moments où tu acceptes trop de demandes ou repousses une conversation nécessaire."
+          },
+          {
+            "id": "aggravators",
+            "title": "Ce qui peut aggraver la pression",
+            "text": "Éviter les désaccords et attendre que les autres devinent tes besoins peut aggraver la situation."
+          },
+          {
+            "id": "supports",
+            "title": "Ce qui peut t’aider",
+            "text": "Exprime une limite, demande un délai réaliste et prépare un échange calme pour clarifier la décision. Concentre les vérifications sur l’essentiel."
+          }
+        ]
+      }
+    },
+    "CD": {
+      "primary": "C",
+      "secondary": "D",
+      "label": "Analyste + Conquérant",
+      "introduction": "Sous pression, tu peux chercher davantage de précision, de preuves et de maîtrise des risques. Cette rigueur peut sécuriser les choix, mais ralentir l’action. Ta tendance Conquérant secondaire peut ajouter un besoin d’accélérer et de trancher.",
+      "sections": {
+        "reactions": [
+          {
+            "id": "triggers",
+            "title": "Ce qui déclenche la pression",
+            "text": "Les consignes imprécises, les erreurs possibles et les décisions non vérifiées peuvent accroître ton inconfort."
+          },
+          {
+            "id": "decisions",
+            "title": "Comment tu décides",
+            "text": "Tu peux examiner les options et les conséquences en détail. Le choix peut tarder si aucune solution ne paraît suffisamment fiable."
+          },
+          {
+            "id": "actions",
+            "title": "Comment tu agis",
+            "text": "Tu peux renforcer les contrôles, structurer les étapes et corriger les incohérences. Cela peut prendre beaucoup de temps. Tu peux aussi chercher une décision rapide."
+          },
+          {
+            "id": "relationships",
+            "title": "Avec les autres",
+            "text": "Tu peux poser davantage de questions et souligner les points insuffisamment étayés, au risque d’être perçu comme critique."
+          }
+        ],
+        "communication": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t’exprimer",
+            "text": "Ton discours peut devenir plus précis, technique et réservé. Tu peux détailler les objections et distinguer faits et hypothèses. Tes propos peuvent devenir plus directs."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Une expression contenue ou une posture réservée peuvent accompagner la concentration. Le questionnaire ne mesure pas ces signes."
+          },
+          {
+            "id": "listening",
+            "title": "Ta manière d’écouter",
+            "text": "Tu peux écouter pour vérifier la logique et les preuves, puis prendre du temps avant de répondre."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tes e-mails peuvent devenir détaillés, structurés et documentés, avec références et pièces jointes. Leur préparation peut s’allonger."
+          }
+        ],
+        "balance": [
+          {
+            "id": "signals",
+            "title": "Reconnaître les signaux",
+            "text": "Observe les vérifications répétées, les demandes de précisions supplémentaires et les réponses différées."
+          },
+          {
+            "id": "aggravators",
+            "title": "Ce qui peut aggraver la pression",
+            "text": "Chercher à éliminer toute incertitude ou contrôler chaque détail peut bloquer l’avancement."
+          },
+          {
+            "id": "supports",
+            "title": "Ce qui peut t’aider",
+            "text": "Définis les informations indispensables, limite le temps d’analyse et distingue les erreurs critiques des détails secondaires. Identifie ce qui nécessite réellement une décision immédiate."
+          }
+        ]
+      }
+    },
+    "CI": {
+      "primary": "C",
+      "secondary": "I",
+      "label": "Analyste + Communiquant",
+      "introduction": "Sous pression, tu peux chercher davantage de précision, de preuves et de maîtrise des risques. Cette rigueur peut sécuriser les choix, mais ralentir l’action. Ta tendance Communiquant secondaire peut ajouter une recherche de contact et d’adhésion.",
+      "sections": {
+        "reactions": [
+          {
+            "id": "triggers",
+            "title": "Ce qui déclenche la pression",
+            "text": "Les consignes imprécises, les erreurs possibles et les décisions non vérifiées peuvent accroître ton inconfort."
+          },
+          {
+            "id": "decisions",
+            "title": "Comment tu décides",
+            "text": "Tu peux examiner les options et les conséquences en détail. Le choix peut tarder si aucune solution ne paraît suffisamment fiable."
+          },
+          {
+            "id": "actions",
+            "title": "Comment tu agis",
+            "text": "Tu peux renforcer les contrôles, structurer les étapes et corriger les incohérences. Cela peut prendre beaucoup de temps. Tu peux aussi solliciter les réactions de ton entourage."
+          },
+          {
+            "id": "relationships",
+            "title": "Avec les autres",
+            "text": "Tu peux poser davantage de questions et souligner les points insuffisamment étayés, au risque d’être perçu comme critique."
+          }
+        ],
+        "communication": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t’exprimer",
+            "text": "Ton discours peut devenir plus précis, technique et réservé. Tu peux détailler les objections et distinguer faits et hypothèses. Une expression plus spontanée peut accompagner ton style principal."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Une expression contenue ou une posture réservée peuvent accompagner la concentration. Le questionnaire ne mesure pas ces signes."
+          },
+          {
+            "id": "listening",
+            "title": "Ta manière d’écouter",
+            "text": "Tu peux écouter pour vérifier la logique et les preuves, puis prendre du temps avant de répondre."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tes e-mails peuvent devenir détaillés, structurés et documentés, avec références et pièces jointes. Leur préparation peut s’allonger."
+          }
+        ],
+        "balance": [
+          {
+            "id": "signals",
+            "title": "Reconnaître les signaux",
+            "text": "Observe les vérifications répétées, les demandes de précisions supplémentaires et les réponses différées."
+          },
+          {
+            "id": "aggravators",
+            "title": "Ce qui peut aggraver la pression",
+            "text": "Chercher à éliminer toute incertitude ou contrôler chaque détail peut bloquer l’avancement."
+          },
+          {
+            "id": "supports",
+            "title": "Ce qui peut t’aider",
+            "text": "Définis les informations indispensables, limite le temps d’analyse et distingue les erreurs critiques des détails secondaires. Privilégie quelques échanges utiles."
+          }
+        ]
+      }
+    },
+    "CS": {
+      "primary": "C",
+      "secondary": "S",
+      "label": "Analyste + Facilitateur",
+      "introduction": "Sous pression, tu peux chercher davantage de précision, de preuves et de maîtrise des risques. Cette rigueur peut sécuriser les choix, mais ralentir l’action. Ta tendance Facilitateur secondaire peut renforcer ton souci de préserver la relation.",
+      "sections": {
+        "reactions": [
+          {
+            "id": "triggers",
+            "title": "Ce qui déclenche la pression",
+            "text": "Les consignes imprécises, les erreurs possibles et les décisions non vérifiées peuvent accroître ton inconfort."
+          },
+          {
+            "id": "decisions",
+            "title": "Comment tu décides",
+            "text": "Tu peux examiner les options et les conséquences en détail. Le choix peut tarder si aucune solution ne paraît suffisamment fiable."
+          },
+          {
+            "id": "actions",
+            "title": "Comment tu agis",
+            "text": "Tu peux renforcer les contrôles, structurer les étapes et corriger les incohérences. Cela peut prendre beaucoup de temps. L’impact sur les autres peut peser davantage."
+          },
+          {
+            "id": "relationships",
+            "title": "Avec les autres",
+            "text": "Tu peux poser davantage de questions et souligner les points insuffisamment étayés, au risque d’être perçu comme critique."
+          }
+        ],
+        "communication": [
+          {
+            "id": "expression",
+            "title": "Ta façon de t’exprimer",
+            "text": "Ton discours peut devenir plus précis, technique et réservé. Tu peux détailler les objections et distinguer faits et hypothèses. Tu peux chercher à ménager ton interlocuteur."
+          },
+          {
+            "id": "nonverbal",
+            "title": "Ton langage non verbal",
+            "text": "Une expression contenue ou une posture réservée peuvent accompagner la concentration. Le questionnaire ne mesure pas ces signes."
+          },
+          {
+            "id": "listening",
+            "title": "Ta manière d’écouter",
+            "text": "Tu peux écouter pour vérifier la logique et les preuves, puis prendre du temps avant de répondre."
+          },
+          {
+            "id": "emails",
+            "title": "Tes e-mails",
+            "text": "Tes e-mails peuvent devenir détaillés, structurés et documentés, avec références et pièces jointes. Leur préparation peut s’allonger."
+          }
+        ],
+        "balance": [
+          {
+            "id": "signals",
+            "title": "Reconnaître les signaux",
+            "text": "Observe les vérifications répétées, les demandes de précisions supplémentaires et les réponses différées."
+          },
+          {
+            "id": "aggravators",
+            "title": "Ce qui peut aggraver la pression",
+            "text": "Chercher à éliminer toute incertitude ou contrôler chaque détail peut bloquer l’avancement."
+          },
+          {
+            "id": "supports",
+            "title": "Ce qui peut t’aider",
+            "text": "Définis les informations indispensables, limite le temps d’analyse et distingue les erreurs critiques des détails secondaires. Préserve la relation sans oublier tes propres limites."
+          }
+        ]
+      }
+    }
+  },
+  "sections": [
+    {
+      "id": "reactions",
+      "title": "Tes réactions sous pression.",
+      "photoSlot": "mlk-pressure-reactions",
+      "accordionIds": [
+        "triggers",
+        "decisions",
+        "actions",
+        "relationships"
+      ]
+    },
+    {
+      "id": "communication",
+      "title": "Ta communication sous pression.",
+      "photoSlot": "mlk-pressure-communication",
+      "accordionIds": [
+        "expression",
+        "nonverbal",
+        "listening",
+        "emails"
+      ]
+    },
+    {
+      "id": "balance",
+      "title": "Retrouver ton équilibre.",
+      "photoSlot": "mlk-pressure-balance",
+      "accordionIds": [
+        "signals",
+        "aggravators",
+        "supports"
+      ]
+    }
+  ],
+  "ui": {
+    "tabs": [
+      "Au naturel",
+      "Sous pression"
+    ],
+    "layout": "left heading + personalized intro + portrait MLK photo; right accordion only",
+    "photoCount": 3,
+    "photosProvided": false,
+    "accordionDefaultIndex": 0,
+    "singleOpen": true,
+    "colors": "official primary pressure profile color; secondary only when semantically relevant",
+    "responsiveWidths": [
+      320,
+      375,
+      390,
+      768,
+      1440
+    ]
+  },
+  "results": {
+    "source": "stored pressure result revision",
+    "percentages": "result_dimension_metrics",
+    "rankings": "result_rankings",
+    "equalities": "raw pressure scores before tie-break; never rounded percentages",
+    "missing": "show unavailable, never infer from natural scores",
+    "historical": "do not recalculate"
+  },
+  "review": {
+    "source": "four MAPP memo PDFs supplied by user",
+    "textType": "original editorial interpretation, not verbatim excerpts",
+    "publishOnlyAfterApproval": true
+  }
+}
