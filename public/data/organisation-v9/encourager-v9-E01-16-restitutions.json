@@ -1,0 +1,576 @@
+{
+  "schemaVersion": "9.0.0",
+  "lot": "E01",
+  "edition": "nouvelle_redaction_2026-10-22",
+  "status": "requires_independent_review",
+  "scope": {
+    "role": "direction",
+    "context": "personnes_sous_responsabilite",
+    "situation": "encourager",
+    "counterpart": "D",
+    "expectedRestitutions": 16,
+    "configurations": [
+      "D",
+      "DI",
+      "DS",
+      "DC",
+      "I",
+      "ID",
+      "IS",
+      "IC",
+      "S",
+      "SD",
+      "SI",
+      "SC",
+      "C",
+      "CD",
+      "CI",
+      "CS"
+    ]
+  },
+  "validation": {
+    "codexAuthorReview": "completed",
+    "chatgptReview": "not_started",
+    "userValidation": "not_started"
+  },
+  "editorialNotes": {
+    "provenance": "Rédaction nouvelle distincte du lot E01 antérieur ; aucun fichier canonique remplacé.",
+    "qualityTarget": "9/10 minimum : objectif soumis à relecture indépendante, aucune note certifiée.",
+    "referenceLimitation": "Recommandations présentes dans la conversation appliquées ; comparaison textuelle au consolidé Convaincre V9 non réalisée, fichier indisponible.",
+    "distinction": "Encourager : reconnaître une contribution et soutenir la confiance sans conditionner le soutien à une nouvelle performance. Les appuis opérationnels restent au service de cet objectif."
+  },
+  "restitutions": [
+    {
+      "id": "direction/personnes_sous_responsabilite/encourager/D/D",
+      "participant": {
+        "code": "D",
+        "primary": "D",
+        "secondary": null
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux chercher à rendre courage en rappelant à la personne ce qu’elle est capable de surmonter. Ta dominante Conquérante transforme facilement la confiance en défi : tu veux lui montrer qu’elle peut encore gagner. Mais si tu passes aussitôt à l’objectif suivant, elle doit déjà prouver quelque chose pour recevoir ton soutien.",
+        "potentialFriction": "Face à un interlocuteur Conquérant, deux volontés de rebondir peuvent se renforcer jusqu’à rendre l’hésitation difficile à exprimer. La personne peut répondre « je vais gérer » pour préserver sa position devant la direction. Cet accord ne te dit pas si ton encouragement l’a aidée ou lui a ajouté une obligation.",
+        "recommendedApproach": "Reconnais une décision ou un effort précis, y compris lorsque le résultat reste décevant. Explique ce que cet acte te permet d’apprécier sans annoncer une réussite future. Laisse ensuite la personne préciser ce qu’elle veut poursuivre, revoir ou arrêter. Si une attente de direction doit être posée, annonce ce changement de registre au lieu de la glisser dans ton encouragement.",
+        "wordsToUse": [
+          {
+            "intent": "Reconnaître",
+            "text": "« Tu as pris la décision difficile de [fait], alors que [contrainte]. Je veux reconnaître ce que cela t’a demandé. »"
+          },
+          {
+            "intent": "Dissocier",
+            "text": "« Le résultat n’est pas celui que nous attendions ; cela n’efface pas la qualité de [acte précis]. »"
+          },
+          {
+            "intent": "Laisser une place",
+            "text": "« Qu’est-ce que tu souhaites poursuivre ou revoir après cette étape ? »"
+          },
+          {
+            "intent": "Clarifier",
+            "text": "« J’ai aussi une attente à poser pour la suite. Prenons-la séparément pour ne pas mélanger les deux. »"
+          }
+        ],
+        "avoid": "Évite « je sais que tu vas te dépasser » si cette confiance signifie en réalité que tu attends un effort supplémentaire. La personne pourrait ne plus se sentir libre de signaler une limite.",
+        "practicalAction": "Au prochain débrief d’un résultat décevant, distingue une contribution que tu reconnais d’une attente restant à traiter. Après avoir laissé la personne répondre, demande si ton retour a été reçu comme un soutien ou comme une exigence nouvelle. Clarifie ce qui a été mal compris sans attendre qu’elle relativise l’échec ou propose un rebond."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/encourager/D/DI",
+      "participant": {
+        "code": "DI",
+        "primary": "D",
+        "secondary": "I"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux repérer une réaction courageuse, la valoriser avec force et vouloir en faire un exemple pour l’organisation. Ta dominante Conquérante souligne ce qui fait avancer ; ton secondaire Communiquant donne de l’ampleur au message. Un encouragement destiné à soutenir une personne peut ainsi devenir le récit de réussite dont le collectif a besoin.",
+        "potentialFriction": "Un interlocuteur Conquérant peut apprécier que son initiative soit reconnue, tout en refusant d’endosser le rôle de celui qui trouve toujours une issue. Si la direction héroïse son effort, il peut lui devenir plus difficile de demander des moyens, de reconnaître un doute ou de dire que cette mobilisation était exceptionnelle.",
+        "recommendedApproach": "Reconnais d’abord la contribution en privé et distingue ce que la personne a choisi de ce que les circonstances lui ont imposé. Demande ce qu’elle souhaite voir reconnu et sous quelle forme. Si elle accepte une prise de parole publique, cite le fait et son effet sans fabriquer une identité de sauveur. Ne transforme pas cet épisode en norme pour les prochaines difficultés.",
+        "wordsToUse": [
+          {
+            "intent": "Préciser",
+            "text": "« Ce que je veux saluer, c’est ton initiative sur [fait], pas l’idée que tu devrais toujours rattraper ce genre de situation. »"
+          },
+          {
+            "intent": "Nuancer",
+            "text": "« Qu’est-ce qui t’a aidé dans cette étape, et qu’est-ce qui t’a demandé trop ? »"
+          },
+          {
+            "intent": "Choisir la visibilité",
+            "text": "« Comment souhaites-tu que cette contribution soit reconnue, si tu veux qu’elle le soit au-delà de cet échange ? »"
+          },
+          {
+            "intent": "Protéger la suite",
+            "text": "« Je ne prendrai pas cet effort exceptionnel comme référence pour tes prochains engagements. »"
+          }
+        ],
+        "avoid": "Évite de célébrer une personne comme « celle sur qui on peut toujours compter pour sauver la situation ». Cette image peut l’enfermer dans une disponibilité qu’elle n’a pas promise.",
+        "practicalAction": "Lors du prochain échange, reconnais en privé une contribution précise et demande si la personne souhaite qu'elle soit également valorisée publiquement. Si elle accepte, prépare avec elle un message factuel sans la présenter comme indispensable à chaque difficulté. Vérifie ensuite si cette reconnaissance lui convient et n'a pas créé d'attentes supplémentaires."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/encourager/D/DS",
+      "participant": {
+        "code": "DS",
+        "primary": "D",
+        "secondary": "S"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux vouloir encourager en garantissant que la personne pourra continuer : tu dégages une voie, puis tu sécurises les conditions pour tenir. Ta dominante Conquérante vise la reprise d’action et ton secondaire Facilitateur protège la continuité. Tu risques de féliciter surtout sa capacité à supporter, alors que poursuivre de la même manière n’est peut-être pas souhaitable.",
+        "potentialFriction": "Un interlocuteur Conquérant peut avoir défendu longtemps une responsabilité parce qu’il y tient. S’il entend que sa résistance est particulièrement appréciée par la direction, il peut craindre qu’un allègement soit interprété comme un recul. Ton soutien renforcerait alors précisément la posture dont il cherche à sortir.",
+        "recommendedApproach": "Reconnais ce que la personne a assumé sans faire de l’endurance la mesure de sa valeur. Demande ce qu’elle souhaite conserver et ce qu’elle voudrait exercer autrement. Si une adaptation relève de toi, rends-la compatible avec une responsabilité réelle, plutôt que de choisir entre tout maintenir et tout retirer. Explique qu’une modification du cadre ne retire rien à la contribution reconnue.",
+        "wordsToUse": [
+          {
+            "intent": "Reconnaître",
+            "text": "« Tu as tenu [responsabilité] dans des conditions difficiles ; je ne veux pas faire de cette endurance une exigence permanente. »"
+          },
+          {
+            "intent": "Comprendre",
+            "text": "« Qu’est-ce que tu souhaites garder dans ce rôle, et qu’est-ce qui ne devrait plus fonctionner ainsi ? »"
+          },
+          {
+            "intent": "Adapter",
+            "text": "« Regardons quelle contrainte je peux faire évoluer, tout en préservant ta marge de décision sur [périmètre]. »"
+          },
+          {
+            "intent": "Confirmer",
+            "text": "« Cet ajustement ne remet pas en cause la contribution que je viens de reconnaître. »"
+          }
+        ],
+        "avoid": "Évite d’encourager la solidité de la personne tout en laissant inchangées des conditions que tu sais intenables. Elle pourrait entendre que sa valeur dépend de sa capacité à continuer à les absorber.",
+        "practicalAction": "Après une période éprouvante, distingue avec la personne la responsabilité qu’elle veut garder d’une contrainte à modifier. Mets en place l’ajustement relevant de toi, ou porte l’arbitrage. Au point convenu, demande si l’appui a soutenu sa marge d’action ou l’a trop protégée ; ajuste sans attendre qu’elle supporte davantage."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/encourager/D/DC",
+      "participant": {
+        "code": "DC",
+        "primary": "D",
+        "secondary": "C"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux encourager en montrant, preuves à l’appui, que la personne possède les moyens de réussir. Ta dominante Conquérante veut lui redonner prise sur la suite ; ton secondaire Analyste construit une démonstration solide. Mais prouver qu’elle est capable peut devenir une manière de lui retirer le droit de trouver la situation difficile.",
+        "potentialFriction": "Un interlocuteur Conquérant peut entrer volontiers dans un débat sur les résultats ou la méthode. Si ton soutien prend la forme d’un dossier de preuves, l’échange peut basculer vers la défense de ses choix. Vous examinez alors qui a raison au lieu de reconnaître ce qui mérite de l’être dans une expérience exigeante.",
+        "recommendedApproach": "Choisis un acte dont tu peux expliquer la valeur sans en déduire que la personne doit être confiante. Présente ton observation comme un retour, puis accueille une lecture différente. Si elle souhaite une analyse, demande quel point elle veut examiner et traite-le à part. Une contribution peut être reconnue sans que toute l’expérience soit réévaluée positivement.",
+        "wordsToUse": [
+          {
+            "intent": "Ancrer",
+            "text": "« Quand tu as [acte], tu as permis [effet précis]. C’est cette contribution que je reconnais. »"
+          },
+          {
+            "intent": "Ne pas conclure à sa place",
+            "text": "« Cela ne me dit pas comment tu as vécu cette étape. »"
+          },
+          {
+            "intent": "Écouter",
+            "text": "« Y a-t-il quelque chose dans mon retour qui ne correspond pas à ton expérience ? »"
+          },
+          {
+            "intent": "Séparer l’analyse",
+            "text": "« Si tu souhaites revenir sur la méthode, quel point veux-tu examiner en priorité ? »"
+          }
+        ],
+        "avoid": "Évite d’accumuler les preuves jusqu’à obtenir l’adhésion à ton interprétation positive. Un encouragement perd sa portée si la personne doit reconnaître que tu as raison pour le recevoir.",
+        "practicalAction": "Prépare un retour limité à un acte, son effet et ce que tu y reconnais. Laisse la personne le nuancer puis reformule. Demande si cette version correspond mieux à son expérience ; accepte une réserve persistante sans ajouter des preuves pour obtenir une lecture positive."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/encourager/D/I",
+      "participant": {
+        "code": "I",
+        "primary": "I",
+        "secondary": null
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux encourager par la chaleur, l’enthousiasme et des paroles qui élargissent les possibles. Ta dominante Communicante rend ton appréciation immédiatement perceptible. Mais en voulant rendre l’échange positif, tu peux occuper la place où la personne aurait besoin de dire qu’elle est déçue, fatiguée ou simplement peu réceptive aux compliments.",
+        "potentialFriction": "Un interlocuteur Conquérant peut préférer une reconnaissance nette à une longue célébration. Un « tu es formidable » venant de la direction peut lui sembler sympathique mais peu informatif : il ne sait pas ce qui a été vu ni si le compliment précède une nouvelle demande. Une réponse brève ne signifie pourtant pas qu’il rejette ton soutien.",
+        "recommendedApproach": "Dis exactement ce que tu as apprécié et pourquoi cela a compté. Laisse ensuite le message exister sans le renforcer par d’autres compliments. Accueille une réaction sobre ou une réserve sans tenter de modifier l’humeur de la personne. Si elle ouvre la conversation, suis ce qu’elle apporte plutôt que de chercher à conclure sur une note enthousiaste.",
+        "wordsToUse": [
+          {
+            "intent": "Nommer",
+            "text": "« J’ai apprécié ta façon de [comportement] quand [situation]. »"
+          },
+          {
+            "intent": "Donner du poids",
+            "text": "« Cela a permis [effet], et je tenais à te le dire directement. »"
+          },
+          {
+            "intent": "Accueillir",
+            "text": "« Tu peux aussi être déçu de cette étape ; mon appréciation n’efface pas ce qui a été difficile. »"
+          },
+          {
+            "intent": "Laisser libre",
+            "text": "« Tu n’as pas besoin de me répondre maintenant. »"
+          }
+        ],
+        "avoid": "Évite de relancer tes compliments parce que la personne ne sourit pas ou répond peu. Elle pourrait se sentir chargée de te rassurer sur l’effet de ton encouragement.",
+        "practicalAction": "Lors de ta prochaine reconnaissance, donne un fait et son effet puis laisse une pause. Demande si le ton, le moment et la précision du message convenaient ou seraient à modifier. Accueille une réponse sobre ou différée sans ajouter des compliments pour obtenir une émotion visible."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/encourager/D/ID",
+      "participant": {
+        "code": "ID",
+        "primary": "I",
+        "secondary": "D"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux encourager en faisant émerger une perspective attrayante, puis chercher à convertir l’énergie de l’échange en prochain pas. Ta dominante Communicante ouvre les possibles ; ton secondaire Conquérant veut que la conversation produise un rebond visible. Tu peux alors entendre un « pourquoi pas » comme le retour de la confiance.",
+        "potentialFriction": "Un interlocuteur Conquérant peut répondre vite à une proposition stimulante, surtout devant une personne qui dirige. Il peut s’engager pour rester dans une posture de capacité avant d’avoir mesuré ce qu’il veut réellement reprendre. L’encouragement devient une nouvelle promesse à tenir plutôt qu’un espace où retrouver du courage.",
+        "recommendedApproach": "Reconnais d’abord une contribution sans lui associer une occasion à saisir. Laisse la personne dire ce que cette étape change pour elle. Si elle évoque elle-même une suite, explore ce qui l’attire et ce qu’elle veut éviter de reproduire. Une idée née pendant l’échange doit pouvoir rester une possibilité tant que les conditions d’un engagement n’ont pas été examinées.",
+        "wordsToUse": [
+          {
+            "intent": "Reconnaître",
+            "text": "« Ta manière de [acte] mérite d’être reconnue, même si nous ne décidons de rien aujourd’hui. »"
+          },
+          {
+            "intent": "Explorer",
+            "text": "« Après cette expérience, qu’as-tu envie de retrouver dans ton travail ? »"
+          },
+          {
+            "intent": "Comprendre la limite",
+            "text": "« Qu’est-ce que tu ne voudrais pas revivre de la même manière ? »"
+          },
+          {
+            "intent": "Distinguer",
+            "text": "« Gardons cette idée comme une possibilité ; nous vérifierons les conditions avant d’en faire un engagement. »"
+          }
+        ],
+        "avoid": "Évite de prendre une conversation plus animée pour une disponibilité retrouvée. Le plaisir de parler d’une idée ne vaut ni accord sur sa réalisation ni capacité à la porter.",
+        "practicalAction": "Si une idée de rebond apparaît pendant un échange de soutien, note-la comme une option sans attribuer de mission. Demande si l’échange a été reçu comme une ouverture ou comme une attente supplémentaire. Retire toute attente non convenue ; l’utilité du soutien ne dépend pas du lancement de l’idée."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/encourager/D/IS",
+      "participant": {
+        "code": "IS",
+        "primary": "I",
+        "secondary": "S"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux vouloir que la personne se sente appréciée et entourée : tu exprimes ta reconnaissance et imagines qui pourrait se joindre au soutien. Ta dominante Communicante favorise les échanges ; ton secondaire Facilitateur recherche un appui collectif. Tu peux cependant élargir une conversation que la personne souhaitait garder sous son contrôle.",
+        "potentialFriction": "Un interlocuteur Conquérant peut recevoir favorablement un témoignage précis tout en refusant que sa difficulté devienne un sujet partagé. Si plusieurs personnes viennent l’encourager à la suite de ton intervention, il peut se sentir exposé ou réduit à une fragilité. Le soutien collectif perd alors la qualité d’appui que tu voulais lui donner.",
+        "recommendedApproach": "Adresse ton encouragement directement à la personne et vérifie si elle souhaite qu’un tiers intervienne. Distingue la reconnaissance d’une contribution de la divulgation de sa situation. Si un appui collectif est souhaité, fais préciser à quoi il servirait et quelles informations peuvent circuler. Précise les limites de confidentialité applicables à ton rôle et ne partage que les informations nécessaires, avec les personnes habilitées.",
+        "wordsToUse": [
+          {
+            "intent": "Reconnaître",
+            "text": "« Je tenais à te dire moi-même ce que j’ai apprécié dans [contribution]. »"
+          },
+          {
+            "intent": "Demander",
+            "text": "« Souhaites-tu un retour d’autres personnes, ou préfères-tu que nous en restions à cet échange ? »"
+          },
+          {
+            "intent": "Délimiter",
+            "text": "« Si nous associons [personne], quelles informations te concernant souhaites-tu partager, et lesquelles devons-nous garder confidentielles ? »"
+          },
+          {
+            "intent": "Rendre concret",
+            "text": "« Quel appui précis pourrait-elle t’apporter ? »"
+          }
+        ],
+        "avoid": "Évite d’organiser une chaîne de messages ou de raconter une difficulté pour susciter de la bienveillance. La personne pourrait perdre la maîtrise de ce qu’elle souhaite rendre visible.",
+        "practicalAction": "Si la personne souhaite un appui extérieur, convenez d’un interlocuteur, d’un objet et des informations partageables. Après la mise en relation, demande si le cercle et la forme de l’appui étaient adaptés ou trop exposants. Réduis ou arrête le dispositif sans attendre de gratitude envers les personnes mobilisées."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/encourager/D/IC",
+      "participant": {
+        "code": "IC",
+        "primary": "I",
+        "secondary": "C"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux chercher la formulation qui touchera juste, puis l’étayer par plusieurs exemples. Ta dominante Communicante veut rendre l’encouragement sensible ; ton secondaire Analyste vérifie qu’il est crédible. À force de composer un message convaincant, tu peux cependant parler davantage de ton interprétation que de ce que la personne reconnaît dans son expérience.",
+        "potentialFriction": "Un interlocuteur Conquérant peut se fermer si une reconnaissance détaillée ressemble à un portrait psychologique dressé par la direction. Il peut accepter les faits sans se reconnaître dans les qualités que tu lui attribues. S’il doit corriger ton éloge, il risque de préférer une réponse polie et de laisser le décalage intact.",
+        "recommendedApproach": "Choisis un épisode et décris ce que tu y as vu, sans passer directement de l’acte à une identité. Demande quel aspect de cette étape la personne considère elle-même comme significatif. Ajuste ton retour si tu as valorisé le mauvais point. Tu peux reconnaître une contribution que tu n’avais pas comprise au départ sans perdre la sincérité de ton message.",
+        "wordsToUse": [
+          {
+            "intent": "Décrire",
+            "text": "« Dans [épisode], tu as [action] ; voilà ce que j’ai observé. »"
+          },
+          {
+            "intent": "Vérifier",
+            "text": "« Est-ce cela qui a le plus compté pour toi dans cette étape ? »"
+          },
+          {
+            "intent": "Approfondir",
+            "text": "« Quel aspect de ton travail est resté peu visible selon toi ? »"
+          },
+          {
+            "intent": "Ajuster",
+            "text": "« Je comprends mieux : ce que tu as dû faire sur [point] mérite aussi d’être reconnu. »"
+          }
+        ],
+        "avoid": "Évite de défendre un compliment que la personne nuance. Insister sur ton portrait positif peut lui donner l’impression que ton image d’elle compte davantage que son expérience.",
+        "practicalAction": "Choisis une contribution dont tu n’as vu que le résultat et invite la personne à nommer un effort resté invisible. Fais un retour qui distingue ce que tu as observé de ce qu’elle t’a appris. Demande si la reconnaissance est désormais plus fidèle ou manque encore un point, sans attendre son adhésion à un portrait positif."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/encourager/D/S",
+      "participant": {
+        "code": "S",
+        "primary": "S",
+        "secondary": null
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux encourager en restant disponible, en maintenant une relation stable et en apportant discrètement de l’aide. Ta dominante Facilitatrice exprime souvent la confiance par la continuité plutôt que par un retour explicite. Tu peux supposer que la personne sait ce que tu apprécies puisque tu continues à lui confier des responsabilités.",
+        "potentialFriction": "Un interlocuteur Conquérant peut interpréter de nouvelles responsabilités comme une attente supplémentaire, sans y lire la reconnaissance que tu pensais transmettre. À l’inverse, tes attentions discrètes peuvent lui sembler être des vérifications. La personne peut ainsi recevoir du travail ou de la présence sans entendre clairement ton appréciation.",
+        "recommendedApproach": "Rends ton encouragement explicite et indépendant d’une demande. Nomme une contribution que tu as réellement remarquée, puis explique sa valeur. N’exige pas un échange personnel pour donner ce retour. Si tu proposes ta disponibilité, précise son objet et laisse la personne décider si elle souhaite l’utiliser.",
+        "wordsToUse": [
+          {
+            "intent": "Expliciter",
+            "text": "« Je ne te l’ai pas dit assez clairement : j’ai remarqué [contribution précise]. »"
+          },
+          {
+            "intent": "Reconnaître",
+            "text": "« Ta décision sur [point] a compté pour [effet]. »"
+          },
+          {
+            "intent": "Dissocier",
+            "text": "« Je te le dis pour reconnaître ce travail, sans te demander de prendre autre chose en charge. »"
+          },
+          {
+            "intent": "Offrir",
+            "text": "« Si tu souhaites revenir sur cette étape, je peux me rendre disponible pour en parler. »"
+          }
+        ],
+        "avoid": "Évite de laisser une nouvelle responsabilité tenir lieu de remerciement. La personne pourrait y voir la confirmation que tout effort reconnu entraîne davantage de charge.",
+        "practicalAction": "Nomme directement une contribution que tu avais appréciée en silence, sans ajouter de tâche. Demande si ce retour est bienvenu sous cette forme ou si la personne préfère un autre canal ou un autre moment. Retiens sa préférence sans attendre un remerciement ou une conversation prolongée."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/encourager/D/SD",
+      "participant": {
+        "code": "SD",
+        "primary": "S",
+        "secondary": "D"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux d’abord vouloir montrer que la personne n’est pas seule, puis intervenir rapidement pour lui éviter une nouvelle difficulté. Ta dominante Facilitatrice protège la relation ; ton secondaire Conquérant rend ton soutien tangible par une décision. Tu risques de résoudre le problème avant d’avoir reconnu la manière dont elle y faisait face.",
+        "potentialFriction": "Un interlocuteur Conquérant peut recevoir ton intervention comme un doute sur sa capacité à conduire la suite. Si la direction reprend le dossier au moment de l’encourager, ses paroles de confiance et ses actes semblent se contredire. La personne peut défendre son autonomie au lieu de recevoir l’appui proposé.",
+        "recommendedApproach": "Commence par reconnaître un choix ou une initiative qu’elle a portés. Demande ensuite si elle attend un avis, une ressource ou une intervention de ta part. Lorsque tu dois agir dans ton propre périmètre, explique précisément pourquoi cela relève de toi et ce qui reste sous sa conduite. Si aucune intervention n’est souhaitée et qu’aucune obligation ne l’impose, laisse ton encouragement se suffire à lui-même.",
+        "wordsToUse": [
+          {
+            "intent": "Reconnaître",
+            "text": "« Tu as pris l’initiative de [acte] dans une situation difficile. »"
+          },
+          {
+            "intent": "Demander",
+            "text": "« Attends-tu de moi un avis, une ressource ou une intervention sur un point précis ? »"
+          },
+          {
+            "intent": "Situer",
+            "text": "« L’arbitrage sur [point] m’appartient ; il ne nécessite pas que je reprenne [son périmètre]. »"
+          },
+          {
+            "intent": "Respecter",
+            "text": "« Si tu souhaites poursuivre sans cet appui, je respecte ce choix dans le cadre convenu. »"
+          }
+        ],
+        "avoid": "Évite de prouver ton soutien en prenant la main sur un dossier. Tu pourrais annuler, par ton intervention, la confiance que tu viens d’exprimer.",
+        "practicalAction": "Avant une intervention envisagée pour aider, demande quelle forme d’appui est souhaitée et convenez de qui conduit la suite. Après le geste autorisé, demande s’il a soutenu l’initiative ou déplacé le pilotage vers toi. Ajuste le périmètre sans demander à la personne d’approuver tes intentions."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/encourager/D/SI",
+      "participant": {
+        "code": "SI",
+        "primary": "S",
+        "secondary": "I"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux installer un climat rassurant, puis inviter la personne à raconter ce qu’elle a traversé. Ta dominante Facilitatrice cherche une relation sûre ; ton secondaire Communiquant l’approfondit par le dialogue. Tu peux attendre de cet échange personnel le signe que ton encouragement a été reçu.",
+        "potentialFriction": "Un interlocuteur Conquérant peut vouloir préserver une frontière entre une difficulté professionnelle et ce qu’il souhaite raconter à la direction. S’il doit se confier pour que tu puisses le soutenir, il peut écourter la conversation. Tu risques alors d’insister par bienveillance, alors qu’il cherche seulement à choisir la distance qui lui convient.",
+        "recommendedApproach": "Reconnais un fait professionnel sans demander d’abord un récit de l’épreuve. Offre la possibilité d’en parler, puis respecte la profondeur d’échange choisie. Si la personne reste sur des éléments concrets, réponds sur ce terrain. Une conversation brève peut porter un encouragement réel ; elle n’a pas besoin de se terminer par une confidence ou une émotion visible.",
+        "wordsToUse": [
+          {
+            "intent": "Reconnaître",
+            "text": "« Ta façon de [acte] dans cette étape m’a marqué ; je voulais te le dire. »"
+          },
+          {
+            "intent": "Ouvrir",
+            "text": "« Si tu souhaites parler de ce qui a été difficile, je peux t’écouter. »"
+          },
+          {
+            "intent": "Respecter la distance",
+            "text": "« Nous pouvons aussi en rester aux éléments de travail que tu souhaites aborder. »"
+          },
+          {
+            "intent": "Ne pas insister",
+            "text": "« Je te laisse choisir si tu veux revenir sur ce sujet. »"
+          }
+        ],
+        "avoid": "Évite les relances personnelles après que la personne a choisi de rester factuelle. Elles peuvent rendre ton soutien conditionnel à une proximité qu’elle ne souhaite pas.",
+        "practicalAction": "Lors de ton prochain échange, reconnais une contribution précise et propose une seule fois d’en parler davantage. Si la personne reste sur les faits professionnels, respecte ce choix. Demande seulement si ce cadre et ce format lui conviennent ou doivent changer, puis termine sans relance personnelle ni attente de confidence."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/encourager/D/SC",
+      "participant": {
+        "code": "SC",
+        "primary": "S",
+        "secondary": "C"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux observer longtemps avant de formuler un encouragement, pour être sûr de ne pas te tromper ni de mettre la personne mal à l’aise. Ta dominante Facilitatrice évite l’intrusion ; ton secondaire Analyste cherche un fondement suffisamment fiable. Une reconnaissance juste peut ainsi arriver trop tard, ou être précédée de tant de questions qu’elle ressemble à une enquête.",
+        "potentialFriction": "Un interlocuteur Conquérant peut entendre tes précautions comme une incertitude sur la valeur de sa contribution. S’il doit expliquer en détail ce qu’il a fait avant d’être reconnu, il peut avoir le sentiment de devoir justifier son effort. Pourtant, reconnaître un fait observé ne t’oblige pas à comprendre toute la situation.",
+        "recommendedApproach": "Appuie-toi sur ce que tu sais et nomme honnêtement ce que tu ignores. Dis pourquoi l’acte observé mérite ton attention, sans chercher une explication complète. Invite la personne à corriger un détail si nécessaire, puis laisse-lui la liberté de développer. La précision doit rendre ton encouragement fiable, pas retarder indéfiniment son expression.",
+        "wordsToUse": [
+          {
+            "intent": "Observer",
+            "text": "« J’ai vu que tu as [acte] malgré [contrainte observable]. »"
+          },
+          {
+            "intent": "Reconnaître",
+            "text": "« Cela a permis [effet], et je tenais à le reconnaître. »"
+          },
+          {
+            "intent": "Rester juste",
+            "text": "« Je n’ai pas tous les éléments de cette étape ; dis-moi si je me trompe sur ce point. »"
+          },
+          {
+            "intent": "Laisser ouvert",
+            "text": "« Y a-t-il autre chose que tu souhaites me faire connaître ? »"
+          }
+        ],
+        "avoid": "Évite d’attendre le bilan complet pour reconnaître un effort que tu as déjà vu. La personne pourrait croire que seule une réussite définitivement établie mérite ton attention.",
+        "practicalAction": "Sépare dans ta préparation ce que tu as observé de ce que tu supposes. Formule une reconnaissance fondée sur le premier ensemble sans attendre d’élucider le second. Demande si le message est juste et opportun ; corrige un décalage sans réclamer une explication complète ni une réaction positive."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/encourager/D/C",
+      "participant": {
+        "code": "C",
+        "primary": "C",
+        "secondary": null
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux vouloir que ton encouragement soit exact, mesuré et défendable. Ta dominante Analyste repère une amélioration, mais voit aussi immédiatement ce qui reste à corriger. Tu risques d’ajouter une réserve pour préserver la rigueur de ton retour, au point que la personne n’entende plus que l’écart restant.",
+        "potentialFriction": "Un interlocuteur Conquérant peut se concentrer sur la réserve et répondre par des arguments ou une promesse de résultat. Si chaque reconnaissance contient son « mais », il peut conclure que la direction ne considère jamais une contribution comme suffisante. Ton souci d’exactitude devient alors un message de condition permanente.",
+        "recommendedApproach": "Délimite précisément ce que tu reconnais : un choix, une progression ou un travail particulier. Ce périmètre te permet d’être sincère sans prétendre que tout est satisfaisant. Si une correction est nécessaire, traite-la explicitement dans un autre temps de l’échange. Ne fais pas suivre chaque appréciation d’un objectif destiné à en réduire aussitôt la portée.",
+        "wordsToUse": [
+          {
+            "intent": "Délimiter",
+            "text": "« Sur [point précis], ton travail a apporté [amélioration observable]. »"
+          },
+          {
+            "intent": "Donner du sens",
+            "text": "« Cette amélioration a compté parce que [effet concret]. »"
+          },
+          {
+            "intent": "Assumer l’appréciation",
+            "text": "« C’est une contribution que je reconnais pleinement sur ce point. »"
+          },
+          {
+            "intent": "Changer de registre",
+            "text": "« J’ai aussi un autre sujet à traiter ; il ne retire rien à ce que je viens de reconnaître. »"
+          }
+        ],
+        "avoid": "Évite la formule « c’est bien, mais… » lorsqu’elle fait disparaître l’appréciation sous la correction. La personne risque de n’y entendre qu’une évaluation négative adoucie.",
+        "practicalAction": "Prépare séparément une contribution reconnue et un point à corriger. Exprime la première sans réserve ajoutée, puis annonce le changement de registre si le second doit être traité. Demande si la personne a pu distinguer l’appréciation de la correction ; clarifie sans attendre qu’elle soit satisfaite de l’ensemble du bilan."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/encourager/D/CD",
+      "participant": {
+        "code": "CD",
+        "primary": "C",
+        "secondary": "D"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux repérer une progression avec précision, puis vouloir lui donner une suite utile. Ta dominante Analyste établit ce qui a été bien fait ; ton secondaire Conquérant convertit volontiers ce constat en niveau à atteindre. L’encouragement peut devenir le début d’une négociation de performance dont la personne n’avait pas perçu l’enjeu.",
+        "potentialFriction": "Un interlocuteur Conquérant peut immédiatement se projeter vers la barre suivante, surtout si tu présentes sa réussite comme la preuve qu’il peut faire davantage. Il peut accepter cette hausse pour préserver sa crédibilité. La contribution du jour devient alors un nouveau minimum, sans examen des conditions qui l’ont rendue possible.",
+        "recommendedApproach": "Reconnais la progression dans les conditions où elle a eu lieu. Distingue un succès ponctuel d’une capacité durable avant d’en tirer une conclusion sur les attentes futures. Si un nouvel objectif est pertinent, ouvre une discussion explicite sur les moyens et les priorités. La personne doit pouvoir recevoir ton appréciation sans accepter dans le même mouvement une hausse de ses engagements.",
+        "wordsToUse": [
+          {
+            "intent": "Reconnaître",
+            "text": "« Tu as franchi [étape] dans les conditions suivantes : [conditions utiles]. »"
+          },
+          {
+            "intent": "Distinguer",
+            "text": "« Ce résultat ne devient pas automatiquement notre nouvelle exigence habituelle. »"
+          },
+          {
+            "intent": "Examiner",
+            "text": "« Quelles conditions seraient nécessaires pour reproduire cette progression sans coût excessif ? »"
+          },
+          {
+            "intent": "Séparer l’engagement",
+            "text": "« Nous discuterons d’un éventuel objectif après avoir examiné ces conditions. »"
+          }
+        ],
+        "avoid": "Évite « tu nous as montré que tu pouvais le faire, donc… ». Tu transformerais la réussite en argument pour augmenter la demande plutôt qu’en occasion de reconnaître le travail.",
+        "practicalAction": "Après une réussite inhabituelle, reconnais précisément l’accomplissement puis demande ce qui l’a rendu possible. Garde cette reconnaissance distincte des objectifs futurs. Vérifie si l’échange a été reçu comme une appréciation ou comme une hausse implicite d’exigence ; clarifie sans attendre une nouvelle réussite."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/encourager/D/CI",
+      "participant": {
+        "code": "CI",
+        "primary": "C",
+        "secondary": "I"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux préparer une reconnaissance précise, puis chercher une manière agréable et valorisante de la partager. Ta dominante Analyste choisit les faits ; ton secondaire Communiquant soigne leur présentation. Tu risques de conserver seulement les éléments qui composent un récit positif et d’effacer un choix moins spectaculaire, mais plus important pour la personne.",
+        "potentialFriction": "Un interlocuteur Conquérant peut tenir à être reconnu pour la justesse d’une décision, y compris lorsqu’elle a consisté à renoncer ou à exposer une difficulté. Si tu valorises surtout le résultat visible, il peut comprendre que seuls les succès faciles à raconter comptent pour la direction. Un acte responsable peut rester sans reconnaissance parce qu’il se prête mal à la célébration.",
+        "recommendedApproach": "Cherche ce qui mérite réellement d’être reconnu dans l’épisode, au-delà de son issue. Vérifie les faits et demande à la personne quelle décision lui a le plus demandé. Formule ensuite une appréciation précise, sans embellir le résultat ni effacer ses conséquences. Une éventuelle communication plus large doit restituer cette nuance et respecter les informations qui peuvent être partagées.",
+        "wordsToUse": [
+          {
+            "intent": "Explorer",
+            "text": "« Quelle décision t’a le plus demandé dans cette étape, même si elle se voit peu dans le résultat ? »"
+          },
+          {
+            "intent": "Reconnaître",
+            "text": "« Le fait d’avoir [choix responsable] a permis [effet ou risque évité]. »"
+          },
+          {
+            "intent": "Rester exact",
+            "text": "« L’issue reste difficile ; cela n’enlève pas sa valeur à ce choix. »"
+          },
+          {
+            "intent": "Vérifier la visibilité",
+            "text": "« Si cette contribution est évoquée plus largement, quels faits pouvons-nous partager ? »"
+          }
+        ],
+        "avoid": "Évite de préférer une belle histoire à une reconnaissance exacte. Tu pourrais valoriser le résultat spectaculaire et laisser dans l’ombre le jugement qui a réellement protégé l’organisation.",
+        "practicalAction": "Lors d’un bilan, cherche avec la personne une décision responsable dont l’issue n’est pas une réussite visible. Reconnais précisément la valeur de l’acte sans embellir le résultat. Demande si ce retour rend justice à son expérience ou la déforme ; respecte une autre lecture sans imposer une conclusion positive."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/encourager/D/CS",
+      "participant": {
+        "code": "CS",
+        "primary": "C",
+        "secondary": "S"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux vouloir montrer ta confiance en proposant un cadre rassurant, des vérifications et un suivi régulier. Ta dominante Analyste sécurise les conditions ; ton secondaire Facilitateur cherche à éviter une nouvelle difficulté. Tu peux ainsi augmenter ton attention au moment même où tu affirmes que la personne peut compter sur sa propre capacité.",
+        "potentialFriction": "Un interlocuteur Conquérant peut interpréter ces points supplémentaires comme une surveillance consécutive à son épreuve. Même si tes paroles sont positives, le dispositif peut lui dire que sa fiabilité est désormais en doute. Il peut se raidir ou cacher ses difficultés pour retrouver une autonomie qu’il pense avoir perdue.",
+        "recommendedApproach": "Reconnais un acte qui fonde réellement ta confiance, puis distingue les suivis obligatoires de l’appui facultatif que tu proposes. Demande quelle forme de retour serait utile sans créer un contrôle supplémentaire. Convenez d’un mode de contact proportionné et de ce que chacun fera si une difficulté apparaît. La confiance se traduit aussi par le respect du cadre convenu.",
+        "wordsToUse": [
+          {
+            "intent": "Fonder la confiance",
+            "text": "« Ta façon de [acte précis] me donne un repère concret pour te faire confiance sur [périmètre]. »"
+          },
+          {
+            "intent": "Distinguer",
+            "text": "« Le suivi prévu reste [cadre] ; je ne souhaite pas ajouter des contrôles pour exprimer mon soutien. »"
+          },
+          {
+            "intent": "Proposer",
+            "text": "« Quel point d’appui te serait utile, s’il t’en faut un ? »"
+          },
+          {
+            "intent": "Convenir",
+            "text": "« Si [difficulté] apparaît, nous nous recontactons ainsi : [modalité]. »"
+          }
+        ],
+        "avoid": "Évite de multiplier les vérifications pour rassurer la personne ou te rassurer toi-même. Elle pourrait entendre une défiance que tes paroles d’encouragement ne suffiraient pas à compenser.",
+        "practicalAction": "Distingue le suivi obligatoire des points supplémentaires que tu envisages pour soutenir. Convenez d’un appui facultatif et d’un signal de reprise de contact. Après un premier essai, demande s’il a été utile, superflu ou vécu comme un contrôle ; ajuste sans attendre moins de doutes ni davantage de résultats."
+      }
+    }
+  ],
+  "editorialRevision": {
+    "kind": "contextualisation_et_approfondissement_cible",
+    "note": "Révision conservatrice automatisée des champs courts. Nécessite une relecture humaine individuelle avant validation; aucune note 9,5/10 certifiée."
+  }
+}

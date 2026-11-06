@@ -1,0 +1,292 @@
+{
+  "schemaVersion": "10.0.0",
+  "lot": "M04",
+  "status": "ready_for_external_review",
+  "scope": {
+    "role": "direction",
+    "context": "personnes_sous_responsabilite",
+    "situation": "motiver",
+    "counterpart": "C",
+    "expectedRestitutions": 16,
+    "configurations": ["D", "DI", "DS", "DC", "I", "ID", "IS", "IC", "S", "SD", "SI", "SC", "C", "CD", "CI", "CS"]
+  },
+  "validation": {
+    "codexAuthorReview": "completed",
+    "chatgptReview": "completed",
+    "userValidation": "not_started"
+  },
+  "restitutions": [
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/C/D",
+      "participant": {"code": "D", "primary": "D", "secondary": null},
+      "content": {
+        "yourLikelyReflex": "Tu peux vouloir raccourcir l'analyse, fixer la décision et demander une exécution rapide. Cette netteté évite l'enlisement, mais elle peut supprimer une vérification qui conditionne réellement la fiabilité du résultat.",
+        "potentialFriction": "Des corrections tardives, des réserves répétées ou un délai qui s'allonge peuvent signaler un critère incomplet, une donnée indisponible ou une responsabilité de validation floue. Accélérer sans identifier lequel de ces freins agit augmente le risque de reprise.",
+        "recommendedApproach": "Pars d'un changement observable dans sa contribution et demande ce qui l'empêche aujourd'hui de s'engager avec la même constance. Si une incertitude décisionnelle est en cause, identifiez l'information qui changerait réellement la décision, le critère suffisant et la personne qui tranche. Agis sur le frein relevant de la direction, puis vérifiez séparément l'avancée du dossier et la capacité retrouvée à contribuer.",
+        "wordsToUse": [
+          {"intent": "Constater", "text": "« J'ai remarqué [changement observable]. Qu'est-ce qui a changé dans ta manière de vivre ce travail ? »"},
+          {"intent": "Limiter", "text": "« Quelle donnée unique changerait réellement la décision ? »"},
+          {"intent": "Trancher", "text": "« Je fixe [critère] comme seuil de décision et j'assume l'arbitrage à [date]. »"},
+          {"intent": "Vérifier", "text": "« Nous contrôlerons si le dossier se clôt sans nouvelle reprise. »"}
+        ],
+        "avoid": "Évite d'opposer vitesse et rigueur avant d'avoir distingué la vérification déterminante des contrôles optionnels.",
+        "practicalAction": "Lors du prochain échange, identifie avec la personne le frein principal à son engagement. S'il tient à une décision insuffisamment bornée, fixe le critère suffisant, le décideur et une échéance réaliste. Au point convenu, vérifiez si elle peut conclure avec davantage d'autonomie et si sa contribution retrouve de la continuité."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/C/DI",
+      "participant": {"code": "DI", "primary": "D", "secondary": "I"},
+      "content": {
+        "yourLikelyReflex": "Tu peux présenter une cible ambitieuse, obtenir un accord en réunion et lancer aussitôt l'action. Ton énergie rend le cap visible ; elle peut aussi laisser dans l'ombre une réserve technique formulée trop tard pour modifier le plan.",
+        "potentialFriction": "Un accord collectif suivi de questions écrites, de simulations supplémentaires ou d'un démarrage différé montre que le niveau de preuve attendu n'est peut-être pas partagé. La réaction positive au projet ne garantit pas que ses conditions de fiabilité sont établies.",
+        "recommendedApproach": "Avant de mobiliser autour du résultat, échange individuellement sur ce qui rend son engagement difficile à maintenir. Si une réserve technique est déterminante, faites formuler le risque et le niveau de preuve suffisant, puis autorise un test borné dans ton périmètre ou sollicite l'arbitrage nécessaire. Vérifiez ensuite si la réponse sécurise réellement sa contribution, au-delà de l'enthousiasme initial pour le projet.",
+        "wordsToUse": [
+          {"intent": "Séparer", "text": "« Avant de lancer cette initiative, qu'est-ce qui te permettrait de t'y engager dans de bonnes conditions ? »"},
+          {"intent": "Cibler", "text": "« Quel risque technique pourrait réellement invalider ce lancement ? »"},
+          {"intent": "Tester", "text": "« J'autorise un test limité à [périmètre] avant le déploiement. »"},
+          {"intent": "Décider", "text": "« À partir de [résultat], nous lancerons, adapterons ou arrêterons. »"}
+        ],
+        "avoid": "Évite de traiter l'adhésion exprimée devant le collectif comme une validation technique du plan.",
+        "practicalAction": "Avant le prochain lancement, demande ce qui freine réellement sa contribution. Si une réserve technique est confirmée, convenez d'un test limité, de son seuil d'arrêt et du décideur. Après le test, vérifiez si elle dispose de conditions suffisamment fiables pour s'engager durablement dans la suite."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/C/DS",
+      "participant": {"code": "DS", "primary": "D", "secondary": "S"},
+      "content": {
+        "yourLikelyReflex": "Tu peux vouloir protéger la personne en reprenant une partie du dossier ou en simplifiant rapidement la demande. L'allègement peut être utile, mais il peut aussi retirer la partie d'analyse où sa contribution est la plus déterminante.",
+        "potentialFriction": "Une baisse de participation peut venir d'interruptions nombreuses plutôt que du niveau technique du dossier. Retirer l'analyse centrale sans vérifier ce point risque de conserver les interruptions tout en réduisant l'utilité de la contribution.",
+        "recommendedApproach": "Distingue le travail d'analyse à préserver des sollicitations qui le fragmentent et vérifie avec la personne que les interruptions constituent bien le frein déterminant. Si cette hypothèse est confirmée, crée une plage protégée et un canal unique pour les demandes urgentes, sans transférer leur traitement à un collègue. Mesurez le nombre d'interruptions et la part d'analyse terminée dans cette plage.",
+        "wordsToUse": [
+          {"intent": "Préserver", "text": "« Quelle partie de ton travail souhaites-tu préserver, et qu'est-ce qui rend aujourd'hui sa réalisation plus difficile ? »"},
+          {"intent": "Repérer", "text": "« Quelles sollicitations interrompent concrètement cette analyse ? »"},
+          {"intent": "Protéger", "text": "« Je réserve [plage] à ce travail et centralise les urgences par [canal]. »"},
+          {"intent": "Mesurer", "text": "« Nous suivrons les interruptions et la part du dossier effectivement finalisée. »"}
+        ],
+        "avoid": "Évite de soulager en retirant l'analyse centrale lorsque le frein se situe dans la fragmentation du travail.",
+        "practicalAction": "Identifie avec la personne ce qu'elle souhaite préserver dans sa contribution et ce qui la fragilise. Si les interruptions constituent le frein principal, protège une plage adaptée sans transférer les demandes à un collègue. Vérifiez ensuite si elle peut avancer avec davantage de maîtrise et si ce cadre soutient réellement son engagement."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/C/DC",
+      "participant": {"code": "DC", "primary": "D", "secondary": "C"},
+      "content": {
+        "yourLikelyReflex": "Tu peux construire rapidement un diagnostic solide, choisir la correction la plus rationnelle et demander sa mise en œuvre. Ta rigueur accélère l'arbitrage ; elle peut aussi fermer trop tôt une hypothèse différente issue du terrain.",
+        "potentialFriction": "Des écarts persistants après une correction peuvent montrer que la cause retenue n'était pas déterminante. Défendre le diagnostic initial ou ajouter des contrôles sans réexaminer l'hypothèse prolonge les reprises.",
+        "recommendedApproach": "Présente ton diagnostic comme une hypothèse et demande à la personne ce qu'il laisse hors champ. Identifiez ce qui freine réellement son engagement, sans conclure automatiquement à un dysfonctionnement technique. Si une correction de processus paraît utile, teste une mesure réversible dans ton périmètre. Vérifiez ensuite séparément son effet sur le problème et sur la capacité de la personne à contribuer.",
+        "wordsToUse": [
+          {"intent": "Soumettre", "text": "« Mon hypothèse est [cause] ; quel fait la contredirait ? »"},
+          {"intent": "Comparer", "text": "« Quel indicateur devrait bouger si cette cause est la bonne ? »"},
+          {"intent": "Expérimenter", "text": "« Testons cette correction sur un cycle, sans la généraliser. »"},
+          {"intent": "Réviser", "text": "« Si le repère ne change pas, nous abandonnerons cette hypothèse. »"}
+        ],
+        "avoid": "Évite de transformer un diagnostic cohérent en conclusion définitive avant qu'un effet mesurable ne le confirme.",
+        "practicalAction": "Présente ton diagnostic comme une hypothèse et demande ce qu'il laisse hors champ. Choisissez une correction réversible relevant de ton autorité et un signe d'effet convenu. Après une étape, conservez, révisez ou abandonnez l'hypothèse selon son effet sur le problème et sur la capacité de la personne à contribuer."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/C/I",
+      "participant": {"code": "I", "primary": "I", "secondary": null},
+      "content": {
+        "yourLikelyReflex": "Tu peux chercher à ranimer l'intérêt par une vision stimulante, davantage d'échanges et une reconnaissance publique. Cette énergie crée du lien, mais elle ne résout pas forcément une absence de suite donnée aux alertes ou aux analyses produites.",
+        "potentialFriction": "Des contributions techniques remises sans réponse, des réunions qui se terminent sans décision ou des recommandations rarement reprises peuvent réduire la participation, même si les échanges restent positifs.",
+        "recommendedApproach": "Vérifie d'abord avec la personne quelle analyse restée sans suite affecte réellement sa contribution et quelle décision elle devait éclairer. Si la décision relève de toi, rends-la explicitement ; sinon, saisis le décideur compétent et annonce une date de retour sur l'avancement. Vérifiez ensuite si la réponse a permis de clore ou de faire avancer le dossier.",
+        "wordsToUse": [
+          {"intent": "Reconnaître", "text": "« Ton analyse sur [sujet] devait éclairer [décision]. »"},
+          {"intent": "Relier", "text": "« Quelle suite concrète manque aujourd'hui à ce travail ? »"},
+          {"intent": "Responsabiliser", "text": "« Je demande à [décideur] une réponse motivée avant [date]. »"},
+          {"intent": "Clore", "text": "« La réponse précisera si la recommandation est retenue, refusée ou à compléter. »"}
+        ],
+        "avoid": "Évite de compenser l'absence de décision par davantage de visibilité ou de reconnaissance publique.",
+        "practicalAction": "Demande quelle évolution a diminué l'utilité qu'elle perçoit dans sa contribution. Si une analyse restée sans suite constitue le frein, apporte la réponse relevant de ton autorité ou sollicite l'arbitrage avec une date de retour. Vérifiez ensuite si cette suite rend sa contribution de nouveau utile et soutenable."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/C/ID",
+      "participant": {"code": "ID", "primary": "I", "secondary": "D"},
+      "content": {
+        "yourLikelyReflex": "Tu peux ouvrir plusieurs possibilités, faire émerger une option séduisante puis décider vite pour conserver l'élan. Le passage rapide de l'idée à l'engagement peut toutefois laisser les critères de réussite et la charge de validation indéfinis.",
+        "potentialFriction": "Une idée retenue sans seuil de qualité ni responsable de validation produit souvent des demandes complémentaires, des versions successives ou un arrêt au moment de livrer. Ces signes indiquent un cadre incomplet, pas nécessairement un manque d'intérêt.",
+        "recommendedApproach": "Commence par demander ce qui a changé dans son envie de contribuer, puis explore les possibilités sans attribuer de responsabilité. Si une idée répond au frein identifié, demande si la personne souhaite la proposer, y contribuer ou la conduire. Vérifie les critères de réussite, les moyens et la charge avant tout engagement. Convenez ensuite d'un moment pour examiner si cette contribution reste choisie et soutenable.",
+        "wordsToUse": [
+          {"intent": "Converger", "text": "« Parmi ces options, laquelle mérite un cadrage avant toute attribution ? »"},
+          {"intent": "Définir", "text": "« Quel livrable et quel seuil permettront de dire que le travail est terminé ? »"},
+          {"intent": "Attribuer", "text": "« [Personne] validera selon ces critères, sans en ajouter après le départ. »"},
+          {"intent": "Équilibrer", "text": "« Pour ouvrir ce chantier, je retire ou reporte [demande]. »"}
+        ],
+        "avoid": "Évite d'attribuer une idée stimulante avant d'avoir stabilisé ce qui sera livré et validé.",
+        "practicalAction": "Lorsqu'une idée émerge, distingue avec la personne le fait de la proposer de la responsabilité de la porter. Si elle choisit de la conduire, définissez le livrable, le seuil d'acceptation, le valideur et l'ajustement de charge éventuel. Après une première étape, vérifiez si l'engagement reste choisi et tenable."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/C/IS",
+      "participant": {"code": "IS", "primary": "I", "secondary": "S"},
+      "content": {
+        "yourLikelyReflex": "Tu peux privilégier un échange chaleureux, valoriser la fiabilité de la personne et offrir ta disponibilité. Cette qualité relationnelle soutient la parole, mais elle peut laisser intact un désaccord professionnel si aucune voie sûre n'est prévue pour le traiter.",
+        "potentialFriction": "Des réserves exprimées seulement après la réunion, des validations assorties de nombreuses précautions ou des comptes rendus corrigés montrent qu'un désaccord technique n'a peut-être pas trouvé son lieu de traitement.",
+        "recommendedApproach": "Ouvre la possibilité d'un désaccord précis sans supposer qu'il existe. S'il est confirmé, reformule séparément le point technique et son effet sur le travail. Avec l'accord de la personne sur les informations partageables, décide si cela relève de toi ; sinon, porte le point auprès du décideur compétent et reviens à la date fixée sur l'avancement. Vérifiez si une règle, une décision ou une exception a été clarifiée.",
+        "wordsToUse": [
+          {"intent": "Autoriser", "text": "« Y a-t-il un point technique que le cadre collectif ne permet pas de discuter correctement ? »"},
+          {"intent": "Dissocier", "text": "« Quel est le désaccord précis, et quel effet produit-il sur le travail ? »"},
+          {"intent": "Protéger", "text": "« Nous convenons ensemble de ce qui peut être transmis et à qui. »"},
+          {"intent": "Suivre", "text": "« Je porte ce point à [décideur] et je te réponds avant [date]. »"}
+        ],
+        "avoid": "Évite de préserver une bonne relation au prix d'un désaccord technique qui reste sans voie de décision.",
+        "practicalAction": "Propose un échange où une difficulté professionnelle peut être exposée sans obligation de se confier. Si un désaccord technique est identifié, décide dans ton périmètre ou transmets-le avec son accord et une date de retour. Vérifiez ensuite si la réponse obtenue restaure des conditions de contribution suffisamment sûres."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/C/IC",
+      "participant": {"code": "IC", "primary": "I", "secondary": "C"},
+      "content": {
+        "yourLikelyReflex": "Tu peux multiplier les questions pour comprendre, puis reformuler longuement afin de rendre le dossier accessible. Cette pédagogie facilite l'échange ; elle peut aussi prolonger l'analyse sans préciser quelle décision en dépend.",
+        "potentialFriction": "Un entretien riche en explications mais sans question décisionnelle produit de nouvelles notes sans réduire les points ouverts. Le volume d'information augmente alors que le dossier reste au même stade.",
+        "recommendedApproach": "Demande d'abord quelle décision l'analyse doit permettre et fais résumer la conclusion en une phrase. Identifie ensuite la seule objection qui empêcherait cette décision ; réponds-y ou fais-la arbitrer. Mesurez au point suivant la réduction du nombre de points ouverts.",
+        "wordsToUse": [
+          {"intent": "Orienter", "text": "« Quelle décision ce travail doit-il permettre de prendre ? »"},
+          {"intent": "Résumer", "text": "« Si tu devais résumer ce qui te freine aujourd'hui, quel serait le point essentiel ? »"},
+          {"intent": "Isoler", "text": "« Quelle objection empêcherait encore de décider ? »"},
+          {"intent": "Conclure", "text": "« Je réponds à ce point ou je le soumets à [responsable] avant [date]. »"}
+        ],
+        "avoid": "Évite d'ajouter des questions lorsque la décision attendue et l'objection déterminante ne sont pas encore nommées.",
+        "practicalAction": "Demande d'abord quel résultat la personne attend de l'échange et ce qui freine sa contribution. Si l'analyse s'est dispersée, ramenez-la à une décision, une conclusion et une objection déterminante. Réponds ou fais arbitrer, puis vérifiez si son travail retrouve une utilité claire et une possibilité réelle d'aboutir."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/C/S",
+      "participant": {"code": "S", "primary": "S", "secondary": null},
+      "content": {
+        "yourLikelyReflex": "Tu peux maintenir les repères existants, donner du temps et éviter de modifier trop vite une méthode éprouvée. Cette stabilité sécurise le travail ; elle peut devenir un frein lorsqu'une règle obsolète oblige à multiplier les contournements.",
+        "potentialFriction": "Une hausse des exceptions, des vérifications manuelles ou des délais de traitement peut signaler que le standard actuel ne correspond plus au travail réel. Préserver ce standard sans mesurer son coût entretient les contournements.",
+        "recommendedApproach": "Demande ce qui a changé dans l'utilité ou la soutenabilité de sa contribution. Si une règle devenue inadaptée constitue le frein, mesurez son coût réel et définissez une variante limitée. Autorise-la dans ton périmètre ou demande l'arbitrage nécessaire, puis vérifiez à la fois son effet opérationnel et la stabilité de l'engagement.",
+        "wordsToUse": [
+          {"intent": "Observer", "text": "« Quelle règle produit aujourd'hui le plus de contournements vérifiables ? »"},
+          {"intent": "Circonscrire", "text": "« Sur quel type de dossier pouvons-nous essayer une variante sans modifier tout le cadre ? »"},
+          {"intent": "Stabiliser", "text": "« Tout le reste du processus demeure inchangé pendant l'essai. »"},
+          {"intent": "Évaluer", "text": "« Nous comparerons les exceptions et le délai avant de pérenniser quoi que ce soit. »"}
+        ],
+        "avoid": "Évite de confondre stabilité utile et maintien d'une règle dont les contournements sont devenus la norme.",
+        "practicalAction": "Identifie avec la personne ce qui rend sa contribution difficile à maintenir. Si une règle inadaptée est en cause, testez une variante limitée et réversible dans ton périmètre, ou sollicite l'autorisation avec une date de retour. Au moment convenu, vérifiez son effet sur le travail et sur son aisance à contribuer."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/C/SD",
+      "participant": {"code": "SD", "primary": "S", "secondary": "D"},
+      "content": {
+        "yourLikelyReflex": "Tu peux écouter les réserves, chercher à préserver la continuité puis décider d'un changement net quand la limite est atteinte. Le basculement peut surprendre si le critère qui déclenche la décision n'a pas été annoncé.",
+        "potentialFriction": "Des travaux poursuivis en parallèle de l'ancien et du nouveau cadre, ou des validations demandées sur les deux, montrent que la transition n'est pas suffisamment datée. Cette double exécution consomme de la capacité sans améliorer la fiabilité.",
+        "recommendedApproach": "Écoute ce qui fragilise aujourd'hui sa contribution et demande quel repère elle souhaite préserver. Si une transition de fonctionnement est réellement nécessaire, clarifie le contrôle indispensable, le moment du changement et les responsabilités concernées. Décide dans ton périmètre, puis vérifiez si ce changement traite le frein sans déstabiliser inutilement son travail.",
+        "wordsToUse": [
+          {"intent": "Sécuriser", "text": "« Quel contrôle doit absolument rester actif jusqu'à la bascule ? »"},
+          {"intent": "Dater", "text": "« Le nouveau circuit devient la référence à partir de [date]. »"},
+          {"intent": "Arrêter", "text": "« À cette date, l'ancien circuit cesse ; nous ne maintiendrons pas les deux. »"},
+          {"intent": "Contrôler", "text": "« Nous vérifierons qu'aucun dossier n'est traité en double. »"}
+        ],
+        "avoid": "Évite de sécuriser une transition en maintenant durablement deux circuits de validation.",
+        "practicalAction": "Demande quel frein doit être traité et quel repère de continuité doit être préservé. Si une transition de fonctionnement est nécessaire, fixe le critère de bascule, le contrôle indispensable et la fin de l'ancien circuit. Vérifiez ensuite si le changement réduit la difficulté sans diminuer la confiance dans le travail produit."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/C/SI",
+      "participant": {"code": "SI", "primary": "S", "secondary": "I"},
+      "content": {
+        "yourLikelyReflex": "Tu peux rendre les échanges plus réguliers, reconnaître la qualité du travail et expliquer les évolutions avec soin. Cette attention soutient la coopération, mais elle ne remplace pas une clarification lorsque plusieurs interlocuteurs donnent des consignes incompatibles.",
+        "potentialFriction": "Des demandes de confirmation, des messages croisés ou des livrables adaptés plusieurs fois peuvent révéler une pluralité de donneurs d'ordre. La qualité relationnelle des échanges ne supprime pas ce conflit de consignes.",
+        "recommendedApproach": "Reconnais une contribution précise, puis demande ce qui rend aujourd'hui son travail moins soutenable ou moins utile. Si des consignes contradictoires apparaissent, identifie leurs sources et clarifie les priorités dans ton périmètre, ou sollicite l'arbitrage nécessaire. Convenez d'un retour pour vérifier si cette clarification facilite réellement sa contribution.",
+        "wordsToUse": [
+          {"intent": "Tracer", "text": "« Quelles consignes se sont contredites sur le dernier dossier ? »"},
+          {"intent": "Unifier", "text": "« Pour ce périmètre, [rôle] devient la source unique de priorité. »"},
+          {"intent": "Escalader", "text": "« Cette désignation dépasse mon autorité ; je demande l'arbitrage à [responsable]. »"},
+          {"intent": "Rendre compte", "text": "« Je te donne l'avancement de cet arbitrage à [date]. »"}
+        ],
+        "avoid": "Évite d'ajouter une explication ou un point de coordination sans résoudre l'origine des consignes concurrentes.",
+        "practicalAction": "Après avoir reconnu une contribution précise, demande ce qui continue à freiner son engagement. Si des consignes contradictoires sont en cause, désigne la source de priorité dans ton périmètre ou sollicite l'arbitrage avec une date de retour. Vérifiez ensuite si elle retrouve une marge d'action et une contribution plus régulière."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/C/SC",
+      "participant": {"code": "SC", "primary": "S", "secondary": "C"},
+      "content": {
+        "yourLikelyReflex": "Tu peux vouloir fiabiliser chaque étape avant de modifier un processus, tout en préservant les personnes des effets d'une erreur. Cette prudence est utile ; elle peut prolonger un contrôle dont le coût est devenu supérieur au risque traité.",
+        "potentialFriction": "Un contrôle peut mobiliser du temps tout en détectant très peu d'écarts déterminants. Sans comparaison entre son coût et les anomalies réellement évitées, son maintien devient difficile à justifier.",
+        "recommendedApproach": "Demande ce qui freine son engagement et vérifie si un contrôle contribue réellement à cette difficulté. Si c'est le cas, distingue les vérifications indispensables des précautions facultatives. Évalue une adaptation proportionnée sans compromettre les exigences de qualité ou de sécurité, puis vérifiez si elle facilite le travail et l'engagement.",
+        "wordsToUse": [
+          {"intent": "Quantifier", "text": "« Combien de temps ce contrôle prend-il et quels écarts décisifs détecte-t-il ? »"},
+          {"intent": "Segmenter", "text": "« Quels cas présentent un risque assez faible pour un contrôle allégé ? »"},
+          {"intent": "Borner", "text": "« Je peux autoriser cet allègement sur [périmètre] jusqu'à [date]. »"},
+          {"intent": "Arbitrer", "text": "« Au-delà de ce périmètre, je transmets les données à [décideur]. »"}
+        ],
+        "avoid": "Évite de maintenir un contrôle par habitude sans confronter son coût aux anomalies déterminantes qu'il prévient.",
+        "practicalAction": "Vérifie avec la personne si un contrôle contribue réellement au frein d'engagement. Si c'est le cas, mesure son coût et les écarts déterminants qu'il prévient, puis allège-le provisoirement dans ton périmètre ou fais arbitrer. Comparez ensuite le risque observé et la capacité qu'elle peut consacrer au travail utile."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/C/C",
+      "participant": {"code": "C", "primary": "C", "secondary": null},
+      "content": {
+        "yourLikelyReflex": "Tu peux approfondir le diagnostic, demander des données complémentaires et différer l'action jusqu'à obtenir une conclusion robuste. Cette exigence protège la qualité ; elle peut aussi rendre impossible une décision lorsque l'incertitude ne peut pas être entièrement levée.",
+        "potentialFriction": "Une accumulation de données sans réduction du nombre d'options montre que l'analyse ne discrimine plus les choix. Continuer à documenter le dossier ajoute du travail sans rapprocher la décision.",
+        "recommendedApproach": "Demande d'abord ce qui rend sa contribution moins utile ou moins soutenable, sans conclure à un besoin de données supplémentaires. Si l'analyse ne discrimine plus les choix, identifiez l'information qui changerait réellement la décision. À défaut d'information accessible, fixe un seuil suffisant et choisis une option réversible. Vérifiez ensuite l'effet sur la décision et sur son engagement.",
+        "wordsToUse": [
+          {"intent": "Discriminer", "text": "« Quelle information nous ferait choisir une option plutôt qu'une autre ? »"},
+          {"intent": "Arrêter", "text": "« Si aucune information supplémentaire ne peut réellement modifier notre décision, quel choix raisonnable pouvons-nous faire avec les éléments disponibles ? »"},
+          {"intent": "Proportionner", "text": "« Je retiens une décision réversible au niveau de risque observé. »"},
+          {"intent": "Réexaminer", "text": "« Nous la réexaminerons à [date] avec [indicateur]. »"}
+        ],
+        "avoid": "Évite de demander une donnée supplémentaire sans pouvoir dire quelle décision elle modifierait.",
+        "practicalAction": "Identifie avec la personne le frein qui pèse sur son engagement. Si l'analyse reste ouverte faute de donnée discriminante, borne la vérification ou décide d'une option réversible avec un critère d'arrêt. Au point convenu, vérifiez si la décision avance et si elle peut contribuer sans rechercher une certitude inaccessible."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/C/CD",
+      "participant": {"code": "CD", "primary": "C", "secondary": "D"},
+      "content": {
+        "yourLikelyReflex": "Tu peux établir une norme précise, repérer l'écart puis imposer rapidement un plan correctif. La décision gagne en cohérence ; elle peut toutefois traiter chaque écart de la même manière sans distinguer erreur locale et défaut de système.",
+        "potentialFriction": "Des écarts similaires répartis entre plusieurs dossiers indiquent qu'une correction individuelle ne suffira peut-être pas. Multiplier les rappels ou plans séparés maintient alors la même source d'erreur.",
+        "recommendedApproach": "Demande ce qui, dans le travail ou son organisation, fragilise réellement son engagement. Si plusieurs écarts semblent liés, examine avec elle l'hypothèse d'une cause commune avant d'attribuer les difficultés aux personnes. Si cette cause est confirmée, corrige le point concerné dans ton périmètre et vérifiez séparément son effet sur les résultats et sur la contribution de la personne.",
+        "wordsToUse": [
+          {"intent": "Regrouper", "text": "« Quels écarts récents présentent exactement le même motif ? »"},
+          {"intent": "Localiser", "text": "« Quelle étape commune pourrait produire ces écarts ? »"},
+          {"intent": "Corriger", "text": "« Je modifie [règle ou outil] plutôt que d'ajouter un rappel individuel. »"},
+          {"intent": "Comparer", "text": "« Nous suivrons le taux du même écart sur le prochain cycle. »"}
+        ],
+        "avoid": "Évite de réduire une répétition d'écarts à plusieurs défaillances individuelles avant d'avoir testé une cause commune.",
+        "practicalAction": "Demande ce qui, dans le système ou la situation, fragilise sa contribution. Si une cause commune à plusieurs écarts est confirmée, corrige une seule étape sans ajouter de contrôle individuel. Vérifiez ensuite si les écarts diminuent et si la personne retrouve du temps et de l'utilité dans son travail d'analyse."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/C/CI",
+      "participant": {"code": "CI", "primary": "C", "secondary": "I"},
+      "content": {
+        "yourLikelyReflex": "Tu peux expliquer en détail les raisons d'une décision et chercher l'adhésion par une argumentation complète. La transparence aide à comprendre ; elle peut aussi masquer qu'une contribution demandée n'a pas reçu de réponse explicite.",
+        "potentialFriction": "Un long retour général sans statut sur chaque recommandation laisse le travail d'analyse ouvert. La personne peut alors produire de nouvelles justifications alors qu'il manque surtout une décision traçable.",
+        "recommendedApproach": "Demande quelle contribution la personne estime insuffisamment prise en compte et ce qu'elle attend réellement de la direction. Si une recommandation sans réponse constitue le frein, donne-lui un statut clair et motivé, ou précise l'arbitrage nécessaire. Vérifie ensuite si cette suite répond à son besoin et lui permet de retrouver une contribution utile.",
+        "wordsToUse": [
+          {"intent": "Statuer", "text": "« Cette recommandation est retenue, refusée ou encore à instruire. »"},
+          {"intent": "Motiver", "text": "« Le critère qui fonde ce statut est [critère]. »"},
+          {"intent": "Assigner", "text": "« [Responsable] fournit la donnée manquante avant [date]. »"},
+          {"intent": "Tracer", "text": "« Nous inscrivons ce statut dans le dossier de décision. »"}
+        ],
+        "avoid": "Évite de remplacer une décision traçable par une explication générale, même complète.",
+        "practicalAction": "Demande quelle contribution ou recommandation elle souhaiterait voir mieux prise en compte. Si l'absence de réponse constitue le frein, attribue un statut motivé et précise l'unique information encore nécessaire. Vérifiez ensuite si cette suite rend son analyse plus utile et son engagement plus durable."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/C/CS",
+      "participant": {"code": "CS", "primary": "C", "secondary": "S"},
+      "content": {
+        "yourLikelyReflex": "Tu peux rechercher une solution très sûre, documenter ses effets sur les personnes et attendre un accord large avant d'agir. Cette prudence protège la continuité ; elle peut retarder une mesure limitée alors que l'attente produit déjà des reprises ou une charge supplémentaire.",
+        "potentialFriction": "Un arbitrage en attente peut se traduire par des dossiers suspendus, des contrôles maintenus en double ou des relances répétées. Présenter toutes les contraintes sans hiérarchiser le risque bloquant ne donne aucune issue opérationnelle.",
+        "recommendedApproach": "Demande ce que l'attente ou l'incertitude change concrètement dans sa contribution, sans présumer qu'elle explique seule le retrait. Si un risque bloque réellement l'action, distingue-le de ceux qui peuvent être suivis. Propose une mesure provisoire proportionnée dans ton périmètre ou saisis le responsable de l'arbitrage, puis vérifiez si la réponse rend une possibilité d'agir sans créer de risque disproportionné.",
+        "wordsToUse": [
+          {"intent": "Hiérarchiser", "text": "« Quel risque interdit réellement d'agir, et lequel pouvons-nous suivre ? »"},
+          {"intent": "Provisoirement décider", "text": "« Dans mon périmètre, j'autorise cette mesure jusqu'à [date] sur [champ]. »"},
+          {"intent": "Ne pas transférer", "text": "« Le soutien sera assuré par [moyen] sans déplacer la charge sur l'équipe. »"},
+          {"intent": "Faire arbitrer", "text": "« Si ce seuil est dépassé, [responsable] arbitrera et je reviendrai vers toi à [date]. »"}
+        ],
+        "avoid": "Évite d'attendre la disparition de tous les risques lorsque le risque bloquant peut être isolé et les autres suivis.",
+        "practicalAction": "Lors du prochain échange, identifie avec la personne ce qui freine sa capacité à contribuer. Si une décision suspendue est en cause, évalue une mesure provisoire bornée et sans transfert ; autorise-la dans ton périmètre ou sollicite l'arbitrage avec une date de retour. Vérifiez ensuite son effet sur le risque et sur sa latitude d'action."
+      }
+    }
+  ]
+}

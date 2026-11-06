@@ -72,6 +72,6 @@ export type MappResultBundle = {
   scoringVersionId: string;
   scores: Array<Record<string, unknown>>;
   metrics: Array<Record<string, unknown>>;
-  rankings: Array<Record<string, unknown>>;
+  rankings: Array<Record<string, unknown> & { tie_break_required?: boolean; resolved_order?: string[] | null }>;
   tieBreak: Record<string, unknown> | null;
 };

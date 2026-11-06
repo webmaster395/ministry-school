@@ -1,0 +1,565 @@
+{
+  "schemaVersion": "10.0.0",
+  "lot": "M03",
+  "status": "ready_for_external_review",
+  "scope": {
+    "role": "direction",
+    "context": "personnes_sous_responsabilite",
+    "situation": "motiver",
+    "counterpart": "S",
+    "expectedRestitutions": 16,
+    "configurations": [
+      "D",
+      "DI",
+      "DS",
+      "DC",
+      "I",
+      "ID",
+      "IS",
+      "IC",
+      "S",
+      "SD",
+      "SI",
+      "SC",
+      "C",
+      "CD",
+      "CI",
+      "CS"
+    ]
+  },
+  "validation": {
+    "codexAuthorReview": "completed",
+    "chatgptReview": "completed",
+    "userValidation": "not_started"
+  },
+  "restitutions": [
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/S/D",
+      "participant": {
+        "code": "D",
+        "primary": "D",
+        "secondary": null
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux vouloir restaurer rapidement l'engagement en clarifiant la priorité et en demandant une première avancée. Cette orientation vers l'action peut rassurer par sa netteté, mais elle peut aussi laisser peu de place à une inquiétude, une fatigue ou une tension qui n'a pas encore été clairement identifiée.",
+        "potentialFriction": "Une baisse de participation, des délais moins bien tenus ou des demandes de clarification plus fréquentes peuvent signaler que la charge ou les changements fragilisent les conditions de contribution. Une relance ferme risque alors d'obtenir un accord de principe sans traiter ce qui empêche l'avancée.",
+        "recommendedApproach": "Pars d'un écart observable — délai, disponibilité ou participation — et demande quel obstacle de travail l'explique le mieux. Si une concurrence de priorités est confirmée, tranche laquelle passe en premier et nomme celle qui est différée. Vérifiez à la prochaine échéance si l'étape prioritaire avance sans relance supplémentaire.",
+        "wordsToUse": [
+          {
+            "intent": "Ouvrir",
+            "text": "« Qu'est-ce qui est devenu plus difficile dans ton travail ? »"
+          },
+          {
+            "intent": "Autoriser",
+            "text": "« Y a-t-il une inquiétude que tu n'as pas encore eu l'occasion d'exprimer ? »"
+          },
+          {
+            "intent": "Prioriser",
+            "text": "« Quelle contrainte devrions-nous traiter en premier ? »"
+          },
+          {
+            "intent": "Stabiliser",
+            "text": "« Voici ce que je vais ajuster et ce qui restera stable. »"
+          }
+        ],
+        "avoid": "Évite d'interpréter son sérieux ou son accord apparent comme la preuve que sa charge et ses inquiétudes sont maîtrisées.",
+        "practicalAction": "Lors du prochain échange, demande ce qui fragilise aujourd'hui son engagement. Si des priorités concurrentes constituent le frein principal, arbitre celle qui doit passer en premier et précise ce qui peut attendre. Convenez ensuite d'un moment pour vérifier si cette clarification lui permet de travailler avec davantage de sérénité et de régularité."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/S/DI",
+      "participant": {
+        "code": "DI",
+        "primary": "D",
+        "secondary": "I"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux chercher à relancer l'élan par une perspective stimulante, un résultat visible et un message capable de rassembler. Ta dominante Conquérante vise le mouvement et ton secondaire Communiquant donne de l'énergie. Tu peux toutefois créer une dynamique collective avant d'avoir entendu ce qui rend la situation difficile à vivre.",
+        "potentialFriction": "La personne peut participer au regain d'énergie collectif alors que le frein initial reste présent. Sans vérification de la charge ou du rythme, cet accord peut ne pas tenir.",
+        "recommendedApproach": "Reçois son appréciation hors du collectif, fais nommer le frein et son effet, puis arbitre le moyen, le rythme ou la priorité qui relève de toi. Précise ce qui sera différé et convenez d'un signe permettant de vérifier après la première étape que sa contribution peut se maintenir sans lui imposer un rythme qu'elle ne peut soutenir.",
+        "wordsToUse": [
+          {
+            "intent": "Écouter",
+            "text": "« Comment vis-tu la situation, au-delà de ce que nous montrons au collectif ? »"
+          },
+          {
+            "intent": "Observer",
+            "text": "« Quelles conséquences vois-tu pour les personnes concernées ? »"
+          },
+          {
+            "intent": "Limiter",
+            "text": "« Qu'est-ce qui te paraît difficile à tenir dans la durée ? »"
+          },
+          {
+            "intent": "Soutenir",
+            "text": "« Pour rendre cet objectif soutenable, je vais agir sur [levier]. »"
+          }
+        ],
+        "avoid": "Évite d'utiliser l'énergie du collectif pour obtenir un accord que la personne n'aurait pas donné dans un échange plus calme.",
+        "practicalAction": "Avant de lancer une nouvelle dynamique collective, échange individuellement avec la personne sur ce qui rend sa contribution difficile à maintenir. Agis sur un frein relevant de la direction, puis vérifie après une première étape si elle se sent davantage en mesure de contribuer, sans devoir suivre un rythme qu'elle ne peut soutenir."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/S/DS",
+      "participant": {
+        "code": "DS",
+        "primary": "D",
+        "secondary": "S"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux vouloir résoudre le problème tout en protégeant la personne et la continuité du travail. Ton profil Conquérant cherche un ajustement rapide ; ton côté Facilitateur te rend attentif à la charge et au climat. Tu peux cependant décider d'un allègement bienveillant sans savoir si elle souhaite plutôt plus de clarté, de reconnaissance ou de stabilité.",
+        "potentialFriction": "Un allègement peut manquer sa cible si le frein tient moins au volume qu'aux changements répétés ou au retrait d'une contribution jugée utile. Enlever une mission sans vérifier ce qui doit être préservé peut donc réduire encore la continuité ou l'utilité du travail.",
+        "recommendedApproach": "Fais distinguer la tâche qui surcharge de la contribution que la personne veut préserver. Si le frein est une accumulation, retire une seule tâche périphérique sans toucher à cette contribution et précise où elle est absorbée. Après un cycle, comparez le nombre de reports sur la contribution préservée.",
+        "wordsToUse": [
+          {
+            "intent": "Distinguer",
+            "text": "« Est-ce surtout la charge, l'incertitude ou autre chose qui t'affecte ? »"
+          },
+          {
+            "intent": "Préserver",
+            "text": "« Quelle partie de ta mission veux-tu absolument conserver ? »"
+          },
+          {
+            "intent": "Ajuster",
+            "text": "« Qu'est-ce qui pourrait être simplifié sans diminuer le sens de ta contribution ? »"
+          },
+          {
+            "intent": "Décider",
+            "text": "« Je vais ajuster [élément] tout en préservant [contribution]. »"
+          }
+        ],
+        "avoid": "Évite de retirer à la personne une contribution porteuse de sens sous prétexte de la soulager.",
+        "practicalAction": "Identifie avec la personne ce qui fragilise sa contribution et ce qu'elle souhaite préserver. Si une surcharge est confirmée, examine un allègement réalisable sans transférer le problème à un collègue. Après une période convenue, vérifiez si cet ajustement lui permet de contribuer plus sereinement."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/S/DC",
+      "participant": {
+        "code": "DC",
+        "primary": "D",
+        "secondary": "C"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux examiner la charge, les résultats et les dysfonctionnements, puis vouloir corriger rapidement la cause la plus probable. Ta dominante Conquérante cherche une issue et ton secondaire Analyste structure le diagnostic. Le risque est de considérer les signes visibles sans entendre une tension relationnelle ou une inquiétude difficile à objectiver.",
+        "potentialFriction": "Une tension relationnelle ou une perte de confiance peut d'abord apparaître par des retards de coordination, des échanges évités ou des reprises de travail. Exiger une preuve complète avant d'agir laisse ces effets se prolonger alors qu'une mesure prudente est déjà possible.",
+        "recommendedApproach": "Présente les faits observables sans conclure sur leur origine, puis demande à la personne ce qui a changé dans ses conditions de contribution. Explore les difficultés qu'elle identifie, qu'elles concernent la coordination, la charge, les relations ou le sens du travail. Si un problème de coordination est confirmé, clarifie temporairement les responsabilités concernées et vérifie ensuite si cette mesure améliore réellement sa capacité à contribuer.",
+        "wordsToUse": [
+          {
+            "intent": "Observer",
+            "text": "« J'observe [fait]. Comment comprends-tu cette évolution ? »"
+          },
+          {
+            "intent": "Ouvrir",
+            "text": "« Y a-t-il une tension que les indicateurs ne montrent pas ? »"
+          },
+          {
+            "intent": "Distinguer",
+            "text": "« Que devons-nous vérifier, et sur quoi pouvons-nous déjà agir ? »"
+          },
+          {
+            "intent": "Protéger",
+            "text": "« Je peux mettre en place cette mesure pendant que nous clarifions la situation. »"
+          }
+        ],
+        "avoid": "Évite d'exiger une preuve complète d'une tension avant de créer les conditions permettant d'en parler.",
+        "practicalAction": "Demande d'abord ce qui a changé dans ses conditions de contribution. Si un problème de coordination est confirmé, clarifie temporairement qui décide, réalise et valide sur l'interface concernée. Vérifiez ensuite si cette clarification réduit la difficulté identifiée et facilite réellement sa contribution."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/S/I",
+      "participant": {
+        "code": "I",
+        "primary": "I",
+        "secondary": null
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux chercher à redonner de l'espoir par une parole positive, une vision commune et une reconnaissance chaleureuse. Cette capacité à recréer du lien peut être précieuse. Elle peut aussi t'amener à rassurer trop tôt une personne qui a besoin de pouvoir exprimer une lassitude ou un désaccord sans devoir préserver l'ambiance.",
+        "potentialFriction": "Une réponse positive ne renseigne pas à elle seule sur la soutenabilité du travail. Si la conversation reste centrée sur les possibilités, une surcharge ou une inquiétude concrète peut rester sans réponse et continuer à affecter la disponibilité ou les délais.",
+        "recommendedApproach": "Pars d'un changement observable et écoute ce qui pèse sur sa contribution sans le reformuler positivement. Demande quel soutien professionnel serait réellement utile. Si un besoin concret est confirmé, propose un ajustement relevant de ton autorité et convenez d'un repère permettant d'en vérifier l'effet sur sa contribution.",
+        "wordsToUse": [
+          {
+            "intent": "Ouvrir",
+            "text": "« Comment vis-tu réellement cette période ? »"
+          },
+          {
+            "intent": "Approfondir",
+            "text": "« Y a-t-il quelque chose dont tu aurais besoin et que nous n'avons pas encore abordé ? »"
+          },
+          {
+            "intent": "Reconnaître",
+            "text": "« Je vois que tu as maintenu [contribution] malgré [difficulté]. »"
+          },
+          {
+            "intent": "Répondre",
+            "text": "« Sur ce point, voici ce que je peux changer concrètement. »"
+          }
+        ],
+        "avoid": "Évite de rassurer ou de positiver avant que la personne ait pu aller au bout de ce qu'elle vit.",
+        "practicalAction": "Lors du prochain échange, laisse la personne exprimer ce qui lui pèse sans chercher immédiatement à la rassurer. Demande quel soutien professionnel lui serait réellement utile. Si un besoin concret est identifié, propose un ajustement relevant de ton autorité, puis vérifie avec elle si ce soutien facilite sa contribution."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/S/ID",
+      "participant": {
+        "code": "ID",
+        "primary": "I",
+        "secondary": "D"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux ouvrir un échange vivant, faire émerger des solutions puis choisir rapidement celle qui semble capable de remettre la personne en mouvement. Ton profil Communiquant facilite la parole et ton secondaire Conquérant pousse vers l'action. Tu peux toutefois prendre une idée prudente pour un engagement ferme afin de conclure sur une note dynamique.",
+        "potentialFriction": "Une option proposée pendant l'exploration n'est pas nécessairement une responsabilité acceptée. L'attribuer immédiatement peut ajouter une charge sans retirer le frein initial ni clarifier les moyens disponibles.",
+        "recommendedApproach": "Sépare explicitement la collecte d'idées de l'attribution des responsabilités. Quand une option utile émerge, demande si la personne veut la porter et quelle tâche devrait sortir de son périmètre en contrepartie. Si elle l'accepte, acte cet échange de charge et vérifiez après la première étape si aucune échéance supplémentaire n'a glissé.",
+        "wordsToUse": [
+          {
+            "intent": "Explorer",
+            "text": "« Nous pouvons chercher des options sans décider maintenant qui les portera. »"
+          },
+          {
+            "intent": "Évaluer",
+            "text": "« Quel effet cette option aurait-elle sur ta charge et ton engagement ? »"
+          },
+          {
+            "intent": "Vérifier",
+            "text": "« Est-ce une idée que tu proposes ou une responsabilité que tu souhaites prendre ? »"
+          },
+          {
+            "intent": "Confirmer",
+            "text": "« De quoi aurais-tu besoin pour l'assumer sereinement ? »"
+          }
+        ],
+        "avoid": "Évite de transformer une suggestion faite pour aider en engagement personnel implicite.",
+        "practicalAction": "Lorsqu'une nouvelle idée émerge, vérifie d'abord si la personne souhaite réellement la porter ou simplement la proposer. Si elle accepte une responsabilité, examine avec elle sa charge et les moyens nécessaires. Ajuste les priorités si besoin, puis vérifie après une première étape si cet engagement reste choisi et soutenable."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/S/IS",
+      "participant": {
+        "code": "IS",
+        "primary": "I",
+        "secondary": "S"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux vouloir restaurer une relation positive, valoriser les efforts et redonner à la personne le sentiment d'appartenir au collectif. Ton profil Communiquant favorise l'expression et ton côté Facilitateur sécurise la confiance. Le souci de préserver un échange harmonieux peut cependant maintenir hors de l'échange le sujet qui crée réellement la tension.",
+        "potentialFriction": "L'échange peut rester chaleureux alors qu'un désaccord ou une limite n'est pas abordé. La relation est entretenue, mais le frein professionnel reste sans réponse.",
+        "recommendedApproach": "Reconnais un effet précis, puis ouvre la possibilité d'un désaccord sans supposer qu'il existe. Fais préciser son effet et la réponse attendue, agis sur un point de ton périmètre et vérifie à date fixe sans exposer la personne.",
+        "wordsToUse": [
+          {
+            "intent": "Reconnaître",
+            "text": "« Ta constance sur [élément] a réellement soutenu [effet]. »"
+          },
+          {
+            "intent": "Autoriser",
+            "text": "« Y a-t-il un aspect de la situation actuelle qui ne te convient plus et dont tu aimerais parler ? »"
+          },
+          {
+            "intent": "Demander",
+            "text": "« Quel soutien ou quel changement attends-tu de moi ? »"
+          },
+          {
+            "intent": "Clarifier",
+            "text": "« Je peux agir sur [point] ; je ne peux pas modifier [contrainte]. »"
+          }
+        ],
+        "avoid": "Évite de préserver une conversation agréable au prix d'un désaccord ou d'une limite qui doivent être entendus.",
+        "practicalAction": "Propose un échange individuel où la personne peut exprimer librement une difficulté ou un désaccord professionnel, si elle le souhaite. Écoute sans chercher à préserver artificiellement une ambiance positive. Si une réponse de direction est nécessaire, précise ce que tu peux faire et convenez d'un retour respectant la confidentialité applicable."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/S/IC",
+      "participant": {
+        "code": "IC",
+        "primary": "I",
+        "secondary": "C"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux chercher à faire parler la personne, recueillir les éléments puis organiser l'échange pour rendre la difficulté compréhensible. Ta dominante Communicante ouvre la discussion et ton secondaire Analyste cherche une explication cohérente. Tu peux néanmoins multiplier les questions jusqu'à donner le sentiment que son vécu doit être démontré.",
+        "potentialFriction": "Une succession de questions peut déplacer l'échange du message essentiel vers sa justification. Des réponses précises ne garantissent pas une décision sur le frein.",
+        "recommendedApproach": "Fais formuler le message essentiel et reformule-le avant l'analyse. Identifie le frein et l'unique information qui modifierait ta décision ; décide, ou annonce quoi vérifier, auprès de qui et pour quelle date. Vérifie ensuite que la suite répond au message initial.",
+        "wordsToUse": [
+          {
+            "intent": "Centrer",
+            "text": "« Qu'aimerais-tu surtout que je comprenne de ta situation ? »"
+          },
+          {
+            "intent": "Reformuler",
+            "text": "« Le point essentiel pour toi est [point]. Est-ce juste ? »"
+          },
+          {
+            "intent": "Vérifier",
+            "text": "« Quelle information me manque pour décider utilement ? »"
+          },
+          {
+            "intent": "Conclure",
+            "text": "« Je vais examiner [élément] et te répondre à [date]. »"
+          }
+        ],
+        "avoid": "Évite de poser une succession de questions qui oblige la personne à rationaliser son vécu avant d'être entendue.",
+        "practicalAction": "Fais formuler le message essentiel, vérifie l'unique information déterminante et rends une décision ou un retour daté ; au point suivant, mesurez si la contribution visée a repris ou gagné en régularité."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/S/S",
+      "participant": {
+        "code": "S",
+        "primary": "S",
+        "secondary": null
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux offrir du temps, de la stabilité et une écoute attentive pour comprendre ce qui a fragilisé l'engagement. Cette patience facilite une parole nuancée. Comme vous accordez tous les deux de l'importance à la continuité, vous pouvez toutefois éviter la décision ou le désaccord qui modifierait réellement la situation.",
+        "potentialFriction": "Une description prudente peut laisser plusieurs attentes présentées comme également tenables alors que les délais, les interruptions ou la qualité montrent déjà une limite. Sans arbitrage explicite, la continuité apparente peut reposer sur des reports répétés.",
+        "recommendedApproach": "Examine avec elle les engagements qu'elle souhaite préserver et ceux qui deviennent difficiles à tenir. Demande ce qui fragilise leur soutenabilité sans conclure à une surcharge. Si des attentes contradictoires sont confirmées, décide laquelle devient secondaire et communique cet arbitrage aux personnes concernées. Convenez d'un moment pour vérifier l'effet sur sa contribution.",
+        "wordsToUse": [
+          {
+            "intent": "Évaluer",
+            "text": "« Qu'est-ce qui reste soutenable et qu'est-ce qui ne l'est plus ? »"
+          },
+          {
+            "intent": "Prioriser",
+            "text": "« Quelle attente crains-tu de ne plus pouvoir tenir correctement ? »"
+          },
+          {
+            "intent": "Autoriser",
+            "text": "« Tu n'as pas à préserver toutes les priorités actuelles sans arbitrage. »"
+          },
+          {
+            "intent": "Arbitrer",
+            "text": "« Je décide que [priorité] passe avant [autre priorité] pour cette période. »"
+          }
+        ],
+        "avoid": "Évite de rechercher un compromis qui maintient toutes les attentes alors que la personne signale une limite réelle.",
+        "practicalAction": "Lors du prochain échange, examine avec la personne les engagements qu'elle souhaite préserver et ceux qui deviennent difficiles à tenir. Si des attentes contradictoires apparaissent, arbitre une priorité dans ton périmètre. Vérifiez ensuite si cette clarification lui permet de retrouver une contribution plus stable et soutenable."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/S/SD",
+      "participant": {
+        "code": "SD",
+        "primary": "S",
+        "secondary": "D"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux écouter longuement pour préserver la confiance, puis décider d'un changement afin de sortir la personne d'une situation usante. Ta dominante Facilitatrice accueille le vécu et ton secondaire Conquérant facilite l'arbitrage. Le passage à la décision peut cependant surprendre si tu n'as pas vérifié ce qu'elle souhaitait préserver.",
+        "potentialFriction": "Un changement décidé après l'écoute peut néanmoins déplacer le problème s'il fragilise un repère de continuité important. L'absence d'objection ne suffit pas à établir que la conséquence opérationnelle du changement a été examinée.",
+        "recommendedApproach": "Demande ce qui a changé dans sa contribution et quel repère elle souhaite préserver. Si le frein appelle un ajustement de fonctionnement, associe-la à une transition limitée sans lui transférer la décision qui relève de toi. Rends l'arbitrage en nommant ce qu'il remplace, puis vérifiez si le changement traite réellement le frein tout en préservant la continuité utile.",
+        "wordsToUse": [
+          {
+            "intent": "Situer",
+            "text": "« Cet échange doit m'aider à décider d'un ajustement utile. »"
+          },
+          {
+            "intent": "Préserver",
+            "text": "« Qu'est-ce qui doit impérativement rester stable pour toi ? »"
+          },
+          {
+            "intent": "Anticiper",
+            "text": "« Quelle conséquence de ce changement dois-je prendre en compte ? »"
+          },
+          {
+            "intent": "Accompagner",
+            "text": "« Je retiens [décision] et je prévois [soutien] pendant la transition. »"
+          }
+        ],
+        "avoid": "Évite de prendre son silence pour une absence de réserve face au changement envisagé.",
+        "practicalAction": "Identifie avec la personne un ajustement susceptible de traiter le frein confirmé. S'il modifie le fonctionnement, convenez d'un repère de continuité à préserver, rends la décision relevant de ton autorité et vérifiez après une première étape son effet sur la difficulté et sur sa capacité à contribuer."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/S/SI",
+      "participant": {
+        "code": "SI",
+        "primary": "S",
+        "secondary": "I"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux chercher à restaurer la confiance, recréer des échanges et rappeler à la personne la valeur de sa présence dans le collectif. Ton profil Facilitateur sécurise la relation et ton secondaire Communiquant remet de la chaleur. Tu peux toutefois privilégier la reconnaissance sociale lorsque la difficulté concerne surtout la charge ou une priorité contradictoire.",
+        "potentialFriction": "La reconnaissance peut être sincère sans modifier une charge ou une priorité contradictoire. Sans retrait ni clarification, elle risque de rester sans effet durable.",
+        "recommendedApproach": "Reconnais une contribution, puis demande ce que cela ne résout pas. Laisse la personne qualifier le frein et l'effet qu'il produit. Si la charge est en cause, examine un retrait, un report ou un redimensionnement sans transfert sur un tiers ; sinon, apporte la réponse adaptée ou sollicite l'arbitrage nécessaire avec une date de retour.",
+        "wordsToUse": [
+          {
+            "intent": "Reconnaître",
+            "text": "« Ta contribution sur [élément] a permis [effet concret]. »"
+          },
+          {
+            "intent": "Approfondir",
+            "text": "« Qu'est-ce que cette reconnaissance ne résout pas pour toi ? »"
+          },
+          {
+            "intent": "Décharger",
+            "text": "« Quelle attente continues-tu à porter alors qu'elle devient trop lourde ? »"
+          },
+          {
+            "intent": "Arbitrer",
+            "text": "« Je retire ou reporte [demande] afin de préserver [priorité]. »"
+          }
+        ],
+        "avoid": "Évite d'utiliser la reconnaissance comme compensation à une charge ou à des attentes que tu pourrais réellement arbitrer.",
+        "practicalAction": "Après avoir reconnu une contribution précise, demande ce qui continue à rendre son engagement difficile. Si la charge est en cause, examine un ajustement qui ne reporte pas le problème sur un tiers. Si le frein est différent, identifie la réponse adaptée et vérifie ensuite son effet sur la contribution."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/S/SC",
+      "participant": {
+        "code": "SC",
+        "primary": "S",
+        "secondary": "C"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux écouter, observer les conditions et chercher une solution sûre qui protège la personne et la continuité. Ta dominante Facilitatrice veille à la relation ; ton secondaire Analyste examine les risques. Cette prudence peut prolonger une situation dont l'incertitude constitue déjà une source de démotivation.",
+        "potentialFriction": "Pendant les vérifications, la personne peut maintenir la continuité par un effort supplémentaire ou réduire autre chose. Sans contrôle, la charge peut être déplacée.",
+        "recommendedApproach": "Identifie l'incertitude prioritaire et une éventuelle compensation sans la supposer. Sépare la vérification indispensable du suivi. Si une mesure réversible et proportionnée peut traiter le frein dans ton périmètre, précise ses limites, ce qui sera absorbé sans transfert non arbitré et le repère d'évaluation ; sinon, saisis le décideur et date ton retour.",
+        "wordsToUse": [
+          {
+            "intent": "Cibler",
+            "text": "« Quelle incertitude pèse le plus sur ton engagement ? »"
+          },
+          {
+            "intent": "Distinguer",
+            "text": "« Que devons-nous savoir avant d'agir, et que pouvons-nous suivre ensuite ? »"
+          },
+          {
+            "intent": "Limiter",
+            "text": "« Quel ajustement réduit pourrait être essayé sans fragiliser la situation ? »"
+          },
+          {
+            "intent": "Réévaluer",
+            "text": "« Si nous l'essayons, convenons du moment où nous en examinerons les effets. »"
+          }
+        ],
+        "avoid": "Évite d'attendre que toutes les incertitudes disparaissent avant d'envisager un ajustement limité.",
+        "practicalAction": "Vérifie avec la personne si une mesure réversible peut traiter le frein sans déplacer la charge. Si elle est proportionnée et relève de ton périmètre, applique-la jusqu'au moment convenu et suivez le repère choisi ; sinon, saisis le décideur compétent et donne à la personne une date de retour."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/S/C",
+      "participant": {
+        "code": "C",
+        "primary": "C",
+        "secondary": null
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux chercher une explication fiable dans la charge, l'organisation, les objectifs ou les résultats avant de modifier le cadre. Cette rigueur évite les réponses hâtives. Elle peut aussi conduire la personne à penser qu'elle doit prouver sa démotivation avant que sa difficulté soit prise au sérieux.",
+        "potentialFriction": "Une difficulté liée à la confiance ou aux relations peut être signalée avant que tous les faits soient établis. Des demandes répétées de preuves retardent alors la réponse tandis que les incidents, évitements de coordination ou reprises de travail peuvent continuer.",
+        "recommendedApproach": "Accueille le signal sans conclure sur sa cause ni exiger immédiatement une démonstration complète. Identifie avec la personne une conséquence professionnelle concrète et la réponse proportionnée qui relève de ton autorité. Convenez d'un repère et d'un moment pour vérifier si cette réponse réduit la difficulté et facilite son engagement.",
+        "wordsToUse": [
+          {
+            "intent": "Accueillir",
+            "text": "« Ce que tu décris mérite que nous l'examinions sérieusement. »"
+          },
+          {
+            "intent": "Illustrer",
+            "text": "« Peux-tu me donner une situation où tu as ressenti cette difficulté ? »"
+          },
+          {
+            "intent": "Évaluer",
+            "text": "« Quelle conséquence te préoccupe le plus si rien ne change ? »"
+          },
+          {
+            "intent": "Répondre",
+            "text": "« Les éléments disponibles me permettent déjà d'agir sur [point]. »"
+          }
+        ],
+        "avoid": "Évite de faire de la précision de son récit une condition pour reconnaître que la situation mérite une réponse.",
+        "practicalAction": "Accueille la difficulté signalée sans demander immédiatement une démonstration complète. Identifie avec la personne une conséquence professionnelle concrète et une mesure proportionnée relevant de ton autorité. Après une période convenue, vérifiez si la mesure a réduit la difficulté et facilité son engagement."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/S/CD",
+      "participant": {
+        "code": "CD",
+        "primary": "C",
+        "secondary": "D"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux analyser la situation, identifier une cause dominante puis décider d'un nouveau cadre pour rétablir des conditions efficaces. Ton profil Analyste sécurise le diagnostic et ton secondaire Conquérant accélère l'arbitrage. Tu peux toutefois choisir une solution nette avant d'avoir exploré ses conséquences sur la confiance et la continuité.",
+        "potentialFriction": "Une réorganisation peut corriger le dysfonctionnement visé tout en créant une rupture de coordination pour les personnes dépendantes du travail. Si cet effet n'est pas vérifié, le changement peut être appliqué sans améliorer la contribution attendue.",
+        "recommendedApproach": "Présente la cause envisagée comme une hypothèse et demande ce qui, dans les conditions de travail, fragilise réellement sa contribution. Si une dépendance opérationnelle est confirmée, identifie celle qui est la plus exposée et décide d'un changement réversible limité, avec un relais explicite. Convenez d'un repère pour vérifier séparément l'effet opérationnel et l'effet sur son engagement.",
+        "wordsToUse": [
+          {
+            "intent": "Soumettre",
+            "text": "« Mon hypothèse est [cause]. Qu'est-ce qui pourrait la remettre en question ? »"
+          },
+          {
+            "intent": "Anticiper",
+            "text": "« Quelle conséquence de cet ajustement devons-nous impérativement traiter ? »"
+          },
+          {
+            "intent": "Décider",
+            "text": "« Je retiens [ajustement] en prévoyant [mesure de soutien]. »"
+          },
+          {
+            "intent": "Suivre",
+            "text": "« Nous vérifierons son effet sur [critère] à [moment]. »"
+          }
+        ],
+        "avoid": "Évite de considérer l'absence d'opposition comme la preuve que les conséquences du changement sont acceptables.",
+        "practicalAction": "Examine avec la personne le frein qu'elle identifie et la réponse proportionnée qui relève de ton autorité. Si une dépendance opérationnelle est en cause, testez sur une étape un relais clairement nommé. Vérifiez ensuite l'effet de la réponse retenue sur la difficulté concrète et sur sa capacité à contribuer."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/S/CI",
+      "participant": {
+        "code": "CI",
+        "primary": "C",
+        "secondary": "I"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux chercher à comprendre précisément la situation puis expliquer les priorités et les options de manière accessible. Ta dominante Analyste structure le problème et ton secondaire Communiquant facilite l'échange. Tu peux cependant parler davantage pour rendre la situation claire alors que la personne a surtout besoin d'être entendue sur une limite ou une inquiétude.",
+        "potentialFriction": "Une explication claire du contexte peut occuper l'entretien sans répondre au message initial. L'échange paraît alors constructif, mais la limite signalée reste inchangée et ses effets sur la contribution demeurent observables.",
+        "recommendedApproach": "Demande d'abord quelle difficulté la personne souhaite voir traitée et reformule son besoin avant d'expliquer. Donne seulement l'information nécessaire pour décider. Si une règle ambiguë constitue effectivement le frein, publie une clarification unique avec l'exception applicable ; sinon, engage la réponse correspondant à la difficulté identifiée. Convenez d'un repère pour en vérifier l'effet sur sa contribution.",
+        "wordsToUse": [
+          {
+            "intent": "Écouter",
+            "text": "« Qu'est-ce que tu voudrais que je comprenne avant de t'expliquer le contexte ? »"
+          },
+          {
+            "intent": "Reformuler",
+            "text": "« Si je comprends bien, ta principale difficulté est [difficulté]. »"
+          },
+          {
+            "intent": "Clarifier",
+            "text": "« Quelle réponse concrète attends-tu de moi ? »"
+          },
+          {
+            "intent": "Répondre",
+            "text": "« L'information utile est [information], et voici la suite que je retiens. »"
+          }
+        ],
+        "avoid": "Évite de prendre son écoute attentive pour la preuve que ton explication répond à sa difficulté.",
+        "practicalAction": "Avant d'expliquer le fonctionnement actuel, demande quelle difficulté la personne souhaite voir traitée. Reformule son besoin et vérifie qu'il est compris. Si une règle ambiguë constitue effectivement le frein, clarifie-la par écrit ; sinon, apporte la réponse correspondant à la difficulté identifiée. Vérifiez ensuite si cette réponse facilite sa contribution."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/S/CS",
+      "participant": {
+        "code": "CS",
+        "primary": "C",
+        "secondary": "S"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux examiner les faits et les risques tout en cherchant une réponse respectueuse des personnes et de la continuité. Ton profil Analyste sécurise le choix ; ton secondaire Facilitateur veille aux effets humains. Tu peux aboutir à une analyse équilibrée mais trop prudente pour une personne découragée par l'absence de changement.",
+        "potentialFriction": "Une attente prolongée peut se traduire par des décisions suspendues, des relances ou une contribution moins régulière. Si tous les risques sont présentés au même niveau, il reste impossible de savoir lequel interdit réellement d'agir et lequel peut être suivi pendant un essai.",
+        "recommendedApproach": "Identifie avec la personne la décision qui reste en suspens et ce que cette attente change concrètement dans son travail. Distingue les risques qui empêchent réellement d'agir de ceux qui peuvent être suivis. Si une mesure provisoire proportionnée est possible dans ton périmètre, propose-la avec un critère de réexamen ; sinon, sollicite l'arbitrage nécessaire et annonce une date de retour. Vérifie également si cette clarification redonne à la personne des perspectives d'action.",
+        "wordsToUse": [
+          {
+            "intent": "Hiérarchiser",
+            "text": "« Quelle conséquence affecte le plus durablement ton engagement ? »"
+          },
+          {
+            "intent": "Distinguer",
+            "text": "« Quel risque bloque réellement l'action, et lequel pouvons-nous accompagner ? »"
+          },
+          {
+            "intent": "Arbitrer",
+            "text": "« Je décide de [mesure] en tenant compte de [conséquence]. »"
+          },
+          {
+            "intent": "Réévaluer",
+            "text": "« Nous réexaminerons son effet à [date] avec ce repère : [repère]. »"
+          }
+        ],
+        "avoid": "Évite de présenter une analyse complète sans indiquer clairement la décision qu'elle permet de prendre.",
+        "practicalAction": "Lors du prochain échange, précise avec la personne ce que la décision suspendue empêche concrètement. Si une mesure provisoire proportionnée est possible dans ton périmètre, propose-la avec un critère de réexamen ; sinon, saisis le responsable de l'arbitrage et annonce une date de retour. Vérifiez ensuite si cette clarification lui redonne une possibilité réelle d'agir."
+      }
+    }
+  ]
+}

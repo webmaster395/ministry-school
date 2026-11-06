@@ -1,0 +1,565 @@
+{
+    "schemaVersion": "10.0.0",
+    "lot": "M06",
+    "status": "ready_for_external_review",
+    "scope": {
+        "role": "management",
+        "context": "collaborateurs_encadres",
+        "situation": "motiver",
+        "counterpart": "I",
+        "expectedRestitutions": 16,
+        "configurations": [
+            "D",
+            "DI",
+            "DS",
+            "DC",
+            "I",
+            "ID",
+            "IS",
+            "IC",
+            "S",
+            "SD",
+            "SI",
+            "SC",
+            "C",
+            "CD",
+            "CI",
+            "CS"
+        ]
+    },
+    "validation": {
+        "codexAuthorReview": "completed",
+        "chatgptReview": "completed",
+        "userValidation": "not_started"
+    },
+    "restitutions": [
+        {
+            "id": "management/collaborateurs_encadres/motiver/I/D",
+            "participant": {
+                "code": "D",
+                "primary": "D",
+                "secondary": null
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux vouloir fixer vite un objectif et demander une première avancée. Cette netteté aide, mais elle peut couper l'exploration avant de savoir si le frein vient d'une idée sans suite, d'une charge ou d'une priorité floue.",
+                "potentialFriction": "Une participation en baisse, des propositions non reprises ou des démarrages sans lendemain peuvent signaler que l'échange produit de l'élan sans débouché concret.",
+        "recommendedApproach": "Demande ce qui a changé dans son envie ou sa capacité à contribuer. Si une contribution restée sans suite constitue le frein, clarifie la réponse relevant de ton management et porte à la direction l'arbitrage qui te dépasse. Convenez ensuite d'une étape réaliste sans transformer son expression en responsabilité imposée.",
+                "wordsToUse": [
+                    {
+                        "intent": "Cibler",
+                        "text": "« Y a-t-il une idée ou une contribution que tu aurais aimé voir davantage prise en compte ? »"
+                    },
+                    {
+                        "intent": "Décider",
+                        "text": "« La décision attendue est [décision]. »"
+                    },
+                    {
+                        "intent": "Agir",
+                        "text": "« Je rends cette décision au plus tard le [date]. »"
+                    },
+                    {
+                        "intent": "Démarrer",
+                        "text": "« La première étape livrable est [étape]. »"
+                    }
+                ],
+                "avoid": "Évite d'ajouter un objectif sans traiter la contribution ou la décision restée en attente.",
+        "practicalAction": "Lors du prochain échange, demande ce qui a changé dans son envie de contribuer. Si une contribution restée sans réponse constitue le frein, décide dans ton périmètre ou sollicite l'arbitrage nécessaire. Au point convenu, vérifiez si la réponse facilite son travail et lui redonne une possibilité réelle de s'engager."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/I/DI",
+            "participant": {
+                "code": "DI",
+                "primary": "D",
+                "secondary": "I"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux relancer par un défi visible et une présentation mobilisatrice. La réaction collective peut être positive sans que les moyens et le rôle du collaborateur soient établis.",
+                "potentialFriction": "Un lancement suivi de demandes de clarification, de ressources ou de reports montre que l'intérêt initial n'a pas suffi à rendre l'engagement tenable.",
+                "recommendedApproach": "Demande d'abord ce qui a changé dans son envie de contribuer, sans proposer immédiatement un nouveau défi. Si une initiative répond réellement au frein identifié, vérifie avec lui s'il souhaite y participer, la proposer ou la conduire. Examine les moyens et la charge nécessaires avant tout engagement, puis sollicite l'arbitrage de la direction si une priorité reçue doit être modifiée.",
+                "wordsToUse": [
+                    {
+                        "intent": "Distinguer",
+                        "text": "« Ce défi t'intéresse-t-il, et quel rôle veux-tu réellement y tenir ? »"
+                    },
+                    {
+                        "intent": "Sécuriser",
+                        "text": "« Quel moyen doit être disponible avant le départ ? »"
+                    },
+                    {
+                        "intent": "Équilibrer",
+                        "text": "« Quelle demande sera différée en contrepartie ? »"
+                    },
+                    {
+                        "intent": "Valider",
+                        "text": "« Je confirme ou fais arbitrer ce point avant [date]. »"
+                    }
+                ],
+                "avoid": "Évite de prendre l'énergie du lancement pour la preuve que les conditions sont réunies.",
+        "practicalAction": "Avant de proposer un défi, identifie le frein et vérifie que le rôle est choisi, doté des moyens nécessaires et compatible avec la charge. Après une première étape, vérifiez si l'intérêt initial se traduit par un engagement encore choisi et soutenable."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/I/DS",
+            "participant": {
+                "code": "DS",
+                "primary": "D",
+                "secondary": "S"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux vouloir protéger le collaborateur en réduisant sa charge rapidement. Cet allègement peut retirer la contribution visible qu'il souhaitait continuer à porter.",
+                "potentialFriction": "Une baisse de participation peut coexister avec une contribution précise qui reste régulière. La retirer sans vérifier le frein ferait disparaître un point d'appui observable.",
+                "recommendedApproach": "Demande quelle contribution le collaborateur souhaite préserver et ce qui fragilise aujourd'hui son engagement. Si une surcharge ou une fragmentation du travail est confirmée, ajuste une contrainte dans ton périmètre sans transférer la charge à un collègue. Vérifie ensuite si cet ajustement lui permet de retrouver une contribution utile et soutenable.",
+                "wordsToUse": [
+                    {
+                        "intent": "Préserver",
+                        "text": "« Quelle contribution veux-tu continuer à rendre visible ? »"
+                    },
+                    {
+                        "intent": "Identifier",
+                        "text": "« Quelle tâche empêche cette contribution d'avancer ? »"
+                    },
+                    {
+                        "intent": "Alléger",
+                        "text": "« Je retire [tâche] sans la déplacer sur un collègue. »"
+                    },
+                    {
+                        "intent": "Porter",
+                        "text": "« Je demande l'arbitrage des priorités à [responsable]. »"
+                    }
+                ],
+                "avoid": "Évite de soulager en supprimant la contribution que le collaborateur veut préserver.",
+        "practicalAction": "Demande quelle contribution elle souhaite préserver et ce qui en fragilise l'exercice. Si une contrainte relevant de toi est confirmée, ajuste-la sans transférer la charge. Vérifiez ensuite l'effet sur le travail et si la contribution préservée reste utile et soutenable."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/I/DC",
+            "participant": {
+                "code": "DC",
+                "primary": "D",
+                "secondary": "C"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux diagnostiquer les résultats puis corriger vite le processus. Les indicateurs peuvent toutefois omettre qu'une proposition utile n'a jamais reçu de réponse.",
+                "potentialFriction": "Des idées documentées sans statut et des reprises identiques montrent moins un manque de créativité qu'une boucle de décision incomplète.",
+        "recommendedApproach": "Pars du changement observé et demande ce qui freine réellement son engagement. Si l'absence de suite à une proposition y contribue, vérifie le critère utile et donne une réponse motivée dans ton périmètre ; sinon, transmets à la direction une demande concise avec son effet sur l'équipe.",
+                "wordsToUse": [
+                    {
+                        "intent": "Tracer",
+                        "text": "« Y a-t-il une proposition sur laquelle tu aurais souhaité recevoir une réponse plus claire ? »"
+                    },
+                    {
+                        "intent": "Critériser",
+                        "text": "« Quel critère devait permettre de la départager ? »"
+                    },
+                    {
+                        "intent": "Statuer",
+                        "text": "« Elle est retenue, refusée ou à compléter sur [point]. »"
+                    },
+                    {
+                        "intent": "Escalader",
+                        "text": "« Je la porte à [décideur] et reviens à [date]. »"
+                    }
+                ],
+                "avoid": "Évite d'ajouter une analyse quand le besoin principal est un statut décisionnel.",
+        "practicalAction": "Demande d'abord ce qui freine sa contribution. Si une proposition sans réponse est en cause, donne-lui une suite motivée ou demande l'arbitrage nécessaire. Vérifiez ensuite l'action engagée et si cette réponse restaure une envie réelle de contribuer."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/I/I",
+            "participant": {
+                "code": "I",
+                "primary": "I",
+                "secondary": null
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux multiplier les échanges, les idées et la reconnaissance pour recréer de l'énergie. Cette richesse peut disperser l'attention si aucune idée ne reçoit de suite visible.",
+                "potentialFriction": "Un nombre croissant d'idées pour peu de décisions, ou des réunions animées suivies de peu d'actions, signale un défaut de convergence.",
+        "recommendedApproach": "Demande ce qui nourrit encore son engagement et ce qui l'affaiblit aujourd'hui. Choisissez une réponse concrète relevant de ton rôle, sans confondre qualité de l'échange et motivation retrouvée. Si une idée répond au frein, convenez seulement ensuite de qui souhaite la porter et dans quelles conditions.",
+                "wordsToUse": [
+                    {
+                        "intent": "Converger",
+                        "text": "« Parmi les idées que tu as proposées, y en a-t-il une qui compte particulièrement pour toi aujourd'hui ? »"
+                    },
+                    {
+                        "intent": "Choisir",
+                        "text": "« Nous en retenons une seule pour cette étape. »"
+                    },
+                    {
+                        "intent": "Attribuer",
+                        "text": "« [Responsable] livre [résultat] avant [date]. »"
+                    },
+                    {
+                        "intent": "Mesurer",
+                        "text": "« Nous suivrons [indicateur] plutôt que le nombre d'idées. »"
+                    }
+                ],
+                "avoid": "Évite de relancer l'énergie par un nouvel échange sans clore les idées déjà ouvertes.",
+        "practicalAction": "Demande ce qui nourrit encore son engagement et ce qui l'affaiblit aujourd'hui. Si une proposition sans suite constitue le frein, apporte une réponse dans ton périmètre ou sollicite l'arbitrage nécessaire. Vérifiez ensuite si cette réponse lui permet de retrouver une contribution utile et une envie réelle de participer, sans lui attribuer automatiquement une nouvelle responsabilité."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/I/ID",
+            "participant": {
+                "code": "ID",
+                "primary": "I",
+                "secondary": "D"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux faire émerger rapidement plusieurs initiatives puis attribuer la plus stimulante. Cette vitesse peut transformer une suggestion en engagement non cadré.",
+                "potentialFriction": "Une nouvelle initiative accompagnée de glissements sur les engagements existants révèle une attribution sans échange de charge.",
+                "recommendedApproach": "Commence par explorer ce qui freine son engagement, sans transformer immédiatement les idées évoquées en projets. Si une proposition répond à ce besoin, demande s'il souhaite simplement la partager, y contribuer ou la conduire. Examine ensuite la charge, les moyens et les autorisations nécessaires avant de confirmer toute responsabilité.",
+                "wordsToUse": [
+                    {
+                        "intent": "Explorer",
+                        "text": "« Cherchons des options sans attribuer encore la responsabilité. »"
+                    },
+                    {
+                        "intent": "Consentir",
+                        "text": "« Souhaites-tu réellement porter celle-ci ? »"
+                    },
+                    {
+                        "intent": "Cadrer",
+                        "text": "« Quel livrable acceptes-tu et quelle tâche doit sortir ? »"
+                    },
+                    {
+                        "intent": "Borner",
+                        "text": "« Ce moyen nécessite une validation avant engagement. »"
+                    }
+                ],
+                "avoid": "Évite de convertir une suggestion en responsabilité implicite.",
+        "practicalAction": "Explorez une possibilité sans l'attribuer. Si elle répond au frein, demande si la personne souhaite proposer, contribuer ou conduire, puis ajuste la charge dans ton périmètre. Après une étape, vérifiez si la responsabilité reste choisie et soutenable."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/I/IS",
+            "participant": {
+                "code": "IS",
+                "primary": "I",
+                "secondary": "S"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux préserver un échange positif et reconnaître la présence du collaborateur dans l'équipe. Cette attention peut laisser un désaccord ou une limite professionnelle hors décision.",
+                "potentialFriction": "Une conversation chaleureuse suivie des mêmes réserves ou d'une participation moindre montre que le sujet opérationnel reste ouvert.",
+                "recommendedApproach": "Propose un échange où le collaborateur peut exprimer une difficulté ou un désaccord professionnel sans obligation de se confier. Si un sujet nécessitant une réponse est identifié, clarifie ce qui relève de ton autorité et ce qui doit être transmis à la direction. Précise les limites de confidentialité applicables, puis vérifie si la réponse obtenue améliore ses conditions de contribution.",
+                "wordsToUse": [
+                    {
+                        "intent": "Autoriser",
+                        "text": "« Y a-t-il une difficulté ou un désaccord professionnel que tu aimerais pouvoir aborder avec moi ? »"
+                    },
+                    {
+                        "intent": "Effet",
+                        "text": "« Quel effet produit-il sur ta contribution ? »"
+                    },
+                    {
+                        "intent": "Consentir",
+                        "text": "« Que puis-je transmettre et à qui ? »"
+                    },
+                    {
+                        "intent": "Suivre",
+                        "text": "« Je te donne l'avancement à [date]. »"
+                    }
+                ],
+                "avoid": "Évite de prendre la qualité de l'échange pour une résolution du sujet.",
+        "practicalAction": "Propose un échange protégé sur une difficulté professionnelle, sans supposer un désaccord. Si une réponse est nécessaire, agis dans ton périmètre ou transmets les éléments partageables. Vérifiez ensuite la suite obtenue et si la personne se sent davantage en mesure de contribuer."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/I/IC",
+            "participant": {
+                "code": "IC",
+                "primary": "I",
+                "secondary": "C"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux questionner largement puis expliquer le contexte pour rendre la situation intelligible. L'échange peut s'allonger sans identifier la décision qui donnera une suite.",
+                "potentialFriction": "Des réponses détaillées suivies de nouveaux comptes rendus mais d'aucune décision indiquent que l'information a remplacé l'action.",
+        "recommendedApproach": "Accueille d'abord ce qui freine sa contribution, puis aide à distinguer le message essentiel des éléments secondaires. Si une décision manque, vérifie seulement l'information déterminante, réponds dans ton périmètre ou porte à la direction une demande d'arbitrage explicite.",
+                "wordsToUse": [
+                    {
+                        "intent": "Résumer",
+                        "text": "« Quel message dois-je retenir en une phrase ? »"
+                    },
+                    {
+                        "intent": "Relier",
+                        "text": "« Quelle décision doit suivre ce message ? »"
+                    },
+                    {
+                        "intent": "Limiter",
+                        "text": "« Quelle information unique pourrait la modifier ? »"
+                    },
+                    {
+                        "intent": "Conclure",
+                        "text": "« Je décide ou fais arbitrer avant [date]. »"
+                    }
+                ],
+                "avoid": "Évite d'accumuler les questions quand le message et la décision attendue sont déjà identifiés.",
+        "practicalAction": "Demande d'abord ce qui freine sa contribution. Si l'absence de décision est confirmée, fais préciser le message essentiel, réponds dans ton périmètre ou porte l'arbitrage. Vérifiez ensuite si la clarification facilite le travail et redonne confiance pour contribuer."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/I/S",
+            "participant": {
+                "code": "S",
+                "primary": "S",
+                "secondary": null
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux offrir du temps et préserver les habitudes de coopération. Cette stabilité aide, mais elle peut maintenir des réunions ou sollicitations qui dispersent la contribution.",
+                "potentialFriction": "Une participation régulière assortie de livrables retardés peut signaler que le temps collectif empiète sur le travail de fond.",
+                "recommendedApproach": "Demande ce qui rend aujourd'hui sa contribution moins utile ou moins soutenable. Si les réunions ou sollicitations fragmentent réellement son travail, examine avec lui lesquelles sont utiles et lesquelles pourraient être regroupées. Ajuste dans ton périmètre ou sollicite l'accord nécessaire, puis vérifie si ce changement soutient son engagement.",
+                "wordsToUse": [
+                    {
+                        "intent": "Observer",
+                        "text": "« Quel échange aide réellement ton travail, et lequel le fragmente ? »"
+                    },
+                    {
+                        "intent": "Regrouper",
+                        "text": "« Je rassemble ces sollicitations dans un seul point. »"
+                    },
+                    {
+                        "intent": "Protéger",
+                        "text": "« Cette plage reste réservée au livrable. »"
+                    },
+                    {
+                        "intent": "Escalader",
+                        "text": "« Ce rituel est imposé ; je demande son ajustement à [responsable]. »"
+                    }
+                ],
+                "avoid": "Évite de conserver un rythme d'échanges uniquement parce qu'il est familier.",
+        "practicalAction": "Demande ce qui rend sa contribution moins soutenable ou moins utile. Si la fragmentation est confirmée, regroupe une sollicitation ou protège une plage dans ton périmètre ; sinon sollicite l'ajustement nécessaire. Vérifiez ensuite l'effet sur le travail et sur sa capacité réelle à s'engager."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/I/SD",
+            "participant": {
+                "code": "SD",
+                "primary": "S",
+                "secondary": "D"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux écouter longuement puis décider d'un nouveau rôle pour remettre la personne en mouvement. La décision peut surprendre si la contribution qu'elle veut préserver n'a pas été reformulée.",
+                "potentialFriction": "Un rôle attribué suivi de nombreuses clarifications ou d'une double exécution montre que la répartition n'est pas stabilisée.",
+                "recommendedApproach": "Annonce que l'échange prépare une répartition. Demande quelle contribution le collaborateur veut porter, reformule-la, puis fixe ce que tu ajustes, ce qu'il conduit et ce qui exige une validation externe.",
+                "wordsToUse": [
+                    {
+                        "intent": "Situer",
+                        "text": "« Qu'aimerais-tu voir évoluer pour retrouver une contribution qui te corresponde davantage ? »"
+                    },
+                    {
+                        "intent": "Choisir",
+                        "text": "« Quelle contribution veux-tu porter directement ? »"
+                    },
+                    {
+                        "intent": "Reformuler",
+                        "text": "« Tu prends donc [rôle] sur [périmètre]. »"
+                    },
+                    {
+                        "intent": "Répartir",
+                        "text": "« Je traite [dépendance] et fais valider [point]. »"
+                    }
+                ],
+                "avoid": "Évite d'attribuer seul un rôle après avoir demandé au collaborateur de s'exprimer.",
+        "practicalAction": "Identifiez une contribution qu'elle souhaite exercer et ce dont elle a besoin de la part du manager. Formalisez une répartition choisie, puis vérifiez après une étape si elle reste claire, utile et soutenable pour la personne."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/I/SI",
+            "participant": {
+                "code": "SI",
+                "primary": "S",
+                "secondary": "I"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux reconnaître la contribution et recréer des occasions d'échange. La visibilité relationnelle ne remplace pas une décision sur une proposition ou une latitude d'exécution.",
+                "potentialFriction": "Une contribution félicitée mais toujours soumise aux mêmes validations reste limitée par le même cadre.",
+                "recommendedApproach": "Reconnais une contribution précise, puis demande ce qui continue à limiter son engagement. Si une absence de suite ou de latitude est identifiée, clarifie la décision que tu peux prendre dans ton périmètre ou sollicite l'autorisation nécessaire. Vérifie ensuite si cette réponse lui permet de retrouver une participation choisie et utile.",
+                "wordsToUse": [
+                    {
+                        "intent": "Reconnaître",
+                        "text": "« Ta contribution a produit [effet observable]. »"
+                    },
+                    {
+                        "intent": "Prolonger",
+                        "text": "« Quelle suite concrète lui manque ? »"
+                    },
+                    {
+                        "intent": "Déléguer",
+                        "text": "« Tu peux désormais décider de [élément]. »"
+                    },
+                    {
+                        "intent": "Autoriser",
+                        "text": "« Au-delà, je demande l'accord à [responsable]. »"
+                    }
+                ],
+                "avoid": "Évite de remplacer une suite décisionnelle possible par davantage de reconnaissance.",
+        "practicalAction": "Après avoir reconnu une contribution précise, demande ce qui continue à limiter son engagement. Si les validations constituent le frein, délègue une décision dans ton périmètre ou sollicite l'autorisation nécessaire. Vérifiez ensuite si cette marge est utilisable et soutient une contribution choisie."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/I/SC",
+            "participant": {
+                "code": "SC",
+                "primary": "S",
+                "secondary": "C"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux examiner longtemps les conditions d'une idée avant de l'essayer. Cette prudence protège l'équipe, mais elle peut laisser toute proposition sans test.",
+                "potentialFriction": "Des demandes successives de précision sans réduction du risque ni décision de test transforment l'analyse en file d'attente.",
+        "recommendedApproach": "Demande quel soutien concret permettrait de contribuer sans fragiliser la continuité. Si une condition de coopération ou de sécurité constitue le frein, ajuste-la dans ton périmètre avec un repère d'arrêt ; sinon, porte à la direction la condition qui dépasse ton mandat.",
+                "wordsToUse": [
+                    {
+                        "intent": "Discriminer",
+                        "text": "« Quelle information ferait réellement changer le niveau de risque ? »"
+                    },
+                    {
+                        "intent": "Borner",
+                        "text": "« L'essai porte seulement sur [champ]. »"
+                    },
+                    {
+                        "intent": "Arrêter",
+                        "text": "« Nous l'arrêtons si [seuil] est franchi. »"
+                    },
+                    {
+                        "intent": "Valider",
+                        "text": "« Je demande l'autorisation et reviens à [date]. »"
+                    }
+                ],
+                "avoid": "Évite de demander une précision sans nommer la décision qu'elle permettra.",
+        "practicalAction": "Identifiez un soutien concret et vérifiez qu'il ne déplace pas la charge. Ajuste une condition de coopération dans ton périmètre ou sollicite l'arbitrage. Au point convenu, vérifiez si ce soutien est réellement utilisable et rend la contribution plus soutenable."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/I/C",
+            "participant": {
+                "code": "C",
+                "primary": "C",
+                "secondary": null
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux chercher des faits complets avant de répondre à une idée ou une baisse de participation. La rigueur évite une décision hâtive ; elle peut laisser les contributions sans statut.",
+                "potentialFriction": "Des analyses ajoutées sans diminution du nombre de propositions ouvertes montrent que l'information ne départage plus les choix.",
+        "recommendedApproach": "Demande ce qui fragilise son engagement avant de rechercher une information supplémentaire. Si une incertitude empêche réellement d'agir, identifie la donnée déterminante et décide dans ton périmètre ou porte l'arbitrage à la direction, sans attribuer sa collecte automatiquement.",
+                "wordsToUse": [
+                    {
+                        "intent": "Discriminer",
+                        "text": "« Quelle donnée ferait changer le statut de cette proposition ? »"
+                    },
+                    {
+                        "intent": "Assigner",
+                        "text": "« Quelle information serait réellement nécessaire pour prendre une décision sur cette proposition ? »"
+                    },
+                    {
+                        "intent": "Décider",
+                        "text": "« Sans autre donnée accessible, je tranche avec les éléments présents. »"
+                    },
+                    {
+                        "intent": "Escalader",
+                        "text": "« Cette décision appartient à [responsable] ; retour prévu à [date]. »"
+                    }
+                ],
+                "avoid": "Évite de demander une information qui ne modifierait pas le statut de la proposition.",
+        "practicalAction": "Demande ce qui fragilise son engagement. Si une incertitude décisionnelle est confirmée, identifie la seule donnée nécessaire puis décide dans ton périmètre ou sollicite l'arbitrage. Vérifiez ensuite si la réponse facilite son travail et lui redonne une perspective d'action."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/I/CD",
+            "participant": {
+                "code": "CD",
+                "primary": "C",
+                "secondary": "D"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux évaluer une idée selon des critères exigeants puis imposer le plan qui te paraît le plus efficace. Le cadre gagne en netteté, mais la contribution peut se réduire à exécuter ta solution.",
+                "potentialFriction": "Une idée retenue puis entièrement redéfinie par le manager peut produire un livrable conforme sans préserver l'apport initial du collaborateur.",
+                "recommendedApproach": "Demande ce qui a changé dans son envie de contribuer avant d'évaluer une nouvelle méthode. Si un manque de latitude constitue le frein, clarifie les critères non négociables et laisse le collaborateur proposer la manière de les respecter. Vérifie ensuite si cette autonomie soutient son engagement sans compromettre les exigences reçues de la direction.",
+                "wordsToUse": [
+                    {
+                        "intent": "Critériser",
+                        "text": "« Ces critères sont non négociables : [critères]. »"
+                    },
+                    {
+                        "intent": "Rendre la main",
+                        "text": "« Propose la méthode qui permet de les satisfaire. »"
+                    },
+                    {
+                        "intent": "Prototyper",
+                        "text": "« Quel prototype pouvons-nous examiner au premier jalon ? »"
+                    },
+                    {
+                        "intent": "Porter",
+                        "text": "« Je prends en charge la validation auprès de [interlocuteur]. »"
+                    }
+                ],
+                "avoid": "Évite de retenir une idée puis de remplacer sa méthode par la tienne.",
+        "practicalAction": "Demande ce qui fragilise sa contribution avant de proposer un prototype. Si la latitude sur la méthode répond au frein, rappelle les critères reçus et laisse-la choisir une première réalisation. Vérifiez ensuite le résultat et si cette autonomie soutient son engagement."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/I/CI",
+            "participant": {
+                "code": "CI",
+                "primary": "C",
+                "secondary": "I"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux expliquer précisément pourquoi une idée n'a pas avancé. Cette transparence aide à comprendre, mais elle ne donne pas forcément un statut ni une prochaine action.",
+                "potentialFriction": "Une explication complète suivie de la même relance montre que le collaborateur attend encore une décision opérationnelle.",
+        "recommendedApproach": "Demande quelle difficulté elle souhaite voir traitée et quelle réponse serait réellement utile. Si une proposition sans suite constitue le frein, donne une réponse motivée dans ton périmètre ou formule à la direction une recommandation concise avec son impact sur l'équipe.",
+                "wordsToUse": [
+                    {
+                        "intent": "Demander",
+                        "text": "« Quelle réponse concrète manque encore ? »"
+                    },
+                    {
+                        "intent": "Statuer",
+                        "text": "« La proposition est retenue, refusée ou à compléter. »"
+                    },
+                    {
+                        "intent": "Motiver",
+                        "text": "« Le critère déterminant est [critère]. »"
+                    },
+                    {
+                        "intent": "Recommander",
+                        "text": "« Je porte [recommandation] et reviens à [date]. »"
+                    }
+                ],
+                "avoid": "Évite de remplacer le statut attendu par une explication générale du contexte.",
+        "practicalAction": "Reformule le frein, apporte la réponse relevant de toi ou transmets une recommandation argumentée. Vérifiez ensuite l'action obtenue et si la personne retrouve une contribution qu'elle juge réellement utile."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/I/CS",
+            "participant": {
+                "code": "CS",
+                "primary": "C",
+                "secondary": "S"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux analyser toutes les conséquences d'une idée avant de l'autoriser. Cette prudence protège la continuité ; elle peut différer tout essai alors qu'une mesure provisoire suffirait.",
+                "potentialFriction": "Des propositions suspendues et des relances répétées montrent qu'aucun risque n'a été identifié comme réellement bloquant.",
+        "recommendedApproach": "Identifie ce qui limite son engagement et le soutien prioritaire attendu. Si une mesure provisoire proportionnée répond au frein confirmé, mets-la en œuvre dans ton périmètre sans transfert de charge ; sinon, porte à la direction le risque, l'impact équipe et l'arbitrage demandé.",
+                "wordsToUse": [
+                    {
+                        "intent": "Hiérarchiser",
+                        "text": "« Quel risque interdit réellement l'essai ? »"
+                    },
+                    {
+                        "intent": "Suivre",
+                        "text": "« Quels effets pouvons-nous mesurer pendant l'essai ? »"
+                    },
+                    {
+                        "intent": "Provisoirement agir",
+                        "text": "« Dans mon périmètre, j'autorise [mesure] jusqu'à [date]. »"
+                    },
+                    {
+                        "intent": "Arbitrer",
+                        "text": "« Sinon, je saisis [décideur] et reviens à [date]. »"
+                    }
+                ],
+                "avoid": "Évite de traiter tous les risques comme également bloquants.",
+        "practicalAction": "Identifie avec elle le frein et le soutien prioritaire. Si une mesure provisoire proportionnée est possible, mets-la en œuvre sans transfert ; sinon sollicite l'arbitrage. Vérifiez séparément ses effets sur le travail, le risque suivi et l'envie de contribuer."
+            }
+        }
+    ]
+}

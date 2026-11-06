@@ -1,0 +1,559 @@
+{
+  "schemaVersion": "9.0.0",
+  "documentType": "organisation_role_presentations",
+  "status": "editorial_review",
+  "configurationOrder": ["D", "DI", "DS", "DC", "I", "ID", "IS", "IC", "S", "SD", "SI", "SC", "C", "CD", "CI", "CS"],
+  "roleOrder": ["direction", "management", "contribution", "transversal"],
+  "roleDefinitions": {
+    "direction": "Tu définis le cap, prends les décisions stratégiques et assumes la responsabilité des résultats et des personnes qui te sont confiées.",
+    "management": "Tu accompagnes une équipe au quotidien, organises le travail et aides chacun à progresser pour atteindre les objectifs communs.",
+    "contribution": "Tu apportes ton expertise, tes idées et ton travail à un projet, en coopération avec ton responsable ou tes collègues, sans nécessairement exercer d’autorité hiérarchique.",
+    "transversal": "Tu travailles avec d’autres personnes, équipes ou partenaires autour d’un objectif commun, sans disposer d’autorité directe sur eux."
+  },
+  "presentations": {
+    "D": {
+      "direction": {
+        "role": "Tu définis le cap, prends les décisions stratégiques et assumes la responsabilité des résultats et des personnes qui te sont confiées.",
+        "strengths": [
+          "Tu identifies rapidement les priorités et sais prendre une décision lorsque la situation exige une direction claire.",
+          "Ton orientation vers les résultats t’aide à assumer les arbitrages difficiles et à maintenir l’organisation en mouvement."
+        ],
+        "vigilance": "À force de privilégier l’efficacité et la rapidité, tu peux décider avant d’avoir suffisamment entendu les personnes concernées ou mesuré les effets de l’arbitrage."
+      },
+      "management": {
+        "role": "Tu accompagnes une équipe au quotidien, organises le travail et aides chacun à progresser pour atteindre les objectifs communs.",
+        "strengths": [
+          "Tu poses des attentes nettes et aides l’équipe à concentrer ses efforts sur ce qui produit réellement un résultat.",
+          "Face à un obstacle, tu encourages chacun à chercher une solution et à prendre sa part de responsabilité."
+        ],
+        "vigilance": "Ton exigence d’autonomie peut te faire intervenir trop directement ou, à l’inverse, laisser trop peu de temps à une personne qui a besoin d’explications et d’accompagnement."
+      },
+      "contribution": {
+        "role": "Tu apportes ton expertise, tes idées et ton travail à un projet, en coopération avec ton responsable ou tes collègues, sans nécessairement exercer d’autorité hiérarchique.",
+        "strengths": [
+          "Tu prends facilement l’initiative et proposes des solutions concrètes lorsque le projet rencontre un blocage.",
+          "Tu sais défendre une idée, décider dans ton périmètre et maintenir l’attention sur l’objectif à atteindre."
+        ],
+        "vigilance": "Ton réflexe d’avancer peut te conduire à dépasser ton périmètre ou à engager une action avant d’avoir obtenu les validations nécessaires."
+      },
+      "transversal": {
+        "role": "Tu travailles avec d’autres personnes, équipes ou partenaires autour d’un objectif commun, sans disposer d’autorité directe sur eux.",
+        "strengths": [
+          "Tu aides les partenaires à clarifier l’objectif commun, à trancher les questions en suspens et à passer à l’action.",
+          "Ta franchise permet souvent de rendre visibles les responsabilités, les délais et les décisions encore nécessaires."
+        ],
+        "vigilance": "En cherchant une conclusion rapide, tu peux donner l’impression d’imposer une solution à des partenaires qui restent libres de leurs décisions et de leurs engagements."
+      }
+    },
+    "DI": {
+      "direction": {
+        "role": "Tu définis le cap, prends les décisions stratégiques et assumes la responsabilité des résultats et des personnes qui te sont confiées.",
+        "strengths": [
+          "Tu sais transformer une ambition en décisions concrètes et maintenir l’attention sur les résultats à atteindre.",
+          "Ton aisance relationnelle t’aide à rendre cette direction vivante, à susciter l’adhésion et à entraîner les personnes dans l’action."
+        ],
+        "vigilance": "À vouloir décider rapidement et communiquer ton élan, tu peux laisser trop peu d’espace aux objections, aux signaux faibles ou aux personnes qui ont besoin de davantage de temps."
+      },
+      "management": {
+        "role": "Tu accompagnes une équipe au quotidien, organises le travail et aides chacun à progresser pour atteindre les objectifs communs.",
+        "strengths": [
+          "Tu donnes des priorités claires et encourages ton équipe à prendre des initiatives face aux difficultés.",
+          "Ton énergie communicative t’aide à créer une dynamique stimulante et à mobiliser les personnes autour d’objectifs exigeants."
+        ],
+        "vigilance": "Ton rythme et ton goût du défi peuvent te faire sous-estimer la charge réelle ou le besoin d’accompagnement plus régulier de certains collaborateurs."
+      },
+      "contribution": {
+        "role": "Tu apportes ton expertise, tes idées et ton travail à un projet, en coopération avec ton responsable ou tes collègues, sans nécessairement exercer d’autorité hiérarchique.",
+        "strengths": [
+          "Tu prends volontiers des initiatives et cherches rapidement des solutions qui font avancer le projet.",
+          "Ta capacité à présenter tes idées avec conviction peut donner de l’élan au collectif et faciliter l’adhésion autour de tes propositions."
+        ],
+        "vigilance": "Ton envie d’agir et de convaincre peut te pousser à prendre une décision ou à engager le collectif avant d’avoir clarifié ton périmètre et obtenu les accords nécessaires."
+      },
+      "transversal": {
+        "role": "Tu travailles avec d’autres personnes, équipes ou partenaires autour d’un objectif commun, sans disposer d’autorité directe sur eux.",
+        "strengths": [
+          "Tu sais orienter les échanges vers des résultats concrets et aider les partenaires à identifier les prochaines étapes.",
+          "Ton aisance à créer des liens et à faire circuler l’énergie favorise l’émergence de coopérations concrètes."
+        ],
+        "vigilance": "Tu peux interpréter un échange enthousiaste comme un engagement acquis, alors que chaque partenaire doit encore consulter ses priorités, ses contraintes ou ses décideurs."
+      }
+    },
+    "DS": {
+      "direction": {
+        "role": "Tu définis le cap, prends les décisions stratégiques et assumes la responsabilité des résultats et des personnes qui te sont confiées.",
+        "strengths": [
+          "Tu sais fixer une direction ferme tout en veillant à ce qu’elle puisse être mise en œuvre de manière stable et réaliste.",
+          "Ton attention à la continuité t’aide à soutenir les personnes dans la durée et à sécuriser les étapes qui suivent la décision."
+        ],
+        "vigilance": "Entre ton envie d’avancer et ton souci de préserver la stabilité, tu peux différer une explication délicate puis imposer soudainement une décision lorsque le temps presse."
+      },
+      "management": {
+        "role": "Tu accompagnes une équipe au quotidien, organises le travail et aides chacun à progresser pour atteindre les objectifs communs.",
+        "strengths": [
+          "Tu donnes un cadre clair et restes présent lorsque l’équipe doit persévérer face à une difficulté.",
+          "Ton sens de la stabilité t’aide à répartir les efforts avec constance et à construire une confiance fondée sur des engagements tenus."
+        ],
+        "vigilance": "Tu peux prendre en charge une difficulté pour protéger l’équipe, puis devenir directif si les résultats tardent, sans avoir assez partagé ce changement d’attente."
+      },
+      "contribution": {
+        "role": "Tu apportes ton expertise, tes idées et ton travail à un projet, en coopération avec ton responsable ou tes collègues, sans nécessairement exercer d’autorité hiérarchique.",
+        "strengths": [
+          "Tu avances avec détermination sur les missions qui te sont confiées et gardes le cap malgré les obstacles.",
+          "Ta constance te permet de fiabiliser l’exécution, de soutenir tes collègues et de ne pas abandonner une solution au premier contretemps."
+        ],
+        "vigilance": "Parce que tu veux à la fois obtenir un résultat et préserver les relations, tu peux accumuler une frustration avant d’exprimer trop brusquement ce qui doit changer."
+      },
+      "transversal": {
+        "role": "Tu travailles avec d’autres personnes, équipes ou partenaires autour d’un objectif commun, sans disposer d’autorité directe sur eux.",
+        "strengths": [
+          "Tu aides le groupe à retenir une direction praticable et à maintenir les engagements dans le temps.",
+          "Ton sens de la fiabilité favorise une coopération où chacun sait sur quoi il peut compter et ce qui doit encore être décidé."
+        ],
+        "vigilance": "Tu peux insister sur une solution que tu juges sûre sans rouvrir suffisamment la discussion lorsque les contraintes d’un partenaire évoluent."
+      }
+    },
+    "DC": {
+      "direction": {
+        "role": "Tu définis le cap, prends les décisions stratégiques et assumes la responsabilité des résultats et des personnes qui te sont confiées.",
+        "strengths": [
+          "Tu sais combiner une décision nette avec une analyse rigoureuse des risques, des moyens et des résultats attendus.",
+          "Ton exigence de précision t’aide à construire des orientations solides et à expliquer les critères qui fondent tes arbitrages."
+        ],
+        "vigilance": "Ton besoin de maîtrise peut réduire la consultation à une recherche de confirmation et laisser peu de place aux informations qui remettent en cause ton scénario initial."
+      },
+      "management": {
+        "role": "Tu accompagnes une équipe au quotidien, organises le travail et aides chacun à progresser pour atteindre les objectifs communs.",
+        "strengths": [
+          "Tu clarifies les objectifs, les standards et les responsabilités afin que l’équipe sache précisément ce qui est attendu.",
+          "Ton regard analytique t’aide à repérer les écarts, à résoudre les problèmes de fond et à améliorer les méthodes de travail."
+        ],
+        "vigilance": "Ton niveau d’exigence peut t’amener à corriger surtout ce qui ne va pas, au risque de limiter l’autonomie ou de rendre les progrès moins visibles."
+      },
+      "contribution": {
+        "role": "Tu apportes ton expertise, tes idées et ton travail à un projet, en coopération avec ton responsable ou tes collègues, sans nécessairement exercer d’autorité hiérarchique.",
+        "strengths": [
+          "Tu abordes les problèmes avec l’intention de produire une solution à la fois efficace, argumentée et vérifiable.",
+          "Ta capacité à questionner les hypothèses permet de sécuriser les décisions et d’éviter que le projet avance sur des bases fragiles."
+        ],
+        "vigilance": "Convaincu par la solidité de ton analyse, tu peux défendre ta solution avec une fermeté qui laisse peu de place aux choix relevant de ton responsable ou du collectif."
+      },
+      "transversal": {
+        "role": "Tu travailles avec d’autres personnes, équipes ou partenaires autour d’un objectif commun, sans disposer d’autorité directe sur eux.",
+        "strengths": [
+          "Tu aides les partenaires à objectiver les décisions en distinguant les faits, les risques et les responsabilités de chacun.",
+          "Ton orientation vers le résultat permet de transformer cette analyse en critères d’arbitrage et en étapes concrètes."
+        ],
+        "vigilance": "Tu peux chercher à verrouiller trop tôt le cadre commun et sous-estimer la marge de négociation dont les autres parties ont besoin."
+      }
+    },
+    "I": {
+      "direction": {
+        "role": "Tu définis le cap, prends les décisions stratégiques et assumes la responsabilité des résultats et des personnes qui te sont confiées.",
+        "strengths": [
+          "Tu sais rendre une vision accessible, créer de l’enthousiasme et donner aux personnes l’envie d’y prendre part.",
+          "Ta sensibilité aux réactions du groupe t’aide à repérer les relais capables de faire vivre cette orientation dans l’organisation."
+        ],
+        "vigilance": "L’énergie suscitée par une vision peut te sembler suffisante, alors que certaines décisions, responsabilités ou conditions de réussite restent à préciser."
+      },
+      "management": {
+        "role": "Tu accompagnes une équipe au quotidien, organises le travail et aides chacun à progresser pour atteindre les objectifs communs.",
+        "strengths": [
+          "Tu encourages facilement la participation et sais reconnaître ce que chaque personne apporte à la dynamique collective.",
+          "Ta communication vivante peut rendre les objectifs motivants et aider l’équipe à retrouver de l’élan dans les périodes plus exigeantes."
+        ],
+        "vigilance": "En privilégiant l’enthousiasme et la relation, tu peux laisser les priorités, le suivi ou les attentes individuelles moins explicites qu’ils ne devraient l’être."
+      },
+      "contribution": {
+        "role": "Tu apportes ton expertise, tes idées et ton travail à un projet, en coopération avec ton responsable ou tes collègues, sans nécessairement exercer d’autorité hiérarchique.",
+        "strengths": [
+          "Tu enrichis le projet par tes idées, ta capacité à établir des contacts et ton envie de faire participer les autres.",
+          "Tu sais présenter une proposition de manière engageante et créer les échanges nécessaires pour la faire progresser."
+        ],
+        "vigilance": "La variété des idées et des interactions peut disperser ton effort ou te faire annoncer une possibilité avant d’avoir vérifié sa faisabilité et son niveau de validation."
+      },
+      "transversal": {
+        "role": "Tu travailles avec d’autres personnes, équipes ou partenaires autour d’un objectif commun, sans disposer d’autorité directe sur eux.",
+        "strengths": [
+          "Tu facilites les rencontres, fais circuler l’information et aides des partenaires différents à découvrir ce qu’ils peuvent construire ensemble.",
+          "Ton enthousiasme peut transformer un premier contact en envie de poursuivre la coopération."
+        ],
+        "vigilance": "Une bonne qualité de relation peut te donner le sentiment que l’accord est plus avancé qu’il ne l’est réellement, alors que les engagements restent à formaliser."
+      }
+    },
+    "ID": {
+      "direction": {
+        "role": "Tu définis le cap, prends les décisions stratégiques et assumes la responsabilité des résultats et des personnes qui te sont confiées.",
+        "strengths": [
+          "Tu sais donner du sens à une vision et la rendre suffisamment vivante pour que les personnes aient envie d’y contribuer.",
+          "Lorsque la situation l’exige, ta détermination t’aide à trancher, à affirmer les priorités et à transformer l’enthousiasme en mouvement."
+        ],
+        "vigilance": "Porté par l’élan collectif, tu peux annoncer une orientation ou solliciter un engagement avant d’avoir suffisamment entendu les réserves et vérifié les contraintes."
+      },
+      "management": {
+        "role": "Tu accompagnes une équipe au quotidien, organises le travail et aides chacun à progresser pour atteindre les objectifs communs.",
+        "strengths": [
+          "Tu crées facilement une relation dynamique dans laquelle les personnes se sentent reconnues et encouragées à participer.",
+          "Ta détermination t’aide à fixer des objectifs ambitieux, à recentrer les efforts et à relancer l’équipe lorsque le rythme ralentit."
+        ],
+        "vigilance": "Ton enthousiasme et ton goût des défis peuvent multiplier les sollicitations, au risque de rendre les priorités moins lisibles ou de négliger le suivi individuel."
+      },
+      "contribution": {
+        "role": "Tu apportes ton expertise, tes idées et ton travail à un projet, en coopération avec ton responsable ou tes collègues, sans nécessairement exercer d’autorité hiérarchique.",
+        "strengths": [
+          "Tu fais volontiers circuler les idées, rapproches les personnes et contribues à installer une dynamique constructive.",
+          "Ta détermination t’aide à défendre une proposition et à transformer les discussions en actions concrètes."
+        ],
+        "vigilance": "Ton enthousiasme, renforcé par ta détermination, peut te conduire à occuper beaucoup d’espace ou à élargir le projet avant d’avoir validé cette évolution avec les personnes concernées."
+      },
+      "transversal": {
+        "role": "Tu travailles avec d’autres personnes, équipes ou partenaires autour d’un objectif commun, sans disposer d’autorité directe sur eux.",
+        "strengths": [
+          "Tu sais créer un climat de confiance, relier les personnes et faire émerger des possibilités auxquelles chacun peut contribuer.",
+          "Ta détermination t’aide à donner une suite concrète aux échanges et à maintenir la coopération orientée vers un résultat."
+        ],
+        "vigilance": "À vouloir maintenir l’élan collectif, tu peux rechercher un accord trop rapidement, avant que chaque partenaire ait vérifié ses contraintes et ses possibilités d’engagement."
+      }
+    },
+    "IS": {
+      "direction": {
+        "role": "Tu définis le cap, prends les décisions stratégiques et assumes la responsabilité des résultats et des personnes qui te sont confiées.",
+        "strengths": [
+          "Tu sais fédérer autour d’une vision en prenant soin de la rendre accueillante et compréhensible pour des personnes différentes.",
+          "Ton attention aux relations t’aide à construire une adhésion durable plutôt qu’un enthousiasme seulement ponctuel."
+        ],
+        "vigilance": "Pour préserver la confiance et l’adhésion, tu peux retarder un arbitrage impopulaire ou présenter trop doucement une décision qui demande pourtant de la clarté."
+      },
+      "management": {
+        "role": "Tu accompagnes une équipe au quotidien, organises le travail et aides chacun à progresser pour atteindre les objectifs communs.",
+        "strengths": [
+          "Tu installes une atmosphère chaleureuse où les personnes osent participer, demander de l’aide et partager leurs idées.",
+          "Ta patience relationnelle t’aide à encourager les progrès et à maintenir la cohésion lorsque l’équipe traverse une période exigeante."
+        ],
+        "vigilance": "Ton désir de préserver une bonne ambiance peut te conduire à contourner un recadrage nécessaire ou à accepter trop longtemps des engagements imprécis."
+      },
+      "contribution": {
+        "role": "Tu apportes ton expertise, tes idées et ton travail à un projet, en coopération avec ton responsable ou tes collègues, sans nécessairement exercer d’autorité hiérarchique.",
+        "strengths": [
+          "Tu contribues en créant du lien, en faisant circuler les idées et en invitant chacun à prendre part au projet.",
+          "Ta constance relationnelle t’aide à soutenir les collègues, à maintenir la coopération et à accompagner les propositions jusqu’à leur appropriation."
+        ],
+        "vigilance": "À force de rester disponible et de vouloir préserver le collectif, tu peux accepter trop de demandes ou hésiter à signaler qu’une priorité devient irréaliste."
+      },
+      "transversal": {
+        "role": "Tu travailles avec d’autres personnes, équipes ou partenaires autour d’un objectif commun, sans disposer d’autorité directe sur eux.",
+        "strengths": [
+          "Tu crées facilement un climat d’échange qui permet aux partenaires de se connaître et de faire émerger leurs complémentarités.",
+          "Ton souci de continuité t’aide à entretenir la relation et à garder les personnes reliées au-delà de la première rencontre."
+        ],
+        "vigilance": "Tu peux entretenir une coopération agréable sans demander assez tôt qui s’engage réellement, sur quoi et dans quel délai."
+      }
+    },
+    "IC": {
+      "direction": {
+        "role": "Tu définis le cap, prends les décisions stratégiques et assumes la responsabilité des résultats et des personnes qui te sont confiées.",
+        "strengths": [
+          "Tu sais présenter une vision de manière engageante tout en cherchant les arguments qui la rendent crédible et compréhensible.",
+          "Ton attention aux informations t’aide à adapter ton message et à répondre avec précision aux questions qui pourraient freiner l’adhésion."
+        ],
+        "vigilance": "Tu peux consacrer beaucoup d’énergie à rendre la vision séduisante et irréprochable, au risque de retarder l’arbitrage ou de minimiser une incertitude encore réelle."
+      },
+      "management": {
+        "role": "Tu accompagnes une équipe au quotidien, organises le travail et aides chacun à progresser pour atteindre les objectifs communs.",
+        "strengths": [
+          "Tu sais expliquer les attentes de façon accessible et créer des échanges où chacun peut poser ses questions.",
+          "Ton souci de précision t’aide à structurer les informations, à préparer les étapes et à donner des repères utiles pour progresser."
+        ],
+        "vigilance": "Entre ton envie d’encourager et ton besoin de qualité, tu peux multiplier les explications ou les ajustements sans formuler assez simplement la priorité du moment."
+      },
+      "contribution": {
+        "role": "Tu apportes ton expertise, tes idées et ton travail à un projet, en coopération avec ton responsable ou tes collègues, sans nécessairement exercer d’autorité hiérarchique.",
+        "strengths": [
+          "Tu sais rendre une information technique plus accessible et susciter l’intérêt autour d’une proposition bien préparée.",
+          "Ta vigilance sur la cohérence et les détails t’aide à enrichir les idées du collectif avant leur mise en œuvre."
+        ],
+        "vigilance": "Tu peux continuer à développer ou à présenter une idée alors que le groupe attend surtout une version finalisée, vérifiée et livrée dans le périmètre convenu."
+      },
+      "transversal": {
+        "role": "Tu travailles avec d’autres personnes, équipes ou partenaires autour d’un objectif commun, sans disposer d’autorité directe sur eux.",
+        "strengths": [
+          "Tu facilites la compréhension entre partenaires en reformulant les idées et en rendant les informations complexes plus accessibles.",
+          "Ton souci de cohérence aide le groupe à distinguer l’enthousiasme partagé des conditions précises nécessaires à la coopération."
+        ],
+        "vigilance": "Tu peux vouloir convaincre par une présentation très élaborée sans laisser assez de temps aux partenaires pour exposer leurs propres critères et réserves."
+      }
+    },
+    "S": {
+      "direction": {
+        "role": "Tu définis le cap, prends les décisions stratégiques et assumes la responsabilité des résultats et des personnes qui te sont confiées.",
+        "strengths": [
+          "Tu construis une direction attentive à la continuité, aux personnes et à la capacité réelle de l’organisation à tenir ses engagements.",
+          "Ta constance favorise la confiance et aide les équipes à traverser les changements sans perdre leurs repères essentiels."
+        ],
+        "vigilance": "Ton souci de préserver l’équilibre peut retarder une décision nécessaire ou rendre moins visible la fermeté avec laquelle elle devra ensuite être appliquée."
+      },
+      "management": {
+        "role": "Tu accompagnes une équipe au quotidien, organises le travail et aides chacun à progresser pour atteindre les objectifs communs.",
+        "strengths": [
+          "Tu offres un cadre régulier et une présence fiable qui permettent aux personnes de travailler avec confiance.",
+          "Ton écoute t’aide à repérer les besoins d’accompagnement et à soutenir les progrès sans mettre inutilement les personnes sous pression."
+        ],
+        "vigilance": "Pour éviter de déstabiliser une personne ou l’équipe, tu peux attendre trop longtemps avant de nommer un écart ou de réorganiser le travail."
+      },
+      "contribution": {
+        "role": "Tu apportes ton expertise, tes idées et ton travail à un projet, en coopération avec ton responsable ou tes collègues, sans nécessairement exercer d’autorité hiérarchique.",
+        "strengths": [
+          "Tu contribues avec régularité, prends soin des engagements communs et aides le projet à rester fiable dans la durée.",
+          "Ta disponibilité favorise l’entraide et permet souvent de repérer les difficultés que d’autres n’osent pas encore exprimer."
+        ],
+        "vigilance": "Ta volonté d’aider peut t’amener à absorber une charge supplémentaire ou à suivre une décision qui te préoccupe sans exprimer assez tôt ton désaccord."
+      },
+      "transversal": {
+        "role": "Tu travailles avec d’autres personnes, équipes ou partenaires autour d’un objectif commun, sans disposer d’autorité directe sur eux.",
+        "strengths": [
+          "Tu favorises une coopération patiente où chacun peut être entendu et où les engagements se construisent progressivement.",
+          "Ta fiabilité aide les partenaires à maintenir le lien et à poursuivre l’objectif commun malgré les aléas."
+        ],
+        "vigilance": "Pour préserver la relation, tu peux laisser subsister un désaccord implicite ou un engagement flou qui fragilisera la coopération plus tard."
+      }
+    },
+    "SD": {
+      "direction": {
+        "role": "Tu définis le cap, prends les décisions stratégiques et assumes la responsabilité des résultats et des personnes qui te sont confiées.",
+        "strengths": [
+          "Tu cherches à construire une direction durable, comprise par les personnes et compatible avec les réalités du terrain.",
+          "Lorsque l’arbitrage devient nécessaire, ta détermination t’aide à protéger l’essentiel et à faire avancer l’organisation sans abandonner trop vite la relation."
+        ],
+        "vigilance": "Après avoir longtemps recherché une solution acceptable pour tous, tu peux trancher brusquement lorsque la situation devient urgente, sans préparer suffisamment ce changement de rythme."
+      },
+      "management": {
+        "role": "Tu accompagnes une équipe au quotidien, organises le travail et aides chacun à progresser pour atteindre les objectifs communs.",
+        "strengths": [
+          "Tu accompagnes les personnes avec constance et leur donnes le temps nécessaire pour développer leur autonomie.",
+          "Ta détermination t’aide à défendre les besoins de l’équipe, à maintenir les objectifs et à intervenir quand un obstacle persiste."
+        ],
+        "vigilance": "Tu peux tolérer un écart par patience, puis passer directement à une exigence ferme sans avoir posé assez tôt les étapes du progrès attendu."
+      },
+      "contribution": {
+        "role": "Tu apportes ton expertise, tes idées et ton travail à un projet, en coopération avec ton responsable ou tes collègues, sans nécessairement exercer d’autorité hiérarchique.",
+        "strengths": [
+          "Tu apportes une présence fiable, suis les dossiers avec persévérance et contribues à sécuriser la continuité du projet.",
+          "Quand une difficulté menace le résultat, ta détermination te permet de prendre position et de proposer une action concrète."
+        ],
+        "vigilance": "Tu peux prendre beaucoup sur toi pour préserver le collectif, puis défendre ta solution avec une fermeté inattendue lorsque tes limites sont atteintes."
+      },
+      "transversal": {
+        "role": "Tu travailles avec d’autres personnes, équipes ou partenaires autour d’un objectif commun, sans disposer d’autorité directe sur eux.",
+        "strengths": [
+          "Tu construis la coopération sur la confiance, la continuité et une attention sincère aux contraintes de chaque partenaire.",
+          "Ta détermination aide ensuite le groupe à protéger ses engagements et à ne pas perdre de vue l’objectif commun."
+        ],
+        "vigilance": "Tu peux défendre un accord devenu familier alors qu’une renégociation explicite serait nécessaire pour tenir compte d’une nouvelle réalité."
+      }
+    },
+    "SI": {
+      "direction": {
+        "role": "Tu définis le cap, prends les décisions stratégiques et assumes la responsabilité des résultats et des personnes qui te sont confiées.",
+        "strengths": [
+          "Tu donnes de la continuité à la vision et veilles à ce que les personnes puissent se l’approprier sans perdre leurs repères.",
+          "Ton aisance relationnelle t’aide à expliquer la direction, à maintenir la proximité et à faire vivre le sentiment d’appartenance."
+        ],
+        "vigilance": "Ton souci de préserver la cohésion peut t’amener à adoucir les conséquences d’une décision ou à prolonger la consultation au-delà du temps réellement disponible."
+      },
+      "management": {
+        "role": "Tu accompagnes une équipe au quotidien, organises le travail et aides chacun à progresser pour atteindre les objectifs communs.",
+        "strengths": [
+          "Tu crées un cadre rassurant où les personnes se sentent écoutées et soutenues dans leur progression.",
+          "Ta chaleur relationnelle t’aide à valoriser les efforts, à encourager l’entraide et à maintenir une dynamique positive au quotidien."
+        ],
+        "vigilance": "En voulant rester disponible et encourageant, tu peux éviter une conversation exigeante ou prendre sur toi une difficulté qui devrait être traitée avec la personne concernée."
+      },
+      "contribution": {
+        "role": "Tu apportes ton expertise, tes idées et ton travail à un projet, en coopération avec ton responsable ou tes collègues, sans nécessairement exercer d’autorité hiérarchique.",
+        "strengths": [
+          "Tu assures une contribution régulière et attentive aux besoins des personnes avec lesquelles tu travailles.",
+          "Ton sens du contact t’aide à partager les informations, à encourager les collègues et à rendre la coopération plus fluide."
+        ],
+        "vigilance": "Ta disponibilité et ton envie de répondre positivement peuvent te conduire à accepter des demandes concurrentes sans renégocier clairement tes priorités."
+      },
+      "transversal": {
+        "role": "Tu travailles avec d’autres personnes, équipes ou partenaires autour d’un objectif commun, sans disposer d’autorité directe sur eux.",
+        "strengths": [
+          "Tu prends le temps de construire une relation de confiance et de maintenir les partenaires reliés autour de l’objectif commun.",
+          "Ta communication chaleureuse facilite les échanges réguliers et aide chacun à trouver sa place dans la coopération."
+        ],
+        "vigilance": "La qualité de la relation peut prendre le pas sur la clarification des responsabilités, au risque que chacun reparte avec une compréhension différente de son engagement."
+      }
+    },
+    "SC": {
+      "direction": {
+        "role": "Tu définis le cap, prends les décisions stratégiques et assumes la responsabilité des résultats et des personnes qui te sont confiées.",
+        "strengths": [
+          "Tu recherches une direction durable, attentive aux personnes et suffisamment structurée pour résister aux imprévus.",
+          "Ton souci de précision t’aide à préparer les étapes, à sécuriser les moyens et à éviter des changements qui fragiliseraient inutilement l’organisation."
+        ],
+        "vigilance": "Ton besoin de stabilité et de fiabilité peut prolonger l’analyse ou la préparation alors qu’une décision imparfaite mais réversible serait déjà utile."
+      },
+      "management": {
+        "role": "Tu accompagnes une équipe au quotidien, organises le travail et aides chacun à progresser pour atteindre les objectifs communs.",
+        "strengths": [
+          "Tu offres des repères constants et prends le temps d’expliquer les méthodes qui permettent de produire un travail fiable.",
+          "Ton attention aux détails t’aide à prévenir les difficultés, à soutenir les apprentissages et à améliorer les pratiques sans agitation inutile."
+        ],
+        "vigilance": "Tu peux conserver trop longtemps une organisation familière ou reprendre toi-même une tâche sensible plutôt que d’accompagner une personne dans une nouvelle manière de faire."
+      },
+      "contribution": {
+        "role": "Tu apportes ton expertise, tes idées et ton travail à un projet, en coopération avec ton responsable ou tes collègues, sans nécessairement exercer d’autorité hiérarchique.",
+        "strengths": [
+          "Tu apportes de la continuité, respectes les engagements et veilles à ce que les informations utiles restent accessibles au collectif.",
+          "Ton regard méthodique t’aide à repérer les incohérences et à fiabiliser le travail avant qu’elles ne deviennent des problèmes."
+        ],
+        "vigilance": "Tu peux hésiter à proposer une approche nouvelle ou à signaler rapidement un désaccord tant que tu n’as pas réuni tous les éléments qui te rassurent."
+      },
+      "transversal": {
+        "role": "Tu travailles avec d’autres personnes, équipes ou partenaires autour d’un objectif commun, sans disposer d’autorité directe sur eux.",
+        "strengths": [
+          "Tu contribues à une coopération fiable en clarifiant les processus, les informations attendues et les engagements réciproques.",
+          "Ta constance aide les partenaires à suivre les décisions et à préserver la qualité du travail commun dans la durée."
+        ],
+        "vigilance": "Tu peux rechercher un accord très sécurisé qui protège tous les cas de figure, alors que les partenaires ont besoin de commencer par une expérimentation limitée."
+      }
+    },
+    "C": {
+      "direction": {
+        "role": "Tu définis le cap, prends les décisions stratégiques et assumes la responsabilité des résultats et des personnes qui te sont confiées.",
+        "strengths": [
+          "Tu fondes la direction sur des informations vérifiées, des critères explicites et une compréhension précise des risques.",
+          "Ton exigence de cohérence aide l’organisation à éviter les décisions improvisées et à construire des orientations défendables."
+        ],
+        "vigilance": "La recherche d’une décision suffisamment sûre peut retarder l’arbitrage ou donner aux équipes trop peu de visibilité pendant que tu approfondis encore l’analyse."
+      },
+      "management": {
+        "role": "Tu accompagnes une équipe au quotidien, organises le travail et aides chacun à progresser pour atteindre les objectifs communs.",
+        "strengths": [
+          "Tu définis des méthodes et des critères de qualité qui permettent à l’équipe de savoir comment réussir son travail.",
+          "Ton observation attentive t’aide à identifier les causes d’un problème et à proposer un accompagnement précis plutôt qu’une correction superficielle."
+        ],
+        "vigilance": "Ton attention aux écarts peut rendre les erreurs plus visibles que les progrès et installer une prudence excessive chez les personnes qui apprennent."
+      },
+      "contribution": {
+        "role": "Tu apportes ton expertise, tes idées et ton travail à un projet, en coopération avec ton responsable ou tes collègues, sans nécessairement exercer d’autorité hiérarchique.",
+        "strengths": [
+          "Tu apportes une analyse structurée, vérifies les informations et aides le projet à s’appuyer sur des bases fiables.",
+          "Ta rigueur permet de repérer les risques, de documenter les choix et d’améliorer la qualité des livrables."
+        ],
+        "vigilance": "Tu peux attendre un niveau de certitude ou de finition supérieur à ce que demande la décision, au risque de ralentir une contribution attendue plus tôt."
+      },
+      "transversal": {
+        "role": "Tu travailles avec d’autres personnes, équipes ou partenaires autour d’un objectif commun, sans disposer d’autorité directe sur eux.",
+        "strengths": [
+          "Tu aides les partenaires à partager des définitions, des critères et des informations suffisamment précis pour travailler sans malentendu.",
+          "Ta rigueur facilite la traçabilité des décisions et la répartition claire des responsabilités entre les parties."
+        ],
+        "vigilance": "Tu peux privilégier la solidité du cadre au point de rendre la coopération lourde ou peu adaptable pour des partenaires qui avancent par étapes."
+      }
+    },
+    "CD": {
+      "direction": {
+        "role": "Tu définis le cap, prends les décisions stratégiques et assumes la responsabilité des résultats et des personnes qui te sont confiées.",
+        "strengths": [
+          "Tu analyses les enjeux avec rigueur afin de choisir une direction robuste et de rendre les critères d’arbitrage explicites.",
+          "Ta détermination t’aide à décider lorsque les faits sont suffisants et à défendre la cohérence de l’orientation retenue."
+        ],
+        "vigilance": "Une fois ton analyse consolidée, tu peux fermer rapidement la discussion et sous-estimer les informations nouvelles qui obligeraient à réexaminer la décision."
+      },
+      "management": {
+        "role": "Tu accompagnes une équipe au quotidien, organises le travail et aides chacun à progresser pour atteindre les objectifs communs.",
+        "strengths": [
+          "Tu structures le travail avec des critères précis et aides l’équipe à comprendre les causes réelles des écarts.",
+          "Ta détermination te permet de traiter les problèmes persistants, de fixer des attentes claires et de protéger la qualité attendue."
+        ],
+        "vigilance": "Ton diagnostic peut devenir très direct lorsque les standards ne sont pas respectés, sans laisser assez de place à l’explication ou à l’apprentissage progressif."
+      },
+      "contribution": {
+        "role": "Tu apportes ton expertise, tes idées et ton travail à un projet, en coopération avec ton responsable ou tes collègues, sans nécessairement exercer d’autorité hiérarchique.",
+        "strengths": [
+          "Tu vérifies les hypothèses, construis des solutions argumentées et produis un travail dont la solidité peut être démontrée.",
+          "Ta détermination t’aide à défendre un point technique important et à agir lorsque l’inaction exposerait le projet à un risque réel."
+        ],
+        "vigilance": "La force de tes arguments peut te conduire à présenter une recommandation comme la seule décision acceptable, alors que l’arbitrage final appartient à d’autres."
+      },
+      "transversal": {
+        "role": "Tu travailles avec d’autres personnes, équipes ou partenaires autour d’un objectif commun, sans disposer d’autorité directe sur eux.",
+        "strengths": [
+          "Tu aides les partenaires à établir des critères communs, à identifier les risques et à rendre les désaccords suffisamment précis pour être arbitrés.",
+          "Ta détermination permet au groupe de ne pas contourner les sujets difficiles et d’aboutir à des décisions applicables."
+        ],
+        "vigilance": "Tu peux défendre le cadre le plus rigoureux avec une telle fermeté que les partenaires perçoivent peu la place laissée à leurs propres contraintes et choix."
+      }
+    },
+    "CI": {
+      "direction": {
+        "role": "Tu définis le cap, prends les décisions stratégiques et assumes la responsabilité des résultats et des personnes qui te sont confiées.",
+        "strengths": [
+          "Tu construis une vision cohérente, nourrie par des informations vérifiées et des critères que tu peux expliquer.",
+          "Ton sens de la communication t’aide à traduire cette analyse en un message accessible et à répondre aux questions qui conditionnent l’adhésion."
+        ],
+        "vigilance": "Tu peux chercher la formulation et l’argumentation les plus convaincantes alors que les équipes ont surtout besoin d’un arbitrage clair, même encore perfectible."
+      },
+      "management": {
+        "role": "Tu accompagnes une équipe au quotidien, organises le travail et aides chacun à progresser pour atteindre les objectifs communs.",
+        "strengths": [
+          "Tu apportes des repères précis et prends le temps d’expliquer pourquoi une méthode ou un niveau de qualité est nécessaire.",
+          "Ton aisance à reformuler t’aide à rendre les sujets complexes plus accessibles et à adapter l’accompagnement aux questions de l’équipe."
+        ],
+        "vigilance": "Tu peux donner beaucoup d’informations ou rechercher l’adhésion intellectuelle complète avant de laisser la personne expérimenter et apprendre par elle-même."
+      },
+      "contribution": {
+        "role": "Tu apportes ton expertise, tes idées et ton travail à un projet, en coopération avec ton responsable ou tes collègues, sans nécessairement exercer d’autorité hiérarchique.",
+        "strengths": [
+          "Tu produis une contribution structurée et sais rendre ses enjeux compréhensibles pour des personnes qui ne partagent pas ton expertise.",
+          "Ta capacité à créer le dialogue facilite la collecte d’informations et permet d’améliorer une solution avant sa finalisation."
+        ],
+        "vigilance": "Tu peux prolonger les échanges pour affiner ou faire reconnaître ton analyse, alors que ton responsable ou le collectif attend une recommandation plus concise."
+      },
+      "transversal": {
+        "role": "Tu travailles avec d’autres personnes, équipes ou partenaires autour d’un objectif commun, sans disposer d’autorité directe sur eux.",
+        "strengths": [
+          "Tu aides des partenaires aux langages différents à se comprendre en clarifiant les notions, les données et les attentes.",
+          "Ton sens du contact rend cette rigueur plus accessible et favorise la construction d’un cadre commun accepté."
+        ],
+        "vigilance": "À vouloir obtenir une compréhension partagée très complète, tu peux alourdir les échanges ou retarder un premier accord limité mais utile."
+      }
+    },
+    "CS": {
+      "direction": {
+        "role": "Tu définis le cap, prends les décisions stratégiques et assumes la responsabilité des résultats et des personnes qui te sont confiées.",
+        "strengths": [
+          "Tu prépares la direction avec méthode, en vérifiant les risques, les ressources et la cohérence des différentes étapes.",
+          "Ton souci de stabilité t’aide à mesurer la capacité des personnes à mettre cette orientation en œuvre dans la durée."
+        ],
+        "vigilance": "Ton besoin de fiabilité et de continuité peut te faire conserver trop longtemps une orientation connue ou retarder une décision dont les données resteront incomplètes."
+      },
+      "management": {
+        "role": "Tu accompagnes une équipe au quotidien, organises le travail et aides chacun à progresser pour atteindre les objectifs communs.",
+        "strengths": [
+          "Tu poses un cadre méthodique et veilles à ce que chacun dispose des informations nécessaires pour produire un travail fiable.",
+          "Ta patience t’aide à accompagner les apprentissages, à suivre les progrès et à consolider les bonnes pratiques dans le temps."
+        ],
+        "vigilance": "Tu peux sécuriser le travail en multipliant les contrôles ou en conservant les tâches sensibles, ce qui limite progressivement l’autonomie de l’équipe."
+      },
+      "contribution": {
+        "role": "Tu apportes ton expertise, tes idées et ton travail à un projet, en coopération avec ton responsable ou tes collègues, sans nécessairement exercer d’autorité hiérarchique.",
+        "strengths": [
+          "Tu apportes une expertise précise, documentes les choix et veilles à ce que la contribution puisse être utilisée sans créer de difficulté ultérieure.",
+          "Ta constance te permet de suivre les détails dans la durée et de préserver la qualité lorsque le projet se complexifie."
+        ],
+        "vigilance": "Tu peux continuer à sécuriser ou à perfectionner ta contribution alors qu’une version intermédiaire permettrait déjà au collectif d’avancer et de te faire un retour."
+      },
+      "transversal": {
+        "role": "Tu travailles avec d’autres personnes, équipes ou partenaires autour d’un objectif commun, sans disposer d’autorité directe sur eux.",
+        "strengths": [
+          "Tu aides les partenaires à construire un fonctionnement fiable, avec des règles compréhensibles et des engagements suivis dans le temps.",
+          "Ton attention à la continuité permet de préserver la qualité de la coopération au-delà des premières décisions."
+        ],
+        "vigilance": "Tu peux privilégier un cadre très stable et détaillé alors que la coopération exige encore des essais, des ajustements et une répartition évolutive des responsabilités."
+      }
+    }
+  }
+}

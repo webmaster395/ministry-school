@@ -39,6 +39,7 @@ type SaveState = "saved" | "pending" | "saving" | "offline" | "error";
 
 function resultScores(bundle: MappResultBundle) {
   return bundle.scores
+    .filter((row) => !row.context || row.context === "natural")
     .map((row) => ({
       code: String(row.dimensionCode ?? ""),
       name: String(row.dimensionName ?? row.dimensionCode ?? "Profil"),
@@ -61,7 +62,7 @@ const officialTieBreakQuestions = tieBreakQuestions as Array<{
   options: Record<ResultProfileCode, string>;
 }>;
 
-function ResultPanel({ bundle, onResolved }: { bundle: MappResultBundle; onResolved: (bundle: MappResultBundle) => void }) {
+export function ResultPanel({ bundle, onResolved }: { bundle: MappResultBundle; onResolved: (bundle: MappResultBundle) => void }) {
   const scores = resultScores(bundle);
   const classification = applyTieBreak(
     scores.map((score) => ({ code: score.code, value: score.percentage })),

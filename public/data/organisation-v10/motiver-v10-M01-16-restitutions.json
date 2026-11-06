@@ -1,0 +1,565 @@
+{
+  "schemaVersion": "10.0.0",
+  "lot": "M01",
+  "status": "ready_for_external_review",
+  "scope": {
+    "role": "direction",
+    "context": "personnes_sous_responsabilite",
+    "situation": "motiver",
+    "counterpart": "D",
+    "expectedRestitutions": 16,
+    "configurations": [
+      "D",
+      "DI",
+      "DS",
+      "DC",
+      "I",
+      "ID",
+      "IS",
+      "IC",
+      "S",
+      "SD",
+      "SI",
+      "SC",
+      "C",
+      "CD",
+      "CI",
+      "CS"
+    ]
+  },
+  "validation": {
+    "codexAuthorReview": "completed",
+    "chatgptReview": "not_started",
+    "userValidation": "not_started"
+  },
+  "restitutions": [
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/D/D",
+      "participant": {
+        "code": "D",
+        "primary": "D",
+        "secondary": null
+      },
+      "content": {
+        "yourLikelyReflex": "Quand l'engagement baisse, tu peux vouloir rétablir rapidement un cap, lever l'obstacle principal et demander une avancée visible. Cette franchise peut rendre la situation plus lisible. Elle peut aussi te conduire à augmenter l'exigence avant de savoir si la personne manque de marge, de moyens, de priorité claire ou d'utilité perçue.",
+        "potentialFriction": "Une personne Conquérante peut accorder beaucoup de valeur à sa capacité d'influencer le résultat. Si tu fixes seul un nouveau défi ou interprètes son retrait comme un manque d'ambition, elle peut défendre son autonomie plutôt que décrire le frein réel, et produire un sursaut sans engagement durable.",
+        "recommendedApproach": "Demande quel résultat est aujourd'hui bloqué et ce qui empêche directement son avancée. Fais hiérarchiser un seul obstacle, puis décide explicitement de le lever, de le maintenir ou de le faire arbitrer. Clarifie le résultat non négociable, laisse la méthode à la personne et vérifiez si l'étape auparavant bloquée avance sans relance supplémentaire.",
+        "wordsToUse": [
+          {
+            "intent": "Observer",
+            "text": "« J'ai remarqué [changement observable]. Comment comprends-tu ce qui a changé ? »"
+          },
+          {
+            "intent": "Cibler",
+            "text": "« Quel obstacle limite le plus ta capacité d'agir aujourd'hui ? »"
+          },
+          {
+            "intent": "Décider",
+            "text": "« Je vais agir sur [levier relevant de la direction]. »"
+          },
+          {
+            "intent": "Autonomiser",
+            "text": "« Le résultat attendu est [résultat] ; tu peux décider de [marge]. »"
+          }
+        ],
+        "avoid": "Évite de répondre à une capacité d'action réduite par une ambition ou une pression supplémentaire.",
+        "practicalAction": "Lors du prochain échange, identifiez le frein principal à sa capacité d'agir. Décide d'un ajustement relevant de ton autorité ou fixe une échéance réaliste pour l'arbitrage nécessaire. Au point suivant, vérifiez si cet ajustement a réellement facilité sa contribution et son autonomie."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/D/DI",
+      "participant": {
+        "code": "DI",
+        "primary": "D",
+        "secondary": "I"
+      },
+      "content": {
+        "yourLikelyReflex": "Quand l'engagement baisse, tu peux vouloir recréer rapidement de l'élan autour d'un résultat ambitieux. Ta dominante Conquérante cherche le levier qui remettra l'action en mouvement ; ton secondaire Communiquant donne du relief à la perspective et sait entraîner. Cette combinaison peut toutefois te faire confondre la réaction positive d'une personne Conquérante avec un engagement restauré, alors que cette réaction peut seulement traduire un intérêt pour le défi, sans indiquer que les conditions d'un engagement durable sont réunies.",
+        "potentialFriction": "Une personne Conquérante peut accorder une importance particulière à sa marge d'action, à la clarté des décisions et à son influence sur le résultat. Elle peut accueillir ton ambition sans exposer immédiatement une priorité contradictoire, un moyen manquant, une responsabilité devenue trop étroite ou un désaccord avec le cadre. Si tu relances par un objectif plus stimulant avant d'avoir identifié ce qui limite réellement sa capacité d'agir, vous risquez d'obtenir un sursaut bref suivi du même retrait.",
+        "recommendedApproach": "Pars d'un changement observable dans sa contribution et demande ce qui a rendu l'action moins utile, moins possible ou moins maîtrisable. Laisse-la distinguer l'obstacle concret de ce qu'elle souhaiterait pouvoir décider. Choisis ensuite un seul levier relevant de la direction — arbitrage, moyen, priorité ou marge de décision — et précise le résultat attendu sans transformer l'échange en discours mobilisateur. Convenez enfin d'un repère qui permettra de vérifier si le changement restaure réellement sa capacité d'agir.",
+        "wordsToUse": [
+          {
+            "intent": "Observer",
+            "text": "« J'ai remarqué [changement observable] dans ta contribution. Comment comprends-tu ce qui a changé ? »"
+          },
+          {
+            "intent": "Identifier le frein",
+            "text": "« Qu'est-ce qui limite le plus aujourd'hui ta capacité à obtenir le résultat attendu ? »"
+          },
+          {
+            "intent": "Rendre la main",
+            "text": "« Sur quelle décision ou responsabilité aurais-tu besoin d'une marge plus claire ? »"
+          },
+          {
+            "intent": "Décider",
+            "text": "« Je vais agir sur [levier relevant de la direction] ; nous vérifierons son effet avec [repère]. »"
+          }
+        ],
+        "avoid": "Évite d'augmenter l'ambition ou la pression pour provoquer un regain d'énergie : si le frein porte sur les moyens, les priorités ou la latitude réelle, tu ne ferais que demander davantage dans les mêmes conditions.",
+        "practicalAction": "Lors du prochain échange, identifiez un obstacle précis à sa contribution. Décide de l'ajustement relevant de la direction ou sollicite l'arbitrage nécessaire, puis convenez d'un moment pour vérifier si la personne dispose de meilleures conditions pour s'engager durablement."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/D/DS",
+      "participant": {
+        "code": "DS",
+        "primary": "D",
+        "secondary": "S"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux chercher une issue concrète tout en voulant protéger la personne et la continuité. Ta dominante Conquérante pousse à lever l'obstacle ; ton secondaire Facilitateur t'incite à rendre la suite soutenable. Tu peux cependant décider d'un allègement avant de savoir quelle responsabilité donne encore du sens à sa contribution.",
+        "potentialFriction": "Une personne Conquérante peut accueillir un soutien tout en vivant une protection non demandée comme une réduction de confiance ou d'autonomie. Retirer une difficulté sans distinguer charge inutile et responsabilité utile peut affaiblir davantage son engagement.",
+        "recommendedApproach": "Demande quel résultat elle veut encore pouvoir obtenir, ce qui l'en empêche et ce qu'elle tient à conserver sous sa responsabilité. Ajuste un moyen ou une contrainte relevant de toi sans reprendre la conduite du sujet. Fixez une durée et un signe permettant d'évaluer si le soutien libère réellement sa capacité d'agir.",
+        "wordsToUse": [
+          {
+            "intent": "Projeter",
+            "text": "« Quel résultat veux-tu encore pouvoir obtenir sur ce sujet ? »"
+          },
+          {
+            "intent": "Préserver",
+            "text": "« Quelle responsabilité tiens-tu à garder entièrement ? »"
+          },
+          {
+            "intent": "Soutenir",
+            "text": "« Regardons quelle contrainte je peux alléger sans te retirer la responsabilité que tu souhaites conserver. »"
+          },
+          {
+            "intent": "Vérifier",
+            "text": "« Quel signe montrera que cet appui te rend davantage la main ? »"
+          }
+        ],
+        "avoid": "Évite de confondre soutien et retrait de responsabilité.",
+        "practicalAction": "Pendant une étape, retire une contrainte choisie avec la personne tout en maintenant la responsabilité qu'elle veut exercer, puis vérifiez si son autonomie et sa contribution progressent."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/D/DC",
+      "participant": {
+        "code": "DC",
+        "primary": "D",
+        "secondary": "C"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux vouloir isoler rapidement la cause, confronter les indicateurs et corriger le point qui empêche le résultat. Ta dominante Conquérante vise l'effet ; ton secondaire Analyste sécurise le diagnostic. Tu peux ainsi conclure à partir des données avant d'avoir entendu ce qu'elles ne montrent pas de la capacité d'agir.",
+        "potentialFriction": "Une personne Conquérante peut apprécier une analyse brève mais contester un diagnostic qui transforme son expérience en problème de performance. Si votre échange devient une compétition de lectures, le frein d'engagement reste intact.",
+        "recommendedApproach": "Présente deux faits observables et formule ton interprétation comme une hypothèse. Demande ce qu'ils ne montrent pas, puis laisse la personne qualifier la nature du frein que les indicateurs laissent hors champ. Corrige un élément relevant de la direction et convenez d'un critère simple d'effet.",
+        "wordsToUse": [
+          {
+            "intent": "Factualiser",
+            "text": "« J'observe [fait 1] et [fait 2], sans en déduire encore la cause. »"
+          },
+          {
+            "intent": "Corriger la lecture",
+            "text": "« Qu'est-ce que ces faits ne montrent pas de la situation ? »"
+          },
+          {
+            "intent": "Distinguer",
+            "text": "« Le frein vient-il du fonctionnement, d'une décision ou d'une marge insuffisante ? »"
+          },
+          {
+            "intent": "Tester",
+            "text": "« Je corrige [élément] ; observons [critère] jusqu'à [repère]. »"
+          }
+        ],
+        "avoid": "Évite de présenter ton diagnostic comme la conclusion obligatoire des indicateurs.",
+        "practicalAction": "Révisez ensemble, si nécessaire, une hypothèse issue des indicateurs, testez pendant un cycle un levier de direction limité et comparez le critère convenu avant et après."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/D/I",
+      "participant": {
+        "code": "I",
+        "primary": "I",
+        "secondary": null
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux vouloir redonner envie par une vision vivante, des possibilités et une reconnaissance chaleureuse. Ton énergie facilite l'expression, mais elle peut remplir l'espace avant que le frein soit nommé et produire un moment positif sans modifier les conditions du travail.",
+        "potentialFriction": "Une personne Conquérante peut apprécier ton optimisme tout en attendant surtout une décision, une priorité ou une marge réelle. Si le message inspirant remplace l'arbitrage, elle peut y entendre une demande d'effort supplémentaire.",
+        "recommendedApproach": "Commence par un fait observable et laisse la personne expliquer ce qui a changé. Reformule le frein sans le positiver, puis demande quelle réponse de direction aurait un effet concret. Décide d'un levier, annonce ce qui ne peut pas changer et rends la suite visible.",
+        "wordsToUse": [
+          {
+            "intent": "Observer",
+            "text": "« J'ai remarqué [fait]. Qu'est-ce qui a changé pour toi ? »"
+          },
+          {
+            "intent": "Reformuler",
+            "text": "« Si je comprends bien, le frein principal est [frein]. Est-ce exact ? »"
+          },
+          {
+            "intent": "Décider",
+            "text": "« Je vais agir sur [point] avant [date]. »"
+          },
+          {
+            "intent": "Dire la limite",
+            "text": "« [Contrainte] restera présente ; voici la marge que je peux créer. »"
+          }
+        ],
+        "avoid": "Évite de remplacer une décision attendue par un discours stimulant ou une reconnaissance générale.",
+        "practicalAction": "Au prochain échange, limite-toi à une reformulation du frein et une décision datée relevant de toi, puis rends compte de son effet avant d'ouvrir de nouvelles pistes."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/D/ID",
+      "participant": {
+        "code": "ID",
+        "primary": "I",
+        "secondary": "D"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux d'abord chercher à rouvrir le dialogue, faire circuler des idées et redonner envie par une perspective vivante. Ta dominante Communicante mise sur l'échange pour faire émerger un nouvel élan ; ton secondaire Conquérant veut ensuite convertir rapidement cet élan en décision. Tu peux ainsi retenir l'idée la plus stimulante avant d'avoir compris ce que la personne ne veut ou ne peut plus porter dans les conditions actuelles.",
+        "potentialFriction": "Une personne Conquérante peut volontiers entrer dans cette dynamique et proposer aussitôt une initiative forte. Pourtant, son retrait peut venir moins d'un manque d'idées que d'une responsabilité sans portée, d'arbitrages incohérents, d'un obstacle récurrent ou d'une décision qu'elle subit. Si vous choisissez trop vite une nouveauté séduisante, elle retrouvera peut-être de l'enthousiasme sans retrouver une influence réelle ni un engagement durable.",
+        "recommendedApproach": "Ouvre largement l'échange, puis ralentis avant de sélectionner une solution. Fais distinguer ce qui a perdu du sens, ce qui empêche d'agir et la responsabilité que la personne voudrait réellement exercer. Vérifie avec elle si l'idée envisagée traite ce frein ou lui offre seulement un nouveau terrain stimulant. Lorsque le lien est établi, décide d'une expérimentation qui lui rend une influence utile dans un cadre explicite, puis évaluez sa soutenabilité après une première étape.",
+        "wordsToUse": [
+          {
+            "intent": "Ouvrir",
+            "text": "« Qu'est-ce qui a changé dans ton envie de porter cette mission ? »"
+          },
+          {
+            "intent": "Approfondir",
+            "text": "« Qu'aimerais-tu pouvoir influencer ou reprendre réellement en main ? »"
+          },
+          {
+            "intent": "Éprouver l'idée",
+            "text": "« Cette piste agit-elle sur le frein que tu viens de nommer, ou crée-t-elle surtout de la nouveauté ? »"
+          },
+          {
+            "intent": "Cadrer",
+            "text": "« Je peux te confier [responsabilité] avec cette marge de décision : [marge]. »"
+          }
+        ],
+        "avoid": "Évite de prendre l'enthousiasme produit par une nouvelle idée pour la preuve que l'engagement est revenu ; vérifie que la personne retrouve une responsabilité utile et tenable, pas seulement un projet attirant.",
+        "practicalAction": "Fais-lui choisir une responsabilité qu'elle souhaite reprendre et définis une décision qu'elle pourra réellement prendre sans revenir vers toi. Après une première étape, vérifiez si cette marge a accru sa capacité d'agir plutôt que son seul enthousiasme."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/D/IS",
+      "participant": {
+        "code": "IS",
+        "primary": "I",
+        "secondary": "S"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux créer un espace chaleureux, reconnaître les efforts et mobiliser du soutien autour de la personne. Ta dominante Communicante ouvre la parole ; ton secondaire Facilitateur protège le lien. Tu peux toutefois personnaliser une difficulté professionnelle ou te rendre responsable de son moral.",
+        "potentialFriction": "Une personne Conquérante peut apprécier ta loyauté tout en voulant maîtriser ce qu'elle partage et conserver la main. Un soutien collectif ou une attention insistante peut masquer la décision ou la ressource qui manque réellement.",
+        "recommendedApproach": "Reconnais une contribution précise, puis recentre sur le travail sans solliciter de confidence. Demande quel frein professionnel peut être traité par la direction et quel appui elle accepte. Agis sur un point circonscrit, avec son accord sur les personnes informées, puis vérifiez l'utilité réelle du soutien.",
+        "wordsToUse": [
+          {
+            "intent": "Reconnaître",
+            "text": "« Ta contribution sur [fait] a produit [effet]. »"
+          },
+          {
+            "intent": "Recentrer",
+            "text": "« Qu'est-ce qui, dans le travail, devient difficile à maintenir ? »"
+          },
+          {
+            "intent": "Respecter",
+            "text": "« Qui souhaites-tu associer, si quelqu'un doit l'être ? »"
+          },
+          {
+            "intent": "Offrir",
+            "text": "« Je peux agir sur [point précis] en limitant les informations partagées à ce qui est nécessaire. »"
+          }
+        ],
+        "avoid": "Évite de faire dépendre l'aide d'une ouverture personnelle ou d'une mobilisation collective.",
+        "practicalAction": "Avec son accord sur les informations qui peuvent être partagées, traite un frein professionnel précis en limitant le partage aux personnes nécessaires, puis observez ensemble si l'engagement devient plus stable sans coût relationnel supplémentaire."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/D/IC",
+      "participant": {
+        "code": "IC",
+        "primary": "I",
+        "secondary": "C"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux vouloir tout mettre à plat par le dialogue, relier les causes et expliquer clairement les choix possibles. Ta dominante Communicante explore ; ton secondaire Analyste ordonne. L'échange peut devenir riche et cohérent sans produire la réponse concrète attendue.",
+        "potentialFriction": "Une personne Conquérante peut contribuer à l'analyse tant qu'elle mène vers une capacité d'action. Si les hypothèses s'accumulent, elle peut imposer sa propre conclusion ou se retirer avant que le frein réel soit isolé.",
+        "recommendedApproach": "Demande le résultat qu'elle ne parvient plus à obtenir et limite l'exploration au facteur qui l'empêche. Distingue faits, hypothèses et décision attendue. Arrête l'analyse dès qu'un levier de direction peut être essayé, puis mesurez son effet avant de rouvrir les causes secondaires.",
+        "wordsToUse": [
+          {
+            "intent": "Orienter",
+            "text": "« Quel résultat ne parviens-tu plus à obtenir dans le cadre actuel ? »"
+          },
+          {
+            "intent": "Prioriser",
+            "text": "« Quel facteur bloque le plus directement ce résultat ? »"
+          },
+          {
+            "intent": "Distinguer",
+            "text": "« Qu'est-ce qui est établi et qu'est-ce qui reste une hypothèse ? »"
+          },
+          {
+            "intent": "Agir",
+            "text": "« Je peux modifier [levier] et observer [effet]. »"
+          }
+        ],
+        "avoid": "Évite de confondre compréhension complète et condition préalable à l'action.",
+        "practicalAction": "Clôture le prochain diagnostic par une seule hypothèse testable, essayez pendant une étape un ajustement limité et réversible, puis comparez son effet au résultat empêché."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/D/S",
+      "participant": {
+        "code": "S",
+        "primary": "S",
+        "secondary": null
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux écouter longtemps, préserver la relation et éviter d'ajouter de la pression. Cette patience facilite une parole nuancée, mais elle peut retarder l'arbitrage dont la personne a besoin pour retrouver une prise sur son résultat.",
+        "potentialFriction": "Une personne Conquérante peut apprécier l'écoute tout en interprétant l'absence de décision comme un manque de cap. Si tu compenses par davantage de disponibilité, le frein opérationnel demeure.",
+        "recommendedApproach": "Annonce que l'échange doit conduire à une réponse de direction. Écoute ce qui est devenu moins utile ou moins possible, puis reformule le choix attendu. Prends la décision relevant de toi, ou donne le délai et le responsable de l'arbitrage qui te dépasse.",
+        "wordsToUse": [
+          {
+            "intent": "Cadrer",
+            "text": "« Je veux comprendre et te donner une réponse sur [point]. »"
+          },
+          {
+            "intent": "Écouter",
+            "text": "« Qu'est-ce qui empêche aujourd'hui ton action d'avoir l'effet attendu ? »"
+          },
+          {
+            "intent": "Arbitrer",
+            "text": "« Je décide [décision] afin de lever [frein]. »"
+          },
+          {
+            "intent": "Suivre",
+            "text": "« Nous vérifierons à [date] ce que cette décision change. »"
+          }
+        ],
+        "avoid": "Évite de prolonger l'écoute lorsque l'absence de décision nourrit elle-même le retrait.",
+        "practicalAction": "Prends sous un délai annoncé une décision sur le frein nommé, puis mesure avec la personne un effet concret sur sa capacité d'avancer."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/D/SD",
+      "participant": {
+        "code": "SD",
+        "primary": "S",
+        "secondary": "D"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux d'abord sécuriser la relation et accueillir la difficulté, puis trancher pour sortir la personne de l'impasse. Ta dominante Facilitatrice écoute ; ton secondaire Conquérant finit par agir. Le basculement peut toutefois lui retirer la conduite d'un sujet qu'elle voulait encore assumer.",
+        "potentialFriction": "Une personne Conquérante peut se sentir entendue puis dépossédée si la solution est décidée sans elle. Même favorable, une reprise en main peut confirmer que son influence s'est réduite.",
+        "recommendedApproach": "Reconnais la difficulté et demande quelle responsabilité elle veut préserver. Présente les options qui relèvent de ton rôle, laisse-la proposer la première étape et annonce clairement l'arbitrage que toi seul dois rendre. Vérifiez ensuite si la répartition rend réellement de la prise.",
+        "wordsToUse": [
+          {
+            "intent": "Reconnaître",
+            "text": "« Je vois l'effet de [difficulté] sur ta capacité d'agir. »"
+          },
+          {
+            "intent": "Préserver",
+            "text": "« Quelle responsabilité veux-tu continuer à conduire ? »"
+          },
+          {
+            "intent": "Choisir",
+            "text": "« Quelle première étape souhaites-tu porter ? »"
+          },
+          {
+            "intent": "Arbitrer",
+            "text": "« Je prends la décision [décision] ; tu gardes la main sur [périmètre]. »"
+          }
+        ],
+        "avoid": "Évite de faire de l'écoute le prélude à une solution déjà conçue.",
+        "practicalAction": "Construisez une première étape où elle conserve une décision réelle, rends l'arbitrage qui relève de toi et vérifiez après l'étape si la répartition accroît son influence utile."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/D/SI",
+      "participant": {
+        "code": "SI",
+        "primary": "S",
+        "secondary": "I"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux chercher à restaurer la confiance, rappeler la valeur de la personne et recréer des liens autour de sa contribution. Ta dominante Facilitatrice sécurise ; ton secondaire Communiquant rend le soutien visible. Tu peux néanmoins améliorer le climat sans rendre à son action une utilité ou une suite réelle.",
+        "potentialFriction": "Une personne Conquérante peut apprécier la reconnaissance tout en la jugeant compensatoire si ses décisions restent sans effet. Une meilleure ambiance ne remplace ni une priorité claire ni une réponse à ses propositions.",
+        "recommendedApproach": "Reconnais un effet précis, puis demande ce que cette reconnaissance ne résout pas. Identifie la contribution dont elle veut retrouver l'utilité et le destinataire capable de lui donner une suite. Agis ou fais répondre ce destinataire sans promettre un soutien collectif non confirmé.",
+        "wordsToUse": [
+          {
+            "intent": "Reconnaître",
+            "text": "« Ton action sur [fait] a permis [effet]. »"
+          },
+          {
+            "intent": "Approfondir",
+            "text": "« Qu'est-ce que cette reconnaissance ne résout pas ? »"
+          },
+          {
+            "intent": "Cibler",
+            "text": "« Quelle contribution devrait recevoir une suite plus visible ? »"
+          },
+          {
+            "intent": "Donner suite",
+            "text": "« Je vais obtenir une réponse de [responsable] avant [date]. »"
+          }
+        ],
+        "avoid": "Évite de substituer visibilité et reconnaissance à une suite concrète.",
+        "practicalAction": "Choisissez une contribution restée sans suite ; donne la réponse qui relève de ta direction ou nomme le décideur requis avec une échéance, puis vérifiez si cette suite restaure une utilité réelle."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/D/SC",
+      "participant": {
+        "code": "SC",
+        "primary": "S",
+        "secondary": "C"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux écouter, examiner les conditions et chercher l'ajustement le moins déstabilisant. Ta dominante Facilitatrice protège la continuité ; ton secondaire Analyste sécurise la réponse. Cette prudence peut ajouter des vérifications alors que l'immobilité réduit déjà l'engagement.",
+        "potentialFriction": "Une personne Conquérante peut percevoir une succession de précautions comme de nouveaux contrôles. Si aucune incertitude déterminante n'est isolée, elle ne voit plus quelle action reste possible.",
+        "recommendedApproach": "Demande quel résultat est empêché et quelle vérification constitue réellement un obstacle. Distingue les contrôles indispensables des précautions facultatives, sans présumer que la prudence explique la baisse d'engagement. Si un essai limité est possible dans ton périmètre, définis ses conditions et son critère d'arrêt ; sinon, précise l'arbitrage nécessaire et son échéance.",
+        "wordsToUse": [
+          {
+            "intent": "Cibler",
+            "text": "« Quel résultat est empêché aujourd'hui ? »"
+          },
+          {
+            "intent": "Prioriser",
+            "text": "« Quelle inconnue changerait réellement le risque ? »"
+          },
+          {
+            "intent": "Expérimenter",
+            "text": "« J'autorise cet essai dans les limites suivantes : [limites]. »"
+          },
+          {
+            "intent": "Sécuriser",
+            "text": "« Nous l'arrêterons si [critère]. »"
+          }
+        ],
+        "avoid": "Évite d'ajouter un contrôle sans dire quel risque il protège.",
+        "practicalAction": "Si cela relève de ton autorité, remplace pendant un cycle une vérification non déterminante par un critère de résultat ; sinon, sollicite l'arbitrage nécessaire. Puis comparez le risque observé et la capacité d'action retrouvée."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/D/C",
+      "participant": {
+        "code": "C",
+        "primary": "C",
+        "secondary": null
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux vouloir établir les causes avec précision avant de décider. Cette rigueur protège des réponses superficielles, mais elle peut transformer la baisse d'engagement en problème de processus et différer un levier déjà suffisamment compris.",
+        "potentialFriction": "Une personne Conquérante peut apprécier les faits tout en se décourageant si l'analyse ne débouche sur aucune marge nouvelle. Elle peut répondre brièvement à tes questions ou contester leur utilité, sans que cela prouve la cause de son retrait.",
+        "recommendedApproach": "Présente les faits disponibles et demande ce qu'ils ne montrent pas. Identifiez l'information nécessaire à une décision, pas à une certitude complète. Arbitre un levier proportionné et annonce l'incertitude restante sans demander à la personne de démontrer sa démotivation.",
+        "wordsToUse": [
+          {
+            "intent": "Observer",
+            "text": "« J'observe [faits] ; qu'est-ce qu'ils expliquent mal ? »"
+          },
+          {
+            "intent": "Cibler",
+            "text": "« Quelle information changerait réellement ma décision ? »"
+          },
+          {
+            "intent": "Décider",
+            "text": "« Ces éléments suffisent pour que j'agisse sur [levier]. »"
+          },
+          {
+            "intent": "Vérifier",
+            "text": "« Nous observerons [critère] jusqu'à [date]. »"
+          }
+        ],
+        "avoid": "Évite d'exiger la preuve complète d'un frein avant d'agir sur un obstacle crédible.",
+        "practicalAction": "Révise avec elle une hypothèse de ton diagnostic, décide d'un ajustement limité malgré l'incertitude restante et vérifiez son effet sur un critère convenu."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/D/CD",
+      "participant": {
+        "code": "CD",
+        "primary": "C",
+        "secondary": "D"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux structurer un diagnostic robuste puis décider rapidement de la correction qui paraît la plus efficace. Ta dominante Analyste cherche la cause ; ton secondaire Conquérant transforme l'analyse en action. Tu peux ainsi fermer le raisonnement avant de savoir si la solution rend une influence utile à la personne.",
+        "potentialFriction": "Une personne Conquérante peut contester une correction techniquement solide si elle la place encore en exécutante. Le débat porte alors sur la solution plutôt que sur le frein d'engagement.",
+        "recommendedApproach": "Présente ton diagnostic comme une hypothèse et demande quel élément la personne juge déterminant. Distingue correction technique, décision de direction et responsabilité qu'elle peut reprendre. Choisis une mesure réversible, avec un critère d'arrêt, et laisse-lui conduire la part relevant de son périmètre.",
+        "wordsToUse": [
+          {
+            "intent": "Proposer une lecture",
+            "text": "« Mon hypothèse est [cause] ; quel élément important me manque ? »"
+          },
+          {
+            "intent": "Distinguer",
+            "text": "« Que doit corriger le système et que veux-tu reprendre en main ? »"
+          },
+          {
+            "intent": "Décider",
+            "text": "« Je mets en place [mesure réversible] jusqu'à [repère]. »"
+          },
+          {
+            "intent": "Responsabiliser",
+            "text": "« Tu conduiras [partie] avec cette marge : [marge]. »"
+          }
+        ],
+        "avoid": "Évite de présenter la correction la plus rationnelle comme la seule réponse possible à l'engagement.",
+        "practicalAction": "Testez pendant une étape une correction réversible qu'elle conduit sur son périmètre, puis vérifiez séparément son effet technique et son effet sur sa capacité d'agir."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/D/CI",
+      "participant": {
+        "code": "CI",
+        "primary": "C",
+        "secondary": "I"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux organiser toutes les informations puis expliquer clairement pourquoi la mission reste utile. Ta dominante Analyste construit la cohérence ; ton secondaire Communiquant la rend accessible. Cette démonstration peut répondre à ta lecture plutôt qu'au frein vécu par la personne.",
+        "potentialFriction": "Une personne Conquérante peut comprendre ton raisonnement sans retrouver de prise sur le résultat. Si l'explication vise à rétablir son adhésion, elle peut débattre des détails ou écourter l'échange plutôt que nommer l'obstacle.",
+        "recommendedApproach": "Demande ce qu'elle ne parvient plus à accomplir et reformule le frein avant d'apporter une information. Choisis un seul fait susceptible d'éclairer son choix, puis décide d'une contribution de direction. Vérifiez l'effet obtenu au lieu de conclure que la compréhension suffit.",
+        "wordsToUse": [
+          {
+            "intent": "Comprendre",
+            "text": "« Qu'est-ce que tu ne parviens plus à accomplir dans le cadre actuel ? »"
+          },
+          {
+            "intent": "Reformuler",
+            "text": "« Le frein principal est [frein]. Est-ce exact ? »"
+          },
+          {
+            "intent": "Éclairer",
+            "text": "« Ce fait change-t-il ta lecture ou laisse-t-il le frein intact ? »"
+          },
+          {
+            "intent": "Agir",
+            "text": "« Je peux modifier [élément] dans mon périmètre. »"
+          }
+        ],
+        "avoid": "Évite d'utiliser une explication cohérente comme substitut à une marge d'action réelle.",
+        "practicalAction": "Reformule le frein et vérifie d'abord si une seule information utile modifie sa lecture. Si le frein demeure, ajuste ensuite un levier de direction et mesurez séparément son effet au point suivant."
+      }
+    },
+    {
+      "id": "direction/personnes_sous_responsabilite/motiver/D/CS",
+      "participant": {
+        "code": "CS",
+        "primary": "C",
+        "secondary": "S"
+      },
+      "content": {
+        "yourLikelyReflex": "Tu peux examiner les causes, les risques et les effets humains avant de proposer une réponse stable. Ta dominante Analyste cherche la fiabilité ; ton secondaire Facilitateur protège la continuité. Cette double précaution peut mettre toutes les contraintes au même niveau et rendre la priorité illisible.",
+        "potentialFriction": "Une personne Conquérante peut accepter qu'un changement soit sécurisé tout en se décourageant si personne ne choisit la voie d'action. Une réponse très prudente peut confirmer que la stabilité compte davantage que sa capacité d'obtenir un résultat.",
+        "recommendedApproach": "Demande quel frein semble affecter le plus sa contribution et quelle conséquence observable il produit, en gardant cette lecture comme une hypothèse à vérifier. Sépare le risque déterminant des précautions secondaires. Mets en place une mesure provisoire dans ton périmètre ; si elle exige un arbitrage, sollicite-le et annonce une date de retour sur son avancement.",
+        "wordsToUse": [
+          {
+            "intent": "Hiérarchiser",
+            "text": "« Quel frein te semble peser le plus sur ta contribution aujourd'hui ? »"
+          },
+          {
+            "intent": "Relier",
+            "text": "« Quelle conséquence concrète produit-il ? »"
+          },
+          {
+            "intent": "Protéger",
+            "text": "« Dans mon périmètre, je mets en place [mesure réversible] dès maintenant. »"
+          },
+          {
+            "intent": "Décider",
+            "text": "« D'ici le [date], je te confirmerai ma décision ou l'avancement de l'arbitrage nécessaire. »"
+          }
+        ],
+        "avoid": "Évite d'attendre une réponse sans risque pendant que la personne supporte le coût du statu quo.",
+        "practicalAction": "Dès le prochain échange, identifie avec la personne une mesure provisoire réversible qui pourrait alléger le frein prioritaire, sans créer de risque disproportionné. Mets-la en œuvre si elle relève de ton autorité ; sinon, sollicite l'arbitrage nécessaire et fixe une date de retour. Vérifiez ensuite son effet concret sur sa capacité d'agir."
+      }
+    }
+  ]
+}

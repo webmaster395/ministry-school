@@ -1,9 +1,6 @@
 import { notFound, redirect } from "next/navigation";
-import { getStudentTools } from "@/lib/apps/catalog";
 import { getViewer } from "@/lib/data/viewer";
 import { getMappResultBundle, openMappQuestionnaire } from "@/lib/mapp/server";
-import MappNativeExperience from "./MappNativeExperience";
-import MappOfficialHybridExperience from "./MappOfficialHybridExperience";
 
 export const dynamic = "force-dynamic";
 
@@ -12,18 +9,19 @@ export default async function ProfilMappPage() {
   if (!viewer) redirect("/login?next=/apps/profil-mapp");
   if (viewer.deactivated) redirect("/auth/desactive");
 
-  const published = (await getStudentTools()).some((tool) => tool.slug === "profil-mapp");
-  if (!published && !viewer.roles.superAdmin) notFound();
+  if (!viewer.roles.superAdmin) notFound();
 
   try {
     const questionnaire = await openMappQuestionnaire();
-    const result = questionnaire.status === "completed"
-      ? await getMappResultBundle(questionnaire.attemptId)
-      : null;
-    if (questionnaire.engine === "hybrid-44" && !result) {
-      return <MappOfficialHybridExperience questionnaire={questionnaire} />;
+    if (questionnaire.engine !== "hybrid-44") throw new Error("MAPP_OFFICIAL_SESSION_REQUIRED");
+    if (questionnaire.status === "completed") {
+      const result = await getMappResultBundle(questionnaire.attemptId);
+      const unresolved = result.rankings.some((ranking) => ranking.tie_break_required && !ranking.resolved_order);
+      redirect(unresolved
+        ? `/apps/profil-mapp/test/${questionnaire.attemptId}/departage?revision=${result.resultRevisionId}`
+        : `/apps/profil-mapp/test/${questionnaire.attemptId}/resultat?revision=${result.resultRevisionId}`);
     }
-    return <MappNativeExperience initialQuestionnaire={questionnaire} initialResult={result} />;
+    redirect(`/apps/profil-mapp/test/${questionnaire.attemptId}`);
   } catch (cause) {
     const technicalMessage = cause instanceof Error ? cause.message : "Accès impossible";
     const denied = technicalMessage.includes("MAPP_ACCESS_DENIED");

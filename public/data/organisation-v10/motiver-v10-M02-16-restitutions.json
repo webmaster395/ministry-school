@@ -1,0 +1,565 @@
+{
+    "schemaVersion": "10.0.0",
+    "lot": "M02",
+    "status": "ready_for_external_review",
+    "scope": {
+        "role": "direction",
+        "context": "personnes_sous_responsabilite",
+        "situation": "motiver",
+        "counterpart": "I",
+        "expectedRestitutions": 16,
+        "configurations": [
+            "D",
+            "DI",
+            "DS",
+            "DC",
+            "I",
+            "ID",
+            "IS",
+            "IC",
+            "S",
+            "SD",
+            "SI",
+            "SC",
+            "C",
+            "CD",
+            "CI",
+            "CS"
+        ]
+    },
+    "validation": {
+        "codexAuthorReview": "completed",
+        "chatgptReview": "not_started",
+        "userValidation": "not_started"
+    },
+    "restitutions": [
+        {
+            "id": "direction/personnes_sous_responsabilite/motiver/I/D",
+            "participant": {
+                "code": "D",
+                "primary": "D",
+                "secondary": null
+            },
+            "content": {
+                "yourLikelyReflex": "Quand l'engagement baisse, tu peux vouloir redonner vite un objectif visible, une responsabilité nette et un délai. Cette clarté remet parfois du mouvement. Elle peut aussi réduire la difficulté à un manque de défi avant que la personne ait expliqué si ses idées restent sans réponse, si sa contribution a perdu du sens ou si la charge limite sa disponibilité.",
+                "potentialFriction": "Une personne Communicante peut réagir avec énergie à un nouveau défi sans que le frein initial soit levé. Si tu transformes immédiatement cet intérêt en mission, elle peut y entendre une demande supplémentaire et apprendre que participer avec enthousiasme conduit surtout à recevoir plus de travail.",
+                "recommendedApproach": "Pars d'un changement observable et demande ce qui a diminué son envie de contribuer. Fais distinguer l'intérêt pour une nouvelle perspective du frein qui demeure. Choisis ensuite un levier de direction — priorité, moyen, réponse ou visibilité — et clarifie une seule contribution attendue. Vérifiez à une date convenue si elle reçoit davantage de suite sans ajouter une charge non arbitrée.",
+                "wordsToUse": [
+                    {
+                        "intent": "Observer",
+                        "text": "« J'ai remarqué [changement observable]. Qu'est-ce qui a changé pour toi ? »"
+                    },
+                    {
+                        "intent": "Comprendre",
+                        "text": "« Y a-t-il une contribution ou une idée que tu aurais aimé voir davantage prise en compte ? »"
+                    },
+                    {
+                        "intent": "Arbitrer",
+                        "text": "« Je vais agir sur [priorité, moyen ou décision] avant [date]. »"
+                    },
+                    {
+                        "intent": "Cadrer",
+                        "text": "« Si nous retenons [contribution], voici ce qu'elle remplace dans tes priorités. »"
+                    }
+                ],
+                "avoid": "Évite de répondre à une perte de sens ou de suite par une mission supplémentaire présentée comme une opportunité.",
+                "practicalAction": "Lors du prochain échange, demande ce qui a changé dans son envie de contribuer. Si une proposition restée sans suite apparaît comme un frein, apporte une réponse relevant de ton autorité ou annonce l'arbitrage nécessaire. Vérifiez ensuite si cette réponse facilite réellement son engagement."
+            }
+        },
+        {
+            "id": "direction/personnes_sous_responsabilite/motiver/I/DI",
+            "participant": {
+                "code": "DI",
+                "primary": "D",
+                "secondary": "I"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux vouloir recréer rapidement de l'élan autour d'un projet ambitieux et rendre le résultat désirable. Ta dominante Conquérante cherche un effet visible ; ton secondaire Communiquant sait entraîner. Votre énergie commune peut toutefois faire passer un moment stimulant pour un engagement restauré, alors que les conditions de travail n'ont pas changé.",
+                "potentialFriction": "Une personne Communicante peut accueillir la perspective, enrichir aussitôt l'idée et sembler prête à avancer. Si son retrait vient d'une déception, d'une surcharge ou de propositions sans réponse, cette animation peut produire un sursaut bref puis une nouvelle retombée.",
+                "recommendedApproach": "Commence par ce qui a rendu sa contribution moins utile ou moins soutenable avant d'ouvrir de nouvelles possibilités. Demande ce qui doit recevoir une réponse réelle de la direction. Si une nouvelle initiative traite ce frein, confirme le résultat, les moyens et la priorité qu'elle remplace. Convenez d'un signe qui distinguera l'intérêt initial d'un engagement tenable.",
+                "wordsToUse": [
+                    {
+                        "intent": "Revenir au frein",
+                        "text": "« Avant de parler d'un nouveau projet, qu'est-ce qui a diminué ton envie de contribuer ? »"
+                    },
+                    {
+                        "intent": "Éprouver l'idée",
+                        "text": "« Cette perspective traite-t-elle ce frein ou apporte-t-elle surtout de la nouveauté ? »"
+                    },
+                    {
+                        "intent": "Arbitrer",
+                        "text": "« Si nous avançons, [priorité] sera différée et [moyen] sera confirmé. »"
+                    },
+                    {
+                        "intent": "Vérifier",
+                        "text": "« Quel signe montrera que cet engagement reste tenable après l'élan initial ? »"
+                    }
+                ],
+                "avoid": "Évite de prendre une réaction enthousiaste pour la preuve que le temps, les moyens et le sens sont retrouvés.",
+                "practicalAction": "Avant de confirmer une initiative stimulante, faites nommer le frein qu'elle doit traiter et la priorité qu'elle remplacera. Après une première étape, vérifiez si la contribution reste soutenable une fois la nouveauté passée."
+            }
+        },
+        {
+            "id": "direction/personnes_sous_responsabilite/motiver/I/DS",
+            "participant": {
+                "code": "DS",
+                "primary": "D",
+                "secondary": "S"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux chercher une solution concrète tout en protégeant la personne d'une charge ou d'une instabilité supplémentaire. Ta dominante Conquérante pousse à agir ; ton secondaire Facilitateur cherche un cadre soutenable. Tu peux ainsi proposer un allègement avant de savoir si elle souffre surtout d'une contribution invisible ou d'une idée continuellement écartée.",
+                "potentialFriction": "Une personne Communicante peut être soulagée par l'allègement tout en perdant encore davantage l'espace d'expression qui donnait du sens à son travail. Retirer une activité visible sans distinguer charge usante et contribution nourrissante peut affaiblir son engagement.",
+                "recommendedApproach": "Demande ce qui lui coûte de l'énergie et ce qui lui en rend dans le travail. Fais-lui choisir la contribution qu'elle tient à préserver et la contrainte qui peut être réduite. Arbitre un allègement dans ton périmètre sans effacer sa place dans les échanges. Fixez une durée et observez si sa participation utile se stabilise.",
+                "wordsToUse": [
+                    {
+                        "intent": "Distinguer",
+                        "text": "« Qu'est-ce qui te prend de l'énergie et qu'est-ce qui t'en redonne ? »"
+                    },
+                    {
+                        "intent": "Préserver",
+                        "text": "« Quelle contribution tiens-tu à continuer de porter ? »"
+                    },
+                    {
+                        "intent": "Alléger",
+                        "text": "« Je peux réduire [contrainte] sans retirer [contribution]. »"
+                    },
+                    {
+                        "intent": "Vérifier",
+                        "text": "« Quel signe montrera que cet ajustement t'aide réellement ? »"
+                    }
+                ],
+                "avoid": "Évite de réduire son périmètre au nom de son bien-être sans préserver ce qui nourrit sa contribution.",
+                "practicalAction": "Identifiez ensemble une contrainte qui épuise sa disponibilité et une contribution qu'elle souhaite préserver. Ajuste la contrainte dans ton périmètre, puis convenez d'un moment adapté pour vérifier si la personne retrouve une participation soutenable."
+            }
+        },
+        {
+            "id": "direction/personnes_sous_responsabilite/motiver/I/DC",
+            "participant": {
+                "code": "DC",
+                "primary": "D",
+                "secondary": "C"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux isoler rapidement le point de rupture dans les résultats et construire une correction précise. Ta dominante Conquérante vise l'effet ; ton secondaire Analyste sécurise la décision. Cette lecture peut négliger les apports relationnels ou créatifs qui donnent du sens à la personne mais apparaissent peu dans les indicateurs.",
+                "potentialFriction": "Une personne Communicante peut investir de l'énergie pour relier les personnes, faire circuler une idée ou rendre un projet compréhensible. Si tu n'examines que sa production mesurée, elle peut conclure que ce qui motive sa contribution n'est ni vu ni utile.",
+                "recommendedApproach": "Présente les faits sans les transformer en diagnostic complet, puis demande ce qu'ils ne montrent pas de son travail. Identifiez une contribution sous-utilisée et reliez-la à une priorité réelle. Décide d'un essai limité avec un résultat observable, sans prétendre réduire toute sa valeur à ce seul indicateur.",
+                "wordsToUse": [
+                    {
+                        "intent": "Factualiser",
+                        "text": "« J'observe [fait], sans en déduire encore la cause. »"
+                    },
+                    {
+                        "intent": "Compléter",
+                        "text": "« Qu'est-ce que cet indicateur ne montre pas de ta contribution ? »"
+                    },
+                    {
+                        "intent": "Relier",
+                        "text": "« À quelle priorité cet apport pourrait-il répondre ? »"
+                    },
+                    {
+                        "intent": "Tester",
+                        "text": "« Essayons [contribution] jusqu'à [date] et observons [effet]. »"
+                    }
+                ],
+                "avoid": "Évite de conclure qu'une contribution est secondaire simplement parce qu'elle est difficile à mesurer.",
+                "practicalAction": "Testez pendant un cycle une contribution aujourd'hui peu visible sur une priorité précise, puis examinez ensemble son effet observable et l'énergie qu'elle demande réellement."
+            }
+        },
+        {
+            "id": "direction/personnes_sous_responsabilite/motiver/I/I",
+            "participant": {
+                "code": "I",
+                "primary": "I",
+                "secondary": null
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux chercher à recréer de l'enthousiasme par un échange vivant, de nouvelles perspectives et une reconnaissance chaleureuse. Cette proximité facilite l'expression. Elle peut aussi produire un moment positif où vous multipliez les idées sans faire apparaître la difficulté qui use réellement l'engagement.",
+                "potentialFriction": "Une personne Communicante peut rebondir sur tes propositions et sembler remotivée pendant l'entretien alors qu'elle reste surchargée, déçue ou privée de suite. Si vous ouvrez ensemble trop de possibilités, elle peut repartir avec davantage d'attentes et aucune priorité clarifiée.",
+                "recommendedApproach": "Ralentis avant de chercher des idées et pars d'un changement concret dans son travail. Accueille ce qu'elle exprime, puis revenez au frein principal et à sa capacité réelle. Choisis une seule réponse de direction, nomme les pistes écartées et convenez d'un repère après l'échange, lorsque l'énergie conversationnelle est retombée.",
+                "wordsToUse": [
+                    {
+                        "intent": "Ralentir",
+                        "text": "« Avant de chercher des idées, qu'est-ce qui t'a fait perdre de l'élan ? »"
+                    },
+                    {
+                        "intent": "Approfondir",
+                        "text": "« Qu'est-ce qui resterait difficile après une conversation stimulante ? »"
+                    },
+                    {
+                        "intent": "Prioriser",
+                        "text": "« Laquelle de ces pistes répond réellement au frein principal ? »"
+                    },
+                    {
+                        "intent": "Borner",
+                        "text": "« Nous retenons [action] ; les autres pistes restent en attente. »"
+                    }
+                ],
+                "avoid": "Évite d'accumuler les idées et les promesses sous l'effet d'un échange enthousiaste.",
+                "practicalAction": "Clôturez le prochain échange avec un seul frein, une seule réponse de direction et les idées mises en attente ; au moment convenu, vérifiez si cette réponse a encore un effet utile."
+            }
+        },
+        {
+            "id": "direction/personnes_sous_responsabilite/motiver/I/ID",
+            "participant": {
+                "code": "ID",
+                "primary": "I",
+                "secondary": "D"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux faire émerger rapidement des possibilités, puis orienter la personne vers celle qui paraît la plus mobilisatrice. Ta dominante Communicante ouvre le champ ; ton secondaire Conquérant pousse vers une responsabilité visible. Tu peux convertir trop vite une idée exprimée librement en engagement attendu.",
+                "potentialFriction": "Une personne Communicante peut proposer pour nourrir la discussion sans vouloir ni pouvoir porter chaque idée. Si la direction transforme systématiquement sa créativité en charge, elle peut finir par se censurer ou associer sa participation à une nouvelle obligation.",
+                "recommendedApproach": "Demande d'abord ce qui freine son engagement, puis autorise une exploration sans attribution implicite. Distingue l'idée, la contribution qu'elle souhaite apporter et la responsabilité qu'elle accepte. Avant de décider, vérifie sa disponibilité, confirme les moyens et arbitre explicitement ce que cette responsabilité remplace.",
+                "wordsToUse": [
+                    {
+                        "intent": "Sécuriser",
+                        "text": "« Nous pouvons explorer sans décider tout de suite qui portera quoi. »"
+                    },
+                    {
+                        "intent": "Relier",
+                        "text": "« Quelle piste répond réellement au frein que tu viens de nommer ? »"
+                    },
+                    {
+                        "intent": "Distinguer",
+                        "text": "« Veux-tu proposer cette idée, y contribuer ou la conduire ? »"
+                    },
+                    {
+                        "intent": "Arbitrer",
+                        "text": "« Si tu la conduis, voici ce qu'elle remplacera et les moyens confirmés. »"
+                    }
+                ],
+                "avoid": "Évite d'attribuer automatiquement à la personne la responsabilité de toute idée qu'elle partage.",
+                "practicalAction": "Sur la prochaine idée retenue, fais-lui choisir entre proposer, contribuer ou conduire ; si elle conduit, retire ou diffère une priorité et vérifiez la charge après la première étape."
+            }
+        },
+        {
+            "id": "direction/personnes_sous_responsabilite/motiver/I/IS",
+            "participant": {
+                "code": "IS",
+                "primary": "I",
+                "secondary": "S"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux recréer un climat positif où la personne se sent écoutée, appréciée et reliée aux autres. Ta dominante Communicante ouvre la parole ; ton secondaire Facilitateur protège la confiance. L'échange peut toutefois rester positif alors qu'une surcharge ou une déception n'est pas abordée.",
+                "potentialFriction": "Si une personne Communicante minimise ce qu'elle vit, votre attention commune à la relation peut laisser intact un manque de moyens, une limite dépassée ou une contribution sans réponse.",
+                "recommendedApproach": "Reconnais une contribution précise sans refermer la discussion par cette reconnaissance. Invite-la à nommer un sujet professionnel difficile, sans exiger de confidence ni mobiliser le collectif. Choisis avec elle un point que la direction peut traiter, dis clairement la limite éventuelle et vérifiez l'effet sans exposer davantage la personne.",
+                "wordsToUse": [
+                    {
+                        "intent": "Reconnaître",
+                        "text": "« Sur [fait], ta contribution a rendu possible [effet]. »"
+                    },
+                    {
+                        "intent": "Autoriser",
+                        "text": "« Y a-t-il un sujet professionnel sur lequel tu aimerais pouvoir échanger plus librement avec moi ? »"
+                    },
+                    {
+                        "intent": "Cibler",
+                        "text": "« Quel point concret devrait recevoir une réponse en priorité ? »"
+                    },
+                    {
+                        "intent": "Répondre",
+                        "text": "« Je peux agir sur [point] ; [contrainte] restera présente. »"
+                    }
+                ],
+                "avoid": "Évite d'utiliser la chaleur de l'échange ou la reconnaissance pour contourner une conversation difficile.",
+                "practicalAction": "Propose un échange où la personne peut aborder un sujet professionnel difficile, sans obligation de se confier. Si un frein relevant de la direction est identifié, précise la réponse possible ou l'arbitrage nécessaire, puis convenez d'un retour sans élargir inutilement le cercle des personnes informées."
+            }
+        },
+        {
+            "id": "direction/personnes_sous_responsabilite/motiver/I/IC",
+            "participant": {
+                "code": "IC",
+                "primary": "I",
+                "secondary": "C"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux ouvrir un échange riche, faire circuler les idées puis les organiser pour comprendre ce qui pourrait relancer l'engagement. Ta dominante Communicante valorise la participation ; ton secondaire Analyste veut rendre les propositions crédibles. Tu peux formaliser trop vite une parole qui avait d'abord besoin d'être entendue.",
+                "potentialFriction": "Une personne Communicante peut se décourager si chacune de ses idées est aussitôt soumise à des critères ou transformée en dossier à défendre. Même utiles, tes questions peuvent lui donner l'impression que la direction écoute surtout pour filtrer.",
+                "recommendedApproach": "Commence par ce qu'elle aimerait voir mieux entendu, sans évaluer immédiatement la faisabilité. Reformule le besoin derrière ses propositions, puis choisissez une seule idée à examiner. Rends les critères explicites, fixe une date de réponse et distingue l'examen de l'engagement à mettre en œuvre.",
+                "wordsToUse": [
+                    {
+                        "intent": "Accueillir",
+                        "text": "« Qu'aimerais-tu proposer sans devoir déjà tout démontrer ? »"
+                    },
+                    {
+                        "intent": "Reformuler",
+                        "text": "« Derrière cette idée, quel besoin cherches-tu à traiter ? »"
+                    },
+                    {
+                        "intent": "Sélectionner",
+                        "text": "« Quelle proposition mérite un examen réel en priorité ? »"
+                    },
+                    {
+                        "intent": "Suivre",
+                        "text": "« Je te répondrai sur ces critères d'ici [date]. »"
+                    }
+                ],
+                "avoid": "Évite d'exiger une justification complète avant d'avoir compris le besoin porté par la proposition.",
+                "practicalAction": "Sélectionnez une proposition, consigne le besoin qu'elle traite et trois critères au maximum, puis rends une réponse motivée à la date annoncée et vérifiez si cette suite restaure l'envie de contribuer."
+            }
+        },
+        {
+            "id": "direction/personnes_sous_responsabilite/motiver/I/S",
+            "participant": {
+                "code": "S",
+                "primary": "S",
+                "secondary": null
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux écouter longuement, rassurer la personne sur sa place et préserver une relation de confiance. Cette stabilité aide à parler sans crainte. Elle peut aussi te conduire à accueillir ses idées avec bienveillance sans donner la réponse précise qu'elle attend.",
+                "potentialFriction": "Une personne Communicante peut se décourager lorsque ses propositions suscitent de l'intérêt mais aucune suite visible. Si tu laisses une option ouverte sans donner de réponse claire, elle peut conclure que sa participation est appréciée en paroles mais sans influence réelle.",
+                "recommendedApproach": "Demande quelle contribution ne reçoit plus de suite, puis distingue le besoin d'être entendue de la demande de décision, de moyen ou de visibilité. Choisis une proposition identifiable et donne une réponse claire, même négative. Explique le critère du choix et indique la prochaine possibilité de contribution utile.",
+                "wordsToUse": [
+                    {
+                        "intent": "Écouter",
+                        "text": "« Quelle contribution as-tu le sentiment de ne plus voir reconnue ? »"
+                    },
+                    {
+                        "intent": "Clarifier",
+                        "text": "« Attends-tu une écoute, une décision ou un moyen précis ? »"
+                    },
+                    {
+                        "intent": "Cibler",
+                        "text": "« Sur quelle proposition veux-tu une réponse claire ? »"
+                    },
+                    {
+                        "intent": "Répondre",
+                        "text": "« Ma réponse est [réponse], pour cette raison : [critère]. »"
+                    }
+                ],
+                "avoid": "Évite de laisser une proposition indéfiniment ouverte sans réponse claire.",
+                "practicalAction": "Choisissez une proposition en suspens ; donne une réponse motivée avant une date convenue, puis vérifiez si la clarté obtenue facilite une contribution réaliste, même si la réponse est négative."
+            }
+        },
+        {
+            "id": "direction/personnes_sous_responsabilite/motiver/I/SD",
+            "participant": {
+                "code": "SD",
+                "primary": "S",
+                "secondary": "D"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux d'abord accueillir la personne avec attention, puis prendre une décision nette pour lui redonner une place active. Ta dominante Facilitatrice protège la relation ; ton secondaire Conquérant aide à sortir de l'attente. Tu peux néanmoins choisir toi-même une responsabilité visible pour lui témoigner ta confiance.",
+                "potentialFriction": "Une personne Communicante peut apprécier la marque de confiance tout en se sentant enfermée dans un rôle non choisi ou trop lourd. Une mission visible ne restaure pas l'engagement si le frein était une idée ignorée, une fatigue ou une perte de sens.",
+                "recommendedApproach": "Écoute ce qui a changé et demande quelle forme de contribution lui semblerait utile maintenant. Fais-lui distinguer ce qu'elle veut proposer, partager ou conduire. Vérifie sa disponibilité, puis rends l'arbitrage qui relève de toi sans utiliser la responsabilité comme récompense symbolique.",
+                "wordsToUse": [
+                    {
+                        "intent": "Comprendre",
+                        "text": "« Qu'est-ce qui a changé dans la manière dont tu vis ta contribution ? »"
+                    },
+                    {
+                        "intent": "Explorer",
+                        "text": "« Quelle forme de contribution te semblerait réellement utile ? »"
+                    },
+                    {
+                        "intent": "Choisir",
+                        "text": "« Veux-tu la partager, y participer ou la conduire ? »"
+                    },
+                    {
+                        "intent": "Soutenir",
+                        "text": "« Si tu la choisis, je confirme [cadre] et [moyens]. »"
+                    }
+                ],
+                "avoid": "Évite d'attribuer une responsabilité visible comme signe de confiance sans vérifier qu'elle est souhaitée.",
+                "practicalAction": "Fais-lui choisir le degré de responsabilité sur une contribution utile, confirme les moyens correspondants et vérifiez après une étape si ce rôle est choisi et soutenable."
+            }
+        },
+        {
+            "id": "direction/personnes_sous_responsabilite/motiver/I/SI",
+            "participant": {
+                "code": "SI",
+                "primary": "S",
+                "secondary": "I"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux restaurer la confiance par une écoute chaleureuse, rappeler la valeur de la personne et recréer des liens autour de sa contribution. Ta dominante Facilitatrice sécurise ; ton secondaire Communiquant rend la reconnaissance visible. Tu peux privilégier ces signes relationnels alors que le retrait peut venir d'une contribution sans suite réelle.",
+                "potentialFriction": "Une personne Communicante peut apprécier une reconnaissance sincère puis constater que ses idées, ses priorités ou ses moyens restent inchangés. Si l'estime exprimée ne produit aucune réponse concrète, elle peut paraître compensatoire.",
+                "recommendedApproach": "Reconnais un effet précis de son travail, puis demande ce que cette reconnaissance ne résout pas. Identifiez la contribution qui doit recevoir une suite et la personne habilitée à la donner. Réponds si la décision relève de toi ; sinon, sollicite le décideur et annonce une date de retour sur l'avancement, sans promettre une visibilité collective non confirmée.",
+                "wordsToUse": [
+                    {
+                        "intent": "Reconnaître",
+                        "text": "« Grâce à ton action sur [fait], [effet] est devenu possible. »"
+                    },
+                    {
+                        "intent": "Approfondir",
+                        "text": "« Au-delà de cette reconnaissance, quel obstacle reste entier ? »"
+                    },
+                    {
+                        "intent": "Cibler",
+                        "text": "« Quelle contribution attend encore une suite utile ? »"
+                    },
+                    {
+                        "intent": "Donner suite",
+                        "text": "« D'ici le [date], je te donnerai ma réponse ou un point précis sur l'avancement de l'arbitrage. »"
+                    }
+                ],
+                "avoid": "Évite de substituer une reconnaissance chaleureuse à la réponse ou au moyen attendu.",
+                "practicalAction": "Choisissez une contribution restée sans suite ; donne la réponse qui relève de toi ou sollicite le décideur avant une date annoncée, puis rends compte de la décision ou de l'avancement et vérifiez si cette suite rend la contribution de nouveau utile."
+            }
+        },
+        {
+            "id": "direction/personnes_sous_responsabilite/motiver/I/SC",
+            "participant": {
+                "code": "SC",
+                "primary": "S",
+                "secondary": "C"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux écouter avec patience, examiner les conditions et chercher une réponse fiable qui ne crée pas de faux espoir. Ta dominante Facilitatrice préserve la confiance ; ton secondaire Analyste sécurise les engagements. Cette prudence peut prolonger l'examen jusqu'à rendre la contribution de la personne invisible.",
+                "potentialFriction": "Une personne Communicante peut accepter qu'une proposition soit étudiée, mais perdre de l'élan si elle ne sait ni selon quels critères ni quand une réponse viendra. Des demandes successives de précision peuvent ressembler à une manière polie de ne pas décider.",
+                "recommendedApproach": "Demande quelle proposition compte le plus et quel besoin elle cherche à traiter. Sépare l'information indispensable des précisions optionnelles. Annonce deux ou trois critères et une échéance. Rends la décision si elle relève de toi ; sinon, nomme le responsable de l'arbitrage et date ton prochain retour. Si l'examen doit durer, donne une réponse provisoire explicite plutôt que de laisser croire à un accord.",
+                "wordsToUse": [
+                    {
+                        "intent": "Prioriser",
+                        "text": "« Quelle proposition compte le plus pour ton engagement aujourd'hui ? »"
+                    },
+                    {
+                        "intent": "Cibler",
+                        "text": "« Quelle information manque réellement pour décider ? »"
+                    },
+                    {
+                        "intent": "Cadrer",
+                        "text": "« L'arbitrage reposera sur [critères] ; je te donnerai la décision ou un point d'avancement le [date]. »"
+                    },
+                    {
+                        "intent": "Situer",
+                        "text": "« À ce stade, la proposition est étudiée ; elle n'est pas encore acceptée. »"
+                    }
+                ],
+                "avoid": "Évite d'ajouter des demandes de précision sans dire quelle décision elles doivent éclairer.",
+                "practicalAction": "Pour une proposition en attente, fixe au plus trois critères et une date de retour ; rends la décision si elle relève de toi, sinon partage l'avancement de l'arbitrage, puis vérifiez si cette suite permet une contribution réaliste et soutenable."
+            }
+        },
+        {
+            "id": "direction/personnes_sous_responsabilite/motiver/I/C",
+            "participant": {
+                "code": "C",
+                "primary": "C",
+                "secondary": null
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux vouloir établir précisément les causes de la baisse d'engagement avant de promettre une réponse. Cette rigueur protège des décisions superficielles. Elle peut aussi transformer l'échange en collecte d'informations et différer une reconnaissance ou une décision déjà possible.",
+                "potentialFriction": "Une personne Communicante peut développer de nombreuses idées pour rendre son expérience compréhensible. Si chaque élément appelle une nouvelle vérification, elle peut perdre le fil de ce qu'elle voulait voir reconnu et conclure que sa parole n'aboutit pas.",
+                "recommendedApproach": "Pars d'un fait observable et demande quelle contribution a perdu du sens ou de la suite. Reformule une hypothèse sans chercher une explication complète. Identifie l'information qui changerait réellement ta décision, puis agis sur un levier proportionné et annonce ce qui reste incertain.",
+                "wordsToUse": [
+                    {
+                        "intent": "Observer",
+                        "text": "« J'observe [fait]. Qu'est-ce qui a changé dans ta contribution ? »"
+                    },
+                    {
+                        "intent": "Reformuler",
+                        "text": "« Si je comprends bien, [contribution] ne reçoit plus [suite]. »"
+                    },
+                    {
+                        "intent": "Cibler",
+                        "text": "« Quel élément encore absent pourrait modifier la décision ? »"
+                    },
+                    {
+                        "intent": "Décider",
+                        "text": "« J'ai désormais assez d'éléments pour agir sur [levier]. »"
+                    }
+                ],
+                "avoid": "Évite d'exiger une explication exhaustive avant de répondre à un frein suffisamment établi.",
+                "practicalAction": "Formulez une hypothèse sur une contribution devenue moins utile, vérifie une seule information déterminante, puis décide d'un ajustement limité et observez son effet au point suivant."
+            }
+        },
+        {
+            "id": "direction/personnes_sous_responsabilite/motiver/I/CD",
+            "participant": {
+                "code": "CD",
+                "primary": "C",
+                "secondary": "D"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux structurer un diagnostic solide puis décider rapidement de la correction la plus efficace. Ta dominante Analyste cherche la cause ; ton secondaire Conquérant transforme l'analyse en action. Tu peux ainsi choisir une solution nette avant de savoir si elle redonne une place utile à l'expression de la personne.",
+                "potentialFriction": "Une personne Communicante peut contester une correction techniquement juste si elle traite seulement le processus et laisse ses propositions sans destinataire. Le débat sur la solution peut alors masquer le frein d'engagement.",
+                "recommendedApproach": "Présente ton diagnostic comme une hypothèse et demande quel élément important manque. Distingue la correction technique de la contribution que la personne veut retrouver. Choisis une mesure réversible dans ton périmètre et donne-lui un rôle choisi, avec un destinataire, un résultat attendu et un critère d'arrêt.",
+                "wordsToUse": [
+                    {
+                        "intent": "Proposer une lecture",
+                        "text": "« Je pars de l'hypothèse [cause] ; qu'est-ce que je dois encore intégrer ? »"
+                    },
+                    {
+                        "intent": "Distinguer",
+                        "text": "« Que faut-il corriger et quelle contribution veux-tu retrouver ? »"
+                    },
+                    {
+                        "intent": "Tester",
+                        "text": "« Je mets en place [mesure] jusqu'à [repère]. »"
+                    },
+                    {
+                        "intent": "Donner une place",
+                        "text": "« Ton apport sur [sujet] recevra une réponse de [destinataire]. »"
+                    }
+                ],
+                "avoid": "Évite de présenter la correction la plus rationnelle comme une réponse suffisante à l'engagement.",
+                "practicalAction": "Testez pendant une étape une correction réversible qui donne une suite explicite à une contribution choisie, puis mesurez séparément son effet opérationnel et son effet sur l'envie de contribuer."
+            }
+        },
+        {
+            "id": "direction/personnes_sous_responsabilite/motiver/I/CI",
+            "participant": {
+                "code": "CI",
+                "primary": "C",
+                "secondary": "I"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux organiser les informations puis expliquer clairement pourquoi la mission et les choix restent cohérents. Ta dominante Analyste construit le raisonnement ; ton secondaire Communiquant le rend accessible. Cette démonstration peut répondre à ta lecture plutôt qu'à la contribution que la personne ne voit plus entendue.",
+                "potentialFriction": "Une personne Communicante peut comprendre ton explication et y réagir vivement sans retrouver de prise sur le travail. Si la discussion porte sur la cohérence du cadre, son besoin de suite, de visibilité ou de moyen reste intact.",
+                "recommendedApproach": "Demande quelle contribution semble ne plus compter et reformule le frein avant d'expliquer. Apporte un seul fait susceptible d'éclairer son choix, puis vérifie s'il change réellement la situation. S'il ne la change pas, décide d'un levier de direction et donne une suite datée.",
+                "wordsToUse": [
+                    {
+                        "intent": "Comprendre",
+                        "text": "« Quelle contribution as-tu le sentiment de ne plus pouvoir apporter ? »"
+                    },
+                    {
+                        "intent": "Reformuler",
+                        "text": "« Je comprends que [frein] empêche surtout ta contribution. Est-ce juste ? »"
+                    },
+                    {
+                        "intent": "Éclairer",
+                        "text": "« Avec cette information, qu'est-ce qui change réellement pour toi ? »"
+                    },
+                    {
+                        "intent": "Agir",
+                        "text": "« Je vais donner cette suite : [action], avant [date]. »"
+                    }
+                ],
+                "avoid": "Évite d'utiliser une explication cohérente comme substitut à une suite concrète.",
+                "practicalAction": "Reformule le frein identifié, apporte une information réellement utile et vérifie si elle change sa compréhension de la situation. Si le frein demeure, engage une réponse relevant de ton autorité ou fixe une échéance réaliste pour l'arbitrage, puis vérifiez son effet."
+            }
+        },
+        {
+            "id": "direction/personnes_sous_responsabilite/motiver/I/CS",
+            "participant": {
+                "code": "CS",
+                "primary": "C",
+                "secondary": "S"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux examiner les causes, les risques et les effets humains avant de proposer une réponse stable. Ta dominante Analyste cherche la fiabilité ; ton secondaire Facilitateur protège la continuité. Cette double précaution peut laisser toutes les idées en attente au nom d'un examen complet.",
+                "potentialFriction": "Une personne Communicante peut accepter qu'une idée soit sécurisée, mais se décourager si aucun signe ne montre qu'elle est réellement considérée. Une attente sans étape ni réponse peut confirmer que sa contribution compte moins que l'absence de risque.",
+                "recommendedApproach": "Demande quelle proposition pèse le plus sur son engagement et quelle conséquence observable produit l'absence de réponse. Isole le risque déterminant et écarte les précautions secondaires. Évalue la possibilité d'un essai réversible ; autorise-le s'il relève de ton périmètre et présente des risques acceptables, ou sollicite l'arbitrage nécessaire, avec une date de retour et un critère d'arrêt explicites.",
+                "wordsToUse": [
+                    {
+                        "intent": "Hiérarchiser",
+                        "text": "« Quelle proposition sans réponse pèse le plus sur ton engagement ? »"
+                    },
+                    {
+                        "intent": "Relier",
+                        "text": "« Quelle conséquence concrète cette attente produit-elle ? »"
+                    },
+                    {
+                        "intent": "Protéger",
+                        "text": "« J'autorise [essai] dans ces limites : [limites]. »"
+                    },
+                    {
+                        "intent": "Donner suite",
+                        "text": "« Je te confirmerai la décision ou l'avancement de l'arbitrage le [date]. »"
+                    }
+                ],
+                "avoid": "Évite d'attendre une réponse sans risque pendant que l'absence de suite use l'engagement.",
+                "practicalAction": "Lors du prochain échange, identifie avec la personne une proposition dont l'absence de réponse freine réellement son engagement. Évalue la possibilité d'un essai limité et réversible. Autorise-le s'il relève de ton périmètre et présente des risques acceptables ; sinon, sollicite l'arbitrage nécessaire et fixe une date de retour."
+            }
+        }
+    ]
+}

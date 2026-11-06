@@ -1,0 +1,565 @@
+{
+    "schemaVersion": "10.0.0",
+    "lot": "M05",
+    "status": "ready_for_external_review",
+    "scope": {
+        "role": "management",
+        "context": "collaborateurs_encadres",
+        "situation": "motiver",
+        "counterpart": "D",
+        "expectedRestitutions": 16,
+        "configurations": [
+            "D",
+            "DI",
+            "DS",
+            "DC",
+            "I",
+            "ID",
+            "IS",
+            "IC",
+            "S",
+            "SD",
+            "SI",
+            "SC",
+            "C",
+            "CD",
+            "CI",
+            "CS"
+        ]
+    },
+    "validation": {
+        "codexAuthorReview": "completed",
+    "chatgptReview": "completed",
+        "userValidation": "not_started"
+    },
+    "restitutions": [
+        {
+            "id": "management/collaborateurs_encadres/motiver/D/D",
+            "participant": {
+                "code": "D",
+                "primary": "D",
+                "secondary": null
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux vouloir rétablir vite un objectif net et demander une avancée visible. Cette franchise clarifie l'attente, mais elle peut ajouter de la pression avant d'identifier la décision ou la ressource qui bloque l'action.",
+                "potentialFriction": "Un résultat qui stagne malgré des relances, des validations en attente ou des priorités concurrentes peut signaler un obstacle de cadre plutôt qu'un manque d'effort. Ajouter un défi conserve alors le même frein.",
+        "recommendedApproach": "Pars d'un changement observable et demande ce qui fragilise son engagement. Rappelle le résultat reçu de la direction sans présenter comme négociable ce qui ne l'est pas, puis demande sur quelle part du travail il souhaite retrouver de l'influence. Ajuste l'organisation dans ton périmètre ; si le frein exige un arbitrage supérieur, remonte son effet concret sur l'équipe et annonce seulement la date de ton prochain retour.",
+                "wordsToUse": [
+                    {
+                        "intent": "Cibler",
+                        "text": "« Qu'est-ce qui freine aujourd'hui ton envie ou ta capacité à avancer sur cet objectif ? »"
+                    },
+                    {
+                        "intent": "Classer",
+                        "text": "« Est-ce une priorité, un moyen, une validation ou une marge de décision ? »"
+                    },
+                    {
+                        "intent": "Agir",
+                        "text": "« Je lève [blocage] dans mon périmètre avant [date]. »"
+                    },
+                    {
+                        "intent": "Autonomiser",
+                        "text": "« Le résultat reste [résultat] ; la méthode t'appartient sur [champ]. »"
+                    }
+                ],
+                "avoid": "Évite d'augmenter l'objectif lorsque le frein est une décision ou un moyen qui ne dépend pas du collaborateur.",
+        "practicalAction": "Lors du prochain échange, identifie avec le collaborateur le frein principal à son engagement. Si un manque de marge de décision est confirmé, clarifie une responsabilité qu'il peut exercer dans le cadre reçu de la direction. Au point convenu, vérifiez s'il se sent davantage en mesure de contribuer et si cette autonomie est réellement utilisable."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/D/DI",
+            "participant": {
+                "code": "DI",
+                "primary": "D",
+                "secondary": "I"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux remettre de l'énergie autour d'un défi visible et proposer au collaborateur d'en devenir le moteur. L'élan collectif peut toutefois précéder la vérification des moyens et des dépendances.",
+                "potentialFriction": "Un accord enthousiaste suivi d'un démarrage tardif, de demandes de renfort ou de reports montre que les conditions du défi restent incomplètes. L'intérêt exprimé ne prouve pas sa faisabilité.",
+        "recommendedApproach": "Demande d'abord ce qui rend sa contribution difficile à maintenir, avant de proposer un défi. Si une ambition répond au frein identifié, distingue son intérêt de ses conditions de faisabilité. Confirme les moyens relevant de toi ; pour une dépendance ou un calendrier imposé par la direction, alerte sur le risque et sollicite l'arbitrage sans promettre de différer le démarrage.",
+                "wordsToUse": [
+                    {
+                        "intent": "Distinguer",
+                        "text": "« Ce défi t'intéresse-t-il, et qu'est-ce qui le rendrait réellement tenable ? »"
+                    },
+                    {
+                        "intent": "Sécuriser",
+                        "text": "« Quel moyen manque avant de démarrer ? »"
+                    },
+                    {
+                        "intent": "Confirmer",
+                        "text": "« Je peux garantir [moyen] dans notre périmètre. »"
+                    },
+                    {
+                        "intent": "Escalader",
+                        "text": "« Je demande l'arbitrage sur [dépendance] et reviens à [date]. »"
+                    }
+                ],
+                "avoid": "Évite de convertir une réaction positive au défi en engagement avant d'avoir vérifié ses conditions.",
+        "practicalAction": "Avant de proposer un nouveau défi, demande ce qui a changé dans son envie de contribuer. Si le défi répond réellement au frein identifié, vérifie les moyens et la charge nécessaires, sans lui attribuer automatiquement la responsabilité. Après une première étape, demande si cette contribution reste choisie et soutenable."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/D/DS",
+            "participant": {
+                "code": "DS",
+                "primary": "D",
+                "secondary": "S"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux chercher un allègement rapide pour rendre le travail soutenable. Cette protection aide si la charge est le frein ; elle peut retirer une responsabilité utile si le problème tient plutôt aux interruptions ou au contrôle.",
+                "potentialFriction": "Une mission centrale qui avance lentement tandis que des sollicitations périphériques se multiplient indique une fragmentation possible. Retirer la mission centrale ne réduirait pas cette fragmentation.",
+        "recommendedApproach": "Demande ce qui fragilise sa contribution et ce qu'il souhaite préserver. Si la charge ou les interruptions sont en cause, ajuste une contrainte relevant de ton organisation sans transférer son coût à un collègue. Si les orientations reçues rendent les priorités incompatibles, documente l'impact sur l'équipe et demande l'arbitrage nécessaire.",
+                "wordsToUse": [
+                    {
+                        "intent": "Diagnostiquer",
+                        "text": "« Est-ce le volume, les interruptions ou le manque de latitude qui bloque le plus ? »"
+                    },
+                    {
+                        "intent": "Préserver",
+                        "text": "« Quelle responsabilité veux-tu continuer à exercer pleinement ? »"
+                    },
+                    {
+                        "intent": "Alléger",
+                        "text": "« Je retire [contrainte] sans la déplacer sur un collègue. »"
+                    },
+                    {
+                        "intent": "Arbitrer",
+                        "text": "« Si ces priorités restent incompatibles, je demande un arbitrage à [responsable]. »"
+                    }
+                ],
+                "avoid": "Évite de soulager en retirant la responsabilité qui donne encore une prise utile sur le résultat.",
+        "practicalAction": "Demande quelle responsabilité le collaborateur souhaite préserver et ce qui rend aujourd'hui son exercice difficile. Si une contrainte relevant de ton périmètre est confirmée, ajuste-la sans transférer le problème à un collègue. Vérifiez ensuite si cet ajustement lui permet de retrouver une contribution utile et soutenable."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/D/DC",
+            "participant": {
+                "code": "DC",
+                "primary": "D",
+                "secondary": "C"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux lire les indicateurs, identifier une cause probable et corriger rapidement le processus. Cette efficacité peut figer le diagnostic avant que le collaborateur ait décrit ce qu'il ne maîtrise plus.",
+                "potentialFriction": "Des résultats acceptables accompagnés de validations nombreuses ou de cycles de reprise longs peuvent masquer une marge d'action réduite. Une correction centrée uniquement sur la performance manquerait ce frein.",
+        "recommendedApproach": "Présente les faits comme une hypothèse et demande ce qu'ils laissent hors champ. Identifiez ce qui freine réellement son engagement. Si un contrôle ou une dépendance y contribue, remplace dans ton périmètre une vérification détaillée par un critère de résultat ; sinon, porte à la direction l'effet observé et la modification demandée.",
+                "wordsToUse": [
+                    {
+                        "intent": "Soumettre",
+                        "text": "« J'observe [fait] ; qu'est-ce que cela ne montre pas ? »"
+                    },
+                    {
+                        "intent": "Localiser",
+                        "text": "« Si un contrôle est en cause, lequel réduit le plus ta prise sur le résultat ? »"
+                    },
+                    {
+                        "intent": "Expérimenter",
+                        "text": "« Je remplace ce contrôle par [critère] sur un cycle. »"
+                    },
+                    {
+                        "intent": "Limiter",
+                        "text": "« Nous déciderons après comparaison, pas avant. »"
+                    }
+                ],
+                "avoid": "Évite de conclure à un problème de performance quand les données peuvent aussi refléter un excès de validation.",
+        "practicalAction": "Après avoir recueilli son analyse, vérifie si le frein tient réellement à un contrôle ou à une dépendance. Si c'est le cas, teste une adaptation réversible dans ton périmètre, avec des critères de sécurité clairs. Vérifiez ensuite séparément son effet sur le travail et sur l'autonomie et l'engagement du collaborateur."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/D/I",
+            "participant": {
+                "code": "I",
+                "primary": "I",
+                "secondary": null
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux chercher à ranimer l'envie par une perspective stimulante et une reconnaissance visible. Cette énergie ouvre l'échange, mais elle ne modifie pas une décision suspendue ou un moyen absent.",
+                "potentialFriction": "Une conversation positive suivie du même nombre de relances ou de dossiers bloqués montre que le cadre de travail n'a pas changé. Le message mobilisateur reste alors sans effet opérationnel.",
+        "recommendedApproach": "Demande ce qui a changé dans son envie de contribuer et ce qu'une réponse utile devrait permettre. Si un dossier sans suite constitue le frein, rends la décision relevant de toi ou porte à la direction une demande concise avec son impact sur l'équipe. Relie la reconnaissance à la suite réellement obtenue, pas à un message mobilisateur.",
+                "wordsToUse": [
+                    {
+                        "intent": "Choisir",
+                        "text": "« Quel dossier bloqué affecte le plus ta contribution aujourd'hui ? »"
+                    },
+                    {
+                        "intent": "Reformuler",
+                        "text": "« La décision attendue est donc [décision]. »"
+                    },
+                    {
+                        "intent": "Répondre",
+                        "text": "« Je tranche ce point avant [date]. »"
+                    },
+                    {
+                        "intent": "Porter",
+                        "text": "« Ce point dépasse mon mandat ; je le soumets et te tiens informé à [date]. »"
+                    }
+                ],
+                "avoid": "Évite de remplacer une réponse managériale attendue par un encouragement général.",
+        "practicalAction": "Demande ce qui a changé dans son envie de contribuer et quelle réponse professionnelle lui serait réellement utile. Si une décision restée sans suite constitue le frein, apporte une réponse dans ton périmètre ou sollicite l'arbitrage nécessaire. Vérifiez ensuite si cette réponse lui permet de retrouver du sens et une participation soutenable."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/D/ID",
+            "participant": {
+                "code": "ID",
+                "primary": "I",
+                "secondary": "D"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux faire émerger des options puis attribuer rapidement l'initiative la plus stimulante. Le passage à l'action crée du mouvement ; il peut aussi ajouter une responsabilité avant de retirer le frein initial.",
+                "potentialFriction": "Une nouvelle initiative accompagnée de reports sur les engagements existants indique un échange de charge insuffisant. L'initiative ne restaure pas la capacité d'agir si elle s'ajoute au reste.",
+        "recommendedApproach": "Explore d'abord le frein, puis garde les options sans attribution implicite. Pour une option qui y répond, distingue proposer, contribuer et conduire. Si une responsabilité est choisie, ajuste la charge dans ton périmètre ; si une priorité reçue doit être déplacée, soumets à la direction la compensation nécessaire avant de promettre les moyens.",
+                "wordsToUse": [
+                    {
+                        "intent": "Explorer",
+                        "text": "« Que faut-il traiter avant d'ouvrir une nouvelle initiative ? »"
+                    },
+                    {
+                        "intent": "Choisir",
+                        "text": "« Quelle option restaure réellement ta capacité d'agir ? »"
+                    },
+                    {
+                        "intent": "Équilibrer",
+                        "text": "« Quelle tâche doit sortir si tu prends cette responsabilité ? »"
+                    },
+                    {
+                        "intent": "Valider",
+                        "text": "« Ce moyen exige un accord ; je te réponds à [date]. »"
+                    }
+                ],
+                "avoid": "Évite de transformer une idée proposée dans l'échange en responsabilité ajoutée sans compensation.",
+        "practicalAction": "Sur la prochaine option, fais choisir son degré de responsabilité et examine la charge correspondante. Ajuste ce qui relève de toi ou demande l'arbitrage de compensation. Après un premier jalon, vérifiez à la fois l'avancée et si cette responsabilité reste choisie et soutenable."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/D/IS",
+            "participant": {
+                "code": "IS",
+                "primary": "I",
+                "secondary": "S"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux restaurer un échange positif et reconnaître les efforts pour sécuriser la relation. Cette qualité facilite la parole ; elle peut laisser un désaccord professionnel sans voie de traitement.",
+                "potentialFriction": "Un sujet évoqué en entretien mais absent des décisions, ou des réserves répétées après les réunions, peut signaler qu'un obstacle demeure sans réponse. L'apaisement de l'échange ne suffit pas à le lever.",
+        "recommendedApproach": "Ouvre la possibilité d'une difficulté ou d'un désaccord sans le supposer. S'il est confirmé, distingue son objet, son effet et les informations partageables avec son accord. Décide dans ton périmètre ou transmets au décideur compétent ; partage sans délai ce qui relève d'une obligation d'alerte, en expliquant cette limite de confidentialité.",
+                "wordsToUse": [
+                    {
+                        "intent": "Autoriser",
+                        "text": "« Y a-t-il une difficulté ou un désaccord professionnel que tu aimerais pouvoir aborder avec moi ? »"
+                    },
+                    {
+                        "intent": "Préciser",
+                        "text": "« Quel effet concret produit-il sur ton travail ? »"
+                    },
+                    {
+                        "intent": "Délimiter le partage",
+                        "text": "« Que puis-je transmettre, à qui, avec ton accord ? »"
+                    },
+                    {
+                        "intent": "Suivre",
+                        "text": "« Je te donne l'avancement de la décision à [date]. »"
+                    }
+                ],
+                "avoid": "Évite de conclure que le frein est levé parce que l'entretien s'est déroulé sereinement.",
+        "practicalAction": "Propose un échange protégé sur une difficulté professionnelle. Si une réponse est nécessaire, agis dans ton périmètre ou transmets les éléments partageables, sans différer une alerte obligatoire. Vérifiez ensuite la suite obtenue et si le collaborateur peut signaler plus tôt un prochain désaccord pertinent."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/D/IC",
+            "participant": {
+                "code": "IC",
+                "primary": "I",
+                "secondary": "C"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux questionner largement puis expliquer les contraintes pour rendre le problème compréhensible. Cette pédagogie aide, mais elle peut occuper l'espace sans clarifier la décision que le collaborateur peut prendre.",
+                "potentialFriction": "Un échange riche suivi de nouvelles demandes de validation montre que la marge d'action est restée floue. Davantage d'explications ne réduit pas nécessairement ces validations.",
+        "recommendedApproach": "Demande quel résultat il attend de l'échange et ce qui freine sa contribution. Si une décision manquante est en cause, vérifie le seul fait qui la conditionne, puis distingue la latitude managériale de l'orientation reçue. Porte à la direction la limite qui dépasse ton mandat au lieu de la masquer par davantage d'explications.",
+                "wordsToUse": [
+                    {
+                        "intent": "Centrer",
+                        "text": "« Quelle décision manque pour faire avancer ce résultat ? »"
+                    },
+                    {
+                        "intent": "Vérifier",
+                        "text": "« Quel fait unique conditionne cette décision ? »"
+                    },
+                    {
+                        "intent": "Délimiter",
+                        "text": "« Cette contrainte est fixée ; cette latitude t'appartient. »"
+                    },
+                    {
+                        "intent": "Conclure",
+                        "text": "« Au-delà, je demande l'arbitrage et reviens à [date]. »"
+                    }
+                ],
+                "avoid": "Évite de détailler tout le contexte lorsque la personne attend une marge décisionnelle lisible.",
+        "practicalAction": "Lors du prochain échange, demande ce qui freine sa contribution avant de chercher à clarifier les décisions. Si une marge d'action insuffisante est identifiée, distingue ce qu'il peut décider, ce qui relève de toi et ce qui nécessite l'accord de la direction. Vérifiez ensuite si cette clarification lui permet de contribuer avec davantage d'autonomie et de confiance."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/D/S",
+            "participant": {
+                "code": "S",
+                "primary": "S",
+                "secondary": null
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux écouter longtemps et chercher un compromis acceptable pour préserver la relation. Cette patience soutient la confiance ; elle peut retarder l'arbitrage quotidien que le collaborateur attend de son manager.",
+                "potentialFriction": "Des priorités maintenues en parallèle, des délais renégociés ou des décisions relancées indiquent que la concertation n'a pas produit de choix. La continuité apparente repose alors sur des reports.",
+        "recommendedApproach": "Demande ce qui rend aujourd'hui sa contribution moins tenable ou moins utile. Si des attentes incompatibles apparaissent, fixe dans ton périmètre une priorité provisoire et explicite la capacité disponible. Au-delà, porte à la direction les conséquences concrètes sans promettre l'abandon d'une orientation reçue.",
+                "wordsToUse": [
+                    {
+                        "intent": "Clarifier",
+                        "text": "« Attends-tu de moi une priorité, un moyen ou une marge plus nette ? »"
+                    },
+                    {
+                        "intent": "Choisir",
+                        "text": "« Pour cette période, [priorité] passe avant [autre]. »"
+                    },
+                    {
+                        "intent": "Différer",
+                        "text": "« Je reporte explicitement [demande] au lieu de conserver les deux. »"
+                    },
+                    {
+                        "intent": "Escalader",
+                        "text": "« Si ce choix me dépasse, je le porte avec un retour à [date]. »"
+                    }
+                ],
+                "avoid": "Évite de prolonger la recherche d'accord quand l'absence de priorité entretient les reports.",
+        "practicalAction": "Demande ce qui rend aujourd'hui sa contribution moins soutenable ou moins utile. Si des priorités incompatibles sont confirmées, clarifie ce que tu peux arbitrer dans ton périmètre ou sollicite la direction. Vérifiez ensuite si la personne retrouve une charge plus soutenable et une possibilité réelle de s'engager."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/D/SD",
+            "participant": {
+                "code": "SD",
+                "primary": "S",
+                "secondary": "D"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux écouter pour préserver la confiance, puis décider d'un ajustement net afin de sortir de l'enlisement. La décision peut cependant retirer au collaborateur la responsabilité qu'il voulait retrouver.",
+                "potentialFriction": "Un ajustement appliqué sans appropriation peut produire des demandes de clarification, une double exécution ou une baisse d'initiative. L'absence d'objection ne montre pas que la répartition est comprise.",
+        "recommendedApproach": "Demande ce qui fragilise sa contribution et quelle responsabilité il souhaite exercer. Distingue l'orientation reçue, l'organisation que tu peux adapter et l'arbitrage qui appartient à la direction. Si un ajustement est utile, répartis explicitement ce que tu modifies, ce qu'il conduit et ce qui doit être validé ailleurs.",
+                "wordsToUse": [
+                    {
+                        "intent": "Situer",
+                        "text": "« Cet échange doit nous conduire à un ajustement concret. »"
+                    },
+                    {
+                        "intent": "Projeter",
+                        "text": "« Quel résultat et quelle responsabilité veux-tu reprendre ? »"
+                    },
+                    {
+                        "intent": "Répartir",
+                        "text": "« Je modifie [cadre] et tu conduis [action]. »"
+                    },
+                    {
+                        "intent": "Borner",
+                        "text": "« [Point] nécessite une validation ; je la demande avant [date]. »"
+                    }
+                ],
+                "avoid": "Évite de concevoir seul la solution après avoir demandé au collaborateur de décrire le frein.",
+        "practicalAction": "Formalisez une responsabilité choisie et la part managériale qui la soutient. Après une première étape, vérifiez la décision qu'il a prise dans ce cadre et s'il souhaite maintenir cette responsabilité dans les conditions convenues."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/D/SI",
+            "participant": {
+                "code": "SI",
+                "primary": "S",
+                "secondary": "I"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux reconnaître publiquement la contribution et recréer des échanges réguliers. Cette reconnaissance soutient le lien, mais elle ne remplace pas la latitude nécessaire pour agir.",
+                "potentialFriction": "Une contribution valorisée qui reste soumise aux mêmes validations ou dont les propositions restent sans suite conserve le même obstacle. La reconnaissance peut alors sembler déconnectée du travail réel.",
+        "recommendedApproach": "Reconnais un résultat précis, puis demande ce que cette reconnaissance ne résout pas. Si une influence insuffisante sur le travail constitue le frein, identifie une décision qu'il souhaite assumer dans le cadre reçu. Accorde-la dans ton périmètre ou demande à la direction l'autorisation nécessaire en expliquant l'effet attendu sur l'équipe.",
+                "wordsToUse": [
+                    {
+                        "intent": "Reconnaître",
+                        "text": "« Ton action sur [élément] a produit [résultat]. »"
+                    },
+                    {
+                        "intent": "Approfondir",
+                        "text": "« Qu'est-ce que cette reconnaissance ne change pas dans ton quotidien ? »"
+                    },
+                    {
+                        "intent": "Autonomiser",
+                        "text": "« Quelle décision pourrais-tu prendre sans me solliciter ? »"
+                    },
+                    {
+                        "intent": "Autoriser",
+                        "text": "« Je peux ouvrir [champ] ; au-delà, je demande l'accord à [responsable]. »"
+                    }
+                ],
+                "avoid": "Évite d'utiliser la reconnaissance comme compensation à une autonomie que tu pourrais réellement ajuster.",
+        "practicalAction": "Après avoir reconnu une contribution précise, demande ce qui continue à limiter son engagement. Si le manque d'autonomie constitue le frein, examine une décision qu'il pourrait exercer dans ton périmètre ou sollicite l'autorisation nécessaire. Vérifiez ensuite si cette marge de décision lui permet de retrouver une contribution utile et choisie."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/D/SC",
+            "participant": {
+                "code": "SC",
+                "primary": "S",
+                "secondary": "C"
+            },
+            "content": {
+        "yourLikelyReflex": "Tu peux vouloir préserver la continuité de l'équipe en vérifiant qu'un essai ne crée pas de risque disproportionné. Ce souci de stabilité aide à borner l'action ; il peut toutefois maintenir un cadre devenu trop contraignant si son utilité n'est pas réexaminée.",
+                "potentialFriction": "Des contrôles successifs sans réduction du risque ni décision de lancement prolongent l'immobilité. Leur accumulation peut devenir elle-même le frein opérationnel.",
+        "recommendedApproach": "Demande d'abord ce qui freine son engagement. Si une exigence de sécurité ou de qualité contribue à la difficulté, distingue la vérification indispensable des précautions facultatives. Évalue un essai proportionné dans ton périmètre ; sinon, présente à la direction le risque, les limites proposées et l'effet attendu sur l'équipe.",
+                "wordsToUse": [
+                    {
+                        "intent": "Discriminer",
+                        "text": "« Quelle inconnue changerait réellement le niveau de risque ? »"
+                    },
+                    {
+                        "intent": "Coûter",
+                        "text": "« Que nous coûte ce contrôle en délai et en capacité ? »"
+                    },
+                    {
+                        "intent": "Tester",
+                        "text": "« J'autorise cet essai sur [champ] jusqu'à [date], avec [seuil]. »"
+                    },
+                    {
+                        "intent": "Faire valider",
+                        "text": "« Cette autorisation me dépasse ; je la demande à [responsable]. »"
+                    }
+                ],
+                "avoid": "Évite d'ajouter un contrôle sans dire quelle décision son résultat permettra de prendre.",
+        "practicalAction": "Si un essai peut traiter le frein, définissez ensemble son périmètre et son seuil d'arrêt. Autorise-le dans ton mandat ou demande sa validation. Au bilan, examinez séparément les incidents et la capacité du collaborateur à s'engager, proposer un ajustement ou arrêter au seuil."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/D/C",
+            "participant": {
+                "code": "C",
+                "primary": "C",
+                "secondary": null
+            },
+            "content": {
+        "yourLikelyReflex": "Tu peux vouloir fonder ton intervention sur les faits qui départagent réellement les options. Cette rigueur sécurise la décision ; elle devient moins utile lorsque les informations restantes ne pourraient plus en modifier le sens.",
+                "potentialFriction": "Une accumulation d'informations sans réduction des options ni du nombre de blocages indique que l'analyse ne rapproche plus de la décision. Le dossier reste documenté mais immobile.",
+        "recommendedApproach": "Demande ce qui freine son engagement avant de rechercher d'autres faits. Si l'incertitude décisionnelle est en cause, distingue l'information qui changerait le choix de celle qui ne ferait que le préciser. Décide avec un niveau de preuve suffisant dans ton périmètre ou transmets à la direction les éléments discriminants et leur impact sur l'équipe.",
+                "wordsToUse": [
+                    {
+                        "intent": "Discriminer",
+                        "text": "« Quelle information modifierait réellement notre décision ? »"
+                    },
+                    {
+                        "intent": "Arrêter",
+                        "text": "« Les éléments disponibles suffisent pour agir sur [point]. »"
+                    },
+                    {
+                        "intent": "Documenter",
+                        "text": "« Je transmets ces deux faits parce qu'ils départagent les options. »"
+                    },
+                    {
+                        "intent": "Suivre",
+                        "text": "« Je te réponds sur l'arbitrage à [date]. »"
+                    }
+                ],
+                "avoid": "Évite de demander une analyse exhaustive quand elle ne modifierait pas la décision managériale.",
+        "practicalAction": "Demande d'abord ce qui fragilise son engagement avant de rechercher des informations supplémentaires. Si une incertitude décisionnelle est confirmée, identifie la donnée réellement nécessaire et décide dans ton périmètre ou sollicite l'arbitrage. Vérifiez ensuite si la réponse obtenue facilite son travail et lui redonne une perspective d'action."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/D/CD",
+            "participant": {
+                "code": "CD",
+                "primary": "C",
+                "secondary": "D"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux concevoir un cadre plus efficace puis en demander l'application. La cohérence du système progresse ; la méthode peut toutefois devenir plus prescrite alors que le frein concernait la latitude.",
+                "potentialFriction": "Une nouvelle procédure peut réduire certains écarts tout en maintenant les demandes de validation et la faible initiative. Le système est plus net sans rendre davantage de prise sur le résultat.",
+        "recommendedApproach": "Présente ton diagnostic comme une hypothèse et demande ce qui fragilise réellement son engagement. Si la latitude sur la méthode est en cause, rappelle les exigences reçues et précise celles que tu peux arrêter dans ton périmètre. Laisse-le proposer la méthode et porte toi-même les dépendances externes ou l'arbitrage supérieur.",
+                "wordsToUse": [
+                    {
+                        "intent": "Soumettre",
+                        "text": "« Mon hypothèse est [cause] ; qu'est-ce qui la contredit ? »"
+                    },
+                    {
+                        "intent": "Influencer",
+                        "text": "« Quel changement te rendrait une prise réelle sur le résultat ? »"
+                    },
+                    {
+                        "intent": "Cadrer",
+                        "text": "« Ces exigences restent fixes ; propose la méthode pour les tenir. »"
+                    },
+                    {
+                        "intent": "Porter",
+                        "text": "« Je prends en charge la dépendance avec [interlocuteur]. »"
+                    }
+                ],
+                "avoid": "Évite de répondre à un manque de latitude par une procédure plus détaillée.",
+        "practicalAction": "Demande ce qui fragilise réellement sa contribution avant de proposer une nouvelle méthode. Si un manque de latitude est confirmé, clarifie les exigences non négociables et laisse le collaborateur proposer une manière de les respecter. Après une première étape, vérifiez si cette autonomie soutient sa contribution sans compromettre le résultat attendu."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/D/CI",
+            "participant": {
+                "code": "CI",
+                "primary": "C",
+                "secondary": "I"
+            },
+            "content": {
+                "yourLikelyReflex": "Tu peux expliquer précisément les contraintes et les raisons des décisions. Cette transparence rend le cadre compréhensible ; elle peut laisser sans réponse la demande concrète adressée au manager.",
+                "potentialFriction": "Un collaborateur peut comprendre le contexte tout en continuant à relancer la même décision ou à contourner la même contrainte. L'explication n'a alors produit ni marge nouvelle ni arbitrage.",
+        "recommendedApproach": "Demande ce qui a changé dans sa contribution et quelle réponse il attend réellement de toi. Donne seulement l'information utile, agis dans ton périmètre et formule pour la direction une recommandation concise avec son impact sur l'équipe. Vérifie la suite obtenue plutôt que la compréhension seule.",
+                "wordsToUse": [
+                    {
+                        "intent": "Demander",
+                        "text": "« Quelle action attends-tu de moi comme manager ? »"
+                    },
+                    {
+                        "intent": "Informer",
+                        "text": "« La contrainte utile à cette décision est [contrainte]. »"
+                    },
+                    {
+                        "intent": "Agir",
+                        "text": "« Je modifie [point] dans notre fonctionnement. »"
+                    },
+                    {
+                        "intent": "Recommander",
+                        "text": "« Je propose [ajustement] à [responsable] et reviens à [date]. »"
+                    }
+                ],
+                "avoid": "Évite de remplacer l'action attendue par une présentation complète du contexte.",
+        "practicalAction": "Reformule le frein, apporte la réponse relevant de toi ou transmets une recommandation argumentée à la direction. Au retour convenu, vérifiez l'action déclenchée et si la réponse permet au collaborateur de formuler une nouvelle contribution qu'il juge utile."
+            }
+        },
+        {
+            "id": "management/collaborateurs_encadres/motiver/D/CS",
+            "participant": {
+                "code": "CS",
+                "primary": "C",
+                "secondary": "S"
+            },
+            "content": {
+        "yourLikelyReflex": "Tu peux rendre visibles plusieurs dépendances afin de proposer un soutien cohérent et soutenable. Cette vue d'ensemble protège l'équipe ; elle peut néanmoins laisser le besoin prioritaire sans réponse immédiate si aucun ordre de traitement n'est posé.",
+                "potentialFriction": "Des contraintes présentées au même niveau sans mesure temporaire laissent les dossiers suspendus et les relances se poursuivre. La compréhension de la complexité ne produit pas de capacité supplémentaire.",
+        "recommendedApproach": "Demande ce qui affecte réellement son engagement et hiérarchisez le besoin prioritaire. Si une mesure provisoire peut aider sans déplacer la charge, applique-la dans ton périmètre ; pour ce qui dépend des orientations reçues, formule à la direction une recommandation avec l'impact équipe et un critère de réexamen.",
+                "wordsToUse": [
+                    {
+                        "intent": "Hiérarchiser",
+                        "text": "« Quel besoin affecte directement le résultat aujourd'hui ? »"
+                    },
+                    {
+                        "intent": "Protéger temporairement",
+                        "text": "« J'applique [mesure] sur [champ] jusqu'à [date]. »"
+                    },
+                    {
+                        "intent": "Ne pas transférer",
+                        "text": "« Cette mesure ne déplacera pas la charge sur un collègue. »"
+                    },
+                    {
+                        "intent": "Recommander",
+                        "text": "« Je porte [besoin] à [décideur] avec cette conséquence observable. »"
+                    }
+                ],
+                "avoid": "Évite de présenter toutes les contraintes sans choisir le soutien immédiat et l'arbitrage prioritaire.",
+        "practicalAction": "Identifie avec le collaborateur ce qui limite son engagement et le soutien prioritaire dont il aurait besoin. Si une mesure provisoire proportionnée est possible dans ton périmètre, mets-la en œuvre sans transférer la charge à un collègue ; sinon, sollicite l'arbitrage nécessaire. Vérifiez ensuite si elle améliore réellement ses conditions de contribution."
+            }
+        }
+    ]
+}

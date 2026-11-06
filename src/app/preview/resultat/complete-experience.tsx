@@ -13,6 +13,8 @@ import FunctioningDemo, { type DailyCombination, type StoredPressureResult } fro
 import ForcesDefis from "../forces-et-defis-v2/preview";
 import AvecLesAutres from "../avec-les-autres-v2/preview";
 import Grandir from "../grandir-v1/preview";
+import OrganisationPreview from "../dans-une-organisation-v1/preview";
+import { ORGANISATION_MANUAL_SOURCE, defaultContextForRole, normalizeManualOrganisationContent } from "../dans-une-organisation-v1/dataset";
 import { withMappBasePath } from "@/lib/routing/base-path";
 
 const source = normalizeIntegralV10();
@@ -140,7 +142,6 @@ function appendDetailSection(doc: Document, container: HTMLElement, label: strin
 
 export function ensureCompleteResultsJourney(doc: Document, initialPage = 1) {
   if (doc.getElementById("page-7")) return;
-  const visibleInitialPage = initialPage === 5 ? 6 : initialPage;
   const legacyGrowth = doc.getElementById("page-5");
   const legacyBible = doc.getElementById("page-6");
   if (!legacyGrowth || !legacyBible) return;
@@ -154,12 +155,21 @@ export function ensureCompleteResultsJourney(doc: Document, initialPage = 1) {
   });
 
   const growthButton = doc.querySelector<HTMLElement>('.nav [data-page="6"]');
+  const organisationButton = doc.createElement("button");
+  organisationButton.setAttribute("data-page", "5");
+  organisationButton.innerHTML = '<span class="num">05</span> Dans une organisation';
+  growthButton?.before(organisationButton);
   const growthNumber = growthButton?.querySelector<HTMLElement>(".num");
-  if (growthNumber) growthNumber.textContent = "05";
+  if (growthNumber) growthNumber.textContent = "06";
   const bibleNumber = doc.querySelector<HTMLElement>('.nav [data-page="7"] .num');
-  if (bibleNumber) bibleNumber.textContent = "06";
-  doc.querySelectorAll<HTMLElement>(".page").forEach(page => page.classList.toggle("active", page.id === `page-${visibleInitialPage}`));
-  doc.querySelectorAll<HTMLElement>(".nav [data-page]").forEach(button => button.classList.toggle("active", button.dataset.page === String(visibleInitialPage)));
+  if (bibleNumber) bibleNumber.textContent = "07";
+
+  const organisationPage = doc.createElement("section");
+  organisationPage.id = "page-5";
+  organisationPage.className = "page";
+  legacyGrowth.before(organisationPage);
+  doc.querySelectorAll<HTMLElement>(".page").forEach(page => page.classList.toggle("active", page.id === `page-${initialPage}`));
+  doc.querySelectorAll<HTMLElement>(".nav [data-page]").forEach(button => button.classList.toggle("active", button.dataset.page === String(initialPage)));
 }
 
 export function hydrateDraftProfile(
@@ -673,7 +683,7 @@ export function hydrateDraftProfile(
     }
     page?.style.setProperty("--profile", journeyColor);
     page?.setAttribute("data-editorial-source", "biblical-v10");
-    setText(doc, "#page-7 .bible-top .kicker", "06 / Dans la Bible");
+    setText(doc, "#page-7 .bible-top .kicker", "07 / Dans la Bible");
     page?.style.setProperty("--profile-pale", `color-mix(in srgb, ${journeyColor} 10%, white)`);
     page?.style.setProperty("--profile-soft", `color-mix(in srgb, ${journeyColor} 22%, white)`);
 
@@ -995,6 +1005,7 @@ export default function CompleteExperience({
   const forcesRoot = useRef<Root | null>(null);
   const relationsRoot = useRef<Root | null>(null);
   const growthRoot = useRef<Root | null>(null);
+  const organisationRoot = useRef<Root | null>(null);
   const [height, setHeight] = useState(1700);
   const [ready, setReady] = useState(false);
 
@@ -1067,6 +1078,7 @@ export default function CompleteExperience({
     forcesRoot.current?.unmount();
     relationsRoot.current?.unmount();
     growthRoot.current?.unmount();
+    organisationRoot.current?.unmount();
     const profileDisc = { conquerant: "D", communiquant: "I", facilitateur: "S", analyste: "C" } as const;
     const naturalPair = `${profileDisc[profileCode]}${profileDisc[secondaryCode]}` as DailyCombination;
     const pressureValues = pressureScores && ["conquerant", "communiquant", "facilitateur", "analyste"].every(code => typeof pressureScores[code as PreviewProfileCode] === "number")
@@ -1124,8 +1136,8 @@ export default function CompleteExperience({
           const nextTitle = pageNavigation.querySelector<HTMLElement>("strong");
           const nextButton = pageNavigation.querySelector<HTMLElement>("[data-go]");
           if (nextStep) nextStep.textContent = "Prochaine étape · 05";
-          if (nextTitle) nextTitle.textContent = "Grandir";
-          if (nextButton) nextButton.dataset.go = "6";
+          if (nextTitle) nextTitle.textContent = "Dans une organisation";
+          if (nextButton) nextButton.dataset.go = "5";
         }
         relationsHost.replaceChildren();
         const reactHost = doc.createElement("div");
@@ -1134,6 +1146,41 @@ export default function CompleteExperience({
         relationsRoot.current = createRoot(reactHost);
         relationsRoot.current.render(<AvecLesAutres combination={naturalPair} embedded />);
       }
+    }
+    const organisationHost = doc.querySelector<HTMLElement>("#page-5");
+    if (organisationHost && !profileOnly) {
+      const reactHost = doc.createElement("div");
+      organisationHost.replaceChildren(reactHost);
+      fetch(ORGANISATION_MANUAL_SOURCE)
+        .then(async response => {
+          if (!response.ok) throw new Error(`Contenus Organisation indisponibles (${response.status})`);
+          return normalizeManualOrganisationContent(await response.json());
+        })
+        .then(dataset => {
+          const configuration = dataset.configurations[naturalPair];
+          const initialRole = "direction" as const;
+          organisationRoot.current = createRoot(reactHost);
+          organisationRoot.current.render(<OrganisationPreview
+            combination={naturalPair}
+            configuration={configuration}
+            manifest={dataset}
+            initialRole={initialRole}
+            initialContext={defaultContextForRole(configuration, initialRole)}
+            embedded
+            onNavigate={targetPage => {
+              activeDoc.querySelectorAll<HTMLElement>(".page").forEach(page => page.classList.toggle("active", page.id === `page-${targetPage}`));
+              activeDoc.querySelectorAll<HTMLElement>(".nav [data-page]").forEach(item => item.classList.toggle("active", item.dataset.page === String(targetPage)));
+              setTimeout(syncHeight, 30);
+              requestAnimationFrame(() => {
+                frame.contentWindow?.scrollTo({ top: 0, left: 0, behavior: "instant" });
+                frame.scrollIntoView({ behavior: "instant", block: "start" });
+              });
+            }}
+          />);
+        })
+        .catch(error => {
+          reactHost.textContent = error instanceof Error ? error.message : "Le guide n’a pas pu être chargé.";
+        });
     }
     const growthHost = doc.querySelector<HTMLElement>("#page-6");
     if (growthHost) {
@@ -1228,8 +1275,9 @@ export default function CompleteExperience({
         key={`${profileCode}-${secondaryCode}-${initialPage}`}
         src={`${withMappBasePath("/preview/profil-mapp-complet.html")}#page-${initialPage}`}
         title="Restitution complète Profil MAPP"
+        loading="eager"
         onLoad={prepareFrame}
-        style={{ height, width: previewViewport ? `${previewViewport}px` : undefined, maxWidth: previewViewport ? "none" : undefined, marginInline: previewViewport ? "auto" : undefined, opacity: ready ? 1 : 0, visibility: ready ? "visible" : "hidden", transition: "opacity .18s ease" }}
+        style={{ height, width: previewViewport ? `${previewViewport}px` : undefined, maxWidth: previewViewport ? "none" : undefined, marginInline: previewViewport ? "auto" : undefined, opacity: ready ? 1 : 0, visibility: "visible", transition: "opacity .18s ease" }}
       />
     </section>
   );
