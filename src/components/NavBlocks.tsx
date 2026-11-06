@@ -82,6 +82,16 @@ export function NavSections({ collapsed = false, onNavigate }: { collapsed?: boo
   const { spaces, current, pendingValidationCount } = useSpace();
   const multiple = spaces.length > 1;
   const [adminOpen, setAdminOpen] = useState(!!current);
+  const toolsOpenAt = new Date("2026-11-07T06:00:00.000Z").getTime();
+  const [toolsVisible, setToolsVisible] = useState(() => Date.now() >= toolsOpenAt);
+
+  useEffect(() => {
+    if (toolsVisible) return;
+    const remaining = toolsOpenAt - Date.now();
+    if (remaining <= 0) { setToolsVisible(true); return; }
+    const timer = window.setTimeout(() => setToolsVisible(true), remaining);
+    return () => window.clearTimeout(timer);
+  }, [toolsOpenAt, toolsVisible]);
 
   useEffect(() => {
     if (current) {
@@ -121,7 +131,7 @@ export function NavSections({ collapsed = false, onNavigate }: { collapsed?: boo
             </p>
           )}
           <ul className="space-y-0.5">
-            {section.items.map((item) => (
+            {section.items.filter((item) => item.label !== "Mes outils" || toolsVisible).map((item) => (
               <li key={item.label}>
                 <NavLink
                   href={item.href}

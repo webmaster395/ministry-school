@@ -36,13 +36,16 @@ test("public launchpad reads the persisted catalog and exposes only public apps 
   assert.match(catalog, /ministryAppUrls[\s\S]*"profil-mapp": "\/apps\/profil-mapp"/);
 });
 
-test("Mes outils utilise le portail public unique accessible sans connexion", () => {
+test("Mes outils ouvre le portail public mais reste masqué jusqu'au 7 novembre à 07h", () => {
   const migration = read("supabase/migrations/20261101190000_tools_visibility_and_scheduling.sql");
   const nav = read("src/lib/nav.tsx");
   const landing = read("src/app/page.tsx");
+  const navBlocks = read("src/components/NavBlocks.tsx");
   assert.match(migration, /student_tools_enabled boolean not null default false/);
   assert.match(nav, /label: "Mes outils"[\s\S]*href: "\/apps"/);
-  assert.match(landing, /href="\/apps">Mes outils/);
+  assert.doesNotMatch(landing, /href="\/apps">Mes outils/);
+  assert.match(navBlocks, /2026-11-07T06:00:00\.000Z/);
+  assert.match(navBlocks, /item\.label !== "Mes outils" \|\| toolsVisible/);
 });
 
 test("les publications publique et étudiante sont indépendantes et programmées à l'heure réelle", () => {
