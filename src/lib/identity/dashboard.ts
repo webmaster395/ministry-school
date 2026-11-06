@@ -14,7 +14,7 @@ export type IdentityResult = {
 };
 
 export type IdentityDashboard = {
-  profile: { firstName: string; memberSince: string | null; certified: boolean };
+  profile: { firstName: string; memberSince: string | null; certified: boolean; gender?: "homme" | "femme" | null };
   metrics: { studentCount: number; completedTests: number };
   identityResults: IdentityResult[];
   financeResults: IdentityResult[];
@@ -22,7 +22,7 @@ export type IdentityDashboard = {
 };
 
 const emptyDashboard: IdentityDashboard = {
-  profile: { firstName: "", memberSince: null, certified: false },
+  profile: { firstName: "", memberSince: null, certified: false, gender: null },
   metrics: { studentCount: 0, completedTests: 0 },
   identityResults: [],
   financeResults: [],

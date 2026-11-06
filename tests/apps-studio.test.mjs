@@ -41,8 +41,8 @@ test("Mes outils reste accessible et n'affiche que le catalogue étudiant activ�
   const nav = read("src/lib/nav.tsx");
   const page = read("src/app/etudiant/outils/page.tsx");
   assert.match(migration, /student_tools_enabled boolean not null default false/);
-  assert.match(nav, /label: "Mes outils"[\s\S]*href: "\/apps"/);
-  assert.match(page, /const apps = enabled \? await getStudentTools\(\) : \[\]/);
+  assert.match(nav, /label: "Mes outils"[\s\S]*href: "\/etudiant\/outils"/);
+  assert.match(page, /isSuperAdmin[\s\S]*includeUnpublished: true[\s\S]*enabled \? await getStudentTools\(\) : \[\]/);
   assert.match(page, /Aucun outil disponible pour le moment/);
 });
 
@@ -105,11 +105,12 @@ test("le Launchpad centre le nombre réel d’applications sans colonnes fantôm
   assert.match(styles, /\.appName \{[^}]*text-align:center/);
 });
 
-test("Gestion des outils reste dans Ministry School tandis que Mes outils ouvre le portail public", () => {
+test("Gestion des outils reste dans Ministry School tandis que Mes outils ouvre l'espace étudiant", () => {
   const nav = read("src/lib/nav.tsx");
   const links = read("src/components/NavBlocks.tsx");
   const provider = read("src/components/SpaceProvider.tsx");
-  assert.match(nav, /label: "Mes outils"[\s\S]*href: "\/apps"[\s\S]*target: "_blank"/);
+  assert.match(nav, /label: "Mes outils"[\s\S]*href: "\/etudiant\/outils"/);
+  assert.doesNotMatch(nav, /label: "Mes outils"[\s\S]*target: "_blank"/);
   assert.match(nav, /label: "Gestion des outils"[\s\S]*href: "\/admin\/apps"/);
   assert.doesNotMatch(nav, /href: "\/admin\/apps"[\s\S]{0,120}target: "_blank"/);
   assert.match(links, /target=\{target\}/);

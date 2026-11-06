@@ -24,11 +24,22 @@ test("le tableau de bord privé consolide ses lectures et ne rapproche jamais pa
 
 test("les stories ouvrent les outils publiés et les publications viennent des résultats terminés", () => {
   const page = read("src/app/etudiant/identite/page.tsx");
-  assert.match(page, /dashboard\.profile\.certified \?/);
   assert.match(page, /getStudentTools\(\)/);
-  assert.match(page, /storiesForTools\(tools\)/);
-  assert.match(page, /results = \[\.\.\.dashboard\.identityResults, \.\.\.dashboard\.financeResults\]/);
-  assert.match(page, /Les tests en cours ne génèrent aucune publication/);
+  assert.match(page, /buildStories\(tools, dashboard\.recommendations\)/);
+  assert.match(page, /results=\{\[\.\.\.dashboard\.identityResults, \.\.\.dashboard\.financeResults\]\}/);
+
+  const experience = read("src/app/etudiant/identite/IdentityExperience.tsx");
+  assert.match(experience, /props\.certified \?/);
+  assert.match(experience, /Les résultats apparaîtront après la finalisation d’un test/);
+  assert.match(experience, /href="\/apps\/profil-mapp#resultat"/);
+  assert.doesNotMatch(experience, /Retrouve les réponses et résultats enregistrés par l’outil/);
+});
+
+test("le genre est ajouté à la lecture consolidée sans requête supplémentaire", () => {
+  const migration = read("supabase/migrations/20261106130000_student_identity_profile_gender.sql");
+  assert.match(migration, /'gender',current_profile\.gender/);
+  assert.match(migration, /participant_auth_identities[\s\S]*auth_user_id\s*=\s*current_user_id/);
+  assert.doesNotMatch(migration, /where[^;]*email\s*=/i);
 });
 
 test("les pages de résultats permettent un retour direct vers Mon identité", () => {
