@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { ArrowLeft, Check, Heart, Lightbulb, Save, Sparkles, UsersRound } from "lucide-react";
 import { fruitTraits, naturalSkillCategories, spiritualGifts, type GraceTestKey } from "@/lib/apps/grace-identity";
 import SkillReviewLink from "@/components/apps/SkillReviewLink";
@@ -30,7 +31,7 @@ export default function GraceIdentityTool({ initial, preview }: { initial: Recor
   if (active === "gifts") return <GiftsJourney initial={byKey.get("gifts")?.answers ?? {}} saving={saving} onBack={() => setActive(null)} onSave={(answers) => save("gifts", answers)} />;
   if (active) return <TestScreen testKey={active} initial={byKey.get(active)?.answers ?? {}} saving={saving} onBack={() => setActive(null)} onSave={save} />;
   return <div className="mx-auto max-w-5xl space-y-7 pb-10">
-    <header className="max-w-3xl"><p className="label text-[11px] text-muted">MES OUTILS</p><h1 className="mt-2 font-title text-4xl tracking-tight sm:text-5xl">Je suis ce que je suis par la grâce de Dieu</h1><p className="mt-4 text-base leading-7 text-muted">Découvre le fruit de l’Esprit, explore tes dons spirituels et identifie tes compétences naturelles. Avance à ton rythme et prends le temps de mieux te connaître.</p>{preview && <p className="mt-4 inline-flex rounded-full bg-[#f8e7bd] px-3 py-1.5 text-xs font-medium text-[#765311]">Aperçu Super admin — cet outil reste invisible aux étudiants.</p>}</header>
+    <header className="max-w-3xl"><Link href="/etudiant/identite" className="mb-5 inline-flex min-h-10 items-center gap-2 text-sm text-muted hover:text-foreground"><ArrowLeft size={16} /> Mon identité</Link><p className="label text-[11px] text-muted">MES OUTILS</p><h1 className="mt-2 font-title text-4xl tracking-tight sm:text-5xl">Je suis ce que je suis par la grâce de Dieu</h1><p className="mt-4 text-base leading-7 text-muted">Découvre le fruit de l’Esprit, explore tes dons spirituels et identifie tes compétences naturelles. Avance à ton rythme et prends le temps de mieux te connaître.</p>{preview && <p className="mt-4 inline-flex rounded-full bg-[#f8e7bd] px-3 py-1.5 text-xs font-medium text-[#765311]">Aperçu Super admin — cet outil reste invisible aux étudiants.</p>}</header>
     <div className="grid gap-4 md:grid-cols-3">{(Object.keys(testMeta) as GraceTestKey[]).map((key) => { const item = testMeta[key]; const Icon = item.icon; const done = byKey.has(key); return <section key={key} className="flex min-h-64 flex-col rounded-[24px] border border-border bg-background p-5 sm:p-6"><span className="grid h-12 w-12 place-items-center rounded-2xl bg-surface"><Icon size={22} /></span><h2 className="mt-6 font-title text-2xl">{item.title}</h2><p className="mt-2 text-sm leading-6 text-muted">{item.text}</p><button type="button" onClick={() => setActive(key)} className="mt-auto inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-foreground px-4 text-sm font-medium text-on-accent">{done ? <><Check size={16} /> Voir mes résultats</> : "Commencer"}</button></section>; })}</div>
   </div>;
 }

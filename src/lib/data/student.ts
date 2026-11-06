@@ -381,6 +381,30 @@ export async function getStudentAssignments(
   })) as StudentAssignment[];
 }
 
+const getCachedStudentAssignments = unstable_cache(
+  async (sessionIds: string[]) =>
+    getStudentAssignments(createServiceClient(), sessionIds),
+  ["student-assignments-v1"],
+  { tags: [STUDENT_PROGRAM_CACHE_TAG], revalidate: 300 },
+);
+
+/**
+ * Les consignes visibles dépendent uniquement du programme déjà autorisé.
+ * Elles sont donc mutualisées par liste de séances au lieu d'être relues par
+ * chacun des 400 étudiants. Les complétions restent, elles, personnelles.
+ */
+export async function getStudentProgramAssignments(
+  supabase: SupabaseClient,
+  sessionIds: string[],
+) {
+  if (!sessionIds.length) return [];
+  const stableIds = [...new Set(sessionIds)].sort();
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return getStudentAssignments(supabase, stableIds);
+  }
+  return getCachedStudentAssignments(stableIds);
+}
+
 export type StudentWorkItem = {
   assignment: StudentAssignment;
   origin: StudentSession;

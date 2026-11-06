@@ -1,0 +1,36 @@
+{
+  "code": "natural-v3-pressure-v1",
+  "version": 1,
+  "status": "draft",
+  "questionnaireCode": "profil-mapp",
+  "questionnaireVersion": 3,
+  "algorithm": "weighted-points-map-v1",
+  "formula": "(sum(coded_answers) - n) / (4 * n) * 100",
+  "scale": { "minimum": 1, "maximum": 5 },
+  "classification": null,
+  "thresholds": null,
+  "rules": [
+    { "questionKey": "P01", "dimension": "conquerant", "direction": -1, "weight": 1 },
+    { "questionKey": "P02", "dimension": "conquerant", "direction": 1, "weight": 1 },
+    { "questionKey": "P03", "dimension": "facilitateur", "direction": 1, "weight": 1 },
+    { "questionKey": "P04", "dimension": "analyste", "direction": 1, "weight": 1 },
+    { "questionKey": "P05", "dimension": "analyste", "direction": 1, "weight": 1 },
+    { "questionKey": "P06", "dimension": "communiquant", "direction": 1, "weight": 1 },
+    { "questionKey": "P07", "dimension": "conquerant", "direction": 1, "weight": 1 },
+    { "questionKey": "P08", "dimension": "analyste", "direction": 1, "weight": 1 },
+    { "questionKey": "P10", "dimension": "communiquant", "direction": 1, "weight": 1 }
+  ],
+  "excludedQuestions": [
+    {
+      "questionKey": "P09",
+      "reason": "La formulation V3 est conservée, mais son rattachement comportemental n'est pas validé. La réponse ne contribue à aucun indice sous pression."
+    }
+  ],
+  "limitations": {
+    "exploratory": true,
+    "scientificallyValidated": false,
+    "naturalScoresUnchanged": true,
+    "pressureClassificationEnabled": false,
+    "tiesPreserved": true
+  }
+}

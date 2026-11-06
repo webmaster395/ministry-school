@@ -16,8 +16,8 @@ const trackedPage = (pathname: string) => {
 };
 
 /**
- * Un seul événement par vraie navigation. Un délai aléatoire évite une rafale
- * d'écritures lorsque plusieurs centaines d'étudiants arrivent ensemble.
+ * Un seul événement par vraie navigation. Le premier écran est étalé sur une
+ * minute afin que 400 arrivées ne deviennent pas 400 écritures simultanées.
  */
 export default function StudentUsageTracker() {
   const pathname = usePathname();
@@ -30,10 +30,19 @@ export default function StudentUsageTracker() {
     const previous = Number(sessionStorage.getItem(storageKey) ?? 0);
     if (Date.now() - previous < 30_000) return;
     sessionStorage.setItem(storageKey, String(Date.now()));
+    const recordSignIn =
+      pageKey === "home" && sessionStorage.getItem("ms:just-signed-in") === "1";
 
     const timer = window.setTimeout(() => {
-      createClient().rpc("record_student_page_view", { p_page_key: pageKey }).then(() => undefined);
-    }, 2_000 + Math.random() * 6_000);
+      createClient()
+        .rpc("record_student_page_view", {
+          p_page_key: pageKey,
+          p_record_sign_in: recordSignIn,
+        })
+        .then(({ error }) => {
+          if (!error && recordSignIn) sessionStorage.removeItem("ms:just-signed-in");
+        });
+    }, 15_000 + Math.random() * 60_000);
 
     return () => window.clearTimeout(timer);
   }, [pathname]);

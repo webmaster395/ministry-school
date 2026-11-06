@@ -1,0 +1,1923 @@
+{
+  "schemaVersion": "5.0.0",
+  "locale": "fr-FR",
+  "status": "editorial-review",
+  "page": {
+    "id": "03_forces_defis",
+    "title": "Forces et défis",
+    "eyebrow": "03 / Forces et défis",
+    "introTitle": "Ce qui te distingue. Ce qui te fait grandir.",
+    "introText": "Tes tendances peuvent devenir des atouts ou créer des difficultés selon les situations. Découvre comment les reconnaître et les utiliser avec discernement.",
+    "sections": [
+      {
+        "id": "characteristics",
+        "title": "Ce qui te caractérise",
+        "layout": "four-editorial-cards",
+        "designReference": "Dans ton quotidien",
+        "photoCount": 4,
+        "items": [
+          "talents",
+          "besoins",
+          "peurs",
+          "emotions"
+        ]
+      },
+      {
+        "id": "strengths",
+        "title": "Tes forces",
+        "layout": "photo-left-six-accordions-right",
+        "designReference": "Comment tu communiques",
+        "photoCount": 1,
+        "accordionLabel": "Exemple concret"
+      },
+      {
+        "id": "challenges",
+        "title": "Tes défis",
+        "layout": "photo-left-six-accordions-right",
+        "designReference": "Comment tu communiques",
+        "photoCount": 1,
+        "accordionLabel": "À essayer"
+      }
+    ],
+    "footer": {
+      "nextPage": "04_avec_les_autres",
+      "nextLabel": "Avec les autres",
+      "showConclusion": false
+    }
+  },
+  "ui": {
+    "photographs": "6 photos MLK fournies ultérieurement par la personne, ne pas inventer les chemins",
+    "desktop": "4 cartes en grille 2x2; forces et défis avec photo verticale à gauche, six accordéons à droite",
+    "mobile": "cartes empilées ou 2x2 selon largeur réelle, photo agrandie et accordéons dessous",
+    "accordion": "premier ouvert par défaut, un seul ouvert par section, contenu immédiatement sous le titre",
+    "typography": "design system existant figé, ne pas substituer une nouvelle police",
+    "color": "couleur officielle du profil naturel principal uniquement, couleurs secondaires avec parcimonie",
+    "navigation": "conserver la flèche vers 04 / Avec les autres"
+  },
+  "editorialNotes": [
+    "Les six forces et six défis sont déterminés exclusivement par le profil principal.",
+    "Dans chaque combinaison, la description intègre la contribution du profil secondaire sans changer les titres des six forces et des six défis.",
+    "Les exemples concrets et actions À essayer sont conservés depuis la V3 du profil principal pour éviter les injonctions redondantes.",
+    "Les descriptions sont des tendances possibles et non des mesures individuelles des comportements."
+  ],
+  "profiles": {
+    "D": {
+      "primary": "D",
+      "secondary": null,
+      "label": "Conquérant",
+      "intro": "Tu avances en prenant des initiatives et en recherchant des résultats concrets.",
+      "characteristics": [
+        {
+          "id": "talents",
+          "title": "Tes talents",
+          "text": "Tu sais prendre des initiatives, clarifier une direction et mobiliser autour d’un résultat. Ces aptitudes peuvent se manifester différemment selon les responsabilités et les personnes autour de toi."
+        },
+        {
+          "id": "besoins",
+          "title": "Tes besoins",
+          "text": "Tu as besoin de défis, de responsabilités et de liberté pour décider. Lorsque ces conditions manquent, ton énergie ou ta disponibilité peuvent s’en ressentir."
+        },
+        {
+          "id": "peurs",
+          "title": "Tes peurs",
+          "text": "Tu peux redouter de perdre la maîtrise d’une situation ou de voir tes efforts exploités. Ce sont des sensibilités possibles, pas des réactions systématiques."
+        },
+        {
+          "id": "emotions",
+          "title": "Tes émotions",
+          "text": "La détermination te porte, mais les obstacles peuvent provoquer de l’impatience ou de la colère. L’intensité de ces émotions dépend toujours du contexte et ne se déduit pas du test seul."
+        }
+      ],
+      "strengths": [
+        {
+          "id": "force_01",
+          "title": "Prendre l’initiative",
+          "description": "Tu proposes une première étape lorsque la situation stagne. Tu aides ainsi une équipe à sortir de l’attente, mais ton initiative devient plus utile quand chacun comprend ce qu’il peut apporter.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un projet reste sans responsable : tu proposes un essai de deux semaines, avec un bilan à la fin."
+        },
+        {
+          "id": "force_02",
+          "title": "Clarifier un choix",
+          "description": "Tu ramènes la discussion à une décision concrète. Cette clarté permet de distinguer les critères essentiels des préférences personnelles et d’éviter de débattre sans fin.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une équipe hésite entre trois options : tu proposes deux critères communs et un délai pour choisir."
+        },
+        {
+          "id": "force_03",
+          "title": "Assumer une responsabilité",
+          "description": "Tu acceptes de porter une mission et ses conséquences. Assumer ne signifie pas tout faire seul : expliquer ton périmètre donne aux autres la possibilité de prendre leur part.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une échéance approche : tu acceptes de coordonner les étapes et précises qui valide chaque livrable."
+        },
+        {
+          "id": "force_04",
+          "title": "Faire face à un obstacle",
+          "description": "Tu cherches une autre voie lorsqu’un plan échoue. Tu peux préserver l’objectif tout en changeant de méthode, plutôt que de confondre persévérance et entêtement.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un intervenant se désiste : tu identifies une solution de rechange et préviens les personnes concernées."
+        },
+        {
+          "id": "force_05",
+          "title": "Défendre une conviction",
+          "description": "Tu oses exprimer un désaccord important. Ta franchise est précieuse lorsqu’elle ouvre une discussion argumentée, sans faire taire les réserves légitimes.",
+          "exampleLabel": "Exemple concret",
+          "example": "En réunion, tu expliques pourquoi une option doit être revue et invites les objections concrètes."
+        },
+        {
+          "id": "force_06",
+          "title": "Créer de l’élan",
+          "description": "Tu transformes une intention en mouvement collectif. L’élan devient durable lorsque l’énergie du départ se transforme en responsabilités et en étapes partagées.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un projet stagne : tu réunis trois personnes autour d’une première action réalisable cette semaine."
+        }
+      ],
+      "challenges": [
+        {
+          "id": "defi_01",
+          "title": "Décider trop tôt",
+          "description": "Tu peux conclure avant que chacun ait pu contribuer. Tu peux gagner du temps au départ, puis en perdre lorsque les personnes concernées découvrent une contrainte oubliée.",
+          "actionLabel": "À essayer",
+          "action": "Avant de conclure, demande qui doit être consulté et recueille au moins un avis différent. Fixe ensuite un moment pour décider."
+        },
+        {
+          "id": "defi_02",
+          "title": "Voir une objection comme un frein",
+          "description": "Une réserve peut sembler ralentir inutilement le projet. Une objection peut pourtant révéler un risque que ton enthousiasme pour la solution ne te laissait pas voir.",
+          "actionLabel": "À essayer",
+          "action": "Demande quel risque précis l’objection cherche à éviter. Reformule la réponse avant de proposer une solution."
+        },
+        {
+          "id": "defi_03",
+          "title": "Ouvrir trop de chantiers",
+          "description": "Ton envie d’avancer peut disperser tes efforts. Multiplier les débuts peut donner une impression de mouvement sans permettre d’achever les engagements déjà pris.",
+          "actionLabel": "À essayer",
+          "action": "Choisis un seul chantier prioritaire pour les deux prochaines semaines. Garde les autres idées dans une liste à revoir plus tard."
+        },
+        {
+          "id": "defi_04",
+          "title": "Mettre trop de pression",
+          "description": "Ton rythme peut dépasser celui de ton entourage. Certaines personnes peuvent se sentir dépassées même si elles partagent pleinement l’objectif.",
+          "actionLabel": "À essayer",
+          "action": "Demande à chacun ce qu’il peut réellement livrer dans le délai annoncé. Ajuste le plan avec l’équipe avant de fixer l’échéance."
+        },
+        {
+          "id": "defi_05",
+          "title": "Négliger la préparation",
+          "description": "Tu peux agir avant d’avoir identifié les contraintes. Un démarrage rapide est utile, mais l’absence de vérification peut créer des retours en arrière évitables.",
+          "actionLabel": "À essayer",
+          "action": "Vérifie les ressources, les responsables et le risque principal avant de démarrer. Commence ensuite par une étape limitée."
+        },
+        {
+          "id": "defi_06",
+          "title": "Paraître abrupt",
+          "description": "Ta franchise peut être reçue comme un manque d’écoute. Même lorsque ton observation est juste, un ton trop sec peut empêcher l’autre d’en entendre le fond.",
+          "actionLabel": "À essayer",
+          "action": "Écoute la réponse de l’autre sans l’interrompre, puis explique ton point de vue avec des faits. Vérifie que ton intention a été comprise."
+        }
+      ]
+    },
+    "I": {
+      "primary": "I",
+      "secondary": null,
+      "label": "Communiquant",
+      "intro": "Tu mobilises par ton enthousiasme et ton sens du contact.",
+      "characteristics": [
+        {
+          "id": "talents",
+          "title": "Tes talents",
+          "text": "Tu sais créer du lien, partager des idées et donner envie de participer. Ces aptitudes peuvent se manifester différemment selon les responsabilités et les personnes autour de toi."
+        },
+        {
+          "id": "besoins",
+          "title": "Tes besoins",
+          "text": "Tu as besoin d’échanges, de reconnaissance et de sentir que ta contribution compte. Lorsque ces conditions manquent, ton énergie ou ta disponibilité peuvent s’en ressentir."
+        },
+        {
+          "id": "peurs",
+          "title": "Tes peurs",
+          "text": "Tu peux craindre le rejet, l’indifférence ou la perte de ta place dans un groupe. Ce sont des sensibilités possibles, pas des réactions systématiques."
+        },
+        {
+          "id": "emotions",
+          "title": "Tes émotions",
+          "text": "Tu exprimes volontiers ton enthousiasme, mais une critique froide peut susciter de la déception. L’intensité de ces émotions dépend toujours du contexte et ne se déduit pas du test seul."
+        }
+      ],
+      "strengths": [
+        {
+          "id": "force_01",
+          "title": "Créer du lien",
+          "description": "Tu mets les personnes à l’aise et facilites les rencontres. Cette facilité de contact aide notamment les personnes plus réservées à se sentir accueillies et à participer.",
+          "exampleLabel": "Exemple concret",
+          "example": "Lors d’un événement, tu présentes deux personnes qui partagent un intérêt et les aides à entrer dans l’échange."
+        },
+        {
+          "id": "force_02",
+          "title": "Donner envie de participer",
+          "description": "Tu transmets ton enthousiasme et rends un projet attirant. Ton idée devient plus convaincante lorsque tu relies l’enthousiasme à une possibilité concrète et compréhensible.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une idée semble abstraite : tu racontes une situation qui permet au groupe d’en saisir l’intérêt."
+        },
+        {
+          "id": "force_03",
+          "title": "Partager des idées",
+          "description": "Tu encourages les échanges et fais émerger des pistes. Le collectif peut avancer plus facilement si chacun repart avec un rôle défini et une échéance réaliste.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une initiative manque de participants : tu expliques son intérêt et proposes à chacun un rôle accessible."
+        },
+        {
+          "id": "force_04",
+          "title": "Valoriser les autres",
+          "description": "Tu reconnais les contributions et encourages les personnes. Une reconnaissance précise aide l’autre à comprendre ce qu’il a bien fait, plutôt qu’à recevoir un compliment vague.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un collègue doute de lui : tu soulignes précisément une contribution qui a fait la différence."
+        },
+        {
+          "id": "force_05",
+          "title": "Rassembler",
+          "description": "Tu rapproches les personnes autour d’une envie commune. Tu peux créer des liens inattendus entre des personnes, à condition de vérifier que leurs attentes sont compatibles.",
+          "exampleLabel": "Exemple concret",
+          "example": "Deux équipes poursuivent des objectifs proches : tu leur proposes une première rencontre pour explorer un projet commun."
+        },
+        {
+          "id": "force_06",
+          "title": "Prendre la parole",
+          "description": "Tu peux aider un groupe à sortir du silence. Ton optimisme est particulièrement utile lorsqu’il donne envie de recommencer après un échec, sans minimiser les difficultés.",
+          "exampleLabel": "Exemple concret",
+          "example": "Après un échec, tu aides le groupe à identifier ce qui a été appris et à envisager un nouvel essai."
+        }
+      ],
+      "challenges": [
+        {
+          "id": "defi_01",
+          "title": "Se disperser",
+          "description": "Plusieurs idées peuvent t’enthousiasmer sans aboutir. Une nouvelle occasion peut détourner ton attention d’un engagement important qui n’est pas encore terminé.",
+          "actionLabel": "À essayer",
+          "action": "Note les nouvelles idées sans changer immédiatement de priorité. Termine d’abord l’engagement que tu as annoncé."
+        },
+        {
+          "id": "defi_02",
+          "title": "Chercher l’approbation",
+          "description": "Le regard des autres peut peser sur tes choix. Ta bonne volonté ne suffit pas toujours à tenir une promesse si le temps et les moyens n’ont pas été vérifiés.",
+          "actionLabel": "À essayer",
+          "action": "Avant de dire oui, vérifie ton temps disponible et les moyens nécessaires. Confirme une contribution précise et réaliste."
+        },
+        {
+          "id": "defi_03",
+          "title": "Parler avant d’écouter",
+          "description": "Ton enthousiasme peut masquer des nuances importantes. Éviter une conversation délicate peut protéger l’ambiance sur le moment, mais laisser le problème grandir.",
+          "actionLabel": "À essayer",
+          "action": "Prévois un échange court avec la personne concernée. Nomme le problème simplement et demande comment elle le vit."
+        },
+        {
+          "id": "defi_04",
+          "title": "Oublier les détails",
+          "description": "La vision d’ensemble peut prendre le pas sur le suivi. Les détails oubliés peuvent fragiliser une idée pourtant prometteuse lorsqu’il faut la mettre en œuvre.",
+          "actionLabel": "À essayer",
+          "action": "Choisis deux informations indispensables à vérifier avant de présenter ton idée. Fais relire le plan par une personne attentive aux détails."
+        },
+        {
+          "id": "defi_05",
+          "title": "Promettre trop vite",
+          "description": "Tu peux accepter plus que tu ne peux tenir. Le besoin d’être apprécié peut rendre plus difficile une décision qui ne fera pas l’unanimité.",
+          "actionLabel": "À essayer",
+          "action": "Écris ce que tu choisirais sans demander d’avis. Compare ensuite les réactions reçues à tes propres critères."
+        },
+        {
+          "id": "defi_06",
+          "title": "Éviter un échange difficile",
+          "description": "Tu peux repousser un désaccord pour préserver l’ambiance. Les personnes plus discrètes peuvent avoir des idées utiles sans réussir à trouver leur place dans la discussion.",
+          "actionLabel": "À essayer",
+          "action": "Pose une question, puis laisse un vrai temps de réponse. Invite explicitement une personne qui n’a pas encore parlé."
+        }
+      ]
+    },
+    "S": {
+      "primary": "S",
+      "secondary": null,
+      "label": "Facilitateur",
+      "intro": "Tu construis dans la durée grâce à ton écoute et ta constance.",
+      "characteristics": [
+        {
+          "id": "talents",
+          "title": "Tes talents",
+          "text": "Tu sais écouter, soutenir et créer un climat de confiance durable. Ces aptitudes peuvent se manifester différemment selon les responsabilités et les personnes autour de toi."
+        },
+        {
+          "id": "besoins",
+          "title": "Tes besoins",
+          "text": "Tu as besoin de relations fiables, de stabilité et de changements expliqués. Lorsque ces conditions manquent, ton énergie ou ta disponibilité peuvent s’en ressentir."
+        },
+        {
+          "id": "peurs",
+          "title": "Tes peurs",
+          "text": "Tu peux craindre les conflits, les ruptures brusques et la perte de repères. Ce sont des sensibilités possibles, pas des réactions systématiques."
+        },
+        {
+          "id": "emotions",
+          "title": "Tes émotions",
+          "text": "Tu peux ressentir de la tristesse lors de tensions relationnelles, sans toujours l’exprimer. L’intensité de ces émotions dépend toujours du contexte et ne se déduit pas du test seul."
+        }
+      ],
+      "strengths": [
+        {
+          "id": "force_01",
+          "title": "Écouter attentivement",
+          "description": "Tu donnes aux autres l’espace nécessaire pour s’exprimer. Cette attention révèle parfois des besoins que le groupe n’avait pas entendus et permet d’éviter des malentendus.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une personne semble en retrait : tu prends le temps de lui demander ce dont elle a besoin pour participer."
+        },
+        {
+          "id": "force_02",
+          "title": "Créer la confiance",
+          "description": "Ta présence régulière donne des repères rassurants. La confiance se construit aussi dans les petits engagements tenus, pas seulement dans les grands moments.",
+          "exampleLabel": "Exemple concret",
+          "example": "Dans une équipe nouvelle, tu respectes les engagements annoncés et facilites les premiers échanges."
+        },
+        {
+          "id": "force_03",
+          "title": "Soutenir dans la durée",
+          "description": "Tu restes présent après l’enthousiasme initial. Ta présence dans la durée peut soutenir les personnes lorsque l’enthousiasme initial a disparu.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un projet dure plusieurs mois : tu maintiens des points réguliers lorsque la motivation baisse."
+        },
+        {
+          "id": "force_04",
+          "title": "Apaiser les tensions",
+          "description": "Tu entends plusieurs points de vue et facilites le dialogue. Tu peux aider chacun à exprimer son point de vue sans transformer une différence en conflit personnel.",
+          "exampleLabel": "Exemple concret",
+          "example": "Deux personnes s’opposent : tu reformules leurs besoins pour aider à trouver un terrain commun."
+        },
+        {
+          "id": "force_05",
+          "title": "Coopérer avec constance",
+          "description": "Tu tiens tes engagements dans la durée. Dans une période de transition, tu peux rappeler les repères qui demeurent et rassurer sans nier le changement.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une organisation change : tu rappelles ce qui reste stable et expliques les prochaines étapes."
+        },
+        {
+          "id": "force_06",
+          "title": "Repérer les besoins",
+          "description": "Tu remarques les personnes qui ont besoin d’aide. Ton accompagnement est précieux lorsqu’il permet aux autres de s’approprier une nouveauté à leur rythme.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un nouveau membre arrive : tu lui présentes les repères utiles et restes disponible pour ses questions."
+        }
+      ],
+      "challenges": [
+        {
+          "id": "defi_01",
+          "title": "Éviter le désaccord",
+          "description": "Tu peux laisser une difficulté sans réponse pour préserver la paix. Le désaccord non exprimé peut devenir une frustration durable et rendre la relation moins sincère.",
+          "actionLabel": "À essayer",
+          "action": "Exprime ton désaccord avec un exemple concret dès qu’il devient important. Propose un moment pour chercher une solution ensemble."
+        },
+        {
+          "id": "defi_02",
+          "title": "Dire oui trop souvent",
+          "description": "Tu peux négliger tes priorités pour ne pas décevoir. À force d’accepter, tu peux te retrouver avec une charge que les autres ne soupçonnent pas.",
+          "actionLabel": "À essayer",
+          "action": "Vérifie tes engagements avant d’accepter une nouvelle demande. Si nécessaire, propose un délai différent ou une aide plus limitée."
+        },
+        {
+          "id": "defi_03",
+          "title": "Attendre trop longtemps",
+          "description": "Tu peux observer alors qu’une réponse est nécessaire. Une transition mal préparée peut te sembler plus risquée qu’elle ne l’est réellement.",
+          "actionLabel": "À essayer",
+          "action": "Demande ce qui change, ce qui reste stable et quand la transition aura lieu. Identifie une première étape testable."
+        },
+        {
+          "id": "defi_04",
+          "title": "Résister au changement",
+          "description": "Une nouveauté soudaine peut bousculer tes repères. Une observation pertinente peut rester invisible si tu attends systématiquement qu’on te donne la parole.",
+          "actionLabel": "À essayer",
+          "action": "Prépare une idée avant la réunion et exprime-la, même si elle n’est pas parfaite. Ton point de vue peut être utile au groupe."
+        },
+        {
+          "id": "defi_05",
+          "title": "Garder tes émotions",
+          "description": "Tu peux taire ce qui te dérange pour protéger les autres. Soutenir les autres ne signifie pas devoir résoudre à leur place tous leurs conflits.",
+          "actionLabel": "À essayer",
+          "action": "Demande-toi ce qui relève réellement de ta responsabilité. Encourage les personnes concernées à avoir leur propre conversation."
+        },
+        {
+          "id": "defi_06",
+          "title": "T’effacer dans le groupe",
+          "description": "Tu peux laisser passer une contribution utile. Attendre l’accord de tout le monde peut prolonger l’incertitude lorsque le groupe a besoin d’avancer.",
+          "actionLabel": "À essayer",
+          "action": "Fixe une date de décision et recueille les avis avant cette échéance. Accepte qu’un accord total ne soit pas toujours possible."
+        }
+      ]
+    },
+    "C": {
+      "primary": "C",
+      "secondary": null,
+      "label": "Analyste",
+      "intro": "Tu apportes de la rigueur par ton analyse et ton attention à la qualité.",
+      "characteristics": [
+        {
+          "id": "talents",
+          "title": "Tes talents",
+          "text": "Tu sais analyser, structurer et vérifier des informations complexes. Ces aptitudes peuvent se manifester différemment selon les responsabilités et les personnes autour de toi."
+        },
+        {
+          "id": "besoins",
+          "title": "Tes besoins",
+          "text": "Tu as besoin de critères précis, de données fiables et de temps pour réfléchir. Lorsque ces conditions manquent, ton énergie ou ta disponibilité peuvent s’en ressentir."
+        },
+        {
+          "id": "peurs",
+          "title": "Tes peurs",
+          "text": "Tu peux redouter l’erreur visible ou une critique injustifiée de ton travail. Ce sont des sensibilités possibles, pas des réactions systématiques."
+        },
+        {
+          "id": "emotions",
+          "title": "Tes émotions",
+          "text": "L’incertitude peut susciter de l’inquiétude, même lorsque tu gardes une apparence calme. L’intensité de ces émotions dépend toujours du contexte et ne se déduit pas du test seul."
+        }
+      ],
+      "strengths": [
+        {
+          "id": "force_01",
+          "title": "Analyser précisément",
+          "description": "Tu repères les incohérences et les points à vérifier. En distinguant ce qui est démontré de ce qui reste supposé, tu rends la décision plus solide.",
+          "exampleLabel": "Exemple concret",
+          "example": "Avant une décision, tu vérifies les chiffres essentiels et signales les hypothèses encore incertaines."
+        },
+        {
+          "id": "force_02",
+          "title": "Structurer une méthode",
+          "description": "Tu rends un objectif complexe plus compréhensible. Anticiper un risque permet de préparer une solution de rechange sans empêcher le projet de démarrer.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un événement se prépare : tu identifies un risque logistique et proposes un plan de secours."
+        },
+        {
+          "id": "force_03",
+          "title": "Anticiper les risques",
+          "description": "Tu prépares des solutions avant que les problèmes surviennent. Une démarche explicite aide les autres à savoir où ils en sont et ce qui sera attendu à chaque étape.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une mission est floue : tu la découpes en étapes, responsables et critères de réussite."
+        },
+        {
+          "id": "force_04",
+          "title": "Rechercher la qualité",
+          "description": "Tu accordes de l’importance à la fiabilité du travail. Ta rigueur évite des corrections coûteuses lorsqu’elle porte sur les points qui influencent réellement le résultat.",
+          "exampleLabel": "Exemple concret",
+          "example": "Avant publication, tu repères une incohérence importante et évites une correction après diffusion."
+        },
+        {
+          "id": "force_05",
+          "title": "Prendre du recul",
+          "description": "Tu examines plusieurs explications avant de conclure. Tes questions peuvent améliorer une proposition si tu expliques aussi ce qui te semble déjà pertinent.",
+          "exampleLabel": "Exemple concret",
+          "example": "En réunion, tu demandes quelle donnée permet réellement de comparer deux propositions."
+        },
+        {
+          "id": "force_06",
+          "title": "Résoudre un problème",
+          "description": "Tu cherches les causes plutôt que de traiter les symptômes. Prendre du recul donne de la valeur à ton avis, surtout lorsque tu sais indiquer à quel moment il faut décider.",
+          "exampleLabel": "Exemple concret",
+          "example": "Deux solutions semblent équivalentes : tu explicites leurs compromis pour aider le groupe à choisir."
+        }
+      ],
+      "challenges": [
+        {
+          "id": "defi_01",
+          "title": "Attendre trop de certitudes",
+          "description": "Tu peux reporter une décision faute d’informations parfaites. Les vérifications supplémentaires ne changent pas toujours la décision et peuvent retarder inutilement l’action.",
+          "actionLabel": "À essayer",
+          "action": "Définis les trois informations indispensables à la décision. Une fois obtenues, fixe une échéance et accepte une part d’incertitude."
+        },
+        {
+          "id": "defi_02",
+          "title": "Chercher la perfection",
+          "description": "Tu peux consacrer trop de temps aux détails. Un niveau d’exigence identique pour tous les détails peut consommer du temps sans améliorer le résultat final.",
+          "actionLabel": "À essayer",
+          "action": "Classe les corrections en indispensables, utiles et facultatives. Termine d’abord celles qui changent vraiment le résultat."
+        },
+        {
+          "id": "defi_03",
+          "title": "Paraître trop critique",
+          "description": "Tu peux signaler les défauts avant de reconnaître les atouts. Les autres peuvent entendre un rejet global alors que tu souhaites seulement améliorer un point précis.",
+          "actionLabel": "À essayer",
+          "action": "Commence par identifier ce qui fonctionne dans la proposition. Formule ensuite une réserve précise et une amélioration possible."
+        },
+        {
+          "id": "defi_04",
+          "title": "Trop analyser",
+          "description": "Multiplier les scénarios peut bloquer la décision. En contrôlant chaque étape, tu risques de limiter l’autonomie de personnes pourtant capables de contribuer.",
+          "actionLabel": "À essayer",
+          "action": "Définis le résultat attendu et deux critères de contrôle. Laisse ensuite la personne choisir comment réaliser le travail."
+        },
+        {
+          "id": "defi_05",
+          "title": "Garder tes réserves",
+          "description": "Tu peux signaler un risque trop tard. Certaines décisions exigent d’accepter une part d’incertitude plutôt que d’attendre une preuve impossible à obtenir.",
+          "actionLabel": "À essayer",
+          "action": "Distingue les risques majeurs des inconnues secondaires. Décide d’un premier essai réversible plutôt que d’attendre toutes les garanties."
+        },
+        {
+          "id": "defi_06",
+          "title": "Peiner avec l’imprévu",
+          "description": "Un changement soudain peut perturber ton organisation. Une méthode qui a fait ses preuves peut devoir évoluer lorsque le contexte ou les besoins changent.",
+          "actionLabel": "À essayer",
+          "action": "Demande si la méthode sert toujours l’objectif. Teste une adaptation limitée avant de décider de la conserver."
+        }
+      ]
+    }
+  },
+  "orderedCombinations": {
+    "DI": {
+      "primary": "D",
+      "secondary": "I",
+      "label": "Conquérant + Communiquant",
+      "intro": "Tu avances en prenant des initiatives et en recherchant des résultats concrets. Ton aisance relationnelle lui donne plus d’élan.",
+      "characteristics": [
+        {
+          "id": "talents",
+          "title": "Tes talents",
+          "text": "Tu sais prendre des initiatives, clarifier une direction et mobiliser autour d’un résultat. Ces aptitudes peuvent se manifester différemment selon les responsabilités et les personnes autour de toi. Tu peux mettre ces capacités au service du collectif en partageant tes idées et en donnant envie de participer."
+        },
+        {
+          "id": "besoins",
+          "title": "Tes besoins",
+          "text": "Tu as besoin de défis, de responsabilités et de liberté pour décider. Lorsque ces conditions manquent, ton énergie ou ta disponibilité peuvent s’en ressentir. Les échanges vivants et la reconnaissance sincère peuvent renforcer ton engagement."
+        },
+        {
+          "id": "peurs",
+          "title": "Tes peurs",
+          "text": "Tu peux redouter de perdre la maîtrise d’une situation ou de voir tes efforts exploités. Ce sont des sensibilités possibles, pas des réactions systématiques. Le sentiment d'être ignoré ou tenu à l'écart peut parfois peser dans tes réactions."
+        },
+        {
+          "id": "emotions",
+          "title": "Tes émotions",
+          "text": "La détermination te porte, mais les obstacles peuvent provoquer de l’impatience ou de la colère. L’intensité de ces émotions dépend toujours du contexte et ne se déduit pas du test seul. Ton enthousiasme se communique facilement ; une déception relationnelle peut aussi se voir rapidement."
+        }
+      ],
+      "strengths": [
+        {
+          "id": "force_01",
+          "title": "Prendre l’initiative",
+          "description": "Tu proposes une première étape lorsque la situation stagne. Tu aides ainsi une équipe à sortir de l’attente, mais ton initiative devient plus utile quand chacun comprend ce qu’il peut apporter. Ton aisance relationnelle peut transformer une initiative individuelle en invitation à agir ensemble, plutôt qu'en décision annoncée au groupe.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un projet reste sans responsable : tu proposes un essai de deux semaines, avec un bilan à la fin."
+        },
+        {
+          "id": "force_02",
+          "title": "Clarifier un choix",
+          "description": "Tu ramènes la discussion à une décision concrète. Cette clarté permet de distinguer les critères essentiels des préférences personnelles et d’éviter de débattre sans fin. Tu sais rendre les options accessibles et susciter des réactions : les autres peuvent plus facilement exprimer ce qu'ils pensent du choix.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une équipe hésite entre trois options : tu proposes deux critères communs et un délai pour choisir."
+        },
+        {
+          "id": "force_03",
+          "title": "Assumer une responsabilité",
+          "description": "Tu acceptes de porter une mission et ses conséquences. Assumer ne signifie pas tout faire seul : expliquer ton périmètre donne aux autres la possibilité de prendre leur part. Tu peux fédérer autour de la mission en expliquant son sens et en donnant à chacun envie d'y contribuer.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une échéance approche : tu acceptes de coordonner les étapes et précises qui valide chaque livrable."
+        },
+        {
+          "id": "force_04",
+          "title": "Faire face à un obstacle",
+          "description": "Tu cherches une autre voie lorsqu’un plan échoue. Tu peux préserver l’objectif tout en changeant de méthode, plutôt que de confondre persévérance et entêtement. Ton optimisme et ta capacité à communiquer aident le groupe à garder de l'élan lorsque le premier plan ne fonctionne plus.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un intervenant se désiste : tu identifies une solution de rechange et préviens les personnes concernées."
+        },
+        {
+          "id": "force_05",
+          "title": "Défendre une conviction",
+          "description": "Tu oses exprimer un désaccord important. Ta franchise est précieuse lorsqu’elle ouvre une discussion argumentée, sans faire taire les réserves légitimes. Tu peux défendre cette conviction avec chaleur, ce qui facilite l'adhésion sans exiger l'accord immédiat.",
+          "exampleLabel": "Exemple concret",
+          "example": "En réunion, tu expliques pourquoi une option doit être revue et invites les objections concrètes."
+        },
+        {
+          "id": "force_06",
+          "title": "Créer de l’élan",
+          "description": "Tu transformes une intention en mouvement collectif. L’élan devient durable lorsque l’énergie du départ se transforme en responsabilités et en étapes partagées. Tu donnes une dimension collective à l'action : les personnes se sentent invitées à participer, pas seulement informées.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un projet stagne : tu réunis trois personnes autour d’une première action réalisable cette semaine."
+        }
+      ],
+      "challenges": [
+        {
+          "id": "defi_01",
+          "title": "Décider trop tôt",
+          "description": "Tu peux conclure avant que chacun ait pu contribuer. Tu peux gagner du temps au départ, puis en perdre lorsque les personnes concernées découvrent une contrainte oubliée. Ton enthousiasme peut entraîner une adhésion rapide sans que les réserves plus discrètes aient été exprimées.",
+          "actionLabel": "À essayer",
+          "action": "Avant de conclure, demande qui doit être consulté et recueille au moins un avis différent. Fixe ensuite un moment pour décider."
+        },
+        {
+          "id": "defi_02",
+          "title": "Voir une objection comme un frein",
+          "description": "Une réserve peut sembler ralentir inutilement le projet. Une objection peut pourtant révéler un risque que ton enthousiasme pour la solution ne te laissait pas voir. Tu peux chercher à rallier les autres trop vite et prendre un désaccord comme un manque de soutien.",
+          "actionLabel": "À essayer",
+          "action": "Demande quel risque précis l’objection cherche à éviter. Reformule la réponse avant de proposer une solution."
+        },
+        {
+          "id": "defi_03",
+          "title": "Ouvrir trop de chantiers",
+          "description": "Ton envie d’avancer peut disperser tes efforts. Multiplier les débuts peut donner une impression de mouvement sans permettre d’achever les engagements déjà pris. De nouvelles idées stimulantes peuvent détourner ton attention des engagements déjà pris.",
+          "actionLabel": "À essayer",
+          "action": "Choisis un seul chantier prioritaire pour les deux prochaines semaines. Garde les autres idées dans une liste à revoir plus tard."
+        },
+        {
+          "id": "defi_04",
+          "title": "Mettre trop de pression",
+          "description": "Ton rythme peut dépasser celui de ton entourage. Certaines personnes peuvent se sentir dépassées même si elles partagent pleinement l’objectif. Ton énergie communicative peut donner l'impression que tout le monde est prêt à suivre le même rythme.",
+          "actionLabel": "À essayer",
+          "action": "Demande à chacun ce qu’il peut réellement livrer dans le délai annoncé. Ajuste le plan avec l’équipe avant de fixer l’échéance."
+        },
+        {
+          "id": "defi_05",
+          "title": "Négliger la préparation",
+          "description": "Tu peux agir avant d’avoir identifié les contraintes. Un démarrage rapide est utile, mais l’absence de vérification peut créer des retours en arrière évitables. Le plaisir de lancer et de partager une idée peut passer avant la vérification des moyens disponibles.",
+          "actionLabel": "À essayer",
+          "action": "Vérifie les ressources, les responsables et le risque principal avant de démarrer. Commence ensuite par une étape limitée."
+        },
+        {
+          "id": "defi_06",
+          "title": "Paraître abrupt",
+          "description": "Ta franchise peut être reçue comme un manque d’écoute. Même lorsque ton observation est juste, un ton trop sec peut empêcher l’autre d’en entendre le fond. Ton expression spontanée peut prendre beaucoup de place, même si ton intention est de créer du lien.",
+          "actionLabel": "À essayer",
+          "action": "Écoute la réponse de l’autre sans l’interrompre, puis explique ton point de vue avec des faits. Vérifie que ton intention a été comprise."
+        }
+      ]
+    },
+    "DS": {
+      "primary": "D",
+      "secondary": "S",
+      "label": "Conquérant + Facilitateur",
+      "intro": "Tu avances en prenant des initiatives et en recherchant des résultats concrets. Ton attention aux autres lui apporte de la stabilité.",
+      "characteristics": [
+        {
+          "id": "talents",
+          "title": "Tes talents",
+          "text": "Tu sais prendre des initiatives, clarifier une direction et mobiliser autour d’un résultat. Ces aptitudes peuvent se manifester différemment selon les responsabilités et les personnes autour de toi. Tu peux utiliser ces capacités pour soutenir les autres et rendre les engagements durables."
+        },
+        {
+          "id": "besoins",
+          "title": "Tes besoins",
+          "text": "Tu as besoin de défis, de responsabilités et de liberté pour décider. Lorsque ces conditions manquent, ton énergie ou ta disponibilité peuvent s’en ressentir. La confiance, la stabilité des relations et le temps de t'adapter comptent également."
+        },
+        {
+          "id": "peurs",
+          "title": "Tes peurs",
+          "text": "Tu peux redouter de perdre la maîtrise d’une situation ou de voir tes efforts exploités. Ce sont des sensibilités possibles, pas des réactions systématiques. Les conflits prolongés et les changements brusques peuvent te mettre mal à l'aise."
+        },
+        {
+          "id": "emotions",
+          "title": "Tes émotions",
+          "text": "La détermination te porte, mais les obstacles peuvent provoquer de l’impatience ou de la colère. L’intensité de ces émotions dépend toujours du contexte et ne se déduit pas du test seul. Tu peux garder certaines préoccupations pour toi afin de préserver l'harmonie, même quand elles méritent d'être exprimées."
+        }
+      ],
+      "strengths": [
+        {
+          "id": "force_01",
+          "title": "Prendre l’initiative",
+          "description": "Tu proposes une première étape lorsque la situation stagne. Tu aides ainsi une équipe à sortir de l’attente, mais ton initiative devient plus utile quand chacun comprend ce qu’il peut apporter. Ton attention aux personnes t'aide à associer les plus réservés dès le départ et à construire une initiative que l'équipe pourra réellement suivre.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un projet reste sans responsable : tu proposes un essai de deux semaines, avec un bilan à la fin."
+        },
+        {
+          "id": "force_02",
+          "title": "Clarifier un choix",
+          "description": "Tu ramènes la discussion à une décision concrète. Cette clarté permet de distinguer les critères essentiels des préférences personnelles et d’éviter de débattre sans fin. Tu peux vérifier que le choix tient compte de ses conséquences humaines, au-delà de son efficacité immédiate.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une équipe hésite entre trois options : tu proposes deux critères communs et un délai pour choisir."
+        },
+        {
+          "id": "force_03",
+          "title": "Assumer une responsabilité",
+          "description": "Tu acceptes de porter une mission et ses conséquences. Assumer ne signifie pas tout faire seul : expliquer ton périmètre donne aux autres la possibilité de prendre leur part. Ta fiabilité te pousse à tenir les engagements pris et à soutenir les personnes qui dépendent de ton travail.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une échéance approche : tu acceptes de coordonner les étapes et précises qui valide chaque livrable."
+        },
+        {
+          "id": "force_04",
+          "title": "Faire face à un obstacle",
+          "description": "Tu cherches une autre voie lorsqu’un plan échoue. Tu peux préserver l’objectif tout en changeant de méthode, plutôt que de confondre persévérance et entêtement. Ta constance permet de traverser un obstacle sans perdre la confiance du groupe ni abandonner trop vite l'objectif.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un intervenant se désiste : tu identifies une solution de rechange et préviens les personnes concernées."
+        },
+        {
+          "id": "force_05",
+          "title": "Défendre une conviction",
+          "description": "Tu oses exprimer un désaccord important. Ta franchise est précieuse lorsqu’elle ouvre une discussion argumentée, sans faire taire les réserves légitimes. Tu peux défendre une conviction avec persévérance et respect, sans confondre fermeté et confrontation.",
+          "exampleLabel": "Exemple concret",
+          "example": "En réunion, tu expliques pourquoi une option doit être revue et invites les objections concrètes."
+        },
+        {
+          "id": "force_06",
+          "title": "Créer de l’élan",
+          "description": "Tu transformes une intention en mouvement collectif. L’élan devient durable lorsque l’énergie du départ se transforme en responsabilités et en étapes partagées. Tu aides à inscrire l'élan dans la durée grâce à des engagements réalistes et à l'attention portée au collectif.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un projet stagne : tu réunis trois personnes autour d’une première action réalisable cette semaine."
+        }
+      ],
+      "challenges": [
+        {
+          "id": "defi_01",
+          "title": "Décider trop tôt",
+          "description": "Tu peux conclure avant que chacun ait pu contribuer. Tu peux gagner du temps au départ, puis en perdre lorsque les personnes concernées découvrent une contrainte oubliée. Tu peux hésiter à bousculer les habitudes du groupe, puis prendre une décision tardive lorsque la situation devient urgente.",
+          "actionLabel": "À essayer",
+          "action": "Avant de conclure, demande qui doit être consulté et recueille au moins un avis différent. Fixe ensuite un moment pour décider."
+        },
+        {
+          "id": "defi_02",
+          "title": "Voir une objection comme un frein",
+          "description": "Une réserve peut sembler ralentir inutilement le projet. Une objection peut pourtant révéler un risque que ton enthousiasme pour la solution ne te laissait pas voir. Le souci de préserver l'harmonie peut rendre un désaccord difficile à aborder franchement.",
+          "actionLabel": "À essayer",
+          "action": "Demande quel risque précis l’objection cherche à éviter. Reformule la réponse avant de proposer une solution."
+        },
+        {
+          "id": "defi_03",
+          "title": "Ouvrir trop de chantiers",
+          "description": "Ton envie d’avancer peut disperser tes efforts. Multiplier les débuts peut donner une impression de mouvement sans permettre d’achever les engagements déjà pris. Tu peux accepter trop de demandes pour ne décevoir personne, au risque de disperser ton énergie.",
+          "actionLabel": "À essayer",
+          "action": "Choisis un seul chantier prioritaire pour les deux prochaines semaines. Garde les autres idées dans une liste à revoir plus tard."
+        },
+        {
+          "id": "defi_04",
+          "title": "Mettre trop de pression",
+          "description": "Ton rythme peut dépasser celui de ton entourage. Certaines personnes peuvent se sentir dépassées même si elles partagent pleinement l’objectif. Tu peux porter silencieusement une charge importante plutôt que d'exprimer à temps ce qui devient trop lourd.",
+          "actionLabel": "À essayer",
+          "action": "Demande à chacun ce qu’il peut réellement livrer dans le délai annoncé. Ajuste le plan avec l’équipe avant de fixer l’échéance."
+        },
+        {
+          "id": "defi_05",
+          "title": "Négliger la préparation",
+          "description": "Tu peux agir avant d’avoir identifié les contraintes. Un démarrage rapide est utile, mais l’absence de vérification peut créer des retours en arrière évitables. Le désir de préserver les repères existants peut retarder une préparation nécessaire au changement.",
+          "actionLabel": "À essayer",
+          "action": "Vérifie les ressources, les responsables et le risque principal avant de démarrer. Commence ensuite par une étape limitée."
+        },
+        {
+          "id": "defi_06",
+          "title": "Paraître abrupt",
+          "description": "Ta franchise peut être reçue comme un manque d’écoute. Même lorsque ton observation est juste, un ton trop sec peut empêcher l’autre d’en entendre le fond. À force d'éviter les tensions, tu peux laisser un problème s'installer sans dire clairement ce qui te dérange.",
+          "actionLabel": "À essayer",
+          "action": "Écoute la réponse de l’autre sans l’interrompre, puis explique ton point de vue avec des faits. Vérifie que ton intention a été comprise."
+        }
+      ]
+    },
+    "DC": {
+      "primary": "D",
+      "secondary": "C",
+      "label": "Conquérant + Analyste",
+      "intro": "Tu avances en prenant des initiatives et en recherchant des résultats concrets. Ton exigence de précision lui donne de la solidité.",
+      "characteristics": [
+        {
+          "id": "talents",
+          "title": "Tes talents",
+          "text": "Tu sais prendre des initiatives, clarifier une direction et mobiliser autour d’un résultat. Ces aptitudes peuvent se manifester différemment selon les responsabilités et les personnes autour de toi. Tu peux renforcer ces capacités en structurant les étapes et en vérifiant les éléments déterminants."
+        },
+        {
+          "id": "besoins",
+          "title": "Tes besoins",
+          "text": "Tu as besoin de défis, de responsabilités et de liberté pour décider. Lorsque ces conditions manquent, ton énergie ou ta disponibilité peuvent s’en ressentir. Des informations fiables et des critères explicites te permettent de t'engager plus sereinement."
+        },
+        {
+          "id": "peurs",
+          "title": "Tes peurs",
+          "text": "Tu peux redouter de perdre la maîtrise d’une situation ou de voir tes efforts exploités. Ce sont des sensibilités possibles, pas des réactions systématiques. Le risque d'erreur ou une décision fondée sur des éléments imprécis peut nourrir tes réserves."
+        },
+        {
+          "id": "emotions",
+          "title": "Tes émotions",
+          "text": "La détermination te porte, mais les obstacles peuvent provoquer de l’impatience ou de la colère. L’intensité de ces émotions dépend toujours du contexte et ne se déduit pas du test seul. L'incertitude peut accroître ton besoin de vérifier et de prendre du recul avant de réagir."
+        }
+      ],
+      "strengths": [
+        {
+          "id": "force_01",
+          "title": "Prendre l’initiative",
+          "description": "Tu proposes une première étape lorsque la situation stagne. Tu aides ainsi une équipe à sortir de l’attente, mais ton initiative devient plus utile quand chacun comprend ce qu’il peut apporter. Ton souci de précision peut transformer une impulsion en expérimentation cadrée, avec des critères pour savoir si elle fonctionne.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un projet reste sans responsable : tu proposes un essai de deux semaines, avec un bilan à la fin."
+        },
+        {
+          "id": "force_02",
+          "title": "Clarifier un choix",
+          "description": "Tu ramènes la discussion à une décision concrète. Cette clarté permet de distinguer les critères essentiels des préférences personnelles et d’éviter de débattre sans fin. Tu apportes des éléments vérifiables à la décision et aides à distinguer les faits des impressions.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une équipe hésite entre trois options : tu proposes deux critères communs et un délai pour choisir."
+        },
+        {
+          "id": "force_03",
+          "title": "Assumer une responsabilité",
+          "description": "Tu acceptes de porter une mission et ses conséquences. Assumer ne signifie pas tout faire seul : expliquer ton périmètre donne aux autres la possibilité de prendre leur part. Tu peux définir un périmètre clair, documenter les engagements et sécuriser la qualité du résultat attendu.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une échéance approche : tu acceptes de coordonner les étapes et précises qui valide chaque livrable."
+        },
+        {
+          "id": "force_04",
+          "title": "Faire face à un obstacle",
+          "description": "Tu cherches une autre voie lorsqu’un plan échoue. Tu peux préserver l’objectif tout en changeant de méthode, plutôt que de confondre persévérance et entêtement. Ton analyse aide à identifier la cause de l'obstacle et à choisir une alternative qui traite le vrai problème.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un intervenant se désiste : tu identifies une solution de rechange et préviens les personnes concernées."
+        },
+        {
+          "id": "force_05",
+          "title": "Défendre une conviction",
+          "description": "Tu oses exprimer un désaccord important. Ta franchise est précieuse lorsqu’elle ouvre une discussion argumentée, sans faire taire les réserves légitimes. Tu peux étayer ta conviction avec des arguments solides et accepter de la réviser si de nouveaux faits apparaissent.",
+          "exampleLabel": "Exemple concret",
+          "example": "En réunion, tu expliques pourquoi une option doit être revue et invites les objections concrètes."
+        },
+        {
+          "id": "force_06",
+          "title": "Créer de l’élan",
+          "description": "Tu transformes une intention en mouvement collectif. L’élan devient durable lorsque l’énergie du départ se transforme en responsabilités et en étapes partagées. Tu rends l'élan plus fiable en précisant les étapes, les ressources et les points de contrôle.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un projet stagne : tu réunis trois personnes autour d’une première action réalisable cette semaine."
+        }
+      ],
+      "challenges": [
+        {
+          "id": "defi_01",
+          "title": "Décider trop tôt",
+          "description": "Tu peux conclure avant que chacun ait pu contribuer. Tu peux gagner du temps au départ, puis en perdre lorsque les personnes concernées découvrent une contrainte oubliée. Tu peux vouloir vérifier encore un élément avant de trancher, ce qui crée une tension entre décision et prudence.",
+          "actionLabel": "À essayer",
+          "action": "Avant de conclure, demande qui doit être consulté et recueille au moins un avis différent. Fixe ensuite un moment pour décider."
+        },
+        {
+          "id": "defi_02",
+          "title": "Voir une objection comme un frein",
+          "description": "Une réserve peut sembler ralentir inutilement le projet. Une objection peut pourtant révéler un risque que ton enthousiasme pour la solution ne te laissait pas voir. Tu peux multiplier les questions pour sécuriser une idée, sans toujours montrer que tu reconnais l'intention de l'autre.",
+          "actionLabel": "À essayer",
+          "action": "Demande quel risque précis l’objection cherche à éviter. Reformule la réponse avant de proposer une solution."
+        },
+        {
+          "id": "defi_03",
+          "title": "Ouvrir trop de chantiers",
+          "description": "Ton envie d’avancer peut disperser tes efforts. Multiplier les débuts peut donner une impression de mouvement sans permettre d’achever les engagements déjà pris. Le désir de bien faire peut te conduire à approfondir plusieurs sujets au lieu d'en finaliser un.",
+          "actionLabel": "À essayer",
+          "action": "Choisis un seul chantier prioritaire pour les deux prochaines semaines. Garde les autres idées dans une liste à revoir plus tard."
+        },
+        {
+          "id": "defi_04",
+          "title": "Mettre trop de pression",
+          "description": "Ton rythme peut dépasser celui de ton entourage. Certaines personnes peuvent se sentir dépassées même si elles partagent pleinement l’objectif. Tes critères de qualité peuvent devenir difficiles à suivre si tu n'explicites pas ce qui est indispensable.",
+          "actionLabel": "À essayer",
+          "action": "Demande à chacun ce qu’il peut réellement livrer dans le délai annoncé. Ajuste le plan avec l’équipe avant de fixer l’échéance."
+        },
+        {
+          "id": "defi_05",
+          "title": "Négliger la préparation",
+          "description": "Tu peux agir avant d’avoir identifié les contraintes. Un démarrage rapide est utile, mais l’absence de vérification peut créer des retours en arrière évitables. Tu peux repousser le démarrage en attendant un niveau d'information impossible à atteindre.",
+          "actionLabel": "À essayer",
+          "action": "Vérifie les ressources, les responsables et le risque principal avant de démarrer. Commence ensuite par une étape limitée."
+        },
+        {
+          "id": "defi_06",
+          "title": "Paraître abrupt",
+          "description": "Ta franchise peut être reçue comme un manque d’écoute. Même lorsque ton observation est juste, un ton trop sec peut empêcher l’autre d’en entendre le fond. Une remarque techniquement exacte peut sembler froide si tu n'expliques pas d'abord son intention.",
+          "actionLabel": "À essayer",
+          "action": "Écoute la réponse de l’autre sans l’interrompre, puis explique ton point de vue avec des faits. Vérifie que ton intention a été comprise."
+        }
+      ]
+    },
+    "ID": {
+      "primary": "I",
+      "secondary": "D",
+      "label": "Communiquant + Conquérant",
+      "intro": "Tu mobilises par ton enthousiasme et ton sens du contact. Ton sens de l’action renforce cette dynamique.",
+      "characteristics": [
+        {
+          "id": "talents",
+          "title": "Tes talents",
+          "text": "Tu sais créer du lien, partager des idées et donner envie de participer. Ces aptitudes peuvent se manifester différemment selon les responsabilités et les personnes autour de toi. Tu sais orienter tes capacités vers une décision et une première action mesurable."
+        },
+        {
+          "id": "besoins",
+          "title": "Tes besoins",
+          "text": "Tu as besoin d’échanges, de reconnaissance et de sentir que ta contribution compte. Lorsque ces conditions manquent, ton énergie ou ta disponibilité peuvent s’en ressentir. Tu apprécies d'avoir une marge de décision et des responsabilités clairement confiées."
+        },
+        {
+          "id": "peurs",
+          "title": "Tes peurs",
+          "text": "Tu peux craindre le rejet, l’indifférence ou la perte de ta place dans un groupe. Ce sont des sensibilités possibles, pas des réactions systématiques. La perte de contrôle ou l'impossibilité d'agir peut devenir une source de tension."
+        },
+        {
+          "id": "emotions",
+          "title": "Tes émotions",
+          "text": "Tu exprimes volontiers ton enthousiasme, mais une critique froide peut susciter de la déception. L’intensité de ces émotions dépend toujours du contexte et ne se déduit pas du test seul. L'impatience peut apparaître lorsque les décisions stagnent, même si ton intention reste constructive."
+        }
+      ],
+      "strengths": [
+        {
+          "id": "force_01",
+          "title": "Créer du lien",
+          "description": "Tu mets les personnes à l’aise et facilites les rencontres. Cette facilité de contact aide notamment les personnes plus réservées à se sentir accueillies et à participer. Ton goût du résultat donne une direction à cette initiative : tu cherches rapidement qui décide et quelle étape permet de mesurer l'avancement.",
+          "exampleLabel": "Exemple concret",
+          "example": "Lors d’un événement, tu présentes deux personnes qui partagent un intérêt et les aides à entrer dans l’échange."
+        },
+        {
+          "id": "force_02",
+          "title": "Donner envie de participer",
+          "description": "Tu transmets ton enthousiasme et rends un projet attirant. Ton idée devient plus convaincante lorsque tu relies l’enthousiasme à une possibilité concrète et compréhensible. Tu apportes un cap concret à la réflexion : les options ne restent pas théoriques, elles doivent déboucher sur un choix assumé.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une idée semble abstraite : tu racontes une situation qui permet au groupe d’en saisir l’intérêt."
+        },
+        {
+          "id": "force_03",
+          "title": "Partager des idées",
+          "description": "Tu encourages les échanges et fais émerger des pistes. Le collectif peut avancer plus facilement si chacun repart avec un rôle défini et une échéance réaliste. Tu prends volontiers la responsabilité de trancher lorsque le groupe hésite, sans attendre qu'un consensus parfait se forme.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une initiative manque de participants : tu expliques son intérêt et proposes à chacun un rôle accessible."
+        },
+        {
+          "id": "force_04",
+          "title": "Valoriser les autres",
+          "description": "Tu reconnais les contributions et encourages les personnes. Une reconnaissance précise aide l’autre à comprendre ce qu’il a bien fait, plutôt qu’à recevoir un compliment vague. Ta détermination t'aide à choisir une solution de rechange et à maintenir une échéance malgré l'imprévu.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un collègue doute de lui : tu soulignes précisément une contribution qui a fait la différence."
+        },
+        {
+          "id": "force_05",
+          "title": "Rassembler",
+          "description": "Tu rapproches les personnes autour d’une envie commune. Tu peux créer des liens inattendus entre des personnes, à condition de vérifier que leurs attentes sont compatibles. Tu peux donner à cette conviction une portée pratique en précisant ce qui doit changer et pourquoi cela compte maintenant.",
+          "exampleLabel": "Exemple concret",
+          "example": "Deux équipes poursuivent des objectifs proches : tu leur proposes une première rencontre pour explorer un projet commun."
+        },
+        {
+          "id": "force_06",
+          "title": "Prendre la parole",
+          "description": "Tu peux aider un groupe à sortir du silence. Ton optimisme est particulièrement utile lorsqu’il donne envie de recommencer après un échec, sans minimiser les difficultés. Tu contribues à transformer l'enthousiasme collectif en décisions, en responsables identifiés et en premières actions.",
+          "exampleLabel": "Exemple concret",
+          "example": "Après un échec, tu aides le groupe à identifier ce qui a été appris et à envisager un nouvel essai."
+        }
+      ],
+      "challenges": [
+        {
+          "id": "defi_01",
+          "title": "Se disperser",
+          "description": "Plusieurs idées peuvent t’enthousiasmer sans aboutir. Une nouvelle occasion peut détourner ton attention d’un engagement important qui n’est pas encore terminé. Ton besoin d'avancer peut raccourcir le temps accordé à la discussion, même quand les autres ont des informations utiles.",
+          "actionLabel": "À essayer",
+          "action": "Note les nouvelles idées sans changer immédiatement de priorité. Termine d’abord l’engagement que tu as annoncé."
+        },
+        {
+          "id": "defi_02",
+          "title": "Chercher l’approbation",
+          "description": "Le regard des autres peut peser sur tes choix. Ta bonne volonté ne suffit pas toujours à tenir une promesse si le temps et les moyens n’ont pas été vérifiés. Tu peux entendre une réserve comme une remise en cause de ta direction, plutôt que comme une contribution à la décision.",
+          "actionLabel": "À essayer",
+          "action": "Avant de dire oui, vérifie ton temps disponible et les moyens nécessaires. Confirme une contribution précise et réaliste."
+        },
+        {
+          "id": "defi_03",
+          "title": "Parler avant d’écouter",
+          "description": "Ton enthousiasme peut masquer des nuances importantes. Éviter une conversation délicate peut protéger l’ambiance sur le moment, mais laisser le problème grandir. Le désir d'obtenir rapidement des résultats peut t'inciter à accepter trop de responsabilités à la fois.",
+          "actionLabel": "À essayer",
+          "action": "Prévois un échange court avec la personne concernée. Nomme le problème simplement et demande comment elle le vit."
+        },
+        {
+          "id": "defi_04",
+          "title": "Oublier les détails",
+          "description": "La vision d’ensemble peut prendre le pas sur le suivi. Les détails oubliés peuvent fragiliser une idée pourtant prometteuse lorsqu’il faut la mettre en œuvre. Ton exigence de résultats peut rendre tes attentes plus pressantes que tu ne l'imagines pour les autres.",
+          "actionLabel": "À essayer",
+          "action": "Choisis deux informations indispensables à vérifier avant de présenter ton idée. Fais relire le plan par une personne attentive aux détails."
+        },
+        {
+          "id": "defi_05",
+          "title": "Promettre trop vite",
+          "description": "Tu peux accepter plus que tu ne peux tenir. Le besoin d’être apprécié peut rendre plus difficile une décision qui ne fera pas l’unanimité. Tu peux considérer certaines vérifications comme un ralentissement, puis devoir corriger des points évitables.",
+          "actionLabel": "À essayer",
+          "action": "Écris ce que tu choisirais sans demander d’avis. Compare ensuite les réactions reçues à tes propres critères."
+        },
+        {
+          "id": "defi_06",
+          "title": "Éviter un échange difficile",
+          "description": "Tu peux repousser un désaccord pour préserver l’ambiance. Les personnes plus discrètes peuvent avoir des idées utiles sans réussir à trouver leur place dans la discussion. Quand tu veux aller à l'essentiel, ton message peut paraître définitif et laisser peu de place à la réponse.",
+          "actionLabel": "À essayer",
+          "action": "Pose une question, puis laisse un vrai temps de réponse. Invite explicitement une personne qui n’a pas encore parlé."
+        }
+      ]
+    },
+    "IS": {
+      "primary": "I",
+      "secondary": "S",
+      "label": "Communiquant + Facilitateur",
+      "intro": "Tu mobilises par ton enthousiasme et ton sens du contact. Ton attention aux autres lui apporte de la stabilité.",
+      "characteristics": [
+        {
+          "id": "talents",
+          "title": "Tes talents",
+          "text": "Tu sais créer du lien, partager des idées et donner envie de participer. Ces aptitudes peuvent se manifester différemment selon les responsabilités et les personnes autour de toi. Tu peux utiliser ces capacités pour soutenir les autres et rendre les engagements durables."
+        },
+        {
+          "id": "besoins",
+          "title": "Tes besoins",
+          "text": "Tu as besoin d’échanges, de reconnaissance et de sentir que ta contribution compte. Lorsque ces conditions manquent, ton énergie ou ta disponibilité peuvent s’en ressentir. La confiance, la stabilité des relations et le temps de t'adapter comptent également."
+        },
+        {
+          "id": "peurs",
+          "title": "Tes peurs",
+          "text": "Tu peux craindre le rejet, l’indifférence ou la perte de ta place dans un groupe. Ce sont des sensibilités possibles, pas des réactions systématiques. Les conflits prolongés et les changements brusques peuvent te mettre mal à l'aise."
+        },
+        {
+          "id": "emotions",
+          "title": "Tes émotions",
+          "text": "Tu exprimes volontiers ton enthousiasme, mais une critique froide peut susciter de la déception. L’intensité de ces émotions dépend toujours du contexte et ne se déduit pas du test seul. Tu peux garder certaines préoccupations pour toi afin de préserver l'harmonie, même quand elles méritent d'être exprimées."
+        }
+      ],
+      "strengths": [
+        {
+          "id": "force_01",
+          "title": "Créer du lien",
+          "description": "Tu mets les personnes à l’aise et facilites les rencontres. Cette facilité de contact aide notamment les personnes plus réservées à se sentir accueillies et à participer. Ton attention aux personnes t'aide à associer les plus réservés dès le départ et à construire une initiative que l'équipe pourra réellement suivre.",
+          "exampleLabel": "Exemple concret",
+          "example": "Lors d’un événement, tu présentes deux personnes qui partagent un intérêt et les aides à entrer dans l’échange."
+        },
+        {
+          "id": "force_02",
+          "title": "Donner envie de participer",
+          "description": "Tu transmets ton enthousiasme et rends un projet attirant. Ton idée devient plus convaincante lorsque tu relies l’enthousiasme à une possibilité concrète et compréhensible. Tu peux vérifier que le choix tient compte de ses conséquences humaines, au-delà de son efficacité immédiate.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une idée semble abstraite : tu racontes une situation qui permet au groupe d’en saisir l’intérêt."
+        },
+        {
+          "id": "force_03",
+          "title": "Partager des idées",
+          "description": "Tu encourages les échanges et fais émerger des pistes. Le collectif peut avancer plus facilement si chacun repart avec un rôle défini et une échéance réaliste. Ta fiabilité te pousse à tenir les engagements pris et à soutenir les personnes qui dépendent de ton travail.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une initiative manque de participants : tu expliques son intérêt et proposes à chacun un rôle accessible."
+        },
+        {
+          "id": "force_04",
+          "title": "Valoriser les autres",
+          "description": "Tu reconnais les contributions et encourages les personnes. Une reconnaissance précise aide l’autre à comprendre ce qu’il a bien fait, plutôt qu’à recevoir un compliment vague. Ta constance permet de traverser un obstacle sans perdre la confiance du groupe ni abandonner trop vite l'objectif.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un collègue doute de lui : tu soulignes précisément une contribution qui a fait la différence."
+        },
+        {
+          "id": "force_05",
+          "title": "Rassembler",
+          "description": "Tu rapproches les personnes autour d’une envie commune. Tu peux créer des liens inattendus entre des personnes, à condition de vérifier que leurs attentes sont compatibles. Tu peux défendre une conviction avec persévérance et respect, sans confondre fermeté et confrontation.",
+          "exampleLabel": "Exemple concret",
+          "example": "Deux équipes poursuivent des objectifs proches : tu leur proposes une première rencontre pour explorer un projet commun."
+        },
+        {
+          "id": "force_06",
+          "title": "Prendre la parole",
+          "description": "Tu peux aider un groupe à sortir du silence. Ton optimisme est particulièrement utile lorsqu’il donne envie de recommencer après un échec, sans minimiser les difficultés. Tu aides à inscrire l'élan dans la durée grâce à des engagements réalistes et à l'attention portée au collectif.",
+          "exampleLabel": "Exemple concret",
+          "example": "Après un échec, tu aides le groupe à identifier ce qui a été appris et à envisager un nouvel essai."
+        }
+      ],
+      "challenges": [
+        {
+          "id": "defi_01",
+          "title": "Se disperser",
+          "description": "Plusieurs idées peuvent t’enthousiasmer sans aboutir. Une nouvelle occasion peut détourner ton attention d’un engagement important qui n’est pas encore terminé. Tu peux hésiter à bousculer les habitudes du groupe, puis prendre une décision tardive lorsque la situation devient urgente.",
+          "actionLabel": "À essayer",
+          "action": "Note les nouvelles idées sans changer immédiatement de priorité. Termine d’abord l’engagement que tu as annoncé."
+        },
+        {
+          "id": "defi_02",
+          "title": "Chercher l’approbation",
+          "description": "Le regard des autres peut peser sur tes choix. Ta bonne volonté ne suffit pas toujours à tenir une promesse si le temps et les moyens n’ont pas été vérifiés. Le souci de préserver l'harmonie peut rendre un désaccord difficile à aborder franchement.",
+          "actionLabel": "À essayer",
+          "action": "Avant de dire oui, vérifie ton temps disponible et les moyens nécessaires. Confirme une contribution précise et réaliste."
+        },
+        {
+          "id": "defi_03",
+          "title": "Parler avant d’écouter",
+          "description": "Ton enthousiasme peut masquer des nuances importantes. Éviter une conversation délicate peut protéger l’ambiance sur le moment, mais laisser le problème grandir. Tu peux accepter trop de demandes pour ne décevoir personne, au risque de disperser ton énergie.",
+          "actionLabel": "À essayer",
+          "action": "Prévois un échange court avec la personne concernée. Nomme le problème simplement et demande comment elle le vit."
+        },
+        {
+          "id": "defi_04",
+          "title": "Oublier les détails",
+          "description": "La vision d’ensemble peut prendre le pas sur le suivi. Les détails oubliés peuvent fragiliser une idée pourtant prometteuse lorsqu’il faut la mettre en œuvre. Tu peux porter silencieusement une charge importante plutôt que d'exprimer à temps ce qui devient trop lourd.",
+          "actionLabel": "À essayer",
+          "action": "Choisis deux informations indispensables à vérifier avant de présenter ton idée. Fais relire le plan par une personne attentive aux détails."
+        },
+        {
+          "id": "defi_05",
+          "title": "Promettre trop vite",
+          "description": "Tu peux accepter plus que tu ne peux tenir. Le besoin d’être apprécié peut rendre plus difficile une décision qui ne fera pas l’unanimité. Le désir de préserver les repères existants peut retarder une préparation nécessaire au changement.",
+          "actionLabel": "À essayer",
+          "action": "Écris ce que tu choisirais sans demander d’avis. Compare ensuite les réactions reçues à tes propres critères."
+        },
+        {
+          "id": "defi_06",
+          "title": "Éviter un échange difficile",
+          "description": "Tu peux repousser un désaccord pour préserver l’ambiance. Les personnes plus discrètes peuvent avoir des idées utiles sans réussir à trouver leur place dans la discussion. À force d'éviter les tensions, tu peux laisser un problème s'installer sans dire clairement ce qui te dérange.",
+          "actionLabel": "À essayer",
+          "action": "Pose une question, puis laisse un vrai temps de réponse. Invite explicitement une personne qui n’a pas encore parlé."
+        }
+      ]
+    },
+    "IC": {
+      "primary": "I",
+      "secondary": "C",
+      "label": "Communiquant + Analyste",
+      "intro": "Tu mobilises par ton enthousiasme et ton sens du contact. Ton exigence de précision lui donne de la solidité.",
+      "characteristics": [
+        {
+          "id": "talents",
+          "title": "Tes talents",
+          "text": "Tu sais créer du lien, partager des idées et donner envie de participer. Ces aptitudes peuvent se manifester différemment selon les responsabilités et les personnes autour de toi. Tu peux renforcer ces capacités en structurant les étapes et en vérifiant les éléments déterminants."
+        },
+        {
+          "id": "besoins",
+          "title": "Tes besoins",
+          "text": "Tu as besoin d’échanges, de reconnaissance et de sentir que ta contribution compte. Lorsque ces conditions manquent, ton énergie ou ta disponibilité peuvent s’en ressentir. Des informations fiables et des critères explicites te permettent de t'engager plus sereinement."
+        },
+        {
+          "id": "peurs",
+          "title": "Tes peurs",
+          "text": "Tu peux craindre le rejet, l’indifférence ou la perte de ta place dans un groupe. Ce sont des sensibilités possibles, pas des réactions systématiques. Le risque d'erreur ou une décision fondée sur des éléments imprécis peut nourrir tes réserves."
+        },
+        {
+          "id": "emotions",
+          "title": "Tes émotions",
+          "text": "Tu exprimes volontiers ton enthousiasme, mais une critique froide peut susciter de la déception. L’intensité de ces émotions dépend toujours du contexte et ne se déduit pas du test seul. L'incertitude peut accroître ton besoin de vérifier et de prendre du recul avant de réagir."
+        }
+      ],
+      "strengths": [
+        {
+          "id": "force_01",
+          "title": "Créer du lien",
+          "description": "Tu mets les personnes à l’aise et facilites les rencontres. Cette facilité de contact aide notamment les personnes plus réservées à se sentir accueillies et à participer. Ton souci de précision peut transformer une impulsion en expérimentation cadrée, avec des critères pour savoir si elle fonctionne.",
+          "exampleLabel": "Exemple concret",
+          "example": "Lors d’un événement, tu présentes deux personnes qui partagent un intérêt et les aides à entrer dans l’échange."
+        },
+        {
+          "id": "force_02",
+          "title": "Donner envie de participer",
+          "description": "Tu transmets ton enthousiasme et rends un projet attirant. Ton idée devient plus convaincante lorsque tu relies l’enthousiasme à une possibilité concrète et compréhensible. Tu apportes des éléments vérifiables à la décision et aides à distinguer les faits des impressions.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une idée semble abstraite : tu racontes une situation qui permet au groupe d’en saisir l’intérêt."
+        },
+        {
+          "id": "force_03",
+          "title": "Partager des idées",
+          "description": "Tu encourages les échanges et fais émerger des pistes. Le collectif peut avancer plus facilement si chacun repart avec un rôle défini et une échéance réaliste. Tu peux définir un périmètre clair, documenter les engagements et sécuriser la qualité du résultat attendu.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une initiative manque de participants : tu expliques son intérêt et proposes à chacun un rôle accessible."
+        },
+        {
+          "id": "force_04",
+          "title": "Valoriser les autres",
+          "description": "Tu reconnais les contributions et encourages les personnes. Une reconnaissance précise aide l’autre à comprendre ce qu’il a bien fait, plutôt qu’à recevoir un compliment vague. Ton analyse aide à identifier la cause de l'obstacle et à choisir une alternative qui traite le vrai problème.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un collègue doute de lui : tu soulignes précisément une contribution qui a fait la différence."
+        },
+        {
+          "id": "force_05",
+          "title": "Rassembler",
+          "description": "Tu rapproches les personnes autour d’une envie commune. Tu peux créer des liens inattendus entre des personnes, à condition de vérifier que leurs attentes sont compatibles. Tu peux étayer ta conviction avec des arguments solides et accepter de la réviser si de nouveaux faits apparaissent.",
+          "exampleLabel": "Exemple concret",
+          "example": "Deux équipes poursuivent des objectifs proches : tu leur proposes une première rencontre pour explorer un projet commun."
+        },
+        {
+          "id": "force_06",
+          "title": "Prendre la parole",
+          "description": "Tu peux aider un groupe à sortir du silence. Ton optimisme est particulièrement utile lorsqu’il donne envie de recommencer après un échec, sans minimiser les difficultés. Tu rends l'élan plus fiable en précisant les étapes, les ressources et les points de contrôle.",
+          "exampleLabel": "Exemple concret",
+          "example": "Après un échec, tu aides le groupe à identifier ce qui a été appris et à envisager un nouvel essai."
+        }
+      ],
+      "challenges": [
+        {
+          "id": "defi_01",
+          "title": "Se disperser",
+          "description": "Plusieurs idées peuvent t’enthousiasmer sans aboutir. Une nouvelle occasion peut détourner ton attention d’un engagement important qui n’est pas encore terminé. Tu peux vouloir vérifier encore un élément avant de trancher, ce qui crée une tension entre décision et prudence.",
+          "actionLabel": "À essayer",
+          "action": "Note les nouvelles idées sans changer immédiatement de priorité. Termine d’abord l’engagement que tu as annoncé."
+        },
+        {
+          "id": "defi_02",
+          "title": "Chercher l’approbation",
+          "description": "Le regard des autres peut peser sur tes choix. Ta bonne volonté ne suffit pas toujours à tenir une promesse si le temps et les moyens n’ont pas été vérifiés. Tu peux multiplier les questions pour sécuriser une idée, sans toujours montrer que tu reconnais l'intention de l'autre.",
+          "actionLabel": "À essayer",
+          "action": "Avant de dire oui, vérifie ton temps disponible et les moyens nécessaires. Confirme une contribution précise et réaliste."
+        },
+        {
+          "id": "defi_03",
+          "title": "Parler avant d’écouter",
+          "description": "Ton enthousiasme peut masquer des nuances importantes. Éviter une conversation délicate peut protéger l’ambiance sur le moment, mais laisser le problème grandir. Le désir de bien faire peut te conduire à approfondir plusieurs sujets au lieu d'en finaliser un.",
+          "actionLabel": "À essayer",
+          "action": "Prévois un échange court avec la personne concernée. Nomme le problème simplement et demande comment elle le vit."
+        },
+        {
+          "id": "defi_04",
+          "title": "Oublier les détails",
+          "description": "La vision d’ensemble peut prendre le pas sur le suivi. Les détails oubliés peuvent fragiliser une idée pourtant prometteuse lorsqu’il faut la mettre en œuvre. Tes critères de qualité peuvent devenir difficiles à suivre si tu n'explicites pas ce qui est indispensable.",
+          "actionLabel": "À essayer",
+          "action": "Choisis deux informations indispensables à vérifier avant de présenter ton idée. Fais relire le plan par une personne attentive aux détails."
+        },
+        {
+          "id": "defi_05",
+          "title": "Promettre trop vite",
+          "description": "Tu peux accepter plus que tu ne peux tenir. Le besoin d’être apprécié peut rendre plus difficile une décision qui ne fera pas l’unanimité. Tu peux repousser le démarrage en attendant un niveau d'information impossible à atteindre.",
+          "actionLabel": "À essayer",
+          "action": "Écris ce que tu choisirais sans demander d’avis. Compare ensuite les réactions reçues à tes propres critères."
+        },
+        {
+          "id": "defi_06",
+          "title": "Éviter un échange difficile",
+          "description": "Tu peux repousser un désaccord pour préserver l’ambiance. Les personnes plus discrètes peuvent avoir des idées utiles sans réussir à trouver leur place dans la discussion. Une remarque techniquement exacte peut sembler froide si tu n'expliques pas d'abord son intention.",
+          "actionLabel": "À essayer",
+          "action": "Pose une question, puis laisse un vrai temps de réponse. Invite explicitement une personne qui n’a pas encore parlé."
+        }
+      ]
+    },
+    "SD": {
+      "primary": "S",
+      "secondary": "D",
+      "label": "Facilitateur + Conquérant",
+      "intro": "Tu construis dans la durée grâce à ton écoute et ta constance. Ton sens de l’action renforce cette dynamique.",
+      "characteristics": [
+        {
+          "id": "talents",
+          "title": "Tes talents",
+          "text": "Tu sais écouter, soutenir et créer un climat de confiance durable. Ces aptitudes peuvent se manifester différemment selon les responsabilités et les personnes autour de toi. Tu sais orienter tes capacités vers une décision et une première action mesurable."
+        },
+        {
+          "id": "besoins",
+          "title": "Tes besoins",
+          "text": "Tu as besoin de relations fiables, de stabilité et de changements expliqués. Lorsque ces conditions manquent, ton énergie ou ta disponibilité peuvent s’en ressentir. Tu apprécies d'avoir une marge de décision et des responsabilités clairement confiées."
+        },
+        {
+          "id": "peurs",
+          "title": "Tes peurs",
+          "text": "Tu peux craindre les conflits, les ruptures brusques et la perte de repères. Ce sont des sensibilités possibles, pas des réactions systématiques. La perte de contrôle ou l'impossibilité d'agir peut devenir une source de tension."
+        },
+        {
+          "id": "emotions",
+          "title": "Tes émotions",
+          "text": "Tu peux ressentir de la tristesse lors de tensions relationnelles, sans toujours l’exprimer. L’intensité de ces émotions dépend toujours du contexte et ne se déduit pas du test seul. L'impatience peut apparaître lorsque les décisions stagnent, même si ton intention reste constructive."
+        }
+      ],
+      "strengths": [
+        {
+          "id": "force_01",
+          "title": "Écouter attentivement",
+          "description": "Tu donnes aux autres l’espace nécessaire pour s’exprimer. Cette attention révèle parfois des besoins que le groupe n’avait pas entendus et permet d’éviter des malentendus. Ton goût du résultat donne une direction à cette initiative : tu cherches rapidement qui décide et quelle étape permet de mesurer l'avancement.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une personne semble en retrait : tu prends le temps de lui demander ce dont elle a besoin pour participer."
+        },
+        {
+          "id": "force_02",
+          "title": "Créer la confiance",
+          "description": "Ta présence régulière donne des repères rassurants. La confiance se construit aussi dans les petits engagements tenus, pas seulement dans les grands moments. Tu apportes un cap concret à la réflexion : les options ne restent pas théoriques, elles doivent déboucher sur un choix assumé.",
+          "exampleLabel": "Exemple concret",
+          "example": "Dans une équipe nouvelle, tu respectes les engagements annoncés et facilites les premiers échanges."
+        },
+        {
+          "id": "force_03",
+          "title": "Soutenir dans la durée",
+          "description": "Tu restes présent après l’enthousiasme initial. Ta présence dans la durée peut soutenir les personnes lorsque l’enthousiasme initial a disparu. Tu prends volontiers la responsabilité de trancher lorsque le groupe hésite, sans attendre qu'un consensus parfait se forme.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un projet dure plusieurs mois : tu maintiens des points réguliers lorsque la motivation baisse."
+        },
+        {
+          "id": "force_04",
+          "title": "Apaiser les tensions",
+          "description": "Tu entends plusieurs points de vue et facilites le dialogue. Tu peux aider chacun à exprimer son point de vue sans transformer une différence en conflit personnel. Ta détermination t'aide à choisir une solution de rechange et à maintenir une échéance malgré l'imprévu.",
+          "exampleLabel": "Exemple concret",
+          "example": "Deux personnes s’opposent : tu reformules leurs besoins pour aider à trouver un terrain commun."
+        },
+        {
+          "id": "force_05",
+          "title": "Coopérer avec constance",
+          "description": "Tu tiens tes engagements dans la durée. Dans une période de transition, tu peux rappeler les repères qui demeurent et rassurer sans nier le changement. Tu peux donner à cette conviction une portée pratique en précisant ce qui doit changer et pourquoi cela compte maintenant.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une organisation change : tu rappelles ce qui reste stable et expliques les prochaines étapes."
+        },
+        {
+          "id": "force_06",
+          "title": "Repérer les besoins",
+          "description": "Tu remarques les personnes qui ont besoin d’aide. Ton accompagnement est précieux lorsqu’il permet aux autres de s’approprier une nouveauté à leur rythme. Tu contribues à transformer l'enthousiasme collectif en décisions, en responsables identifiés et en premières actions.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un nouveau membre arrive : tu lui présentes les repères utiles et restes disponible pour ses questions."
+        }
+      ],
+      "challenges": [
+        {
+          "id": "defi_01",
+          "title": "Éviter le désaccord",
+          "description": "Tu peux laisser une difficulté sans réponse pour préserver la paix. Le désaccord non exprimé peut devenir une frustration durable et rendre la relation moins sincère. Ton besoin d'avancer peut raccourcir le temps accordé à la discussion, même quand les autres ont des informations utiles.",
+          "actionLabel": "À essayer",
+          "action": "Exprime ton désaccord avec un exemple concret dès qu’il devient important. Propose un moment pour chercher une solution ensemble."
+        },
+        {
+          "id": "defi_02",
+          "title": "Dire oui trop souvent",
+          "description": "Tu peux négliger tes priorités pour ne pas décevoir. À force d’accepter, tu peux te retrouver avec une charge que les autres ne soupçonnent pas. Tu peux entendre une réserve comme une remise en cause de ta direction, plutôt que comme une contribution à la décision.",
+          "actionLabel": "À essayer",
+          "action": "Vérifie tes engagements avant d’accepter une nouvelle demande. Si nécessaire, propose un délai différent ou une aide plus limitée."
+        },
+        {
+          "id": "defi_03",
+          "title": "Attendre trop longtemps",
+          "description": "Tu peux observer alors qu’une réponse est nécessaire. Une transition mal préparée peut te sembler plus risquée qu’elle ne l’est réellement. Le désir d'obtenir rapidement des résultats peut t'inciter à accepter trop de responsabilités à la fois.",
+          "actionLabel": "À essayer",
+          "action": "Demande ce qui change, ce qui reste stable et quand la transition aura lieu. Identifie une première étape testable."
+        },
+        {
+          "id": "defi_04",
+          "title": "Résister au changement",
+          "description": "Une nouveauté soudaine peut bousculer tes repères. Une observation pertinente peut rester invisible si tu attends systématiquement qu’on te donne la parole. Ton exigence de résultats peut rendre tes attentes plus pressantes que tu ne l'imagines pour les autres.",
+          "actionLabel": "À essayer",
+          "action": "Prépare une idée avant la réunion et exprime-la, même si elle n’est pas parfaite. Ton point de vue peut être utile au groupe."
+        },
+        {
+          "id": "defi_05",
+          "title": "Garder tes émotions",
+          "description": "Tu peux taire ce qui te dérange pour protéger les autres. Soutenir les autres ne signifie pas devoir résoudre à leur place tous leurs conflits. Tu peux considérer certaines vérifications comme un ralentissement, puis devoir corriger des points évitables.",
+          "actionLabel": "À essayer",
+          "action": "Demande-toi ce qui relève réellement de ta responsabilité. Encourage les personnes concernées à avoir leur propre conversation."
+        },
+        {
+          "id": "defi_06",
+          "title": "T’effacer dans le groupe",
+          "description": "Tu peux laisser passer une contribution utile. Attendre l’accord de tout le monde peut prolonger l’incertitude lorsque le groupe a besoin d’avancer. Quand tu veux aller à l'essentiel, ton message peut paraître définitif et laisser peu de place à la réponse.",
+          "actionLabel": "À essayer",
+          "action": "Fixe une date de décision et recueille les avis avant cette échéance. Accepte qu’un accord total ne soit pas toujours possible."
+        }
+      ]
+    },
+    "SI": {
+      "primary": "S",
+      "secondary": "I",
+      "label": "Facilitateur + Communiquant",
+      "intro": "Tu construis dans la durée grâce à ton écoute et ta constance. Ton aisance relationnelle lui donne plus d’élan.",
+      "characteristics": [
+        {
+          "id": "talents",
+          "title": "Tes talents",
+          "text": "Tu sais écouter, soutenir et créer un climat de confiance durable. Ces aptitudes peuvent se manifester différemment selon les responsabilités et les personnes autour de toi. Tu peux mettre ces capacités au service du collectif en partageant tes idées et en donnant envie de participer."
+        },
+        {
+          "id": "besoins",
+          "title": "Tes besoins",
+          "text": "Tu as besoin de relations fiables, de stabilité et de changements expliqués. Lorsque ces conditions manquent, ton énergie ou ta disponibilité peuvent s’en ressentir. Les échanges vivants et la reconnaissance sincère peuvent renforcer ton engagement."
+        },
+        {
+          "id": "peurs",
+          "title": "Tes peurs",
+          "text": "Tu peux craindre les conflits, les ruptures brusques et la perte de repères. Ce sont des sensibilités possibles, pas des réactions systématiques. Le sentiment d'être ignoré ou tenu à l'écart peut parfois peser dans tes réactions."
+        },
+        {
+          "id": "emotions",
+          "title": "Tes émotions",
+          "text": "Tu peux ressentir de la tristesse lors de tensions relationnelles, sans toujours l’exprimer. L’intensité de ces émotions dépend toujours du contexte et ne se déduit pas du test seul. Ton enthousiasme se communique facilement ; une déception relationnelle peut aussi se voir rapidement."
+        }
+      ],
+      "strengths": [
+        {
+          "id": "force_01",
+          "title": "Écouter attentivement",
+          "description": "Tu donnes aux autres l’espace nécessaire pour s’exprimer. Cette attention révèle parfois des besoins que le groupe n’avait pas entendus et permet d’éviter des malentendus. Ton aisance relationnelle peut transformer une initiative individuelle en invitation à agir ensemble, plutôt qu'en décision annoncée au groupe.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une personne semble en retrait : tu prends le temps de lui demander ce dont elle a besoin pour participer."
+        },
+        {
+          "id": "force_02",
+          "title": "Créer la confiance",
+          "description": "Ta présence régulière donne des repères rassurants. La confiance se construit aussi dans les petits engagements tenus, pas seulement dans les grands moments. Tu sais rendre les options accessibles et susciter des réactions : les autres peuvent plus facilement exprimer ce qu'ils pensent du choix.",
+          "exampleLabel": "Exemple concret",
+          "example": "Dans une équipe nouvelle, tu respectes les engagements annoncés et facilites les premiers échanges."
+        },
+        {
+          "id": "force_03",
+          "title": "Soutenir dans la durée",
+          "description": "Tu restes présent après l’enthousiasme initial. Ta présence dans la durée peut soutenir les personnes lorsque l’enthousiasme initial a disparu. Tu peux fédérer autour de la mission en expliquant son sens et en donnant à chacun envie d'y contribuer.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un projet dure plusieurs mois : tu maintiens des points réguliers lorsque la motivation baisse."
+        },
+        {
+          "id": "force_04",
+          "title": "Apaiser les tensions",
+          "description": "Tu entends plusieurs points de vue et facilites le dialogue. Tu peux aider chacun à exprimer son point de vue sans transformer une différence en conflit personnel. Ton optimisme et ta capacité à communiquer aident le groupe à garder de l'élan lorsque le premier plan ne fonctionne plus.",
+          "exampleLabel": "Exemple concret",
+          "example": "Deux personnes s’opposent : tu reformules leurs besoins pour aider à trouver un terrain commun."
+        },
+        {
+          "id": "force_05",
+          "title": "Coopérer avec constance",
+          "description": "Tu tiens tes engagements dans la durée. Dans une période de transition, tu peux rappeler les repères qui demeurent et rassurer sans nier le changement. Tu peux défendre cette conviction avec chaleur, ce qui facilite l'adhésion sans exiger l'accord immédiat.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une organisation change : tu rappelles ce qui reste stable et expliques les prochaines étapes."
+        },
+        {
+          "id": "force_06",
+          "title": "Repérer les besoins",
+          "description": "Tu remarques les personnes qui ont besoin d’aide. Ton accompagnement est précieux lorsqu’il permet aux autres de s’approprier une nouveauté à leur rythme. Tu donnes une dimension collective à l'action : les personnes se sentent invitées à participer, pas seulement informées.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un nouveau membre arrive : tu lui présentes les repères utiles et restes disponible pour ses questions."
+        }
+      ],
+      "challenges": [
+        {
+          "id": "defi_01",
+          "title": "Éviter le désaccord",
+          "description": "Tu peux laisser une difficulté sans réponse pour préserver la paix. Le désaccord non exprimé peut devenir une frustration durable et rendre la relation moins sincère. Ton enthousiasme peut entraîner une adhésion rapide sans que les réserves plus discrètes aient été exprimées.",
+          "actionLabel": "À essayer",
+          "action": "Exprime ton désaccord avec un exemple concret dès qu’il devient important. Propose un moment pour chercher une solution ensemble."
+        },
+        {
+          "id": "defi_02",
+          "title": "Dire oui trop souvent",
+          "description": "Tu peux négliger tes priorités pour ne pas décevoir. À force d’accepter, tu peux te retrouver avec une charge que les autres ne soupçonnent pas. Tu peux chercher à rallier les autres trop vite et prendre un désaccord comme un manque de soutien.",
+          "actionLabel": "À essayer",
+          "action": "Vérifie tes engagements avant d’accepter une nouvelle demande. Si nécessaire, propose un délai différent ou une aide plus limitée."
+        },
+        {
+          "id": "defi_03",
+          "title": "Attendre trop longtemps",
+          "description": "Tu peux observer alors qu’une réponse est nécessaire. Une transition mal préparée peut te sembler plus risquée qu’elle ne l’est réellement. De nouvelles idées stimulantes peuvent détourner ton attention des engagements déjà pris.",
+          "actionLabel": "À essayer",
+          "action": "Demande ce qui change, ce qui reste stable et quand la transition aura lieu. Identifie une première étape testable."
+        },
+        {
+          "id": "defi_04",
+          "title": "Résister au changement",
+          "description": "Une nouveauté soudaine peut bousculer tes repères. Une observation pertinente peut rester invisible si tu attends systématiquement qu’on te donne la parole. Ton énergie communicative peut donner l'impression que tout le monde est prêt à suivre le même rythme.",
+          "actionLabel": "À essayer",
+          "action": "Prépare une idée avant la réunion et exprime-la, même si elle n’est pas parfaite. Ton point de vue peut être utile au groupe."
+        },
+        {
+          "id": "defi_05",
+          "title": "Garder tes émotions",
+          "description": "Tu peux taire ce qui te dérange pour protéger les autres. Soutenir les autres ne signifie pas devoir résoudre à leur place tous leurs conflits. Le plaisir de lancer et de partager une idée peut passer avant la vérification des moyens disponibles.",
+          "actionLabel": "À essayer",
+          "action": "Demande-toi ce qui relève réellement de ta responsabilité. Encourage les personnes concernées à avoir leur propre conversation."
+        },
+        {
+          "id": "defi_06",
+          "title": "T’effacer dans le groupe",
+          "description": "Tu peux laisser passer une contribution utile. Attendre l’accord de tout le monde peut prolonger l’incertitude lorsque le groupe a besoin d’avancer. Ton expression spontanée peut prendre beaucoup de place, même si ton intention est de créer du lien.",
+          "actionLabel": "À essayer",
+          "action": "Fixe une date de décision et recueille les avis avant cette échéance. Accepte qu’un accord total ne soit pas toujours possible."
+        }
+      ]
+    },
+    "SC": {
+      "primary": "S",
+      "secondary": "C",
+      "label": "Facilitateur + Analyste",
+      "intro": "Tu construis dans la durée grâce à ton écoute et ta constance. Ton exigence de précision lui donne de la solidité.",
+      "characteristics": [
+        {
+          "id": "talents",
+          "title": "Tes talents",
+          "text": "Tu sais écouter, soutenir et créer un climat de confiance durable. Ces aptitudes peuvent se manifester différemment selon les responsabilités et les personnes autour de toi. Tu peux renforcer ces capacités en structurant les étapes et en vérifiant les éléments déterminants."
+        },
+        {
+          "id": "besoins",
+          "title": "Tes besoins",
+          "text": "Tu as besoin de relations fiables, de stabilité et de changements expliqués. Lorsque ces conditions manquent, ton énergie ou ta disponibilité peuvent s’en ressentir. Des informations fiables et des critères explicites te permettent de t'engager plus sereinement."
+        },
+        {
+          "id": "peurs",
+          "title": "Tes peurs",
+          "text": "Tu peux craindre les conflits, les ruptures brusques et la perte de repères. Ce sont des sensibilités possibles, pas des réactions systématiques. Le risque d'erreur ou une décision fondée sur des éléments imprécis peut nourrir tes réserves."
+        },
+        {
+          "id": "emotions",
+          "title": "Tes émotions",
+          "text": "Tu peux ressentir de la tristesse lors de tensions relationnelles, sans toujours l’exprimer. L’intensité de ces émotions dépend toujours du contexte et ne se déduit pas du test seul. L'incertitude peut accroître ton besoin de vérifier et de prendre du recul avant de réagir."
+        }
+      ],
+      "strengths": [
+        {
+          "id": "force_01",
+          "title": "Écouter attentivement",
+          "description": "Tu donnes aux autres l’espace nécessaire pour s’exprimer. Cette attention révèle parfois des besoins que le groupe n’avait pas entendus et permet d’éviter des malentendus. Ton souci de précision peut transformer une impulsion en expérimentation cadrée, avec des critères pour savoir si elle fonctionne.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une personne semble en retrait : tu prends le temps de lui demander ce dont elle a besoin pour participer."
+        },
+        {
+          "id": "force_02",
+          "title": "Créer la confiance",
+          "description": "Ta présence régulière donne des repères rassurants. La confiance se construit aussi dans les petits engagements tenus, pas seulement dans les grands moments. Tu apportes des éléments vérifiables à la décision et aides à distinguer les faits des impressions.",
+          "exampleLabel": "Exemple concret",
+          "example": "Dans une équipe nouvelle, tu respectes les engagements annoncés et facilites les premiers échanges."
+        },
+        {
+          "id": "force_03",
+          "title": "Soutenir dans la durée",
+          "description": "Tu restes présent après l’enthousiasme initial. Ta présence dans la durée peut soutenir les personnes lorsque l’enthousiasme initial a disparu. Tu peux définir un périmètre clair, documenter les engagements et sécuriser la qualité du résultat attendu.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un projet dure plusieurs mois : tu maintiens des points réguliers lorsque la motivation baisse."
+        },
+        {
+          "id": "force_04",
+          "title": "Apaiser les tensions",
+          "description": "Tu entends plusieurs points de vue et facilites le dialogue. Tu peux aider chacun à exprimer son point de vue sans transformer une différence en conflit personnel. Ton analyse aide à identifier la cause de l'obstacle et à choisir une alternative qui traite le vrai problème.",
+          "exampleLabel": "Exemple concret",
+          "example": "Deux personnes s’opposent : tu reformules leurs besoins pour aider à trouver un terrain commun."
+        },
+        {
+          "id": "force_05",
+          "title": "Coopérer avec constance",
+          "description": "Tu tiens tes engagements dans la durée. Dans une période de transition, tu peux rappeler les repères qui demeurent et rassurer sans nier le changement. Tu peux étayer ta conviction avec des arguments solides et accepter de la réviser si de nouveaux faits apparaissent.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une organisation change : tu rappelles ce qui reste stable et expliques les prochaines étapes."
+        },
+        {
+          "id": "force_06",
+          "title": "Repérer les besoins",
+          "description": "Tu remarques les personnes qui ont besoin d’aide. Ton accompagnement est précieux lorsqu’il permet aux autres de s’approprier une nouveauté à leur rythme. Tu rends l'élan plus fiable en précisant les étapes, les ressources et les points de contrôle.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un nouveau membre arrive : tu lui présentes les repères utiles et restes disponible pour ses questions."
+        }
+      ],
+      "challenges": [
+        {
+          "id": "defi_01",
+          "title": "Éviter le désaccord",
+          "description": "Tu peux laisser une difficulté sans réponse pour préserver la paix. Le désaccord non exprimé peut devenir une frustration durable et rendre la relation moins sincère. Tu peux vouloir vérifier encore un élément avant de trancher, ce qui crée une tension entre décision et prudence.",
+          "actionLabel": "À essayer",
+          "action": "Exprime ton désaccord avec un exemple concret dès qu’il devient important. Propose un moment pour chercher une solution ensemble."
+        },
+        {
+          "id": "defi_02",
+          "title": "Dire oui trop souvent",
+          "description": "Tu peux négliger tes priorités pour ne pas décevoir. À force d’accepter, tu peux te retrouver avec une charge que les autres ne soupçonnent pas. Tu peux multiplier les questions pour sécuriser une idée, sans toujours montrer que tu reconnais l'intention de l'autre.",
+          "actionLabel": "À essayer",
+          "action": "Vérifie tes engagements avant d’accepter une nouvelle demande. Si nécessaire, propose un délai différent ou une aide plus limitée."
+        },
+        {
+          "id": "defi_03",
+          "title": "Attendre trop longtemps",
+          "description": "Tu peux observer alors qu’une réponse est nécessaire. Une transition mal préparée peut te sembler plus risquée qu’elle ne l’est réellement. Le désir de bien faire peut te conduire à approfondir plusieurs sujets au lieu d'en finaliser un.",
+          "actionLabel": "À essayer",
+          "action": "Demande ce qui change, ce qui reste stable et quand la transition aura lieu. Identifie une première étape testable."
+        },
+        {
+          "id": "defi_04",
+          "title": "Résister au changement",
+          "description": "Une nouveauté soudaine peut bousculer tes repères. Une observation pertinente peut rester invisible si tu attends systématiquement qu’on te donne la parole. Tes critères de qualité peuvent devenir difficiles à suivre si tu n'explicites pas ce qui est indispensable.",
+          "actionLabel": "À essayer",
+          "action": "Prépare une idée avant la réunion et exprime-la, même si elle n’est pas parfaite. Ton point de vue peut être utile au groupe."
+        },
+        {
+          "id": "defi_05",
+          "title": "Garder tes émotions",
+          "description": "Tu peux taire ce qui te dérange pour protéger les autres. Soutenir les autres ne signifie pas devoir résoudre à leur place tous leurs conflits. Tu peux repousser le démarrage en attendant un niveau d'information impossible à atteindre.",
+          "actionLabel": "À essayer",
+          "action": "Demande-toi ce qui relève réellement de ta responsabilité. Encourage les personnes concernées à avoir leur propre conversation."
+        },
+        {
+          "id": "defi_06",
+          "title": "T’effacer dans le groupe",
+          "description": "Tu peux laisser passer une contribution utile. Attendre l’accord de tout le monde peut prolonger l’incertitude lorsque le groupe a besoin d’avancer. Une remarque techniquement exacte peut sembler froide si tu n'expliques pas d'abord son intention.",
+          "actionLabel": "À essayer",
+          "action": "Fixe une date de décision et recueille les avis avant cette échéance. Accepte qu’un accord total ne soit pas toujours possible."
+        }
+      ]
+    },
+    "CD": {
+      "primary": "C",
+      "secondary": "D",
+      "label": "Analyste + Conquérant",
+      "intro": "Tu apportes de la rigueur par ton analyse et ton attention à la qualité. Ton sens de l’action renforce cette dynamique.",
+      "characteristics": [
+        {
+          "id": "talents",
+          "title": "Tes talents",
+          "text": "Tu sais analyser, structurer et vérifier des informations complexes. Ces aptitudes peuvent se manifester différemment selon les responsabilités et les personnes autour de toi. Tu sais orienter tes capacités vers une décision et une première action mesurable."
+        },
+        {
+          "id": "besoins",
+          "title": "Tes besoins",
+          "text": "Tu as besoin de critères précis, de données fiables et de temps pour réfléchir. Lorsque ces conditions manquent, ton énergie ou ta disponibilité peuvent s’en ressentir. Tu apprécies d'avoir une marge de décision et des responsabilités clairement confiées."
+        },
+        {
+          "id": "peurs",
+          "title": "Tes peurs",
+          "text": "Tu peux redouter l’erreur visible ou une critique injustifiée de ton travail. Ce sont des sensibilités possibles, pas des réactions systématiques. La perte de contrôle ou l'impossibilité d'agir peut devenir une source de tension."
+        },
+        {
+          "id": "emotions",
+          "title": "Tes émotions",
+          "text": "L’incertitude peut susciter de l’inquiétude, même lorsque tu gardes une apparence calme. L’intensité de ces émotions dépend toujours du contexte et ne se déduit pas du test seul. L'impatience peut apparaître lorsque les décisions stagnent, même si ton intention reste constructive."
+        }
+      ],
+      "strengths": [
+        {
+          "id": "force_01",
+          "title": "Analyser précisément",
+          "description": "Tu repères les incohérences et les points à vérifier. En distinguant ce qui est démontré de ce qui reste supposé, tu rends la décision plus solide. Ton goût du résultat donne une direction à cette initiative : tu cherches rapidement qui décide et quelle étape permet de mesurer l'avancement.",
+          "exampleLabel": "Exemple concret",
+          "example": "Avant une décision, tu vérifies les chiffres essentiels et signales les hypothèses encore incertaines."
+        },
+        {
+          "id": "force_02",
+          "title": "Structurer une méthode",
+          "description": "Tu rends un objectif complexe plus compréhensible. Anticiper un risque permet de préparer une solution de rechange sans empêcher le projet de démarrer. Tu apportes un cap concret à la réflexion : les options ne restent pas théoriques, elles doivent déboucher sur un choix assumé.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un événement se prépare : tu identifies un risque logistique et proposes un plan de secours."
+        },
+        {
+          "id": "force_03",
+          "title": "Anticiper les risques",
+          "description": "Tu prépares des solutions avant que les problèmes surviennent. Une démarche explicite aide les autres à savoir où ils en sont et ce qui sera attendu à chaque étape. Tu prends volontiers la responsabilité de trancher lorsque le groupe hésite, sans attendre qu'un consensus parfait se forme.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une mission est floue : tu la découpes en étapes, responsables et critères de réussite."
+        },
+        {
+          "id": "force_04",
+          "title": "Rechercher la qualité",
+          "description": "Tu accordes de l’importance à la fiabilité du travail. Ta rigueur évite des corrections coûteuses lorsqu’elle porte sur les points qui influencent réellement le résultat. Ta détermination t'aide à choisir une solution de rechange et à maintenir une échéance malgré l'imprévu.",
+          "exampleLabel": "Exemple concret",
+          "example": "Avant publication, tu repères une incohérence importante et évites une correction après diffusion."
+        },
+        {
+          "id": "force_05",
+          "title": "Prendre du recul",
+          "description": "Tu examines plusieurs explications avant de conclure. Tes questions peuvent améliorer une proposition si tu expliques aussi ce qui te semble déjà pertinent. Tu peux donner à cette conviction une portée pratique en précisant ce qui doit changer et pourquoi cela compte maintenant.",
+          "exampleLabel": "Exemple concret",
+          "example": "En réunion, tu demandes quelle donnée permet réellement de comparer deux propositions."
+        },
+        {
+          "id": "force_06",
+          "title": "Résoudre un problème",
+          "description": "Tu cherches les causes plutôt que de traiter les symptômes. Prendre du recul donne de la valeur à ton avis, surtout lorsque tu sais indiquer à quel moment il faut décider. Tu contribues à transformer l'enthousiasme collectif en décisions, en responsables identifiés et en premières actions.",
+          "exampleLabel": "Exemple concret",
+          "example": "Deux solutions semblent équivalentes : tu explicites leurs compromis pour aider le groupe à choisir."
+        }
+      ],
+      "challenges": [
+        {
+          "id": "defi_01",
+          "title": "Attendre trop de certitudes",
+          "description": "Tu peux reporter une décision faute d’informations parfaites. Les vérifications supplémentaires ne changent pas toujours la décision et peuvent retarder inutilement l’action. Ton besoin d'avancer peut raccourcir le temps accordé à la discussion, même quand les autres ont des informations utiles.",
+          "actionLabel": "À essayer",
+          "action": "Définis les trois informations indispensables à la décision. Une fois obtenues, fixe une échéance et accepte une part d’incertitude."
+        },
+        {
+          "id": "defi_02",
+          "title": "Chercher la perfection",
+          "description": "Tu peux consacrer trop de temps aux détails. Un niveau d’exigence identique pour tous les détails peut consommer du temps sans améliorer le résultat final. Tu peux entendre une réserve comme une remise en cause de ta direction, plutôt que comme une contribution à la décision.",
+          "actionLabel": "À essayer",
+          "action": "Classe les corrections en indispensables, utiles et facultatives. Termine d’abord celles qui changent vraiment le résultat."
+        },
+        {
+          "id": "defi_03",
+          "title": "Paraître trop critique",
+          "description": "Tu peux signaler les défauts avant de reconnaître les atouts. Les autres peuvent entendre un rejet global alors que tu souhaites seulement améliorer un point précis. Le désir d'obtenir rapidement des résultats peut t'inciter à accepter trop de responsabilités à la fois.",
+          "actionLabel": "À essayer",
+          "action": "Commence par identifier ce qui fonctionne dans la proposition. Formule ensuite une réserve précise et une amélioration possible."
+        },
+        {
+          "id": "defi_04",
+          "title": "Trop analyser",
+          "description": "Multiplier les scénarios peut bloquer la décision. En contrôlant chaque étape, tu risques de limiter l’autonomie de personnes pourtant capables de contribuer. Ton exigence de résultats peut rendre tes attentes plus pressantes que tu ne l'imagines pour les autres.",
+          "actionLabel": "À essayer",
+          "action": "Définis le résultat attendu et deux critères de contrôle. Laisse ensuite la personne choisir comment réaliser le travail."
+        },
+        {
+          "id": "defi_05",
+          "title": "Garder tes réserves",
+          "description": "Tu peux signaler un risque trop tard. Certaines décisions exigent d’accepter une part d’incertitude plutôt que d’attendre une preuve impossible à obtenir. Tu peux considérer certaines vérifications comme un ralentissement, puis devoir corriger des points évitables.",
+          "actionLabel": "À essayer",
+          "action": "Distingue les risques majeurs des inconnues secondaires. Décide d’un premier essai réversible plutôt que d’attendre toutes les garanties."
+        },
+        {
+          "id": "defi_06",
+          "title": "Peiner avec l’imprévu",
+          "description": "Un changement soudain peut perturber ton organisation. Une méthode qui a fait ses preuves peut devoir évoluer lorsque le contexte ou les besoins changent. Quand tu veux aller à l'essentiel, ton message peut paraître définitif et laisser peu de place à la réponse.",
+          "actionLabel": "À essayer",
+          "action": "Demande si la méthode sert toujours l’objectif. Teste une adaptation limitée avant de décider de la conserver."
+        }
+      ]
+    },
+    "CI": {
+      "primary": "C",
+      "secondary": "I",
+      "label": "Analyste + Communiquant",
+      "intro": "Tu apportes de la rigueur par ton analyse et ton attention à la qualité. Ton aisance relationnelle lui donne plus d’élan.",
+      "characteristics": [
+        {
+          "id": "talents",
+          "title": "Tes talents",
+          "text": "Tu sais analyser, structurer et vérifier des informations complexes. Ces aptitudes peuvent se manifester différemment selon les responsabilités et les personnes autour de toi. Tu peux mettre ces capacités au service du collectif en partageant tes idées et en donnant envie de participer."
+        },
+        {
+          "id": "besoins",
+          "title": "Tes besoins",
+          "text": "Tu as besoin de critères précis, de données fiables et de temps pour réfléchir. Lorsque ces conditions manquent, ton énergie ou ta disponibilité peuvent s’en ressentir. Les échanges vivants et la reconnaissance sincère peuvent renforcer ton engagement."
+        },
+        {
+          "id": "peurs",
+          "title": "Tes peurs",
+          "text": "Tu peux redouter l’erreur visible ou une critique injustifiée de ton travail. Ce sont des sensibilités possibles, pas des réactions systématiques. Le sentiment d'être ignoré ou tenu à l'écart peut parfois peser dans tes réactions."
+        },
+        {
+          "id": "emotions",
+          "title": "Tes émotions",
+          "text": "L’incertitude peut susciter de l’inquiétude, même lorsque tu gardes une apparence calme. L’intensité de ces émotions dépend toujours du contexte et ne se déduit pas du test seul. Ton enthousiasme se communique facilement ; une déception relationnelle peut aussi se voir rapidement."
+        }
+      ],
+      "strengths": [
+        {
+          "id": "force_01",
+          "title": "Analyser précisément",
+          "description": "Tu repères les incohérences et les points à vérifier. En distinguant ce qui est démontré de ce qui reste supposé, tu rends la décision plus solide. Ton aisance relationnelle peut transformer une initiative individuelle en invitation à agir ensemble, plutôt qu'en décision annoncée au groupe.",
+          "exampleLabel": "Exemple concret",
+          "example": "Avant une décision, tu vérifies les chiffres essentiels et signales les hypothèses encore incertaines."
+        },
+        {
+          "id": "force_02",
+          "title": "Structurer une méthode",
+          "description": "Tu rends un objectif complexe plus compréhensible. Anticiper un risque permet de préparer une solution de rechange sans empêcher le projet de démarrer. Tu sais rendre les options accessibles et susciter des réactions : les autres peuvent plus facilement exprimer ce qu'ils pensent du choix.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un événement se prépare : tu identifies un risque logistique et proposes un plan de secours."
+        },
+        {
+          "id": "force_03",
+          "title": "Anticiper les risques",
+          "description": "Tu prépares des solutions avant que les problèmes surviennent. Une démarche explicite aide les autres à savoir où ils en sont et ce qui sera attendu à chaque étape. Tu peux fédérer autour de la mission en expliquant son sens et en donnant à chacun envie d'y contribuer.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une mission est floue : tu la découpes en étapes, responsables et critères de réussite."
+        },
+        {
+          "id": "force_04",
+          "title": "Rechercher la qualité",
+          "description": "Tu accordes de l’importance à la fiabilité du travail. Ta rigueur évite des corrections coûteuses lorsqu’elle porte sur les points qui influencent réellement le résultat. Ton optimisme et ta capacité à communiquer aident le groupe à garder de l'élan lorsque le premier plan ne fonctionne plus.",
+          "exampleLabel": "Exemple concret",
+          "example": "Avant publication, tu repères une incohérence importante et évites une correction après diffusion."
+        },
+        {
+          "id": "force_05",
+          "title": "Prendre du recul",
+          "description": "Tu examines plusieurs explications avant de conclure. Tes questions peuvent améliorer une proposition si tu expliques aussi ce qui te semble déjà pertinent. Tu peux défendre cette conviction avec chaleur, ce qui facilite l'adhésion sans exiger l'accord immédiat.",
+          "exampleLabel": "Exemple concret",
+          "example": "En réunion, tu demandes quelle donnée permet réellement de comparer deux propositions."
+        },
+        {
+          "id": "force_06",
+          "title": "Résoudre un problème",
+          "description": "Tu cherches les causes plutôt que de traiter les symptômes. Prendre du recul donne de la valeur à ton avis, surtout lorsque tu sais indiquer à quel moment il faut décider. Tu donnes une dimension collective à l'action : les personnes se sentent invitées à participer, pas seulement informées.",
+          "exampleLabel": "Exemple concret",
+          "example": "Deux solutions semblent équivalentes : tu explicites leurs compromis pour aider le groupe à choisir."
+        }
+      ],
+      "challenges": [
+        {
+          "id": "defi_01",
+          "title": "Attendre trop de certitudes",
+          "description": "Tu peux reporter une décision faute d’informations parfaites. Les vérifications supplémentaires ne changent pas toujours la décision et peuvent retarder inutilement l’action. Ton enthousiasme peut entraîner une adhésion rapide sans que les réserves plus discrètes aient été exprimées.",
+          "actionLabel": "À essayer",
+          "action": "Définis les trois informations indispensables à la décision. Une fois obtenues, fixe une échéance et accepte une part d’incertitude."
+        },
+        {
+          "id": "defi_02",
+          "title": "Chercher la perfection",
+          "description": "Tu peux consacrer trop de temps aux détails. Un niveau d’exigence identique pour tous les détails peut consommer du temps sans améliorer le résultat final. Tu peux chercher à rallier les autres trop vite et prendre un désaccord comme un manque de soutien.",
+          "actionLabel": "À essayer",
+          "action": "Classe les corrections en indispensables, utiles et facultatives. Termine d’abord celles qui changent vraiment le résultat."
+        },
+        {
+          "id": "defi_03",
+          "title": "Paraître trop critique",
+          "description": "Tu peux signaler les défauts avant de reconnaître les atouts. Les autres peuvent entendre un rejet global alors que tu souhaites seulement améliorer un point précis. De nouvelles idées stimulantes peuvent détourner ton attention des engagements déjà pris.",
+          "actionLabel": "À essayer",
+          "action": "Commence par identifier ce qui fonctionne dans la proposition. Formule ensuite une réserve précise et une amélioration possible."
+        },
+        {
+          "id": "defi_04",
+          "title": "Trop analyser",
+          "description": "Multiplier les scénarios peut bloquer la décision. En contrôlant chaque étape, tu risques de limiter l’autonomie de personnes pourtant capables de contribuer. Ton énergie communicative peut donner l'impression que tout le monde est prêt à suivre le même rythme.",
+          "actionLabel": "À essayer",
+          "action": "Définis le résultat attendu et deux critères de contrôle. Laisse ensuite la personne choisir comment réaliser le travail."
+        },
+        {
+          "id": "defi_05",
+          "title": "Garder tes réserves",
+          "description": "Tu peux signaler un risque trop tard. Certaines décisions exigent d’accepter une part d’incertitude plutôt que d’attendre une preuve impossible à obtenir. Le plaisir de lancer et de partager une idée peut passer avant la vérification des moyens disponibles.",
+          "actionLabel": "À essayer",
+          "action": "Distingue les risques majeurs des inconnues secondaires. Décide d’un premier essai réversible plutôt que d’attendre toutes les garanties."
+        },
+        {
+          "id": "defi_06",
+          "title": "Peiner avec l’imprévu",
+          "description": "Un changement soudain peut perturber ton organisation. Une méthode qui a fait ses preuves peut devoir évoluer lorsque le contexte ou les besoins changent. Ton expression spontanée peut prendre beaucoup de place, même si ton intention est de créer du lien.",
+          "actionLabel": "À essayer",
+          "action": "Demande si la méthode sert toujours l’objectif. Teste une adaptation limitée avant de décider de la conserver."
+        }
+      ]
+    },
+    "CS": {
+      "primary": "C",
+      "secondary": "S",
+      "label": "Analyste + Facilitateur",
+      "intro": "Tu apportes de la rigueur par ton analyse et ton attention à la qualité. Ton attention aux autres lui apporte de la stabilité.",
+      "characteristics": [
+        {
+          "id": "talents",
+          "title": "Tes talents",
+          "text": "Tu sais analyser, structurer et vérifier des informations complexes. Ces aptitudes peuvent se manifester différemment selon les responsabilités et les personnes autour de toi. Tu peux utiliser ces capacités pour soutenir les autres et rendre les engagements durables."
+        },
+        {
+          "id": "besoins",
+          "title": "Tes besoins",
+          "text": "Tu as besoin de critères précis, de données fiables et de temps pour réfléchir. Lorsque ces conditions manquent, ton énergie ou ta disponibilité peuvent s’en ressentir. La confiance, la stabilité des relations et le temps de t'adapter comptent également."
+        },
+        {
+          "id": "peurs",
+          "title": "Tes peurs",
+          "text": "Tu peux redouter l’erreur visible ou une critique injustifiée de ton travail. Ce sont des sensibilités possibles, pas des réactions systématiques. Les conflits prolongés et les changements brusques peuvent te mettre mal à l'aise."
+        },
+        {
+          "id": "emotions",
+          "title": "Tes émotions",
+          "text": "L’incertitude peut susciter de l’inquiétude, même lorsque tu gardes une apparence calme. L’intensité de ces émotions dépend toujours du contexte et ne se déduit pas du test seul. Tu peux garder certaines préoccupations pour toi afin de préserver l'harmonie, même quand elles méritent d'être exprimées."
+        }
+      ],
+      "strengths": [
+        {
+          "id": "force_01",
+          "title": "Analyser précisément",
+          "description": "Tu repères les incohérences et les points à vérifier. En distinguant ce qui est démontré de ce qui reste supposé, tu rends la décision plus solide. Ton attention aux personnes t'aide à associer les plus réservés dès le départ et à construire une initiative que l'équipe pourra réellement suivre.",
+          "exampleLabel": "Exemple concret",
+          "example": "Avant une décision, tu vérifies les chiffres essentiels et signales les hypothèses encore incertaines."
+        },
+        {
+          "id": "force_02",
+          "title": "Structurer une méthode",
+          "description": "Tu rends un objectif complexe plus compréhensible. Anticiper un risque permet de préparer une solution de rechange sans empêcher le projet de démarrer. Tu peux vérifier que le choix tient compte de ses conséquences humaines, au-delà de son efficacité immédiate.",
+          "exampleLabel": "Exemple concret",
+          "example": "Un événement se prépare : tu identifies un risque logistique et proposes un plan de secours."
+        },
+        {
+          "id": "force_03",
+          "title": "Anticiper les risques",
+          "description": "Tu prépares des solutions avant que les problèmes surviennent. Une démarche explicite aide les autres à savoir où ils en sont et ce qui sera attendu à chaque étape. Ta fiabilité te pousse à tenir les engagements pris et à soutenir les personnes qui dépendent de ton travail.",
+          "exampleLabel": "Exemple concret",
+          "example": "Une mission est floue : tu la découpes en étapes, responsables et critères de réussite."
+        },
+        {
+          "id": "force_04",
+          "title": "Rechercher la qualité",
+          "description": "Tu accordes de l’importance à la fiabilité du travail. Ta rigueur évite des corrections coûteuses lorsqu’elle porte sur les points qui influencent réellement le résultat. Ta constance permet de traverser un obstacle sans perdre la confiance du groupe ni abandonner trop vite l'objectif.",
+          "exampleLabel": "Exemple concret",
+          "example": "Avant publication, tu repères une incohérence importante et évites une correction après diffusion."
+        },
+        {
+          "id": "force_05",
+          "title": "Prendre du recul",
+          "description": "Tu examines plusieurs explications avant de conclure. Tes questions peuvent améliorer une proposition si tu expliques aussi ce qui te semble déjà pertinent. Tu peux défendre une conviction avec persévérance et respect, sans confondre fermeté et confrontation.",
+          "exampleLabel": "Exemple concret",
+          "example": "En réunion, tu demandes quelle donnée permet réellement de comparer deux propositions."
+        },
+        {
+          "id": "force_06",
+          "title": "Résoudre un problème",
+          "description": "Tu cherches les causes plutôt que de traiter les symptômes. Prendre du recul donne de la valeur à ton avis, surtout lorsque tu sais indiquer à quel moment il faut décider. Tu aides à inscrire l'élan dans la durée grâce à des engagements réalistes et à l'attention portée au collectif.",
+          "exampleLabel": "Exemple concret",
+          "example": "Deux solutions semblent équivalentes : tu explicites leurs compromis pour aider le groupe à choisir."
+        }
+      ],
+      "challenges": [
+        {
+          "id": "defi_01",
+          "title": "Attendre trop de certitudes",
+          "description": "Tu peux reporter une décision faute d’informations parfaites. Les vérifications supplémentaires ne changent pas toujours la décision et peuvent retarder inutilement l’action. Tu peux hésiter à bousculer les habitudes du groupe, puis prendre une décision tardive lorsque la situation devient urgente.",
+          "actionLabel": "À essayer",
+          "action": "Définis les trois informations indispensables à la décision. Une fois obtenues, fixe une échéance et accepte une part d’incertitude."
+        },
+        {
+          "id": "defi_02",
+          "title": "Chercher la perfection",
+          "description": "Tu peux consacrer trop de temps aux détails. Un niveau d’exigence identique pour tous les détails peut consommer du temps sans améliorer le résultat final. Le souci de préserver l'harmonie peut rendre un désaccord difficile à aborder franchement.",
+          "actionLabel": "À essayer",
+          "action": "Classe les corrections en indispensables, utiles et facultatives. Termine d’abord celles qui changent vraiment le résultat."
+        },
+        {
+          "id": "defi_03",
+          "title": "Paraître trop critique",
+          "description": "Tu peux signaler les défauts avant de reconnaître les atouts. Les autres peuvent entendre un rejet global alors que tu souhaites seulement améliorer un point précis. Tu peux accepter trop de demandes pour ne décevoir personne, au risque de disperser ton énergie.",
+          "actionLabel": "À essayer",
+          "action": "Commence par identifier ce qui fonctionne dans la proposition. Formule ensuite une réserve précise et une amélioration possible."
+        },
+        {
+          "id": "defi_04",
+          "title": "Trop analyser",
+          "description": "Multiplier les scénarios peut bloquer la décision. En contrôlant chaque étape, tu risques de limiter l’autonomie de personnes pourtant capables de contribuer. Tu peux porter silencieusement une charge importante plutôt que d'exprimer à temps ce qui devient trop lourd.",
+          "actionLabel": "À essayer",
+          "action": "Définis le résultat attendu et deux critères de contrôle. Laisse ensuite la personne choisir comment réaliser le travail."
+        },
+        {
+          "id": "defi_05",
+          "title": "Garder tes réserves",
+          "description": "Tu peux signaler un risque trop tard. Certaines décisions exigent d’accepter une part d’incertitude plutôt que d’attendre une preuve impossible à obtenir. Le désir de préserver les repères existants peut retarder une préparation nécessaire au changement.",
+          "actionLabel": "À essayer",
+          "action": "Distingue les risques majeurs des inconnues secondaires. Décide d’un premier essai réversible plutôt que d’attendre toutes les garanties."
+        },
+        {
+          "id": "defi_06",
+          "title": "Peiner avec l’imprévu",
+          "description": "Un changement soudain peut perturber ton organisation. Une méthode qui a fait ses preuves peut devoir évoluer lorsque le contexte ou les besoins changent. À force d'éviter les tensions, tu peux laisser un problème s'installer sans dire clairement ce qui te dérange.",
+          "actionLabel": "À essayer",
+          "action": "Demande si la méthode sert toujours l’objectif. Teste une adaptation limitée avant de décider de la conserver."
+        }
+      ]
+    }
+  }
+}

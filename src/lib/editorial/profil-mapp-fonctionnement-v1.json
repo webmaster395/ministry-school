@@ -1,0 +1,355 @@
+{
+  "schemaVersion": "1.0.0",
+  "contentVersion": "profil-mapp-fonctionnement-v1.0.0",
+  "status": "draft-to-review",
+  "locale": "fr-FR",
+  "sources": {
+    "reference": "Mémentos MAPP Profil4 v1.1 : Dominant, Influent, Stable, Consciencieux, pages 1–2.",
+    "method": "Textes MAPP originaux inspirés des rubriques des documents, sans reproduction longue.",
+    "caution": "Les préférences de gestes, de voix, de peur et d’e-mails ne sont pas directement mesurées par les 44 questions ; utiliser des formulations conditionnelles."
+  },
+  "ui": {
+    "section": "02 / Ton fonctionnement",
+    "exclusiveTabs": true,
+    "defaultTab": "natural",
+    "tabs": [
+      {
+        "id": "natural",
+        "label": "Au naturel"
+      },
+      {
+        "id": "stress",
+        "label": "Sous pression"
+      }
+    ],
+    "preserveTabOnReturn": true,
+    "switchWithoutReload": true,
+    "scrollToSectionOnSwitch": true,
+    "naturalFooterAction": "Découvrir comment tu réagis sous pression",
+    "stressFooterAction": "Revenir à ton fonctionnement naturel"
+  },
+  "natural": {
+    "title": "Ta manière naturelle de fonctionner.",
+    "definition": "Ton fonctionnement naturel décrit les préférences que tu exprimes le plus spontanément pour agir, décider et interagir. Ton profil principal oriente cette lecture, tandis que ton secondaire peut la nuancer.",
+    "groups": [
+      {
+        "id": "daily",
+        "title": "Ce qui te fait avancer",
+        "fields": [
+          "moteurs",
+          "freins",
+          "inconfort",
+          "decisions",
+          "action",
+          "rythme",
+          "changement",
+          "relations"
+        ]
+      },
+      {
+        "id": "expression",
+        "title": "Comment tu communiques",
+        "fields": [
+          "verbal",
+          "vocal",
+          "visuel",
+          "emails",
+          "ecoute"
+        ]
+      },
+      {
+        "id": "interaction",
+        "title": "Comment communiquer avec toi",
+        "fields": [
+          "pour_te_parler",
+          "convaincre",
+          "feedback",
+          "reconnaissance",
+          "delegation",
+          "delais",
+          "conflits",
+          "a_eviter"
+        ]
+      }
+    ],
+    "fieldLabels": {
+      "moteurs": "Moteurs",
+      "freins": "Freins",
+      "inconfort": "Situations inconfortables",
+      "decisions": "Décisions",
+      "action": "Passage à l’action",
+      "rythme": "Rythme",
+      "changement": "Changement",
+      "relations": "Relations",
+      "verbal": "Verbal",
+      "vocal": "Vocal",
+      "visuel": "Visuel et non-verbal",
+      "emails": "E-mails et messages",
+      "ecoute": "Écoute",
+      "pour_te_parler": "Pour t’aborder",
+      "convaincre": "Pour te convaincre",
+      "feedback": "Feedback",
+      "reconnaissance": "Reconnaissance",
+      "delegation": "Délégation",
+      "delais": "Délais",
+      "conflits": "Conflits",
+      "a_eviter": "À éviter"
+    },
+    "profiles": {
+      "D": {
+        "name": "Conquérant",
+        "biblical": "Paul",
+        "intro": "Tu prends volontiers des initiatives et cherches à faire progresser les choses.",
+        "moteurs": "Les défis, les responsabilités et les résultats concrets.",
+        "freins": "L’inaction et les décisions sans direction claire.",
+        "decisions": "Tu peux trancher avec les informations essentielles, puis ajuster.",
+        "rythme": "Tu apprécies un rythme soutenu et une autonomie réelle.",
+        "verbal": "Tu tends à exprimer directement ta conclusion.",
+        "vocal": "Ton rythme oral peut être rapide et affirmé.",
+        "visuel": "Une gestuelle assurée peut t’accompagner, sans que le test le mesure.",
+        "emails": "Tu peux préférer des e-mails brefs avec une action explicite.",
+        "pour_te_parler": "Va à l’essentiel et clarifie les objectifs.",
+        "a_eviter": "Évite les détours et les attentes ambiguës.",
+        "inconfort": "Tu peux rechercher une décision claire et un objectif réalisable.",
+        "action": "Tu peux passer rapidement à l’action et ajuster en cours de route.",
+        "changement": "Tu peux accueillir favorablement le changement s’il ouvre une possibilité.",
+        "relations": "Tu privilégies les échanges francs et les engagements tenus.",
+        "ecoute": "Laisse une place aux arguments avant de conclure.",
+        "convaincre": "Montre les conséquences pratiques des options.",
+        "feedback": "Donne un retour direct, factuel et constructif.",
+        "reconnaissance": "Valorise les résultats et les initiatives.",
+        "delegation": "Clarifie le but et laisse une autonomie adaptée.",
+        "delais": "Fixe des échéances explicites.",
+        "conflits": "Traite le désaccord sans rapport de force."
+      },
+      "I": {
+        "name": "Communiquant",
+        "biblical": "Pierre",
+        "intro": "Tu apprécies les échanges et peux donner vie aux idées en partageant ton enthousiasme.",
+        "moteurs": "Les échanges, la reconnaissance et la participation.",
+        "freins": "Les relations impersonnelles et l’isolement prolongé.",
+        "decisions": "Tu peux explorer les options à voix haute avant de choisir.",
+        "rythme": "Tu apprécies la variété et les occasions de mobiliser.",
+        "verbal": "Tu peux raconter, illustrer et rebondir sur les réactions.",
+        "vocal": "Ton intonation peut varier avec ton enthousiasme.",
+        "visuel": "Une expression animée peut te correspondre, sans que le test le mesure.",
+        "emails": "Tu peux préférer des messages chaleureux, clairs et vivants.",
+        "pour_te_parler": "Crée un contact humain et laisse une place à la discussion.",
+        "a_eviter": "Évite un ton froid ou des consignes sans contexte.",
+        "inconfort": "Tu peux chercher à créer une dynamique collective.",
+        "action": "Tu apprécies d’échanger pour développer une idée.",
+        "changement": "La nouveauté peut nourrir ton intérêt.",
+        "relations": "Tu investis facilement les échanges et les rencontres.",
+        "ecoute": "Prends le temps d’écouter avant de relancer.",
+        "convaincre": "Montre le sens et les possibilités d’une idée.",
+        "feedback": "Donne un retour précis sans jugement global.",
+        "reconnaissance": "Valorise la contribution et l’énergie partagée.",
+        "delegation": "Laisse place à l’échange puis précise les livrables.",
+        "delais": "Prévois des points de suivi courts.",
+        "conflits": "Nomme les faits avant de rechercher l’accord."
+      },
+      "S": {
+        "name": "Facilitateur",
+        "biblical": "Abraham",
+        "intro": "Tu recherches des relations de confiance et apprécies les engagements qui durent.",
+        "moteurs": "Être utile, soutenir et construire dans la continuité.",
+        "freins": "Les changements brusques et les tensions prolongées.",
+        "decisions": "Tu peux consulter les personnes concernées avant de décider.",
+        "rythme": "Tu apprécies la régularité et les transitions préparées.",
+        "verbal": "Tu peux poser des questions et laisser l’autre terminer.",
+        "vocal": "Ton expression peut être posée et ponctuée de pauses.",
+        "visuel": "Une gestuelle mesurée peut te correspondre, sans que le test le mesure.",
+        "emails": "Tu peux préférer des messages courtois et contextualisés.",
+        "pour_te_parler": "Explique le contexte et laisse du temps pour répondre.",
+        "a_eviter": "Évite les changements imposés sans explication.",
+        "inconfort": "Tu peux chercher à préserver un cadre fiable.",
+        "action": "Tu avances volontiers avec régularité.",
+        "changement": "Tu préfères comprendre les étapes d’une transition.",
+        "relations": "Tu valorises l’écoute et les liens durables.",
+        "ecoute": "Exprime aussi tes besoins dans l’échange.",
+        "convaincre": "Explique les effets sur les personnes.",
+        "feedback": "Choisis un cadre respectueux et un temps de réponse.",
+        "reconnaissance": "Valorise la fiabilité et l’entraide.",
+        "delegation": "Précise le contexte et les étapes attendues.",
+        "delais": "Anticipe les changements de calendrier.",
+        "conflits": "Aborde le désaccord calmement sans l’éviter."
+      },
+      "C": {
+        "name": "Analyste",
+        "biblical": "Moïse",
+        "intro": "Tu apprécies de comprendre, de vérifier et de produire un travail cohérent.",
+        "moteurs": "Les explications solides, la précision et la qualité.",
+        "freins": "Les informations imprécises et les méthodes floues.",
+        "decisions": "Tu peux comparer les options et expliciter tes critères.",
+        "rythme": "Tu privilégies une progression méthodique et vérifiable.",
+        "verbal": "Tu peux présenter le raisonnement avant la conclusion.",
+        "vocal": "Ton expression peut être mesurée et précise.",
+        "visuel": "Une expression discrète peut te correspondre, sans que le test le mesure.",
+        "emails": "Tu peux préférer des messages structurés et documentés.",
+        "pour_te_parler": "Présente des faits vérifiables et laisse place aux questions.",
+        "a_eviter": "Évite les affirmations non étayées et les interruptions.",
+        "inconfort": "Tu peux rechercher une solution rigoureuse.",
+        "action": "Tu apprécies de vérifier les points déterminants.",
+        "changement": "Tu préfères connaître les raisons et les risques d’un changement.",
+        "relations": "Tu valorises la cohérence et la fiabilité.",
+        "ecoute": "Demande des précisions sans prolonger inutilement l’échange.",
+        "convaincre": "Utilise des critères clairs et des éléments vérifiables.",
+        "feedback": "Donne un retour précis sur la méthode.",
+        "reconnaissance": "Valorise la qualité et le raisonnement.",
+        "delegation": "Précise le périmètre et les critères de qualité.",
+        "delais": "Définis le niveau de vérification compatible avec le délai.",
+        "conflits": "Distingue faits, hypothèses et interprétations."
+      }
+    },
+    "orderedCombinations": {
+      "DI": {
+        "primary": "D",
+        "secondary": "I",
+        "headline": "Tu impulses une direction et sais la partager.",
+        "summary": "Tu peux décider puis mobiliser les autres autour d’un objectif.",
+        "watchout": "Vérifie que l’enthousiasme s’accompagne d’engagements clairs."
+      },
+      "DS": {
+        "primary": "D",
+        "secondary": "S",
+        "headline": "Tu avances sans perdre de vue la confiance.",
+        "summary": "Tu peux tenir un cap tout en préservant la continuité du groupe.",
+        "watchout": "N’évite pas les décisions nécessaires pour maintenir l’harmonie."
+      },
+      "DC": {
+        "primary": "D",
+        "secondary": "C",
+        "headline": "Tu veux avancer sur des bases solides.",
+        "summary": "Tu peux associer une recherche de résultats à une attention aux faits.",
+        "watchout": "Définis quand les informations sont suffisantes pour décider."
+      },
+      "ID": {
+        "primary": "I",
+        "secondary": "D",
+        "headline": "Tu inspires et cherches à concrétiser.",
+        "summary": "L’échange fait émerger des possibilités et ton côté Conquérant aide à agir.",
+        "watchout": "Prévois le suivi après l’élan initial."
+      },
+      "IS": {
+        "primary": "I",
+        "secondary": "S",
+        "headline": "Tu rapproches les personnes et construis la confiance.",
+        "summary": "Tu associes une expression spontanée à une attention à la continuité.",
+        "watchout": "Ose exprimer les désaccords nécessaires."
+      },
+      "IC": {
+        "primary": "I",
+        "secondary": "C",
+        "headline": "Tu rends les idées vivantes et précises.",
+        "summary": "Tu apprécies de transmettre tout en approfondissant les informations.",
+        "watchout": "Adapte le niveau de détail à ton interlocuteur."
+      },
+      "SD": {
+        "primary": "S",
+        "secondary": "D",
+        "headline": "Tu soutiens et sais prendre position.",
+        "summary": "Ta constance peut s’accompagner d’une capacité à décider.",
+        "watchout": "N’attends pas toujours le consensus pour exprimer ton avis."
+      },
+      "SI": {
+        "primary": "S",
+        "secondary": "I",
+        "headline": "Tu crées des liens chaleureux et durables.",
+        "summary": "Tu combines une présence fiable avec des échanges vivants.",
+        "watchout": "Préserve aussi tes propres priorités."
+      },
+      "SC": {
+        "primary": "S",
+        "secondary": "C",
+        "headline": "Tu construis avec patience et précision.",
+        "summary": "Tu apprécies les repères fiables et le travail méthodique.",
+        "watchout": "Laisse une place aux changements utiles."
+      },
+      "CD": {
+        "primary": "C",
+        "secondary": "D",
+        "headline": "Tu réfléchis avec rigueur puis agis.",
+        "summary": "Tu peux approfondir les faits tout en cherchant une décision concrète.",
+        "watchout": "Évite de transformer l’exigence en impatience."
+      },
+      "CI": {
+        "primary": "C",
+        "secondary": "I",
+        "headline": "Tu approfondis et sais transmettre.",
+        "summary": "Tu peux rendre une idée complexe accessible et intéressante.",
+        "watchout": "Ne laisse pas les détails masquer l’essentiel."
+      },
+      "CS": {
+        "primary": "C",
+        "secondary": "S",
+        "headline": "Tu apportes de la fiabilité et de la sérénité.",
+        "summary": "Tu conjugues cohérence, méthode et continuité.",
+        "watchout": "Accepte d’avancer sans certitude absolue."
+      }
+    }
+  },
+  "stress": {
+    "title": "Quand la pression monte.",
+    "definition": "Face à une urgence, un désaccord ou une situation exigeante, certains réflexes peuvent s’accentuer ou changer. Cette lecture repose sur les douze duels sous pression, indépendamment des résultats naturels.",
+    "resultsTitle": "Tes tendances sous pression",
+    "explanationTitle": "Comment tu peux réagir",
+    "profiles": {
+      "D": {
+        "headline": "Tu cherches à reprendre la main.",
+        "summary": "Tu peux clarifier rapidement les priorités et prendre une décision.",
+        "premier_reflexe": "Identifier ce qui doit être décidé.",
+        "decisions": "Trancher avec les informations disponibles.",
+        "communication": "Devenir plus direct dans tes demandes.",
+        "relations": "Risque d’impatience envers un rythme plus lent.",
+        "risque": "Aller trop vite sans vérifier un point essentiel.",
+        "retrouver_equilibre": "Demander un avis contradictoire et fixer un point de vérification."
+      },
+      "I": {
+        "headline": "Tu cherches à relancer la dynamique.",
+        "summary": "Tu peux avoir besoin d’échanger pour mobiliser le groupe.",
+        "premier_reflexe": "Mettre des mots sur la situation.",
+        "decisions": "Explorer les options en discutant.",
+        "communication": "Parler davantage pour créer du mouvement.",
+        "relations": "Risque de multiplier les échanges sans conclure.",
+        "risque": "Confondre enthousiasme et résolution effective.",
+        "retrouver_equilibre": "Résumer les faits, choisir une priorité et confirmer par écrit."
+      },
+      "S": {
+        "headline": "Tu cherches à retrouver des repères.",
+        "summary": "Tu peux privilégier l’apaisement et la continuité.",
+        "premier_reflexe": "Vérifier ce qui reste stable.",
+        "decisions": "Prendre en compte les personnes concernées.",
+        "communication": "Adopter un ton calme et rassurant.",
+        "relations": "Risque de taire un désaccord.",
+        "risque": "Reporter une conversation nécessaire.",
+        "retrouver_equilibre": "Exprimer ton besoin et avancer par étapes."
+      },
+      "C": {
+        "headline": "Tu cherches à clarifier les faits.",
+        "summary": "Tu peux intensifier tes vérifications face à l’incertitude.",
+        "premier_reflexe": "Séparer les faits des hypothèses.",
+        "decisions": "Comparer les risques avant de conclure.",
+        "communication": "Poser davantage de questions précises.",
+        "relations": "Risque de paraître distant dans l’urgence.",
+        "risque": "Prolonger l’analyse au-delà du nécessaire.",
+        "retrouver_equilibre": "Fixer les vérifications indispensables et un délai de décision."
+      }
+    },
+    "renderingRules": {
+      "useStoredScores": true,
+      "showFourPercentages": true,
+      "showPrimaryAndSecondary": true,
+      "handleTiesFromRawScores": true,
+      "doNotInterpretPercentageDeltaAsPsychometricChange": true
+    }
+  },
+  "renderingRules": {
+    "naturalUseOrderedCombination": true,
+    "noMechanicalConcatenation": true,
+    "showConciseOverviewThenExpandDetails": true,
+    "keepProfileScoresImmutable": true,
+    "doNotInferIndividualGesturesOrFears": true,
+    "allContentVersioned": true,
+    "preserveHistoricalResults": true
+  }
+}
