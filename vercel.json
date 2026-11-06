@@ -14,6 +14,10 @@
       "destination": "https://profil-mapp.vercel.app/apps/profil-mapp"
     },
     {
+      "source": "/apps/profil-mapp/officiel",
+      "destination": "https://profil-mapp.vercel.app/apps/profil-mapp"
+    },
+    {
       "source": "/apps/profil-mapp/:path*",
       "destination": "https://profil-mapp.vercel.app/apps/profil-mapp/:path*"
     }
