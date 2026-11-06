@@ -87,8 +87,9 @@ export const studentSections: NavSection[] = [
       // { label: "Mon ministère", href: "/etudiant/formation", icon: icons.ministries },
       { label: "Projets et formations", href: "/etudiant/services", icon: icons.services },
       { label: "Mon identité", href: "/etudiant/identite", icon: icons.identity },
-      // Toujours visible : le portail décide ensuite quels outils sont réellement publiés.
-      { label: "Mes outils", href: "/apps", icon: icons.apps, target: "_blank" },
+      // L'espace étudiant applique les dates de publication. Les super-administrateurs
+      // y voient aussi les outils en préparation afin de valider le parcours réel.
+      { label: "Mes outils", href: "/etudiant/outils", icon: icons.apps },
     ],
   },
 ];
@@ -101,9 +102,8 @@ export const notesNavItem: NavItem = {
 
 export const toolsNavItem: NavItem = {
   label: "Mes outils",
-  href: "/apps",
+  href: "/etudiant/outils",
   icon: icons.apps,
-  target: "_blank",
 };
 
 /** Icône générique conservée pour les anciens appels qui représentent une fonction de gestion. */

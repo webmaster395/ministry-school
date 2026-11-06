@@ -1,18 +1,24 @@
 /* eslint-disable @next/next/no-img-element -- icônes du catalogue importées par les administrateurs */
 import { ArrowUpRight, PanelsTopLeft } from "lucide-react";
-import { getStudentTools, getStudentToolsEnabled } from "@/lib/apps/catalog";
+import { getCatalogApps, getStudentTools, getStudentToolsEnabled } from "@/lib/apps/catalog";
+import { getViewer } from "@/lib/data/viewer";
 
 export const dynamic = "force-dynamic";
 
 export default async function StudentToolsPage() {
-  const enabled = await getStudentToolsEnabled();
-  const apps = enabled ? await getStudentTools() : [];
+  const viewer = await getViewer();
+  const isSuperAdmin = Boolean(viewer?.roles.superAdmin);
+  const enabled = isSuperAdmin || await getStudentToolsEnabled();
+  const apps = isSuperAdmin
+    ? await getCatalogApps({ includeUnpublished: true, channel: "admin" })
+    : enabled ? await getStudentTools() : [];
 
   return <div className="space-y-7">
     <header>
       <p className="label text-[11px] text-muted">MON PARCOURS</p>
       <h1 className="mt-2 font-title text-4xl tracking-tight sm:text-5xl">Mes outils</h1>
       <p className="mt-3 max-w-2xl text-base leading-7 text-muted">Retrouve ici les applications pédagogiques mises à ta disposition.</p>
+      {isSuperAdmin && <p className="mt-3 inline-flex rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-900">Aperçu super-administrateur · les outils en préparation restent invisibles aux étudiants</p>}
     </header>
 
     {apps.length ? <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
