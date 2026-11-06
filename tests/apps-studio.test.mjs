@@ -28,22 +28,21 @@ test("Généropoly secrets remain server-side and only completed tables feed res
   assert.match(results, /snapshot\.tables\.filter\(\(table\) => table\.completed\)/);
 });
 
-test("public launchpad reads the persisted catalog and filters unpublished apps", () => {
+test("public launchpad reads the persisted catalog and exposes only public apps plus MAPP", () => {
   const page = read("src/app/apps/page.tsx");
   const catalog = read("src/lib/apps/catalog.ts");
-  assert.match(page, /await getCatalogApps\(\)/);
-  assert.match(catalog, /channel === "public"/);
-  assert.match(catalog, /\.eq\("public_enabled", true\)/);
+  assert.match(page, /await getPublicToolsPortal\(\)/);
+  assert.match(catalog, /app\.publicVisible \|\| app\.slug === "profil-mapp"/);
+  assert.match(catalog, /ministryAppUrls[\s\S]*"profil-mapp": "\/apps\/profil-mapp"/);
 });
 
-test("Mes outils reste accessible et n'affiche que le catalogue étudiant activé", () => {
+test("Mes outils utilise le portail public unique accessible sans connexion", () => {
   const migration = read("supabase/migrations/20261101190000_tools_visibility_and_scheduling.sql");
   const nav = read("src/lib/nav.tsx");
-  const page = read("src/app/etudiant/outils/page.tsx");
+  const landing = read("src/app/page.tsx");
   assert.match(migration, /student_tools_enabled boolean not null default false/);
-  assert.match(nav, /label: "Mes outils"[\s\S]*href: "\/etudiant\/outils"/);
-  assert.match(page, /isSuperAdmin[\s\S]*includeUnpublished: true[\s\S]*enabled \? await getStudentTools\(\) : \[\]/);
-  assert.match(page, /Aucun outil disponible pour le moment/);
+  assert.match(nav, /label: "Mes outils"[\s\S]*href: "\/apps"/);
+  assert.match(landing, /href="\/apps">Mes outils/);
 });
 
 test("les publications publique et étudiante sont indépendantes et programmées à l'heure réelle", () => {
@@ -105,11 +104,11 @@ test("le Launchpad centre le nombre réel d’applications sans colonnes fantôm
   assert.match(styles, /\.appName \{[^}]*text-align:center/);
 });
 
-test("Gestion des outils reste dans Ministry School tandis que Mes outils ouvre l'espace étudiant", () => {
+test("Gestion des outils reste privée tandis que Mes outils ouvre le portail public", () => {
   const nav = read("src/lib/nav.tsx");
   const links = read("src/components/NavBlocks.tsx");
   const provider = read("src/components/SpaceProvider.tsx");
-  assert.match(nav, /label: "Mes outils"[\s\S]*href: "\/etudiant\/outils"/);
+  assert.match(nav, /label: "Mes outils"[\s\S]*href: "\/apps"/);
   assert.doesNotMatch(nav, /label: "Mes outils"[\s\S]*target: "_blank"/);
   assert.match(nav, /label: "Gestion des outils"[\s\S]*href: "\/admin\/apps"/);
   assert.doesNotMatch(nav, /href: "\/admin\/apps"[\s\S]{0,120}target: "_blank"/);

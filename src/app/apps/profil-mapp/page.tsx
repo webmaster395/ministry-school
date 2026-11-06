@@ -46,7 +46,7 @@ export default async function ProfilMappPage() {
               ? "Votre compte Ministry doit être un compte étudiant actif avec une adresse e-mail confirmée. Aucun second compte MAPP n’est demandé."
               : "Le questionnaire n’est pas encore ouvert ou sa configuration doit être vérifiée par l’équipe."}
           </p>
-          <a className="mt-7 inline-flex rounded-lg bg-[#27302f] px-5 py-3 text-sm font-semibold text-[#fbeeda]" href="/etudiant/outils">
+          <a className="mt-7 inline-flex rounded-lg bg-[#27302f] px-5 py-3 text-sm font-semibold text-[#fbeeda]" href="/apps">
             Retour à Mes outils
           </a>
         </section>

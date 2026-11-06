@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import AppsPortal from "./AppsPortal";
-import { getCatalogApps, getStudentTools } from "@/lib/apps/catalog";
+import { getCatalogApps, getPublicToolsPortal } from "@/lib/apps/catalog";
 import { getViewer } from "@/lib/data/viewer";
 
 export const dynamic = "force-dynamic";
@@ -17,13 +17,10 @@ export const metadata: Metadata = {
 
 export default async function AppsPage() {
   const viewer = await getViewer();
-  // Le catalogue public ne révèle pas MAPP. Une personne connectée retrouve
-  // l'outil publié ; la RPC d'ouverture décide ensuite si son profil Ministry
-  // actif et confirmé est autorisé à commencer le questionnaire.
+  // URL publique unique de « Mes outils ». La page de chaque outil conserve
+  // ses propres règles d'ouverture et de sécurité.
   const apps = viewer?.roles.superAdmin
     ? await getCatalogApps({ includeUnpublished: true, channel: "admin" })
-    : viewer
-      ? await getStudentTools()
-      : (await getCatalogApps()).filter((app) => app.slug !== "profil-mapp");
+    : await getPublicToolsPortal();
   return <AppsPortal applications={apps} />;
 }

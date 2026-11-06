@@ -300,7 +300,7 @@ export default function MappNativeExperience({
   return (
     <main className={styles.shell}>
       <header className={styles.header}>
-        <a href="/etudiant/outils" className={styles.backLink}>← Mes outils</a>
+        <a href="/apps" className={styles.backLink}>← Mes outils</a>
         <div>
           <strong>Profil MAPP</strong>
           <span>Ministry School</span>

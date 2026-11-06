@@ -89,7 +89,7 @@ export const studentSections: NavSection[] = [
       { label: "Mon identité", href: "/etudiant/identite", icon: icons.identity },
       // L'espace étudiant applique les dates de publication. Les super-administrateurs
       // y voient aussi les outils en préparation afin de valider le parcours réel.
-      { label: "Mes outils", href: "/etudiant/outils", icon: icons.apps },
+      { label: "Mes outils", href: "/apps", icon: icons.apps },
     ],
   },
 ];
@@ -102,7 +102,7 @@ export const notesNavItem: NavItem = {
 
 export const toolsNavItem: NavItem = {
   label: "Mes outils",
-  href: "/etudiant/outils",
+  href: "/apps",
   icon: icons.apps,
 };
 

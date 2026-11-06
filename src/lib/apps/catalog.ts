@@ -166,6 +166,22 @@ export async function getStudentTools() {
   return getCatalogApps({ channel: "student" });
 }
 
+/** Portail public unique « Mes outils », alimenté par les fiches existantes. */
+export async function getPublicToolsPortal() {
+  const now = Date.now();
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from("app_catalog")
+    .select("id,slug,name,short_description,category,icon_url,destination_url,status,display_order,integration_key,public_enabled,public_publish_at,student_enabled,student_publish_at,archived_at")
+    .is("archived_at", null)
+    .order("display_order", { ascending: true })
+    .order("name", { ascending: true });
+  if (error) return [];
+  return (data as CatalogRow[])
+    .map((row) => mapRow(row, now))
+    .filter((app) => app.publicVisible || app.slug === "profil-mapp");
+}
+
 export async function getCatalogAppBySlug(slug: string) {
   const apps = await getCatalogApps({ includeUnpublished: true, includeArchived: true, channel: "admin" });
   return apps.find((app) => app.slug === slug) ?? null;
