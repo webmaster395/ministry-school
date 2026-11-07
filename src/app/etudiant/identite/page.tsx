@@ -1,9 +1,8 @@
 import { getStudentTools, type CatalogApp } from "@/lib/apps/catalog";
 import { getViewer } from "@/lib/data/viewer";
 import { getIdentityDashboard } from "@/lib/identity/dashboard";
+import { getOfficialMappIdentityResults } from "@/lib/mapp/official-results";
 import IdentityExperience, { type IdentityStoryGroup, type IdentityStoryItem } from "./IdentityExperience";
-import { GuestMappAutoClaim } from "./GuestMappAutoClaim";
-import { getGuestCredential } from "@/lib/mapp/guest";
 import { isMappGuestOpen } from "@/lib/mapp/access-window";
 import { redirect } from "next/navigation";
 
@@ -69,19 +68,24 @@ export default async function StudentIdentityPage() {
   if (!viewer) redirect("/login");
   if (viewer.deactivated) redirect("/auth/desactive");
   if (!viewer.roles.superAdmin && !isMappGuestOpen()) redirect("/etudiant");
-  const [dashboard, tools, guestMapp] = await Promise.all([getIdentityDashboard(), getStudentTools(), getGuestCredential()]);
-  const allResults = [...dashboard.identityResults, ...dashboard.financeResults]
+  const [dashboard, tools, officialMappResults] = await Promise.all([
+    getIdentityDashboard(),
+    getStudentTools(),
+    getOfficialMappIdentityResults(),
+  ]);
+  const nonMappIdentityResults = dashboard.identityResults.filter((result) => result.kind !== "mapp");
+  const allResults = [...officialMappResults, ...nonMappIdentityResults, ...dashboard.financeResults]
     .sort((left, right) => new Date(right.completedAt).getTime() - new Date(left.completedAt).getTime());
   const completedKinds = new Set(allResults.map((result) => result.kind));
-  return <>{guestMapp ? <GuestMappAutoClaim /> : null}<IdentityExperience
+  return <IdentityExperience
     fullName={viewer.fullName || dashboard.profile.firstName || "Mon identité"}
     status={accountStatus(viewer.role, dashboard.profile.gender)}
     avatarUrl={viewer.avatarUrl}
     studentCount={dashboard.metrics.studentCount}
     months={monthsTogether(dashboard.profile.memberSince)}
-    completedTests={dashboard.metrics.completedTests}
+    completedTests={allResults.length}
     stories={buildStories(tools)}
     results={allResults}
     upcoming={buildUpcoming(tools, completedKinds)}
-  /></>;
+  />;
 }
