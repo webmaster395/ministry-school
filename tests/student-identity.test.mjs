@@ -88,3 +88,11 @@ test("les cartes MAPP utilisent la couleur et le personnage officiels de chaque 
   assert.match(identity, /S: "\/apps\/profil-mapp\/images\/profile-cards\/abraham-hero-hd-v2\.webp"/);
   assert.match(identity, /C: "\/apps\/profil-mapp\/images\/profile-cards\/moise-hero-hd-v2\.webp"/);
 });
+
+test("Mon identité affiche seulement le prénom dans un titre plus discret", () => {
+  const identity = read("src/app/etudiant/identite/IdentityExperience.tsx");
+  const styles = read("src/app/etudiant/identite/identity.module.css");
+  assert.match(identity, /const firstName = nameParts\[0\]/);
+  assert.match(identity, /<h1>\{firstName\}<\/h1>/);
+  assert.match(styles, /font-size: clamp\(27px, 3\.4vw, 36px\)/);
+});

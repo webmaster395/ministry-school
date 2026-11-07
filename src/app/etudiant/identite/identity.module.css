@@ -66,7 +66,7 @@
 
 .nameLine h1 {
   font-family: var(--font-title);
-  font-size: clamp(30px, 4.2vw, 44px);
+  font-size: clamp(27px, 3.4vw, 36px);
   font-weight: 600;
   line-height: 1.05;
   letter-spacing: -0.035em;
@@ -632,7 +632,7 @@
   }
 
   .nameLine h1 {
-    font-size: clamp(23px, 7vw, 31px);
+    font-size: clamp(21px, 6vw, 27px);
   }
 
   .nameLine > span {

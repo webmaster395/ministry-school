@@ -164,6 +164,7 @@ export default function IdentityExperience(props: Props) {
   const [openStory, setOpenStory] = useState<IdentityStoryGroup | null>(null);
   const [activeTab, setActiveTab] = useState<"results" | "upcoming">("results");
   const nameParts = props.fullName.trim().split(/\s+/).filter(Boolean);
+  const firstName = nameParts[0] || "Mon identité";
   const initials = `${nameParts[0]?.charAt(0) ?? "?"}${nameParts.length > 1 ? nameParts.at(-1)?.charAt(0) ?? "" : ""}`.toUpperCase();
 
   useEffect(() => {
@@ -188,7 +189,7 @@ export default function IdentityExperience(props: Props) {
         <div className={styles.profileContent}>
           <p className={styles.eyebrow}>Mon espace personnel</p>
           <div className={styles.nameLine}>
-            <h1>{props.fullName}</h1>
+            <h1>{firstName}</h1>
             <span>{props.status}</span>
           </div>
           <div className={styles.metrics} aria-label="Mes statistiques Ministry School">
