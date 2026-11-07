@@ -1,11 +1,9 @@
 import "server-only";
 
-import { createClient as createSupabaseClient } from "@supabase/supabase-js";
-import { createClient as createMinistryClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 import type { IdentityResult } from "@/lib/identity/dashboard";
 
-const OFFICIAL_MAPP_SUPABASE_URL = "https://zzfmkpfwiknekkssxaki.supabase.co";
-const OFFICIAL_MAPP_PUBLISHABLE_KEY = "sb_publishable_z23F5gybMlDroslzVskaVw_a-tUVwnL";
+const OFFICIAL_RESULTS_ENDPOINT = "https://profil-mapp.vercel.app/apps/profil-mapp/api/integrations/ministry/claim-results";
 
 type RankingRow = {
   context: string;
@@ -27,39 +25,25 @@ type AttemptRow = {
 };
 
 /**
- * Reads the official MAPP project with the current Ministry JWT.
- * RLS in the MAPP project resolves the JWT issuer + subject against
- * participant_auth_identities, so only this Ministry account's attempts
- * can be returned. No service-role key is used here.
+ * Le serveur officiel MAPP vérifie lui-même la session Ministry, rattache les
+ * tentatives par e-mail vérifié et renvoie les résultats dans le même appel.
+ * Ministry ne reçoit jamais de clé de service MAPP.
  */
 export async function getOfficialMappIdentityResults(): Promise<IdentityResult[]> {
-  const ministry = await createMinistryClient();
-  const { data: userData } = await ministry.auth.getUser();
-  if (!userData.user) return [];
+  const cookieHeader = (await cookies()).getAll()
+    .map(({ name, value }) => `${name}=${value}`)
+    .join("; ");
+  if (!cookieHeader) return [];
+  const response = await fetch(OFFICIAL_RESULTS_ENDPOINT, {
+    method: "POST",
+    headers: { cookie: cookieHeader, accept: "application/json" },
+    cache: "no-store",
+  });
+  if (!response.ok) return [];
+  const payload = await response.json() as { results?: AttemptRow[] };
+  const data = payload.results ?? [];
 
-  const { data: sessionData } = await ministry.auth.getSession();
-  const accessToken = sessionData.session?.access_token;
-  if (!accessToken) return [];
-
-  const mapp = createSupabaseClient(
-    OFFICIAL_MAPP_SUPABASE_URL,
-    OFFICIAL_MAPP_PUBLISHABLE_KEY,
-    {
-      accessToken: async () => accessToken,
-      auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
-    },
-  );
-
-  const { data, error } = await mapp
-    .from("attempts")
-    .select("id,completed_at,result_revisions(id,revision,result_rankings(context,primary_code,secondary_code,tie_break_required))")
-    .eq("status", "completed")
-    .is("deleted_at", null)
-    .order("completed_at", { ascending: false });
-
-  if (error) throw new Error(`Chargement des résultats MAPP officiels impossible : ${error.message}`);
-
-  return ((data ?? []) as AttemptRow[]).flatMap((attempt) => {
+  return data.flatMap((attempt) => {
     const revision = [...(attempt.result_revisions ?? [])]
       .sort((left, right) => right.revision - left.revision)[0];
     if (!revision || !attempt.completed_at) return [];

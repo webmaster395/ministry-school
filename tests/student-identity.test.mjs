@@ -122,7 +122,11 @@ test("les stories s’ouvrent dans la fenêtre et l’identité reste compacte s
 test("Mon identité rattache automatiquement les résultats MAPP par e-mail Ministry vérifié", () => {
   const page = read("src/app/etudiant/identite/page.tsx");
   const autoClaim = read("src/app/etudiant/identite/GuestMappAutoClaim.tsx");
+  const officialResults = read("src/lib/mapp/official-results.ts");
   assert.match(page, /<GuestMappAutoClaim\s*\/>/);
   assert.match(autoClaim, /payload\?\.claimed/);
   assert.match(autoClaim, /\/apps\/profil-mapp\/api\/integrations\/ministry\/claim-results/);
+  assert.match(officialResults, /OFFICIAL_RESULTS_ENDPOINT/);
+  assert.match(officialResults, /headers: \{ cookie: cookieHeader/);
+  assert.match(officialResults, /payload\.results/);
 });
