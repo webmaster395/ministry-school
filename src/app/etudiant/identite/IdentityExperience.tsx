@@ -44,14 +44,14 @@ const profileNames: Record<string, string> = {
 };
 
 const mappImages: Record<string, string> = {
-  D: "/apps/profil-mapp/images/profile-cards/moise-hero-hd-v2.webp",
-  I: "/apps/profil-mapp/images/profile-cards/paul-hero-hd-v2.webp",
-  S: "/apps/profil-mapp/images/profile-cards/pierre-hero-hd-v2.webp",
-  C: "/apps/profil-mapp/images/profile-cards/abraham-hero-hd-v2.webp",
-  conquerant: "/apps/profil-mapp/images/profile-cards/moise-hero-hd-v2.webp",
-  communiquant: "/apps/profil-mapp/images/profile-cards/paul-hero-hd-v2.webp",
-  facilitateur: "/apps/profil-mapp/images/profile-cards/pierre-hero-hd-v2.webp",
-  analyste: "/apps/profil-mapp/images/profile-cards/abraham-hero-hd-v2.webp",
+  D: "/apps/profil-mapp/images/profile-cards/paul-hero-hd-v2.webp",
+  I: "/apps/profil-mapp/images/profile-cards/pierre-hero-hd-v2.webp",
+  S: "/apps/profil-mapp/images/profile-cards/abraham-hero-hd-v2.webp",
+  C: "/apps/profil-mapp/images/profile-cards/moise-hero-hd-v2.webp",
+  conquerant: "/apps/profil-mapp/images/profile-cards/paul-hero-hd-v2.webp",
+  communiquant: "/apps/profil-mapp/images/profile-cards/pierre-hero-hd-v2.webp",
+  facilitateur: "/apps/profil-mapp/images/profile-cards/abraham-hero-hd-v2.webp",
+  analyste: "/apps/profil-mapp/images/profile-cards/moise-hero-hd-v2.webp",
 };
 
 const resultContent = {

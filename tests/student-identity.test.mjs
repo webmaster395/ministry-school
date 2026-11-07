@@ -80,3 +80,11 @@ test("les pages de résultats permettent un retour direct vers Mon identité", (
   assert.match(mapp, /href="\/etudiant\/identite"[^>]*>← Mon identité/);
   assert.match(grace, /href="\/etudiant\/identite"/);
 });
+
+test("les cartes MAPP utilisent la couleur et le personnage officiels de chaque profil", () => {
+  const identity = read("src/app/etudiant/identite/IdentityExperience.tsx");
+  assert.match(identity, /D: "\/apps\/profil-mapp\/images\/profile-cards\/paul-hero-hd-v2\.webp"/);
+  assert.match(identity, /I: "\/apps\/profil-mapp\/images\/profile-cards\/pierre-hero-hd-v2\.webp"/);
+  assert.match(identity, /S: "\/apps\/profil-mapp\/images\/profile-cards\/abraham-hero-hd-v2\.webp"/);
+  assert.match(identity, /C: "\/apps\/profil-mapp\/images\/profile-cards\/moise-hero-hd-v2\.webp"/);
+});
