@@ -590,6 +590,38 @@ body:has(.assessment-pages), body:has(.assessment-loading) { background: #fff; }
   .multi-question-pages .five-question-list { padding-inline: 12px; }
 }
 
+/* Questionnaire mobile Ministry : largeur fixe à l'écran, sans carte flottante ni zoom horizontal. */
+@media (max-width: 760px) {
+  .assessment-pages.multi-question-pages {
+    width: 100%; max-width: 100%; min-height: 100dvh; padding: 0 0 24px;
+    overflow-x: hidden; background: #fff;
+  }
+  .multi-question-pages .assessment-header {
+    width: 100%; max-width: 100%; height: 58px; margin: 0; padding: 0 16px;
+    border: 0; border-bottom: 1px solid var(--cal-line); border-radius: 0;
+    background: #fff; box-shadow: none; backdrop-filter: none;
+  }
+  .multi-question-pages .page-progress { width: calc(100% - 32px); margin-top: 10px; }
+  .multi-question-pages .question-page {
+    width: 100%; max-width: 100%; margin: 0; padding: 24px 16px 28px;
+    border: 0; border-radius: 0; background: #fff; box-shadow: none;
+  }
+  .multi-question-pages .five-question-list,
+  .multi-question-pages .duel-v1-list {
+    padding: 0; border: 0; border-radius: 0; background: transparent;
+    box-shadow: none; backdrop-filter: none;
+  }
+  .multi-question-pages .five-question-list > li,
+  .multi-question-pages .duel-v1-list > li { padding-bottom: 28px; margin-bottom: 28px; }
+  .multi-question-pages .five-question-copy h2,
+  .multi-question-pages .duel-v1-copy h2 { font-size: 16px; line-height: 1.42; }
+  .multi-question-pages .page-navigation {
+    position: sticky; bottom: 8px; margin-top: 20px; padding: 10px;
+    border: 1px solid var(--cal-line); border-radius: 14px; background: rgba(255,255,255,.96);
+    box-shadow: 0 10px 28px rgba(11,31,58,.09); backdrop-filter: blur(12px);
+  }
+}
+
 /* Entry experience: optical white, graphite and pearlescent silver. */
 body:has(.entry-experience) { background: #fff; }
 .entry-experience { position: relative; isolation: isolate; min-height: 100svh; display: grid; place-items: center; overflow: hidden; padding: clamp(24px, 5vw, 64px); color: #27313d; background: radial-gradient(circle at 82% 16%, rgba(220,225,233,.72), transparent 25rem), radial-gradient(circle at 12% 88%, rgba(238,241,245,.9), transparent 28rem), #fff; }
@@ -1166,3 +1198,15 @@ body:has(.duel-v1-assessment) { background:#f3f6f8; }
 .equal-result-topbar{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:20px}
 /* Le PDF est volontairement hors périmètre de l'intégration Ministry actuelle. */
 .pdf-download-action,.pdf-download-status{display:none!important}
+
+/* Dernière règle mobile : le questionnaire reste calé sur le viewport Ministry. */
+@media(max-width:700px){
+  .duel-v1-assessment.assessment-pages.multi-question-pages{width:100%;max-width:100%;min-height:100dvh;padding:0 0 24px;overflow-x:hidden;background:#fff}
+  .duel-v1-assessment .assessment-header{width:100%;max-width:100%;height:58px;margin:0;padding:0 16px;border:0;border-bottom:1px solid #dfe7eb;border-radius:0;background:#fff;box-shadow:none}
+  .duel-v1-assessment .page-progress{width:calc(100% - 32px);margin:10px auto 14px}
+  .duel-v1-assessment .duel-v1-page{width:100%;max-width:100%;margin:0;padding:24px 16px 28px;border:0;border-radius:0;background:#fff;box-shadow:none}
+  .duel-v1-assessment .duel-v1-list{padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
+  .duel-v1-assessment .duel-v1-list>li{padding:26px 0 30px;margin:0}
+  .duel-v1-assessment .duel-v1-list>li:first-child{padding-top:18px}
+  .duel-v1-assessment .page-navigation{position:sticky;bottom:8px;margin-top:20px;padding:10px;border:1px solid #dfe7eb;border-radius:14px;background:rgba(255,255,255,.96);box-shadow:0 10px 28px rgba(18,59,78,.09);backdrop-filter:blur(12px)}
+}

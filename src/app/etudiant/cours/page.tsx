@@ -1,260 +1,91 @@
-import Link from "next/link";
-import { CalendarDays, CheckCircle2, ChevronRight, CircleUser, MapPin } from "lucide-react";
 import { redirect } from "next/navigation";
+import MonthCalendar, { type MonthSession } from "@/components/MonthCalendar";
 import { createClient } from "@/lib/supabase/server";
-import {
-  getStudentAllSessions,
-  getStudentProgramAssignments,
-  getStudentCompletedIds,
-  studentSessionTrainerNames,
-  type StudentSession,
-} from "@/lib/data/student";
+import { getStudentAllSessions, getStudentCompletedIds, getStudentProgramAssignments, studentSessionTrainerNames, type StudentSession } from "@/lib/data/student";
+import { getAllOpportunityDates, getMyOpportunityDateRegistrationIds, getOpportunities, isPublished, opportunityType, TYPE_LABEL } from "@/lib/data/opportunities";
 import { getViewer } from "@/lib/data/viewer";
+import { getMinistry, sessionColor } from "@/lib/ministry";
 import { PROMOTION } from "@/lib/promotion";
 
-type Period = "upcoming" | "past";
-type CourseKind = "all" | "coeur" | "caractere" | "sensibilite" | "projet";
-
-const COURSE_KINDS: Array<{ key: CourseKind; label: string }> = [
-  { key: "all", label: "Tous" },
-  { key: "coeur", label: "Formation du cœur" },
-  { key: "caractere", label: "Caractère" },
-  { key: "sensibilite", label: "Sensibilité ministérielle" },
-  { key: "projet", label: "Projet et formation" },
-];
-
-const KIND_STYLES: Record<Exclude<CourseKind, "all">, { color: string; label: string }> = {
-  coeur: { color: "var(--f-coeur)", label: "Formation du cœur" },
-  caractere: { color: "var(--f-caractere)", label: "Caractère" },
-  sensibilite: { color: "var(--f-sensibilite)", label: "Sensibilité ministérielle" },
-  projet: { color: "var(--f-projet)", label: "Projet et formation" },
-};
-
-function kindOf(session: StudentSession): Exclude<CourseKind, "all"> {
-  const value = `${session.track ?? ""} ${session.description ?? ""}`.toLowerCase();
-  if (value.includes("cœur") || value.includes("coeur")) return "coeur";
-  if (value.includes("caractère") || value.includes("caractere")) return "caractere";
-  if (value.includes("sensibilité") || value.includes("sensibilite") || session.session_type === "ministere") {
-    return "sensibilite";
-  }
-  return "projet";
+function isProjectDay(session: StudentSession) {
+  const value = `${session.track ?? ""} ${session.description ?? ""} ${session.courses?.title ?? ""}`.toLowerCase();
+  return value.includes("projet") || value.includes("formation");
 }
 
-function parisDate() {
-  return new Intl.DateTimeFormat("fr-CA", {
-    timeZone: "Europe/Paris",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date());
-}
-
-function dateParts(value: string) {
-  const date = new Date(`${value}T12:00:00`);
-  return {
-    day: new Intl.DateTimeFormat("fr-FR", { day: "2-digit" }).format(date),
-    month: new Intl.DateTimeFormat("fr-FR", { month: "short" }).format(date).replace(".", "").toUpperCase(),
-    long: new Intl.DateTimeFormat("fr-FR", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    }).format(date),
-  };
-}
-
-function hours(start: string, end: string) {
-  const short = (value: string) => value.slice(0, 5).replace(":", " h ").replace(/ h 00$/, " h");
-  return `${short(start)} – ${short(end)}`;
-}
-
-function monthLabel(value: string) {
-  const date = new Date(`${value}-01T12:00:00`);
-  const label = new Intl.DateTimeFormat("fr-FR", { month: "long", year: "numeric" }).format(date);
-  return label.charAt(0).toUpperCase() + label.slice(1);
-}
-
-function courseHref(period: Period, kind: CourseKind, month = "all") {
-  const query = new URLSearchParams();
-  if (period === "past") query.set("periode", "passes");
-  if (kind !== "all") query.set("type", kind);
-  if (month !== "all") query.set("mois", month);
-  const value = query.toString();
-  return `/etudiant/cours${value ? `?${value}` : ""}`;
-}
-
-export default async function StudentCoursesPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ periode?: string; type?: string; mois?: string }>;
-}) {
+export default async function StudentCoursesPage({ searchParams }: { searchParams: Promise<{ mois?: string; jour?: string }> }) {
   const params = await searchParams;
-  const period: Period = params.periode === "passes" ? "past" : "upcoming";
-  const requestedKind = COURSE_KINDS.some((item) => item.key === params.type)
-    ? (params.type as CourseKind)
-    : "all";
-
   const supabase = await createClient();
   const viewer = await getViewer();
   if (!viewer) redirect("/login");
 
   const sessions = await getStudentAllSessions(supabase, viewer.id);
-  const [assignments, completedIds] = await Promise.all([
+  const [assignments, completedIds, opportunities, opportunityDates, registeredDateIds] = await Promise.all([
     getStudentProgramAssignments(supabase, sessions.map((session) => session.id)),
     getStudentCompletedIds(supabase, viewer.id),
+    getOpportunities(supabase),
+    getAllOpportunityDates(supabase),
+    getMyOpportunityDateRegistrationIds(supabase, viewer.id),
   ]);
 
-  const today = parisDate();
-  const inPeriod = sessions.filter((session) =>
-    period === "past" ? session.session_date < today : session.session_date >= today,
-  );
-  const months = [...new Set(inPeriod.map((session) => session.session_date.slice(0, 7)))]
-    .sort((a, b) => period === "past" ? b.localeCompare(a) : a.localeCompare(b));
-  const selectedMonth = params.mois && months.includes(params.mois) ? params.mois : "all";
-  const visible = inPeriod
-    .filter((session) => requestedKind === "all" || kindOf(session) === requestedKind)
-    .filter((session) => selectedMonth === "all" || session.session_date.startsWith(selectedMonth))
-    .sort((a, b) => {
-      const order = a.session_date.localeCompare(b.session_date) || a.start_time.localeCompare(b.start_time);
-      return period === "past" ? -order : order;
-    });
+  const ministryColor = getMinistry(viewer.ministrySlug)?.color ?? "var(--foreground)";
+  const assignmentsBySession = new Map<string, typeof assignments>();
+  for (const assignment of assignments) assignmentsBySession.set(assignment.session_id, [...(assignmentsBySession.get(assignment.session_id) ?? []), assignment]);
 
-  const assignmentBySession = new Map<string, typeof assignments>();
-  for (const assignment of assignments) {
-    const current = assignmentBySession.get(assignment.session_id) ?? [];
-    current.push(assignment);
-    assignmentBySession.set(assignment.session_id, current);
-  }
+  const regularSessions: MonthSession[] = sessions.filter((session) => !isProjectDay(session)).map((session) => {
+    const work = assignmentsBySession.get(session.id) ?? [];
+    const remaining = work.filter((assignment) => !completedIds.has(assignment.id)).length;
+    return {
+      id: session.id,
+      date: session.session_date,
+      start: session.start_time,
+      end: session.end_time,
+      title: session.courses?.title ?? session.description ?? "Cours",
+      description: remaining > 0 ? `${remaining} ${remaining > 1 ? "travaux" : "travail"} à préparer` : work.length > 0 ? "Tout le travail est terminé" : null,
+      label: session.track?.replace(/^Votre parcours\s*:\s*/i, "") ?? (session.session_type === "commun" ? "Tronc commun" : (viewer.ministryName ?? "Ministère")),
+      location: session.room ? `${session.location} · ${session.room}` : session.location,
+      teacher: studentSessionTrainerNames(session),
+      color: sessionColor(session.track, session.session_type, ministryColor),
+    };
+  });
 
-  const upcomingCount = sessions.filter((session) => session.session_date >= today).length;
-  const pastCount = sessions.filter((session) => session.session_date < today).length;
+  const opportunityById = new Map(opportunities.filter((opportunity) => isPublished(opportunity)).map((opportunity) => [opportunity.id, opportunity]));
+  const registeredDates = opportunityDates.filter((date) => registeredDateIds.has(date.id) && opportunityById.has(date.opportunity_id));
+  const registeredDays = new Set(registeredDates.map((date) => date.session_date));
+  const registeredSessions: MonthSession[] = registeredDates.map((date) => {
+    const opportunity = opportunityById.get(date.opportunity_id)!;
+    return {
+      id: `opportunity-${date.id}`,
+      date: date.session_date,
+      start: date.start_time,
+      end: date.end_time,
+      title: opportunity.title,
+      description: "Vous êtes inscrit à ce projet ou à cette formation.",
+      label: TYPE_LABEL[opportunityType(opportunity)],
+      location: date.room ? `${date.location ?? opportunity.location ?? ""} · ${date.room}` : (date.location ?? opportunity.location),
+      teacher: opportunity.organizer_label ?? opportunity.services?.name ?? null,
+      color: "var(--f-projet)",
+      href: `/etudiant/services/${opportunity.id}`,
+    };
+  });
+  const choiceSessions: MonthSession[] = sessions.filter((session) => isProjectDay(session) && !registeredDays.has(session.session_date)).map((session) => ({
+    id: `choice-${session.id}`,
+    date: session.session_date,
+    start: session.start_time,
+    end: session.end_time,
+    title: "Choisir mon projet ou ma formation",
+    description: "Découvrez les propositions disponibles pour cette journée et inscrivez-vous.",
+    label: "Projets et formations",
+    location: session.room ? `${session.location} · ${session.room}` : session.location,
+    teacher: null,
+    color: "var(--f-projet)",
+    href: `/etudiant/services?jour=${session.session_date}`,
+  }));
 
-  return (
-    <div className="mx-auto max-w-5xl space-y-5 pb-10">
-      <header>
-        <div>
-          <p className="text-[13px] font-medium text-muted">Promotion {PROMOTION}</p>
-          <h1 className="mt-0.5 font-title text-[25px] leading-tight text-foreground sm:text-[29px]">Mes cours</h1>
-          <p className="mt-1 text-[14px] text-muted">Ton programme, les informations utiles et le travail à préparer.</p>
-        </div>
-      </header>
+  const calendarSessions = [...regularSessions, ...choiceSessions, ...registeredSessions].sort((a, b) => a.date.localeCompare(b.date) || a.start.localeCompare(b.start));
+  const initialDate = params.jour && /^\d{4}-\d{2}-\d{2}$/.test(params.jour) ? params.jour : params.mois && /^\d{4}-\d{2}$/.test(params.mois) ? `${params.mois}-01` : undefined;
 
-      <div className="sticky top-0 z-10 -mx-4 space-y-3 border-y border-border-soft bg-[color:var(--background)]/95 px-4 py-3 backdrop-blur sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:px-0 sm:py-0">
-        <nav aria-label="Période" className="inline-flex rounded-full bg-surface p-1">
-          <Link
-            href={courseHref("upcoming", requestedKind)}
-            className={`rounded-full px-4 py-2 text-[14px] font-semibold transition ${period === "upcoming" ? "bg-accent text-on-accent shadow-sm" : "text-muted hover:text-foreground"}`}
-          >
-            À venir <span className="ml-1 opacity-70">{upcomingCount}</span>
-          </Link>
-          <Link
-            href={courseHref("past", requestedKind)}
-            className={`rounded-full px-4 py-2 text-[14px] font-semibold transition ${period === "past" ? "bg-accent text-on-accent shadow-sm" : "text-muted hover:text-foreground"}`}
-          >
-            Passés <span className="ml-1 opacity-70">{pastCount}</span>
-          </Link>
-        </nav>
-
-        <nav aria-label="Mois" className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:px-0">
-          <Link
-            href={courseHref(period, requestedKind)}
-            className={`inline-flex min-h-9 shrink-0 items-center rounded-full px-3.5 text-[13px] font-semibold transition ${selectedMonth === "all" ? "bg-accent text-on-accent" : "bg-surface text-muted hover:text-foreground"}`}
-          >
-            {period === "past" ? "Tous les mois passés" : "Tous les mois à venir"}
-          </Link>
-          {months.map((month) => (
-            <Link
-              key={month}
-              href={courseHref(period, requestedKind, month)}
-              className={`inline-flex min-h-9 shrink-0 items-center rounded-full px-3.5 text-[13px] font-semibold transition ${selectedMonth === month ? "bg-accent text-on-accent" : "bg-surface text-muted hover:text-foreground"}`}
-            >
-              {monthLabel(month)}
-            </Link>
-          ))}
-        </nav>
-
-        <nav aria-label="Type de cours" className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:flex-wrap sm:px-0">
-          {COURSE_KINDS.map((item) => (
-            <Link
-              key={item.key}
-              href={courseHref(period, item.key, selectedMonth)}
-              className={`inline-flex min-h-9 shrink-0 items-center rounded-full border px-3.5 text-[13px] font-medium transition ${requestedKind === item.key ? "border-foreground bg-foreground text-background" : "border-border bg-background text-muted hover:border-foreground/40 hover:text-foreground"}`}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-      </div>
-
-      {visible.length ? (
-        <ul className="overflow-hidden rounded-2xl border border-border bg-background shadow-[0_16px_50px_rgba(39,48,47,0.04)]">
-          {visible.map((session) => {
-            const kind = kindOf(session);
-            const style = KIND_STYLES[kind];
-            const date = dateParts(session.session_date);
-            const trainer = studentSessionTrainerNames(session);
-            const work = assignmentBySession.get(session.id) ?? [];
-            const completed = work.filter((assignment) => completedIds.has(assignment.id)).length;
-            const remaining = work.length - completed;
-            const title = session.courses?.title ?? session.description ?? "Cours";
-
-            return (
-              <li key={session.id} className="border-b border-border-soft last:border-b-0">
-                <Link
-                  href={`/etudiant/seances/${session.id}`}
-                  className="group relative grid gap-3 px-4 py-4 transition hover:bg-surface/60 focus-visible:outline-2 focus-visible:outline-offset-[-2px] sm:grid-cols-[74px_minmax(0,1fr)_auto] sm:items-center sm:gap-5 sm:px-5 sm:py-5"
-                  style={{ outlineColor: style.color }}
-                >
-                  <span aria-hidden="true" className="absolute inset-y-3 left-0 w-[3px] rounded-r-full" style={{ backgroundColor: style.color }} />
-
-                  <div className="flex items-center gap-3 sm:block sm:text-center">
-                    <span className="text-[25px] font-semibold leading-none text-foreground sm:block">{date.day}</span>
-                    <span className="text-[11px] font-bold tracking-[0.12em] text-muted sm:mt-1 sm:block">{date.month}</span>
-                    <span className="text-[12px] text-muted sm:mt-1 sm:block">{session.start_time.slice(0, 5)}</span>
-                  </div>
-
-                  <div className="min-w-0">
-                    <span
-                      className="inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold"
-                      style={{ color: style.color, backgroundColor: `color-mix(in srgb, ${style.color} 13%, transparent)` }}
-                    >
-                      {style.label}
-                    </span>
-                    <h2 className="mt-2 text-[16px] font-semibold leading-snug text-foreground sm:text-[17px]">{title}</h2>
-                    <p className="mt-1 text-[13px] capitalize text-muted sm:hidden">{date.long}</p>
-                    <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[13px] text-muted">
-                      <span className="inline-flex items-center gap-1.5"><CalendarDays size={14} /> {hours(session.start_time, session.end_time)}</span>
-                      <span className="inline-flex items-center gap-1.5"><MapPin size={14} /> {session.location || "Espace Martin Luther King"}{session.room ? ` · ${session.room}` : ""}</span>
-                      {trainer && <span className="inline-flex items-center gap-1.5"><CircleUser size={14} /> {trainer}</span>}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between gap-4 border-t border-border-soft pt-3 sm:min-w-[155px] sm:justify-end sm:border-0 sm:pt-0">
-                    <div className="text-left sm:text-right">
-                      {work.length === 0 ? (
-                        <span className="text-[12px] text-muted">Aucun travail</span>
-                      ) : remaining === 0 ? (
-                        <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-emerald-700"><CheckCircle2 size={15} /> Tout est terminé</span>
-                      ) : (
-                        <>
-                          <span className="block text-[12px] font-semibold text-foreground">{remaining} élément{remaining > 1 ? "s" : ""} à préparer</span>
-                          {completed > 0 && <span className="mt-0.5 block text-[11px] text-muted">{completed} terminé{completed > 1 ? "s" : ""}</span>}
-                        </>
-                      )}
-                    </div>
-                    <ChevronRight size={19} className="shrink-0 text-muted transition group-hover:translate-x-1 group-hover:text-foreground" />
-                  </div>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      ) : (
-        <section className="rounded-2xl border border-dashed border-border bg-background px-6 py-12 text-center">
-          <p className="text-[15px] font-medium text-foreground">Aucun cours {period === "past" ? "passé" : "à venir"} dans cette catégorie.</p>
-          <Link href={courseHref(period, "all", selectedMonth)} className="mt-3 inline-flex text-[14px] font-semibold text-foreground underline underline-offset-4">Afficher tous les cours</Link>
-        </section>
-      )}
-    </div>
-  );
+  return <div className="mx-auto max-w-6xl space-y-4 pb-8">
+    <header><p className="text-[13px] font-medium text-muted">Promotion {PROMOTION}</p><h1 className="mt-0.5 font-title text-[25px] leading-tight text-foreground sm:text-[29px]">Mes cours</h1><p className="mt-1 text-[14px] text-muted">Retrouvez votre calendrier, vos cours et le travail à préparer.</p></header>
+    <MonthCalendar sessions={calendarSessions} initialDate={initialDate} />
+  </div>;
 }

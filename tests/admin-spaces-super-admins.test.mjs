@@ -8,7 +8,7 @@ test("la sidebar étudiante historique reste inchangée", async () => {
   const nav = await source("src/lib/nav.tsx");
   const studentBlock = nav.slice(nav.indexOf("export const studentSections"), nav.indexOf("export const notesNavItem"));
   assert.match(studentBlock, /label: "Accueil"/);
-  assert.match(studentBlock, /label: "Calendrier"/);
+  assert.doesNotMatch(studentBlock, /label: "Calendrier"/);
   assert.match(studentBlock, /label: "Mes cours"/);
   assert.match(studentBlock, /label: "Travail à faire"/);
   assert.match(studentBlock, /label: "Projets et formations"/);

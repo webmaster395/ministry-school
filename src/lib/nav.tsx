@@ -71,12 +71,12 @@ export const studentSections: NavSection[] = [
     title: "Principal",
     items: [
       { label: "Accueil", href: "/etudiant", icon: icons.home },
+      { label: "Mon identité", href: "/etudiant/identite", icon: icons.identity },
     ],
   },
   {
     title: "Mon parcours",
     items: [
-      { label: "Mon identité", href: "/etudiant/identite", icon: icons.identity },
       { label: "Mes cours", href: "/etudiant/cours", icon: icons.calendar },
       { label: "Travail à faire", href: "/etudiant/travail", icon: icons.task },
       // Le ministère reste masqué tant que son espace n'est pas prêt.

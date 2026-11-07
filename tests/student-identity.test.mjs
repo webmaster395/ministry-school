@@ -12,7 +12,7 @@ test("Mon identité reste privée et s'ouvre aux étudiants à 07h00 Paris", () 
 
   assert.equal((nav.match(/label: "Mon identité"/g) ?? []).length, 1);
   assert.match(nav, /href: "\/etudiant\/identite"/);
-  assert.match(nav, /title: "Mon parcours",[\s\S]*?items: \[[\s\S]*?label: "Mon identité"[\s\S]*?label: "Mes cours"/);
+  assert.match(nav, /title: "Principal",[\s\S]*?label: "Accueil"[\s\S]*?label: "Mon identité"/);
   assert.doesNotMatch(nav, /label: "Mes ressources"/);
   assert.match(navBlocks, /item\.label !== "Mon identité" \|\| isSuperAdmin \|\| toolsVisible/);
   assert.match(page, /if \(!viewer\) redirect\("\/login"\)/);

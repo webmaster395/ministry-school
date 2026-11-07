@@ -117,6 +117,7 @@ function requireOpportunityFields(formData: FormData, dates: Array<{
 function refreshOpportunity(id: string) {
   revalidatePath("/etudiant/services");
   revalidatePath(`/etudiant/services/${id}`);
+  revalidatePath("/etudiant/cours");
   revalidatePath("/gestion/projets-formations");
   revalidatePath(`/gestion/projets-formations/${id}`);
   revalidatePath("/gestion/admin");

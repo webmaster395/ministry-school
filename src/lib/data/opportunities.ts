@@ -197,6 +197,25 @@ export async function getOpportunityDates(supabase: SupabaseClient, id: string) 
   }[];
 }
 
+/** Toutes les dates publiables, utilisées pour relier le calendrier étudiant aux inscriptions. */
+export async function getAllOpportunityDates(supabase: SupabaseClient) {
+  const { data } = await supabase
+    .from("opportunity_dates")
+    .select("id, opportunity_id, session_date, start_time, end_time, room, location, capacity")
+    .order("session_date")
+    .order("start_time");
+  return (data ?? []) as Array<{
+    id: string;
+    opportunity_id: string;
+    session_date: string;
+    start_time: string;
+    end_time: string;
+    room: string | null;
+    location: string | null;
+    capacity: number | null;
+  }>;
+}
+
 export type OpportunityManagementRevision = {
   payload: Partial<Opportunity> & {
     service_id?: string | null;

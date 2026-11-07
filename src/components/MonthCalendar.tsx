@@ -20,6 +20,7 @@ export type MonthSession = {
   teacher: string | null;
   color: string;
   informational?: boolean;
+  href?: string;
 };
 
 const MONTHS = [
@@ -108,7 +109,7 @@ export default function MonthCalendar({
 
   return (
     <div>
-      <div className="mb-5 flex flex-wrap justify-end gap-3">
+      <div className="mb-4 flex flex-wrap justify-end gap-3">
         {SYNC_ENABLED && (
         <button
           type="button"
@@ -132,7 +133,7 @@ export default function MonthCalendar({
 
       <div className="grid items-start gap-[22px] lg:grid-cols-[1fr_400px]">
         <section className="rounded-lg border border-border bg-background p-4 sm:p-6">
-          <div className="mb-5 flex items-center justify-center gap-3 sm:gap-6">
+          <div className="mb-5 flex items-center justify-end gap-2 sm:gap-3">
             <button
               type="button"
               onClick={() => go(-1)}
@@ -141,7 +142,7 @@ export default function MonthCalendar({
             >
               <ChevronLeft size={18} strokeWidth={1.8} />
             </button>
-            <h2 className="font-title min-w-0 flex-1 text-center text-[18px] text-foreground sm:min-w-[180px] sm:flex-none sm:text-[20px]">
+            <h2 className="font-title min-w-[150px] text-center text-[18px] text-foreground sm:min-w-[190px] sm:text-[20px]">
               {MONTHS[month]} {year}
             </h2>
             <button
@@ -237,13 +238,13 @@ export default function MonthCalendar({
                   className="rounded-lg border border-border border-l-4 transition hover:border-r-foreground hover:border-y-foreground"
                   style={{ borderLeftColor: s.color }}
                 >
-                  {s.informational ? (
+                  {s.informational && !s.href ? (
                     <div className="flex items-start gap-2 p-4">
                       <SessionContent session={s} />
                     </div>
                   ) : (
                     <Link
-                      href={`/etudiant/seances/${s.id}`}
+                      href={s.href ?? `/etudiant/seances/${s.id}`}
                       className="flex items-start gap-2 p-4"
                     >
                       <SessionContent session={s} />
