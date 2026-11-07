@@ -408,6 +408,7 @@ export async function getStudentProgramAssignments(
 export type StudentWorkItem = {
   assignment: StudentAssignment;
   origin: StudentSession;
+  targetId: string | null;
   targetDate: string | null;
   after: boolean;
 };
@@ -431,7 +432,13 @@ export function getStudentWorkItems(
         new Date(assignment.due_at) >
           new Date(`${origin.session_date}T${origin.end_time}`);
     const target = after ? getNextRelevantSession(origin, sessions) : origin;
-    return [{ assignment, origin, targetDate: target?.session_date ?? null, after }];
+    return [{
+      assignment,
+      origin,
+      targetId: target?.id ?? null,
+      targetDate: target?.session_date ?? null,
+      after,
+    }];
   });
 }
 

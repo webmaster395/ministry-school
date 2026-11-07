@@ -61,14 +61,14 @@ export default async function StudentWorkPage({
   // Chaque travail est présenté sous la séance pour laquelle il doit être prêt.
   const groups = new Map<string, typeof shown>();
   for (const item of shown) {
-    const key = item.targetDate ?? `sans-date:${item.origin.id}`;
+    const key = item.targetId ?? `sans-date:${item.origin.id}`;
     groups.set(key, [...(groups.get(key) ?? []), item]);
   }
   const orderedGroups = [...groups.entries()]
     .map(([key, items]) => ({
       session: (key.startsWith("sans-date:")
         ? sessionById.get(key.replace("sans-date:", ""))
-        : sessions.find((session) => session.session_date === key)) as StudentSession,
+        : sessionById.get(key)) as StudentSession,
       items,
     }))
     .filter((g) => g.session)
