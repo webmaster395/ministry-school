@@ -4,15 +4,20 @@ import { readFileSync } from "node:fs";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("Mon identité possède une seule entrée réservée aux super administrateurs", () => {
+test("Mon identité est disponible aux étudiants authentifiés et reste privée", () => {
   const nav = read("src/lib/nav.tsx");
   const navBlocks = read("src/components/NavBlocks.tsx");
   const page = read("src/app/etudiant/identite/page.tsx");
+  const proxy = read("src/proxy.ts");
+
   assert.equal((nav.match(/label: "Mon identité"/g) ?? []).length, 1);
   assert.match(nav, /href: "\/etudiant\/identite"/);
   assert.doesNotMatch(nav, /label: "Mes ressources"/);
-  assert.match(navBlocks, /item\.label !== "Mon identité" \|\| isSuperAdmin/);
-  assert.match(page, /!viewer\?\.roles\.superAdmin[\s\S]*redirect\("\/etudiant"\)/);
+  assert.doesNotMatch(navBlocks, /item\.label !== "Mon identité"/);
+  assert.match(page, /if \(!viewer\) redirect\("\/login"\)/);
+  assert.match(proxy, /isDevelopmentPreview[\s\S]*process\.env\.VERCEL_ENV !== "production"/);
+  assert.match(proxy, /request\.nextUrl\.pathname === "\/apps"/);
+  assert.doesNotMatch(proxy, /isPublicPage[\s\S]*request\.nextUrl\.pathname === "\/etudiant\/identite"/);
 });
 
 test("le tableau de bord privé consolide ses lectures et ne rapproche jamais par e-mail", () => {
@@ -26,17 +31,38 @@ test("le tableau de bord privé consolide ses lectures et ne rapproche jamais pa
   assert.match(migration, /grant execute on function public\.student_identity_dashboard\(\) to authenticated/);
 });
 
-test("les stories ouvrent les outils publiés et les publications viennent des résultats terminés", () => {
+test("la page reprend le profil, les stories, les onglets et les résultats réels", () => {
   const page = read("src/app/etudiant/identite/page.tsx");
-  assert.match(page, /getStudentTools\(\)/);
-  assert.match(page, /buildStories\(tools, dashboard\.recommendations\)/);
-  assert.match(page, /results=\{\[\.\.\.dashboard\.identityResults, \.\.\.dashboard\.financeResults\]\}/);
-
   const experience = read("src/app/etudiant/identite/IdentityExperience.tsx");
-  assert.match(experience, /props\.certified \?/);
+
+  assert.match(page, /fullName=\{viewer\.fullName/);
+  assert.match(page, /status=\{accountStatus\(viewer\.role/);
+  assert.match(page, /buildStories\(tools\)/);
+  assert.doesNotMatch(page, /key: "recommendations"/);
+  assert.match(page, /buildUpcoming\(tools, completedKinds\)/);
+  assert.match(page, /seenKinds/);
+  assert.match(experience, /Mes résultats/);
+  assert.match(experience, /À venir/);
+  assert.match(experience, /props\.stories\.map/);
   assert.match(experience, /Les résultats apparaîtront après la finalisation d’un test/);
   assert.match(experience, /result\.attemptId[\s\S]*\/apps\/profil-mapp\/test\/\$\{result\.attemptId\}\/resultat/);
+  assert.match(experience, /competences-naturelles\.webp/);
+  assert.match(experience, /dons-spirituels\.webp/);
+  assert.match(experience, /generopoly\.webp/);
+  assert.match(experience, /\?test=fruit/);
+  assert.match(experience, /\?test=gifts/);
+  assert.match(experience, /\?test=skills/);
+  assert.doesNotMatch(experience, /Certifié/);
   assert.doesNotMatch(experience, /Retrouve les réponses et résultats enregistrés par l’outil/);
+});
+
+test("la grille Instagram conserve trois colonnes sur ordinateur et téléphone", () => {
+  const css = read("src/app/etudiant/identite/identity.module.css");
+  assert.match(css, /\.grid\s*\{[\s\S]*grid-template-columns:\s*repeat\(3,/);
+  assert.doesNotMatch(css, /grid-template-columns:\s*repeat\(2,/);
+  assert.match(css, /var\(--foreground\)/);
+  assert.match(css, /var\(--surface\)/);
+  assert.match(css, /var\(--accent\)/);
 });
 
 test("le genre est ajouté à la lecture consolidée sans requête supplémentaire", () => {

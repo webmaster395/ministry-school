@@ -4,10 +4,11 @@ import { getCatalogAppBySlug, getStudentTools } from "@/lib/apps/catalog";
 import { graceIdentitySlug } from "@/lib/apps/grace-identity";
 import { createClient } from "@/lib/supabase/server";
 import GraceIdentityTool from "@/components/apps/GraceIdentityTool";
+import type { GraceTestKey } from "@/lib/apps/grace-identity";
 
 export const dynamic = "force-dynamic";
 
-export default async function GraceIdentityPage() {
+export default async function GraceIdentityPage({ searchParams }: { searchParams: Promise<{ test?: string }> }) {
   const viewer = await getViewer();
   if (!viewer) redirect(`/login?next=/apps/${graceIdentitySlug}`);
   if (viewer.deactivated) redirect("/auth/desactive");
@@ -26,5 +27,8 @@ export default async function GraceIdentityPage() {
     .select("test_key,answers,results,completed_at,updated_at")
     .eq("user_id", viewer.id);
 
-  return <GraceIdentityTool initial={(data ?? []) as never[]} preview={viewer.roles.superAdmin && !app?.studentVisible} />;
+  const requestedTest = (await searchParams).test;
+  const initialTest: GraceTestKey | null = requestedTest === "fruit" || requestedTest === "gifts" || requestedTest === "skills" ? requestedTest : null;
+
+  return <GraceIdentityTool initial={(data ?? []) as never[]} preview={viewer.roles.superAdmin && !app?.studentVisible} initialTest={initialTest} />;
 }
