@@ -32,6 +32,15 @@ function buildStories(tools: CatalogApp[]): IdentityStoryGroup[] {
   if (!finance.some((item) => item.name === "Généropoly")) {
     finance.unshift({ key: "generopoly", name: "Généropoly", href: "/apps/generopoly", iconUrl: null });
   }
+  if (!finance.some((item) => item.name === "Ta générosité")) {
+    const generopolyIndex = finance.findIndex((item) => item.name === "Généropoly");
+    finance.splice(generopolyIndex >= 0 ? generopolyIndex + 1 : finance.length, 0, {
+      key: "ta-generosite",
+      name: "Ta générosité",
+      href: "https://generosite.jeveuxdonner.fr/",
+      iconUrl: null,
+    });
+  }
   const groups: IdentityStoryGroup[] = [
     { key: "identity", label: "Identité", image: "/identity/stories/identity-v2.webp", items: identity },
     { key: "finance", label: "Finance", image: "/identity/stories/finance-v2.webp", items: finance },

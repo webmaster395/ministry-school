@@ -103,6 +103,8 @@ test("les stories MAPP et Généropoly restent visibles avec leurs bons liens", 
   const page = read("src/app/etudiant/identite/page.tsx");
   assert.match(page, /name: "Profil MAPP", href: "\/apps\/profil-mapp"/);
   assert.match(page, /name: "Généropoly", href: "\/apps\/generopoly"/);
+  assert.match(page, /name: "Ta générosité"/);
+  assert.match(page, /https:\/\/generosite\.jeveuxdonner\.fr\//);
   assert.match(page, /image: "\/identity\/stories\/identity-v2\.webp"/);
   assert.match(page, /image: "\/identity\/stories\/finance-v2\.webp"/);
 });
