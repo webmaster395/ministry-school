@@ -81,12 +81,12 @@ export const studentSections: NavSection[] = [
   {
     title: "Mon parcours",
     items: [
+      { label: "Mon identité", href: "/etudiant/identite", icon: icons.identity },
       { label: "Mes cours", href: "/etudiant/cours", icon: icons.book },
       { label: "Travail à faire", href: "/etudiant/travail", icon: icons.task },
       // Le ministère reste masqué tant que son espace n'est pas prêt.
       // { label: "Mon ministère", href: "/etudiant/formation", icon: icons.ministries },
       { label: "Projets et formations", href: "/etudiant/services", icon: icons.services },
-      { label: "Mon identité", href: "/etudiant/identite", icon: icons.identity },
       // L'espace étudiant applique les dates de publication. Les super-administrateurs
       // y voient aussi les outils en préparation afin de valider le parcours réel.
       { label: "Mes outils", href: "/apps", icon: icons.apps },
