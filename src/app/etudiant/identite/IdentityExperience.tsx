@@ -61,21 +61,25 @@ const resultContent = {
 const resultArtwork = {
   fruit: {
     title: "Fruit de l’Esprit",
+    eyebrow: null,
     image: "/identity/posts/fruit-de-lesprit.png",
     href: "/apps/je-suis-par-la-grace-de-dieu?test=fruit",
   },
   gifts: {
     title: "Dons spirituels",
+    eyebrow: "Je suis ce que je suis",
     image: "/identity/posts/dons-spirituels.webp",
     href: "/apps/je-suis-par-la-grace-de-dieu?test=gifts",
   },
   skills: {
     title: "Compétences naturelles",
+    eyebrow: "Je suis ce que je suis",
     image: "/identity/posts/competences-naturelles.webp",
     href: "/apps/je-suis-par-la-grace-de-dieu?test=skills",
   },
   generopoly: {
-    title: "Généropoly",
+    title: "Mon profil financier",
+    eyebrow: "Généropoly",
     image: "/identity/posts/generopoly.webp",
     href: "/apps/generopoly",
   },
@@ -114,6 +118,14 @@ function ResultPost({ result }: { result: IdentityResult }) {
           fill
           sizes="(max-width: 767px) 33vw, 320px"
         />
+        {result.kind !== "fruit" ? <>
+          <span className={styles.postShade} />
+          <span className={styles.postCopy}>
+            <span className={styles.postKicker}>{artwork.eyebrow}</span>
+            <strong>{artwork.title}</strong>
+            <span className={styles.openPost}>Voir le résultat <ArrowRight size={15} /></span>
+          </span>
+        </> : null}
       </Link>
     );
   }
