@@ -13,7 +13,8 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import type { IdentityResult } from "@/lib/identity/dashboard";
 import styles from "./identity.module.css";
 
@@ -85,6 +86,8 @@ const resultArtwork = {
     href: "/apps/generopoly",
   },
 } as const;
+
+const subscribeToMount = () => () => undefined;
 
 function ResultPost({ result }: { result: IdentityResult }) {
   if (result.kind === "mapp") {
@@ -164,17 +167,23 @@ function UpcomingPost({ item }: { item: IdentityUpcomingItem }) {
 export default function IdentityExperience(props: Props) {
   const [openStory, setOpenStory] = useState<IdentityStoryGroup | null>(null);
   const [activeTab, setActiveTab] = useState<"results" | "upcoming">("results");
+  const isMounted = useSyncExternalStore(subscribeToMount, () => true, () => false);
   const nameParts = props.fullName.trim().split(/\s+/).filter(Boolean);
   const firstName = nameParts[0] || "Mon identité";
   const initials = `${nameParts[0]?.charAt(0) ?? "?"}${nameParts.length > 1 ? nameParts.at(-1)?.charAt(0) ?? "" : ""}`.toUpperCase();
 
   useEffect(() => {
     if (!openStory) return;
+    const previousOverflow = document.body.style.overflow;
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") setOpenStory(null);
     };
+    document.body.style.overflow = "hidden";
     document.addEventListener("keydown", closeOnEscape);
-    return () => document.removeEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", closeOnEscape);
+    };
   }, [openStory]);
 
   const activeCount = activeTab === "results" ? props.results.length : props.upcoming.length;
@@ -247,7 +256,7 @@ export default function IdentityExperience(props: Props) {
         )}
       </section>
 
-      {openStory ? (
+      {isMounted && openStory ? createPortal((
         <div className={`${styles.modalBackdrop} app-modal-layer`} role="presentation" onMouseDown={() => setOpenStory(null)}>
           <section className={styles.storyModal} role="dialog" aria-modal="true" aria-labelledby="story-dialog-title" onMouseDown={(event) => event.stopPropagation()}>
             <button type="button" className={styles.close} onClick={() => setOpenStory(null)} aria-label="Fermer"><X /></button>
@@ -267,7 +276,7 @@ export default function IdentityExperience(props: Props) {
             </div>
           </section>
         </div>
-      ) : null}
+      ), document.body) : null}
     </div>
   );
 }

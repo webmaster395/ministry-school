@@ -108,3 +108,13 @@ test("les stories MAPP et Généropoly restent visibles avec leurs bons liens", 
   assert.match(page, /image: "\/identity\/stories\/identity-v2\.webp"/);
   assert.match(page, /image: "\/identity\/stories\/finance-v2\.webp"/);
 });
+
+test("les stories s’ouvrent dans la fenêtre et l’identité reste compacte sur mobile", () => {
+  const identity = read("src/app/etudiant/identite/IdentityExperience.tsx");
+  const styles = read("src/app/etudiant/identite/identity.module.css");
+  assert.match(identity, /createPortal/);
+  assert.match(identity, /document\.body\.style\.overflow = "hidden"/);
+  assert.match(styles, /z-index:\s*10000/);
+  assert.match(styles, /min-height:\s*100dvh/);
+  assert.match(styles, /grid-template-columns:\s*84px minmax\(0, 1fr\)/);
+});
