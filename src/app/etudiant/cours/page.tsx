@@ -9,7 +9,9 @@ import { PROMOTION } from "@/lib/promotion";
 
 function isProjectDay(session: StudentSession) {
   const value = `${session.track ?? ""} ${session.description ?? ""} ${session.courses?.title ?? ""}`.toLowerCase();
-  return value.includes("projet") || value.includes("formation");
+  // Une « Formation du cœur » reste un cours. Seule la journée générique
+  // Projets et formations ouvre le catalogue des choix.
+  return value.includes("projet");
 }
 
 export default async function StudentCoursesPage({ searchParams }: { searchParams: Promise<{ mois?: string; jour?: string }> }) {
