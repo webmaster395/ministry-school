@@ -10,7 +10,7 @@ export function GuestMappAutoClaim() {
   useEffect(() => {
     if (attempted.current) return;
     attempted.current = true;
-    void fetch("/api/mapp/guest/claim", { method: "POST" })
+    void fetch("/apps/profil-mapp/api/integrations/ministry/claim-results", { method: "POST" })
       .then(async (response) => ({ response, payload: await response.json().catch(() => null) as { claimed?: boolean } | null }))
       .then(({ response, payload }) => {
         if (response.ok && payload?.claimed) router.refresh();
