@@ -30,6 +30,18 @@ test("les tentatives invitées gardent leur secret hors du navigateur Supabase",
   assert.doesNotMatch(start, /SUPABASE_SERVICE_ROLE_KEY/);
 });
 
+test("Mon identité rattache une tentative possédée sans dépendre de l'e-mail saisi", () => {
+  const route = read("src/app/api/mapp/guest/claim/route.ts");
+  const migration = read("supabase/migrations/20261107003000_mapp_claim_owned_guest_attempt.sql");
+  assert.match(route, /mapp_claim_owned_guest_attempt/);
+  assert.match(route, /sha256\(credential\.secret\)/);
+  assert.match(migration, /access\.token_hash = p_token_hash/);
+  assert.match(migration, /access\.expires_at > now\(\)/);
+  assert.match(migration, /access\.claimed_at is null or access\.claimed_by = current_user_id/);
+  assert.doesNotMatch(migration, /guest\.email/);
+  assert.match(migration, /revoke all on function public\.mapp_claim_owned_guest_attempt\(uuid, text\) from public, anon/);
+});
+
 test("la porte SQL contrôle publication étudiante et aperçu super-admin", () => {
   const sql = read("supabase/migrations/20261106140000_mapp_superadmin_preview_gate.sql");
   assert.match(sql, /public\.is_super_admin\(profile\.id\)/);
