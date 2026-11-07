@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("Mon identité est disponible aux étudiants authentifiés et reste privée", () => {
+test("Mon identité reste privée et s'ouvre aux étudiants à 07h00 Paris", () => {
   const nav = read("src/lib/nav.tsx");
   const navBlocks = read("src/components/NavBlocks.tsx");
   const page = read("src/app/etudiant/identite/page.tsx");
@@ -13,8 +13,9 @@ test("Mon identité est disponible aux étudiants authentifiés et reste privée
   assert.equal((nav.match(/label: "Mon identité"/g) ?? []).length, 1);
   assert.match(nav, /href: "\/etudiant\/identite"/);
   assert.doesNotMatch(nav, /label: "Mes ressources"/);
-  assert.doesNotMatch(navBlocks, /item\.label !== "Mon identité"/);
+  assert.match(navBlocks, /item\.label !== "Mon identité" \|\| isSuperAdmin \|\| toolsVisible/);
   assert.match(page, /if \(!viewer\) redirect\("\/login"\)/);
+  assert.match(page, /!viewer\.roles\.superAdmin && !isMappGuestOpen\(\)/);
   assert.match(proxy, /isDevelopmentPreview[\s\S]*process\.env\.VERCEL_ENV !== "production"/);
   assert.match(proxy, /request\.nextUrl\.pathname === "\/apps"/);
   assert.doesNotMatch(proxy, /isPublicPage[\s\S]*request\.nextUrl\.pathname === "\/etudiant\/identite"/);
@@ -40,7 +41,8 @@ test("la page reprend le profil, les stories, les onglets et les résultats rée
   assert.match(page, /buildStories\(tools\)/);
   assert.doesNotMatch(page, /key: "recommendations"/);
   assert.match(page, /buildUpcoming\(tools, completedKinds\)/);
-  assert.match(page, /seenKinds/);
+  assert.doesNotMatch(page, /seenKinds/);
+  assert.match(page, /results=\{allResults\}/);
   assert.match(experience, /Mes résultats/);
   assert.match(experience, /À venir/);
   assert.match(experience, /props\.stories\.map/);

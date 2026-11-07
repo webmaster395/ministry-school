@@ -4,6 +4,7 @@ import { getIdentityDashboard } from "@/lib/identity/dashboard";
 import IdentityExperience, { type IdentityStoryGroup, type IdentityStoryItem } from "./IdentityExperience";
 import { GuestMappAutoClaim } from "./GuestMappAutoClaim";
 import { getGuestCredential } from "@/lib/mapp/guest";
+import { isMappGuestOpen } from "@/lib/mapp/access-window";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -67,16 +68,11 @@ export default async function StudentIdentityPage() {
   const viewer = await getViewer();
   if (!viewer) redirect("/login");
   if (viewer.deactivated) redirect("/auth/desactive");
+  if (!viewer.roles.superAdmin && !isMappGuestOpen()) redirect("/etudiant");
   const [dashboard, tools, guestMapp] = await Promise.all([getIdentityDashboard(), getStudentTools(), getGuestCredential()]);
   const allResults = [...dashboard.identityResults, ...dashboard.financeResults]
     .sort((left, right) => new Date(right.completedAt).getTime() - new Date(left.completedAt).getTime());
   const completedKinds = new Set(allResults.map((result) => result.kind));
-  const seenKinds = new Set<string>();
-  const results = allResults.filter((result) => {
-    if (seenKinds.has(result.kind)) return false;
-    seenKinds.add(result.kind);
-    return true;
-  });
   return <>{guestMapp ? <GuestMappAutoClaim /> : null}<IdentityExperience
     fullName={viewer.fullName || dashboard.profile.firstName || "Mon identité"}
     status={accountStatus(viewer.role, dashboard.profile.gender)}
@@ -85,7 +81,7 @@ export default async function StudentIdentityPage() {
     months={monthsTogether(dashboard.profile.memberSince)}
     completedTests={dashboard.metrics.completedTests}
     stories={buildStories(tools)}
-    results={results}
+    results={allResults}
     upcoming={buildUpcoming(tools, completedKinds)}
   /></>;
 }
