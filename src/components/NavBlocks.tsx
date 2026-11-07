@@ -81,6 +81,7 @@ export function NavSections({ collapsed = false, onNavigate }: { collapsed?: boo
   const pathname = usePathname();
   const { spaces, current, pendingValidationCount } = useSpace();
   const multiple = spaces.length > 1;
+  const isSuperAdmin = spaces.some((space) => space.key === "apps");
   const [adminOpen, setAdminOpen] = useState(!!current);
   const toolsOpenAt = new Date("2026-11-07T06:00:00.000Z").getTime();
   const [toolsVisible, setToolsVisible] = useState(() => Date.now() >= toolsOpenAt);
