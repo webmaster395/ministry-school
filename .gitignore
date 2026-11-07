@@ -39,3 +39,4 @@ CAHIER_DES_CHARGES.md
 
 # Police Etna : licence « usage personnel », ne pas publier
 public/fonts/
+.env*

@@ -44,7 +44,7 @@ function NavLink({
       rel={target === "_blank" ? "noreferrer" : undefined}
       onClick={onNavigate}
       title={collapsed ? label : undefined}
-      className={`flex items-center rounded-[7px] text-[15px] transition ${
+      className={`relative flex items-center rounded-[7px] text-[15px] transition ${
         nested ? "py-2 text-[14px]" : "py-2.5"
       } ${collapsed ? "justify-center px-1.5" : nested ? "gap-[11px] pl-[42px] pr-3" : "gap-[11px] px-3"} ${
         active
@@ -69,6 +69,9 @@ function NavLink({
           {badge}
         </span>
       )}
+      {collapsed && !!badge && badge > 0 && (
+        <span className="absolute right-1.5 top-1.5 h-2.5 w-2.5 rounded-full border-2 border-background bg-[#C43D32]" aria-hidden="true" />
+      )}
     </Link>
   );
 }
@@ -79,7 +82,7 @@ function NavLink({
  */
 export function NavSections({ collapsed = false, onNavigate }: { collapsed?: boolean; onNavigate?: () => void }) {
   const pathname = usePathname();
-  const { spaces, current, pendingValidationCount } = useSpace();
+  const { spaces, current, pendingValidationCount, studentWorkCount } = useSpace();
   const multiple = spaces.length > 1;
   const isSuperAdmin = spaces.some((space) => space.key === "apps");
   const [adminOpen, setAdminOpen] = useState(!!current);
@@ -142,6 +145,7 @@ export function NavSections({ collapsed = false, onNavigate }: { collapsed?: boo
                   icon={item.icon}
                   active={sameRoute(pathname, item.href)}
                   collapsed={collapsed}
+                  badge={item.label === "Travail à faire" ? studentWorkCount : undefined}
                   target={item.target}
                   onNavigate={onNavigate}
                 />

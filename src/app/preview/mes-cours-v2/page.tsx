@@ -16,13 +16,13 @@ export default function CoursesPreviewPage() {
         <span className="rounded-full bg-[#ece9df] px-3 py-1 text-xs">Données de démonstration</span>
       </div>
 
-      <header className="flex flex-wrap items-end justify-between gap-3">
-        <div><p className="text-[13px] text-[#777b77]">Promotion 2026–2027</p><h1 className="mt-0.5 font-serif text-[29px] leading-tight">Mes cours</h1><p className="mt-1 text-sm text-[#777b77]">Ton programme, les informations utiles et le travail à préparer.</p></div>
-        <button className="min-h-10 rounded-full border border-[#d5d3cc] bg-white px-4 text-sm font-semibold">Voir tout le travail à faire</button>
+      <header>
+        <div><p className="text-[13px] text-[#777b77]">Promotion 2026–2027</p><h1 className="mt-0.5 font-serif text-[29px] leading-tight">Mes cours</h1><p className="mt-1 text-sm text-[#777b77]">Ton calendrier, les informations utiles et le travail à préparer.</p></div>
       </header>
 
       <div className="space-y-3">
         <nav className="inline-flex rounded-full bg-[#eae7df] p-1 text-sm font-semibold"><span className="rounded-full bg-[#27302f] px-4 py-2 text-[#fff5dd]">À venir <span className="ml-1 opacity-70">4</span></span><span className="px-4 py-2 text-[#777b77]">Passés <span className="ml-1">12</span></span></nav>
+        <nav className="flex gap-2 overflow-x-auto pb-1 text-[13px]"><span className="shrink-0 rounded-full bg-[#27302f] px-3.5 py-2 text-white">Tous les mois à venir</span>{["Novembre 2026", "Décembre 2026", "Janvier 2027"].map(label => <span key={label} className="shrink-0 rounded-full bg-[#eae7df] px-3.5 py-2 text-[#666b67]">{label}</span>)}</nav>
         <nav className="flex gap-2 overflow-x-auto pb-1 text-[13px]"><span className="shrink-0 rounded-full bg-[#27302f] px-3.5 py-2 text-white">Tous</span>{["Formation du cœur", "Caractère", "Sensibilité ministérielle", "Projet et formation"].map(label => <span key={label} className="shrink-0 rounded-full border border-[#d5d3cc] bg-white px-3.5 py-2 text-[#666b67]">{label}</span>)}</nav>
       </div>
 
@@ -34,7 +34,7 @@ export default function CoursesPreviewPage() {
         </article></li>)}
       </ul>
 
-      <p className="text-center text-xs text-[#777b77]">Les anciens onglets Mes cours et Travail à faire restent conservés pendant la phase de validation.</p>
+      <p className="text-center text-xs text-[#777b77]">Le calendrier est désormais intégré à Mes cours. Le travail détaillé reste accessible dans son onglet dédié.</p>
       <Link href="/" className="mx-auto block w-fit text-sm font-semibold underline underline-offset-4">Quitter l’aperçu</Link>
     </div>
   </main>;

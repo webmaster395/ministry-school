@@ -10,6 +10,8 @@ import WelcomeModal from "@/components/WelcomeModal";
 import MlkEngagementModal from "@/components/MlkEngagementModal";
 import StudentUsageTracker from "@/components/StudentUsageTracker";
 import { getStudentToolsEnabled } from "@/lib/apps/catalog";
+import { createClient } from "@/lib/supabase/server";
+import { getStudentOutstandingWorkCount } from "@/lib/data/student";
 
 export default async function StudentLayout({
   children,
@@ -20,7 +22,11 @@ export default async function StudentLayout({
   if (!viewer) redirect("/login");
   if (viewer?.deactivated) redirect("/auth/desactive");
   const notesEnabled = viewer?.courseNotesEnabled ?? false;
-  const studentToolsEnabled = await getStudentToolsEnabled();
+  const supabase = await createClient();
+  const [studentToolsEnabled, studentWorkCount] = await Promise.all([
+    getStudentToolsEnabled(),
+    getStudentOutstandingWorkCount(supabase, viewer.id),
+  ]);
 
   return (
     <SpaceProvider
@@ -29,6 +35,7 @@ export default async function StudentLayout({
       notesEnabled={notesEnabled}
       studentToolsEnabled={studentToolsEnabled}
       pendingValidationCount={viewer.pendingValidationCount}
+      studentWorkCount={studentWorkCount}
     >
       <StudentUsageTracker />
       <div className="app-shell flex min-h-screen w-full">

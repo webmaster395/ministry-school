@@ -3,7 +3,7 @@ import { Check, ChevronRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import {
   getStudentAllSessions,
-  getStudentAssignments,
+  getStudentProgramAssignments,
   getStudentCompletedIds,
   getStudentProfile,
   getStudentWorkItems,
@@ -14,9 +14,9 @@ import { getMinistry, INK, sessionColor } from "@/lib/ministry";
 import TravailTabs from "@/components/TravailTabs";
 import { toggleAssignment } from "./actions";
 
-type Tab = "prochaine" | "plus-tard" | "termines";
+type Tab = "a-faire" | "termines";
 
-type Assignment = Awaited<ReturnType<typeof getStudentAssignments>>[number];
+type Assignment = Awaited<ReturnType<typeof getStudentProgramAssignments>>[number];
 
 function dueLabels(after: boolean, date: string | null) {
   const primary = after
@@ -33,8 +33,7 @@ export default async function StudentWorkPage({
   searchParams: Promise<{ onglet?: string }>;
 }) {
   const { onglet } = await searchParams;
-  const tab: Tab =
-    onglet === "plus-tard" || onglet === "termines" ? onglet : "prochaine";
+  const tab: Tab = onglet === "termines" ? "termines" : "a-faire";
 
   const supabase = await createClient();
   const {
@@ -46,7 +45,7 @@ export default async function StudentWorkPage({
     getStudentProfile(supabase, user!.id),
     getStudentCompletedIds(supabase, user!.id),
   ]);
-  const assignments = await getStudentAssignments(
+  const assignments = await getStudentProgramAssignments(
     supabase,
     sessions.map((s) => s.id),
   );
@@ -56,28 +55,20 @@ export default async function StudentWorkPage({
   const isDone = (a: Assignment) => doneIds.has(a.id);
   const work = getStudentWorkItems(assignments, sessions);
   const open = work.filter(({ assignment }) => !isDone(assignment));
-  const knownDates = open
-    .map((item) => item.targetDate)
-    .filter((date): date is string => !!date)
-    .sort();
-  const nextDate = knownDates[0] ?? null;
-  const nextDayTodo = open.filter(
-    (item) => item.targetDate === nextDate || item.targetDate === null,
-  );
-  const later = open.filter(
-    (item) => item.targetDate !== null && item.targetDate !== nextDate,
-  );
   const finished = work.filter(({ assignment }) => isDone(assignment));
-  const shown =
-    tab === "prochaine" ? nextDayTodo : tab === "plus-tard" ? later : finished;
+  const shown = tab === "a-faire" ? open : finished;
 
-  // Regroupement par séance, dans l'ordre chronologique
+  // Chaque travail est présenté sous la séance pour laquelle il doit être prêt.
   const groups = new Map<string, typeof shown>();
-  for (const item of shown)
-    groups.set(item.origin.id, [...(groups.get(item.origin.id) ?? []), item]);
+  for (const item of shown) {
+    const key = item.targetDate ?? `sans-date:${item.origin.id}`;
+    groups.set(key, [...(groups.get(key) ?? []), item]);
+  }
   const orderedGroups = [...groups.entries()]
-    .map(([id, items]) => ({
-      session: sessionById.get(id) as StudentSession,
+    .map(([key, items]) => ({
+      session: (key.startsWith("sans-date:")
+        ? sessionById.get(key.replace("sans-date:", ""))
+        : sessions.find((session) => session.session_date === key)) as StudentSession,
       items,
     }))
     .filter((g) => g.session)
@@ -87,29 +78,12 @@ export default async function StudentWorkPage({
         a.session.start_time.localeCompare(b.session.start_time),
     );
 
-  const nextItems = work.filter((item) => item.targetDate === nextDate);
-  const doneOnNextDay = nextItems.filter(({ assignment }) =>
-    isDone(assignment),
-  ).length;
-  const percent = nextItems.length
-    ? (doneOnNextDay / nextItems.length) * 100
-    : 0;
-  const nextSession = nextDate
-    ? sessions.find((s) => s.session_date === nextDate)
-    : null;
-
   const tabs: { key: Tab; label: string; count: number; href: string }[] = [
     {
-      key: "prochaine",
-      label: "Prochaine session",
-      count: nextDayTodo.length,
+      key: "a-faire",
+      label: "À faire",
+      count: open.length,
       href: "/etudiant/travail",
-    },
-    {
-      key: "plus-tard",
-      label: "Plus tard",
-      count: later.length,
-      href: "/etudiant/travail?onglet=plus-tard",
     },
     {
       key: "termines",
@@ -127,29 +101,16 @@ export default async function StudentWorkPage({
 
       <TravailTabs tabs={tabs} active={tab} />
 
-      {tab === "prochaine" && nextSession && (
+      {tab === "a-faire" && open.length > 0 && (
         <section className="flex flex-wrap items-end justify-between gap-6 rounded-lg border border-border bg-background p-6">
           <div>
-            <p className="text-sm text-muted">Prochaine journée</p>
+            <p className="text-sm text-muted">Votre préparation</p>
             <h2 className="font-title mt-1 text-[24px] leading-tight text-foreground">
-              {formatSessionDate(nextSession.session_date)}
+              {open.length} {open.length > 1 ? "travaux" : "travail"} à faire
             </h2>
             <p className="mt-1 text-[15px] text-muted">
-              {nextSession.location} · {nextDayTodo.length} élément
-              {nextDayTodo.length > 1 ? "s" : ""} à préparer
+              Chaque consigne reste visible jusqu’à ce que vous la cochiez.
             </p>
-          </div>
-          <div className="w-full max-w-[240px]">
-            <p className="text-sm font-semibold text-foreground">
-              {doneOnNextDay} sur {nextItems.length} terminé
-              {doneOnNextDay > 1 ? "s" : ""}
-            </p>
-            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-surface">
-              <div
-                className="h-full rounded-full bg-accent"
-                style={{ width: `${percent}%` }}
-              />
-            </div>
           </div>
         </section>
       )}
@@ -187,11 +148,7 @@ export default async function StudentWorkPage({
                   />
                 </Link>
 
-                {tab !== "prochaine" && (
-                  <span className="text-sm text-muted">
-                    {formatSessionDate(s.session_date)}
-                  </span>
-                )}
+                <span className="text-sm text-muted">Pour le {formatSessionDate(s.session_date).toLowerCase()}</span>
               </div>
 
               <ul className="divide-y divide-border-soft">
@@ -245,7 +202,9 @@ export default async function StudentWorkPage({
                           {a.title || a.instructions}
                           </Link>
                           <p className="mt-0.5 text-sm text-muted">
-                            {s.courses?.title ?? s.description ?? "Cours"}
+                            {after
+                              ? `Donné après ${s.courses?.title ?? s.description ?? "le cours précédent"}`
+                              : (s.courses?.title ?? s.description ?? "Cours")}
                             {s.track ? ` · ${s.track}` : ""}
                           </p>
                           {meta.length > 0 && (
@@ -272,9 +231,7 @@ export default async function StudentWorkPage({
           <p className="text-[15px] text-muted">
             {tab === "termines"
               ? "Aucun travail terminé pour le moment."
-              : tab === "plus-tard"
-                ? "Rien de prévu pour les prochaines sessions."
-                : "Rien à préparer pour la prochaine session."}
+              : "Tout est prêt : aucun travail à faire pour le moment."}
           </p>
         </section>
       )}

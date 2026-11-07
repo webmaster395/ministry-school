@@ -18,6 +18,7 @@ type SpaceContext = {
   notesEnabled: boolean;
   studentToolsEnabled: boolean;
   pendingValidationCount: number;
+  studentWorkCount: number;
   /** Les espaces de gestion de la personne ; vide pour un étudiant simple */
   spaces: Space[];
   /** L'espace de gestion de la page ouverte ; null sur les pages étudiant */
@@ -41,6 +42,7 @@ export function SpaceProvider({
   notesEnabled = false,
   studentToolsEnabled = false,
   pendingValidationCount = 0,
+  studentWorkCount = 0,
   children,
 }: {
   roles: ViewerRoles;
@@ -48,6 +50,7 @@ export function SpaceProvider({
   notesEnabled?: boolean;
   studentToolsEnabled?: boolean;
   pendingValidationCount?: number;
+  studentWorkCount?: number;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -125,6 +128,7 @@ export function SpaceProvider({
         notesEnabled,
         studentToolsEnabled,
         pendingValidationCount,
+        studentWorkCount,
         spaces,
         current: shown,
         home,

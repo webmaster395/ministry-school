@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import {
   getStudentAllSessions,
-  getStudentAssignments,
+  getStudentProgramAssignments,
   getStudentCompletedIds,
   studentSessionTrainerNames,
   type StudentSession,
@@ -68,10 +68,17 @@ function hours(start: string, end: string) {
   return `${short(start)} – ${short(end)}`;
 }
 
-function courseHref(period: Period, kind: CourseKind) {
+function monthLabel(value: string) {
+  const date = new Date(`${value}-01T12:00:00`);
+  const label = new Intl.DateTimeFormat("fr-FR", { month: "long", year: "numeric" }).format(date);
+  return label.charAt(0).toUpperCase() + label.slice(1);
+}
+
+function courseHref(period: Period, kind: CourseKind, month = "all") {
   const query = new URLSearchParams();
   if (period === "past") query.set("periode", "passes");
   if (kind !== "all") query.set("type", kind);
+  if (month !== "all") query.set("mois", month);
   const value = query.toString();
   return `/etudiant/cours${value ? `?${value}` : ""}`;
 }
@@ -79,7 +86,7 @@ function courseHref(period: Period, kind: CourseKind) {
 export default async function StudentCoursesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ periode?: string; type?: string }>;
+  searchParams: Promise<{ periode?: string; type?: string; mois?: string }>;
 }) {
   const params = await searchParams;
   const period: Period = params.periode === "passes" ? "past" : "upcoming";
@@ -93,7 +100,7 @@ export default async function StudentCoursesPage({
 
   const sessions = await getStudentAllSessions(supabase, viewer.id);
   const [assignments, completedIds] = await Promise.all([
-    getStudentAssignments(supabase, sessions.map((session) => session.id)),
+    getStudentProgramAssignments(supabase, sessions.map((session) => session.id)),
     getStudentCompletedIds(supabase, viewer.id),
   ]);
 
@@ -101,8 +108,12 @@ export default async function StudentCoursesPage({
   const inPeriod = sessions.filter((session) =>
     period === "past" ? session.session_date < today : session.session_date >= today,
   );
+  const months = [...new Set(inPeriod.map((session) => session.session_date.slice(0, 7)))]
+    .sort((a, b) => period === "past" ? b.localeCompare(a) : a.localeCompare(b));
+  const selectedMonth = params.mois && months.includes(params.mois) ? params.mois : "all";
   const visible = inPeriod
     .filter((session) => requestedKind === "all" || kindOf(session) === requestedKind)
+    .filter((session) => selectedMonth === "all" || session.session_date.startsWith(selectedMonth))
     .sort((a, b) => {
       const order = a.session_date.localeCompare(b.session_date) || a.start_time.localeCompare(b.start_time);
       return period === "past" ? -order : order;
@@ -120,18 +131,12 @@ export default async function StudentCoursesPage({
 
   return (
     <div className="mx-auto max-w-5xl space-y-5 pb-10">
-      <header className="flex flex-wrap items-end justify-between gap-3">
+      <header>
         <div>
           <p className="text-[13px] font-medium text-muted">Promotion {PROMOTION}</p>
           <h1 className="mt-0.5 font-title text-[25px] leading-tight text-foreground sm:text-[29px]">Mes cours</h1>
           <p className="mt-1 text-[14px] text-muted">Ton programme, les informations utiles et le travail à préparer.</p>
         </div>
-        <Link
-          href="/etudiant/travail"
-          className="inline-flex min-h-10 items-center rounded-full border border-border bg-background px-4 text-[14px] font-semibold text-foreground transition hover:border-foreground"
-        >
-          Voir tout le travail à faire
-        </Link>
       </header>
 
       <div className="sticky top-0 z-10 -mx-4 space-y-3 border-y border-border-soft bg-[color:var(--background)]/95 px-4 py-3 backdrop-blur sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:px-0 sm:py-0">
@@ -150,11 +155,29 @@ export default async function StudentCoursesPage({
           </Link>
         </nav>
 
+        <nav aria-label="Mois" className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:px-0">
+          <Link
+            href={courseHref(period, requestedKind)}
+            className={`inline-flex min-h-9 shrink-0 items-center rounded-full px-3.5 text-[13px] font-semibold transition ${selectedMonth === "all" ? "bg-accent text-on-accent" : "bg-surface text-muted hover:text-foreground"}`}
+          >
+            {period === "past" ? "Tous les mois passés" : "Tous les mois à venir"}
+          </Link>
+          {months.map((month) => (
+            <Link
+              key={month}
+              href={courseHref(period, requestedKind, month)}
+              className={`inline-flex min-h-9 shrink-0 items-center rounded-full px-3.5 text-[13px] font-semibold transition ${selectedMonth === month ? "bg-accent text-on-accent" : "bg-surface text-muted hover:text-foreground"}`}
+            >
+              {monthLabel(month)}
+            </Link>
+          ))}
+        </nav>
+
         <nav aria-label="Type de cours" className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:flex-wrap sm:px-0">
           {COURSE_KINDS.map((item) => (
             <Link
               key={item.key}
-              href={courseHref(period, item.key)}
+              href={courseHref(period, item.key, selectedMonth)}
               className={`inline-flex min-h-9 shrink-0 items-center rounded-full border px-3.5 text-[13px] font-medium transition ${requestedKind === item.key ? "border-foreground bg-foreground text-background" : "border-border bg-background text-muted hover:border-foreground/40 hover:text-foreground"}`}
             >
               {item.label}
@@ -229,7 +252,7 @@ export default async function StudentCoursesPage({
       ) : (
         <section className="rounded-2xl border border-dashed border-border bg-background px-6 py-12 text-center">
           <p className="text-[15px] font-medium text-foreground">Aucun cours {period === "past" ? "passé" : "à venir"} dans cette catégorie.</p>
-          <Link href={courseHref(period, "all")} className="mt-3 inline-flex text-[14px] font-semibold text-foreground underline underline-offset-4">Afficher tous les cours</Link>
+          <Link href={courseHref(period, "all", selectedMonth)} className="mt-3 inline-flex text-[14px] font-semibold text-foreground underline underline-offset-4">Afficher tous les cours</Link>
         </section>
       )}
     </div>

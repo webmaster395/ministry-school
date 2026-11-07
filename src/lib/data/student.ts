@@ -448,6 +448,21 @@ export async function getStudentCompletedIds(
   return new Set((data ?? []).map((c) => c.assignment_id as string));
 }
 
+/** Nombre de travaux encore à faire, partagé par la page et la pastille du menu. */
+export async function getStudentOutstandingWorkCount(
+  supabase: SupabaseClient,
+  userId: string,
+) {
+  const sessions = await getStudentAllSessions(supabase, userId);
+  const [assignments, completedIds] = await Promise.all([
+    getStudentProgramAssignments(supabase, sessions.map((session) => session.id)),
+    getStudentCompletedIds(supabase, userId),
+  ]);
+  return getStudentWorkItems(assignments, sessions).filter(
+    ({ assignment }) => !completedIds.has(assignment.id),
+  ).length;
+}
+
 export type StudentCourse = {
   id: string;
   title: string;

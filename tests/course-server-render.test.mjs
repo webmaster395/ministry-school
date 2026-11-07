@@ -25,7 +25,7 @@ test("les pages de cours réutilisent le viewer vérifié sans second appel Auth
   }
 });
 
-test("Mes cours présente une liste compacte filtrable sans supprimer Travail à faire", async () => {
+test("Mes cours réunit le calendrier et conserve Travail à faire dans la navigation", async () => {
   const courses = await source("src/app/etudiant/cours/page.tsx");
   const navigation = await source("src/lib/nav.tsx");
 
@@ -35,10 +35,12 @@ test("Mes cours présente une liste compacte filtrable sans supprimer Travail à
   assert.match(courses, /Caractère/);
   assert.match(courses, /Sensibilité ministérielle/);
   assert.match(courses, /Projet et formation/);
-  assert.match(courses, /href="\/etudiant\/travail"/);
+  assert.match(courses, /aria-label="Mois"/);
+  assert.match(courses, /Tous les mois à venir/);
   assert.match(courses, /visible\.map\(\(session\)/);
   assert.match(navigation, /label: "Mes cours"/);
   assert.match(navigation, /label: "Travail à faire"/);
+  assert.doesNotMatch(navigation, /label: "Calendrier"/);
 });
 
 test("la page de séance dérive les permissions du même contexte sécurisé", async () => {
