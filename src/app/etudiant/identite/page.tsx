@@ -24,6 +24,14 @@ function buildStories(tools: CatalogApp[]): IdentityStoryGroup[] {
     if (tool.slug === "generopoly") finance.push(...toolItems(tool));
     if (tool.slug === "profil-mapp" || tool.slug === "je-suis-par-la-grace-de-dieu") identity.push(...toolItems(tool));
   }
+  // Ces deux outils structurent Mon identité. Les stories doivent rester
+  // visibles même pendant une modification de leur publication au catalogue.
+  if (!identity.some((item) => item.name === "Profil MAPP")) {
+    identity.unshift({ key: "profil-mapp", name: "Profil MAPP", href: "/apps/profil-mapp", iconUrl: null });
+  }
+  if (!finance.some((item) => item.name === "Généropoly")) {
+    finance.unshift({ key: "generopoly", name: "Généropoly", href: "/apps/generopoly", iconUrl: null });
+  }
   const groups: IdentityStoryGroup[] = [
     { key: "identity", label: "Identité", image: "/identity/stories/identity-v2.webp", items: identity },
     { key: "finance", label: "Finance", image: "/identity/stories/finance-v2.webp", items: finance },
