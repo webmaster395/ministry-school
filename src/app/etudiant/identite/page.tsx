@@ -5,7 +5,6 @@ import { getOfficialMappIdentityResults } from "@/lib/mapp/official-results";
 import IdentityExperience, { type IdentityStoryGroup, type IdentityStoryItem } from "./IdentityExperience";
 import { isMappGuestOpen } from "@/lib/mapp/access-window";
 import { redirect } from "next/navigation";
-import { GuestMappAutoClaim } from "./GuestMappAutoClaim";
 
 export const dynamic = "force-dynamic";
 
@@ -94,7 +93,7 @@ export default async function StudentIdentityPage() {
   const allResults = [...officialMappResults, ...nonMappIdentityResults, ...dashboard.financeResults]
     .sort((left, right) => new Date(right.completedAt).getTime() - new Date(left.completedAt).getTime());
   const completedKinds = new Set(allResults.map((result) => result.kind));
-  return <><GuestMappAutoClaim /><IdentityExperience
+  return <IdentityExperience
     fullName={viewer.fullName || dashboard.profile.firstName || "Mon identité"}
     status={accountStatus(dashboard.profile.gender)}
     avatarUrl={viewer.avatarUrl}
@@ -104,5 +103,5 @@ export default async function StudentIdentityPage() {
     stories={buildStories(tools)}
     results={allResults}
     upcoming={buildUpcoming(tools, completedKinds)}
-  /></>;
+  />;
 }
