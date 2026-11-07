@@ -80,6 +80,20 @@
   font-size: 13px;
 }
 
+.certifiedStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.certifiedStatus svg {
+  width: 17px;
+  height: 17px;
+  fill: #1d9bf0;
+  color: #fff;
+  stroke-width: 3;
+}
+
 .metrics {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -625,9 +639,10 @@
 
   .nameLine {
     grid-column: 2;
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 5px;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 7px;
     margin-top: 4px;
   }
 

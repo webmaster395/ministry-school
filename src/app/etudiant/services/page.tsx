@@ -123,14 +123,17 @@ export default async function ServicesPage({
           {shown.map((o) => {
             const places = placesLabel(o, taken(o));
             const organizer = o.organizer_label ?? o.services?.name;
+            const type = opportunityType(o);
+            const accent = type === "projet" ? "var(--f-projet)" : type === "formation" ? "var(--f-coeur)" : "var(--f-sensibilite)";
             return (
               <li key={o.id}>
                 <Link
                   href={`/etudiant/services/${o.id}`}
-                  className="group grid gap-3 border-b border-border-soft p-4 transition last:border-0 hover:bg-surface/60 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:px-5"
+                  className="group grid gap-3 border-b border-l-4 border-border-soft p-4 transition last:border-b-0 hover:brightness-[.985] sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:px-5"
+                  style={{ borderLeftColor: accent, background: `color-mix(in srgb, ${accent} 5%, var(--background))` }}
                 >
                   <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-2"><span className="rounded-full bg-surface px-2.5 py-1 text-[11px] font-semibold">{TYPE_LABEL[opportunityType(o)]}</span><span className="text-[12px] font-semibold text-muted">
+                    <div className="flex flex-wrap items-center gap-2"><span className="grid h-8 w-8 place-items-center rounded-xl text-[17px]" style={{ background: `color-mix(in srgb, ${accent} 18%, white)` }}>{o.banner_emoji || (type === "formation" ? "✦" : "◆")}</span><span className="rounded-full px-2.5 py-1 text-[11px] font-semibold" style={{ color: accent, background: `color-mix(in srgb, ${accent} 13%, white)` }}>{TYPE_LABEL[type]}</span><span className="text-[12px] font-semibold text-muted">
                       {mine.has(o.id) && status(o) !== "termine" ? "Inscrit" : status(o) === "disponible" ? "M’inscrire" : STATUS_LABEL[status(o)]}
                     </span></div>
                     <h2 className="mt-2 text-[17px] font-semibold text-foreground">{o.title}</h2>

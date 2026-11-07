@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
+  BadgeCheck,
   BookOpen,
   Clock3,
   Grid3X3,
@@ -190,7 +191,7 @@ export default function IdentityExperience(props: Props) {
           <p className={styles.eyebrow}>Mon espace personnel</p>
           <div className={styles.nameLine}>
             <h1>{firstName}</h1>
-            <span>{props.status}</span>
+            <span className={styles.certifiedStatus}>{props.status}<BadgeCheck aria-label="Profil certifié" /></span>
           </div>
           <div className={styles.metrics} aria-label="Mes statistiques Ministry School">
             <div><strong>{props.studentCount}</strong><span>Étudiants à mes côtés</span></div>

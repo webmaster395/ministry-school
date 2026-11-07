@@ -38,7 +38,8 @@ test("la page reprend le profil, les stories, les onglets et les résultats rée
   const experience = read("src/app/etudiant/identite/IdentityExperience.tsx");
 
   assert.match(page, /fullName=\{viewer\.fullName/);
-  assert.match(page, /status=\{accountStatus\(viewer\.role/);
+  assert.match(page, /status=\{accountStatus\(dashboard\.profile\.gender\)\}/);
+  assert.match(page, /"Aimée"[\s\S]*?"Aimé"/);
   assert.match(page, /buildStories\(tools\)/);
   assert.doesNotMatch(page, /key: "recommendations"/);
   assert.match(page, /buildUpcoming\(tools, completedKinds\)/);

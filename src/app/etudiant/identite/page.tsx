@@ -46,9 +46,8 @@ function monthsTogether(memberSince: string | null) {
   return Math.max(0, (now.getUTCFullYear() - start.getUTCFullYear()) * 12 + now.getUTCMonth() - start.getUTCMonth());
 }
 
-function accountStatus(role: "student" | "admin", gender: "homme" | "femme" | null | undefined) {
-  if (role === "admin") return gender === "femme" ? "Administratrice" : gender === "homme" ? "Administrateur" : "Administration";
-  return gender === "femme" ? "Étudiante" : gender === "homme" ? "Étudiant" : "Étudiant·e";
+function accountStatus(gender: "homme" | "femme" | null | undefined) {
+  return gender === "femme" ? "Aimée" : gender === "homme" ? "Aimé" : "Aimé·e";
 }
 
 function resultKindForItem(item: IdentityStoryItem) {
@@ -87,7 +86,7 @@ export default async function StudentIdentityPage() {
   const completedKinds = new Set(allResults.map((result) => result.kind));
   return <IdentityExperience
     fullName={viewer.fullName || dashboard.profile.firstName || "Mon identité"}
-    status={accountStatus(viewer.role, dashboard.profile.gender)}
+    status={accountStatus(dashboard.profile.gender)}
     avatarUrl={viewer.avatarUrl}
     studentCount={dashboard.metrics.studentCount}
     months={monthsTogether(dashboard.profile.memberSince)}
