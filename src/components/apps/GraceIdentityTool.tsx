@@ -13,9 +13,9 @@ const testMeta: Record<GraceTestKey, { title: string; text: string; icon: typeof
   skills: { title: "Mes compétences naturelles", text: "Identifie les compétences que tu aimes utiliser naturellement.", icon: Lightbulb },
 };
 
-export default function GraceIdentityTool({ initial, preview }: { initial: RecordRow[]; preview: boolean }) {
+export default function GraceIdentityTool({ initial, preview, initialTest = null }: { initial: RecordRow[]; preview: boolean; initialTest?: GraceTestKey | null }) {
   const [records, setRecords] = useState<RecordRow[]>(initial);
-  const [active, setActive] = useState<GraceTestKey | null>(null);
+  const [active, setActive] = useState<GraceTestKey | null>(() => initialTest && initial.some((item) => item.test_key === initialTest && item.completed_at) ? initialTest : null);
   const [saving, setSaving] = useState(false);
   const byKey = useMemo(() => new Map(records.map((item) => [item.test_key, item])), [records]);
   const save = async (testKey: GraceTestKey, answers: Record<string, unknown>, close = true) => {

@@ -7,9 +7,7 @@ import {
   ArrowRight,
   BookOpen,
   Clock3,
-  Compass,
   Grid3X3,
-  Lightbulb,
   Network,
   Sparkles,
   X,
@@ -57,10 +55,30 @@ const mappImages: Record<string, string> = {
 };
 
 const resultContent = {
-  gifts: { eyebrow: "Je suis ce que je suis", title: "Dons spirituels", icon: Sparkles },
-  skills: { eyebrow: "Je suis ce que je suis", title: "Compétences naturelles", icon: Lightbulb },
-  generopoly: { eyebrow: "Généropoly", title: "Mon profil financier", icon: Compass },
   apest: { eyebrow: "Profil APEST", title: "Mon profil APEST", icon: Network },
+} as const;
+
+const resultArtwork = {
+  fruit: {
+    title: "Fruit de l’Esprit",
+    image: "/identity/posts/fruit-de-lesprit.png",
+    href: "/apps/je-suis-par-la-grace-de-dieu?test=fruit",
+  },
+  gifts: {
+    title: "Dons spirituels",
+    image: "/identity/posts/dons-spirituels.webp",
+    href: "/apps/je-suis-par-la-grace-de-dieu?test=gifts",
+  },
+  skills: {
+    title: "Compétences naturelles",
+    image: "/identity/posts/competences-naturelles.webp",
+    href: "/apps/je-suis-par-la-grace-de-dieu?test=skills",
+  },
+  generopoly: {
+    title: "Généropoly",
+    image: "/identity/posts/generopoly.webp",
+    href: "/apps/generopoly",
+  },
 } as const;
 
 function ResultPost({ result }: { result: IdentityResult }) {
@@ -85,13 +103,14 @@ function ResultPost({ result }: { result: IdentityResult }) {
     );
   }
 
-  if (result.kind === "fruit") {
+  if (result.kind in resultArtwork) {
+    const artwork = resultArtwork[result.kind as keyof typeof resultArtwork];
     return (
-      <Link className={`${styles.post} ${styles.imagePost}`} href="/apps/je-suis-par-la-grace-de-dieu" aria-label="Ouvrir mon résultat Fruit de l’Esprit">
+      <Link className={`${styles.post} ${styles.imagePost}`} href={artwork.href} aria-label={`Ouvrir mon résultat ${artwork.title}`}>
         <Image
           className={styles.postImage}
-          src="/identity/posts/fruit-de-lesprit.png"
-          alt="Fruit de l’Esprit"
+          src={artwork.image}
+          alt={artwork.title}
           fill
           sizes="(max-width: 767px) 33vw, 320px"
         />
@@ -99,13 +118,10 @@ function ResultPost({ result }: { result: IdentityResult }) {
     );
   }
 
-  const content = resultContent[result.kind];
+  const content = resultContent.apest;
   const Icon = content.icon;
-  const href = result.kind === "gifts" || result.kind === "skills"
-    ? "/apps/je-suis-par-la-grace-de-dieu"
-    : result.kind === "generopoly" ? "/apps/generopoly" : "/apps";
   return (
-    <Link className={`${styles.post} ${styles.editorialPost}`} href={href} aria-label={`Ouvrir ${content.title}`}>
+    <Link className={`${styles.post} ${styles.editorialPost}`} href="/apps" aria-label={`Ouvrir ${content.title}`}>
       <span className={styles.postPattern} aria-hidden="true" />
       <span className={styles.postIcon} aria-hidden="true"><Icon /></span>
       <span className={styles.postCopy}>
