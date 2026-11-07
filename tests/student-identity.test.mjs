@@ -37,7 +37,8 @@ test("la page reprend le profil, les stories, les onglets et les résultats rée
 
   assert.match(page, /fullName=\{viewer\.fullName/);
   assert.match(page, /status=\{accountStatus\(viewer\.role/);
-  assert.match(page, /buildStories\(tools, dashboard\.recommendations\)/);
+  assert.match(page, /buildStories\(tools\)/);
+  assert.doesNotMatch(page, /key: "recommendations"/);
   assert.match(page, /buildUpcoming\(tools, completedKinds\)/);
   assert.match(page, /seenKinds/);
   assert.match(experience, /Mes résultats/);
@@ -45,6 +46,12 @@ test("la page reprend le profil, les stories, les onglets et les résultats rée
   assert.match(experience, /props\.stories\.map/);
   assert.match(experience, /Les résultats apparaîtront après la finalisation d’un test/);
   assert.match(experience, /result\.attemptId[\s\S]*\/apps\/profil-mapp\/test\/\$\{result\.attemptId\}\/resultat/);
+  assert.match(experience, /competences-naturelles\.webp/);
+  assert.match(experience, /dons-spirituels\.webp/);
+  assert.match(experience, /generopoly\.webp/);
+  assert.match(experience, /\?test=fruit/);
+  assert.match(experience, /\?test=gifts/);
+  assert.match(experience, /\?test=skills/);
   assert.doesNotMatch(experience, /Certifié/);
   assert.doesNotMatch(experience, /Retrouve les réponses et résultats enregistrés par l’outil/);
 });

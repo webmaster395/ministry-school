@@ -17,7 +17,7 @@ function toolItems(tool: CatalogApp): IdentityStoryItem[] {
   return [{ key: tool.id, name: tool.name, href: tool.url, iconUrl: tool.iconUrl }];
 }
 
-function buildStories(tools: CatalogApp[], recommendations: Array<{ id: string; title: string; href: string }>): IdentityStoryGroup[] {
+function buildStories(tools: CatalogApp[]): IdentityStoryGroup[] {
   const identity: IdentityStoryItem[] = [];
   const finance: IdentityStoryItem[] = [];
   for (const tool of tools) {
@@ -25,9 +25,8 @@ function buildStories(tools: CatalogApp[], recommendations: Array<{ id: string; 
     if (tool.slug === "profil-mapp" || tool.slug === "je-suis-par-la-grace-de-dieu") identity.push(...toolItems(tool));
   }
   const groups: IdentityStoryGroup[] = [
-    { key: "identity", label: "Identité", image: "/identity/stories/identity.webp", items: identity },
-    { key: "finance", label: "Finance", image: "/identity/stories/finance.webp", items: finance },
-    { key: "recommendations", label: "Recommandations", image: "/identity/stories/recommendations.webp", items: recommendations.map((item) => ({ key: item.id, name: item.title, href: item.href, iconUrl: null })) },
+    { key: "identity", label: "Identité", image: "/identity/stories/identity-v2.webp", items: identity },
+    { key: "finance", label: "Finance", image: "/identity/stories/finance-v2.webp", items: finance },
   ];
   return groups.filter((group) => group.items.length > 0);
 }
@@ -85,7 +84,7 @@ export default async function StudentIdentityPage() {
     studentCount={dashboard.metrics.studentCount}
     months={monthsTogether(dashboard.profile.memberSince)}
     completedTests={dashboard.metrics.completedTests}
-    stories={buildStories(tools, dashboard.recommendations)}
+    stories={buildStories(tools)}
     results={results}
     upcoming={buildUpcoming(tools, completedKinds)}
   /></>;
