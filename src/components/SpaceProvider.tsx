@@ -13,8 +13,6 @@ import type { ViewerRoles } from "@/lib/roles";
 
 type SpaceContext = {
   roles: ViewerRoles;
-  /** Messages non lus, pour les pastilles du menu et l'onglet Messagerie */
-  unread: number;
   notesEnabled: boolean;
   studentToolsEnabled: boolean;
   pendingValidationCount: number;
@@ -38,7 +36,6 @@ const STORAGE_KEY = "space";
  */
 export function SpaceProvider({
   roles,
-  unread = 0,
   notesEnabled = false,
   studentToolsEnabled = false,
   pendingValidationCount = 0,
@@ -46,7 +43,6 @@ export function SpaceProvider({
   children,
 }: {
   roles: ViewerRoles;
-  unread?: number;
   notesEnabled?: boolean;
   studentToolsEnabled?: boolean;
   pendingValidationCount?: number;
@@ -124,7 +120,6 @@ export function SpaceProvider({
     <Ctx.Provider
       value={{
         roles,
-        unread,
         notesEnabled,
         studentToolsEnabled,
         pendingValidationCount,

@@ -15,7 +15,6 @@ const tabLabels: Record<string, string> = {
   programme: "Programme",
   membres: "Membres",
   permissions: "Permissions",
-  notifications: "Notifications",
 };
 
 const pageLabels: Record<string, string> = {

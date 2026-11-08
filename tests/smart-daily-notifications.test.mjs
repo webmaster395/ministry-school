@@ -69,14 +69,12 @@ test("l'ordonnanceur suit les réglages persistés et le fuseau Europe Paris", (
   assert.match(migration, /select public\.create_notification_digest\(now\(\)\)/);
 });
 
-test("l'interface détail regroupe les nouveautés par cours", () => {
+test("l'interface détail des notifications est désactivée", () => {
   const page = source("src/app/etudiant/messages/[id]/page.tsx");
   const data = source("src/lib/data/messages.ts");
   assert.match(migration, /'courseTitle'/);
   assert.match(migration, /'typeLabel'/);
   assert.match(data, /courseTitle/);
-  assert.match(page, /details\.items\.reduce/);
-  assert.match(page, /Nouveautés disponibles/);
-  assert.match(page, /Accéder à mes cours/);
-  assert.doesNotMatch(page, /À traiter|Validation demandée|Du nouveau dans Ministry School/);
+  assert.match(page, /redirect\("\/etudiant"\)/);
+  assert.doesNotMatch(page, /details\.items\.reduce|Nouveautés disponibles|Accéder à mes cours/);
 });

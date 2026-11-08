@@ -6,12 +6,12 @@ import { useSpace } from "@/components/SpaceProvider";
 import { profileTabs } from "@/lib/nav";
 
 /**
- * Les onglets de l'espace Profil (profil, messagerie et, pour un étudiant simple, une question).
+ * Les onglets de l'espace Profil.
  * Chaque onglet reste une page à part : seule la barre est commune.
  */
 export default function ProfileTabs() {
   const pathname = usePathname();
-  const { roles, unread } = useSpace();
+  const { roles } = useSpace();
   const tabs = profileTabs(roles);
 
   return (
@@ -31,7 +31,6 @@ export default function ProfileTabs() {
           }`}
         >
           {tab.label}
-          {tab.href === "/etudiant/messages" && unread > 0 ? ` (${unread})` : ""}
         </Link>
       ))}
     </nav>

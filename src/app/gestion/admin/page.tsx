@@ -11,11 +11,9 @@ import { getViewer } from "@/lib/data/viewer";
 import { redirect } from "next/navigation";
 import AdminHome from "@/components/admin/AdminHome";
 import AdminPilotageSummary from "@/components/admin/AdminPilotageSummary";
-import NotificationSettingsForm from "@/components/admin/NotificationSettingsForm";
-import { getNotificationDigestSettings } from "@/lib/data/notification-settings";
 import ManagementPageHeader from "@/components/management/ManagementPageHeader";
 
-const VALID_TABS = ["pilotage", "vue", "statistiques", "programme", "membres", "permissions", "roles", "notifications"];
+const VALID_TABS = ["pilotage", "vue", "statistiques", "programme", "membres", "permissions", "roles"];
 
 type Params = {
   onglet?: string;
@@ -126,9 +124,6 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           projectsTrainingAccess={viewer.roles.projectsTraining}
           ministryAccess={viewer.roles.steeringMinistryIds.length > 0}
         />
-      )}
-      {tab === "notifications" && (
-        <NotificationSettingsForm settings={await getNotificationDigestSettings(supabase)} />
       )}
     </div>
   );

@@ -29,9 +29,9 @@ test("le récapitulatif hebdomadaire est configurable et idempotent", () => {
   assert.match(notificationSource, /pg_try_advisory_xact_lock/);
 });
 
-test("la messagerie rend la destination sous forme de bouton", () => {
-  assert.match(messageSource, /href=\{m\.targetUrl\}/);
-  assert.match(messageSource, /m\.ctaLabel \|\| "Voir le contenu"/);
+test("la messagerie étudiante est désactivée", () => {
+  assert.match(messageSource, /redirect\("\/etudiant"\)/);
+  assert.doesNotMatch(messageSource, /targetUrl|ctaLabel|Tout marquer comme lu/);
 });
 
 test("Ton parcours est placé avant le contenu et les ancres existent", () => {

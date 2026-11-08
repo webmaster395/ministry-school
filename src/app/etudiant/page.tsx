@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Bell, ChevronRight, FileText, Video } from "lucide-react";
+import { ChevronRight, FileText, Video } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import {
   getStudentProgramAssignments,
@@ -9,9 +9,7 @@ import {
 } from "@/lib/data/student";
 import { formatSessionDate, formatTimeRange } from "@/lib/format";
 import SessionTypeBadge from "@/components/SessionTypeBadge";
-import { getStudentMessages, messagePreview, shortDate } from "@/lib/data/messages";
 import { getMinistry, INK, sessionColor } from "@/lib/ministry";
-import { markNotificationsSeen } from "./actions";
 import { getViewer } from "@/lib/data/viewer";
 
 export default async function StudentDashboardPage() {
@@ -21,16 +19,6 @@ export default async function StudentDashboardPage() {
     viewer!.ministryId,
     viewer!.preferredDay,
   );
-
-  // Messages des enseignants uniquement : le travail à faire a sa propre carte et sa propre page
-  const messages = await getStudentMessages(supabase, viewer!.notificationsSeenAt, {
-    arrival: viewer!.profileCreatedAt,
-    // La Home n'affiche qu'un aperçu. Une petite marge conserve le message de bienvenue
-    // personnalisé sans charger toute la messagerie.
-    limit: 10,
-  });
-  const newCount = messages.filter((m) => m.isNew).length;
-  const preview = messages.slice(0, 1);
 
   // Date du jour à Paris (et non en UTC), pour que le décompte change bien à minuit heure de Paris
   const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris" }).format(new Date());
@@ -216,76 +204,6 @@ export default async function StudentDashboardPage() {
       </section>
 
       <div className="space-y-4">
-        <section className="rounded-lg border border-border bg-background p-4 sm:p-5">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2.5">
-              <h2 className="font-title text-[19px] text-foreground">Messages</h2>
-              {newCount > 0 && (
-                <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-m-doctoral px-1.5 text-xs font-semibold text-white">
-                  {newCount}
-                </span>
-              )}
-            </div>
-            <Bell size={20} strokeWidth={1.6} className="text-muted" aria-hidden="true" />
-          </div>
-
-          {preview.length ? (
-            <ul className="mt-3 divide-y divide-border-soft border-t border-border-soft">
-              {preview.map((m) => (
-                <li key={m.id}>
-                  <Link href="/etudiant/messages" className="group flex items-start gap-3 py-3">
-                    <span
-                      className={`relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
-                        m.isNew ? "bg-accent text-on-accent" : "bg-surface text-muted"
-                      }`}
-                    >
-                      <Bell size={18} strokeWidth={1.7} />
-                      {m.isNew && (
-                        <span
-                          aria-label="Nouveau message"
-                          className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full border-2 border-background bg-m-doctoral"
-                        />
-                      )}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span
-                        className={`block text-[15px] leading-snug text-foreground ${
-                          m.isNew ? "font-semibold" : "font-medium"
-                        }`}
-                      >
-                        {m.title}
-                      </span>
-                      <span className="mt-0.5 line-clamp-2 text-sm text-muted">{messagePreview(m.body, 130)}</span>
-                      <span className="mt-1.5 block text-xs text-muted">
-                        {m.by ? `${m.by} · ` : "L'équipe Ministry School · "}
-                        {shortDate(m.at)}
-                      </span>
-                    </span>
-                    <ChevronRight size={16} className="mt-1 shrink-0 text-muted transition group-hover:text-foreground" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="mt-4 border-t border-border-soft pt-4 text-[15px] text-muted">
-              Aucun message pour le moment.
-            </p>
-          )}
-
-          <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-            <Link href="/etudiant/messages" className="text-sm font-medium text-foreground hover:underline">
-              Voir tous les messages →
-            </Link>
-            {newCount > 0 && (
-              <form action={markNotificationsSeen}>
-                <button type="submit" className="text-[13px] text-muted transition hover:text-foreground">
-                  Tout marquer comme lu
-                </button>
-              </form>
-            )}
-          </div>
-        </section>
-
         <section className="rounded-lg border border-border bg-background p-4 sm:p-5">
           <div className="flex items-start justify-between gap-3">
             <div>

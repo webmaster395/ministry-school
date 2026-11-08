@@ -14,7 +14,6 @@ const TITLES: Record<string, string> = {
   "/gestion/pilotage": "Pilotage ministériel",
   "/etudiant/calendrier": "Mon calendrier",
   "/etudiant/formation": "Mon ministère",
-  "/etudiant/messages": "Messagerie",
   "/etudiant/profil": "Profil",
   "/etudiant/preferences": "Préférences",
   "/enseignant/calendrier": "Mon calendrier",
@@ -41,7 +40,6 @@ const ADMIN_TABS: Record<string, string> = {
   membres: "Membres",
   permissions: "Permissions",
   roles: "Permissions",
-  notifications: "Notifications",
 };
 
 /**

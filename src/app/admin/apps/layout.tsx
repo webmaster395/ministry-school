@@ -13,7 +13,7 @@ export default async function AppsAdminLayout({ children }: { children: React.Re
   if (viewer.deactivated) redirect("/auth/desactive");
   if (!viewer.roles.superAdmin) redirect("/etudiant");
   const studentToolsEnabled = await getStudentToolsEnabled();
-  return <SpaceProvider roles={viewer.roles} unread={viewer.unreadMessages} studentToolsEnabled={studentToolsEnabled} pendingValidationCount={viewer.pendingValidationCount}>
+  return <SpaceProvider roles={viewer.roles} studentToolsEnabled={studentToolsEnabled} pendingValidationCount={viewer.pendingValidationCount}>
     <div className="app-shell flex min-h-screen w-full">
       <Sidebar fullName={viewer.fullName} avatarUrl={viewer.avatarUrl} ministrySlug={viewer.ministrySlug} />
       <div className="flex min-h-screen min-w-0 flex-1 flex-col bg-surface">

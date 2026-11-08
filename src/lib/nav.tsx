@@ -113,13 +113,11 @@ export const validationNavItem: NavItem = {
 export type ProfileTab = { label: string; href: string };
 
 /**
- * Les onglets de l'espace Profil : le profil, la messagerie et, pour un étudiant simple,
- * la question à l'administration. Ils rassemblent des pages qui n'ont plus d'entrée de menu.
+ * Les onglets de l'espace Profil. La messagerie et les notifications sont désactivées.
  */
 export function profileTabs(roles: ViewerRoles): ProfileTab[] {
   const tabs: ProfileTab[] = [
     { label: "Profil", href: "/etudiant/profil" },
-    { label: "Messagerie", href: "/etudiant/messages" },
     { label: "Préférences", href: "/etudiant/preferences" },
   ];
   if (QUESTIONS_ENABLED && isPlainStudent(roles))

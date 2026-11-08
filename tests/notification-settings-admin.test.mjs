@@ -4,16 +4,15 @@ import test from "node:test";
 
 const source = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("Notifications est la huitième carte réservée aux super admins", async () => {
+test("Notifications n'est plus visible dans l'administration", async () => {
   const [home, page] = await Promise.all([
     source("src/components/admin/AdminHome.tsx"),
     source("src/app/gestion/admin/page.tsx"),
   ]);
   assert.match(home, /viewer\.roles\.superAdmin \? \[/);
-  assert.match(home, /title: "Notifications"/);
-  assert.match(home, /onglet=notifications/);
+  assert.doesNotMatch(home, /title: "Notifications"|onglet=notifications/);
   assert.match(page, /!viewer\.roles\.superAdmin && !\["accueil", "pilotage"\]\.includes\(tab\)/);
-  assert.match(page, /NotificationSettingsForm/);
+  assert.doesNotMatch(page, /NotificationSettingsForm|onglet=notifications/);
 });
 
 test("l'action et les RPC répètent le contrôle Super admin", async () => {

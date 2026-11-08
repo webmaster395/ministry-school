@@ -31,7 +31,6 @@ export default async function StudentLayout({
   return (
     <SpaceProvider
       roles={viewer.roles}
-      unread={viewer.unreadMessages}
       notesEnabled={notesEnabled}
       studentToolsEnabled={studentToolsEnabled}
       pendingValidationCount={viewer.pendingValidationCount}
