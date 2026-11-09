@@ -74,7 +74,7 @@ export const spiritualGiftsV2: SpiritualGift[] = [
     palette: { background: "#4D2577", foreground: "#E7B6FF" },
     questions: [
       { id: "miracles_1", dimension: "reflexe", text: "Face à une situation qui semble humainement impossible, as-tu spontanément le réflexe de prier pour que Dieu accomplisse un miracle ?" },
-      { id: "miracles_2", dimension: "disponibilite", text: "Lorsque tu pries pour un miracle, te sens-tu disponible pour que Dieu agisse à travers toi ?" },
+      { id: "miracles_2", dimension: "disponibilite", text: "T’arrive-t-il de prier avec foi pour que Dieu accomplisse un miracle à travers toi ?" },
       { id: "miracles_3", dimension: "reconnaissance", text: "Lorsque tu es témoin d’un miracle, prends-tu le temps de remercier Dieu et de lui rendre gloire ?" },
       { id: "miracles_4", dimension: "sollicitation", text: "Des personnes viennent-elles spontanément te demander de prier pour des situations qui semblent sans issue ?" },
       { id: "miracles_5", dimension: "experience", text: "As-tu déjà prié pour une situation et assisté à un événement que tu considères comme un miracle de Dieu ?" },
