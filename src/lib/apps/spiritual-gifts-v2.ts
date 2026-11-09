@@ -1,136 +1,124 @@
 export const giftScaleLabels = ["Jamais", "Très rarement", "Rarement", "Parfois", "Souvent", "Très souvent"] as const;
 
+export type SpiritualGiftQuestion = { id: string; dimension: string; text: string; insight: string };
 export type SpiritualGift = {
   id: string;
   name: string;
   definition: string;
   challenge: string;
   palette: { background: string; foreground: string };
-  questions: Array<{ id: string; dimension: string; text: string }>;
+  evidenceDimensions: string[];
+  questions: SpiritualGiftQuestion[];
 };
 
 export const spiritualGiftsV2: SpiritualGift[] = [
   {
-    id: "discernement_esprits",
-    name: "Discernement des esprits",
+    id: "discernement", name: "Discernement des esprits",
     definition: "Capacité donnée par le Saint-Esprit à discerner l’origine spirituelle d’un message, d’une manifestation ou d’une situation.",
     challenge: "Face à un message ou une impression spirituelle, prends le temps de prier, de le confronter aux Écritures et d’en discuter avec un chrétien mature avant de conclure.",
-    palette: { background: "#50091D", foreground: "#FF95B3" },
+    palette: { background: "#50091D", foreground: "#FF95B3" }, evidenceDimensions: ["confirmation"],
     questions: [
-      { id: "discernement_esprits_1", dimension: "origine_divine", text: "T’arrive-t-il de reconnaître qu’un message vient de Dieu ?" },
-      { id: "discernement_esprits_2", dimension: "influence_demoniaque", text: "T’arrive-t-il de percevoir la présence ou l’influence d’un esprit démoniaque ?" },
-      { id: "discernement_esprits_3", dimension: "origine_humaine", text: "T’arrive-t-il de reconnaître qu’une personne parle en son propre nom alors qu’elle affirme parler de la part de Dieu ?" },
-      { id: "discernement_esprits_4", dimension: "tromperie_spirituelle", text: "T’arrive-t-il de sentir que quelque chose ne va pas dans un message spirituel, même si tout semble correct en apparence ?" },
-      { id: "discernement_esprits_5", dimension: "confirmation", text: "T’est-il déjà arrivé de discerner quelque chose spirituellement et d’avoir ensuite la confirmation que tu avais raison ?" },
+      { id: "disc_1", dimension: "perception", insight: "la perception d’une présence ou d’une influence spirituelle", text: "Ressens-tu parfois la présence ou l'influence d'un esprit démoniaque dans une situation ?" },
+      { id: "disc_2", dimension: "distinction", insight: "la capacité à distinguer l’origine d’un message spirituel", text: "Lorsqu'une personne partage un message spirituel, arrives-tu à reconnaître s'il vient réellement de Dieu ou s'il reflète simplement ses propres pensées ?" },
+      { id: "disc_3", dimension: "confirmation", insight: "la confirmation ultérieure de ce que tu avais discerné", text: "Lorsque tu discernes quelque chose spirituellement, est-ce que les événements viennent ensuite confirmer ce que tu avais perçu ?" },
     ],
   },
   {
-    id: "parole_connaissance",
-    name: "Parole de connaissance",
+    id: "connaissance", name: "Parole de connaissance",
     definition: "Capacité à recevoir surnaturellement une connaissance précise sur une personne ou une situation passée ou présente, sans l’avoir apprise naturellement.",
     challenge: "Si tu penses recevoir une information pour quelqu’un, note-la précisément, examine-la avec humilité et demande un avis mature avant de la partager sans pression. Ne présente pas une impression comme un fait établi.",
-    palette: { background: "#09272A", foreground: "#9EF4F1" },
+    palette: { background: "#09272A", foreground: "#9EF4F1" }, evidenceDimensions: ["confirmation"],
     questions: [
-      { id: "parole_connaissance_1", dimension: "connaissance_personne", text: "T’arrive-t-il de connaître des choses sur une personne sans qu’elle te les ait confiées et sans pouvoir expliquer comment tu les sais ?" },
-      { id: "parole_connaissance_2", dimension: "revelation", text: "As-tu déjà reçu, par un rêve, une vision ou pendant la prière, une information précise qui s’est ensuite révélée exacte ?" },
-      { id: "parole_connaissance_3", dimension: "connaissance_situation", text: "T’arrive-t-il de recevoir une information précise sur une situation que tu ne connais pas, puis de découvrir qu’elle correspond à la réalité ?" },
-      { id: "parole_connaissance_4", dimension: "transmission", text: "T’arrive-t-il de ressentir que le Saint-Esprit te révèle quelque chose à partager avec une personne pour l’encourager, la conseiller ou l’aider ?" },
-      { id: "parole_connaissance_5", dimension: "confirmation", text: "Une personne t’a-t-elle déjà confirmé qu’une information que tu lui avais partagée était parfaitement juste, alors qu’elle ne t’en avait jamais parlé ?" },
+      { id: "conn_1", dimension: "experience", insight: "la réception d’une information que tu ne pouvais pas connaître naturellement", text: "As-tu déjà reçu une information précise sur une personne ou une situation, sans pouvoir la connaître par tes propres moyens ?" },
+      { id: "conn_2", dimension: "revelation", insight: "des informations reçues dans la prière, un rêve ou une vision", text: "Reçois-tu parfois, pendant la prière, dans un rêve ou une vision, des informations précises qui se révèlent ensuite exactes ?" },
+      { id: "conn_3", dimension: "confirmation", insight: "la confirmation de ces informations par la personne concernée", text: "Quand tu partages une information que tu penses avoir reçue de Dieu, est-ce que la personne te confirme parfois qu'elle est juste, alors que tu ne pouvais pas la connaître ?" },
     ],
   },
   {
-    id: "don_foi",
-    name: "Don de foi",
+    id: "foi", name: "Don de foi",
     definition: "Capacité particulière donnée par le Saint-Esprit à recevoir une assurance profonde que Dieu va intervenir dans une situation précise, même lorsque toute solution humaine semble impossible.",
     challenge: "Identifie une situation difficile, prie avec une personne de confiance et pose un premier acte concret et réfléchi, sans prendre de risque inconsidéré.",
-    palette: { background: "#183FCE", foreground: "#F3E997" },
+    palette: { background: "#183FCE", foreground: "#F3E997" }, evidenceDimensions: ["confirmation"],
     questions: [
-      { id: "don_foi_1", dimension: "conviction", text: "As-tu déjà eu la certitude profonde que Dieu allait intervenir dans une situation, alors que rien ne laissait penser qu’elle pouvait s’arranger ?" },
-      { id: "don_foi_2", dimension: "reflexe", text: "Lorsqu’un nouveau défi se présente et qu’il semble humainement impossible à relever, ta première pensée est-elle que Dieu peut agir malgré les circonstances ?" },
-      { id: "don_foi_3", dimension: "encouragement", text: "Face à un problème qui semble insurmontable, as-tu le réflexe d’encourager les autres en leur rappelant que Dieu peut intervenir ?" },
-      { id: "don_foi_4", dimension: "action", text: "As-tu déjà agi avec assurance dans une situation sans issue, parce que tu avais la conviction que Dieu t’avait donné une promesse précise ?" },
-      { id: "don_foi_5", dimension: "confirmation", text: "As-tu déjà eu la certitude que Dieu allait intervenir dans une situation, puis vu les événements se dérouler comme tu l’avais cru ?" },
+      { id: "foi_1", dimension: "conviction", insight: "une certitude intérieure que Dieu va intervenir", text: "Face à une situation qui semble humainement impossible, ressens-tu parfois une certitude profonde que Dieu va intervenir ?" },
+      { id: "foi_2", dimension: "action", insight: "le fait d’agir à partir d’une promesse reçue", text: "Lorsqu'une situation semble sans issue, t'arrive-t-il d'agir avec assurance parce que tu as la conviction que Dieu t'a donné une promesse précise ?" },
+      { id: "foi_3", dimension: "confirmation", insight: "la confirmation de cette conviction dans les événements", text: "As-tu déjà vu une situation évoluer comme tu en avais reçu la conviction dans la prière ?" },
     ],
   },
   {
-    id: "guerison",
-    name: "Don de guérison",
+    id: "guerison", name: "Don de guérison",
     definition: "Capacité particulière donnée par le Saint-Esprit d’être utilisé par Dieu pour apporter une guérison surnaturelle à une personne malade ou souffrante.",
     challenge: "Propose à une personne malade de prier pour elle, avec son accord. Prends de ses nouvelles et apporte une aide concrète, sans promettre de guérison ni interrompre ses soins.",
-    palette: { background: "#28503C", foreground: "#D7FF99" },
+    palette: { background: "#28503C", foreground: "#D7FF99" }, evidenceDimensions: ["observation"],
     questions: [
-      { id: "guerison_1", dimension: "reflexe", text: "Lorsqu’une personne te parle de sa maladie, ton premier réflexe est-il de lui proposer de prier pour sa guérison ?" },
-      { id: "guerison_2", dimension: "pratique", text: "Pries-tu régulièrement pour la guérison de personnes malades, même lorsqu’elles ne te le demandent pas spontanément ?" },
-      { id: "guerison_3", dimension: "conviction", text: "As-tu déjà prié pour une personne et reçu la conviction qu’elle était guérie, même si tu ne pouvais pas encore le vérifier ?" },
-      { id: "guerison_4", dimension: "sollicitation", text: "Des personnes viennent-elles spontanément te demander de prier pour leur guérison ?" },
-      { id: "guerison_5", dimension: "amelioration", text: "As-tu déjà prié pour une personne malade et constaté une amélioration de son état après ta prière ?" },
+      { id: "guer_1", dimension: "pratique", insight: "le réflexe de proposer de prier pour une personne malade", text: "Lorsque quelqu'un est malade, as-tu spontanément le réflexe de proposer de prier pour sa guérison ?" },
+      { id: "guer_2", dimension: "conviction", insight: "la conviction reçue pendant la prière pour une guérison", text: "Quand tu pries pour une personne malade, reçois-tu parfois la conviction qu'elle est guérie, même si rien ne permet encore de le vérifier ?" },
+      { id: "guer_3", dimension: "observation", insight: "l’observation d’une amélioration après la prière", text: "As-tu déjà prié pour une personne malade et constaté une amélioration de son état après ta prière ?" },
     ],
   },
   {
-    id: "miracles",
-    name: "Don d’opérer des miracles",
+    id: "miracles", name: "Don d'opérer des miracles",
     definition: "Capacité particulière donnée par le Saint-Esprit d’être utilisé par Dieu pour accomplir des actes surnaturels qui manifestent sa puissance.",
     challenge: "Prie avec une personne de confiance pour une situation difficile, puis note les faits observables sans chercher à provoquer ou à exagérer un miracle.",
-    palette: { background: "#4D2577", foreground: "#E7B6FF" },
+    palette: { background: "#4D2577", foreground: "#E7B6FF" }, evidenceDimensions: ["experience", "sollicitation"],
     questions: [
-      { id: "miracles_1", dimension: "reflexe", text: "Face à une situation qui semble humainement impossible, as-tu spontanément le réflexe de prier pour que Dieu accomplisse un miracle ?" },
-      { id: "miracles_2", dimension: "disponibilite", text: "T’arrive-t-il de prier avec foi pour que Dieu accomplisse un miracle à travers toi ?" },
-      { id: "miracles_3", dimension: "reconnaissance", text: "Lorsque tu es témoin d’un miracle, prends-tu le temps de remercier Dieu et de lui rendre gloire ?" },
-      { id: "miracles_4", dimension: "sollicitation", text: "Des personnes viennent-elles spontanément te demander de prier pour des situations qui semblent sans issue ?" },
-      { id: "miracles_5", dimension: "experience", text: "As-tu déjà prié pour une situation et assisté à un événement que tu considères comme un miracle de Dieu ?" },
+      { id: "mir_1", dimension: "pratique", insight: "le réflexe de prier face à une situation impossible", text: "Face à une situation qui semble impossible, as-tu spontanément le réflexe de prier pour que Dieu accomplisse un miracle ?" },
+      { id: "mir_2", dimension: "experience", insight: "l’expérience d’un événement que tu considères comme un miracle", text: "Lorsque tu pries pour une situation, t'arrive-t-il d'assister à un événement que tu considères comme un miracle de Dieu ?" },
+      { id: "mir_3", dimension: "sollicitation", insight: "le fait que d’autres personnes te sollicitent pour prier avec elles", text: "Des personnes viennent-elles te demander de prier avec elles lorsqu'elles traversent des situations qui semblent sans issue ?" },
     ],
   },
   {
-    id: "prophetie",
-    name: "Don de prophétie",
+    id: "prophetie", name: "Don de prophétie",
     definition: "Capacité particulière donnée par le Saint-Esprit à transmettre un message de Dieu pour édifier, encourager, consoler, avertir ou conduire une personne à changer.",
     challenge: "Si une parole d’encouragement te vient pour quelqu’un, examine-la à la lumière de la Bible et partage-la humblement, sans imposer qu’elle vienne de Dieu.",
-    palette: { background: "#D64B27", foreground: "#FFF0CC" },
+    palette: { background: "#D64B27", foreground: "#FFF0CC" }, evidenceDimensions: ["confirmation"],
     questions: [
-      { id: "prophetie_1", dimension: "reception", text: "As-tu déjà ressenti que Dieu te donnait un message précis à transmettre à une personne ou à un groupe ?" },
-      { id: "prophetie_2", dimension: "edification", text: "As-tu déjà partagé une parole que tu pensais venir de Dieu et qui a aidé une personne à grandir dans sa foi ?" },
-      { id: "prophetie_3", dimension: "avertissement", text: "As-tu déjà ressenti que Dieu te demandait d’avertir une personne ou de l’appeler à changer de comportement ?" },
-      { id: "prophetie_4", dimension: "impact", text: "Des personnes t’ont-elles déjà dit qu’une parole que tu leur avais transmise les avait profondément encouragées, consolées ou interpellées ?" },
-      { id: "prophetie_5", dimension: "exercice", text: "T’arrive-t-il de partager un message que tu crois avoir reçu de Dieu, même lorsque cela te demande du courage ?" },
+      { id: "prop_1", dimension: "reception", insight: "la réception d’un message précis pour quelqu’un", text: "Pendant la prière ou dans ton quotidien, ressens-tu parfois que Dieu te donne un message précis à transmettre à quelqu'un ?" },
+      { id: "prop_2", dimension: "transmission", insight: "l’élan d’avertir ou d’encourager une personne à changer", text: "T'arrive-t-il de ressentir que Dieu te pousse à avertir une personne ou à l'encourager à changer quelque chose dans sa vie ?" },
+      { id: "prop_3", dimension: "confirmation", insight: "les retours reçus après avoir partagé une parole", text: "Des personnes t'ont-elles déjà confirmé qu'une parole que tu leur avais transmise les avait profondément encouragées, consolées ou interpellées ?" },
     ],
   },
   {
-    id: "sagesse",
-    name: "Parole de sagesse",
+    id: "sagesse", name: "Parole de sagesse",
     definition: "Capacité particulière donnée par le Saint-Esprit à apporter des conseils et des solutions adaptés à une situation, en s’appuyant sur la sagesse de Dieu.",
     challenge: "Accompagne une personne qui doit prendre une décision : écoute-la, explore les principes bibliques et les conséquences possibles, puis laisse-la décider librement.",
-    palette: { background: "#EFCB56", foreground: "#342E50" },
+    palette: { background: "#EFCB56", foreground: "#342E50" }, evidenceDimensions: ["sollicitation", "confirmation"],
     questions: [
-      { id: "sagesse_1", dimension: "conseil", text: "Face à une situation compliquée, as-tu déjà reçu une compréhension particulière qui t’a permis de conseiller quelqu’un avec sagesse ?" },
-      { id: "sagesse_2", dimension: "sollicitation", text: "Des personnes viennent-elles spontanément te demander conseil lorsqu’elles doivent prendre une décision importante ?" },
-      { id: "sagesse_3", dimension: "sagesse_biblique", text: "Arrives-tu à appliquer les principes bibliques à des situations concrètes pour aider les autres à prendre de bonnes décisions ?" },
-      { id: "sagesse_4", dimension: "solution", text: "As-tu déjà proposé une solution à un problème difficile, alors que personne ne semblait savoir quoi faire ?" },
-      { id: "sagesse_5", dimension: "confirmation", text: "Des personnes t’ont-elles déjà témoigné que tes conseils les avaient aidées à prendre une bonne décision ou à sortir d’une situation compliquée ?" },
+      { id: "sag_1", dimension: "sollicitation", insight: "le fait que les autres viennent naturellement te demander conseil", text: "Les autres viennent-ils naturellement te demander conseil lorsqu'ils doivent prendre une décision importante ?" },
+      { id: "sag_2", dimension: "experience", insight: "une compréhension particulière qui permet d’apporter un conseil adapté", text: "Face à une situation compliquée, reçois-tu parfois une compréhension particulière qui te permet d'apporter un conseil juste et adapté ?" },
+      { id: "sag_3", dimension: "confirmation", insight: "les retours positifs reçus sur l’utilité de tes conseils", text: "Des personnes t'ont-elles déjà dit que tes conseils les avaient aidées à prendre une bonne décision ou à résoudre un problème ?" },
     ],
   },
 ];
 
-// Ordre stable et mélangé : une question de chaque don par cycle, puis rotation.
-// Aucun don n'est affiché dans le questionnaire.
-export const spiritualGiftQuestions = Array.from({ length: 5 }, (_, round) =>
-  spiritualGiftsV2.map((gift, giftIndex) => {
-    const questionIndex = (round + giftIndex * 2) % 5;
-    const question = gift.questions[questionIndex];
-    return { ...question, giftId: gift.id };
-  }),
-).flat();
+export const spiritualGiftQuestionOrder = [
+  "disc_1", "conn_1", "foi_1", "guer_1", "mir_1", "prop_1", "sag_1",
+  "disc_2", "conn_2", "foi_2", "guer_2", "mir_2", "prop_2", "sag_2",
+  "disc_3", "conn_3", "foi_3", "guer_3", "mir_3", "prop_3", "sag_3",
+] as const;
+
+const questionById = new Map(spiritualGiftsV2.flatMap((gift) => gift.questions.map((question) => [question.id, { ...question, giftId: gift.id }] as const)));
+export const spiritualGiftQuestions = spiritualGiftQuestionOrder.map((id) => questionById.get(id)!);
 
 export type GiftCategory = "exercised" | "developing" | "less_visible";
+function frequency(value: number) { return giftScaleLabels[Math.max(0, Math.min(5, value))].toLowerCase(); }
 
 export function classifySpiritualGifts(answers: Record<string, unknown>) {
   return spiritualGiftsV2.map((gift) => {
-    const values = gift.questions.map((question) => Number(answers[question.id])).filter((value) => Number.isFinite(value) && value >= 0 && value <= 5);
-    const average = values.length === 5 ? values.reduce((sum, value) => sum + value, 0) / 5 : 0;
-    const category: GiftCategory = average >= 3.6 ? "exercised" : average >= 1.8 ? "developing" : "less_visible";
-    const strongest = gift.questions
-      .map((question) => ({ ...question, value: Number(answers[question.id]) || 0 }))
-      .sort((left, right) => right.value - left.value)[0];
-    return { ...gift, average, category, strongestDimension: strongest?.dimension ?? null };
+    const responses = gift.questions.map((question) => ({ ...question, value: Number.isInteger(Number(answers[question.id])) ? Number(answers[question.id]) : 0 }));
+    const evidence = responses.filter((response) => gift.evidenceDimensions.includes(response.dimension));
+    const strongestEvidence = Math.max(0, ...evidence.map((response) => response.value));
+    const support = Math.max(0, ...responses.filter((response) => !gift.evidenceDimensions.includes(response.dimension)).map((response) => response.value));
+    const sorted = [...responses].sort((left, right) => right.value - left.value);
+    const average = responses.reduce((sum, response) => sum + response.value, 0) / responses.length;
+    const exercised = strongestEvidence >= 4 && support >= 3;
+    const developing = !exercised && (sorted[0].value >= 3 || (strongestEvidence >= 2 && sorted[1].value >= 2));
+    const category: GiftCategory = exercised ? "exercised" : developing ? "developing" : "less_visible";
+    const strongest = sorted[0];
+    const weakest = [...responses].sort((left, right) => left.value - right.value)[0];
+    const evidenceLead = [...evidence].sort((left, right) => right.value - left.value)[0];
+    const interpretation = `Ta réponse la plus forte concerne ${strongest.insight} : cela t’arrive ${frequency(strongest.value)}. ${category === "exercised" ? `Un indice plus concret ressort aussi dans ${evidenceLead.insight}, que tu rencontres ${frequency(evidenceLead.value)}.` : category === "developing" ? `Le point à approfondir concerne ${evidenceLead.insight}, que tu rencontres ${frequency(evidenceLead.value)}.` : "Pour l’instant, même ton signal le plus présent reste peu fréquent. Tu peux explorer ce don sans en tirer de conclusion."}${weakest.id !== strongest.id && weakest.id !== evidenceLead.id && category !== "less_visible" ? ` Ta réponse la plus faible concerne ${weakest.insight} (${frequency(weakest.value)}).` : ""}`;
+    return { ...gift, average, category, responses, interpretation, strongestDimension: strongest.dimension };
   });
 }
 

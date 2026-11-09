@@ -12,7 +12,7 @@ function resultsFor(testKey: GraceTestKey, answers: Record<string, unknown>) {
   if (testKey === "gifts") {
     if (isSpiritualGiftsV2Complete(answers)) {
       return {
-        version: "spiritual-gifts-v2",
+        version: "spiritual-gifts-v3-21",
         gifts: classifySpiritualGifts(answers).map(({ id, name, category, average, strongestDimension }) => ({ id, name, category, average, strongestDimension })),
       };
     }
