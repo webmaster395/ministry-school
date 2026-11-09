@@ -384,7 +384,7 @@ export async function getStudentAssignments(
 const getCachedStudentAssignments = unstable_cache(
   async (sessionIds: string[]) =>
     getStudentAssignments(createServiceClient(), sessionIds),
-  ["student-assignments-v1"],
+  ["student-assignments-v2"],
   { tags: [STUDENT_PROGRAM_CACHE_TAG], revalidate: 300 },
 );
 
