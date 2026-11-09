@@ -14,8 +14,8 @@
 .giftHeader{margin:24px 0 18px}.giftTitle{max-width:850px;margin:8px 0;font-size:clamp(38px,5vw,62px);font-weight:720;line-height:.98;letter-spacing:-.035em}.giftCard{width:min(760px,100%);border-radius:18px;background:var(--paper);padding:19px;margin-top:11px;font-size:14px;line-height:1.55}.giftCard strong{display:block;margin-bottom:7px;font-size:11px;letter-spacing:.1em;text-transform:uppercase}.giftNav{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.giftDot{width:14px;height:14px;border:0;border-radius:50%;cursor:pointer}.summary{min-height:0}.summary section{max-width:800px;margin-top:24px}.summary h2{font-size:21px;margin:0 0 8px}.summary h3{font-size:16px;margin:15px 0 5px}.summary p{font-size:14px;line-height:1.55}.notice{max-width:760px;border-left:3px solid currentColor;padding-left:14px;font-size:12px;line-height:1.5}
 .giftPage{--gift-accent:#28503c;background:var(--sky);color:var(--ink)}
 .giftPage .frame{z-index:1;padding-bottom:clamp(108px,17vh,156px)}
-.giftPage .eyebrow{color:var(--gift-accent)}
-.giftPage .giftTitle{color:var(--gift-accent)}
+.giftPage .eyebrow{color:var(--ink)}
+.giftPage .giftTitle{color:var(--ink)}
 .giftPage .giftCard{border-top:5px solid var(--gift-accent);color:var(--ink);box-shadow:0 14px 36px #17314a14}
 .giftLandscape{position:absolute;z-index:0;left:-3%;right:-3%;bottom:-7%;height:29%;background:var(--gift-accent);clip-path:polygon(0 48%,8% 33%,17% 44%,27% 18%,37% 39%,48% 9%,58% 36%,68% 21%,79% 43%,89% 16%,100% 38%,100% 100%,0 100%)}
 .giftLandscape:before{content:"";position:absolute;inset:29% 0 0;background:var(--gift-accent);opacity:.52;clip-path:polygon(0 40%,12% 18%,24% 41%,35% 24%,46% 49%,59% 15%,72% 45%,84% 26%,100% 46%,100% 100%,0 100%)}
