@@ -91,7 +91,7 @@ export const spiritualGiftsV2: SpiritualGift[] = [
       { id: "prophetie_2", dimension: "edification", text: "As-tu déjà partagé une parole que tu pensais venir de Dieu et qui a aidé une personne à grandir dans sa foi ?" },
       { id: "prophetie_3", dimension: "avertissement", text: "As-tu déjà ressenti que Dieu te demandait d’avertir une personne ou de l’appeler à changer de comportement ?" },
       { id: "prophetie_4", dimension: "impact", text: "Des personnes t’ont-elles déjà dit qu’une parole que tu leur avais transmise les avait profondément encouragées, consolées ou interpellées ?" },
-      { id: "prophetie_5", dimension: "exercice", text: "Prends-tu régulièrement la parole pour transmettre ce que tu crois être un message de Dieu, même lorsque tu dois sortir de ta zone de confort ?" },
+      { id: "prophetie_5", dimension: "exercice", text: "T’arrive-t-il de partager un message que tu crois avoir reçu de Dieu, même lorsque cela te demande du courage ?" },
     ],
   },
   {
