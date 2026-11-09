@@ -22,6 +22,10 @@ function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const searchParams = useSearchParams();
+  const requestedNext = searchParams.get("next");
+  const nextPath = requestedNext?.startsWith("/") && !requestedNext.startsWith("//")
+    ? requestedNext
+    : "/etudiant";
   const [error, setError] = useState<string | null>(
     searchParams.get("erreur") === "lien_invalide"
       ? "Ce lien de confirmation n'est plus valide. Connectez-vous ou demandez un nouveau lien."
@@ -105,7 +109,7 @@ function LoginForm() {
       }
       if (slowTimer.current) clearTimeout(slowTimer.current);
       slowTimer.current = null;
-      router.replace("/etudiant");
+      router.replace(nextPath);
     } catch (failure) {
       blockImmediateRetry();
       setError(loginErrorMessage(failure));

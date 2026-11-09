@@ -11,23 +11,19 @@ test("Mes outils montre les brouillons aux seuls super-administrateurs", () => {
   assert.match(page, /enabled \? await getStudentTools\(\) : \[\]/);
 });
 
-test("la route MAPP propose directement le parcours invité", () => {
+test("la route MAPP reste servie par l'application officielle", () => {
   const vercel = read("vercel.json");
   assert.match(vercel, /profil-mapp\.vercel\.app\/apps\/profil-mapp/);
   assert.doesNotMatch(vercel, /"source": "\/apps\/profil-mapp\/officiel"/);
 });
 
-test("les tentatives invitées gardent leur secret hors du navigateur Supabase", () => {
-  const migration = read("supabase/migrations/20261106203000_mapp_secure_guest_attempts.sql");
-  const profileMigration = read("supabase/migrations/20261106220000_mapp_guest_profile_and_immediate_access.sql");
+test("le parcours invité MAPP est désactivé", () => {
   const start = read("src/app/api/mapp/guest/start/route.ts");
-  assert.match(migration, /token_hash text not null unique/);
-  assert.match(migration, /revoke all on mapp\.guest_attempt_access from public, anon, authenticated/);
-  assert.match(profileMigration, /start_guest_hybrid_44_profile/);
-  assert.match(profileMigration, /first_name,last_name,email/);
-  assert.doesNotMatch(profileMigration, /MAPP_GUEST_NOT_OPEN/);
-  assert.match(start, /setGuestCredential/);
-  assert.doesNotMatch(start, /SUPABASE_SERVICE_ROLE_KEY/);
+  const proxy = read("src/proxy.ts");
+  assert.match(start, /status: 410/);
+  assert.match(start, /Connectez-vous à Ministry School/);
+  assert.doesNotMatch(start, /start_guest_hybrid_44_profile|setGuestCredential/);
+  assert.doesNotMatch(proxy, /isProfilMappRoute|\/api\/mapp\/guest\/start/);
 });
 
 test("Mon identité rattache une tentative possédée sans dépendre de l'e-mail saisi", () => {
@@ -64,5 +60,5 @@ test("la session officielle est additive et ne publie pas le catalogue étudiant
 test("l'administration propose le parcours réel sans modifier la publication", () => {
   const page = read("src/app/admin/apps/[slug]/settings/page.tsx");
   assert.match(page, /href="\/apps\/profil-mapp"/);
-  assert.match(page, /Il ne publie pas l'outil aux étudiants/);
+  assert.match(page, /Il ne publie pas (?:l'outil|l&apos;outil) aux étudiants/);
 });

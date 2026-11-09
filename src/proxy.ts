@@ -27,11 +27,6 @@ export async function proxy(request: NextRequest) {
   // Le layout résout ensuite l'utilisateur complet une seule fois pour le rendu.
   const { data: auth } = await supabase.auth.getClaims();
   const isAuthenticated = !!auth?.claims?.sub;
-  const isProfilMappRoute = request.nextUrl.pathname.startsWith("/apps/profil-mapp");
-
-  // Profil MAPP accepte aussi les tentatives invitées après l'ouverture
-  // programmée. La page et chaque API privée vérifient le secret HttpOnly ;
-  // le proxy ne doit donc pas imposer une session Ministry en amont.
 
   // La création de compte n'est pas publique : son lien n'est communiqué qu'après le paiement.
   // « /inscription » lui-même reste fermé à tous ; seule l'adresse secrète INSCRIPTION_CHEMIN
@@ -59,10 +54,6 @@ export async function proxy(request: NextRequest) {
     request.nextUrl.pathname === "/apps" ||
     request.nextUrl.pathname.startsWith("/apps/je-suis-par-la-grace-de-dieu/evaluation/") ||
     request.nextUrl.pathname.startsWith("/apps/generopoly") ||
-    isProfilMappRoute ||
-    request.nextUrl.pathname === "/api/mapp/guest/start" ||
-    request.nextUrl.pathname.startsWith("/api/mapp/attempts/") ||
-    request.nextUrl.pathname.startsWith("/api/mapp/hybrid-44/") ||
     request.nextUrl.pathname.startsWith("/api/apps/grace-identity/reviews/") ||
     request.nextUrl.pathname === "/api/deployment-version" ||
     request.nextUrl.pathname === "/mentions-legales" ||
@@ -75,7 +66,10 @@ export async function proxy(request: NextRequest) {
 
   if (!isAuthenticated && !isAuthRoute && !isAuthCallback && !isPublicPage) {
     const url = request.nextUrl.clone();
+    const next = `${request.nextUrl.pathname}${request.nextUrl.search}`;
     url.pathname = "/login";
+    url.search = "";
+    url.searchParams.set("next", next);
     return NextResponse.redirect(url);
   }
 
