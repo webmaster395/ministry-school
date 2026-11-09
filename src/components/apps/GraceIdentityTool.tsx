@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Check, Heart, Lightbulb, Save, Sparkles, UsersRound } from "lucide-react";
 import { fruitTraits, naturalSkillCategories, spiritualGifts, type GraceTestKey } from "@/lib/apps/grace-identity";
 import SkillReviewLink from "@/components/apps/SkillReviewLink";
+import SpiritualGiftsJourney from "@/components/apps/SpiritualGiftsJourney";
 
 type RecordRow = { test_key: GraceTestKey; answers: Record<string, unknown>; results: Record<string, unknown>; completed_at: string | null; updated_at: string };
 const testMeta: Record<GraceTestKey, { title: string; text: string; icon: typeof Heart }> = {
@@ -28,7 +29,7 @@ export default function GraceIdentityTool({ initial, preview, initialTest = null
     if (close) setActive(null);
   };
   if (active === "fruit") return <FruitJourney initial={byKey.get("fruit")?.answers ?? {}} saving={saving} onBack={() => setActive(null)} onSave={(answers) => save("fruit", answers, false)} />;
-  if (active === "gifts") return <GiftsJourney initial={byKey.get("gifts")?.answers ?? {}} saving={saving} onBack={() => setActive(null)} onSave={(answers) => save("gifts", answers)} />;
+  if (active === "gifts") return <SpiritualGiftsJourney initial={byKey.get("gifts")?.answers ?? {}} saving={saving} onBack={() => setActive(null)} onSave={(answers) => save("gifts", answers)} />;
   if (active) return <TestScreen testKey={active} initial={byKey.get(active)?.answers ?? {}} saving={saving} onBack={() => setActive(null)} onSave={save} />;
   return <div className="mx-auto max-w-5xl space-y-7 pb-10">
     <header className="max-w-3xl"><Link href="/etudiant/identite" className="mb-5 inline-flex min-h-10 items-center gap-2 text-sm text-muted hover:text-foreground"><ArrowLeft size={16} /> Mon identité</Link><p className="label text-[11px] text-muted">MES OUTILS</p><h1 className="mt-2 font-title text-4xl tracking-tight sm:text-5xl">Je suis ce que je suis par la grâce de Dieu</h1><p className="mt-4 text-base leading-7 text-muted">Découvre le fruit de l’Esprit, explore tes dons spirituels et identifie tes compétences naturelles. Avance à ton rythme et prends le temps de mieux te connaître.</p>{preview && <p className="mt-4 inline-flex rounded-full bg-[#f8e7bd] px-3 py-1.5 text-xs font-medium text-[#765311]">Aperçu Super admin — cet outil reste invisible aux étudiants.</p>}</header>

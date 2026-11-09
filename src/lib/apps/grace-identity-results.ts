@@ -2,6 +2,7 @@ import "server-only";
 
 import { createServiceClient } from "@/lib/supabase/service";
 import { fruitTraits, spiritualGifts } from "@/lib/apps/grace-identity";
+import { classifySpiritualGifts, isSpiritualGiftsV2Complete, spiritualGiftsV2 } from "@/lib/apps/spiritual-gifts-v2";
 
 type AssessmentRow = {
   test_key: "fruit" | "gifts" | "skills";
@@ -48,9 +49,20 @@ export async function getGraceIdentitySummary(): Promise<GraceIdentitySummary> {
     const values = fruit.map((row) => score(object(row.answers)[trait.key])).filter((value): value is number => value !== null);
     return { name: trait.name, value: values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0, count: values.length };
   });
-  const giftResponses = spiritualGifts.map(([key, name]) => {
-    const values = gifts.map((row) => String(object(row.answers)[key] ?? ""));
-    return { name, yes: values.filter((value) => value === "Oui").length, explore: values.filter((value) => value === "Peut-être").length, no: values.filter((value) => value === "Non").length };
+  const giftResponses = spiritualGiftsV2.map((gift) => {
+    const categories = gifts.map((row) => {
+      const answers = object(row.answers);
+      if (!isSpiritualGiftsV2Complete(answers)) return null;
+      return classifySpiritualGifts(answers).find((item) => item.id === gift.id)?.category ?? null;
+    });
+    const legacy = spiritualGifts.find(([, name]) => name === gift.name);
+    const legacyValues = legacy ? gifts.map((row) => String(object(row.answers)[legacy[0]] ?? "")) : [];
+    return {
+      name: gift.name,
+      yes: categories.filter((value) => value === "exercised").length + legacyValues.filter((value) => value === "Oui").length,
+      explore: categories.filter((value) => value === "developing").length + legacyValues.filter((value) => value === "Peut-être").length,
+      no: categories.filter((value) => value === "less_visible").length + legacyValues.filter((value) => value === "Non").length,
+    };
   });
   const skillCounts = new Map<string, number>();
   skills.forEach((row) => {
