@@ -19,22 +19,22 @@ function readDraft() {
   catch { window.localStorage.removeItem(storageKey); return null; }
 }
 const categories: Array<{ id: GiftCategory; title: string; copy: string }> = [
-  { id: "exercised", title: "Les dons que tu exerces", copy: "D’après tes réponses, ces dons semblent particulièrement présents et exercés dans ta vie." },
-  { id: "developing", title: "Les dons à développer", copy: "Tes réponses laissent apparaître des signes de ces dons, mais leur exercice semble encore occasionnel." },
-  { id: "less_visible", title: "Les dons à explorer", copy: "Ces dons ne semblent pas particulièrement manifestés actuellement. Cela ne ferme aucune porte." },
+  { id: "exercised", title: "Les dons que tu exerces", copy: "D’après tes réponses, certains dons semblent particulièrement présents et régulièrement exercés dans ta vie." },
+  { id: "developing", title: "Les dons à développer", copy: "Tes réponses laissent apparaître certains signes de ces dons, mais leur exercice semble encore occasionnel." },
+  { id: "less_visible", title: "Les dons à explorer", copy: "Certains dons ne semblent pas particulièrement manifestés dans ta vie aujourd’hui." },
 ];
 const categoryGuidance: Record<GiftCategory, { meaning: string; next: string }> = {
   exercised: {
-    meaning: "Tes réponses montrent que tu reconnais souvent ces dons dans ta vie et que tu sembles déjà les exercer. Ce résultat reste une invitation au discernement, pas une confirmation définitive.",
-    next: "Continue de les exercer avec humilité. Observe leurs fruits, demande l’avis de chrétiens matures et veille à ce qu’ils servent les autres plutôt que ta propre reconnaissance.",
+    meaning: "D’après tes réponses, certains dons semblent particulièrement présents et régulièrement exercés dans ta vie.",
+    next: "Dieu nous confie des dons pour édifier son Église et servir les personnes qu’il place sur notre chemin. Continue de les affiner et de les exercer avec amour, humilité et fidélité, en demandant au Saint-Esprit de te guider.",
   },
   developing: {
-    meaning: "Certains signes de ces dons apparaissent dans tes réponses, mais ils ne semblent pas encore réguliers. Ils peuvent être présents sans avoir encore trouvé beaucoup d’occasions de s’exprimer.",
-    next: "Prie, demande conseil et choisis des occasions simples de servir. Avance sans te mettre de pression et vérifie avec le temps ce qui porte réellement du fruit.",
+    meaning: "Tes réponses laissent apparaître certains signes de ces dons, mais leur exercice semble encore occasionnel.",
+    next: "Les dons spirituels sont destinés à construire l’Église, à aider les autres et à manifester la gloire de Dieu. Prie, demande conseil à des chrétiens matures et recherche des occasions concrètes de servir.",
   },
   less_visible: {
-    meaning: "Ces dons apparaissent peu dans tes réponses aujourd’hui. Cela ne signifie pas que Dieu ne pourra jamais les utiliser dans ta vie, ni qu’il te manque quelque chose.",
-    next: "Concentre-toi d’abord sur les dons qui ressortent davantage. Tu peux continuer à découvrir les autres avec curiosité, sans chercher à provoquer une expérience.",
+    meaning: "Certains dons ne semblent pas particulièrement manifestés dans ta vie aujourd’hui. Il est possible que tu n’aies pas encore eu l’occasion de les développer, ou que d’autres dons soient plus présents.",
+    next: "Nous n’avons pas tous les mêmes dons. Concentre-toi d’abord sur ceux qui sont déjà visibles, sans fermer la porte à de nouvelles découvertes. Continue de prier, d’étudier les Écritures et de demander conseil.",
   },
 };
 const categoryAccents: Record<GiftCategory, string> = {
@@ -127,7 +127,7 @@ export default function SpiritualGiftsJourney({ initial, saving, onBack, onSave 
     const gift = results[giftIndex];
     const category = categories.find((item) => item.id === gift.category)!;
     const giftStyle = { "--gift-accent": giftCardAccents[gift.id] } as CSSProperties;
-    return <main className={`${styles.shell} ${styles.giftPage}`} style={giftStyle}><div className={styles.frame}><p className={styles.eyebrow}>{category.title}</p><header className={styles.giftHeader}><h1 className={styles.giftTitle}>{gift.name}</h1><p className={styles.lead}>{gift.definition}</p></header><div className={styles.giftCard}><strong>Ce que tes réponses laissent apparaître</strong><p>{gift.interpretation}</p></div><div className={styles.giftCard}><strong>Ton défi</strong><p>{gift.challenge}</p></div><div className={styles.actions}><button className={styles.ghost} onClick={() => setStage("category")}><ArrowLeft size={17} /> Retour au chapitre</button><button className={styles.pill} onClick={onBack}>Terminer <Check size={19} /></button></div></div><div className={styles.giftLandscape} aria-hidden="true" /></main>;
+    return <main className={`${styles.shell} ${styles.giftPage}`} style={giftStyle}><div className={styles.frame}><p className={styles.eyebrow}>{category.title}</p><header className={styles.giftHeader}><h1 className={styles.giftTitle}>{gift.name}</h1><h2 className={styles.impactTitle}>{gift.impactTitle}</h2><p className={styles.lead}>{gift.impact}</p></header><div className={styles.giftCard}><strong>Ce que tu peux découvrir sur toi</strong><p>{gift.interpretation}</p></div><div className={styles.giftCard}><strong>Comment développer ce don ?</strong><p>{gift.growth}</p></div><div className={`${styles.giftCard} ${styles.challengeCard}`}><strong>Ton défi cette semaine</strong><h2>{gift.challengeTitle}</h2><p>{gift.challenge}</p></div><div className={styles.actions}><button className={styles.ghost} onClick={() => setStage("category")}><ArrowLeft size={17} /> Retour au chapitre</button><button className={styles.pill} onClick={onBack}>Terminer <Check size={19} /></button></div></div><div className={styles.giftLandscape} aria-hidden="true" /></main>;
   }
 
   return <main className={styles.shell}><div className={`${styles.frame} ${styles.summary}`}><p className={styles.eyebrow}>Ton bilan personnalisé</p><h1 className={`${styles.title} ${styles.titleSmall}`}>Mets ces dons<br />au service<br />des autres.</h1>{categories.map((category) => { const gifts = grouped[category.id] ?? []; return <section key={category.id}><h2>{category.title}</h2><p>{category.copy} {category.id === "less_visible" && grouped.exercised?.length ? `Concentre-toi d’abord sur ${grouped.exercised.map((gift) => gift.name).join(" et ")}, qui ressort${grouped.exercised.length > 1 ? "ent" : ""} davantage.` : ""}</p>{gifts.map((gift) => <div key={gift.id}><h3>{gift.name}</h3><p>{gift.challenge}</p></div>)}</section>; })}<p className={styles.notice}>Dieu confie des dons pour édifier son Église, aider les autres et révéler sa gloire, jamais pour la gloire personnelle. Continue de prier, d’apprendre et de les exercer avec humilité.</p><div className={styles.actions}><button className={styles.ghost} onClick={() => setStage("chapters")}><ArrowLeft size={17} /> Revoir mon bilan</button><button className={styles.pill} onClick={onBack}>Terminer <Check size={19} /></button></div></div>{landscape()}</main>;

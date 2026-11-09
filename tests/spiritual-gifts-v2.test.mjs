@@ -56,9 +56,59 @@ test("l’interprétation change réellement selon les trois réponses", () => {
   Object.assign(first, { conn_1: 5, conn_2: 3, conn_3: 1 });
   const second = answersAt(0);
   Object.assign(second, { conn_1: 2, conn_2: 5, conn_3: 4 });
-  const firstText = classifySpiritualGifts(first).find((gift) => gift.id === "connaissance")?.interpretation;
-  const secondText = classifySpiritualGifts(second).find((gift) => gift.id === "connaissance")?.interpretation;
+  const firstResult = classifySpiritualGifts(first).find((gift) => gift.id === "connaissance");
+  const secondResult = classifySpiritualGifts(second).find((gift) => gift.id === "connaissance");
+  const firstText = firstResult?.interpretation;
+  const secondText = secondResult?.interpretation;
   assert.notEqual(firstText, secondText);
-  assert.match(firstText ?? "", /information que tu ne pouvais pas connaître/);
-  assert.match(secondText ?? "", /prière, un rêve ou une vision/);
+  assert.equal(firstResult?.editorialPath, "unverified");
+  assert.equal(secondResult?.editorialPath, "grounded");
+  assert.match(firstText ?? "", /apprendre à distinguer/);
+  assert.match(secondText ?? "", /approfondies avec humilité/);
+});
+
+test("aucune restitution ne répète les notes ou les étiquettes du questionnaire", () => {
+  for (const value of [0, 1, 2, 3, 4, 5]) {
+    for (const gift of classifySpiritualGifts(answersAt(value))) {
+      const copy = [gift.impact, gift.interpretation, gift.growth, gift.challenge].join(" ");
+      assert.doesNotMatch(copy, /ta réponse la plus (forte|faible)|selon ton score|tu as obtenu|très souvent selon/i);
+    }
+  }
+});
+
+test("chaque parcours propose un accompagnement et un défi propres au don", () => {
+  const result = classifySpiritualGifts(answersAt(5));
+  result.forEach((gift) => {
+    assert.ok(gift.impactTitle.length > 25);
+    assert.ok(gift.interpretation.length > 100);
+    assert.ok(gift.growth.length > 100);
+    assert.ok(gift.challengeTitle.length > 15);
+    assert.ok(gift.challenge.length > 100);
+  });
+});
+
+test("les quatre parcours éditoriaux sont disponibles pour chacun des sept dons", () => {
+  for (const giftDefinition of spiritualGiftsV2) {
+    const evidenceIds = new Set(
+      giftDefinition.questions
+        .filter((question) => giftDefinition.evidenceDimensions.includes(question.dimension))
+        .map((question) => question.id),
+    );
+    const unverified = answersAt(0);
+    giftDefinition.questions.forEach((question) => {
+      unverified[question.id] = evidenceIds.has(question.id) ? 1 : 5;
+    });
+
+    const scenarios = [
+      [answersAt(5), "grounded"],
+      [unverified, "unverified"],
+      [answersAt(3), "emerging"],
+      [answersAt(0), "quiet"],
+    ];
+    for (const [answers, expectedPath] of scenarios) {
+      const result = classifySpiritualGifts(answers).find((gift) => gift.id === giftDefinition.id);
+      assert.equal(result?.editorialPath, expectedPath, `${giftDefinition.id} doit proposer le parcours ${expectedPath}`);
+      assert.ok((result?.challenge ?? "").length > 100);
+    }
+  }
 });

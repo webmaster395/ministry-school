@@ -1,3 +1,5 @@
+import { getSpiritualGiftEditorial, type SpiritualGiftEditorialPath } from "./spiritual-gifts-editorial.ts";
+
 export const giftScaleLabels = ["Jamais", "Très rarement", "Rarement", "Parfois", "Souvent", "Très souvent"] as const;
 
 export type SpiritualGiftQuestion = { id: string; dimension: string; text: string; insight: string };
@@ -101,7 +103,6 @@ const questionById = new Map(spiritualGiftsV2.flatMap((gift) => gift.questions.m
 export const spiritualGiftQuestions = spiritualGiftQuestionOrder.map((id) => questionById.get(id)!);
 
 export type GiftCategory = "exercised" | "developing" | "less_visible";
-function frequency(value: number) { return giftScaleLabels[Math.max(0, Math.min(5, value))].toLowerCase(); }
 
 export function classifySpiritualGifts(answers: Record<string, unknown>) {
   return spiritualGiftsV2.map((gift) => {
@@ -114,11 +115,15 @@ export function classifySpiritualGifts(answers: Record<string, unknown>) {
     const exercised = strongestEvidence >= 4 && support >= 3;
     const developing = !exercised && (sorted[0].value >= 3 || (strongestEvidence >= 2 && sorted[1].value >= 2));
     const category: GiftCategory = exercised ? "exercised" : developing ? "developing" : "less_visible";
-    const strongest = sorted[0];
-    const weakest = [...responses].sort((left, right) => left.value - right.value)[0];
-    const evidenceLead = [...evidence].sort((left, right) => right.value - left.value)[0];
-    const interpretation = `Ta réponse la plus forte concerne ${strongest.insight} : cela t’arrive ${frequency(strongest.value)}. ${category === "exercised" ? `Un indice plus concret ressort aussi dans ${evidenceLead.insight}, que tu rencontres ${frequency(evidenceLead.value)}.` : category === "developing" ? `Le point à approfondir concerne ${evidenceLead.insight}, que tu rencontres ${frequency(evidenceLead.value)}.` : "Pour l’instant, même ton signal le plus présent reste peu fréquent. Tu peux explorer ce don sans en tirer de conclusion."}${weakest.id !== strongest.id && weakest.id !== evidenceLead.id && category !== "less_visible" ? ` Ta réponse la plus faible concerne ${weakest.insight} (${frequency(weakest.value)}).` : ""}`;
-    return { ...gift, average, category, responses, interpretation, strongestDimension: strongest.dimension };
+    const path: SpiritualGiftEditorialPath = exercised
+      ? "grounded"
+      : category === "less_visible"
+        ? "quiet"
+        : support >= 3 && strongestEvidence <= 2
+          ? "unverified"
+          : "emerging";
+    const editorial = getSpiritualGiftEditorial(gift.id, path);
+    return { ...gift, ...editorial, average, category, responses, editorialPath: path, strongestDimension: sorted[0].dimension };
   });
 }
 
