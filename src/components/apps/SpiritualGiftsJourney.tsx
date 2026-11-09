@@ -42,6 +42,15 @@ const categoryAccents: Record<GiftCategory, string> = {
   developing: "#50091D",
   less_visible: "#4D2577",
 };
+const giftCardAccents: Record<string, string> = {
+  discernement: "#EB4C79",
+  connaissance: "#247C68",
+  foi: "#315FC8",
+  guerison: "#27833B",
+  miracles: "#7C45B8",
+  prophetie: "#D64B27",
+  sagesse: "#F3BD20",
+};
 
 export default function SpiritualGiftsJourney({ initial, saving, onBack, onSave }: {
   initial: Record<string, unknown>;
@@ -111,13 +120,13 @@ export default function SpiritualGiftsJourney({ initial, saving, onBack, onSave 
     const gifts = grouped[categoryId] ?? [];
     const guidance = categoryGuidance[categoryId];
     const categoryStyle = { "--category-accent": categoryAccents[categoryId] } as CSSProperties;
-    return <main className={styles.shell}><div className={`${styles.frame} ${styles.categoryFrame}`} style={categoryStyle}><button className={styles.ghost} onClick={() => setStage("chapters")}><ArrowLeft size={17} /> Mes trois chapitres</button><header className={styles.categoryIntro}><p className={styles.eyebrow}>{gifts.length} don{gifts.length > 1 ? "s" : ""}</p><h1>{category.title}</h1><div className={styles.categoryOverview}><section><strong>Ce que cette catégorie signifie</strong><p>{guidance.meaning}</p></section><section><strong>Comment avancer</strong><p>{guidance.next}</p></section></div></header>{gifts.length ? <section className={styles.categoryGifts}>{gifts.map((gift) => { const giftCardStyle = { "--gift-card-accent": gift.palette.background } as CSSProperties; return <button className={styles.categoryGift} style={giftCardStyle} key={gift.id} onClick={() => { setGiftIndex(results.findIndex((item) => item.id === gift.id)); setStage("gift"); }}><div className={styles.categoryGiftHeading}><span>{categoryId === "exercised" ? "Reconnu" : categoryId === "developing" ? "À développer" : "À explorer"}</span><h2>{gift.name}</h2></div><p>Découvrir ton interprétation et ton défi</p><ArrowRight className={styles.giftOpen} size={19} /></button>; })}</section> : <div className={styles.emptyCategory}><h2>Aucun don dans cette catégorie aujourd’hui</h2><p>Ce résultat n’est ni un manque ni une conclusion définitive. Reviens aux autres chapitres pour découvrir les dons qui ressortent davantage.</p></div>}<div className={styles.actions}><button className={styles.ghost} onClick={() => setStage("chapters")}><ArrowLeft size={17} /> Retour aux résultats</button><button className={styles.pill} onClick={onBack}>Terminer <Check size={19} /></button></div></div></main>;
+    return <main className={styles.shell}><div className={`${styles.frame} ${styles.categoryFrame}`} style={categoryStyle}><button className={styles.ghost} onClick={() => setStage("chapters")}><ArrowLeft size={17} /> Mes trois chapitres</button><header className={styles.categoryIntro}><p className={styles.eyebrow}>{gifts.length} don{gifts.length > 1 ? "s" : ""}</p><h1>{category.title}</h1><div className={styles.categoryOverview}><section><strong>Ce que cette catégorie signifie</strong><p>{guidance.meaning}</p></section><section><strong>Comment avancer</strong><p>{guidance.next}</p></section></div></header>{gifts.length ? <section className={styles.categoryGifts}>{gifts.map((gift) => { const giftCardStyle = { "--gift-card-accent": giftCardAccents[gift.id] } as CSSProperties; return <button className={styles.categoryGift} style={giftCardStyle} key={gift.id} onClick={() => { setGiftIndex(results.findIndex((item) => item.id === gift.id)); setStage("gift"); }}><div className={styles.categoryGiftHeading}><span>{categoryId === "exercised" ? "Reconnu" : categoryId === "developing" ? "À développer" : "À explorer"}</span><h2>{gift.name}</h2></div><p>Découvrir ton interprétation et ton défi</p><ArrowRight className={styles.giftOpen} size={19} /></button>; })}</section> : <div className={styles.emptyCategory}><h2>Aucun don dans cette catégorie aujourd’hui</h2><p>Ce résultat n’est ni un manque ni une conclusion définitive. Reviens aux autres chapitres pour découvrir les dons qui ressortent davantage.</p></div>}<div className={styles.actions}><button className={styles.ghost} onClick={() => setStage("chapters")}><ArrowLeft size={17} /> Retour aux résultats</button><button className={styles.pill} onClick={onBack}>Terminer <Check size={19} /></button></div></div></main>;
   }
 
   if (stage === "gift") {
     const gift = results[giftIndex];
     const category = categories.find((item) => item.id === gift.category)!;
-    const giftStyle = { "--gift-accent": gift.palette.background } as CSSProperties;
+    const giftStyle = { "--gift-accent": giftCardAccents[gift.id] } as CSSProperties;
     return <main className={`${styles.shell} ${styles.giftPage}`} style={giftStyle}><div className={styles.frame}><p className={styles.eyebrow}>{category.title}</p><header className={styles.giftHeader}><h1 className={styles.giftTitle}>{gift.name}</h1><p className={styles.lead}>{gift.definition}</p></header><div className={styles.giftCard}><strong>Ce que tes réponses laissent apparaître</strong><p>{gift.interpretation}</p></div><div className={styles.giftCard}><strong>Ton défi</strong><p>{gift.challenge}</p></div><div className={styles.actions}><button className={styles.ghost} onClick={() => setStage("category")}><ArrowLeft size={17} /> Retour au chapitre</button><button className={styles.pill} onClick={onBack}>Terminer <Check size={19} /></button></div></div><div className={styles.giftLandscape} aria-hidden="true" /></main>;
   }
 
