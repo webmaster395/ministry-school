@@ -1,5 +1,7 @@
 "use client";
 
+import { Camera } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useRef, useState, useTransition } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { clearAvatar, setAvatar } from "@/lib/actions/avatar";
@@ -42,16 +44,19 @@ export default function AvatarEditor({
   userId,
   fullName,
   initialUrl,
+  variant = "profile",
 }: {
   userId: string;
   fullName: string;
   initialUrl: string | null;
+  variant?: "profile" | "identity";
 }) {
   const input = useRef<HTMLInputElement>(null);
   const [url, setUrl] = useState<string | null>(initialUrl);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [, startTransition] = useTransition();
+  const router = useRouter();
 
   const initials = fullName
     .split(" ")
@@ -81,6 +86,7 @@ export default function AvatarEditor({
       startTransition(async () => {
         try {
           await setAvatar(path);
+          router.refresh();
         } catch {
           setError("La photo est déposée, mais son enregistrement a échoué.");
         }
@@ -100,12 +106,46 @@ export default function AvatarEditor({
       try {
         await clearAvatar();
         setUrl(null);
+        router.refresh();
       } catch {
         setError("La photo n'a pas pu être retirée.");
       } finally {
         setBusy(false);
       }
     });
+  }
+
+  if (variant === "identity") {
+    return (
+      <div className="identity-avatar-editor">
+        <input
+          ref={input}
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          className="hidden"
+          onChange={(event) => onFile(event.target.files?.[0])}
+        />
+        <button
+          type="button"
+          className="identity-avatar-trigger"
+          disabled={busy}
+          onClick={() => input.current?.click()}
+          aria-label={url ? "Changer ma photo de profil" : "Ajouter une photo de profil"}
+        >
+          {url ? (
+            // eslint-disable-next-line @next/next/no-img-element -- adresse temporaire ou signée
+            <img src={url} alt={`Photo de profil de ${fullName}`} />
+          ) : (
+            <span>{initials || "?"}</span>
+          )}
+          <span className="identity-avatar-action" aria-hidden="true">
+            <Camera />
+          </span>
+          {busy ? <span className="identity-avatar-busy">Envoi…</span> : null}
+        </button>
+        {error ? <p className="identity-avatar-error" role="alert">{error}</p> : null}
+      </div>
+    );
   }
 
   return (

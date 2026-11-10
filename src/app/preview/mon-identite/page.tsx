@@ -20,5 +20,5 @@ export default async function IdentityPreviewPage({ searchParams }: { searchPara
     { kind: "generopoly" as const, completedAt: "2026-11-02T12:00:00Z" },
   ];
   const upcoming = state === "empty" ? [] : [];
-  return <div style={{ minHeight: "100vh", background: "var(--surface)", padding: "clamp(16px,4vw,56px)" }}><div style={{ maxWidth: 1040, margin: "0 auto" }}><IdentityExperience fullName="Rose Martin" status="Étudiante" avatarUrl={null} studentCount={337} months={2} completedTests={results.length} stories={stories} results={results} upcoming={upcoming} /></div></div>;
+  return <div style={{ minHeight: "100vh", background: "var(--surface)", padding: "clamp(16px,4vw,56px)" }}><div style={{ maxWidth: 1040, margin: "0 auto" }}><IdentityExperience userId="preview-user" fullName="Rose Martin" status="Étudiante" avatarUrl={null} studentCount={337} months={2} completedTests={results.length} stories={stories} results={results} upcoming={upcoming} /></div></div>;
 }

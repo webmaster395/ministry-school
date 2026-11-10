@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { createPortal } from "react-dom";
 import { useEffect, useState, useSyncExternalStore } from "react";
+import AvatarEditor from "@/components/AvatarEditor";
 import type { IdentityResult } from "@/lib/identity/dashboard";
 import styles from "./identity.module.css";
 
@@ -23,6 +24,7 @@ export type IdentityStoryGroup = { key: "identity" | "finance" | "recommendation
 export type IdentityUpcomingItem = IdentityStoryItem & { category: string };
 
 type Props = {
+  userId: string;
   fullName: string;
   status: string;
   avatarUrl: string | null;
@@ -176,7 +178,6 @@ export default function IdentityExperience(props: Props) {
   const isMounted = useSyncExternalStore(subscribeToMount, () => true, () => false);
   const nameParts = props.fullName.trim().split(/\s+/).filter(Boolean);
   const firstName = nameParts[0] || "Mon identité";
-  const initials = `${nameParts[0]?.charAt(0) ?? "?"}${nameParts.length > 1 ? nameParts.at(-1)?.charAt(0) ?? "" : ""}`.toUpperCase();
 
   useEffect(() => {
     if (!openStory) return;
@@ -199,7 +200,12 @@ export default function IdentityExperience(props: Props) {
       <header className={styles.profile}>
         <div className={styles.avatarRing}>
           <div className={styles.avatar}>
-            {props.avatarUrl ? <img src={props.avatarUrl} alt={`Photo de profil de ${props.fullName}`} /> : <span>{initials}</span>}
+            <AvatarEditor
+              userId={props.userId}
+              fullName={props.fullName}
+              initialUrl={props.avatarUrl}
+              variant="identity"
+            />
           </div>
         </div>
         <div className={styles.profileContent}>

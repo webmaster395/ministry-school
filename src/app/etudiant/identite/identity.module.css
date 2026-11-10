@@ -47,6 +47,87 @@
   object-fit: cover;
 }
 
+.avatar :global(.identity-avatar-editor),
+.avatar :global(.identity-avatar-trigger) {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.avatar :global(.identity-avatar-trigger) {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+
+.avatar :global(.identity-avatar-trigger:focus-visible) {
+  outline: 3px solid var(--link);
+  outline-offset: -5px;
+}
+
+.avatar :global(.identity-avatar-action) {
+  position: absolute;
+  right: 6px;
+  bottom: 7px;
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border: 2px solid var(--background);
+  border-radius: 50%;
+  background: var(--foreground);
+  color: var(--background);
+  transition: transform 180ms var(--ease-out-soft);
+}
+
+.avatar :global(.identity-avatar-action svg) {
+  width: 15px;
+  height: 15px;
+  stroke-width: 1.8;
+}
+
+.avatar :global(.identity-avatar-trigger:hover .identity-avatar-action) {
+  transform: scale(1.08);
+}
+
+.avatar :global(.identity-avatar-trigger:disabled) {
+  cursor: wait;
+}
+
+.avatar :global(.identity-avatar-busy) {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 7px 4px 10px;
+  background: rgb(0 0 0 / 0.62);
+  color: #fff;
+  font-family: var(--font-label);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.avatar :global(.identity-avatar-error) {
+  position: absolute;
+  z-index: 3;
+  top: calc(100% + 8px);
+  left: 50%;
+  width: 210px;
+  border-radius: 7px;
+  background: var(--foreground);
+  padding: 8px 10px;
+  color: var(--background);
+  font-family: var(--font-label);
+  font-size: 10px;
+  line-height: 1.35;
+  transform: translateX(-50%);
+}
+
 .eyebrow,
 .modalContent > p {
   color: var(--muted);
@@ -84,8 +165,12 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 600;
+}
+
+.nameLine > .certifiedStatus {
+  font-size: 17px;
 }
 
 .certifiedStatus svg {
@@ -657,6 +742,13 @@
     font-size: 32px;
   }
 
+  .avatar :global(.identity-avatar-action) {
+    right: 2px;
+    bottom: 3px;
+    width: 29px;
+    height: 29px;
+  }
+
   .eyebrow {
     display: none;
   }
@@ -682,6 +774,10 @@
     border-left: 0;
     padding-left: 0;
     font-size: 13px;
+  }
+
+  .nameLine > .certifiedStatus {
+    font-size: 15.5px;
   }
 
   .metrics {

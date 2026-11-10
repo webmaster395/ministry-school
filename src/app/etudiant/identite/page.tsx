@@ -105,6 +105,7 @@ export default async function StudentIdentityPage() {
     .sort((left, right) => new Date(right.completedAt).getTime() - new Date(left.completedAt).getTime());
   const completedKinds = new Set(allResults.map((result) => result.kind));
   return <IdentityExperience
+    userId={viewer.id}
     fullName={viewer.fullName || dashboard.profile.firstName || "Mon identité"}
     status={accountStatus(dashboard.profile.gender)}
     avatarUrl={viewer.avatarUrl}
