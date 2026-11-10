@@ -5,6 +5,8 @@ import { getOfficialMappIdentityResults } from "@/lib/mapp/official-results";
 import IdentityExperience, { type IdentityStoryGroup, type IdentityStoryItem } from "./IdentityExperience";
 import { isMappGuestOpen } from "@/lib/mapp/access-window";
 import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import type { IdentityResult } from "@/lib/identity/dashboard";
 
 export const dynamic = "force-dynamic";
 
@@ -84,13 +86,16 @@ export default async function StudentIdentityPage() {
   if (!viewer) redirect("/login");
   if (viewer.deactivated) redirect("/auth/desactive");
   if (!viewer.roles.superAdmin && !isMappGuestOpen()) redirect("/etudiant");
-  const [dashboard, tools, officialMappResults] = await Promise.all([
+  const supabase = await createClient();
+  const [dashboard, tools, officialMappResults, lifeLine] = await Promise.all([
     getIdentityDashboard(),
     getStudentTools(),
     getOfficialMappIdentityResults(),
+    supabase.from("life_line_journeys").select("completed_at,updated_at").eq("user_id", viewer.id).not("completed_at", "is", null).maybeSingle(),
   ]);
+  const lifeLineResults: IdentityResult[] = lifeLine.data?.completed_at ? [{ kind: "life-line", completedAt: lifeLine.data.completed_at ?? lifeLine.data.updated_at }] : [];
   const nonMappIdentityResults = dashboard.identityResults.filter((result) => result.kind !== "mapp");
-  const allResults = [...officialMappResults, ...nonMappIdentityResults, ...dashboard.financeResults]
+  const allResults = [...officialMappResults, ...nonMappIdentityResults, ...dashboard.financeResults, ...lifeLineResults]
     .sort((left, right) => new Date(right.completedAt).getTime() - new Date(left.completedAt).getTime());
   const completedKinds = new Set(allResults.map((result) => result.kind));
   return <IdentityExperience

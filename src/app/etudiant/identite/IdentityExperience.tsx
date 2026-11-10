@@ -85,6 +85,12 @@ const resultArtwork = {
     image: "/identity/posts/generopoly.webp",
     href: "/apps/generopoly",
   },
+  "life-line": {
+    title: "Ma ligne de vie",
+    eyebrow: "Je découvre mon appel",
+    image: "/identity/posts/ligne-de-vie.webp",
+    href: "/etudiant/ligne-de-vie",
+  },
 } as const;
 
 const subscribeToMount = () => () => undefined;

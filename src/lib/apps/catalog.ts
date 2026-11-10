@@ -37,6 +37,7 @@ export type CatalogApp = {
 const ministryAppUrls: Record<string, string> = {
   generopoly: "/apps/generopoly",
   "profil-mapp": "/apps/profil-mapp",
+  "ma-ligne-de-vie": "/etudiant/ligne-de-vie",
 };
 
 type CatalogRow = {

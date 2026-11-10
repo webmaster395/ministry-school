@@ -3,7 +3,7 @@ import "server-only";
 import { createClient } from "@/lib/supabase/server";
 
 export type IdentityResult = {
-  kind: "mapp" | "fruit" | "gifts" | "skills" | "generopoly" | "apest";
+  kind: "mapp" | "fruit" | "gifts" | "skills" | "generopoly" | "apest" | "life-line";
   completedAt: string;
   attemptId?: string;
   resultRevisionId?: string;
