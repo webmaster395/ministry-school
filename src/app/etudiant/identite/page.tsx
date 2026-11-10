@@ -91,9 +91,15 @@ export default async function StudentIdentityPage() {
     getIdentityDashboard(),
     getStudentTools(),
     getOfficialMappIdentityResults(),
-    supabase.from("life_line_journeys").select("completed_at,updated_at").eq("user_id", viewer.id).not("completed_at", "is", null).maybeSingle(),
+    supabase.from("life_line_journeys").select("events,reflection,completed_at,updated_at").eq("user_id", viewer.id).maybeSingle(),
   ]);
-  const lifeLineResults: IdentityResult[] = lifeLine.data?.completed_at ? [{ kind: "life-line", completedAt: lifeLine.data.completed_at ?? lifeLine.data.updated_at }] : [];
+  // La création de la ligne de vie est déjà une réalisation personnelle : elle
+  // doit être retrouvable depuis Identité, même si certains champs sont restés
+  // volontairement vides ou si elle a été enregistrée avant ce correctif.
+  const hasLifeLineContent = Boolean(lifeLine.data);
+  const lifeLineResults: IdentityResult[] = hasLifeLineContent
+    ? [{ kind: "life-line", completedAt: lifeLine.data?.completed_at ?? lifeLine.data?.updated_at ?? new Date().toISOString() }]
+    : [];
   const nonMappIdentityResults = dashboard.identityResults.filter((result) => result.kind !== "mapp");
   const allResults = [...officialMappResults, ...nonMappIdentityResults, ...dashboard.financeResults, ...lifeLineResults]
     .sort((left, right) => new Date(right.completedAt).getTime() - new Date(left.completedAt).getTime());

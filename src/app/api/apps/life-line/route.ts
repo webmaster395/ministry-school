@@ -40,7 +40,9 @@ export async function PUT(request: Request) {
   if (!body) return NextResponse.json({ error: "Données invalides." }, { status: 400 });
   const events = cleanEvents(body.events);
   const reflection = cleanReflection(body.reflection);
-  const completedAt = body.completed && events.some((event) => event.complete) ? new Date().toISOString() : null;
+  // L'exercice n'impose aucun nombre minimal d'événements. Une réflexion peut
+  // donc être finalisée même si la personne choisit de garder son récit vide.
+  const completedAt = body.completed ? new Date().toISOString() : null;
   const supabase = await createClient();
   const { data, error } = await supabase.from("life_line_journeys").upsert({ user_id: viewer.id, events, reflection, completed_at: completedAt }, { onConflict: "user_id" }).select("events,reflection,completed_at,updated_at").single();
   if (error) return NextResponse.json({ error: "Enregistrement impossible." }, { status: 500 });

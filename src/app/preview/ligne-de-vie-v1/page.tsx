@@ -56,8 +56,9 @@ export default function LifeLinePreviewPage({ production = false }: { production
   }, [production]);
 
   const persist = async (nextEvents = events, nextReflection = reflection, completed = false) => {
-    if (!production) return;
-    await fetch("/api/apps/life-line", { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify({ events: nextEvents, reflection: nextReflection, completed }) });
+    if (!production) return true;
+    const response = await fetch("/api/apps/life-line", { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify({ events: nextEvents, reflection: nextReflection, completed }) });
+    return response.ok;
   };
 
   return <main className={styles.shell}>
@@ -71,7 +72,10 @@ export default function LifeLinePreviewPage({ production = false }: { production
     {screen === "intro" && <Intro onContinue={() => setScreen("events")} />}
     {screen === "events" && <Events events={events} setEvents={setEvents} onSave={(next) => persist(next)} onContinue={() => setScreen("timeline")} />}
     {screen === "timeline" && <Timeline events={completeEvents} onOpen={setSelectedId} onContinue={() => setScreen("reflection")} />}
-    {screen === "reflection" && <Reflection values={reflection} onChange={setReflection} onContinue={() => { void persist(events, reflection, true); setScreen("final"); }} />}
+    {screen === "reflection" && <Reflection values={reflection} onChange={setReflection} onContinue={async () => {
+      const saved = await persist(events, reflection, true);
+      if (saved) setScreen("final");
+    }} />}
     {screen === "final" && <Final events={completeEvents} onOpen={setSelectedId} onEdit={() => setScreen("events")} />}
 
     {selected && <EventDialog event={selected} onClose={() => setSelectedId(null)} />}
@@ -152,7 +156,7 @@ function Timeline({ events, onOpen, onContinue }: { events: LifeEvent[]; onOpen:
   </section>;
 }
 
-function Reflection({ values, onChange, onContinue }: { values: ReflectionAnswers; onChange: (values: ReflectionAnswers) => void; onContinue: () => void }) {
+function Reflection({ values, onChange, onContinue }: { values: ReflectionAnswers; onChange: (values: ReflectionAnswers) => void; onContinue: () => void | Promise<void> }) {
   const questions = [
     ["Qu’est-ce qui revient régulièrement dans mon histoire ?", "Des thèmes, des rencontres, des besoins qui te touchent, des expériences ou des désirs récurrents."],
     ["Qu’est-ce que ces expériences m’ont appris ?", "Sur Dieu, sur toi-même, sur les autres et sur ce qui compte pour toi."],
