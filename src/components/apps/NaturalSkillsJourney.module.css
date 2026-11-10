@@ -35,6 +35,7 @@
 .editorialIntro{max-width:700px;padding:22px 0 34px}
 .editorialIntro>span,.serviceSection>strong,.growthPath>strong{display:block;margin-bottom:13px;font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
 .editorialIntro p{margin:0 0 12px;font-size:clamp(17px,2vw,21px);line-height:1.55;letter-spacing:-.015em;color:#17201d}
+.skillAccordion[data-mode="growth"] .editorialIntro p{font-size:16px;line-height:1.65;letter-spacing:0}
 .serviceSection{padding:30px 0;border-top:1px solid rgba(23,32,29,.1);border-bottom:1px solid rgba(23,32,29,.1)}
 .serviceGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
 .serviceItem{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start}
@@ -66,6 +67,7 @@
   .skillContent{padding:0 18px 22px 22px}
   .editorialIntro{padding:17px 0 25px}
   .editorialIntro p{font-size:17px;line-height:1.55}
+  .skillAccordion[data-mode="growth"] .editorialIntro p{font-size:15px;line-height:1.65}
   .serviceSection{padding:24px 0}
   .serviceGrid{grid-template-columns:1fr;gap:18px}
   .growthPath{padding:26px 0 10px}
