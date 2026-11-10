@@ -826,4 +826,79 @@
   .cover .screenFooter{padding-top:22px}
 }
 
+/* Restitution : lignes éditoriales dépliables, légères et faciles à parcourir. */
+.resultAccordion{
+  color:#291712;
+  background:rgba(255,248,237,.97);
+  border:0;
+  border-top:1px solid rgba(78,31,21,.2);
+  box-shadow:none;
+}
+.resultAccordion:last-child{border-bottom:1px solid rgba(78,31,21,.2)}
+.resultAccordion summary{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto 34px;
+  align-items:center;
+  gap:20px;
+  min-height:84px;
+  padding:18px 24px;
+  cursor:pointer;
+  list-style:none;
+}
+.resultAccordion summary::-webkit-details-marker{display:none}
+.resultAccordion summary span{display:flex;align-items:center;gap:18px;min-width:0}
+.resultAccordion summary small{
+  color:#a94728;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.1em;
+}
+.resultAccordion summary b{font-size:22px;font-weight:650;letter-spacing:-.025em}
+.resultAccordion summary em{color:#75645b;font-size:13px;font-style:normal}
+.resultAccordion summary i{font-size:22px;font-style:normal;text-align:center;transition:transform .2s ease}
+.resultAccordion[open] summary i{transform:rotate(45deg)}
+.resultAccordionBody{
+  margin:0 24px;
+  padding:4px 0 26px 48px;
+  border-top:1px solid rgba(78,31,21,.12);
+}
+.resultAccordionBody h2{
+  max-width:680px;
+  margin:22px 0 10px;
+  font-size:clamp(24px,2.3vw,34px);
+  line-height:1.08;
+  letter-spacing:-.035em;
+}
+.resultAccordionBody p{max-width:680px;margin:8px 0;color:#695950;font-size:15px;line-height:1.6}
+.resultAccordion.nextStep{
+  color:#291712!important;
+  background:rgba(255,248,237,.97)!important;
+  border-top:1px solid rgba(78,31,21,.2)!important;
+  padding:0!important;
+}
+.resultAccordion.nextStep p{color:#695950!important}
+.finalScreen .finalGrid{
+  display:block;
+  max-width:860px;
+  margin:28px auto 0;
+}
+.finalScreen .finalGrid .resultAccordion{min-height:0;padding:0}
+
+@media(min-width:801px){
+  .screen{border-radius:20px;overflow:hidden}
+}
+@media(max-width:800px){
+  .screen.cover{border-radius:0 0 18px 18px;overflow:hidden}
+  .resultAccordion summary{
+    grid-template-columns:minmax(0,1fr) 28px;
+    gap:12px;
+    min-height:74px;
+    padding:16px 18px;
+  }
+  .resultAccordion summary span{gap:12px}
+  .resultAccordion summary b{font-size:18px}
+  .resultAccordion summary em{display:none}
+  .resultAccordionBody{margin:0 18px;padding:2px 0 22px 0}
+}
+
 

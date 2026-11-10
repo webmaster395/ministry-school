@@ -175,9 +175,18 @@ function Final({ events, onOpen, onEdit }: { events: LifeEvent[]; onOpen: (id: s
     <Header step="MON ESPACE PERSONNEL" />
     <div className={styles.finalHero}><p className={styles.eyebrow}>MA LIGNE DE VIE</p><h1>Je vois mieux<br />le chemin parcouru.</h1><p>{events.length} moments composent aujourd’hui ton histoire. Tu peux continuer à l’enrichir à mesure que ton parcours avance.</p></div>
     <div className={styles.finalGrid}>
-      <article className={styles.miniTimeline}><p className={styles.eyebrow}>MON HISTOIRE</p>{events.slice(0, 4).map((event) => <button key={event.id} onClick={() => onOpen(event.id)}><b>{event.year}</b><span>{event.title}</span></button>)}<small>+ {Math.max(0, events.length - 4)} autre{events.length - 4 > 1 ? "s" : ""} événement{events.length - 4 > 1 ? "s" : ""}</small></article>
-      <article className={styles.insight}><p className={styles.eyebrow}>CE QUE JE RETIENS</p><h2>Des thèmes commencent à se dessiner.</h2><p>Je remarque que les rencontres, le service et l’accompagnement reviennent souvent dans mon histoire.</p><button>Relire ma réflexion →</button></article>
-      <article className={styles.nextStep}><p className={styles.eyebrow}>MON PROCHAIN PAS</p><h2>Rencontrer une personne qui peut m’accompagner.</h2><p>Préparer mes questions et demander un temps d’échange avant la fin du mois.</p></article>
+      <details className={styles.resultAccordion} open>
+        <summary><span><small>01</small><b>Mon histoire</b></span><em>{events.length} moment{events.length > 1 ? "s" : ""}</em><i>＋</i></summary>
+        <div className={`${styles.resultAccordionBody} ${styles.miniTimeline}`}>{events.map((event) => <button key={event.id} onClick={() => onOpen(event.id)}><b>{event.year}</b><span>{event.title}</span></button>)}{events.length === 0 && <p>Ajoute un premier événement pour commencer à composer ton histoire.</p>}</div>
+      </details>
+      <details className={styles.resultAccordion}>
+        <summary><span><small>02</small><b>Ce que je retiens</b></span><em>Relire ma réflexion</em><i>＋</i></summary>
+        <div className={`${styles.resultAccordionBody} ${styles.insight}`}><h2>Des thèmes commencent à se dessiner.</h2><p>Relis les mots que tu as posés pour reconnaître ce qui revient dans ton histoire, sans chercher une conclusion trop rapide.</p><button>Relire ma réflexion →</button></div>
+      </details>
+      <details className={`${styles.resultAccordion} ${styles.nextStep}`}>
+        <summary><span><small>03</small><b>Mon prochain pas</b></span><em>Passer à l’action</em><i>＋</i></summary>
+        <div className={styles.resultAccordionBody}><h2>Rencontrer une personne qui peut m’accompagner.</h2><p>Préparer mes questions et demander un temps d’échange avant la fin du mois.</p></div>
+      </details>
     </div>
     <footer className={styles.screenFooter}><button className={styles.secondary} onClick={onEdit}>Modifier mon histoire</button><button className={styles.primary}>Imprimer ma ligne de vie <b>↗</b></button></footer>
   </section>;
