@@ -956,4 +956,48 @@
   .resultAccordionBody p{font-size:14px}
 }
 
+/* Neutralise définitivement les anciennes dimensions des trois cartes. */
+.finalScreen .finalGrid details.resultAccordion,
+.finalScreen .finalGrid details.resultAccordion.nextStep{
+  display:block!important;
+  min-height:0!important;
+  gap:0!important;
+  padding:0!important;
+}
+.finalScreen .finalGrid details.resultAccordion summary{
+  min-height:56px;
+  padding:11px 16px;
+}
+.finalScreen .finalGrid details.resultAccordion summary b{font-size:16px;line-height:1.2}
+.finalScreen .finalGrid details.resultAccordion summary small{font-size:11px}
+.finalScreen .finalGrid details.resultAccordion summary em{font-size:11px}
+.finalScreen .finalGrid details.resultAccordion .resultAccordionBody{
+  margin:0 16px;
+  padding:0 0 14px 38px;
+}
+.finalScreen .finalGrid details.resultAccordion .resultAccordionBody h2{
+  max-width:720px;
+  margin:12px 0 6px;
+  font-size:20px!important;
+  line-height:1.2;
+  letter-spacing:-.02em;
+}
+.finalScreen .finalGrid details.resultAccordion .resultAccordionBody p{
+  max-width:760px;
+  margin:5px 0;
+  font-size:13px!important;
+  line-height:1.5;
+}
+.finalScreen .finalGrid details.resultAccordion .resultAccordionBody button{
+  font-size:13px;
+}
+
+@media(max-width:800px){
+  .finalScreen .finalGrid details.resultAccordion summary{min-height:54px;padding:10px 13px}
+  .finalScreen .finalGrid details.resultAccordion summary b{font-size:15px}
+  .finalScreen .finalGrid details.resultAccordion .resultAccordionBody{margin:0 13px;padding:0 0 13px}
+  .finalScreen .finalGrid details.resultAccordion .resultAccordionBody h2{font-size:18px!important}
+  .finalScreen .finalGrid details.resultAccordion .resultAccordionBody p{font-size:13px!important}
+}
+
 
