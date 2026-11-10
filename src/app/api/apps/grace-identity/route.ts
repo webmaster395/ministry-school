@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getViewer } from "@/lib/data/viewer";
 import { fruitTraits, naturalSkillCategories, spiritualGifts, type GraceTestKey } from "@/lib/apps/grace-identity";
 import { classifySpiritualGifts, isSpiritualGiftsV2Complete } from "@/lib/apps/spiritual-gifts-v2";
+import { naturalSkillIds } from "@/lib/apps/natural-skills-v2";
 
 const keys = new Set<GraceTestKey>(["fruit", "gifts", "skills"]);
 const knownSkills = new Set<string>(naturalSkillCategories.flatMap((category) => category.skills));
@@ -19,7 +20,10 @@ function resultsFor(testKey: GraceTestKey, answers: Record<string, unknown>) {
     return { yes: spiritualGifts.filter(([key]) => answers[key] === "Oui").map(([, label]) => label), explore: spiritualGifts.filter(([key]) => answers[key] === "Peut-être").map(([, label]) => label) };
   }
   const selected = Array.isArray(answers.selected) ? answers.selected.filter((item): item is string => typeof item === "string" && knownSkills.has(item)) : [];
-  return { selected };
+  const strengths = Array.isArray(answers.strengths) ? answers.strengths.filter((item): item is string => typeof item === "string" && naturalSkillIds.has(item)) : [];
+  const growth = Array.isArray(answers.growth) ? answers.growth.filter((item): item is string => typeof item === "string" && naturalSkillIds.has(item)) : [];
+  const priorities = Array.isArray(answers.priorities) ? answers.priorities.filter((item): item is string => typeof item === "string" && naturalSkillIds.has(item) && growth.includes(item)).slice(0, 3) : [];
+  return { version: "natural-skills-v2-48", strengths, growth, priorities, legacySelected: selected };
 }
 
 export async function PUT(request: Request) {
