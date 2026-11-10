@@ -778,4 +778,52 @@
   .screenFooter{padding-top:24px}
 }
 
+/* Accueil final : une seule composition, sans arrière-plan vert parasite. */
+.shell{
+  background:#f6f1e8;
+}
+.screen.cover{
+  min-height:min(720px,calc(100svh - 150px));
+  padding:28px 44px 34px;
+}
+.coverCopy{
+  justify-content:center;
+  gap:0;
+  margin:18px 0 0;
+}
+.coverCopy .eyebrow{margin-bottom:18px}
+.coverCopy h1{margin-bottom:28px}
+.coverCopy h2{
+  margin:0 auto 16px;
+  font-size:clamp(20px,1.7vw,24px);
+}
+.coverCopy>p:not(.eyebrow){
+  max-width:650px;
+  margin:0 auto;
+  font-size:15px;
+  line-height:1.55;
+}
+.cover .screenFooter{
+  justify-content:center;
+  padding-top:24px;
+}
+.cover .screenFooter .primary{
+  width:min(360px,100%);
+}
+
+@media(max-width:800px){
+  .shell{background:#f6f1e8}
+  .screen.cover{
+    min-height:calc(100svh - 72px);
+    margin:0;
+    padding:22px 20px 28px;
+  }
+  .coverCopy{margin:20px 0 0}
+  .coverCopy .eyebrow{margin-bottom:14px}
+  .coverCopy h1{margin-bottom:24px}
+  .coverCopy h2{margin:0 auto 14px;font-size:19px}
+  .coverCopy>p:not(.eyebrow){font-size:14px;line-height:1.52}
+  .cover .screenFooter{padding-top:22px}
+}
+
 

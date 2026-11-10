@@ -101,9 +101,8 @@ function Intro({ onContinue }: { onContinue: () => void }) {
       <h1>Ma ligne de vie.</h1>
       <h2>Et si ton histoire t’aidait à mieux comprendre ton appel&nbsp;?</h2>
       <p>Certains événements de ta vie ont peut-être joué un rôle important dans ton cheminement avec Dieu. Revisite ton histoire, reconnais ce que tu as vécu et découvre les éléments qui reviennent dans ton parcours.</p>
-      <p className={styles.reassurance}>Il n’y a pas de bonne ou de mauvaise histoire. Tu restes libre de ne pas raconter certains épisodes personnels.</p>
     </div>
-    <footer className={styles.screenFooter}><span>Privé · modifiable · à ton rythme</span><button className={styles.primary} onClick={onContinue}>Commencer ma ligne de vie <b>→</b></button></footer>
+    <footer className={styles.screenFooter}><button className={styles.primary} onClick={onContinue}>Commencer ma ligne de vie <b>→</b></button></footer>
   </section>;
 }
 
