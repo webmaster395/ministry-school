@@ -6,6 +6,31 @@ import { fruitTraits } from "@/lib/apps/grace-identity";
 import styles from "./FruitSpiritJourney.module.css";
 
 type Page = "discover" | "intro" | "evaluate" | "results";
+type CategoryKey = "strong" | "growing" | "cultivate";
+
+const categoryInfo: Record<CategoryKey, { eyebrow: string; title: string; intro: string; body: string; tone: "red" | "green" | "orange" }> = {
+  strong: {
+    eyebrow: "CE QUI PORTE DÉJÀ DU FRUIT",
+    title: "LES FRUITS DÉJÀ VISIBLES.",
+    intro: "Ces qualités semblent régulièrement présentes dans ta vie.",
+    body: "Continue de les laisser grandir avec humilité. Elles prennent tout leur sens lorsqu’elles servent les autres et reflètent le caractère de Jésus.",
+    tone: "red",
+  },
+  growing: {
+    eyebrow: "CE QUI EST EN TRAIN DE GRANDIR",
+    title: "LES FRUITS À FORTIFIER.",
+    intro: "Ces qualités sont présentes, mais elles peuvent encore gagner en stabilité.",
+    body: "Observe les situations dans lesquelles elles apparaissent déjà. Les défis proposés peuvent t’aider à leur donner davantage de place dans ton quotidien.",
+    tone: "green",
+  },
+  cultivate: {
+    eyebrow: "CE QUI DEMANDE DE L’ATTENTION",
+    title: "LES FRUITS À CULTIVER.",
+    intro: "Ces qualités semblent moins faciles à vivre aujourd’hui.",
+    body: "Il ne s’agit pas de te juger. Choisis un petit pas concret et laisse Dieu travailler progressivement ton caractère.",
+    tone: "orange",
+  },
+};
 
 const scoreLabels = [
   [1, "Très peu"],
@@ -27,8 +52,9 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
   const [step, setStep] = useState(firstMissing);
   const [answers, setAnswers] = useState<Record<string, unknown>>(initial);
   const [error, setError] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<CategoryKey | null>(null);
 
-  useEffect(() => { window.scrollTo({ top: 0, behavior: "smooth" }); }, [page, step]);
+  useEffect(() => { window.scrollTo({ top: 0, behavior: "smooth" }); }, [page, step, selectedCategory]);
 
   const groups = useMemo(() => {
     const strong = fruitTraits.filter((trait) => Number(answers[trait.key]) >= 4);
@@ -112,29 +138,40 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
     </Shell>;
   }
 
+  if (selectedCategory) {
+    const category = categoryInfo[selectedCategory];
+    const traits = groups[selectedCategory];
+    return <Shell className={styles.softGreen}>
+      <div className={`${styles.frame} ${styles.categoryFrame}`}>
+        <button type="button" onClick={() => setSelectedCategory(null)} className={styles.ghost}><ArrowLeft size={16} /> Retour aux trois catégories</button>
+        <header className={styles.categoryHeader}>
+          <p className={styles.eyebrow}>{category.eyebrow}</p>
+          <h1 className={`${styles.title} ${styles.categoryTitle}`}>{category.title}</h1>
+          <p className={styles.lead}>{category.intro}</p>
+          <p className={styles.categoryBody}>{category.body}</p>
+        </header>
+        {traits.length > 0 ? <FruitCards traits={traits} answers={answers} setAnswers={setAnswers} /> : <section className={styles.emptyCategory}><h2>Aucun fruit dans cette catégorie aujourd’hui.</h2><p>Tu peux revenir à la synthèse pour découvrir les autres catégories.</p></section>}
+        <div className={styles.actions}>
+          <button type="button" onClick={() => setSelectedCategory(null)} className={styles.ghost}><ArrowLeft size={16} /> Voir les autres catégories</button>
+          <div className={styles.saveArea}>{error && <span className={styles.error}>{error}</span>}<button type="button" disabled={saving} onClick={() => void saveChallenges()} className={styles.pill}><Save size={16} /> {saving ? "Enregistrement…" : "Enregistrer mes défis"}</button></div>
+        </div>
+      </div>
+    </Shell>;
+  }
+
   return <Shell className={styles.softGreen}>
     <div className={`${styles.frame} ${styles.resultsFrame}`}>
       <p className={styles.eyebrow}>TON JARDIN AUJOURD’HUI</p>
       <h1 className={`${styles.title} ${styles.resultsTitle}`}>CE QUI GRANDIT EN TOI.</h1>
       <p className={styles.lead}>Un regard bienveillant sur ton chemin d’aujourd’hui, accompagné d’actions simples à essayer cette semaine.</p>
       <section className={styles.summaryGrid}>
-        <Summary count={groups.strong.length} title="Ce qui porte déjà du fruit" text="Les qualités que tu reconnais régulièrement dans ta vie." tone="red" />
-        <Summary count={groups.growing.length} title="Ce qui est en train de grandir" text="Les qualités présentes que tu peux encore fortifier." tone="green" />
-        <Summary count={groups.cultivate.length} title="Ce qui demande de l’attention" text="Les qualités à cultiver avec douceur et persévérance." tone="orange" />
+        <Summary count={groups.strong.length} title="Ce qui porte déjà du fruit" text="Les qualités que tu reconnais régulièrement dans ta vie." tone="red" onClick={() => setSelectedCategory("strong")} />
+        <Summary count={groups.growing.length} title="Ce qui est en train de grandir" text="Les qualités présentes que tu peux encore fortifier." tone="green" onClick={() => setSelectedCategory("growing")} />
+        <Summary count={groups.cultivate.length} title="Ce qui demande de l’attention" text="Les qualités à cultiver avec douceur et persévérance." tone="orange" onClick={() => setSelectedCategory("cultivate")} />
       </section>
-      <section className={styles.fruitGrid}>{fruitTraits.map((trait) => {
-        const score = Math.min(5, Math.max(1, Number(answers[trait.key]) || 1));
-        const doneKey = `challenge_${trait.key}`;
-        return <article key={trait.key} className={styles.fruitCard}>
-          <div className={styles.fruitHeading}><div><p className={styles.eyebrow}>{score >= 4 ? "PORTE DU FRUIT" : score === 3 ? "EN CROISSANCE" : "À CULTIVER"}</p><h2>{trait.name}</h2></div><strong>{score}<small>/5</small></strong></div>
-          <p>{trait.encouragements[score - 1]}</p>
-          <div className={styles.challenge}><b>TON DÉFI CETTE SEMAINE</b><p>{trait.challenges[score - 1]}</p></div>
-          <label><input type="checkbox" checked={Boolean(answers[doneKey])} onChange={(event) => setAnswers((current) => ({ ...current, [doneKey]: event.target.checked }))} /> <span className={Boolean(answers[doneKey]) ? styles.done : ""}>{Boolean(answers[doneKey]) && <Check size={14} />} Défi réalisé</span></label>
-        </article>;
-      })}</section>
       <div className={styles.actions}>
         <button type="button" onClick={onBack} className={styles.ghost}><Sparkles size={16} /> Faire les autres tests</button>
-        <div className={styles.saveArea}>{error && <span className={styles.error}>{error}</span>}<button type="button" disabled={saving} onClick={() => void saveChallenges()} className={styles.pill}><Save size={16} /> {saving ? "Enregistrement…" : "Enregistrer mes défis"}</button></div>
+        <button type="button" onClick={() => { setStep(0); setPage("evaluate"); }} className={styles.ghost}>Modifier mes réponses</button>
       </div>
     </div>
   </Shell>;
@@ -144,8 +181,25 @@ function Shell({ children, className = "" }: { children: React.ReactNode; classN
   return <main className={`${styles.shell} ${className}`}>{children}</main>;
 }
 
-function Summary({ count, title, text, tone }: { count: number; title: string; text: string; tone: "red" | "green" | "orange" }) {
-  return <article className={`${styles.summary} ${styles[tone]}`}><b>{String(count).padStart(2, "0")}</b><div><h2>{title}</h2><p>{text}</p></div></article>;
+function Summary({ count, title, text, tone, onClick }: { count: number; title: string; text: string; tone: "red" | "green" | "orange"; onClick: () => void }) {
+  return <button type="button" onClick={onClick} className={`${styles.summary} ${styles[tone]}`}><b>{String(count).padStart(2, "0")}</b><div><h2>{title}</h2><p>{text}</p></div><ArrowRight size={19} /></button>;
+}
+
+function FruitCards({ traits, answers, setAnswers }: {
+  traits: typeof fruitTraits[number][];
+  answers: Record<string, unknown>;
+  setAnswers: React.Dispatch<React.SetStateAction<Record<string, unknown>>>;
+}) {
+  return <section className={styles.fruitGrid}>{traits.map((trait) => {
+    const score = Math.min(5, Math.max(1, Number(answers[trait.key]) || 1));
+    const doneKey = `challenge_${trait.key}`;
+    return <article key={trait.key} className={styles.fruitCard}>
+      <div className={styles.fruitHeading}><div><h2>{trait.name}</h2></div><strong>{score}<small>/5</small></strong></div>
+      <p>{trait.encouragements[score - 1]}</p>
+      <div className={styles.challenge}><b>TON DÉFI CETTE SEMAINE</b><p>{trait.challenges[score - 1]}</p></div>
+      <label><input type="checkbox" checked={Boolean(answers[doneKey])} onChange={(event) => setAnswers((current) => ({ ...current, [doneKey]: event.target.checked }))} /> <span className={Boolean(answers[doneKey]) ? styles.done : ""}>{Boolean(answers[doneKey]) && <Check size={14} />} Défi réalisé</span></label>
+    </article>;
+  })}</section>;
 }
 
 function validScore(value: unknown) {
