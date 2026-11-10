@@ -601,4 +601,86 @@
   .timelineScreen .eventCard>small{font-size:11px;line-height:1.45}.finalScreen .finalGrid article{padding:20px}
 }
 
+/* Lisibilité renforcée : aucun texte jaune, corps secondaires confortables. */
+.eyebrow,
+.cover .eyebrow,
+.eventsScreen .editorIntro .eyebrow,
+.timelineScreen .timelineHeading .eyebrow,
+.reflectionScreen .reflectionIntro .eyebrow,
+.finalScreen .finalHero .eyebrow {
+  color: #fff8ed;
+}
+
+.timelineScreen .roots span,
+.finalScreen .finalGrid article:not(.nextStep) .eyebrow,
+.reflectionScreen .reflectionGrid label > b,
+.eventsScreen .eventRail span,
+.timelineScreen .eventCard > b,
+.miniTimeline b {
+  color: #983b25;
+}
+
+.finalScreen .nextStep .eyebrow { color: #fff8ed; }
+
+.editorIntro > p:last-of-type,
+.timelineHeading > p:last-child,
+.reflectionIntro > p:last-child,
+.finalHero > p:last-child {
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.form label small {
+  color: #695950;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.form label > span { font-size: 15px; }
+.form input,.form textarea { font-size: 16px; line-height: 1.55; }
+.timelineScreen .eventCard > small { font-size: 14px; line-height: 1.55; }
+.timelineScreen .calling p,.timelineScreen .roots p { font-size: 14px; line-height: 1.55; }
+.reflectionGrid span { font-size: 14px; line-height: 1.55; }
+.reflectionGrid textarea { font-size: 15px; line-height: 1.55; }
+.finalGrid p:not(.eyebrow) { font-size: 15px; line-height: 1.58; }
+.miniTimeline small { font-size: 13px; }
+
+.finalScreen .finalGrid article { min-height: 0; }
+.finalScreen .nextStep {
+  display: flex;
+  min-height: 270px;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 16px;
+  padding: 32px !important;
+}
+.finalScreen .nextStep .eyebrow,
+.finalScreen .nextStep h2,
+.finalScreen .nextStep p { margin: 0; }
+.finalScreen .nextStep h2 { max-width: 560px; font-size: clamp(27px,3vw,38px); line-height: 1.08; }
+.finalScreen .nextStep p:not(.eyebrow) { max-width: 560px; color: rgba(255,248,237,.9); }
+
+.secondary:hover { color: #421b15; background: #f4ddbc; border-color: #8f3b27; }
+.finalScreen .screenFooter .secondary {
+  color: #fff8ed;
+  background: #421b15;
+  border: 1px solid #421b15;
+  box-shadow: 0 10px 28px rgba(45,13,8,.18);
+}
+.finalScreen .screenFooter .secondary:hover { color: #421b15; background: #fff8ed; }
+
+@media(max-width:800px){
+  .editorIntro > p:last-of-type,
+  .timelineHeading > p:last-child,
+  .reflectionIntro > p:last-child,
+  .finalHero > p:last-child { font-size: 16px !important; line-height: 1.58 !important; }
+  .form label small { font-size: 14px; }
+  .form label > span { font-size: 15px; }
+  .timelineScreen .eventCard > small { font-size: 15px; line-height: 1.55; }
+  .timelineScreen .calling p,.timelineScreen .roots p { font-size: 14px; }
+  .reflectionGrid span { font-size: 14px; }
+  .finalGrid p:not(.eyebrow) { font-size: 15px; }
+  .finalScreen .nextStep { min-height: 0; gap: 14px; padding: 26px 22px !important; }
+}
+
 
