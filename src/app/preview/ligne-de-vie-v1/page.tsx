@@ -172,7 +172,6 @@ function Reflection({ values, onChange, onContinue }: { values: ReflectionAnswer
 
 function Final({ events, onOpen, onEdit }: { events: LifeEvent[]; onOpen: (id: string) => void; onEdit: () => void }) {
   return <section className={`${styles.screen} ${styles.finalScreen}`}>
-    <Header step="MON ESPACE PERSONNEL" />
     <div className={styles.finalHero}><p className={styles.eyebrow}>MA LIGNE DE VIE</p><h1>Je vois mieux<br />le chemin parcouru.</h1><p>{events.length} moments composent aujourd’hui ton histoire. Tu peux continuer à l’enrichir à mesure que ton parcours avance.</p></div>
     <div className={styles.finalGrid}>
       <details className={styles.resultAccordion} open>

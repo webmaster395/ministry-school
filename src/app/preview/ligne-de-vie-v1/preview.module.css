@@ -901,4 +901,59 @@
   .resultAccordionBody{margin:0 18px;padding:2px 0 22px 0}
 }
 
+/* Le shell Ministry reste immobile ; seul l'outil défile dans sa fenêtre. */
+.shell{
+  height:calc(100dvh - 142px);
+  min-height:560px;
+  overflow-x:hidden;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable;
+  border-radius:20px;
+}
+.screen{
+  min-height:100%;
+  margin-top:0!important;
+  margin-bottom:0!important;
+}
+.finalScreen .finalHero{margin-top:18px}
+
+/* Accordéons compacts : lecture confortable sans effet de panneau géant. */
+.resultAccordion summary{
+  min-height:68px;
+  padding:14px 20px;
+}
+.resultAccordion summary b{font-size:18px}
+.resultAccordion summary em{font-size:12px}
+.resultAccordionBody{
+  margin:0 20px;
+  padding:2px 0 18px 42px;
+}
+.resultAccordionBody h2{
+  margin:16px 0 8px;
+  font-size:clamp(20px,1.7vw,25px);
+  line-height:1.14;
+}
+.resultAccordionBody p{font-size:14px;line-height:1.55}
+.resultAccordionBody.miniTimeline{
+  max-height:280px;
+  overflow-y:auto;
+  padding-right:8px;
+}
+
+@media(max-width:800px){
+  .shell{
+    height:calc(100dvh - 96px);
+    min-height:480px;
+    border-radius:16px;
+  }
+  .screen{min-height:100%}
+  .finalScreen .finalHero{margin-top:10px}
+  .resultAccordion summary{min-height:64px;padding:13px 16px}
+  .resultAccordion summary b{font-size:17px}
+  .resultAccordionBody{margin:0 16px;padding:2px 0 17px}
+  .resultAccordionBody h2{font-size:20px}
+  .resultAccordionBody p{font-size:14px}
+}
+
 
