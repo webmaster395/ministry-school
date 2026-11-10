@@ -213,7 +213,10 @@ export default function IdentityExperience(props: Props) {
             <div><strong>{props.months}</strong><span>Mois ensemble</span></div>
             <div><strong>{props.completedTests}</strong><span>Tests réalisés</span></div>
           </div>
-          <p className={styles.bio}>Mes réponses, mes résultats et mes découvertes, réunis au même endroit.</p>
+          <blockquote className={styles.bio}>
+            <p>« Je te loue de ce que je suis une créature si merveilleuse. Tes œuvres sont admirables. »</p>
+            <cite>Psaume 139:14</cite>
+          </blockquote>
         </div>
       </header>
 
