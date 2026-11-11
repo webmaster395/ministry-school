@@ -1,19 +1,18 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("la story et la tâche MAPP ouvrent toujours le parcours officiel authentifié", () => {
+test("la story MAPP terminée ouvre son résultat officiel et une story vierge ouvre le test", () => {
   const page = read("src/app/etudiant/identite/page.tsx");
-  const mappRoute = read("src/app/apps/profil-mapp/page.tsx");
+  const vercel = read("vercel.json");
 
-  assert.match(page, /key: "profil-mapp",[\s\S]*?href: "\/apps\/profil-mapp"/);
+  assert.match(page, /const mappHref = mapp\?\.attemptId[\s\S]*?\/apps\/profil-mapp\/test\/\$\{mapp\.attemptId\}\/resultat/);
+  assert.match(page, /key: "profil-mapp",[\s\S]*?href: mappHref/);
   assert.match(page, /tool\.slug === "profil-mapp"[\s\S]*?href: "\/apps\/profil-mapp"/);
-  assert.match(mappRoute, /const viewer = await getViewer\(\)/);
-  assert.match(mappRoute, /const questionnaire = await openMappQuestionnaire\(\)/);
-  assert.match(mappRoute, /redirect\(destination\)/);
-  assert.doesNotMatch(mappRoute, /GuestMappEntry|api\/mapp\/guest\/start/);
+  assert.match(vercel, /"source": "\/apps\/profil-mapp\/:path\*"[\s\S]*?profil-mapp\.vercel\.app\/apps\/profil-mapp\/:path\*/);
+  assert.equal(existsSync(new URL("../src/app/apps/profil-mapp/page.tsx", import.meta.url)), false);
 });
 
 test("la jauge ouvre l'onglet À faire et le recadre", () => {
