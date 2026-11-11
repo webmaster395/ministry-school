@@ -13,8 +13,10 @@ test("la story MAPP et l'entrée principale ouvrent un résultat existant sans r
   assert.match(page, /key: "profil-mapp",[\s\S]*?href: mappHref/);
   assert.match(page, /tool\.slug === "profil-mapp"[\s\S]*?href: "\/apps\/profil-mapp"/);
   assert.match(mappRoute, /const viewer = await getViewer\(\)/);
-  assert.match(mappRoute, /const \[existingResult\] = await getOfficialMappIdentityResults\(\)/);
+  assert.match(mappRoute, /const nativeResult = dashboard\.identityResults\.find/);
+  assert.match(mappRoute, /const \[officialResult\] = nativeResult \? \[\] : await getOfficialMappIdentityResults\(\)/);
   assert.match(mappRoute, /existingResult\.attemptId[\s\S]*?\/resultat/);
+  assert.match(mappRoute, /if \(nativeResult\) query\.set\("native", "1"\)/);
   assert.match(mappRoute, /const questionnaire = await openMappQuestionnaire\(\)/);
   assert.match(mappRoute, /redirect\(destination\)/);
   assert.doesNotMatch(mappRoute, /GuestMappEntry|api\/mapp\/guest\/start/);
@@ -22,6 +24,17 @@ test("la story MAPP et l'entrée principale ouvrent un résultat existant sans r
   assert.match(vercel, /"source": "\/apps\/profil-mapp\/test\/:path\*"/);
   assert.match(vercel, /"source": "\/apps\/profil-mapp\/admin\/:path\*"/);
   assert.match(vercel, /"source": "\/apps\/profil-mapp\/_next\/:path\*"/);
+});
+
+test("les pages étudiantes privilégient le résultat MAPP natif et conservent le routage Ministry", () => {
+  const identity = read("src/app/etudiant/identite/page.tsx");
+  const work = read("src/app/etudiant/travail/page.tsx");
+
+  for (const page of [identity, work]) {
+    assert.match(page, /const nativeMappResults = dashboard\.identityResults/);
+    assert.match(page, /const selectedMappResults = nativeMappResults\.length \? nativeMappResults : officialMappResults/);
+    assert.match(page, /if \(mapp\?\.native\) mappQuery\.set\("native", "1"\)/);
+  }
 });
 
 test("la jauge ouvre l'onglet À faire et le recadre", () => {

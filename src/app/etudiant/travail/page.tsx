@@ -49,13 +49,16 @@ function hasCatalogTool(tools: CatalogApp[], slug: string) {
 function buildTrackedTools(tools: CatalogApp[], results: IdentityResult[], heroesAvailable: boolean): TrackedTool[] {
   const items: TrackedTool[] = [];
   const mapp = latestResult(results, "mapp");
+  const mappQuery = new URLSearchParams();
+  if (mapp?.resultRevisionId) mappQuery.set("revision", mapp.resultRevisionId);
+  if (mapp?.native) mappQuery.set("native", "1");
   items.push({
     key: "profil-mapp",
     name: "Profil MAPP",
     description: "Découvre ton profil et retrouve tes restitutions personnelles.",
     completed: Boolean(mapp),
     href: mapp?.attemptId
-      ? `/apps/profil-mapp/test/${mapp.attemptId}/resultat${mapp.resultRevisionId ? `?revision=${mapp.resultRevisionId}` : ""}`
+      ? `/apps/profil-mapp/test/${mapp.attemptId}/resultat${mappQuery.size ? `?${mappQuery.toString()}` : ""}`
       : "/apps/profil-mapp",
   });
 
@@ -162,6 +165,10 @@ export default async function StudentWorkPage({
       supabase.from("life_line_journeys").select("completed_at,updated_at").eq("user_id", user!.id).maybeSingle(),
       getPublishedHeroesMotorsResult(user!.id),
     ]);
+    const nativeMappResults = dashboard.identityResults
+      .filter((result) => result.kind === "mapp")
+      .map((result) => ({ ...result, native: true }));
+    const selectedMappResults = nativeMappResults.length ? nativeMappResults : officialMappResults;
     const identityResults = dashboard.identityResults.filter((result) => result.kind !== "mapp");
     const lifeLineResults: IdentityResult[] = lifeLine.data
       ? [{ kind: "life-line", completedAt: lifeLine.data.completed_at ?? lifeLine.data.updated_at ?? new Date().toISOString() }]
@@ -169,7 +176,7 @@ export default async function StudentWorkPage({
     const heroesResults: IdentityResult[] = heroesMotors
       ? [{ kind: "heroes-motors", completedAt: heroesMotors.publishedAt }]
       : [];
-    const results = [...officialMappResults, ...identityResults, ...lifeLineResults, ...heroesResults];
+    const results = [...selectedMappResults, ...identityResults, ...lifeLineResults, ...heroesResults];
     trackedTools = buildTrackedTools(tools, results, Boolean(heroesMotors));
     freeTools = buildFreeTools(tools);
   }

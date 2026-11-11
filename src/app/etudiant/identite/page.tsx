@@ -32,8 +32,11 @@ function buildStories({
   const hasTool = (slug: string) => tools.some((tool) => tool.slug === slug);
   const items: IdentityStoryItem[] = [];
   const mapp = latestResult(results, "mapp");
+  const mappQuery = new URLSearchParams();
+  if (mapp?.resultRevisionId) mappQuery.set("revision", mapp.resultRevisionId);
+  if (mapp?.native) mappQuery.set("native", "1");
   const mappHref = mapp?.attemptId
-    ? `/apps/profil-mapp/test/${mapp.attemptId}/resultat${mapp.resultRevisionId ? `?revision=${mapp.resultRevisionId}` : ""}`
+    ? `/apps/profil-mapp/test/${mapp.attemptId}/resultat${mappQuery.size ? `?${mappQuery.toString()}` : ""}`
     : "/apps/profil-mapp";
 
   // MAPP reste l'accès principal de Mon identité, même pendant une mise à jour
@@ -180,11 +183,15 @@ export default async function StudentIdentityPage() {
   const lifeLineResults: IdentityResult[] = hasLifeLineContent
     ? [{ kind: "life-line", completedAt: lifeLine.data?.completed_at ?? lifeLine.data?.updated_at ?? new Date().toISOString() }]
     : [];
+  const nativeMappResults = dashboard.identityResults
+    .filter((result) => result.kind === "mapp")
+    .map((result) => ({ ...result, native: true }));
+  const selectedMappResults = nativeMappResults.length ? nativeMappResults : officialMappResults;
   const nonMappIdentityResults = dashboard.identityResults.filter((result) => result.kind !== "mapp");
   const heroesResults: IdentityResult[] = heroesMotors
     ? [{ kind: "heroes-motors", completedAt: heroesMotors.publishedAt }]
     : [];
-  const chronologicalResults = [...officialMappResults, ...nonMappIdentityResults, ...dashboard.financeResults, ...lifeLineResults, ...heroesResults]
+  const chronologicalResults = [...selectedMappResults, ...nonMappIdentityResults, ...dashboard.financeResults, ...lifeLineResults, ...heroesResults]
     .sort((left, right) => new Date(right.completedAt).getTime() - new Date(left.completedAt).getTime());
   // Mes moteurs devient la publication éditoriale épinglée lorsqu'un véritable
   // résultat a été publié. MAPP reste ensuite la première publication de test.

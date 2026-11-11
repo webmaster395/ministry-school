@@ -10,6 +10,7 @@ export type IdentityResult = {
   primaryCode?: string | null;
   secondaryCode?: string | null;
   tieBreakRequired?: boolean;
+  native?: boolean;
   results?: Record<string, unknown>;
 };
 
