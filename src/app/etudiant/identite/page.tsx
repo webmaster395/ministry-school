@@ -57,12 +57,11 @@ function buildStories({
     });
   }
 
-  if (graceAvailable) {
-    ([
+  ([
       ["fruit", "Fruit de l’Esprit", "/apps/grace-identity/fruit-spirit-bg-v3.webp"],
       ["gifts", "Dons spirituels", "/identity/posts/dons-spirituels.webp"],
       ["skills", "Compétences naturelles", "/identity/posts/competences-naturelles.webp"],
-    ] as const).forEach(([kind, name, image]) => {
+    ] as const).filter(([kind]) => kind === "fruit" || graceAvailable).forEach(([kind, name, image]) => {
       const completed = latestResult(results, kind);
       items.push({
         key: kind,
@@ -74,7 +73,6 @@ function buildStories({
         measurable: true,
       });
     });
-  }
 
   if (hasTool("ma-ligne-de-vie")) {
     const lifeLine = latestResult(results, "life-line");
@@ -142,7 +140,7 @@ function graceTestHref(kind: "fruit" | "gifts" | "skills") {
 }
 
 function buildUpcoming(tools: CatalogApp[], completedKinds: Set<string>) {
-  return tools.flatMap((tool) => {
+  const items = tools.flatMap((tool) => {
     if (tool.slug === "profil-mapp") return completedKinds.has("mapp") ? [] : [{ key: tool.id, name: "Profil MAPP", href: "/apps/profil-mapp", iconUrl: tool.iconUrl, category: "Identité" }];
     if (tool.slug === "je-suis-par-la-grace-de-dieu") return graceToolItems(tool).flatMap((item) => {
       const kind = resultKindForItem(item);
@@ -155,6 +153,16 @@ function buildUpcoming(tools: CatalogApp[], completedKinds: Set<string>) {
     if (tool.slug.includes("apest")) return completedKinds.has("apest") ? [] : [{ key: tool.id, name: tool.name, href: tool.url, iconUrl: tool.iconUrl, category: "Identité" }];
     return [];
   });
+  if (!completedKinds.has("fruit") && !items.some((item) => item.href === graceTestHref("fruit"))) {
+    items.unshift({
+      key: "fruit",
+      name: "Fruit de l’Esprit",
+      href: graceTestHref("fruit"),
+      iconUrl: null,
+      category: "Identité",
+    });
+  }
+  return items;
 }
 
 export default async function StudentIdentityPage() {
