@@ -1009,4 +1009,12 @@
   .finalScreen .finalGrid details.resultAccordion .resultAccordionBody p{font-size:13px!important}
 }
 
+/* L'impression ne conserve que la restitution, jamais la navigation Ministry. */
+@media print{
+  .shell,.shell *{visibility:visible!important}
+  .shell{position:absolute!important;inset:0!important;width:100%!important;height:auto!important;min-height:0!important;overflow:visible!important;border-radius:0!important;background:#fff!important}
+  .screen{width:100%!important;min-height:0!important;padding:0!important;background:#fff!important}
+  .previewNav,.header,.screenFooter,.dialogBackdrop{display:none!important}
+}
+
 

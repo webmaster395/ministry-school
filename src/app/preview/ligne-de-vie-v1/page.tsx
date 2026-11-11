@@ -37,6 +37,15 @@ const nav: Array<{ key: Screen; label: string }> = [
   { key: "final", label: "Résultat final" },
 ];
 
+function printLifeLine() {
+  const printClass = "printing-life-line";
+  const cleanup = () => document.body.classList.remove(printClass);
+  document.body.classList.add(printClass);
+  window.addEventListener("afterprint", cleanup, { once: true });
+  window.print();
+  window.setTimeout(cleanup, 30_000);
+}
+
 export default function LifeLinePreviewPage({ production = false, embedded = false }: { production?: boolean; embedded?: boolean }) {
   const [screen, setScreen] = useState<Screen>(production ? "intro" : "all");
   const [events, setEvents] = useState<LifeEvent[]>(production ? [] : sampleEvents);
@@ -61,7 +70,7 @@ export default function LifeLinePreviewPage({ production = false, embedded = fal
     return response.ok;
   };
 
-  return <main className={`${styles.shell} ${embedded ? styles.embedded : ""}`}>
+  return <main className={`life-line-print-root ${styles.shell} ${embedded ? styles.embedded : ""}`}>
     {screen === "all" && <div className={styles.showcase}>
       <Intro onContinue={() => setScreen("events")} />
       <Events events={events} setEvents={setEvents} onSave={(next) => persist(next)} onContinue={() => setScreen("timeline")} />
@@ -187,7 +196,7 @@ function Final({ events, onOpen, onEdit }: { events: LifeEvent[]; onOpen: (id: s
         <div className={styles.resultAccordionBody}><h2>Rencontrer une personne qui peut m’accompagner.</h2><p>Préparer mes questions et demander un temps d’échange avant la fin du mois.</p></div>
       </details>
     </div>
-    <footer className={styles.screenFooter}><button className={styles.secondary} onClick={onEdit}>Modifier mon histoire</button><button className={styles.primary}>Imprimer ma ligne de vie <b>↗</b></button></footer>
+    <footer className={styles.screenFooter}><button type="button" className={styles.secondary} onClick={onEdit}>Modifier mon histoire</button><button type="button" className={styles.primary} onClick={printLifeLine}>Imprimer ma ligne de vie <b>↗</b></button></footer>
   </section>;
 }
 
