@@ -61,3 +61,13 @@ test("les styles MAPP ne modifient plus les typographies de Ministry", () => {
   assert.match(mappStyles, /\.profil-mapp-scope h1 \{/);
   assert.match(layout, /profil-mapp-scope results-design-system/);
 });
+
+test("la restitution native embarque les quatre couleurs officielles dans son iframe", () => {
+  const resultExperience = read("src/app/preview/resultat/complete-experience.tsx");
+
+  assert.match(resultExperience, /conquerant: "#D94334"/);
+  assert.match(resultExperience, /communiquant: "#F2C94C"/);
+  assert.match(resultExperience, /facilitateur: "#57A773"/);
+  assert.match(resultExperience, /analyste: "#477CB9"/);
+  assert.doesNotMatch(resultExperience, /conquerant: "var\(--results-conquerant\)"/);
+});

@@ -23,10 +23,13 @@ const biblicalV10 = source.biblical;
 export type PreviewProfileCode = "conquerant" | "communiquant" | "facilitateur" | "analyste";
 
 const resultProfileColor: Record<PreviewProfileCode, string> = {
-  conquerant: "var(--results-conquerant)",
-  communiquant: "var(--results-communiquant)",
-  facilitateur: "var(--results-facilitateur)",
-  analyste: "var(--results-analyste)",
+  // This result is rendered inside an iframe. Keep the official palette
+  // self-contained: CSS variables defined by Ministry's parent document do
+  // not reliably cross the iframe boundary on a cold production load.
+  conquerant: "#D94334",
+  communiquant: "#F2C94C",
+  facilitateur: "#57A773",
+  analyste: "#477CB9",
 };
 
 function assignTypographyRoles(doc: Document) {
