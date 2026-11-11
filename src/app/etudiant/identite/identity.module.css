@@ -639,7 +639,7 @@
 }
 
 .fruitPost {
-  background: #fff9ed;
+  background: #090b25;
 }
 
 .fruitArtwork {
@@ -679,7 +679,7 @@
 
 .fruitArtwork {
   inset: 0;
-  background: #ead8b8 url('/apps/grace-identity/fruit-spirit-bg-v3.webp') center 54% / cover no-repeat;
+  background: #090b25 url('/apps/grace-identity/fruit-spirit-blueberry-abstract-v1.webp') center 50% / cover no-repeat;
   filter: none;
   transform: none;
   transition: transform 420ms var(--ease-out-soft);
@@ -688,17 +688,17 @@
 .fruitPost .postShade {
   background: linear-gradient(
     180deg,
-    rgb(250 239 215 / 0.04) 18%,
-    rgb(250 239 215 / 0.44) 57%,
-    rgb(250 239 215 / 0.9) 100%
+    rgb(5 7 26 / 0.02) 18%,
+    rgb(5 7 26 / 0.3) 55%,
+    rgb(5 7 26 / 0.92) 100%
   );
 }
 
 .fruitPost .postCopy,
 .fruitPost .postKicker,
 .fruitPost .openPost {
-  color: #321d20;
-  text-shadow: none;
+  color: #f8f5ff;
+  text-shadow: 0 2px 18px rgb(3 4 18 / 0.58);
 }
 
 .fruitPost:hover .fruitArtwork {

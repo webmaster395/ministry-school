@@ -60,7 +60,8 @@ test("la DA héros utilise la colombe abstraite et une écriture foncée", () =>
 test("la page étudiante conserve le portrait validé et le refus de communication", () => {
   const page = read("src/app/etudiant/identite/mes-moteurs/HeroesMotorsResultView.tsx");
   const identity = read("src/app/etudiant/identite/IdentityExperience.tsx");
-  assert.match(page, /Ce qui m&apos;anime/);
+  assert.doesNotMatch(page, /Ce qui m&apos;anime/);
+  assert.doesNotMatch(page, /Les qualités qui m&apos;inspirent/);
   assert.match(page, /Mon portrait/);
   assert.match(page, /Mes moteurs/);
   assert.match(page, /Mes héros/);

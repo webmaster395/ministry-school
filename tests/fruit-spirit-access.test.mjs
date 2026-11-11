@@ -21,3 +21,14 @@ test("Fruit de l’Esprit est masqué du tableau de bord étudiant standard", ()
   assert.match(identity, /completedTests=\{visibleResults\.length\}/);
   assert.match(identity, /upcoming=\{buildUpcoming\(visibleTools, completedKinds\)\}/);
 });
+
+test("la DA Fruit de l’Esprit utilise l’abstraction myrtille sur le post et le parcours", () => {
+  const identity = read("src/app/etudiant/identite/identity.module.css");
+  const stories = read("src/app/etudiant/identite/page.tsx");
+  const journey = read("src/components/apps/FruitSpiritJourney.module.css");
+
+  assert.match(identity, /fruit-spirit-blueberry-abstract-v1\.webp/);
+  assert.match(stories, /fruit-spirit-blueberry-abstract-v1\.webp/);
+  assert.match(journey, /fruit-spirit-blueberry-abstract-v1\.webp/);
+  assert.match(journey, /background-color: #090b25/);
+});

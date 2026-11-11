@@ -7,29 +7,46 @@
 .summary{width:100%;border-left:0;border-right:0;border-bottom:0;color:inherit;text-align:left;font:inherit;cursor:pointer;align-items:flex-start}.summary>svg{flex:none;margin-left:auto;margin-top:3px}.summary:hover{transform:translateY(-2px);box-shadow:0 14px 34px #8e353322}.categoryFrame{min-height:100svh}.categoryHeader{max-width:820px;margin-top:54px}.categoryTitle{margin-top:18px}.categoryBody{max-width:720px;margin:18px 0 0;font-size:14px;line-height:1.6}.emptyCategory{max-width:720px;margin-top:34px;border-radius:18px;background:#fffaf0e8;padding:24px}.emptyCategory h2{margin:0 0 8px;font-size:20px}.emptyCategory p{margin:0;font-size:13px;line-height:1.5}.categoryFrame .fruitGrid{margin-top:38px}
 @media(max-width:720px){.categoryHeader{margin-top:32px}.categoryTitle{margin-top:14px}.categoryBody{font-size:13px}.categoryFrame .fruitGrid{margin-top:24px}.summary:hover{transform:none}}
 
-/* Fruit de l'Esprit — warm editorial artwork shared by the test and results. */
+/* Fruit de l'Esprit — dark blueberry abstraction shared by the test and results. */
 .shell {
-  --ink: #321d20;
-  --paper: #f8ebd1;
-  background-color: #ead8b8;
-  background-image: url('/apps/grace-identity/fruit-spirit-bg-v3.webp');
-  background-position: center 48%;
+  --ink: #f8f5ff;
+  --paper: #f2edf8;
+  background-color: #090b25;
+  background-image: url('/apps/grace-identity/fruit-spirit-blueberry-abstract-v1.webp');
+  background-position: center 50%;
   color: var(--ink);
 }
 
 .shell::before,
 .softGreen::before,
 .softIvory::before {
-  background: linear-gradient(90deg, rgb(250 239 215 / 0.9) 0%, rgb(250 239 215 / 0.7) 47%, rgb(250 239 215 / 0.26) 100%);
+  background: linear-gradient(90deg, rgb(7 8 30 / 0.9) 0%, rgb(10 11 40 / 0.7) 47%, rgb(10 11 40 / 0.28) 100%);
 }
 
 .pill,
 .summary,
 .fruitCard,
 .emptyCategory {
-  background: rgb(250 239 215 / 0.9);
-  color: var(--ink);
-  box-shadow: 0 12px 34px rgb(72 29 39 / 0.12);
+  background: rgb(246 242 251 / 0.9);
+  color: #17132d;
+  box-shadow: 0 16px 40px rgb(2 3 18 / 0.28);
+}
+
+.pill {
+  color: #17132d;
+}
+
+.ghost,
+.eyebrow,
+.lead,
+.hint,
+.categoryBody {
+  color: #f8f5ff;
+}
+
+.hint,
+.categoryBody {
+  opacity: 0.78;
 }
 
 .traitList b,
@@ -37,40 +54,63 @@
 .red,
 .green,
 .orange {
-  color: #6f293b;
+  color: #5d4576;
 }
 
 .progress b {
-  background: #6f293b;
+  background: #c9b3ef;
+}
+
+.progress i {
+  background: rgb(255 255 255 / 0.22);
+}
+
+.traitList b {
+  background: rgb(255 255 255 / 0.14);
+  color: #f8f5ff;
+}
+
+.choice,
+.choiceActive {
+  border-color: rgb(255 255 255 / 0.68);
+  color: #f8f5ff;
 }
 
 .choice:hover,
 .choiceActive {
-  border-color: #6f293b;
-  background: #e6c7c1;
-  color: #321d20;
+  border-color: #d4c0f4;
+  background: #a588ca;
+  color: #130e26;
 }
 
 .red,
 .green,
 .orange {
-  border-color: #6f293b;
+  border-color: #bba3dc;
 }
 
 .red > b,
 .green > b,
 .orange > b {
-  color: #6f293b;
+  color: #5d4576;
+}
+
+.green {
+  border-color: #9dbb8e;
+}
+
+.green > b {
+  color: #547246;
 }
 
 .fruitCard > p {
-  color: #4f3435;
+  color: #4a405c;
 }
 
 .fruitCard label .done {
-  border-color: #6f293b;
-  background: #e6c7c1;
-  color: #321d20;
+  border-color: #765d96;
+  background: #d9caeb;
+  color: #17132d;
 }
 
 @media(max-width:720px) {
@@ -81,6 +121,6 @@
   .shell::before,
   .softGreen::before,
   .softIvory::before {
-    background: linear-gradient(180deg, rgb(250 239 215 / 0.78), rgb(250 239 215 / 0.58));
+    background: linear-gradient(180deg, rgb(7 8 30 / 0.82), rgb(10 11 40 / 0.62));
   }
 }
