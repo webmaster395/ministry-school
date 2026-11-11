@@ -29,6 +29,15 @@ test("la lecture étudiante ne reçoit jamais les réponses confidentielles", ()
   assert.doesNotMatch(loader, /source_payload/);
 });
 
+test("la super-administration peut prévisualiser son brouillon sans ouvrir l'outil aux étudiants", () => {
+  const migration = read("supabase/migrations/20261111235500_heroes_super_admin_preview.sql");
+  assert.match(migration, /public\.is_super_admin\(\)/);
+  assert.match(migration, /r\.publication_status = 'published'/);
+  assert.match(migration, /and r\.visible/);
+  assert.match(migration, /a\.student_enabled/);
+  assert.match(migration, /r\.user_id = auth\.uid\(\)/);
+});
+
 test("la page étudiante conserve le portrait validé et le refus de communication", () => {
   const page = read("src/app/etudiant/identite/mes-moteurs/HeroesMotorsResultView.tsx");
   const identity = read("src/app/etudiant/identite/IdentityExperience.tsx");
