@@ -21,9 +21,13 @@ test("la restriction Fruit de l’Esprit reste distincte et réservée aux super
 
 test("MAPP ouvre le test à faire ou le résultat déjà finalisé", () => {
   const page = read("src/app/apps/profil-mapp/page.tsx");
+  const questionnairePage = read("src/app/apps/profil-mapp/test/[attemptId]/page.tsx");
 
   assert.match(page, /if \(existingResult\?\.attemptId\)/);
   assert.match(page, /redirect\(`\/apps\/profil-mapp\/test\/\$\{existingResult\.attemptId\}\/resultat/);
   assert.match(page, /const questionnaire = await openMappQuestionnaire\(\)/);
   assert.match(page, /destination = `\/apps\/profil-mapp\/test\/\$\{questionnaire\.attemptId\}`/);
+  assert.match(questionnairePage, /!guestQuestionnaire && \(!viewer \|\| viewer\.deactivated\)/);
+  assert.doesNotMatch(questionnairePage, /viewer\.roles\.superAdmin/);
+  assert.match(questionnairePage, /questionnaire\.attemptId !== attemptId/);
 });

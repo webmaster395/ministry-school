@@ -10,7 +10,7 @@ export default async function OfficialMappTestPage({ params }: { params: Promise
   const { attemptId } = await params;
   const guestQuestionnaire = await openGuestQuestionnaire(attemptId);
   const viewer = guestQuestionnaire ? null : await getViewer();
-  if (!guestQuestionnaire && (!viewer || viewer.deactivated || !viewer.roles.superAdmin)) notFound();
+  if (!guestQuestionnaire && (!viewer || viewer.deactivated)) notFound();
   const questionnaire = guestQuestionnaire ?? await openMappQuestionnaire();
   if (questionnaire.attemptId !== attemptId || questionnaire.engine !== "hybrid-44") notFound();
   if (questionnaire.status === "completed") redirect(`/apps/profil-mapp/test/${attemptId}/resultat`);
