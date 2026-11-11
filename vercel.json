@@ -15,7 +15,7 @@
     },
     {
       "source": "/apps/profil-mapp/test/:path*",
-      "missing": [{ "type": "query", "key": "native" }],
+      "has": [{ "type": "query", "key": "legacy", "value": "1" }],
       "destination": "https://profil-mapp.vercel.app/apps/profil-mapp/test/:path*"
     },
     {

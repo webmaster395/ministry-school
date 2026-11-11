@@ -52,6 +52,7 @@ function buildTrackedTools(tools: CatalogApp[], results: IdentityResult[], heroe
   const mappQuery = new URLSearchParams();
   if (mapp?.resultRevisionId) mappQuery.set("revision", mapp.resultRevisionId);
   if (mapp?.native) mappQuery.set("native", "1");
+  if (mapp?.legacy) mappQuery.set("legacy", "1");
   items.push({
     key: "profil-mapp",
     name: "Profil MAPP",
@@ -168,7 +169,9 @@ export default async function StudentWorkPage({
     const nativeMappResults = dashboard.identityResults
       .filter((result) => result.kind === "mapp")
       .map((result) => ({ ...result, native: true }));
-    const selectedMappResults = nativeMappResults.length ? nativeMappResults : officialMappResults;
+    const selectedMappResults = nativeMappResults.length
+      ? nativeMappResults
+      : officialMappResults.map((result) => ({ ...result, legacy: true }));
     const identityResults = dashboard.identityResults.filter((result) => result.kind !== "mapp");
     const lifeLineResults: IdentityResult[] = lifeLine.data
       ? [{ kind: "life-line", completedAt: lifeLine.data.completed_at ?? lifeLine.data.updated_at ?? new Date().toISOString() }]

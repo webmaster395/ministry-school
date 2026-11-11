@@ -35,6 +35,7 @@ function buildStories({
   const mappQuery = new URLSearchParams();
   if (mapp?.resultRevisionId) mappQuery.set("revision", mapp.resultRevisionId);
   if (mapp?.native) mappQuery.set("native", "1");
+  if (mapp?.legacy) mappQuery.set("legacy", "1");
   const mappHref = mapp?.attemptId
     ? `/apps/profil-mapp/test/${mapp.attemptId}/resultat${mappQuery.size ? `?${mappQuery.toString()}` : ""}`
     : "/apps/profil-mapp";
@@ -186,7 +187,9 @@ export default async function StudentIdentityPage() {
   const nativeMappResults = dashboard.identityResults
     .filter((result) => result.kind === "mapp")
     .map((result) => ({ ...result, native: true }));
-  const selectedMappResults = nativeMappResults.length ? nativeMappResults : officialMappResults;
+  const selectedMappResults = nativeMappResults.length
+    ? nativeMappResults
+    : officialMappResults.map((result) => ({ ...result, legacy: true }));
   const nonMappIdentityResults = dashboard.identityResults.filter((result) => result.kind !== "mapp");
   const heroesResults: IdentityResult[] = heroesMotors
     ? [{ kind: "heroes-motors", completedAt: heroesMotors.publishedAt }]

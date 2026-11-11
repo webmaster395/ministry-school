@@ -19,6 +19,7 @@ export default async function ProfilMappPage() {
     const query = new URLSearchParams();
     if (existingResult.resultRevisionId) query.set("revision", existingResult.resultRevisionId);
     if (nativeResult) query.set("native", "1");
+    else query.set("legacy", "1");
     const suffix = query.size ? `?${query.toString()}` : "";
     redirect(`/apps/profil-mapp/test/${existingResult.attemptId}/resultat${suffix}`);
   }
