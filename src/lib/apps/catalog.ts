@@ -40,6 +40,7 @@ export type CatalogApp = {
 const ministryAppUrls: Record<string, string> = {
   generopoly: "/apps/generopoly",
   "profil-mapp": "/apps/profil-mapp",
+  "je-suis-par-la-grace-de-dieu": "/etudiant/identite/outils",
   "ma-ligne-de-vie": "/etudiant/ligne-de-vie",
 };
 

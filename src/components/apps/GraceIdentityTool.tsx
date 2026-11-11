@@ -18,7 +18,10 @@ const testMeta: Record<GraceTestKey, { title: string; text: string; icon: typeof
 
 export default function GraceIdentityTool({ initial, preview, initialTest = null }: { initial: RecordRow[]; preview: boolean; initialTest?: GraceTestKey | null }) {
   const [records, setRecords] = useState<RecordRow[]>(initial);
-  const [active, setActive] = useState<GraceTestKey | null>(() => initialTest && initial.some((item) => item.test_key === initialTest && item.completed_at) ? initialTest : null);
+  // Un accès depuis une story ouvre directement le test demandé, qu'il soit
+  // déjà terminé (résultat) ou encore à commencer. La navigation reste dans
+  // le layout étudiant et conserve donc la sidebar Ministry School.
+  const [active, setActive] = useState<GraceTestKey | null>(() => initialTest);
   const [saving, setSaving] = useState(false);
   const byKey = useMemo(() => new Map(records.map((item) => [item.test_key, item])), [records]);
   const save = async (testKey: GraceTestKey, answers: Record<string, unknown>, close = true) => {

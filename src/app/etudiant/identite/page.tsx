@@ -68,7 +68,7 @@ function buildStories({
         key: kind,
         name,
         category: "Identité",
-        href: `/apps/je-suis-par-la-grace-de-dieu?test=${kind}`,
+        href: `/etudiant/identite/outils?test=${kind}`,
         image,
         status: completed ? "completed" : "not-started",
         measurable: true,
@@ -127,9 +127,9 @@ function resultKindForItem(item: { key: string }) {
 
 function graceToolItems(tool: CatalogApp) {
   return [
-    { key: `${tool.id}-fruit`, name: "Fruit de l’Esprit", href: `${tool.url}?test=fruit`, iconUrl: tool.iconUrl },
-    { key: `${tool.id}-gifts`, name: "Dons spirituels", href: `${tool.url}?test=gifts`, iconUrl: tool.iconUrl },
-    { key: `${tool.id}-skills`, name: "Compétences naturelles", href: `${tool.url}?test=skills`, iconUrl: tool.iconUrl },
+    { key: `${tool.id}-fruit`, name: "Fruit de l’Esprit", href: "/etudiant/identite/outils?test=fruit", iconUrl: tool.iconUrl },
+    { key: `${tool.id}-gifts`, name: "Dons spirituels", href: "/etudiant/identite/outils?test=gifts", iconUrl: tool.iconUrl },
+    { key: `${tool.id}-skills`, name: "Compétences naturelles", href: "/etudiant/identite/outils?test=skills", iconUrl: tool.iconUrl },
   ];
 }
 

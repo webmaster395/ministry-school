@@ -37,7 +37,7 @@ const nav: Array<{ key: Screen; label: string }> = [
   { key: "final", label: "Résultat final" },
 ];
 
-export default function LifeLinePreviewPage({ production = false }: { production?: boolean }) {
+export default function LifeLinePreviewPage({ production = false, embedded = false }: { production?: boolean; embedded?: boolean }) {
   const [screen, setScreen] = useState<Screen>(production ? "intro" : "all");
   const [events, setEvents] = useState<LifeEvent[]>(production ? [] : sampleEvents);
   const [reflection, setReflection] = useState<ReflectionAnswers>({});
@@ -61,7 +61,7 @@ export default function LifeLinePreviewPage({ production = false }: { production
     return response.ok;
   };
 
-  return <main className={styles.shell}>
+  return <main className={`${styles.shell} ${embedded ? styles.embedded : ""}`}>
     {screen === "all" && <div className={styles.showcase}>
       <Intro onContinue={() => setScreen("events")} />
       <Events events={events} setEvents={setEvents} onSave={(next) => persist(next)} onContinue={() => setScreen("timeline")} />

@@ -911,6 +911,14 @@
   scrollbar-gutter:stable;
   border-radius:20px;
 }
+.embedded{
+  height:100%;
+  min-height:0;
+  overflow:visible;
+  border-radius:0;
+  background-attachment:scroll;
+}
+.embedded .screen{min-height:100%}
 .screen{
   min-height:100%;
   margin-top:0!important;
@@ -947,6 +955,7 @@
     min-height:480px;
     border-radius:16px;
   }
+  .embedded{height:100%;min-height:0;border-radius:0}
   .screen{min-height:100%}
   .finalScreen .finalHero{margin-top:10px}
   .resultAccordion summary{min-height:64px;padding:13px 16px}

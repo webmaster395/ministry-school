@@ -27,6 +27,8 @@
 @media(prefers-reduced-motion:reduce){.bar span,.spinner{transition:none;animation:none}}
 .shell{width:100%;margin:0}
 @media(max-width:720px){.shell{width:100%;margin:0}}
+:global(.student-tool-frame) .shell{min-height:100%;background-attachment:scroll}
+:global(.student-tool-frame) .frame{min-height:100%}
 
 /* Composition dédiée aux grands écrans. */
 @media(min-width:1101px){

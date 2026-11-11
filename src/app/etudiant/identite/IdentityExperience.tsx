@@ -66,19 +66,19 @@ const resultArtwork = {
     title: "Fruit de l’Esprit",
     eyebrow: "Je suis ce que je suis",
     image: "/apps/grace-identity/fruit-spirit-bg-v1.webp",
-    href: "/apps/je-suis-par-la-grace-de-dieu?test=fruit",
+    href: "/etudiant/identite/outils?test=fruit",
   },
   gifts: {
     title: "Dons spirituels",
     eyebrow: "Je suis ce que je suis",
     image: "/identity/posts/dons-spirituels.webp",
-    href: "/apps/je-suis-par-la-grace-de-dieu?test=gifts",
+    href: "/etudiant/identite/outils?test=gifts",
   },
   skills: {
     title: "Compétences naturelles",
     eyebrow: "Je suis ce que je suis",
     image: "/identity/posts/competences-naturelles.webp",
-    href: "/apps/je-suis-par-la-grace-de-dieu?test=skills",
+    href: "/etudiant/identite/outils?test=skills",
   },
   generopoly: {
     title: "Mon profil financier",

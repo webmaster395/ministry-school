@@ -1,34 +1,11 @@
-import { notFound, redirect } from "next/navigation";
-import { getViewer } from "@/lib/data/viewer";
-import { getCatalogAppBySlug, getStudentTools } from "@/lib/apps/catalog";
-import { graceIdentitySlug } from "@/lib/apps/grace-identity";
-import { createClient } from "@/lib/supabase/server";
-import GraceIdentityTool from "@/components/apps/GraceIdentityTool";
-import type { GraceTestKey } from "@/lib/apps/grace-identity";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
 export default async function GraceIdentityPage({ searchParams }: { searchParams: Promise<{ test?: string }> }) {
-  const viewer = await getViewer();
-  if (!viewer) redirect(`/login?next=/apps/${graceIdentitySlug}`);
-  if (viewer.deactivated) redirect("/auth/desactive");
-
-  // Les Super admins testent toujours le brouillon. Les étudiants ne peuvent
-  // retrouver leurs réponses qu’après la publication étudiante effective,
-  // y compris lors d’un accès direct à l’URL.
-  const app = viewer.roles.superAdmin
-    ? await getCatalogAppBySlug(graceIdentitySlug)
-    : (await getStudentTools()).find((item) => item.slug === graceIdentitySlug) ?? null;
-  if (!app && !viewer.roles.superAdmin) notFound();
-
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("grace_identity_assessments")
-    .select("test_key,answers,results,completed_at,updated_at")
-    .eq("user_id", viewer.id);
-
   const requestedTest = (await searchParams).test;
-  const initialTest: GraceTestKey | null = requestedTest === "fruit" || requestedTest === "gifts" || requestedTest === "skills" ? requestedTest : null;
-
-  return <GraceIdentityTool initial={(data ?? []) as never[]} preview={viewer.roles.superAdmin && !app?.studentVisible} initialTest={initialTest} />;
+  const query = requestedTest === "fruit" || requestedTest === "gifts" || requestedTest === "skills"
+    ? `?test=${requestedTest}`
+    : "";
+  redirect(`/etudiant/identite/outils${query}`);
 }

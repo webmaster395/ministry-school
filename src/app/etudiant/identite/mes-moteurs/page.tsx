@@ -1,16 +1,17 @@
 import { redirect } from "next/navigation";
 import BackButton from "@/components/BackButton";
+import StudentToolFrame from "@/components/student/StudentToolFrame";
 import { getViewer } from "@/lib/data/viewer";
 import { getPublishedHeroesMotorsResult, type HeroesMotorsResult } from "@/lib/identity/heroes-motors";
 import styles from "./prototype.module.css";
 
 export const dynamic = "force-dynamic";
 
-export function HeroesMotorsResultView({ result, preview = false }: { result: HeroesMotorsResult; preview?: boolean }) {
+export function HeroesMotorsResultView({ result, preview = false, embedded = false }: { result: HeroesMotorsResult; preview?: boolean; embedded?: boolean }) {
   const paragraphs = result.portrait.split(/\n\s*\n/).filter(Boolean);
 
   return <article className={styles.page}>
-    <nav className={styles.topbar} aria-label="Retour"><BackButton fallbackHref="/etudiant/identite" fallbackLabel="Mon identité" />{preview ? <span>Aperçu administrateur</span> : null}</nav>
+    {!embedded ? <nav className={styles.topbar} aria-label="Retour"><BackButton fallbackHref="/etudiant/identite" fallbackLabel="Mon identité" />{preview ? <span>Aperçu administrateur</span> : null}</nav> : null}
     <section className={styles.portrait} aria-labelledby="portrait-title">
       <header><p>01 — Mon portrait</p><h1 id="portrait-title">Ce qui me <em>définit.</em></h1></header>
       <div className={styles.portraitText}>{paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
@@ -31,5 +32,5 @@ export default async function HeroesMotorsPage() {
   if (!viewer) redirect("/login?next=/etudiant/identite/mes-moteurs");
   const published = await getPublishedHeroesMotorsResult(viewer.id);
   if (!published) redirect("/etudiant/identite");
-  return <HeroesMotorsResultView result={published} />;
+  return <StudentToolFrame><HeroesMotorsResultView result={published} embedded /></StudentToolFrame>;
 }
