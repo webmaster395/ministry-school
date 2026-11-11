@@ -300,21 +300,37 @@
   object-fit: cover;
 }
 
+.storyRing[data-story-key="fruit"] {
+  background: conic-gradient(
+    from -24deg,
+    #f1edff 0deg,
+    #a989d0 96deg,
+    #435f48 174deg,
+    #17183e 258deg,
+    #79669f 320deg,
+    #f1edff 360deg
+  );
+}
+
 .storyRing[data-story-key="fruit"] .storyInner {
-  background:
-    radial-gradient(ellipse 92% 72% at 20% 20%, rgb(255 243 198 / 0.96), transparent 58%),
-    radial-gradient(ellipse 84% 78% at 82% 28%, rgb(243 126 132 / 0.88), transparent 60%),
-    radial-gradient(ellipse 100% 90% at 34% 92%, rgb(128 170 96 / 0.9), transparent 62%),
-    linear-gradient(145deg, #f3bd79, #f06f77 52%, #6d9d60);
+  background: #090b25;
 }
 
 .storyRing[data-story-key="fruit"] .storyInner img {
-  display: none;
+  display: block;
+  object-position: center 48%;
+  filter: saturate(1.06) contrast(1.04);
+  transform: scale(1.08);
 }
 
 .story_not-started .storyRing[data-story-key="fruit"] .storyInner,
 .story_available .storyRing[data-story-key="fruit"] .storyInner {
-  filter: grayscale(1) contrast(0.88) brightness(1.04);
+  filter: none;
+}
+
+.storyRing[data-story-key="fruit"] .storyBadge {
+  background: #f1edff;
+  color: #17132d;
 }
 
 .story_not-started .storyInner img,

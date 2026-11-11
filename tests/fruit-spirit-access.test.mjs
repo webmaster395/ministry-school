@@ -28,6 +28,8 @@ test("la DA Fruit de l’Esprit utilise l’abstraction myrtille sur le post et 
   const journey = read("src/components/apps/FruitSpiritJourney.module.css");
 
   assert.match(identity, /fruit-spirit-blueberry-abstract-v1\.webp/);
+  assert.match(identity, /storyRing\[data-story-key="fruit"\][\s\S]*#17183e/);
+  assert.doesNotMatch(identity, /storyRing\[data-story-key="fruit"\] \.storyInner img\s*\{\s*display: none/);
   assert.match(stories, /fruit-spirit-blueberry-abstract-v1\.webp/);
   assert.match(journey, /fruit-spirit-blueberry-abstract-v1\.webp/);
   assert.match(journey, /background-color: #090b25/);
