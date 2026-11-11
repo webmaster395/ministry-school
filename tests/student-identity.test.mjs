@@ -10,11 +10,11 @@ test("Mon identité reste privée et s'ouvre aux étudiants à 07h00 Paris", () 
   const page = read("src/app/etudiant/identite/page.tsx");
   const proxy = read("src/proxy.ts");
 
-  assert.equal((nav.match(/label: "Mon identité"/g) ?? []).length, 1);
+  assert.equal((nav.match(/label: "Mon espace"/g) ?? []).length, 1);
   assert.match(nav, /href: "\/etudiant\/identite"/);
-  assert.match(nav, /title: "Principal",[\s\S]*?label: "Accueil"[\s\S]*?label: "Mon identité"/);
+  assert.match(nav, /title: "Principal",[\s\S]*?label: "Accueil"[\s\S]*?label: "Mon espace"/);
   assert.doesNotMatch(nav, /label: "Mes ressources"/);
-  assert.match(navBlocks, /item\.label !== "Mon identité" \|\| isSuperAdmin \|\| toolsVisible/);
+  assert.match(navBlocks, /item\.label !== "Mon espace" \|\| isSuperAdmin \|\| toolsVisible/);
   assert.match(page, /if \(!viewer\) redirect\("\/login"\)/);
   assert.match(page, /!viewer\.roles\.superAdmin && !isMappGuestOpen\(\)/);
   assert.match(proxy, /isDevelopmentPreview[\s\S]*process\.env\.VERCEL_ENV !== "production"/);

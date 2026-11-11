@@ -135,7 +135,7 @@ export function NavSections({ collapsed = false, onNavigate }: { collapsed?: boo
           )}
           <ul className="space-y-0.5">
             {section.items.filter((item) =>
-              item.label !== "Mon identité" || isSuperAdmin || toolsVisible
+              item.label !== "Mon espace" || isSuperAdmin || toolsVisible
             ).map((item) => (
               <li key={item.label}>
                 <NavLink
