@@ -38,6 +38,25 @@ test("la super-administration peut prévisualiser son brouillon sans ouvrir l'ou
   assert.match(migration, /r\.user_id = auth\.uid\(\)/);
 });
 
+test("les résultats non attribués se rattachent automatiquement par e-mail exact", () => {
+  const migration = read("supabase/migrations/20261112003000_heroes_account_claim_and_art_direction.sql");
+  assert.match(migration, /lower\(btrim\(r\.source_email\)\) = lower\(btrim\(target_email\)\)/);
+  assert.match(migration, /after insert or update of email on auth\.users/);
+  assert.match(migration, /after insert on public\.profiles/);
+  assert.match(migration, /existing_result_for_account|exists\(select 1 from public\.heroes_motors_results where user_id = target_user_id\)/);
+});
+
+test("la DA héros utilise la colombe abstraite et une écriture foncée", () => {
+  const identity = read("src/app/etudiant/identite/identity.module.css");
+  const result = read("src/app/etudiant/identite/mes-moteurs/prototype.module.css");
+  const page = read("src/app/etudiant/identite/page.tsx");
+  assert.match(identity, /dove-abstract-v1\.webp/);
+  assert.match(identity, /color: #183750/);
+  assert.match(result, /dove-abstract-v1\.webp/);
+  assert.match(result, /--ink:#183750/);
+  assert.match(page, /dove-abstract-v1\.webp/);
+});
+
 test("la page étudiante conserve le portrait validé et le refus de communication", () => {
   const page = read("src/app/etudiant/identite/mes-moteurs/HeroesMotorsResultView.tsx");
   const identity = read("src/app/etudiant/identite/IdentityExperience.tsx");

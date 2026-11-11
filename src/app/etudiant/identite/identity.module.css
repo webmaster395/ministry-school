@@ -706,21 +706,29 @@
 }
 
 .heroesPost {
-  background: #f8fbf8;
+  background: #cfe7fb;
 }
 
 .heroesGlow {
   position: absolute;
-  inset: -10%;
-  background:
-    linear-gradient(99deg, transparent 0 48%, rgb(255 255 255 / 0.86) 56% 66%, transparent 73%),
-    linear-gradient(83deg, transparent 0 12%, rgb(117 184 81 / 0.78) 27%, transparent 43%),
-    linear-gradient(105deg, transparent 0 34%, rgb(89 172 215 / 0.72) 50%, transparent 67%),
-    linear-gradient(78deg, transparent 0 61%, rgb(164 205 86 / 0.65) 76%, transparent 91%),
-    radial-gradient(ellipse 72% 44% at 12% 92%, rgb(54 145 83 / 0.76), transparent 70%),
-    radial-gradient(ellipse 62% 38% at 84% 80%, rgb(74 166 215 / 0.64), transparent 72%);
-  filter: blur(13px) saturate(1.03);
-  transform: scale(1.08);
+  inset: 0;
+  background: #cfe7fb url('/identity/heroes/dove-abstract-v1.webp') center / cover no-repeat;
+  transition: transform 420ms var(--ease-out-soft);
+}
+
+.heroesPost .postShade {
+  background: linear-gradient(180deg, rgb(207 231 251 / 0.04) 10%, rgb(207 231 251 / 0.28) 54%, rgb(207 231 251 / 0.92) 100%);
+}
+
+.heroesPost .postCopy,
+.heroesPost .postKicker,
+.heroesPost .openPost {
+  color: #183750;
+  text-shadow: none;
+}
+
+.heroesPost:hover .heroesGlow {
+  transform: scale(1.035);
 }
 
 .heroesPostCopy {

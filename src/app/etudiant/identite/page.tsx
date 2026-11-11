@@ -58,7 +58,7 @@ function buildStories({
       name: "Test des héros",
       category: "Identité",
       href: "/etudiant/identite/mes-moteurs",
-      image: "/identity/stories/identity.webp",
+      image: "/identity/heroes/dove-abstract-v1.webp",
       status: "completed",
       measurable: true,
     });
