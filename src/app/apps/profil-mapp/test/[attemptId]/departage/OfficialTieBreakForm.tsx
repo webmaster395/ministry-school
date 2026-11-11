@@ -16,7 +16,7 @@ export function OfficialTieBreakForm({ attemptId, revisionId }: { attemptId: str
     const response = await fetch(endpoint, { cache: "no-store" });
     const value = await response.json();
     if (!response.ok) throw new Error(value.error);
-    if (value.done) { router.push(`/apps/profil-mapp/test/${attemptId}/resultat?revision=${revisionId}`); return; }
+    if (value.done) { router.push(`/apps/profil-mapp/test/${attemptId}/resultat?revision=${revisionId}&native=1`); return; }
     setPayload(value);
   }, [attemptId, endpoint, revisionId, router]);
   useEffect(() => { void load().catch((cause) => setError(cause.message)); }, [load]);
@@ -26,7 +26,7 @@ export function OfficialTieBreakForm({ attemptId, revisionId }: { attemptId: str
     const response = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ selectedCode: dimension }) });
     const value = await response.json();
     if (!response.ok) { setError(value.error); setBusy(false); return; }
-    if (value.done) router.push(`/apps/profil-mapp/test/${attemptId}/resultat?revision=${revisionId}`);
+    if (value.done) router.push(`/apps/profil-mapp/test/${attemptId}/resultat?revision=${revisionId}&native=1`);
     else { setPayload(value); setBusy(false); }
   }
   if (error) return <main className="center-shell"><h1>Impossible de préciser le résultat</h1><p>{error}</p></main>;

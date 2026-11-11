@@ -25,10 +25,10 @@ export default async function ProfilMappPage() {
       const result = await getMappResultBundle(questionnaire.attemptId);
       const unresolved = result.rankings.some((ranking) => ranking.tie_break_required && !ranking.resolved_order);
       destination = unresolved
-        ? `/apps/profil-mapp/test/${questionnaire.attemptId}/departage?revision=${result.resultRevisionId}`
-        : `/apps/profil-mapp/test/${questionnaire.attemptId}/resultat?revision=${result.resultRevisionId}`;
+        ? `/apps/profil-mapp/test/${questionnaire.attemptId}/departage?revision=${result.resultRevisionId}&native=1`
+        : `/apps/profil-mapp/test/${questionnaire.attemptId}/resultat?revision=${result.resultRevisionId}&native=1`;
     } else {
-      destination = `/apps/profil-mapp/test/${questionnaire.attemptId}`;
+      destination = `/apps/profil-mapp/test/${questionnaire.attemptId}?native=1`;
     }
   } catch (cause) {
     const technicalMessage = cause instanceof Error ? cause.message : "Accès impossible";

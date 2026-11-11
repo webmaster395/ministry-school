@@ -97,7 +97,7 @@ export function Hybrid44Runner({ questionnaire }: { questionnaire: MappQuestionn
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.error ?? "Finalisation impossible");
       try { localStorage.removeItem(localKey); } catch { /* sans effet */ }
-      router.push(`/apps/profil-mapp/test/${attemptId}/departage?revision=${payload.revisionId}`);
+      router.push(`/apps/profil-mapp/test/${attemptId}/departage?revision=${payload.revisionId}&native=1`);
     } catch { setMessage("Impossible de calculer le résultat. Tes réponses sont conservées : réessaie."); setBusy(false); }
   }
 

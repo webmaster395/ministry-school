@@ -14,7 +14,7 @@ export default async function OfficialMappResultPage({ params }: { params: Promi
   const bundle = guest ? await getGuestResult(attemptId) : await getMappResultBundle(attemptId).catch(() => null);
   if (!bundle) notFound();
   if (bundle.rankings.some((ranking) => ranking.tie_break_required && !ranking.resolved_order)) {
-    redirect(`/apps/profil-mapp/test/${attemptId}/departage?revision=${bundle.resultRevisionId}`);
+    redirect(`/apps/profil-mapp/test/${attemptId}/departage?revision=${bundle.resultRevisionId}&native=1`);
   }
   return <><OfficialResultClient bundle={bundle} />{guest && <aside className="recovery-code" aria-label="Code de récupération"><strong>Code de récupération personnel</strong><code>{guest.recoveryCode}</code><p>Conserve ce code. Il sera exigé, avec ta connexion Ministry confirmée, pour rattacher ce résultat à ton compte.</p></aside>}</>;
 }

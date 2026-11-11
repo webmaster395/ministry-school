@@ -12,7 +12,8 @@ export default async function OfficialMappTestPage({ params }: { params: Promise
   const viewer = guestQuestionnaire ? null : await getViewer();
   if (!guestQuestionnaire && (!viewer || viewer.deactivated)) notFound();
   const questionnaire = guestQuestionnaire ?? await openMappQuestionnaire();
-  if (questionnaire.attemptId !== attemptId || questionnaire.engine !== "hybrid-44") notFound();
-  if (questionnaire.status === "completed") redirect(`/apps/profil-mapp/test/${attemptId}/resultat`);
+  if (questionnaire.engine !== "hybrid-44") notFound();
+  if (questionnaire.attemptId !== attemptId) redirect(`/apps/profil-mapp/test/${questionnaire.attemptId}?native=1`);
+  if (questionnaire.status === "completed") redirect(`/apps/profil-mapp/test/${attemptId}/resultat?native=1`);
   return <Hybrid44Runner questionnaire={questionnaire} />;
 }
