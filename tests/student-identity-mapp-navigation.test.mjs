@@ -4,13 +4,16 @@ import { readFileSync } from "node:fs";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("la story et la tâche MAPP ouvrent toujours la route Ministry", () => {
+test("la story et la tâche MAPP ouvrent toujours le parcours officiel authentifié", () => {
   const page = read("src/app/etudiant/identite/page.tsx");
   const mappRoute = read("src/app/apps/profil-mapp/page.tsx");
 
   assert.match(page, /key: "profil-mapp",[\s\S]*?href: "\/apps\/profil-mapp"/);
   assert.match(page, /tool\.slug === "profil-mapp"[\s\S]*?href: "\/apps\/profil-mapp"/);
-  assert.match(mappRoute, /<GuestMappEntry \/>/);
+  assert.match(mappRoute, /const viewer = await getViewer\(\)/);
+  assert.match(mappRoute, /const questionnaire = await openMappQuestionnaire\(\)/);
+  assert.match(mappRoute, /redirect\(destination\)/);
+  assert.doesNotMatch(mappRoute, /GuestMappEntry|api\/mapp\/guest\/start/);
 });
 
 test("la jauge ouvre l'onglet À faire et le recadre", () => {
