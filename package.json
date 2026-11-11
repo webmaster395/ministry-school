@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint",
     "test": "node --test tests/*.test.mjs",
-    "load-test:login": "node scripts/load-test-login.mjs"
+    "load-test:login": "node scripts/load-test-login.mjs",
+    "import:heroes-motors": "node scripts/import-heroes-motors.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",

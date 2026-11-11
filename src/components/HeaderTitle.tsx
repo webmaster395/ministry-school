@@ -16,6 +16,7 @@ const TITLES: Record<string, string> = {
   "/etudiant/formation": "Mon ministère",
   "/etudiant/profil": "Profil",
   "/etudiant/preferences": "Préférences",
+  "/etudiant/identite/mes-moteurs": "Mes moteurs",
   "/enseignant/calendrier": "Mon calendrier",
   "/enseignant/supports": "Supports & consignes",
   "/enseignant/seances": "Séances",
@@ -70,6 +71,10 @@ export default function HeaderTitle({ greeting }: { greeting: string }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { current } = useSpace();
+
+  // La page « Mon identité » porte déjà le prénom dans son en-tête de profil.
+  // Sur mobile, répéter « Bonjour Prénom » alourdit inutilement la barre supérieure.
+  if (pathname === "/etudiant/identite") return null;
 
   // Dans un espace de gestion, l'en-tête porte le nom de l'espace, pas la salutation étudiante
   if (current) {

@@ -2,52 +2,109 @@ import { getStudentTools, type CatalogApp } from "@/lib/apps/catalog";
 import { getViewer } from "@/lib/data/viewer";
 import { getIdentityDashboard } from "@/lib/identity/dashboard";
 import { getOfficialMappIdentityResults } from "@/lib/mapp/official-results";
-import IdentityExperience, { type IdentityStoryGroup, type IdentityStoryItem } from "./IdentityExperience";
+import IdentityExperience, { type IdentityStoryItem } from "./IdentityExperience";
 import { isMappGuestOpen } from "@/lib/mapp/access-window";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { IdentityResult } from "@/lib/identity/dashboard";
+import { getPublishedHeroesMotorsResult } from "@/lib/identity/heroes-motors";
 
 export const dynamic = "force-dynamic";
 
-function toolItems(tool: CatalogApp): IdentityStoryItem[] {
-  if (tool.slug === "je-suis-par-la-grace-de-dieu") return [
-    { key: `${tool.id}-fruit`, name: "Fruit de l’Esprit", href: tool.url, iconUrl: tool.iconUrl },
-    { key: `${tool.id}-gifts`, name: "Dons spirituels", href: tool.url, iconUrl: tool.iconUrl },
-    { key: `${tool.id}-skills`, name: "Compétences naturelles", href: tool.url, iconUrl: tool.iconUrl },
-  ];
-  return [{ key: tool.id, name: tool.name, href: tool.url, iconUrl: tool.iconUrl }];
+function latestResult(results: IdentityResult[], kind: IdentityResult["kind"]) {
+  return results.find((result) => result.kind === kind);
 }
 
-function buildStories(tools: CatalogApp[]): IdentityStoryGroup[] {
-  const identity: IdentityStoryItem[] = [];
-  const finance: IdentityStoryItem[] = [];
-  for (const tool of tools) {
-    if (tool.slug === "generopoly") finance.push(...toolItems(tool));
-    if (tool.slug === "profil-mapp" || tool.slug === "je-suis-par-la-grace-de-dieu") identity.push(...toolItems(tool));
-  }
-  // Ces deux outils structurent Mon identité. Les stories doivent rester
-  // visibles même pendant une modification de leur publication au catalogue.
-  if (!identity.some((item) => item.name === "Profil MAPP")) {
-    identity.unshift({ key: "profil-mapp", name: "Profil MAPP", href: "/apps/profil-mapp", iconUrl: null });
-  }
-  if (!finance.some((item) => item.name === "Généropoly")) {
-    finance.unshift({ key: "generopoly", name: "Généropoly", href: "/apps/generopoly", iconUrl: null });
-  }
-  if (!finance.some((item) => item.name === "Ta générosité")) {
-    const generopolyIndex = finance.findIndex((item) => item.name === "Généropoly");
-    finance.splice(generopolyIndex >= 0 ? generopolyIndex + 1 : finance.length, 0, {
-      key: "ta-generosite",
-      name: "Ta générosité",
-      href: "https://generosite.jeveuxdonner.fr/",
-      iconUrl: null,
+function buildStories({
+  tools,
+  results,
+  heroesAvailable,
+  graceAvailable,
+}: {
+  tools: CatalogApp[];
+  results: IdentityResult[];
+  heroesAvailable: boolean;
+  graceAvailable: boolean;
+}): IdentityStoryItem[] {
+  const hasTool = (slug: string) => tools.some((tool) => tool.slug === slug);
+  const items: IdentityStoryItem[] = [];
+  const mapp = latestResult(results, "mapp");
+  const mappHref = mapp?.attemptId
+    ? `/apps/profil-mapp/test/${mapp.attemptId}/resultat${mapp.resultRevisionId ? `?revision=${mapp.resultRevisionId}` : ""}`
+    : "/apps/profil-mapp";
+
+  // MAPP reste l'accès principal de Mon identité, même pendant une mise à jour
+  // de sa fiche catalogue. Son résultat officiel est déjà chargé plus haut.
+  items.push({
+    key: "profil-mapp",
+    name: "Profil MAPP",
+    category: "Identité",
+    href: mappHref,
+    image: "/identity/stories/identity-v2.webp",
+    status: mapp ? "completed" : "not-started",
+    measurable: true,
+  });
+
+  if (heroesAvailable) {
+    items.push({
+      key: "heroes-motors",
+      name: "Test des héros",
+      category: "Identité",
+      href: "/etudiant/identite/mes-moteurs",
+      image: "/identity/stories/identity.webp",
+      status: "completed",
+      measurable: true,
     });
   }
-  const groups: IdentityStoryGroup[] = [
-    { key: "identity", label: "Identité", image: "/identity/stories/identity-v2.webp", items: identity },
-    { key: "finance", label: "Finance", image: "/identity/stories/finance-v2.webp", items: finance },
+
+  if (graceAvailable) {
+    ([
+      ["fruit", "Fruit de l’Esprit", "/apps/grace-identity/fruit-spirit-bg-v1.webp"],
+      ["gifts", "Dons spirituels", "/identity/posts/dons-spirituels.webp"],
+      ["skills", "Compétences naturelles", "/identity/posts/competences-naturelles.webp"],
+    ] as const).forEach(([kind, name, image]) => {
+      const completed = latestResult(results, kind);
+      items.push({
+        key: kind,
+        name,
+        category: "Identité",
+        href: `/apps/je-suis-par-la-grace-de-dieu?test=${kind}`,
+        image,
+        status: completed ? "completed" : "not-started",
+        measurable: true,
+      });
+    });
+  }
+
+  if (hasTool("ma-ligne-de-vie")) {
+    const lifeLine = latestResult(results, "life-line");
+    items.push({
+      key: "life-line",
+      name: "Ma ligne de vie",
+      category: "Identité",
+      href: "/etudiant/ligne-de-vie",
+      image: "/identity/posts/ligne-de-vie.webp",
+      status: lifeLine ? "completed" : "not-started",
+      measurable: true,
+    });
+  }
+
+  const financeLinks = [
+    ...(hasTool("generopoly") ? [{ name: "Généropoly", href: "/apps/generopoly" }] : []),
+    { name: "Simulateur de générosité", href: "https://generosite.jeveuxdonner.fr/", external: true },
   ];
-  return groups.filter((group) => group.items.length > 0);
+  items.push({
+    key: "outils-a-tester",
+    name: "À tester",
+    category: "Finance",
+    href: "#outils-a-tester",
+    image: "/identity/stories/finance-v2.webp",
+    status: "available",
+    measurable: false,
+    links: financeLinks,
+  });
+
+  return items;
 }
 
 function monthsTogether(memberSince: string | null) {
@@ -61,17 +118,25 @@ function accountStatus(gender: "homme" | "femme" | null | undefined) {
   return gender === "femme" ? "Aimée" : gender === "homme" ? "Aimé" : "Aimé·e";
 }
 
-function resultKindForItem(item: IdentityStoryItem) {
-  if (item.key.endsWith("-fruit")) return "fruit";
-  if (item.key.endsWith("-gifts")) return "gifts";
-  if (item.key.endsWith("-skills")) return "skills";
+function resultKindForItem(item: { key: string }) {
+  if (item.key.endsWith("-fruit") || item.key === "fruit") return "fruit";
+  if (item.key.endsWith("-gifts") || item.key === "gifts") return "gifts";
+  if (item.key.endsWith("-skills") || item.key === "skills") return "skills";
   return null;
+}
+
+function graceToolItems(tool: CatalogApp) {
+  return [
+    { key: `${tool.id}-fruit`, name: "Fruit de l’Esprit", href: `${tool.url}?test=fruit`, iconUrl: tool.iconUrl },
+    { key: `${tool.id}-gifts`, name: "Dons spirituels", href: `${tool.url}?test=gifts`, iconUrl: tool.iconUrl },
+    { key: `${tool.id}-skills`, name: "Compétences naturelles", href: `${tool.url}?test=skills`, iconUrl: tool.iconUrl },
+  ];
 }
 
 function buildUpcoming(tools: CatalogApp[], completedKinds: Set<string>) {
   return tools.flatMap((tool) => {
     if (tool.slug === "profil-mapp") return completedKinds.has("mapp") ? [] : [{ key: tool.id, name: "Profil MAPP", href: tool.url, iconUrl: tool.iconUrl, category: "Identité" }];
-    if (tool.slug === "je-suis-par-la-grace-de-dieu") return toolItems(tool).flatMap((item) => {
+    if (tool.slug === "je-suis-par-la-grace-de-dieu") return graceToolItems(tool).flatMap((item) => {
       const kind = resultKindForItem(item);
       return kind && !completedKinds.has(kind) ? [{ ...item, category: "Identité" }] : [];
     });
@@ -87,11 +152,12 @@ export default async function StudentIdentityPage() {
   if (viewer.deactivated) redirect("/auth/desactive");
   if (!viewer.roles.superAdmin && !isMappGuestOpen()) redirect("/etudiant");
   const supabase = await createClient();
-  const [dashboard, tools, officialMappResults, lifeLine] = await Promise.all([
+  const [dashboard, tools, officialMappResults, lifeLine, heroesMotors] = await Promise.all([
     getIdentityDashboard(),
     getStudentTools(),
     getOfficialMappIdentityResults(),
     supabase.from("life_line_journeys").select("events,reflection,completed_at,updated_at").eq("user_id", viewer.id).maybeSingle(),
+    getPublishedHeroesMotorsResult(viewer.id),
   ]);
   // La création de la ligne de vie est déjà une réalisation personnelle : elle
   // doit être retrouvable depuis Identité, même si certains champs sont restés
@@ -101,9 +167,22 @@ export default async function StudentIdentityPage() {
     ? [{ kind: "life-line", completedAt: lifeLine.data?.completed_at ?? lifeLine.data?.updated_at ?? new Date().toISOString() }]
     : [];
   const nonMappIdentityResults = dashboard.identityResults.filter((result) => result.kind !== "mapp");
-  const allResults = [...officialMappResults, ...nonMappIdentityResults, ...dashboard.financeResults, ...lifeLineResults]
+  const heroesResults: IdentityResult[] = heroesMotors
+    ? [{ kind: "heroes-motors", completedAt: heroesMotors.publishedAt }]
+    : [];
+  const allResults = [...officialMappResults, ...nonMappIdentityResults, ...dashboard.financeResults, ...lifeLineResults, ...heroesResults]
     .sort((left, right) => new Date(right.completedAt).getTime() - new Date(left.completedAt).getTime());
+  const displayedResults: IdentityResult[] = viewer.roles.superAdmin && !heroesMotors
+    ? [{ kind: "heroes-prototype", completedAt: "2026-11-10T00:00:00.000Z" }, ...allResults]
+    : allResults;
   const completedKinds = new Set(allResults.map((result) => result.kind));
+  const graceAvailable = tools.some((tool) => tool.slug === "je-suis-par-la-grace-de-dieu");
+  const stories = buildStories({
+    tools,
+    results: allResults,
+    heroesAvailable: Boolean(heroesMotors),
+    graceAvailable,
+  });
   return <IdentityExperience
     userId={viewer.id}
     fullName={viewer.fullName || dashboard.profile.firstName || "Mon identité"}
@@ -112,8 +191,8 @@ export default async function StudentIdentityPage() {
     studentCount={dashboard.metrics.studentCount}
     months={monthsTogether(dashboard.profile.memberSince)}
     completedTests={allResults.length}
-    stories={buildStories(tools)}
-    results={allResults}
+    stories={stories}
+    results={displayedResults}
     upcoming={buildUpcoming(tools, completedKinds)}
   />;
 }

@@ -71,31 +71,6 @@
   outline-offset: -5px;
 }
 
-.avatar :global(.identity-avatar-action) {
-  position: absolute;
-  right: 6px;
-  bottom: 7px;
-  display: grid;
-  width: 32px;
-  height: 32px;
-  place-items: center;
-  border: 2px solid var(--background);
-  border-radius: 50%;
-  background: var(--foreground);
-  color: var(--background);
-  transition: transform 180ms var(--ease-out-soft);
-}
-
-.avatar :global(.identity-avatar-action svg) {
-  width: 15px;
-  height: 15px;
-  stroke-width: 1.8;
-}
-
-.avatar :global(.identity-avatar-trigger:hover .identity-avatar-action) {
-  transform: scale(1.08);
-}
-
 .avatar :global(.identity-avatar-trigger:disabled) {
   cursor: wait;
 }
@@ -244,14 +219,16 @@
 }
 
 .storySection {
-  padding: 30px 18px 26px;
+  padding: 30px 18px 24px;
   border-bottom: 1px solid var(--border);
 }
 
 .stories {
   display: flex;
-  gap: 28px;
+  gap: clamp(18px, 2.5vw, 32px);
   overflow-x: auto;
+  padding: 3px 2px 12px;
+  scroll-snap-type: x proximity;
   scrollbar-width: none;
 }
 
@@ -260,25 +237,40 @@
 }
 
 .story {
-  display: grid;
-  min-width: 92px;
-  justify-items: center;
+  display: flex;
+  width: 112px;
+  min-width: 112px;
+  flex-direction: column;
+  align-items: center;
   border: 0;
   background: transparent;
   color: inherit;
   cursor: pointer;
   font: inherit;
+  scroll-snap-align: start;
+  text-align: center;
+  text-decoration: none;
 }
 
 .storyRing {
+  position: relative;
   display: grid;
-  width: 88px;
-  height: 88px;
+  width: 108px;
+  height: 108px;
   place-items: center;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--link), var(--accent));
-  padding: 3px;
+  background: #aaa9a5;
+  padding: 4px;
+  box-shadow: 0 7px 18px rgb(66 42 31 / 0.08);
   transition: transform 220ms var(--ease-out-soft);
+}
+
+.story_completed .storyRing {
+  background: linear-gradient(145deg, #9b351d 0 42%, #ca753f 72%, #7f2f22 100%);
+}
+
+.story_available .storyRing {
+  background: #aaa9a5;
 }
 
 .storyInner {
@@ -286,7 +278,7 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  border: 3px solid var(--background);
+  border: 4px solid var(--background);
   border-radius: 50%;
   background: var(--surface);
 }
@@ -295,10 +287,43 @@
   object-fit: cover;
 }
 
+.story_not-started .storyInner img,
+.story_available .storyInner img {
+  filter: grayscale(1) contrast(0.88) brightness(1.04);
+}
+
 .story strong {
-  margin-top: 9px;
-  font-size: 12px;
-  font-weight: 600;
+  max-width: 12ch;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.18;
+}
+
+.storyBadge {
+  position: absolute;
+  right: -2px;
+  bottom: 3px;
+  z-index: 2;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 2px solid var(--background);
+  border-radius: 50%;
+  background: #fffdf8;
+  box-shadow: 0 3px 9px rgb(39 30 25 / 0.18);
+  color: #81311f;
+}
+
+.story_completed .storyBadge {
+  color: #81311f;
+}
+
+.storyBadge svg {
+  width: 17px;
+  height: 17px;
+  stroke-width: 2.3;
 }
 
 .story:hover .storyRing {
@@ -309,6 +334,179 @@
   outline: 2px solid var(--accent);
   outline-offset: 5px;
   border-radius: 8px;
+}
+
+.discoveryProgress {
+  display: grid;
+  grid-template-columns: auto minmax(190px, auto) minmax(160px, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  margin-top: 8px;
+  padding: 14px 18px;
+  border: 1px solid rgb(103 86 72 / 0.13);
+  border-radius: 14px;
+  background: rgb(255 253 248 / 0.58);
+  color: #27302f;
+  text-decoration: none;
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.discoveryProgress:hover {
+  border-color: rgb(92 99 94 / 0.3);
+  background: rgb(255 253 248 / 0.82);
+  transform: translateY(-1px);
+}
+
+.discoveryProgress:focus-visible {
+  outline: 2px solid #747a76;
+  outline-offset: 3px;
+}
+
+.discoveryMark {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 50%;
+  background: rgb(39 48 47 / 0.1);
+  color: #27302f;
+  font-size: 16px;
+}
+
+.discoveryCopy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.discoveryCopy strong {
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.discoveryCopy span {
+  color: #27302f;
+  font-size: 12px;
+}
+
+.progressTrack {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgb(39 48 47 / 0.14);
+}
+
+.progressTrack span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #27302f;
+}
+
+.progressCount {
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.toolsBackdrop {
+  position: fixed;
+  z-index: 80;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgb(26 27 25 / 0.44);
+  backdrop-filter: blur(8px);
+}
+
+.toolsDialog {
+  position: relative;
+  width: min(470px, 100%);
+  padding: 32px;
+  border-radius: 22px;
+  background: #fbf8f1;
+  box-shadow: 0 24px 70px rgb(28 23 19 / 0.24);
+}
+
+.toolsDialog > p {
+  margin-bottom: 7px;
+  color: #9a5530;
+  font-family: var(--font-label);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.toolsDialog h2 {
+  margin: 0 0 24px;
+  font-family: var(--font-title);
+  font-size: 34px;
+  letter-spacing: -0.04em;
+}
+
+.toolsClose {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--foreground);
+  cursor: pointer;
+}
+
+.toolsClose svg {
+  width: 18px;
+  height: 18px;
+}
+
+.toolsLinks {
+  display: grid;
+  gap: 10px;
+}
+
+.toolsLinks a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 17px 18px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 180ms ease, background 180ms ease;
+}
+
+.toolsLinks a:hover {
+  border-color: #b06d47;
+  background: #f5ede2;
+}
+
+.toolsLinks a span {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.toolsLinks a strong {
+  font-size: 15px;
+}
+
+.toolsLinks a small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.toolsLinks a svg {
+  width: 18px;
+  min-width: 18px;
 }
 
 .feed {
@@ -397,6 +595,57 @@
 
 .imagePost {
   background: #f3dcc2;
+}
+
+.heroesPost {
+  background: #f8fbf8;
+}
+
+.heroesGlow {
+  position: absolute;
+  inset: -10%;
+  background:
+    linear-gradient(99deg, transparent 0 48%, rgb(255 255 255 / 0.86) 56% 66%, transparent 73%),
+    linear-gradient(83deg, transparent 0 12%, rgb(117 184 81 / 0.78) 27%, transparent 43%),
+    linear-gradient(105deg, transparent 0 34%, rgb(89 172 215 / 0.72) 50%, transparent 67%),
+    linear-gradient(78deg, transparent 0 61%, rgb(164 205 86 / 0.65) 76%, transparent 91%),
+    radial-gradient(ellipse 72% 44% at 12% 92%, rgb(54 145 83 / 0.76), transparent 70%),
+    radial-gradient(ellipse 62% 38% at 84% 80%, rgb(74 166 215 / 0.64), transparent 72%);
+  filter: blur(13px) saturate(1.03);
+  transform: scale(1.08);
+}
+
+.heroesPostCopy {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  color: #143c47;
+}
+
+.heroesPostCopy small {
+  font-family: var(--font-label);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.heroesPostCopy strong {
+  font-family: var(--font-title);
+  font-size: clamp(24px, 3.2vw, 39px);
+  font-weight: 600;
+  line-height: 0.92;
+  letter-spacing: -0.055em;
+}
+
+.heroesPostCopy i {
+  width: 42px;
+  height: 2px;
+  background: currentColor;
 }
 
 .postShade {
@@ -720,33 +969,31 @@
 
 @media (max-width: 720px) {
   .page {
-    width: 100%;
+    width: calc(100% + 32px);
+    max-width: none;
+    margin-inline: -16px;
     padding-bottom: 38px;
   }
 
   .profile {
-    grid-template-columns: 98px minmax(0, 1fr);
-    align-items: start;
-    gap: 14px;
-    padding: 22px 16px 24px;
+    grid-template-columns: 102px minmax(0, 1fr);
+    align-items: center;
+    column-gap: 18px;
+    row-gap: 18px;
+    padding: 26px 18px 25px;
   }
 
   .avatarRing {
-    width: 96px;
-    height: 96px;
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    width: 102px;
+    height: 102px;
     padding: 3px;
   }
 
   .avatar {
     border-width: 3px;
     font-size: 32px;
-  }
-
-  .avatar :global(.identity-avatar-action) {
-    right: 2px;
-    bottom: 3px;
-    width: 29px;
-    height: 29px;
   }
 
   .eyebrow {
@@ -759,15 +1006,16 @@
 
   .nameLine {
     grid-column: 2;
+    grid-row: 1;
     align-items: center;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 4px;
+    gap: 6px 9px;
+    margin-top: 0;
   }
 
   .nameLine h1 {
-    font-size: clamp(24px, 6.7vw, 30px);
+    font-size: clamp(25px, 7.2vw, 32px);
   }
 
   .nameLine > span {
@@ -782,13 +1030,18 @@
 
   .metrics {
     grid-column: 2;
+    grid-row: 2;
+    width: 100%;
     gap: 0;
-    margin-top: 15px;
+    margin-top: 0;
   }
 
   .metrics div {
-    display: block;
-    padding: 0 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 0 5px;
     text-align: center;
   }
 
@@ -797,24 +1050,27 @@
   }
 
   .metrics div + div {
-    padding-left: 6px;
+    border-left: 0;
+    padding-left: 5px;
   }
 
   .metrics strong {
     display: block;
-    font-size: 21px;
+    font-size: 22px;
+    line-height: 1;
   }
 
   .metrics span {
     display: block;
-    margin-top: 4px;
-    font-size: 10px;
-    line-height: 1.25;
+    margin-top: 0;
+    font-size: 9.5px;
+    line-height: 1.15;
   }
 
   .bio {
     grid-column: 1 / -1;
-    margin-top: 14px;
+    grid-row: 3;
+    margin-top: 2px;
     font-size: 13px;
     line-height: 1.5;
   }
@@ -830,24 +1086,84 @@
   }
 
   .storySection {
-    padding: 22px 16px 20px;
+    padding: 21px 0 18px;
   }
 
   .stories {
-    gap: 16px;
+    gap: 15px;
+    padding: 3px 18px 12px;
+    scroll-padding-left: 18px;
   }
 
   .story {
-    min-width: 84px;
+    width: 92px;
+    min-width: 92px;
   }
 
   .storyRing {
-    width: 80px;
-    height: 80px;
+    width: 88px;
+    height: 88px;
+    padding: 3px;
   }
 
   .story strong {
+    margin-top: 8px;
+    font-size: 11.5px;
+  }
+
+  .storyBadge {
+    width: 26px;
+    height: 26px;
+  }
+
+  .storyBadge svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .discoveryProgress {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 10px;
+    margin: 6px 18px 0;
+    padding: 12px 13px;
+  }
+
+  .discoveryMark {
+    width: 34px;
+    height: 34px;
+  }
+
+  .discoveryCopy strong {
+    font-size: 13px;
+  }
+
+  .discoveryCopy span {
+    font-size: 10.5px;
+  }
+
+  .progressTrack {
+    grid-column: 2;
+    height: 6px;
+  }
+
+  .progressCount {
+    grid-column: 3;
+    grid-row: 1 / span 2;
     font-size: 12px;
+  }
+
+  .toolsBackdrop {
+    align-items: end;
+    padding: 12px;
+  }
+
+  .toolsDialog {
+    padding: 27px 20px 20px;
+    border-radius: 20px;
+  }
+
+  .toolsDialog h2 {
+    font-size: 29px;
   }
 
   .tabs {
@@ -867,16 +1183,33 @@
 
   .publicationCount {
     min-height: 23px;
-    padding: 0 2px 6px;
+    padding: 0 18px 7px;
     font-size: 9px;
   }
 
   .grid {
-    gap: 3px;
+    gap: 2px;
   }
 
   .postCopy {
     padding: 9px;
+  }
+
+  .heroesPostCopy {
+    padding: 10px;
+  }
+
+  .heroesPostCopy small {
+    font-size: 5.5px;
+  }
+
+  .heroesPostCopy strong {
+    font-size: clamp(16px, 5vw, 22px);
+  }
+
+  .heroesPostCopy i {
+    width: 24px;
+    height: 1px;
   }
 
   .postKicker {

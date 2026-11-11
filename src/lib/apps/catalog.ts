@@ -6,7 +6,10 @@ import { createServiceClient } from "@/lib/supabase/service";
 export type AppStatus = "draft" | "scheduled" | "published" | "disabled";
 export type CatalogChannel = "public" | "student" | "admin";
 
-const temporarilyHiddenPortalSlugs = new Set(["je-suis-par-la-grace-de-dieu"]);
+// La publication dans App Studio est désormais la source de vérité. Un outil
+// publié pour les étudiants ne doit plus être masqué par une seconde liste
+// codée en dur dans le portail.
+const temporarilyHiddenPortalSlugs = new Set<string>();
 
 export function isToolVisibleInPortals(app: Pick<CatalogApp, "slug">) {
   return !temporarilyHiddenPortalSlugs.has(app.slug);

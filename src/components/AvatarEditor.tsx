@@ -1,6 +1,5 @@
 "use client";
 
-import { Camera } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef, useState, useTransition } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -138,9 +137,6 @@ export default function AvatarEditor({
           ) : (
             <span>{initials || "?"}</span>
           )}
-          <span className="identity-avatar-action" aria-hidden="true">
-            <Camera />
-          </span>
           {busy ? <span className="identity-avatar-busy">Envoi…</span> : null}
         </button>
         {error ? <p className="identity-avatar-error" role="alert">{error}</p> : null}

@@ -1,12 +1,17 @@
 import { notFound } from "next/navigation";
-import IdentityExperience, { type IdentityStoryGroup } from "@/app/etudiant/identite/IdentityExperience";
+import IdentityExperience, { type IdentityStoryItem } from "@/app/etudiant/identite/IdentityExperience";
 
-const stories: IdentityStoryGroup[] = [
-  { key: "identity", label: "Identité", image: "/identity/stories/identity-v2.webp", items: [
-    { key: "mapp", name: "Profil MAPP", href: "#", iconUrl: null }, { key: "fruits", name: "Fruit de l’Esprit", href: "#", iconUrl: null },
-    { key: "dons", name: "Dons spirituels", href: "#", iconUrl: null }, { key: "competences", name: "Compétences naturelles", href: "#", iconUrl: null },
+const stories: IdentityStoryItem[] = [
+  { key: "mapp", name: "Profil MAPP", category: "Identité", href: "#", image: "/identity/stories/identity-v2.webp", status: "completed", measurable: true },
+  { key: "heroes", name: "Test des héros", category: "Identité", href: "#", image: "/identity/stories/identity.webp", status: "completed", measurable: true },
+  { key: "fruit", name: "Fruit de l’Esprit", category: "Identité", href: "#", image: "/apps/grace-identity/fruit-spirit-bg-v1.webp", status: "completed", measurable: true },
+  { key: "gifts", name: "Dons spirituels", category: "Identité", href: "#", image: "/identity/posts/dons-spirituels.webp", status: "not-started", measurable: true },
+  { key: "skills", name: "Compétences naturelles", category: "Identité", href: "#", image: "/identity/posts/competences-naturelles.webp", status: "not-started", measurable: true },
+  { key: "life-line", name: "Ma ligne de vie", category: "Identité", href: "#", image: "/identity/posts/ligne-de-vie.webp", status: "not-started", measurable: true },
+  { key: "try", name: "À tester", category: "Finance", href: "#", image: "/identity/stories/finance-v2.webp", status: "available", measurable: false, links: [
+    { name: "Généropoly", href: "#" },
+    { name: "Simulateur de générosité", href: "#" },
   ] },
-  { key: "finance", label: "Finance", image: "/identity/stories/finance-v2.webp", items: [{ key: "generopoly", name: "Généropoly", href: "#", iconUrl: "/apps/generopoly.png" }] },
 ];
 
 export default async function IdentityPreviewPage({ searchParams }: { searchParams: Promise<{ state?: string }> }) {
@@ -20,5 +25,5 @@ export default async function IdentityPreviewPage({ searchParams }: { searchPara
     { kind: "generopoly" as const, completedAt: "2026-11-02T12:00:00Z" },
   ];
   const upcoming = state === "empty" ? [] : [];
-  return <div style={{ minHeight: "100vh", background: "var(--surface)", padding: "clamp(16px,4vw,56px)" }}><div style={{ maxWidth: 1040, margin: "0 auto" }}><IdentityExperience userId="preview-user" fullName="Rose Martin" status="Étudiante" avatarUrl={null} studentCount={337} months={2} completedTests={results.length} stories={stories} results={results} upcoming={upcoming} /></div></div>;
+  return <div style={{ minHeight: "100vh", background: "var(--surface)", padding: "clamp(16px,4vw,56px)" }}><div style={{ maxWidth: 1040, margin: "0 auto" }}><IdentityExperience userId="preview-user" fullName="Rose Martin" status="Aimée" avatarUrl={null} studentCount={337} months={2} completedTests={results.length} stories={stories} results={results} upcoming={upcoming} /></div></div>;
 }
