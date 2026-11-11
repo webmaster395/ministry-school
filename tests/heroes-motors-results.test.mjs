@@ -54,5 +54,8 @@ test("la super administration gère résultats, statistiques et anomalies", () =
   assert.match(actions, /viewer\?\.roles\.superAdmin/);
   assert.match(actions, /heroes_motors_result_audit/);
   assert.match(actions, /confirmReassignment/);
+  assert.match(actions, /APPROVED_SOURCE_HASH/);
+  assert.match(actions, /rawRows\.length !== 249/);
+  assert.match(actions, /confirmImport/);
   assert.match(lib, /communication === "authorized"/);
 });
