@@ -65,7 +65,7 @@ const resultArtwork = {
   fruit: {
     title: "Fruit de l’Esprit",
     eyebrow: "Je suis ce que je suis",
-    image: "/apps/grace-identity/fruit-spirit-bg-v1.webp",
+    image: "/apps/grace-identity/fruit-spirit-bg-v3.webp",
     href: "/etudiant/identite/fruit-de-lesprit",
   },
   gifts: {

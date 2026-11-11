@@ -677,6 +677,34 @@
   opacity: 1;
 }
 
+.fruitArtwork {
+  inset: 0;
+  background: #ead8b8 url('/apps/grace-identity/fruit-spirit-bg-v3.webp') center 54% / cover no-repeat;
+  filter: none;
+  transform: none;
+  transition: transform 420ms var(--ease-out-soft);
+}
+
+.fruitPost .postShade {
+  background: linear-gradient(
+    180deg,
+    rgb(250 239 215 / 0.04) 18%,
+    rgb(250 239 215 / 0.44) 57%,
+    rgb(250 239 215 / 0.9) 100%
+  );
+}
+
+.fruitPost .postCopy,
+.fruitPost .postKicker,
+.fruitPost .openPost {
+  color: #321d20;
+  text-shadow: none;
+}
+
+.fruitPost:hover .fruitArtwork {
+  transform: scale(1.035);
+}
+
 .heroesPost {
   background: #f8fbf8;
 }

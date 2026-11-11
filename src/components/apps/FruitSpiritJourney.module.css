@@ -6,3 +6,81 @@
 :global(.student-tool-frame) .frame{min-height:100%}
 .summary{width:100%;border-left:0;border-right:0;border-bottom:0;color:inherit;text-align:left;font:inherit;cursor:pointer;align-items:flex-start}.summary>svg{flex:none;margin-left:auto;margin-top:3px}.summary:hover{transform:translateY(-2px);box-shadow:0 14px 34px #8e353322}.categoryFrame{min-height:100svh}.categoryHeader{max-width:820px;margin-top:54px}.categoryTitle{margin-top:18px}.categoryBody{max-width:720px;margin:18px 0 0;font-size:14px;line-height:1.6}.emptyCategory{max-width:720px;margin-top:34px;border-radius:18px;background:#fffaf0e8;padding:24px}.emptyCategory h2{margin:0 0 8px;font-size:20px}.emptyCategory p{margin:0;font-size:13px;line-height:1.5}.categoryFrame .fruitGrid{margin-top:38px}
 @media(max-width:720px){.categoryHeader{margin-top:32px}.categoryTitle{margin-top:14px}.categoryBody{font-size:13px}.categoryFrame .fruitGrid{margin-top:24px}.summary:hover{transform:none}}
+
+/* Fruit de l'Esprit — warm editorial artwork shared by the test and results. */
+.shell {
+  --ink: #321d20;
+  --paper: #f8ebd1;
+  background-color: #ead8b8;
+  background-image: url('/apps/grace-identity/fruit-spirit-bg-v3.webp');
+  background-position: center 48%;
+  color: var(--ink);
+}
+
+.shell::before,
+.softGreen::before,
+.softIvory::before {
+  background: linear-gradient(90deg, rgb(250 239 215 / 0.9) 0%, rgb(250 239 215 / 0.7) 47%, rgb(250 239 215 / 0.26) 100%);
+}
+
+.pill,
+.summary,
+.fruitCard,
+.emptyCategory {
+  background: rgb(250 239 215 / 0.9);
+  color: var(--ink);
+  box-shadow: 0 12px 34px rgb(72 29 39 / 0.12);
+}
+
+.traitList b,
+.progress b,
+.red,
+.green,
+.orange {
+  color: #6f293b;
+}
+
+.progress b {
+  background: #6f293b;
+}
+
+.choice:hover,
+.choiceActive {
+  border-color: #6f293b;
+  background: #e6c7c1;
+  color: #321d20;
+}
+
+.red,
+.green,
+.orange {
+  border-color: #6f293b;
+}
+
+.red > b,
+.green > b,
+.orange > b {
+  color: #6f293b;
+}
+
+.fruitCard > p {
+  color: #4f3435;
+}
+
+.fruitCard label .done {
+  border-color: #6f293b;
+  background: #e6c7c1;
+  color: #321d20;
+}
+
+@media(max-width:720px) {
+  .shell {
+    background-position: 58% center;
+  }
+
+  .shell::before,
+  .softGreen::before,
+  .softIvory::before {
+    background: linear-gradient(180deg, rgb(250 239 215 / 0.78), rgb(250 239 215 / 0.58));
+  }
+}
