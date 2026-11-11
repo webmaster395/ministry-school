@@ -625,7 +625,7 @@
 }
 
 .fruitPost {
-  background: #f6c79c;
+  background: #fff9ed;
 }
 
 .fruitArtwork {
@@ -633,16 +633,17 @@
   z-index: -2;
   inset: -12%;
   background:
-    radial-gradient(ellipse 86% 72% at 14% 12%, #fff9d8 0 22%, transparent 61%),
-    radial-gradient(ellipse 82% 70% at 88% 20%, #f58a91 0 20%, transparent 64%),
-    radial-gradient(ellipse 108% 88% at 26% 104%, #79ab70 0 24%, transparent 68%),
-    linear-gradient(145deg, #f7d59d 0%, #ef9194 50%, #79a977 100%);
-  filter: blur(18px) saturate(1.06) brightness(1.08);
+    radial-gradient(ellipse 76% 58% at 18% 10%, #fff8dc 0 20%, transparent 64%),
+    radial-gradient(ellipse 66% 62% at 84% 24%, #f55278 0 17%, transparent 61%),
+    radial-gradient(ellipse 72% 58% at 80% 76%, #ff9f45 0 16%, transparent 62%),
+    radial-gradient(ellipse 82% 64% at 20% 92%, #b7cc68 0 15%, transparent 66%),
+    linear-gradient(145deg, #fff9ef 0%, #ffe9dc 52%, #f4dfc8 100%);
+  filter: blur(24px) saturate(1.12) brightness(1.06);
   transform: scale(1.08);
 }
 
 .fruitPost .postShade {
-  background: linear-gradient(180deg, transparent 30%, rgb(39 61 43 / 0.08) 56%, rgb(30 63 42 / 0.72) 100%);
+  background: linear-gradient(180deg, transparent 30%, rgb(62 37 24 / 0.04) 56%, rgb(42 29 20 / 0.68) 100%);
 }
 
 .heroesPost {

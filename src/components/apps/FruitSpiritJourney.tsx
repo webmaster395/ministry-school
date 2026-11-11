@@ -95,7 +95,7 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
         <p className={styles.lead}>Découvre ce qui grandit déjà dans ta vie et ce que tu peux encore laisser mûrir.</p>
       </div>
       <div className={styles.actions}>
-        <button type="button" onClick={onBack} className={styles.ghost}><ArrowLeft size={16} /> Tous les tests</button>
+        <button type="button" onClick={onBack} className={styles.ghost}><ArrowLeft size={16} /> Mon identité</button>
         <button type="button" onClick={() => setPage("intro")} className={styles.pill}>Commencer mon parcours <ArrowRight size={18} /></button>
       </div>
     </div>
@@ -170,7 +170,7 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
         <Summary count={groups.cultivate.length} title="Ce qui demande de l’attention" text="Les qualités à cultiver avec douceur et persévérance." tone="orange" onClick={() => setSelectedCategory("cultivate")} />
       </section>
       <div className={styles.actions}>
-        <button type="button" onClick={onBack} className={styles.ghost}><Sparkles size={16} /> Faire les autres tests</button>
+        <button type="button" onClick={onBack} className={styles.ghost}><Sparkles size={16} /> Retour à Mon identité</button>
         <button type="button" onClick={() => { setStep(0); setPage("evaluate"); }} className={styles.ghost}>Modifier mes réponses</button>
       </div>
     </div>

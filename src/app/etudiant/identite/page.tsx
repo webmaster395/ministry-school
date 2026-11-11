@@ -68,7 +68,7 @@ function buildStories({
         key: kind,
         name,
         category: "Identité",
-        href: `/etudiant/identite/outils?test=${kind}`,
+        href: graceTestHref(kind),
         image,
         status: completed ? "completed" : "not-started",
         measurable: true,
@@ -127,10 +127,18 @@ function resultKindForItem(item: { key: string }) {
 
 function graceToolItems(tool: CatalogApp) {
   return [
-    { key: `${tool.id}-fruit`, name: "Fruit de l’Esprit", href: "/etudiant/identite/outils?test=fruit", iconUrl: tool.iconUrl },
-    { key: `${tool.id}-gifts`, name: "Dons spirituels", href: "/etudiant/identite/outils?test=gifts", iconUrl: tool.iconUrl },
-    { key: `${tool.id}-skills`, name: "Compétences naturelles", href: "/etudiant/identite/outils?test=skills", iconUrl: tool.iconUrl },
+    { key: `${tool.id}-fruit`, name: "Fruit de l’Esprit", href: graceTestHref("fruit"), iconUrl: tool.iconUrl },
+    { key: `${tool.id}-gifts`, name: "Dons spirituels", href: graceTestHref("gifts"), iconUrl: tool.iconUrl },
+    { key: `${tool.id}-skills`, name: "Compétences naturelles", href: graceTestHref("skills"), iconUrl: tool.iconUrl },
   ];
+}
+
+function graceTestHref(kind: "fruit" | "gifts" | "skills") {
+  return {
+    fruit: "/etudiant/identite/fruit-de-lesprit",
+    gifts: "/etudiant/identite/dons-spirituels",
+    skills: "/etudiant/identite/competences-naturelles",
+  }[kind];
 }
 
 function buildUpcoming(tools: CatalogApp[], completedKinds: Set<string>) {
