@@ -1,6 +1,4 @@
-@import "tailwindcss";
-
-:root {
+.profil-mapp-scope {
   --ink: #17201e;
   --ink-soft: #34413d;
   --muted: #6f7975;
@@ -21,17 +19,16 @@
 .admin-login-shell{min-height:100vh;display:grid;place-items:center;padding:32px;background:#073640;color:#fff}.admin-login-card{width:min(520px,100%);display:grid;gap:22px;padding:44px;border:1px solid rgba(255,255,255,.18);border-radius:28px;background:#0a414c;box-shadow:0 28px 80px rgba(0,0,0,.22)}.admin-login-card h1{margin:0;font-size:clamp(36px,6vw,62px);line-height:.98;letter-spacing:-.055em}.admin-login-card p{margin:0;color:#c4dfe1;line-height:1.6}.admin-login-card label{display:grid;gap:9px;font-weight:700}.admin-login-card input{min-height:54px;padding:0 16px;border:1px solid rgba(255,255,255,.3);border-radius:12px;background:#fff;color:#151719;font:inherit}.admin-login-card button{min-height:54px;border:0;border-radius:12px;background:#fff;color:#073640;font:700 16px/1 inherit;cursor:pointer}.admin-login-card button:disabled{opacity:.65}.admin-login-card .admin-login-link{min-height:auto;justify-self:start;padding:0;border:0;background:transparent;color:#c4dfe1;font-size:14px;text-decoration:underline;text-underline-offset:4px}.admin-login-card a{color:#fff;text-underline-offset:4px}.admin-success{padding:15px 17px;border-radius:12px;background:rgba(85,168,115,.2)!important;color:#fff!important}.admin-kicker{margin:0!important;color:#9bc9ca!important;font-size:12px!important;font-weight:800;letter-spacing:.16em}
 .admin-shell{min-height:100vh;padding:44px 4vw 70px;background:#fff;color:#17191a}.admin-header{display:flex;align-items:flex-end;justify-content:space-between;gap:30px;margin-bottom:40px;padding-bottom:28px;border-bottom:1px solid #dfe4e4}.admin-header h1{margin:7px 0 8px;font-size:clamp(38px,5vw,70px);line-height:.95;letter-spacing:-.055em}.admin-header p{margin:0;color:#6a7273}.admin-header>div:last-child{display:flex;align-items:center;gap:16px;color:#596263;font-size:13px}.admin-logout{padding:11px 15px;border:1px solid #cfd6d6;border-radius:999px;background:#fff;font:700 13px/1 inherit;cursor:pointer}.admin-table-wrap{overflow:auto;border:1px solid #dfe4e4;border-radius:20px}.admin-table{width:100%;min-width:1320px;border-collapse:collapse}.admin-table th,.admin-table td{padding:18px 16px;border-bottom:1px solid #e8ecec;text-align:left;vertical-align:top}.admin-table th{position:sticky;top:0;background:#073640;color:#fff;font-size:11px;letter-spacing:.08em;text-transform:uppercase}.admin-table td{font-size:14px}.admin-table td>strong{display:block;font-size:15px}.admin-table td>small{display:block;margin-top:5px;color:#6d7475}.admin-table tr:last-child td{border-bottom:0}.admin-table tbody tr:hover{background:#f6f9f8}.admin-scores{display:grid;grid-template-columns:1fr 1fr;gap:7px 14px;min-width:250px}.admin-scores span{display:grid;grid-template-columns:8px 1fr auto;align-items:center;gap:6px;font-size:12px}.admin-scores i{width:7px;height:18px;border-radius:8px;background:#aaa}.admin-scores i[data-profile="conquerant"]{background:#d94b4b}.admin-scores i[data-profile="communiquant"]{background:#e7b93e}.admin-scores i[data-profile="facilitateur"]{background:#55a873}.admin-scores i[data-profile="analyste"]{background:#4f78c8}.admin-muted{color:#7c8485}.admin-actions{display:flex;gap:8px}.admin-actions a{padding:9px 12px;border-radius:9px;background:#073640;color:#fff;font-weight:750;text-decoration:none}.admin-actions a:last-child{background:#0b6971}@media(max-width:700px){.admin-login-card{padding:30px 24px}.admin-shell{padding:28px 18px 50px}.admin-header{align-items:flex-start;flex-direction:column}.admin-header>div:last-child{width:100%;justify-content:space-between}}
 
-* { box-sizing: border-box; }
-html { background: #fff; scroll-behavior: smooth; }
-body { margin: 0; color: var(--ink); background: #fff; font-family: var(--results-font); -webkit-font-smoothing: antialiased; }
-button, input { font: inherit; }
-button, a { touch-action: manipulation; }
-a { color: inherit; text-decoration: none; }
+.profil-mapp-scope, .profil-mapp-scope * { box-sizing: border-box; }
+.profil-mapp-scope { min-height:100svh; color: var(--ink); background: #fff; font-family: var(--results-font); -webkit-font-smoothing: antialiased; }
+.profil-mapp-scope button, .profil-mapp-scope input { font: inherit; }
+.profil-mapp-scope button, .profil-mapp-scope a { touch-action: manipulation; }
+.profil-mapp-scope a { color: inherit; text-decoration: none; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 .eyebrow { margin: 0 0 .6rem; color: var(--accent); font-size: .7rem; font-weight: 800; letter-spacing: .17em; text-transform: uppercase; }
-h1, h2, p { text-wrap: pretty; }
-h1 { margin: 0; font-size: clamp(2rem, 5vw, 4rem); line-height: 1.02; letter-spacing: -.045em; }
-h2 { margin: 0; font-size: clamp(1.55rem, 3vw, 2.35rem); line-height: 1.1; letter-spacing: -.035em; }
+.profil-mapp-scope h1, .profil-mapp-scope h2, .profil-mapp-scope p { text-wrap: pretty; }
+.profil-mapp-scope h1 { margin: 0; font-size: clamp(2rem, 5vw, 4rem); line-height: 1.02; letter-spacing: -.045em; }
+.profil-mapp-scope h2 { margin: 0; font-size: clamp(1.55rem, 3vw, 2.35rem); line-height: 1.1; letter-spacing: -.035em; }
 .lead { color: var(--muted); font-size: clamp(1rem, 2vw, 1.22rem); line-height: 1.6; max-width: 40rem; }
 .lead.compact { font-size: 1.02rem; }
 

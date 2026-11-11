@@ -1,5 +1,5 @@
 import "./official-mapp.css";
 
 export default function ProfilMappLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  return <div className="profil-mapp-scope results-design-system">{children}</div>;
 }

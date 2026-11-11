@@ -1,6 +1,5 @@
 "use client";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -46,6 +45,7 @@ export function Hybrid44Runner({ questionnaire }: { questionnaire: MappQuestionn
   const answered = questions.filter((question) => question.metadata.mapp_kind === "natural_likert" ? scales[question.id] !== undefined : Boolean(duels[question.id])).length;
 
   const localKey = `ministry:mapp:hybrid44:${attemptId}`;
+  /* eslint-disable react-hooks/set-state-in-effect -- restaure une sauvegarde navigateur après l’hydratation */
   useEffect(() => {
     try {
       const local = JSON.parse(localStorage.getItem(localKey) ?? "null") as { duels?: Record<string,string>; scales?: Record<string,AnswerValue> } | null;
@@ -54,6 +54,7 @@ export function Hybrid44Runner({ questionnaire }: { questionnaire: MappQuestionn
     } catch { /* stockage indisponible ou invalide */ }
     setLocalReady(true);
   }, [localKey]);
+  /* eslint-enable react-hooks/set-state-in-effect */
   useEffect(() => { if (!localReady) return; try { localStorage.setItem(localKey, JSON.stringify({ duels, scales })); } catch { /* navigation toujours utilisable */ } }, [duels, scales, localKey, localReady]);
 
   async function choose(question: Question, optionId: string) {
@@ -97,7 +98,7 @@ export function Hybrid44Runner({ questionnaire }: { questionnaire: MappQuestionn
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.error ?? "Finalisation impossible");
       try { localStorage.removeItem(localKey); } catch { /* sans effet */ }
-      router.push(`/apps/profil-mapp/test/${attemptId}/departage?revision=${payload.revisionId}&native=1`);
+      router.push(`/apps/profil-mapp/test/${attemptId}/resultat?revision=${payload.revisionId}&native=1`);
     } catch { setMessage("Impossible de calculer le résultat. Tes réponses sont conservées : réessaie."); setBusy(false); }
   }
 

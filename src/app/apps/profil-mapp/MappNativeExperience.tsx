@@ -9,9 +9,8 @@ import {
 import {
   finalizeMappAttempt,
   saveMappAnswerBatch,
-  submitMappTieBreak,
 } from "@/lib/mapp/client";
-import { applyTieBreak, stableOptionOrder, tieBreakQuestions, type TieBreakRecord } from "@/lib/results/tie-breaker";
+import { applyTieBreak, type TieBreakRecord } from "@/lib/results/tie-breaker";
 import type { ResultProfileCode } from "@/lib/results/premium-result-model";
 import { toRelativePercentages } from "@/lib/results/relative-percentages";
 import type {
@@ -45,88 +44,56 @@ function resultScores(bundle: MappResultBundle) {
     .sort((left, right) => right.percentage - left.percentage);
 }
 
-const profileLabels: Record<ResultProfileCode, string> = {
-  conquerant: "Conquérant",
-  communiquant: "Communiquant",
-  facilitateur: "Facilitateur",
-  analyste: "Analyste",
+const profileCodeByDimension: Record<string, ResultProfileCode> = {
+  D: "conquerant",
+  I: "communiquant",
+  S: "facilitateur",
+  C: "analyste",
+  conquerant: "conquerant",
+  communiquant: "communiquant",
+  facilitateur: "facilitateur",
+  analyste: "analyste",
 };
-const officialTieBreakQuestions = tieBreakQuestions as Array<{
-  id: string;
-  title: string;
-  prompt: string;
-  options: Record<ResultProfileCode, string>;
-}>;
 
-export function ResultPanel({ bundle, onResolved }: { bundle: MappResultBundle; onResolved: (bundle: MappResultBundle) => void }) {
+function storedNaturalOrder(bundle: MappResultBundle) {
+  const ranking = bundle.rankings.find((row) => row.context === "natural");
+  if (!ranking) return [];
+  const values = [
+    ranking.primary_code,
+    ranking.secondary_code,
+    ...(Array.isArray(ranking.resolved_order) ? ranking.resolved_order : []),
+    ...(Array.isArray(ranking.initial_order) ? ranking.initial_order : []),
+  ];
+  return values
+    .map((value) => profileCodeByDimension[String(value)] ?? null)
+    .filter((value): value is ResultProfileCode => Boolean(value))
+    .filter((value, index, all) => all.indexOf(value) === index);
+}
+
+export function ResultPanel({ bundle }: { bundle: MappResultBundle }) {
   const scores = resultScores(bundle);
-  const classification = applyTieBreak(
+  const calculated = applyTieBreak(
     scores.map((score) => ({ code: score.code, value: score.percentage })),
     bundle.tieBreak as TieBreakRecord | null,
   );
+  const storedOrder = storedNaturalOrder(bundle);
+  const scoreOrder = scores
+    .map((score) => profileCodeByDimension[score.code] ?? null)
+    .filter((value): value is ResultProfileCode => Boolean(value));
+  const primary = calculated.primary ?? storedOrder[0] ?? scoreOrder[0] ?? null;
+  const secondary = calculated.secondary
+    ?? storedOrder.find((code) => code !== primary)
+    ?? scoreOrder.find((code) => code !== primary)
+    ?? null;
   const displayScores = toRelativePercentages(scores.map((score) => ({ code: score.code, value: score.percentage })));
-  const [answers, setAnswers] = useState<Record<string, ResultProfileCode>>({});
-  const [submitting, setSubmitting] = useState(false);
-  const [tieError, setTieError] = useState("");
 
-  if (!classification.primary || !classification.secondary) {
-    const candidates = (classification.hasPrimaryTie
-      ? classification.primaryCandidates
-      : classification.secondaryCandidates
-    ).filter((code): code is ResultProfileCode => code in profileLabels);
-    if (bundle.tieBreak) {
-      return <main className={styles.resultShell}>
-        <header className={styles.resultHero}>
-          <a href="/etudiant/identite" className={styles.backLink}>← Mon identité</a>
-          <p className={styles.eyebrow}>PROFIL MAPP · RÉSULTAT</p>
-          <h1>Plusieurs tendances restent à égalité</h1>
-          <p>Vos trois réponses confirment un profil mixte. Aucun classement arbitraire n’est appliqué et vos scores naturels restent inchangés.</p>
-        </header>
-      </main>;
-    }
-    async function submitTieBreak() {
-      setSubmitting(true);
-      setTieError("");
-      try {
-        const resolved = await submitMappTieBreak(
-          bundle.attemptId,
-          bundle.resultRevisionId,
-          officialTieBreakQuestions.map((question) => ({ questionId: question.id, selectedCode: answers[question.id] })),
-        );
-        onResolved(resolved);
-      } catch (cause) {
-        setSubmitting(false);
-        setTieError(cause instanceof Error ? cause.message : "Le départage n’a pas pu être confirmé.");
-      }
-    }
-    return <main className={styles.resultShell}>
-      <header className={styles.resultHero}>
-        <a href="/etudiant/identite" className={styles.backLink}>← Mon identité</a>
-        <p className={styles.eyebrow}>UNE DERNIÈRE ÉTAPE</p>
-        <h1>Précisons votre profil</h1>
-        <p>Certaines tendances ressortent à égalité. Ces trois situations officielles précisent uniquement l’ordre de présentation, sans modifier vos scores.</p>
-      </header>
-      <section className={styles.tieBreakQuestions}>
-        {officialTieBreakQuestions.map((question, index) => <fieldset key={question.id}>
-          <legend><span>0{index + 1}</span><strong>{question.title}</strong><small>{question.prompt}</small></legend>
-          <div>{stableOptionOrder(candidates, `${bundle.attemptId}:${question.id}`).map((code) => <label key={code} className={answers[question.id] === code ? styles.tieSelected : undefined}>
-            <input type="radio" name={question.id} value={code} checked={answers[question.id] === code} onChange={() => setAnswers((current) => ({ ...current, [question.id]: code }))} />
-            <b>{profileLabels[code]}</b><span>{question.options[code]}</span>
-          </label>)}</div>
-        </fieldset>)}
-      </section>
-      <button className={styles.primaryButton} disabled={submitting || Object.keys(answers).length !== 3} onClick={() => void submitTieBreak()} type="button">
-        {submitting ? "Enregistrement…" : "Découvrir mon profil"}
-      </button>
-      {tieError && <p className={styles.error} role="alert">{tieError}</p>}
-    </main>;
-  }
+  if (!primary || !secondary) return <main className={styles.resultShell}><header className={styles.resultHero}><a href="/etudiant/identite" className={styles.backLink}>← Mon identité</a><p className={styles.eyebrow}>PROFIL MAPP · RÉSULTAT</p><h1>Résultat indisponible</h1><p>Le classement de ce passage doit être vérifié par l’équipe Ministry.</p></header></main>;
 
   return <div className={styles.resultShell}>
     <a href="/etudiant/identite" className={styles.backLink}>← Mon identité</a>
     <PreviewShell
-    initialProfile={classification.primary}
-    initialSecondary={classification.secondary}
+    initialProfile={primary}
+    initialSecondary={secondary}
     participantName={bundle.participantName || "Ton résultat"}
     scores={displayScores}
     showControls={false}
@@ -196,6 +163,7 @@ export default function MappNativeExperience({
   const queueRef = useRef<MappAnswerQueue | null>(null);
   const persistenceRef = useRef<ReturnType<typeof createMappLocalStoragePersistence> | null>(null);
 
+  /* eslint-disable react-hooks/set-state-in-effect -- restaure les réponses locales après l’hydratation */
   useEffect(() => {
     if (initialQuestionnaire.status === "completed") return;
     const persistence = createMappLocalStoragePersistence(`ministry:mapp:${initialQuestionnaire.attemptId}`);
@@ -217,6 +185,7 @@ export default function MappNativeExperience({
       persist: persistence.save,
     });
   }, [initialQuestionnaire]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   useEffect(() => {
     const retry = () => {
@@ -291,7 +260,7 @@ export default function MappNativeExperience({
     }
   }
 
-  if (result) return <ResultPanel bundle={result} onResolved={setResult} />;
+  if (result) return <ResultPanel bundle={result} />;
 
   return (
     <main className={styles.shell}>

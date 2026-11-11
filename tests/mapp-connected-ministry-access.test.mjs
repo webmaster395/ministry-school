@@ -21,23 +21,41 @@ test("la restriction Fruit de l’Esprit reste distincte et réservée aux super
 
 test("MAPP ouvre le test à faire ou le résultat déjà finalisé", () => {
   const page = read("src/app/apps/profil-mapp/page.tsx");
+  const startPage = read("src/app/apps/profil-mapp/commencer/page.tsx");
   const questionnairePage = read("src/app/apps/profil-mapp/test/[attemptId]/page.tsx");
   const runner = read("src/app/apps/profil-mapp/OfficialHybrid44Runner.tsx");
   const resultPage = read("src/app/apps/profil-mapp/test/[attemptId]/resultat/page.tsx");
-  const tieBreak = read("src/app/apps/profil-mapp/test/[attemptId]/departage/OfficialTieBreakForm.tsx");
+  const resultPanel = read("src/app/apps/profil-mapp/MappNativeExperience.tsx");
+  const oldTieBreakRoute = read("src/app/apps/profil-mapp/test/[attemptId]/departage/page.tsx");
   const vercel = JSON.parse(read("vercel.json"));
   const testRewrite = vercel.rewrites.find((rewrite) => rewrite.source === "/apps/profil-mapp/test/:path*");
 
   assert.match(page, /if \(existingResult\?\.attemptId\)/);
   assert.match(page, /redirect\(`\/apps\/profil-mapp\/test\/\$\{existingResult\.attemptId\}\/resultat/);
-  assert.match(page, /const questionnaire = await openMappQuestionnaire\(\)/);
-  assert.match(page, /destination = `\/apps\/profil-mapp\/test\/\$\{questionnaire\.attemptId\}\?native=1`/);
+  assert.match(page, /href="\/apps\/profil-mapp\/commencer"/);
+  assert.doesNotMatch(page, /openMappQuestionnaire/);
+  assert.match(startPage, /const questionnaire = await openMappQuestionnaire\(\)/);
+  assert.match(startPage, /destination = `\/apps\/profil-mapp\/test\/\$\{questionnaire\.attemptId\}\?native=1`/);
   assert.match(questionnairePage, /!guestQuestionnaire && \(!viewer \|\| viewer\.deactivated\)/);
   assert.doesNotMatch(questionnairePage, /viewer\.roles\.superAdmin/);
   assert.match(questionnairePage, /questionnaire\.attemptId !== attemptId\) redirect\(`\/apps\/profil-mapp\/test\/\$\{questionnaire\.attemptId\}\?native=1`\)/);
   assert.equal(testRewrite, undefined);
   assert.doesNotMatch(JSON.stringify(vercel), /profil-mapp\.vercel\.app/);
-  assert.match(runner, /departage\?revision=\$\{payload\.revisionId\}&native=1/);
-  assert.match(resultPage, /departage\?revision=\$\{bundle\.resultRevisionId\}&native=1/);
-  assert.equal((tieBreak.match(/resultat\?revision=\$\{revisionId\}&native=1/g) ?? []).length, 2);
+  assert.match(runner, /resultat\?revision=\$\{payload\.revisionId\}&native=1/);
+  assert.doesNotMatch(resultPage, /departage/);
+  assert.doesNotMatch(resultPanel, /Précisons votre profil|tieBreakQuestions|submitMappTieBreak/);
+  assert.match(oldTieBreakRoute, /redirect\(`\/apps\/profil-mapp\/test\/\$\{attemptId\}\/resultat/);
+});
+
+test("les styles MAPP ne modifient plus les typographies de Ministry", () => {
+  const designSystem = read("src/app/mapp-results-design-system.css");
+  const mappStyles = read("src/app/apps/profil-mapp/official-mapp.css");
+  const layout = read("src/app/apps/profil-mapp/layout.tsx");
+
+  assert.doesNotMatch(designSystem, /body, body \*/);
+  assert.match(designSystem, /\.results-design-system, \.results-design-system \*/);
+  assert.doesNotMatch(mappStyles, /@import "tailwindcss"/);
+  assert.doesNotMatch(mappStyles, /(?:^|\n)h1 \{/);
+  assert.match(mappStyles, /\.profil-mapp-scope h1 \{/);
+  assert.match(layout, /profil-mapp-scope results-design-system/);
 });

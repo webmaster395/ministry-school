@@ -7,6 +7,7 @@ const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf
 test("la story MAPP et l'entrée principale ouvrent un résultat existant sans relancer le test", () => {
   const page = read("src/app/etudiant/identite/page.tsx");
   const mappRoute = read("src/app/apps/profil-mapp/page.tsx");
+  const startRoute = read("src/app/apps/profil-mapp/commencer/page.tsx");
   const vercel = read("vercel.json");
 
   assert.match(page, /const mappHref = mapp\?\.attemptId[\s\S]*?\/apps\/profil-mapp\/test\/\$\{mapp\.attemptId\}\/resultat/);
@@ -16,8 +17,11 @@ test("la story MAPP et l'entrée principale ouvrent un résultat existant sans r
   assert.match(mappRoute, /const existingResult = dashboard\.identityResults\.find/);
   assert.match(mappRoute, /existingResult\.attemptId[\s\S]*?\/resultat/);
   assert.match(mappRoute, /query\.set\("native", "1"\)/);
-  assert.match(mappRoute, /const questionnaire = await openMappQuestionnaire\(\)/);
-  assert.match(mappRoute, /redirect\(destination\)/);
+  assert.match(mappRoute, /Commencer ou reprendre le test/);
+  assert.match(mappRoute, /href="\/apps\/profil-mapp\/commencer"/);
+  assert.doesNotMatch(mappRoute, /openMappQuestionnaire/);
+  assert.match(startRoute, /const questionnaire = await openMappQuestionnaire\(\)/);
+  assert.match(startRoute, /redirect\(destination\)/);
   assert.doesNotMatch(mappRoute, /GuestMappEntry|api\/mapp\/guest\/start/);
   assert.doesNotMatch(vercel, /profil-mapp/);
   assert.doesNotMatch(vercel, /profil-mapp\.vercel\.app/);
