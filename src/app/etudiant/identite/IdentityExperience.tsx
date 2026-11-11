@@ -4,7 +4,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BadgeCheck, BookOpen, Check, Clock3, Grid3X3, Network, Plus, Sparkles } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import AvatarEditor from "@/components/AvatarEditor";
 import type { IdentityResult } from "@/lib/identity/dashboard";
 import styles from "./identity.module.css";
@@ -187,8 +187,14 @@ function UpcomingPost({ item }: { item: IdentityUpcomingItem }) {
 
 export default function IdentityExperience(props: Props) {
   const [activeTab, setActiveTab] = useState<"results" | "upcoming" | "resources">("results");
+  const feedRef = useRef<HTMLElement>(null);
   const nameParts = props.fullName.trim().split(/\s+/).filter(Boolean);
   const firstName = nameParts[0] || "Mon identité";
+
+  function openUpcoming() {
+    setActiveTab("upcoming");
+    requestAnimationFrame(() => feedRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  }
 
   const resourceLinks = props.stories.flatMap((story) => story.links ?? []);
   const activeCount = activeTab === "results" ? props.results.length : activeTab === "upcoming" ? props.upcoming.length : resourceLinks.length;
@@ -272,7 +278,7 @@ export default function IdentityExperience(props: Props) {
             <button
               type="button"
               className={styles.discoveryProgress}
-              onClick={() => setActiveTab("upcoming")}
+              onClick={openUpcoming}
               aria-label={`Continuer avec ${nextStory.name}. ${completedStoryCount} outils terminés sur ${measurableStories.length}`}
             >
               <span className={styles.discoveryMark} aria-hidden="true">✦</span>
@@ -287,7 +293,7 @@ export default function IdentityExperience(props: Props) {
         </section>
       ) : null}
 
-      <section className={styles.feed} aria-label="Publications de mon identité">
+      <section ref={feedRef} className={styles.feed} aria-label="Publications de mon identité">
         <div className={styles.tabs} role="tablist" aria-label="Filtrer les publications">
           <button type="button" role="tab" aria-selected={activeTab === "results"} className={activeTab === "results" ? styles.activeTab : ""} onClick={() => setActiveTab("results")}>
             <Grid3X3 /> Mes résultats

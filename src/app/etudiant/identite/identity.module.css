@@ -269,6 +269,19 @@
   background: linear-gradient(145deg, #9b351d 0 42%, #ca753f 72%, #7f2f22 100%);
 }
 
+.storyRing[data-story-key="profil-mapp"],
+.storyRing[data-story-key="mapp"] {
+  background: conic-gradient(
+    from -28deg,
+    #feda75 0deg,
+    #fa7e1e 68deg,
+    #d62976 146deg,
+    #962fbf 228deg,
+    #4f5bd5 302deg,
+    #feda75 360deg
+  );
+}
+
 .story_available .storyRing {
   background: #aaa9a5;
 }
@@ -537,6 +550,7 @@
 }
 
 .feed {
+  scroll-margin-top: 16px;
   padding-top: 0;
 }
 
@@ -1253,6 +1267,7 @@
   .discoveryProgress {
     grid-template-columns: auto minmax(0, 1fr) auto;
     gap: 10px;
+    width: calc(100% - 36px);
     margin: 6px 18px 0;
     padding: 12px 13px;
   }

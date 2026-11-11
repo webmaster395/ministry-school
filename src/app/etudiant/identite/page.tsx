@@ -29,9 +29,6 @@ function buildStories({
   const hasTool = (slug: string) => tools.some((tool) => tool.slug === slug);
   const items: IdentityStoryItem[] = [];
   const mapp = latestResult(results, "mapp");
-  const mappHref = mapp?.attemptId
-    ? `/apps/profil-mapp/test/${mapp.attemptId}/resultat${mapp.resultRevisionId ? `?revision=${mapp.resultRevisionId}` : ""}`
-    : "/apps/profil-mapp";
 
   // MAPP reste l'accès principal de Mon identité, même pendant une mise à jour
   // de sa fiche catalogue. Son résultat officiel est déjà chargé plus haut.
@@ -39,7 +36,7 @@ function buildStories({
     key: "profil-mapp",
     name: "Profil MAPP",
     category: "Identité",
-    href: mappHref,
+    href: "/apps/profil-mapp",
     image: "/identity/stories/identity-v2.webp",
     status: mapp ? "completed" : "not-started",
     measurable: true,
@@ -143,7 +140,7 @@ function graceTestHref(kind: "fruit" | "gifts" | "skills") {
 
 function buildUpcoming(tools: CatalogApp[], completedKinds: Set<string>) {
   return tools.flatMap((tool) => {
-    if (tool.slug === "profil-mapp") return completedKinds.has("mapp") ? [] : [{ key: tool.id, name: "Profil MAPP", href: tool.url, iconUrl: tool.iconUrl, category: "Identité" }];
+    if (tool.slug === "profil-mapp") return completedKinds.has("mapp") ? [] : [{ key: tool.id, name: "Profil MAPP", href: "/apps/profil-mapp", iconUrl: tool.iconUrl, category: "Identité" }];
     if (tool.slug === "je-suis-par-la-grace-de-dieu") return graceToolItems(tool).flatMap((item) => {
       const kind = resultKindForItem(item);
       return kind && !completedKinds.has(kind) ? [{ ...item, category: "Identité" }] : [];
