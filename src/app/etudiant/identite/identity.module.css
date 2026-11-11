@@ -287,6 +287,23 @@
   object-fit: cover;
 }
 
+.storyRing[data-story-key="fruit"] .storyInner {
+  background:
+    radial-gradient(ellipse 92% 72% at 20% 20%, rgb(255 243 198 / 0.96), transparent 58%),
+    radial-gradient(ellipse 84% 78% at 82% 28%, rgb(243 126 132 / 0.88), transparent 60%),
+    radial-gradient(ellipse 100% 90% at 34% 92%, rgb(128 170 96 / 0.9), transparent 62%),
+    linear-gradient(145deg, #f3bd79, #f06f77 52%, #6d9d60);
+}
+
+.storyRing[data-story-key="fruit"] .storyInner img {
+  display: none;
+}
+
+.story_not-started .storyRing[data-story-key="fruit"] .storyInner,
+.story_available .storyRing[data-story-key="fruit"] .storyInner {
+  filter: grayscale(1) contrast(0.88) brightness(1.04);
+}
+
 .story_not-started .storyInner img,
 .story_available .storyInner img {
   filter: grayscale(1) contrast(0.88) brightness(1.04);
@@ -347,6 +364,11 @@
   border-radius: 14px;
   background: rgb(255 253 248 / 0.58);
   color: #27302f;
+  width: 100%;
+  border-color: rgb(39 48 47 / 0.13);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
   text-decoration: none;
   transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
 }
@@ -416,22 +438,27 @@
   display: grid;
   place-items: center;
   padding: 24px;
-  background: rgb(26 27 25 / 0.44);
-  backdrop-filter: blur(8px);
+  overflow-y: auto;
+  background: rgb(26 27 25 / 0.36);
+  backdrop-filter: blur(2px);
 }
 
 .toolsDialog {
   position: relative;
-  width: min(470px, 100%);
+  width: min(470px, calc(100vw - 32px));
+  max-height: min(640px, calc(100dvh - 32px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 32px;
-  border-radius: 22px;
+  border: 1px solid rgb(39 48 47 / 0.12);
+  border-radius: 24px;
   background: #fbf8f1;
   box-shadow: 0 24px 70px rgb(28 23 19 / 0.24);
 }
 
 .toolsDialog > p {
   margin-bottom: 7px;
-  color: #9a5530;
+  color: #59615f;
   font-family: var(--font-label);
   font-size: 10px;
   font-weight: 700;
@@ -442,7 +469,7 @@
 .toolsDialog h2 {
   margin: 0 0 24px;
   font-family: var(--font-title);
-  font-size: 34px;
+  font-size: 30px;
   letter-spacing: -0.04em;
 }
 
@@ -485,8 +512,8 @@
 }
 
 .toolsLinks a:hover {
-  border-color: #b06d47;
-  background: #f5ede2;
+  border-color: #747a76;
+  background: #edf0ee;
 }
 
 .toolsLinks a span {
@@ -595,6 +622,23 @@
 
 .imagePost {
   background: #f3dcc2;
+}
+
+.fruitPost {
+  background: #ef8c86;
+}
+
+.fruitArtwork {
+  position: absolute;
+  z-index: -2;
+  inset: -12%;
+  background:
+    radial-gradient(ellipse 82% 68% at 16% 14%, #fff0a9 0 17%, transparent 57%),
+    radial-gradient(ellipse 82% 72% at 88% 20%, #f05f70 0 22%, transparent 61%),
+    radial-gradient(ellipse 104% 86% at 30% 101%, #3f875d 0 28%, transparent 66%),
+    linear-gradient(145deg, #f3aa57 0%, #ec6574 48%, #438a62 100%);
+  filter: blur(16px) saturate(1.18);
+  transform: scale(1.08);
 }
 
 .heroesPost {
@@ -794,6 +838,69 @@
   width: 21px;
   height: 21px;
   stroke-width: 1.5;
+}
+
+.resourceGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 18px 0 2px;
+}
+
+.resourceCard {
+  display: flex;
+  min-height: 112px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 22px 24px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  color: var(--foreground);
+  text-decoration: none;
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+
+.resourceCard:hover {
+  border-color: #27302f;
+  transform: translateY(-1px);
+}
+
+.resourceCard span {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.resourceCard small {
+  color: var(--muted);
+  font-family: var(--font-label);
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.resourceCard strong {
+  font-family: var(--font-title);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.resourceCard em {
+  color: var(--muted);
+  font-size: 11px;
+  font-style: normal;
+}
+
+.resourceCard > svg {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
 }
 
 .empty {
@@ -1176,6 +1283,22 @@
     font-size: 9px;
   }
 
+  .resourceGrid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 12px 18px 0;
+  }
+
+  .resourceCard {
+    min-height: 88px;
+    padding: 17px 18px;
+    border-radius: 12px;
+  }
+
+  .resourceCard strong {
+    font-size: 17px;
+  }
+
   .tabs button svg {
     width: 14px;
     height: 14px;
@@ -1300,6 +1423,27 @@
 
   .modalContent h2 {
     font-size: 30px;
+  }
+
+  .toolsBackdrop {
+    display: grid;
+    padding: 16px;
+  }
+
+  .toolsDialog {
+    width: min(100%, 430px);
+    max-height: calc(100dvh - 32px);
+    padding: 26px 20px 20px;
+    border-radius: 22px;
+  }
+
+  .toolsDialog h2 {
+    margin-bottom: 18px;
+    font-size: 27px;
+  }
+
+  .toolsLinks a {
+    padding: 15px;
   }
 }
 

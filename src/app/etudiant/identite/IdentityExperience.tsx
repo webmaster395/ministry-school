@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element -- avatars et icônes administrables */
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BadgeCheck, BookOpen, Check, Clock3, Grid3X3, Network, Plus, X } from "lucide-react";
+import { ArrowRight, BadgeCheck, BookOpen, Check, Clock3, Grid3X3, Network, Plus, Sparkles } from "lucide-react";
 import { useState } from "react";
 import AvatarEditor from "@/components/AvatarEditor";
 import type { IdentityResult } from "@/lib/identity/dashboard";
@@ -64,7 +64,7 @@ const resultContent = {
 const resultArtwork = {
   fruit: {
     title: "Fruit de l’Esprit",
-    eyebrow: null,
+    eyebrow: "Je suis ce que je suis",
     image: "/apps/grace-identity/fruit-spirit-bg-v1.webp",
     href: "/apps/je-suis-par-la-grace-de-dieu?test=fruit",
   },
@@ -88,25 +88,26 @@ const resultArtwork = {
   },
   "life-line": {
     title: "Ma ligne de vie",
-    eyebrow: "Je découvre mon appel",
+    eyebrow: "Mon identité",
     image: "/identity/posts/ligne-de-vie.webp",
     href: "/etudiant/ligne-de-vie",
   },
 } as const;
 
-function ResultPost({ result }: { result: IdentityResult }) {
-  if (result.kind === "heroes-prototype" || result.kind === "heroes-motors") {
+function ResultPost({ result, firstName }: { result: IdentityResult; firstName: string }) {
+  if (result.kind === "heroes-motors") {
     return (
       <Link
-        className={`${styles.post} ${styles.heroesPost}`}
+        className={`${styles.post} ${styles.heroesPost} ${styles.imagePost}`}
         href="/etudiant/identite/mes-moteurs"
         aria-label="Ouvrir Mes héros, mes moteurs"
       >
         <span className={styles.heroesGlow} aria-hidden="true" />
-        <span className={styles.heroesPostCopy}>
-          <small>Ministry School</small>
-          <strong>Mes<br />moteurs.</strong>
-          <i aria-hidden="true" />
+        <span className={styles.postShade} />
+        <span className={styles.postCopy}>
+          <span className={styles.postKicker}>Mes moteurs</span>
+          <strong>Moi, {firstName}, je suis…</strong>
+          <span className={styles.openPost}>Voir le résultat <ArrowRight size={15} /></span>
         </span>
       </Link>
     );
@@ -136,22 +137,20 @@ function ResultPost({ result }: { result: IdentityResult }) {
   if (result.kind in resultArtwork) {
     const artwork = resultArtwork[result.kind as keyof typeof resultArtwork];
     return (
-      <Link className={`${styles.post} ${styles.imagePost}`} href={artwork.href} aria-label={`Ouvrir mon résultat ${artwork.title}`}>
-        <Image
+      <Link className={`${styles.post} ${styles.imagePost} ${result.kind === "fruit" ? styles.fruitPost : ""}`} href={artwork.href} aria-label={`Ouvrir mon résultat ${artwork.title}`}>
+        {result.kind === "fruit" ? <span className={styles.fruitArtwork} aria-hidden="true" /> : <Image
           className={styles.postImage}
           src={artwork.image}
-          alt={artwork.title}
+          alt=""
           fill
           sizes="(max-width: 767px) 33vw, 320px"
-        />
-        {result.kind !== "fruit" ? <>
-          <span className={styles.postShade} />
-          <span className={styles.postCopy}>
-            <span className={styles.postKicker}>{artwork.eyebrow}</span>
-            <strong>{artwork.title}</strong>
-            <span className={styles.openPost}>Voir le résultat <ArrowRight size={15} /></span>
-          </span>
-        </> : null}
+        />}
+        <span className={styles.postShade} />
+        <span className={styles.postCopy}>
+          <span className={styles.postKicker}>{artwork.eyebrow}</span>
+          <strong>{artwork.title}</strong>
+          <span className={styles.openPost}>Voir le résultat <ArrowRight size={15} /></span>
+        </span>
       </Link>
     );
   }
@@ -187,12 +186,17 @@ function UpcomingPost({ item }: { item: IdentityUpcomingItem }) {
 }
 
 export default function IdentityExperience(props: Props) {
-  const [activeTab, setActiveTab] = useState<"results" | "upcoming">("results");
-  const [toolsOpen, setToolsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<"results" | "upcoming" | "resources">("results");
   const nameParts = props.fullName.trim().split(/\s+/).filter(Boolean);
   const firstName = nameParts[0] || "Mon identité";
 
-  const activeCount = activeTab === "results" ? props.results.length : props.upcoming.length;
+  const resourceLinks = props.stories.flatMap((story) => story.links ?? []);
+  const activeCount = activeTab === "results" ? props.results.length : activeTab === "upcoming" ? props.upcoming.length : resourceLinks.length;
+  const activeCountLabel = activeTab === "results"
+    ? `publication${activeCount > 1 ? "s" : ""}`
+    : activeTab === "upcoming"
+      ? `outil${activeCount > 1 ? "s" : ""} à faire`
+      : `ressource${activeCount > 1 ? "s" : ""}`;
   const measurableStories = props.stories.filter((story) => story.measurable);
   const completedStoryCount = measurableStories.filter((story) => story.status === "completed").length;
   const remainingStoryCount = measurableStories.length - completedStoryCount;
@@ -237,10 +241,10 @@ export default function IdentityExperience(props: Props) {
                 className={`${styles.story} ${styles[`story_${story.status}`]}`}
                 key={story.key}
                 type="button"
-                onClick={() => setToolsOpen(true)}
+                onClick={() => setActiveTab("resources")}
                 aria-label={`Ouvrir ${story.name}`}
               >
-                <span className={styles.storyRing}>
+                <span className={styles.storyRing} data-story-key={story.key}>
                   <span className={styles.storyInner}><Image src={story.image} alt="" fill sizes="112px" /></span>
                   <span className={styles.storyBadge}><Plus /></span>
                 </span>
@@ -255,7 +259,7 @@ export default function IdentityExperience(props: Props) {
                 rel={story.external ? "noreferrer" : undefined}
                 aria-label={`${story.status === "completed" ? "Consulter" : "Ouvrir"} ${story.name}`}
               >
-                <span className={styles.storyRing}>
+                <span className={styles.storyRing} data-story-key={story.key}>
                   <span className={styles.storyInner}><Image src={story.image} alt="" fill sizes="112px" /></span>
                   {story.status === "completed" ? <span className={styles.storyBadge}><Check /></span> : null}
                   {story.status === "not-started" ? <span className={styles.storyBadge}><Plus /></span> : null}
@@ -265,9 +269,10 @@ export default function IdentityExperience(props: Props) {
             ))}
           </div>
           {measurableStories.length > 0 && remainingStoryCount > 0 && nextStory ? (
-            <Link
+            <button
+              type="button"
               className={styles.discoveryProgress}
-              href={nextStory.href}
+              onClick={() => setActiveTab("upcoming")}
               aria-label={`Continuer avec ${nextStory.name}. ${completedStoryCount} outils terminés sur ${measurableStories.length}`}
             >
               <span className={styles.discoveryMark} aria-hidden="true">✦</span>
@@ -277,26 +282,9 @@ export default function IdentityExperience(props: Props) {
               </div>
               <div className={styles.progressTrack} aria-hidden="true"><span style={{ width: `${completedStoryCount / measurableStories.length * 100}%` }} /></div>
               <strong className={styles.progressCount}>{completedStoryCount} / {measurableStories.length}</strong>
-            </Link>
+            </button>
           ) : null}
         </section>
-      ) : null}
-
-      {toolsOpen ? (
-        <div className={styles.toolsBackdrop} role="presentation" onMouseDown={() => setToolsOpen(false)}>
-          <section className={styles.toolsDialog} role="dialog" aria-modal="true" aria-labelledby="tools-dialog-title" onMouseDown={(event) => event.stopPropagation()}>
-            <button className={styles.toolsClose} type="button" onClick={() => setToolsOpen(false)} aria-label="Fermer"><X /></button>
-            <p>Finance</p>
-            <h2 id="tools-dialog-title">À tester</h2>
-            <div className={styles.toolsLinks}>
-              {props.stories.find((story) => story.links)?.links?.map((item) => (
-                <Link href={item.href} key={item.href} target={item.external ? "_blank" : undefined} rel={item.external ? "noreferrer" : undefined}>
-                  <span><strong>{item.name}</strong><small>Découvrir l’outil</small></span><ArrowRight />
-                </Link>
-              ))}
-            </div>
-          </section>
-        </div>
       ) : null}
 
       <section className={styles.feed} aria-label="Publications de mon identité">
@@ -305,22 +293,31 @@ export default function IdentityExperience(props: Props) {
             <Grid3X3 /> Mes résultats
           </button>
           <button type="button" role="tab" aria-selected={activeTab === "upcoming"} className={activeTab === "upcoming" ? styles.activeTab : ""} onClick={() => setActiveTab("upcoming")}>
-            <Clock3 /> À venir
+            <Clock3 /> À faire
+          </button>
+          <button type="button" role="tab" aria-selected={activeTab === "resources"} className={activeTab === "resources" ? styles.activeTab : ""} onClick={() => setActiveTab("resources")}>
+            <Sparkles /> Ressources
           </button>
         </div>
-        <p className={styles.publicationCount} aria-live="polite">{activeCount} publication{activeCount > 1 ? "s" : ""}</p>
+        <p className={styles.publicationCount} aria-live="polite">{activeCount} {activeCountLabel}</p>
 
         {activeTab === "results" ? (
           props.results.length ? (
-            <div className={styles.grid}>{props.results.map((result) => <ResultPost key={`${result.kind}-${result.attemptId ?? result.completedAt}`} result={result} />)}</div>
+            <div className={styles.grid}>{props.results.map((result) => <ResultPost key={`${result.kind}-${result.attemptId ?? result.completedAt}`} result={result} firstName={firstName} />)}</div>
           ) : (
             <div className={styles.empty}>
               <span><BookOpen /></span>
               <div><strong>Ta collection commence ici</strong><p>Les résultats apparaîtront après la finalisation d’un test. Un test en cours ne publie rien.</p></div>
             </div>
           )
-        ) : props.upcoming.length ? (
+        ) : activeTab === "upcoming" && props.upcoming.length ? (
           <div className={styles.grid}>{props.upcoming.map((item) => <UpcomingPost item={item} key={item.key} />)}</div>
+        ) : activeTab === "resources" && resourceLinks.length ? (
+          <div className={styles.resourceGrid}>{resourceLinks.map((item) => (
+            <Link className={styles.resourceCard} href={item.href} key={item.href} target={item.external ? "_blank" : undefined} rel={item.external ? "noreferrer" : undefined}>
+              <span><small>Finance</small><strong>{item.name}</strong><em>Découvrir la ressource</em></span><ArrowRight />
+            </Link>
+          ))}</div>
         ) : (
           <div className={styles.empty}>
             <span><Clock3 /></span>

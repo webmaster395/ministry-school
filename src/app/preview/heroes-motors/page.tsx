@@ -1,5 +1,7 @@
-import { HeroesMotorsResultView, leilaPreview } from "@/app/etudiant/identite/mes-moteurs/page";
+import { redirect } from "next/navigation";
 
 export default function HeroesMotorsPreviewPage() {
-  return <HeroesMotorsResultView result={leilaPreview} preview />;
+  // L'ancien exemple fictif de Leïla ne doit plus être exposé. Le véritable
+  // résultat est accessible uniquement depuis le compte auquel il est rattaché.
+  redirect("/etudiant/identite");
 }

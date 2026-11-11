@@ -140,7 +140,10 @@ function buildUpcoming(tools: CatalogApp[], completedKinds: Set<string>) {
       const kind = resultKindForItem(item);
       return kind && !completedKinds.has(kind) ? [{ ...item, category: "Identité" }] : [];
     });
-    if (tool.slug === "generopoly") return completedKinds.has("generopoly") ? [] : [{ key: tool.id, name: "Généropoly", href: tool.url, iconUrl: tool.iconUrl, category: "Finance" }];
+    if (tool.slug === "ma-ligne-de-vie") return completedKinds.has("life-line") ? [] : [{ key: tool.id, name: "Ma ligne de vie", href: tool.url, iconUrl: tool.iconUrl, category: "Identité" }];
+    // Généropoly et le simulateur sont des ressources non suivables : ils sont
+    // regroupés dans l'onglet Ressources et ne faussent pas la progression.
+    if (tool.slug === "generopoly") return [];
     if (tool.slug.includes("apest")) return completedKinds.has("apest") ? [] : [{ key: tool.id, name: tool.name, href: tool.url, iconUrl: tool.iconUrl, category: "Identité" }];
     return [];
   });
@@ -170,11 +173,15 @@ export default async function StudentIdentityPage() {
   const heroesResults: IdentityResult[] = heroesMotors
     ? [{ kind: "heroes-motors", completedAt: heroesMotors.publishedAt }]
     : [];
-  const allResults = [...officialMappResults, ...nonMappIdentityResults, ...dashboard.financeResults, ...lifeLineResults, ...heroesResults]
+  const chronologicalResults = [...officialMappResults, ...nonMappIdentityResults, ...dashboard.financeResults, ...lifeLineResults, ...heroesResults]
     .sort((left, right) => new Date(right.completedAt).getTime() - new Date(left.completedAt).getTime());
-  const displayedResults: IdentityResult[] = viewer.roles.superAdmin && !heroesMotors
-    ? [{ kind: "heroes-prototype", completedAt: "2026-11-10T00:00:00.000Z" }, ...allResults]
-    : allResults;
+  // Mes moteurs devient la publication éditoriale épinglée lorsqu'un véritable
+  // résultat a été publié. MAPP reste ensuite la première publication de test.
+  const allResults = [
+    ...chronologicalResults.filter((result) => result.kind === "heroes-motors"),
+    ...chronologicalResults.filter((result) => result.kind === "mapp"),
+    ...chronologicalResults.filter((result) => result.kind !== "mapp" && result.kind !== "heroes-motors"),
+  ];
   const completedKinds = new Set(allResults.map((result) => result.kind));
   const graceAvailable = tools.some((tool) => tool.slug === "je-suis-par-la-grace-de-dieu");
   const stories = buildStories({
@@ -192,7 +199,7 @@ export default async function StudentIdentityPage() {
     months={monthsTogether(dashboard.profile.memberSince)}
     completedTests={allResults.length}
     stories={stories}
-    results={displayedResults}
+    results={allResults}
     upcoming={buildUpcoming(tools, completedKinds)}
   />;
 }
