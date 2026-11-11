@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { getViewer } from "@/lib/data/viewer";
 import { getMappResultBundle, openMappQuestionnaire } from "@/lib/mapp/server";
-import { getOfficialMappIdentityResults } from "@/lib/mapp/official-results";
 import { getIdentityDashboard } from "@/lib/identity/dashboard";
 
 export const dynamic = "force-dynamic";
@@ -12,14 +11,11 @@ export default async function ProfilMappPage() {
   if (viewer.deactivated) redirect("/auth/desactive");
 
   const dashboard = await getIdentityDashboard();
-  const nativeResult = dashboard.identityResults.find((result) => result.kind === "mapp");
-  const [officialResult] = nativeResult ? [] : await getOfficialMappIdentityResults();
-  const existingResult = nativeResult ?? officialResult;
+  const existingResult = dashboard.identityResults.find((result) => result.kind === "mapp");
   if (existingResult?.attemptId) {
     const query = new URLSearchParams();
     if (existingResult.resultRevisionId) query.set("revision", existingResult.resultRevisionId);
-    if (nativeResult) query.set("native", "1");
-    else query.set("legacy", "1");
+    query.set("native", "1");
     const suffix = query.size ? `?${query.toString()}` : "";
     redirect(`/apps/profil-mapp/test/${existingResult.attemptId}/resultat${suffix}`);
   }

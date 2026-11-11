@@ -11,7 +11,6 @@ export type IdentityResult = {
   secondaryCode?: string | null;
   tieBreakRequired?: boolean;
   native?: boolean;
-  legacy?: boolean;
   results?: Record<string, unknown>;
 };
 

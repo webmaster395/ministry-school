@@ -13,20 +13,14 @@ test("la story MAPP et l'entrée principale ouvrent un résultat existant sans r
   assert.match(page, /key: "profil-mapp",[\s\S]*?href: mappHref/);
   assert.match(page, /tool\.slug === "profil-mapp"[\s\S]*?href: "\/apps\/profil-mapp"/);
   assert.match(mappRoute, /const viewer = await getViewer\(\)/);
-  assert.match(mappRoute, /const nativeResult = dashboard\.identityResults\.find/);
-  assert.match(mappRoute, /const \[officialResult\] = nativeResult \? \[\] : await getOfficialMappIdentityResults\(\)/);
+  assert.match(mappRoute, /const existingResult = dashboard\.identityResults\.find/);
   assert.match(mappRoute, /existingResult\.attemptId[\s\S]*?\/resultat/);
-  assert.match(mappRoute, /if \(nativeResult\) query\.set\("native", "1"\)/);
-  assert.match(mappRoute, /else query\.set\("legacy", "1"\)/);
+  assert.match(mappRoute, /query\.set\("native", "1"\)/);
   assert.match(mappRoute, /const questionnaire = await openMappQuestionnaire\(\)/);
   assert.match(mappRoute, /redirect\(destination\)/);
   assert.doesNotMatch(mappRoute, /GuestMappEntry|api\/mapp\/guest\/start/);
-  assert.doesNotMatch(vercel, /"source": "\/apps\/profil-mapp"/);
-  assert.match(vercel, /"source": "\/apps\/profil-mapp\/test\/:path\*"/);
-  assert.match(vercel, /"has": \[\{ "type": "query", "key": "legacy", "value": "1" \}\]/);
-  assert.doesNotMatch(vercel, /"missing": \[\{ "type": "query", "key": "native"/);
-  assert.match(vercel, /"source": "\/apps\/profil-mapp\/admin\/:path\*"/);
-  assert.match(vercel, /"source": "\/apps\/profil-mapp\/_next\/:path\*"/);
+  assert.doesNotMatch(vercel, /profil-mapp/);
+  assert.doesNotMatch(vercel, /profil-mapp\.vercel\.app/);
 });
 
 test("les pages étudiantes privilégient le résultat MAPP natif et conservent le routage Ministry", () => {
@@ -35,9 +29,8 @@ test("les pages étudiantes privilégient le résultat MAPP natif et conservent 
 
   for (const page of [identity, work]) {
     assert.match(page, /const nativeMappResults = dashboard\.identityResults/);
-    assert.match(page, /const selectedMappResults = nativeMappResults\.length[\s\S]*?officialMappResults\.map\(\(result\) => \(\{ \.\.\.result, legacy: true \}\)\)/);
     assert.match(page, /if \(mapp\?\.native\) mappQuery\.set\("native", "1"\)/);
-    assert.match(page, /if \(mapp\?\.legacy\) mappQuery\.set\("legacy", "1"\)/);
+    assert.doesNotMatch(page, /getOfficialMappIdentityResults|officialMappResults|legacy/);
   }
 });
 
