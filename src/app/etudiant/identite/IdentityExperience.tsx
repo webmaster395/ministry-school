@@ -117,8 +117,12 @@ function ResultPost({ result, firstName }: { result: IdentityResult; firstName: 
     const primary = result.primaryCode ? profileNames[result.primaryCode] ?? result.primaryCode : "Profil MAPP";
     const secondary = result.secondaryCode ? profileNames[result.secondaryCode] ?? result.secondaryCode : null;
     const image = result.primaryCode ? mappImages[result.primaryCode] : null;
+    const resultQuery = new URLSearchParams();
+    if (result.resultRevisionId) resultQuery.set("revision", result.resultRevisionId);
+    if (result.native) resultQuery.set("native", "1");
+    if (result.legacy) resultQuery.set("legacy", "1");
     const resultHref = result.attemptId
-      ? `/apps/profil-mapp/test/${result.attemptId}/resultat${result.resultRevisionId ? `?revision=${result.resultRevisionId}` : ""}`
+      ? `/apps/profil-mapp/test/${result.attemptId}/resultat${resultQuery.size ? `?${resultQuery.toString()}` : ""}`
       : "/apps/profil-mapp";
     return (
       <Link className={`${styles.post} ${styles.mappPost}`} href={resultHref} aria-label="Ouvrir mon résultat Profil MAPP">

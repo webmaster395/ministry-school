@@ -46,6 +46,14 @@ test("les pages étudiantes privilégient le résultat MAPP natif et conservent 
   }
 });
 
+test("les publications de résultats conservent le moteur natif ou historique", () => {
+  const experience = read("src/app/etudiant/identite/IdentityExperience.tsx");
+
+  assert.match(experience, /if \(result\.native\) resultQuery\.set\("native", "1"\)/);
+  assert.match(experience, /if \(result\.legacy\) resultQuery\.set\("legacy", "1"\)/);
+  assert.match(experience, /\/apps\/profil-mapp\/test\/\$\{result\.attemptId\}\/resultat\$\{resultQuery\.size/);
+});
+
 test("la jauge ouvre l'onglet À faire et le recadre", () => {
   const experience = read("src/app/etudiant/identite/IdentityExperience.tsx");
 
