@@ -3,7 +3,7 @@ import "server-only";
 import { cookies } from "next/headers";
 import type { IdentityResult } from "@/lib/identity/dashboard";
 
-const OFFICIAL_RESULTS_ENDPOINT = "https://profil-mapp.vercel.app/apps/profil-mapp/api/integrations/ministry/claim-results";
+const OFFICIAL_RESULTS_ENDPOINT = "https://profil-mapp.vercel.app/apps/profil-mapp/api/integrations/ministry/results";
 
 type RankingRow = {
   context: string;

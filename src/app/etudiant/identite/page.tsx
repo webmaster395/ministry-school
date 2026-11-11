@@ -187,9 +187,12 @@ export default async function StudentIdentityPage() {
   const nativeMappResults = dashboard.identityResults
     .filter((result) => result.kind === "mapp")
     .map((result) => ({ ...result, native: true }));
-  const selectedMappResults = nativeMappResults.length
-    ? nativeMappResults
-    : officialMappResults.map((result) => ({ ...result, legacy: true }));
+  const selectedMappResults = [
+    ...nativeMappResults,
+    ...officialMappResults.map((result) => ({ ...result, legacy: true })),
+  ]
+    .filter((result, index, results) => !result.attemptId || results.findIndex((candidate) => candidate.attemptId === result.attemptId) === index)
+    .sort((left, right) => new Date(right.completedAt).getTime() - new Date(left.completedAt).getTime());
   const nonMappIdentityResults = dashboard.identityResults.filter((result) => result.kind !== "mapp");
   const heroesResults: IdentityResult[] = heroesMotors
     ? [{ kind: "heroes-motors", completedAt: heroesMotors.publishedAt }]

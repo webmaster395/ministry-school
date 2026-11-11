@@ -21,6 +21,7 @@ test("la restriction Fruit de l’Esprit reste distincte et réservée aux super
 
 test("MAPP ouvre le test à faire ou le résultat déjà finalisé", () => {
   const page = read("src/app/apps/profil-mapp/page.tsx");
+  const landing = read("src/app/apps/profil-mapp/MappLanding.tsx");
   const startPage = read("src/app/apps/profil-mapp/commencer/page.tsx");
   const questionnairePage = read("src/app/apps/profil-mapp/test/[attemptId]/page.tsx");
   const runner = read("src/app/apps/profil-mapp/OfficialHybrid44Runner.tsx");
@@ -32,7 +33,8 @@ test("MAPP ouvre le test à faire ou le résultat déjà finalisé", () => {
 
   assert.match(page, /if \(existingResult\?\.attemptId\)/);
   assert.match(page, /redirect\(`\/apps\/profil-mapp\/test\/\$\{existingResult\.attemptId\}\/resultat/);
-  assert.match(page, /href="\/apps\/profil-mapp\/commencer"/);
+  assert.match(page, /return <MappLanding \/>/);
+  assert.match(landing, /href="\/apps\/profil-mapp\/commencer"/);
   assert.doesNotMatch(page, /openMappQuestionnaire/);
   assert.match(startPage, /const questionnaire = await openMappQuestionnaire\(\)/);
   assert.match(startPage, /destination = `\/apps\/profil-mapp\/test\/\$\{questionnaire\.attemptId\}\?native=1`/);
