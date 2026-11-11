@@ -105,7 +105,7 @@ function ResultPost({ result, firstName }: { result: IdentityResult; firstName: 
         <span className={styles.heroesGlow} aria-hidden="true" />
         <span className={styles.postShade} />
         <span className={styles.postCopy}>
-          <span className={styles.postKicker}>Mes moteurs</span>
+          <span className={styles.postKicker}>Test des héros</span>
           <strong>Moi, {firstName}, je suis…</strong>
           <span className={styles.openPost}>Voir le résultat <ArrowRight size={15} /></span>
         </span>

@@ -16,7 +16,7 @@ const TITLES: Record<string, string> = {
   "/etudiant/formation": "Mon ministère",
   "/etudiant/profil": "Profil",
   "/etudiant/preferences": "Préférences",
-  "/etudiant/identite/mes-moteurs": "Mes moteurs",
+  "/etudiant/identite/mes-moteurs": "Test des héros",
   "/enseignant/calendrier": "Mon calendrier",
   "/enseignant/supports": "Supports & consignes",
   "/enseignant/seances": "Séances",

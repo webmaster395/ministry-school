@@ -3,8 +3,10 @@ import "server-only";
 import { createClient } from "@/lib/supabase/server";
 
 export type HeroesMotorsResult = {
+  id: string;
   firstName: string;
-  portrait: string;
+  communicationStatus: "authorized" | "refused";
+  portrait: string | null;
   motors: string[];
   heroes: string[];
   publishedAt: string;
@@ -16,25 +18,26 @@ function stringArray(value: unknown) {
 }
 
 export async function getPublishedHeroesMotorsResult(userId: string): Promise<HeroesMotorsResult | null> {
+  // La RPC utilise auth.uid() côté base ; le paramètre conserve l'API explicite
+  // des appelants et documente le propriétaire attendu sans être envoyé au SQL.
+  void userId;
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("heroes_motors_results")
-    .select("first_name,portrait,motors,heroes,published_at")
-    .eq("user_id", userId)
-    .eq("publication_status", "published")
-    .maybeSingle();
+  const { data, error } = await supabase.rpc("get_my_heroes_motors_result");
 
   // La migration peut ne pas encore être appliquée dans un environnement de
   // prévisualisation. Dans ce cas, Mon identité reste disponible sans ce post.
-  if (error?.code === "42P01" || error?.code === "PGRST205") return null;
+  if (["42P01", "42883", "PGRST202", "PGRST205"].includes(error?.code ?? "")) return null;
   if (error) throw new Error(`Chargement de Mes moteurs impossible : ${error.message}`);
-  if (!data) return null;
+  const row = Array.isArray(data) ? data[0] : data;
+  if (!row) return null;
 
   return {
-    firstName: data.first_name,
-    portrait: data.portrait,
-    motors: stringArray(data.motors),
-    heroes: stringArray(data.heroes),
-    publishedAt: data.published_at ?? new Date().toISOString(),
+    id: row.id,
+    firstName: row.first_name,
+    communicationStatus: row.communication_status === "refused" ? "refused" : "authorized",
+    portrait: typeof row.portrait === "string" ? row.portrait : null,
+    motors: stringArray(row.motors),
+    heroes: stringArray(row.heroes),
+    publishedAt: row.published_at ?? new Date().toISOString(),
   };
 }
