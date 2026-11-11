@@ -8,6 +8,42 @@
     {
       "source": "/apps/generopoly/:path*",
       "destination": "https://ma-generosite.vercel.app/apps/generopoly/:path*"
+    },
+    {
+      "source": "/apps/profil-mapp/admin/:path*",
+      "destination": "https://profil-mapp.vercel.app/apps/profil-mapp/admin/:path*"
+    },
+    {
+      "source": "/apps/profil-mapp/test/:path*",
+      "destination": "https://profil-mapp.vercel.app/apps/profil-mapp/test/:path*"
+    },
+    {
+      "source": "/apps/profil-mapp/api/:path*",
+      "destination": "https://profil-mapp.vercel.app/apps/profil-mapp/api/:path*"
+    },
+    {
+      "source": "/apps/profil-mapp/_next/:path*",
+      "destination": "https://profil-mapp.vercel.app/apps/profil-mapp/_next/:path*"
+    },
+    {
+      "source": "/apps/profil-mapp/images/:path*",
+      "destination": "https://profil-mapp.vercel.app/apps/profil-mapp/images/:path*"
+    },
+    {
+      "source": "/apps/profil-mapp/data/:path*",
+      "destination": "https://profil-mapp.vercel.app/apps/profil-mapp/data/:path*"
+    },
+    {
+      "source": "/apps/profil-mapp/pdf-templates/:path*",
+      "destination": "https://profil-mapp.vercel.app/apps/profil-mapp/pdf-templates/:path*"
+    },
+    {
+      "source": "/apps/profil-mapp/preview/:path*",
+      "destination": "https://profil-mapp.vercel.app/apps/profil-mapp/preview/:path*"
+    },
+    {
+      "source": "/apps/profil-mapp/results-design-system.css",
+      "destination": "https://profil-mapp.vercel.app/apps/profil-mapp/results-design-system.css"
     }
   ]
 }

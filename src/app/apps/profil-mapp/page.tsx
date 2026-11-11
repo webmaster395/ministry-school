@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getViewer } from "@/lib/data/viewer";
 import { getMappResultBundle, openMappQuestionnaire } from "@/lib/mapp/server";
+import { getOfficialMappIdentityResults } from "@/lib/mapp/official-results";
 
 export const dynamic = "force-dynamic";
 
@@ -8,6 +9,12 @@ export default async function ProfilMappPage() {
   const viewer = await getViewer();
   if (!viewer) redirect("/login?next=/apps/profil-mapp");
   if (viewer.deactivated) redirect("/auth/desactive");
+
+  const [existingResult] = await getOfficialMappIdentityResults();
+  if (existingResult?.attemptId) {
+    const revision = existingResult.resultRevisionId ? `?revision=${existingResult.resultRevisionId}` : "";
+    redirect(`/apps/profil-mapp/test/${existingResult.attemptId}/resultat${revision}`);
+  }
 
   let destination: string;
   try {
