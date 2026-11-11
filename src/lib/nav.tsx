@@ -82,9 +82,6 @@ export const studentSections: NavSection[] = [
       // Le ministère reste masqué tant que son espace n'est pas prêt.
       // { label: "Mon ministère", href: "/etudiant/formation", icon: icons.ministries },
       { label: "Projets et formations", href: "/etudiant/services", icon: icons.services },
-      // L'espace étudiant applique les dates de publication. Les super-administrateurs
-      // y voient aussi les outils en préparation afin de valider le parcours réel.
-      { label: "Mes outils", href: "/apps", icon: icons.apps },
     ],
   },
 ];
@@ -93,12 +90,6 @@ export const notesNavItem: NavItem = {
   label: "Mes notes",
   href: "/etudiant/notes",
   icon: icons.notes,
-};
-
-export const toolsNavItem: NavItem = {
-  label: "Mes outils",
-  href: "/apps",
-  icon: icons.apps,
 };
 
 /** Icône générique conservée pour les anciens appels qui représentent une fonction de gestion. */

@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { Check, ChevronRight } from "lucide-react";
+import { Check, ChevronRight, ExternalLink, Square } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { getStudentTools, type CatalogApp } from "@/lib/apps/catalog";
 import {
   getStudentAllSessions,
   getStudentProgramAssignments,
@@ -13,10 +14,103 @@ import { formatSessionDate } from "@/lib/format";
 import { getMinistry, INK, sessionColor } from "@/lib/ministry";
 import TravailTabs from "@/components/TravailTabs";
 import { toggleAssignment } from "./actions";
+import { getIdentityDashboard, type IdentityResult } from "@/lib/identity/dashboard";
+import { getOfficialMappIdentityResults } from "@/lib/mapp/official-results";
+import { getPublishedHeroesMotorsResult } from "@/lib/identity/heroes-motors";
 
-type Tab = "a-faire" | "termines";
+type Tab = "a-faire" | "termines" | "outils";
 
 type Assignment = Awaited<ReturnType<typeof getStudentProgramAssignments>>[number];
+
+type TrackedTool = {
+  key: string;
+  name: string;
+  description: string;
+  completed: boolean;
+  href: string;
+};
+
+type FreeTool = {
+  key: string;
+  name: string;
+  description: string;
+  href: string;
+  external?: boolean;
+};
+
+function latestResult(results: IdentityResult[], kind: IdentityResult["kind"]) {
+  return results.find((result) => result.kind === kind);
+}
+
+function hasCatalogTool(tools: CatalogApp[], slug: string) {
+  return tools.some((tool) => tool.slug === slug);
+}
+
+function buildTrackedTools(tools: CatalogApp[], results: IdentityResult[], heroesAvailable: boolean): TrackedTool[] {
+  const items: TrackedTool[] = [];
+  const mapp = latestResult(results, "mapp");
+  items.push({
+    key: "profil-mapp",
+    name: "Profil MAPP",
+    description: "Découvre ton profil et retrouve tes restitutions personnelles.",
+    completed: Boolean(mapp),
+    href: mapp?.attemptId
+      ? `/apps/profil-mapp/test/${mapp.attemptId}/resultat${mapp.resultRevisionId ? `?revision=${mapp.resultRevisionId}` : ""}`
+      : "/apps/profil-mapp",
+  });
+
+  if (heroesAvailable) {
+    items.push({
+      key: "heroes-motors",
+      name: "Test des héros",
+      description: "Retrouve les valeurs et les moteurs qui t’animent.",
+      completed: true,
+      href: "/etudiant/identite/mes-moteurs",
+    });
+  }
+
+  if (hasCatalogTool(tools, "je-suis-par-la-grace-de-dieu")) {
+    ([
+      ["fruit", "Fruit de l’Esprit", "Observe ce qui porte déjà du fruit et ce qui peut encore grandir.", "/etudiant/identite/fruit-de-lesprit"],
+      ["gifts", "Dons spirituels", "Explore les dons qui se manifestent et ceux que tu peux développer.", "/etudiant/identite/dons-spirituels"],
+      ["skills", "Compétences naturelles", "Identifie tes forces et les compétences que tu souhaites faire grandir.", "/etudiant/identite/competences-naturelles"],
+    ] as const).forEach(([kind, name, description, href]) => {
+      items.push({ key: kind, name, description, completed: Boolean(latestResult(results, kind)), href });
+    });
+  }
+
+  if (hasCatalogTool(tools, "ma-ligne-de-vie")) {
+    items.push({
+      key: "life-line",
+      name: "Ma ligne de vie",
+      description: "Relis ton parcours et les événements qui éclairent ton appel.",
+      completed: Boolean(latestResult(results, "life-line")),
+      href: "/etudiant/ligne-de-vie",
+    });
+  }
+
+  return items;
+}
+
+function buildFreeTools(tools: CatalogApp[]): FreeTool[] {
+  const items: FreeTool[] = [];
+  if (hasCatalogTool(tools, "generopoly")) {
+    items.push({
+      key: "generopoly",
+      name: "Généropoly",
+      description: "Un jeu pour explorer tes choix financiers et la gestion de ton temps.",
+      href: "/apps/generopoly",
+    });
+  }
+  items.push({
+    key: "simulateur-generosite",
+    name: "Simulateur de générosité",
+    description: "Découvre la place de la générosité dans ton budget.",
+    href: "https://generosite.jeveuxdonner.fr/",
+    external: true,
+  });
+  return items;
+}
 
 function dueLabels(after: boolean, date: string | null) {
   const primary = after
@@ -33,7 +127,7 @@ export default async function StudentWorkPage({
   searchParams: Promise<{ onglet?: string }>;
 }) {
   const { onglet } = await searchParams;
-  const tab: Tab = onglet === "termines" ? "termines" : "a-faire";
+  const tab: Tab = onglet === "termines" ? "termines" : onglet === "outils" ? "outils" : "a-faire";
 
   const supabase = await createClient();
   const {
@@ -56,7 +150,29 @@ export default async function StudentWorkPage({
   const work = getStudentWorkItems(assignments, sessions);
   const open = work.filter(({ assignment }) => !isDone(assignment));
   const finished = work.filter(({ assignment }) => isDone(assignment));
-  const shown = tab === "a-faire" ? open : finished;
+  const shown = tab === "termines" ? finished : open;
+
+  let trackedTools: TrackedTool[] = [];
+  let freeTools: FreeTool[] = [];
+  if (tab === "outils") {
+    const [tools, dashboard, officialMappResults, lifeLine, heroesMotors] = await Promise.all([
+      getStudentTools(),
+      getIdentityDashboard(),
+      getOfficialMappIdentityResults(),
+      supabase.from("life_line_journeys").select("completed_at,updated_at").eq("user_id", user!.id).maybeSingle(),
+      getPublishedHeroesMotorsResult(user!.id),
+    ]);
+    const identityResults = dashboard.identityResults.filter((result) => result.kind !== "mapp");
+    const lifeLineResults: IdentityResult[] = lifeLine.data
+      ? [{ kind: "life-line", completedAt: lifeLine.data.completed_at ?? lifeLine.data.updated_at ?? new Date().toISOString() }]
+      : [];
+    const heroesResults: IdentityResult[] = heroesMotors
+      ? [{ kind: "heroes-motors", completedAt: heroesMotors.publishedAt }]
+      : [];
+    const results = [...officialMappResults, ...identityResults, ...lifeLineResults, ...heroesResults];
+    trackedTools = buildTrackedTools(tools, results, Boolean(heroesMotors));
+    freeTools = buildFreeTools(tools);
+  }
 
   // Chaque travail est présenté sous la séance pour laquelle il doit être prêt.
   const groups = new Map<string, typeof shown>();
@@ -78,7 +194,7 @@ export default async function StudentWorkPage({
         a.session.start_time.localeCompare(b.session.start_time),
     );
 
-  const tabs: { key: Tab; label: string; count: number; href: string }[] = [
+  const tabs: { key: Tab; label: string; count?: number; href: string; distinct?: boolean }[] = [
     {
       key: "a-faire",
       label: "À faire",
@@ -91,16 +207,27 @@ export default async function StudentWorkPage({
       count: finished.length,
       href: "/etudiant/travail?onglet=termines",
     },
+    {
+      key: "outils",
+      label: "Mes outils",
+      href: "/etudiant/travail?onglet=outils",
+      distinct: true,
+    },
   ];
 
   return (
     <div className="space-y-5">
       <p className="text-[15px] text-muted">
-        Retrouvez tout ce que vous devez préparer pour vos cours.
+        {tab === "outils"
+          ? "Explore les outils de Ministry School et retrouve tes résultats."
+          : "Retrouvez tout ce que vous devez préparer pour vos cours."}
       </p>
 
       <TravailTabs tabs={tabs} active={tab} />
 
+      {tab === "outils" ? (
+        <ToolsPanel tracked={trackedTools} free={freeTools} />
+      ) : <>
       {tab === "a-faire" && open.length > 0 && (
         <section className="flex flex-wrap items-end justify-between gap-6 rounded-lg border border-border bg-background p-6">
           <div>
@@ -235,6 +362,68 @@ export default async function StudentWorkPage({
           </p>
         </section>
       )}
+      </>}
     </div>
+  );
+}
+
+function ToolsPanel({ tracked, free }: { tracked: TrackedTool[]; free: FreeTool[] }) {
+  const completed = tracked.filter((tool) => tool.completed).length;
+  return (
+    <section className="overflow-hidden rounded-lg border border-border bg-background">
+      <div className="border-b border-border-soft px-5 py-5 sm:px-6">
+        <p className="label text-[11px] tracking-[0.14em] text-muted">ESPACE PERSONNEL</p>
+        <h2 className="font-title mt-1 text-[24px] leading-tight text-foreground">Outils disponibles</h2>
+        <p className="mt-1 text-[15px] text-muted">Explore les outils de Ministry School et retrouve tes résultats.</p>
+      </div>
+
+      <div className="px-5 py-6 sm:px-6">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h3 className="font-title text-[19px] text-foreground">Mes tests</h3>
+          <p className="text-sm font-medium text-muted">{completed} {completed > 1 ? "tests réalisés" : "test réalisé"} sur {tracked.length}</p>
+        </div>
+        <ul className="mt-3 divide-y divide-border-soft border-y border-border-soft">
+          {tracked.map((tool) => (
+            <li key={tool.key}>
+              <Link href={tool.href} className="group flex min-h-20 items-center gap-3 py-4 transition hover:bg-surface/60 sm:px-2">
+                <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md border ${tool.completed ? "border-foreground bg-accent text-on-accent" : "border-border text-muted"}`}>
+                  {tool.completed ? <Check size={15} strokeWidth={2.4} aria-hidden="true" /> : <Square size={14} strokeWidth={1.5} aria-hidden="true" />}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[16px] font-semibold text-foreground">{tool.name}</span>
+                  <span className="mt-0.5 block text-sm leading-snug text-muted">{tool.description}</span>
+                </span>
+                <span className="hidden shrink-0 text-sm font-medium text-foreground sm:block">{tool.completed ? "Voir mon résultat" : "Commencer"}</span>
+                <ChevronRight size={18} className="shrink-0 text-muted transition-transform group-hover:translate-x-0.5 group-hover:text-foreground" aria-hidden="true" />
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="border-t border-border bg-surface/35 px-5 py-6 sm:px-6">
+        <h3 className="font-title text-[19px] text-foreground">Outils à explorer</h3>
+        <p className="mt-1 text-sm text-muted">Accessibles à tout moment, sans statut de réalisation.</p>
+        <ul className="mt-3 divide-y divide-border-soft border-y border-border-soft">
+          {free.map((tool) => (
+            <li key={tool.key}>
+              <Link
+                href={tool.href}
+                target={tool.external ? "_blank" : undefined}
+                rel={tool.external ? "noreferrer" : undefined}
+                className="group flex min-h-20 items-center gap-3 py-4 transition hover:bg-background/70 sm:px-2"
+              >
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[16px] font-semibold text-foreground">{tool.name}</span>
+                  <span className="mt-0.5 block text-sm leading-snug text-muted">{tool.description}</span>
+                </span>
+                <span className="hidden shrink-0 text-sm font-medium text-foreground sm:block">Ouvrir l’outil</span>
+                {tool.external ? <ExternalLink size={17} className="shrink-0 text-muted" aria-hidden="true" /> : <ChevronRight size={18} className="shrink-0 text-muted transition-transform group-hover:translate-x-0.5 group-hover:text-foreground" aria-hidden="true" />}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
   );
 }

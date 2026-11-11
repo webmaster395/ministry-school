@@ -36,16 +36,16 @@ test("public launchpad reads the persisted catalog and exposes only public apps 
   assert.match(catalog, /ministryAppUrls[\s\S]*"profil-mapp": "\/apps\/profil-mapp"/);
 });
 
-test("Mes outils ouvre le portail public mais reste masqué jusqu'au 7 novembre à 07h", () => {
+test("Le portail public reste accessible sans entrée Mes outils séparée dans la sidebar", () => {
   const migration = read("supabase/migrations/20261101190000_tools_visibility_and_scheduling.sql");
   const nav = read("src/lib/nav.tsx");
   const landing = read("src/app/page.tsx");
   const navBlocks = read("src/components/NavBlocks.tsx");
   assert.match(migration, /student_tools_enabled boolean not null default false/);
-  assert.match(nav, /label: "Mes outils"[\s\S]*href: "\/apps"/);
+  assert.doesNotMatch(nav, /label: "Mes outils"[\s\S]*href: "\/apps"/);
   assert.doesNotMatch(landing, /href="\/apps">Mes outils/);
   assert.match(navBlocks, /2026-11-07T06:00:00\.000Z/);
-  assert.match(navBlocks, /item\.label !== "Mes outils" \|\| toolsVisible/);
+  assert.doesNotMatch(navBlocks, /item\.label !== "Mes outils" \|\| toolsVisible/);
 });
 
 test("les publications publique et étudiante sont indépendantes et programmées à l'heure réelle", () => {
@@ -107,12 +107,11 @@ test("le Launchpad centre le nombre réel d’applications sans colonnes fantôm
   assert.match(styles, /\.appName \{[^}]*text-align:center/);
 });
 
-test("Gestion des outils reste privée tandis que Mes outils ouvre le portail public", () => {
+test("Gestion des outils reste privée tandis que le portail public conserve sa route", () => {
   const nav = read("src/lib/nav.tsx");
   const links = read("src/components/NavBlocks.tsx");
   const provider = read("src/components/SpaceProvider.tsx");
-  assert.match(nav, /label: "Mes outils"[\s\S]*href: "\/apps"/);
-  assert.doesNotMatch(nav, /label: "Mes outils"[\s\S]*target: "_blank"/);
+  assert.doesNotMatch(nav, /label: "Mes outils"[\s\S]*href: "\/apps"/);
   assert.match(nav, /label: "Gestion des outils"[\s\S]*href: "\/admin\/apps"/);
   assert.doesNotMatch(nav, /href: "\/admin\/apps"[\s\S]{0,120}target: "_blank"/);
   assert.match(links, /target=\{target\}/);

@@ -1,34 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { ChevronDown } from "lucide-react";
+import { Wrench } from "lucide-react";
 
-type Tab = { key: string; label: string; count: number; href: string };
+type Tab = { key: string; label: string; count?: number; href: string; distinct?: boolean };
 
-/** Onglets sur grand écran ; sur mobile, un menu déroulant pour choisir la période. */
+/** Les statuts des devoirs restent groupés ; Mes outils est un espace distinct. */
 export default function TravailTabs({ tabs, active }: { tabs: Tab[]; active: string }) {
-  const router = useRouter();
   return (
-    <>
-      <div className="relative sm:hidden">
-        <select
-          aria-label="Période"
-          value={active}
-          onChange={(e) => router.push(tabs.find((t) => t.key === e.target.value)?.href ?? tabs[0].href)}
-          className="w-full appearance-none rounded-full border border-border bg-background py-3 pl-4 pr-10 text-[15px] font-medium text-foreground"
-        >
-          {tabs.map((t) => (
-            <option key={t.key} value={t.key}>
-              {t.label} ({t.count})
-            </option>
-          ))}
-        </select>
-        <ChevronDown size={18} className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-muted" aria-hidden="true" />
-      </div>
-
-      <nav className="tabbar hidden gap-1 rounded-full border border-border bg-background p-1 sm:inline-flex">
-        {tabs.map((t) => (
+    <nav aria-label="Travail et outils" className="flex max-w-full items-center gap-2 overflow-x-auto pb-1">
+      <div className="tabbar inline-flex shrink-0 gap-1 rounded-full border border-border bg-background p-1">
+        {tabs.filter((tab) => !tab.distinct).map((t) => (
           <Link
             key={t.key}
             href={t.href}
@@ -37,16 +19,31 @@ export default function TravailTabs({ tabs, active }: { tabs: Tab[]; active: str
             }`}
           >
             {t.label}
-            <span
+            {typeof t.count === "number" && <span
               className={`flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] ${
                 active === t.key ? "bg-white/20" : "bg-surface"
               }`}
             >
               {t.count}
-            </span>
+            </span>}
           </Link>
         ))}
-      </nav>
-    </>
+      </div>
+      <span aria-hidden="true" className="mx-1 h-7 w-px shrink-0 bg-border" />
+      {tabs.filter((tab) => tab.distinct).map((t) => (
+        <Link
+          key={t.key}
+          href={t.href}
+          className={`inline-flex shrink-0 items-center gap-2 rounded-full border px-4 py-2.5 text-sm transition ${
+            active === t.key
+              ? "border-foreground bg-accent font-medium text-on-accent"
+              : "border-border bg-background text-foreground hover:border-foreground"
+          }`}
+        >
+          <Wrench size={15} aria-hidden="true" />
+          {t.label}
+        </Link>
+      ))}
+    </nav>
   );
 }
