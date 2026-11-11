@@ -8,12 +8,15 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { IdentityResult } from "@/lib/identity/dashboard";
 import { getPublishedHeroesMotorsResult } from "@/lib/identity/heroes-motors";
+import { graceIdentitySlug } from "@/lib/apps/grace-identity";
 
 export const dynamic = "force-dynamic";
 
 function latestResult(results: IdentityResult[], kind: IdentityResult["kind"]) {
   return results.find((result) => result.kind === kind);
 }
+
+const graceResultKinds = new Set<IdentityResult["kind"]>(["fruit", "gifts", "skills"]);
 
 function buildStories({
   tools,
@@ -57,11 +60,12 @@ function buildStories({
     });
   }
 
-  ([
+  if (graceAvailable) {
+    ([
       ["fruit", "Fruit de l’Esprit", "/apps/grace-identity/fruit-spirit-bg-v3.webp"],
       ["gifts", "Dons spirituels", "/identity/posts/dons-spirituels.webp"],
       ["skills", "Compétences naturelles", "/identity/posts/competences-naturelles.webp"],
-    ] as const).filter(([kind]) => kind === "fruit" || graceAvailable).forEach(([kind, name, image]) => {
+    ] as const).forEach(([kind, name, image]) => {
       const completed = latestResult(results, kind);
       items.push({
         key: kind,
@@ -73,6 +77,7 @@ function buildStories({
         measurable: true,
       });
     });
+  }
 
   if (hasTool("ma-ligne-de-vie")) {
     const lifeLine = latestResult(results, "life-line");
@@ -140,7 +145,7 @@ function graceTestHref(kind: "fruit" | "gifts" | "skills") {
 }
 
 function buildUpcoming(tools: CatalogApp[], completedKinds: Set<string>) {
-  const items = tools.flatMap((tool) => {
+  return tools.flatMap((tool) => {
     if (tool.slug === "profil-mapp") return completedKinds.has("mapp") ? [] : [{ key: tool.id, name: "Profil MAPP", href: "/apps/profil-mapp", iconUrl: tool.iconUrl, category: "Identité" }];
     if (tool.slug === "je-suis-par-la-grace-de-dieu") return graceToolItems(tool).flatMap((item) => {
       const kind = resultKindForItem(item);
@@ -153,16 +158,6 @@ function buildUpcoming(tools: CatalogApp[], completedKinds: Set<string>) {
     if (tool.slug.includes("apest")) return completedKinds.has("apest") ? [] : [{ key: tool.id, name: tool.name, href: tool.url, iconUrl: tool.iconUrl, category: "Identité" }];
     return [];
   });
-  if (!completedKinds.has("fruit") && !items.some((item) => item.href === graceTestHref("fruit"))) {
-    items.unshift({
-      key: "fruit",
-      name: "Fruit de l’Esprit",
-      href: graceTestHref("fruit"),
-      iconUrl: null,
-      category: "Identité",
-    });
-  }
-  return items;
 }
 
 export default async function StudentIdentityPage() {
@@ -198,11 +193,13 @@ export default async function StudentIdentityPage() {
     ...chronologicalResults.filter((result) => result.kind === "mapp"),
     ...chronologicalResults.filter((result) => result.kind !== "mapp" && result.kind !== "heroes-motors"),
   ];
-  const completedKinds = new Set(allResults.map((result) => result.kind));
-  const graceAvailable = tools.some((tool) => tool.slug === "je-suis-par-la-grace-de-dieu");
+  const visibleTools = viewer.roles.superAdmin ? tools : tools.filter((tool) => tool.slug !== graceIdentitySlug);
+  const visibleResults = viewer.roles.superAdmin ? allResults : allResults.filter((result) => !graceResultKinds.has(result.kind));
+  const completedKinds = new Set(visibleResults.map((result) => result.kind));
+  const graceAvailable = viewer.roles.superAdmin;
   const stories = buildStories({
-    tools,
-    results: allResults,
+    tools: visibleTools,
+    results: visibleResults,
     heroesAvailable: Boolean(heroesMotors),
     graceAvailable,
   });
@@ -213,9 +210,9 @@ export default async function StudentIdentityPage() {
     avatarUrl={viewer.avatarUrl}
     studentCount={dashboard.metrics.studentCount}
     months={monthsTogether(dashboard.profile.memberSince)}
-    completedTests={allResults.length}
+    completedTests={visibleResults.length}
     stories={stories}
-    results={allResults}
-    upcoming={buildUpcoming(tools, completedKinds)}
+    results={visibleResults}
+    upcoming={buildUpcoming(visibleTools, completedKinds)}
   />;
 }
