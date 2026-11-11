@@ -1,6 +1,7 @@
 import { getStudentTools, type CatalogApp } from "@/lib/apps/catalog";
 import { getViewer } from "@/lib/data/viewer";
 import { getIdentityDashboard } from "@/lib/identity/dashboard";
+import { getOfficialMappIdentityResults } from "@/lib/mapp/official-results";
 import IdentityExperience, { type IdentityStoryItem } from "./IdentityExperience";
 import { isMappGuestOpen } from "@/lib/mapp/access-window";
 import { redirect } from "next/navigation";
@@ -34,6 +35,7 @@ function buildStories({
   const mappQuery = new URLSearchParams();
   if (mapp?.resultRevisionId) mappQuery.set("revision", mapp.resultRevisionId);
   if (mapp?.native) mappQuery.set("native", "1");
+  if (mapp?.legacy) mappQuery.set("legacy", "1");
   const mappHref = mapp?.attemptId
     ? `/apps/profil-mapp/test/${mapp.attemptId}/resultat${mappQuery.size ? `?${mappQuery.toString()}` : ""}`
     : "/apps/profil-mapp";
@@ -168,9 +170,10 @@ export default async function StudentIdentityPage() {
   if (viewer.deactivated) redirect("/auth/desactive");
   if (!viewer.roles.superAdmin && !isMappGuestOpen()) redirect("/etudiant");
   const supabase = await createClient();
-  const [dashboard, tools, lifeLine, heroesMotors] = await Promise.all([
+  const [dashboard, tools, officialMappResults, lifeLine, heroesMotors] = await Promise.all([
     getIdentityDashboard(),
     getStudentTools(),
+    getOfficialMappIdentityResults(),
     supabase.from("life_line_journeys").select("events,reflection,completed_at,updated_at").eq("user_id", viewer.id).maybeSingle(),
     getPublishedHeroesMotorsResult(viewer.id),
   ]);
@@ -184,11 +187,14 @@ export default async function StudentIdentityPage() {
   const nativeMappResults = dashboard.identityResults
     .filter((result) => result.kind === "mapp")
     .map((result) => ({ ...result, native: true }));
+  const selectedMappResults = nativeMappResults.length
+    ? nativeMappResults
+    : officialMappResults.map((result) => ({ ...result, legacy: true }));
   const nonMappIdentityResults = dashboard.identityResults.filter((result) => result.kind !== "mapp");
   const heroesResults: IdentityResult[] = heroesMotors
     ? [{ kind: "heroes-motors", completedAt: heroesMotors.publishedAt }]
     : [];
-  const chronologicalResults = [...nativeMappResults, ...nonMappIdentityResults, ...dashboard.financeResults, ...lifeLineResults, ...heroesResults]
+  const chronologicalResults = [...selectedMappResults, ...nonMappIdentityResults, ...dashboard.financeResults, ...lifeLineResults, ...heroesResults]
     .sort((left, right) => new Date(right.completedAt).getTime() - new Date(left.completedAt).getTime());
   // Mes moteurs devient la publication éditoriale épinglée lorsqu'un véritable
   // résultat a été publié. MAPP reste ensuite la première publication de test.

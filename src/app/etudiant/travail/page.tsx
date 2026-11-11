@@ -15,6 +15,7 @@ import { getMinistry, INK, sessionColor } from "@/lib/ministry";
 import TravailTabs from "@/components/TravailTabs";
 import { toggleAssignment } from "./actions";
 import { getIdentityDashboard, type IdentityResult } from "@/lib/identity/dashboard";
+import { getOfficialMappIdentityResults } from "@/lib/mapp/official-results";
 import { getPublishedHeroesMotorsResult } from "@/lib/identity/heroes-motors";
 
 type Tab = "a-faire" | "termines" | "outils";
@@ -51,6 +52,7 @@ function buildTrackedTools(tools: CatalogApp[], results: IdentityResult[], heroe
   const mappQuery = new URLSearchParams();
   if (mapp?.resultRevisionId) mappQuery.set("revision", mapp.resultRevisionId);
   if (mapp?.native) mappQuery.set("native", "1");
+  if (mapp?.legacy) mappQuery.set("legacy", "1");
   items.push({
     key: "profil-mapp",
     name: "Profil MAPP",
@@ -157,15 +159,19 @@ export default async function StudentWorkPage({
   let trackedTools: TrackedTool[] = [];
   let freeTools: FreeTool[] = [];
   if (tab === "outils") {
-    const [tools, dashboard, lifeLine, heroesMotors] = await Promise.all([
+    const [tools, dashboard, officialMappResults, lifeLine, heroesMotors] = await Promise.all([
       getStudentTools(),
       getIdentityDashboard(),
+      getOfficialMappIdentityResults(),
       supabase.from("life_line_journeys").select("completed_at,updated_at").eq("user_id", user!.id).maybeSingle(),
       getPublishedHeroesMotorsResult(user!.id),
     ]);
     const nativeMappResults = dashboard.identityResults
       .filter((result) => result.kind === "mapp")
       .map((result) => ({ ...result, native: true }));
+    const selectedMappResults = nativeMappResults.length
+      ? nativeMappResults
+      : officialMappResults.map((result) => ({ ...result, legacy: true }));
     const identityResults = dashboard.identityResults.filter((result) => result.kind !== "mapp");
     const lifeLineResults: IdentityResult[] = lifeLine.data
       ? [{ kind: "life-line", completedAt: lifeLine.data.completed_at ?? lifeLine.data.updated_at ?? new Date().toISOString() }]
@@ -173,7 +179,7 @@ export default async function StudentWorkPage({
     const heroesResults: IdentityResult[] = heroesMotors
       ? [{ kind: "heroes-motors", completedAt: heroesMotors.publishedAt }]
       : [];
-    const results = [...nativeMappResults, ...identityResults, ...lifeLineResults, ...heroesResults];
+    const results = [...selectedMappResults, ...identityResults, ...lifeLineResults, ...heroesResults];
     trackedTools = buildTrackedTools(tools, results, Boolean(heroesMotors));
     freeTools = buildFreeTools(tools);
   }

@@ -39,8 +39,8 @@ test("MAPP ouvre le test à faire ou le résultat déjà finalisé", () => {
   assert.match(questionnairePage, /!guestQuestionnaire && \(!viewer \|\| viewer\.deactivated\)/);
   assert.doesNotMatch(questionnairePage, /viewer\.roles\.superAdmin/);
   assert.match(questionnairePage, /questionnaire\.attemptId !== attemptId\) redirect\(`\/apps\/profil-mapp\/test\/\$\{questionnaire\.attemptId\}\?native=1`\)/);
-  assert.equal(testRewrite, undefined);
-  assert.doesNotMatch(JSON.stringify(vercel), /profil-mapp\.vercel\.app/);
+  assert.deepEqual(testRewrite.has, [{ type: "query", key: "legacy", value: "1" }]);
+  assert.equal("missing" in testRewrite, false);
   assert.match(runner, /resultat\?revision=\$\{payload\.revisionId\}&native=1/);
   assert.doesNotMatch(resultPage, /departage/);
   assert.doesNotMatch(resultPanel, /Précisons votre profil|tieBreakQuestions|submitMappTieBreak/);

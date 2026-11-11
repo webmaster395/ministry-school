@@ -8,11 +8,9 @@ test("Profil MAPP affiche un onglet d’édition dans Gestion des outils", async
   assert.match(settings, /hasEditor=\{isProfilMapp\}/);
 });
 
-test("l’onglet ouvre l’administration MAPP native de Ministry", async () => {
+test("l’onglet ouvre la bibliothèque MAPP historique sous le domaine Ministry", async () => {
   const editor = await readFile(new URL("../src/app/admin/apps/profil-mapp/editor/page.tsx", import.meta.url), "utf8");
   const results = await readFile(new URL("../src/app/admin/apps/profil-mapp/results/page.tsx", import.meta.url), "utf8");
-  assert.match(editor, /redirect\("\/admin\/apps\/profil-mapp\/results"\)/);
-  assert.match(results, /createServiceClient\(\)\.schema\("mapp"\)/);
-  assert.match(results, /Données actives de Ministry School uniquement/);
-  assert.doesNotMatch(`${editor}\n${results}`, /profil-mapp\.vercel\.app|\/apps\/profil-mapp\/admin/);
+  assert.match(editor, /redirect\("\/apps\/profil-mapp\/admin\/restitutions"\)/);
+  assert.match(results, /redirect\("\/apps\/profil-mapp\/admin\/participants"\)/);
 });
