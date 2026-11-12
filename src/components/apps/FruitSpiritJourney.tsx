@@ -123,8 +123,8 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
     <div className={`${styles.frame} ${styles.resultsFrame} ${styles.overviewFrame}`}>
       <header className={styles.overviewHeader}>
         <p className={styles.eyebrow}>TES RÉSULTATS</p>
-        <h1>TES NEUF FRUITS.</h1>
-        <p>Retrouve chaque fruit dans son niveau d’avancement. Sélectionne un fruit pour découvrir son résultat détaillé.</p>
+        <h1>Le fruit de l’Esprit</h1>
+        <p>« Mais le fruit de l’Esprit, c’est l’amour, la joie, la paix, la patience, la bonté, la bienveillance, la foi, la douceur, la maîtrise de soi. » — Galates 5:22</p>
       </header>
       <div className={styles.overviewGroups}>
         {resultGroups.map((group) => <section className={`${styles.overviewGroup} ${styles[`overviewGroup_${group.level}`]}`} key={group.level}>

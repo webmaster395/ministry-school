@@ -196,7 +196,9 @@ test("les résultats commencent par les neuf fruits regroupés par niveau d’av
   const component = read("src/components/apps/FruitSpiritJourney.tsx");
   assert.match(component, /complete \? "overview" : "discover"/);
   assert.match(component, /resultLevelOrder\.map/);
-  assert.match(component, /TES NEUF FRUITS/);
+  assert.match(component, /Le fruit de l’Esprit/);
+  assert.match(component, /Mais le fruit de l’Esprit, c’est l’amour, la joie, la paix, la patience, la bonté, la bienveillance, la foi, la douceur, la maîtrise de soi/);
+  assert.match(component, /Galates 5:22/);
   assert.match(component, /NIVEAU D’AVANCEMENT/);
   assert.match(component, /group\.fruits\.map/);
   assert.match(component, /Voir le détail/);
