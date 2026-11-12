@@ -128,7 +128,7 @@ test("le calcul conserve la moyenne sur cinq et applique les seuils provisoires"
 test("le questionnaire masque le fruit évalué et sauvegarde après chaque situation", () => {
   const component = read("src/components/apps/FruitSpiritJourney.tsx");
   const route = read("src/app/api/apps/grace-identity/route.ts");
-  assert.match(component, /<h1 className=\{styles\.title\}>Fruit de l’Esprit<\/h1>/);
+  assert.match(component, /styles\.introTitle.*Fruit de l’Esprit/);
   assert.doesNotMatch(component, /NEUF SITUATIONS/);
   assert.doesNotMatch(component, /VINGT-SEPT QUESTIONS/);
   assert.doesNotMatch(component, /question\.fruit/);

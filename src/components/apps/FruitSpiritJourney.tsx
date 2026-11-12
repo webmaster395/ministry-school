@@ -70,7 +70,7 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
     <div className={`${styles.frame} ${styles.introFrame}`}>
       <p className={styles.eyebrow}>AVANT DE COMMENCER</p>
       <div className={styles.introCopy}>
-        <h1 className={styles.title}>Fruit de l’Esprit</h1>
+        <h1 className={`${styles.title} ${styles.introTitle}`}>Fruit de l’Esprit</h1>
         <p className={styles.lead}>Réponds selon ton comportement habituel, et non selon ce que tu aimerais faire. Il n’y a pas de bonne ou de mauvaise réponse.</p>
       </div>
       <div className={styles.traitList}>{fruitSpiritFruitsV2.map((fruit, index) => <span key={fruit.key}><b>{String(index + 1).padStart(2, "0")}</b>{fruit.name}</span>)}</div>
