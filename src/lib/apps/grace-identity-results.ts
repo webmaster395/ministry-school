@@ -5,8 +5,11 @@ import { fruitTraits, spiritualGifts } from "@/lib/apps/grace-identity";
 import { classifySpiritualGifts, isSpiritualGiftsV2Complete, spiritualGiftsV2 } from "@/lib/apps/spiritual-gifts-v2";
 
 type AssessmentRow = {
+  user_id: string;
   test_key: "fruit" | "gifts" | "skills";
+  questionnaire_version: string;
   answers: unknown;
+  results: unknown;
   completed_at: string | null;
   updated_at: string;
 };
@@ -35,18 +38,24 @@ export type GraceIdentitySummary = {
 export async function getGraceIdentitySummary(): Promise<GraceIdentitySummary> {
   const service = createServiceClient();
   const [{ data: assessments, error: assessmentsError }, { data: reviews, error: reviewsError }] = await Promise.all([
-    service.from("grace_identity_assessments").select("test_key,answers,completed_at,updated_at"),
+    service.from("grace_identity_assessments").select("user_id,test_key,questionnaire_version,answers,results,completed_at,updated_at"),
     service.from("grace_identity_skill_reviews").select("response,submitted_at"),
   ]);
   if (assessmentsError) throw new Error("Les autoévaluations n’ont pas pu être chargées.");
   if (reviewsError) throw new Error("Les évaluations externes n’ont pas pu être chargées.");
-  const rows = (assessments ?? []) as AssessmentRow[];
+  const allRows = (assessments ?? []) as AssessmentRow[];
+  const latestCompleted = new Map<string, AssessmentRow>();
+  allRows.filter((row) => row.completed_at).sort((left, right) => right.updated_at.localeCompare(left.updated_at)).forEach((row) => {
+    const key = `${row.user_id}:${row.test_key}`;
+    if (!latestCompleted.has(key)) latestCompleted.set(key, row);
+  });
+  const rows = [...latestCompleted.values()];
   const byKey = (key: AssessmentRow["test_key"]) => rows.filter((row) => row.test_key === key);
   const fruit = byKey("fruit");
   const gifts = byKey("gifts");
   const skills = byKey("skills");
   const fruitAverages = fruitTraits.map((trait) => {
-    const values = fruit.map((row) => score(object(row.answers)[trait.key])).filter((value): value is number => value !== null);
+    const values = fruit.map((row) => row.questionnaire_version === "fruit-spirit-v2-27" ? score(object(object(row.results).scores)[trait.key]) : score(object(row.answers)[trait.key])).filter((value): value is number => value !== null);
     return { name: trait.name, value: values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0, count: values.length };
   });
   const giftResponses = spiritualGiftsV2.map((gift) => {
@@ -70,7 +79,7 @@ export async function getGraceIdentitySummary(): Promise<GraceIdentitySummary> {
     if (!Array.isArray(selected)) return;
     new Set(selected.filter((item): item is string => typeof item === "string")).forEach((item) => skillCounts.set(item, (skillCounts.get(item) ?? 0) + 1));
   });
-  const latestUpdate = rows.reduce<string | null>((latest, row) => !latest || row.updated_at > latest ? row.updated_at : latest, null);
+  const latestUpdate = allRows.reduce<string | null>((latest, row) => !latest || row.updated_at > latest ? row.updated_at : latest, null);
   const reviewRows = (reviews ?? []) as ReviewRow[];
   return {
     completed: { fruit: fruit.length, gifts: gifts.length, skills: skills.length },

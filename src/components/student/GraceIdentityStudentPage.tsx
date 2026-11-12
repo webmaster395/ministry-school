@@ -11,7 +11,7 @@ export default async function GraceIdentityStudentPage({ test }: { test: GraceTe
   const supabase = await createClient();
   const { data } = await supabase
     .from("grace_identity_assessments")
-    .select("test_key,answers,results,completed_at,updated_at")
+    .select("test_key,questionnaire_version,scoring_version,restitution_version,answers,results,completed_at,updated_at")
     .eq("user_id", viewer.id);
   return (
     <StudentToolFrame>

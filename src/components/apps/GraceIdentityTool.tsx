@@ -9,8 +9,9 @@ import SkillReviewLink from "@/components/apps/SkillReviewLink";
 import SpiritualGiftsJourney from "@/components/apps/SpiritualGiftsJourney";
 import FruitSpiritJourney from "@/components/apps/FruitSpiritJourney";
 import NaturalSkillsJourney from "@/components/apps/NaturalSkillsJourney";
+import { FRUIT_SPIRIT_QUESTIONNAIRE_VERSION } from "@/lib/apps/fruit-spirit-v2";
 
-type RecordRow = { test_key: GraceTestKey; answers: Record<string, unknown>; results: Record<string, unknown>; completed_at: string | null; updated_at: string };
+type RecordRow = { test_key: GraceTestKey; questionnaire_version?: string; scoring_version?: string; restitution_version?: string | null; answers: Record<string, unknown>; results: Record<string, unknown>; completed_at: string | null; updated_at: string };
 const testMeta: Record<GraceTestKey, { title: string; text: string; icon: typeof Heart }> = {
   fruit: { title: "Le fruit de l’Esprit", text: "Évalue les neuf caractéristiques du fruit de l’Esprit.", icon: Heart },
   gifts: { title: "Mes dons spirituels", text: "Découvre sept dons spirituels et ce que tu reconnais dans ta vie.", icon: Sparkles },
@@ -25,18 +26,25 @@ export default function GraceIdentityTool({ initial, preview, initialTest = null
   // le layout étudiant et conserve donc la sidebar Ministry School.
   const [active, setActive] = useState<GraceTestKey | null>(() => initialTest);
   const [saving, setSaving] = useState(false);
-  const byKey = useMemo(() => new Map(records.map((item) => [item.test_key, item])), [records]);
+  const byKey = useMemo(() => {
+    const map = new Map<GraceTestKey, RecordRow>();
+    records.slice().sort((left, right) => right.updated_at.localeCompare(left.updated_at)).forEach((item) => {
+      if (item.test_key === "fruit" && item.questionnaire_version !== FRUIT_SPIRIT_QUESTIONNAIRE_VERSION) return;
+      if (!map.has(item.test_key)) map.set(item.test_key, item);
+    });
+    return map;
+  }, [records]);
   const leaveTest = () => independent ? router.push("/etudiant/identite") : setActive(null);
-  const save = async (testKey: GraceTestKey, answers: Record<string, unknown>, close = true) => {
+  const save = async (testKey: GraceTestKey, answers: Record<string, unknown>, close = true, completed = true) => {
     setSaving(true);
-    const response = await fetch("/api/apps/grace-identity", { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify({ testKey, answers }) });
+    const response = await fetch("/api/apps/grace-identity", { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify({ testKey, answers, completed }) });
     const payload = await response.json().catch(() => ({}));
     setSaving(false);
     if (!response.ok) throw new Error(payload.error ?? "Enregistrement impossible.");
-    setRecords((current) => [...current.filter((item) => item.test_key !== testKey), payload.record]);
+    setRecords((current) => [...current.filter((item) => !(item.test_key === testKey && item.questionnaire_version === payload.record.questionnaire_version)), payload.record]);
     if (close) setActive(null);
   };
-  if (active === "fruit") return <FruitSpiritJourney initial={byKey.get("fruit")?.answers ?? {}} saving={saving} onBack={leaveTest} onSave={(answers) => save("fruit", answers, false)} />;
+  if (active === "fruit") return <FruitSpiritJourney initial={byKey.get("fruit")?.answers ?? {}} saving={saving} onBack={leaveTest} onSave={(answers, completed) => save("fruit", answers, false, completed)} />;
   if (active === "gifts") return <SpiritualGiftsJourney initial={byKey.get("gifts")?.answers ?? {}} saving={saving} onBack={leaveTest} onSave={(answers) => save("gifts", answers, false)} />;
   if (active === "skills") return <NaturalSkillsJourney initial={byKey.get("skills")?.answers ?? {}} saving={saving} onBack={leaveTest} onSave={(answers) => save("skills", answers, false)} />;
   if (active) return <TestScreen testKey={active} initial={byKey.get(active)?.answers ?? {}} saving={saving} onBack={() => setActive(null)} onSave={save} />;

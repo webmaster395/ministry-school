@@ -13,6 +13,9 @@ export type IdentityResult = {
   native?: boolean;
   legacy?: boolean;
   results?: Record<string, unknown>;
+  questionnaireVersion?: string | null;
+  scoringVersion?: string | null;
+  restitutionVersion?: string | null;
 };
 
 export type IdentityDashboard = {
