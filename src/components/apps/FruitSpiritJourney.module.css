@@ -265,6 +265,186 @@
   font-size: 11px;
 }
 
+.overviewFrame {
+  gap: 0;
+}
+
+.overviewHeader {
+  max-width: 780px;
+  margin-top: 34px;
+}
+
+.overviewHeader h1 {
+  margin: 14px 0 0;
+  font-size: clamp(42px, 6vw, 70px);
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+}
+
+.overviewHeader > p:last-child {
+  max-width: 620px;
+  margin: 18px 0 0;
+  color: rgb(248 245 255 / 0.76);
+  font-size: 14px;
+  line-height: 1.58;
+}
+
+.overviewGroups {
+  display: grid;
+  gap: 18px;
+  margin-top: 40px;
+}
+
+.overviewGroup {
+  --group-accent: #bba3dc;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.2);
+  border-radius: 22px;
+  background: rgb(7 8 30 / 0.58);
+  box-shadow: 0 18px 54px rgb(2 3 18 / 0.18);
+}
+
+.overviewGroup_practice {
+  --group-accent: #a7c894;
+}
+
+.overviewGroup_develop {
+  --group-accent: #c9b3ef;
+}
+
+.overviewGroup_discover {
+  --group-accent: #a9c6ef;
+}
+
+.overviewGroupHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 22px 24px;
+  border-left: 6px solid var(--group-accent);
+}
+
+.overviewGroupHeader > div {
+  display: grid;
+  gap: 7px;
+}
+
+.overviewGroupHeader span {
+  color: var(--group-accent);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.overviewGroupHeader h2 {
+  margin: 0;
+  font-size: clamp(20px, 2.4vw, 29px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+.overviewGroupHeader > strong {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  color: var(--group-accent);
+  font-size: 26px;
+}
+
+.overviewGroupHeader small {
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.overviewFruitList {
+  display: grid;
+  border-top: 1px solid rgb(255 255 255 / 0.14);
+}
+
+.overviewFruit {
+  display: grid;
+  grid-template-columns: 44px minmax(160px, 1fr) auto minmax(128px, auto);
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  min-height: 74px;
+  border: 0;
+  border-bottom: 1px solid rgb(255 255 255 / 0.12);
+  background: rgb(255 255 255 / 0.035);
+  padding: 15px 24px;
+  color: #f8f5ff;
+  text-align: left;
+  cursor: pointer;
+  transition: background 160ms ease, transform 160ms ease;
+}
+
+.overviewFruit:last-child {
+  border-bottom: 0;
+}
+
+.overviewFruit:hover {
+  background: rgb(255 255 255 / 0.095);
+}
+
+.overviewFruit:focus-visible,
+.resultPager button:focus-visible {
+  outline: 3px solid var(--group-accent, #c9b3ef);
+  outline-offset: -4px;
+}
+
+.overviewFruitIndex {
+  color: var(--group-accent);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.overviewFruit > strong {
+  font-size: 19px;
+  letter-spacing: -0.015em;
+}
+
+.overviewFruitScore {
+  font-size: 23px;
+  font-weight: 680;
+  letter-spacing: -0.025em;
+}
+
+.overviewFruitScore small {
+  margin-left: 3px;
+  color: rgb(248 245 255 / 0.58);
+  font-size: 10px;
+  letter-spacing: 0;
+}
+
+.overviewFruitAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  color: rgb(248 245 255 / 0.72);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.overviewEmpty {
+  margin: 0;
+  border-top: 1px solid rgb(255 255 255 / 0.14);
+  padding: 19px 24px;
+  color: rgb(248 245 255 / 0.56);
+  font-size: 12px;
+}
+
+.overviewFrame > .resultDisclaimer {
+  margin-top: 22px;
+}
+
+.resultOverviewBack {
+  align-self: flex-start;
+  margin-bottom: 30px;
+}
+
 .resultReaderProgress {
   display: flex;
   align-items: center;
@@ -568,6 +748,67 @@
 
   .resultList article > strong {
     font-size: 20px;
+  }
+
+  .overviewHeader {
+    margin-top: 24px;
+  }
+
+  .overviewHeader h1 {
+    font-size: 39px;
+  }
+
+  .overviewHeader > p:last-child {
+    font-size: 13px;
+  }
+
+  .overviewGroups {
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .overviewGroup {
+    border-radius: 16px;
+  }
+
+  .overviewGroupHeader {
+    gap: 12px;
+    padding: 17px 15px;
+    border-left-width: 4px;
+  }
+
+  .overviewGroupHeader h2 {
+    font-size: 19px;
+  }
+
+  .overviewGroupHeader > strong {
+    font-size: 21px;
+  }
+
+  .overviewFruit {
+    grid-template-columns: 28px minmax(0, 1fr) auto;
+    gap: 8px;
+    min-height: 67px;
+    padding: 13px 14px;
+  }
+
+  .overviewFruit > strong {
+    font-size: 16px;
+  }
+
+  .overviewFruitScore {
+    font-size: 19px;
+  }
+
+  .overviewFruitAction {
+    grid-column: 2 / 4;
+    justify-content: flex-start;
+    margin-top: -4px;
+    font-size: 10px;
+  }
+
+  .resultOverviewBack {
+    margin-bottom: 24px;
   }
 
   .resultReaderProgress {

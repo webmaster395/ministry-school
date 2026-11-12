@@ -191,3 +191,15 @@ test("la page de résultats affiche le texte complet du niveau calculé", () => 
   assert.match(component, /Fruit \$\{resultStep \+ 1\} sur 9/);
   assert.match(route, /FRUIT_SPIRIT_RESTITUTION_VERSION/);
 });
+
+test("les résultats commencent par les neuf fruits regroupés par niveau d’avancement", () => {
+  const component = read("src/components/apps/FruitSpiritJourney.tsx");
+  assert.match(component, /complete \? "overview" : "discover"/);
+  assert.match(component, /resultLevelOrder\.map/);
+  assert.match(component, /TES NEUF FRUITS/);
+  assert.match(component, /NIVEAU D’AVANCEMENT/);
+  assert.match(component, /group\.fruits\.map/);
+  assert.match(component, /Voir le détail/);
+  assert.match(component, /setResultStep\(index\); setPage\("results"\)/);
+  assert.match(component, /Vue d’ensemble des 9 fruits/);
+});

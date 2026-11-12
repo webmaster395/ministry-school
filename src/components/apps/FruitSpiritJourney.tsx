@@ -10,11 +10,14 @@ import {
   fruitSpiritSituationsV2,
   isFruitSpiritV2Complete,
   validFruitSpiritAnswer,
+  type FruitSpiritLevel,
 } from "@/lib/apps/fruit-spirit-v2";
 import { fruitSpiritRestitutionByKeyV2 } from "@/lib/apps/fruit-spirit-restitutions-v2";
 import styles from "./FruitSpiritJourney.module.css";
 
-type Page = "discover" | "intro" | "evaluate" | "results";
+type Page = "discover" | "intro" | "evaluate" | "overview" | "results";
+
+const resultLevelOrder: FruitSpiritLevel[] = ["practice", "develop", "discover"];
 
 export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: {
   initial: Record<string, unknown>;
@@ -24,7 +27,7 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
 }) {
   const complete = isFruitSpiritV2Complete(initial);
   const firstIncompleteSituation = Math.max(0, fruitSpiritSituationsV2.findIndex((item) => item.questions.some((question) => !validFruitSpiritAnswer(initial[question.id]))));
-  const [page, setPage] = useState<Page>(complete ? "results" : "discover");
+  const [page, setPage] = useState<Page>(complete ? "overview" : "discover");
   const [step, setStep] = useState(firstIncompleteSituation);
   const [resultStep, setResultStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, unknown>>(initial);
@@ -39,6 +42,13 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
   const resultLevel = result.levels[resultFruit.key];
   const resultEditorial = fruitSpiritRestitutionByKeyV2[resultFruit.key];
   const resultRestitution = resultEditorial.levels[resultLevel];
+  const resultGroups = resultLevelOrder.map((level) => ({
+    level,
+    label: fruitSpiritLevelLabels[level],
+    fruits: fruitSpiritFruitsV2.flatMap((fruit, index) => result.levels[fruit.key] === level
+      ? [{ fruit, index, score: result.scores[fruit.key] }]
+      : []),
+  }));
 
   const continueJourney = async () => {
     if (!situationComplete) return;
@@ -47,7 +57,7 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
     setError("");
     try {
       await onSave(answers, completed);
-      if (completed) setPage("results");
+      if (completed) setPage("overview");
       else setStep((current) => current + 1);
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "Enregistrement impossible.");
@@ -109,8 +119,42 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
     </div>
   </Shell>;
 
+  if (page === "overview") return <Shell className={styles.softGreen}>
+    <div className={`${styles.frame} ${styles.resultsFrame} ${styles.overviewFrame}`}>
+      <header className={styles.overviewHeader}>
+        <p className={styles.eyebrow}>TES RÉSULTATS</p>
+        <h1>TES NEUF FRUITS.</h1>
+        <p>Retrouve chaque fruit dans son niveau d’avancement. Sélectionne un fruit pour découvrir son résultat détaillé.</p>
+      </header>
+      <div className={styles.overviewGroups}>
+        {resultGroups.map((group) => <section className={`${styles.overviewGroup} ${styles[`overviewGroup_${group.level}`]}`} key={group.level}>
+          <header className={styles.overviewGroupHeader}>
+            <div><span>NIVEAU D’AVANCEMENT</span><h2>{group.label}</h2></div>
+            <strong>{group.fruits.length}<small> fruit{group.fruits.length > 1 ? "s" : ""}</small></strong>
+          </header>
+          {group.fruits.length > 0
+            ? <div className={styles.overviewFruitList}>
+              {group.fruits.map(({ fruit, index, score }) => <button type="button" className={styles.overviewFruit} key={fruit.key} onClick={() => { setResultStep(index); setPage("results"); }}>
+                <span className={styles.overviewFruitIndex}>{String(index + 1).padStart(2, "0")}</span>
+                <strong>{fruit.name}</strong>
+                <span className={styles.overviewFruitScore}>{score.toFixed(2).replace(".", ",")}<small>/5</small></span>
+                <span className={styles.overviewFruitAction}>Voir le détail <ArrowRight size={17} /></span>
+              </button>)}
+            </div>
+            : <p className={styles.overviewEmpty}>Aucun fruit dans cette catégorie.</p>}
+        </section>)}
+      </div>
+      <p className={styles.resultDisclaimer}>Ces résultats indiquent des pistes de croissance à partir de tes réponses. Ils ne mesurent pas définitivement ta maturité spirituelle.</p>
+      <div className={styles.resultSecondary}>
+        <button type="button" onClick={onBack} className={styles.ghost}>Retour à Mon identité</button>
+        <button type="button" onClick={() => { setStep(0); setPage("evaluate"); }} className={styles.ghost}>Modifier mes réponses</button>
+      </div>
+    </div>
+  </Shell>;
+
   return <Shell className={styles.softGreen}>
     <div className={`${styles.frame} ${styles.resultsFrame}`}>
+      <button type="button" onClick={() => setPage("overview")} className={`${styles.ghost} ${styles.resultOverviewBack}`}><ArrowLeft size={16} /> Vue d’ensemble des 9 fruits</button>
       <div className={styles.resultReaderProgress}>
         <p className={styles.eyebrow}>TON PARCOURS · FRUIT {String(resultStep + 1).padStart(2, "0")} SUR 09</p>
         <div className={styles.resultDots} aria-label={`Fruit ${resultStep + 1} sur 9`}>
@@ -134,10 +178,12 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
         </div>
       </article>
       <nav className={styles.resultPager} aria-label="Navigation entre les fruits">
-        <button type="button" disabled={resultStep === 0} onClick={() => setResultStep((current) => Math.max(0, current - 1))}><ArrowLeft size={18} /><span><small>PRÉCÉDENT</small>{resultStep > 0 ? fruitSpiritRestitutionByKeyV2[fruitSpiritFruitsV2[resultStep - 1].key].name : ""}</span></button>
+        {resultStep > 0
+          ? <button type="button" onClick={() => setResultStep((current) => Math.max(0, current - 1))}><ArrowLeft size={18} /><span><small>FRUIT PRÉCÉDENT</small>{fruitSpiritRestitutionByKeyV2[fruitSpiritFruitsV2[resultStep - 1].key].name}</span></button>
+          : <button type="button" onClick={() => setPage("overview")}><ArrowLeft size={18} /><span><small>VUE D’ENSEMBLE</small>Les 9 fruits</span></button>}
         {resultStep < fruitSpiritFruitsV2.length - 1
           ? <button type="button" onClick={() => setResultStep((current) => Math.min(fruitSpiritFruitsV2.length - 1, current + 1))}><span><small>FRUIT SUIVANT</small>{fruitSpiritRestitutionByKeyV2[fruitSpiritFruitsV2[resultStep + 1].key].name}</span><ArrowRight size={18} /></button>
-          : <button type="button" onClick={onBack}><span><small>TERMINER</small>Retour à Mon identité</span><ArrowRight size={18} /></button>}
+          : <button type="button" onClick={() => setPage("overview")}><span><small>RETOUR AUX RÉSULTATS</small>Les 9 fruits</span><ArrowRight size={18} /></button>}
       </nav>
       <div className={styles.resultSecondary}>
         <button type="button" onClick={onBack} className={styles.ghost}>Retour à Mon identité</button>
