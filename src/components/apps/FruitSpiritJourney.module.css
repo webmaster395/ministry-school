@@ -279,54 +279,50 @@
   box-shadow: 0 18px 54px rgb(2 3 18 / 0.18);
 }
 
-.restitution summary {
+.restitutionHeader {
+  position: sticky;
+  top: 0;
+  z-index: 2;
   display: grid;
   grid-template-columns: 42px minmax(0, 1fr) auto;
   align-items: center;
   gap: 14px;
   min-height: 92px;
   padding: 18px 22px;
-  cursor: pointer;
-  list-style: none;
+  border-bottom: 1px solid rgb(255 255 255 / 0.18);
+  background: rgb(9 11 37 / 0.96);
+  backdrop-filter: blur(14px);
 }
 
-.restitution summary::-webkit-details-marker {
-  display: none;
-}
-
-.restitution summary > b {
+.restitutionHeader > b {
   color: #c9b3ef;
   font-size: 11px;
   letter-spacing: 0.12em;
 }
 
-.restitution summary h2,
-.restitution summary p {
+.restitutionHeader h2,
+.restitutionHeader p {
   margin: 0;
 }
 
-.restitution summary h2 {
+.restitutionHeader h2 {
   font-size: 21px;
 }
 
-.restitution summary p {
+.restitutionHeader p {
   margin-top: 5px;
   color: rgb(248 245 255 / 0.72);
   font-size: 12px;
 }
 
-.restitution summary > strong {
+.restitutionHeader > strong {
   font-size: 25px;
   font-weight: 650;
 }
 
-.restitution summary small {
+.restitutionHeader small {
   margin-left: 3px;
   font-size: 11px;
-}
-
-.restitution[open] summary {
-  border-bottom: 1px solid rgb(255 255 255 / 0.18);
 }
 
 .restitutionBody {
@@ -491,18 +487,18 @@
     border-radius: 14px;
   }
 
-  .restitution summary {
+  .restitutionHeader {
     grid-template-columns: 28px minmax(0, 1fr) auto;
     gap: 8px;
     min-height: 78px;
     padding: 14px 13px;
   }
 
-  .restitution summary h2 {
+  .restitutionHeader h2 {
     font-size: 17px;
   }
 
-  .restitution summary > strong {
+  .restitutionHeader > strong {
     font-size: 19px;
   }
 

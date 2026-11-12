@@ -6,6 +6,7 @@ import {
   FRUIT_SPIRIT_RESTITUTION_VERSION,
   fruitSpiritAnswerScale,
   fruitSpiritFruitsV2,
+  fruitSpiritLevelLabels,
   fruitSpiritQuestionIdsV2,
   fruitSpiritSituationsV2,
   isFruitSpiritV2Complete,
@@ -121,6 +122,11 @@ test("le calcul conserve la moyenne sur cinq et applique les seuils provisoires"
   assert.equal(result.levels.joie, "develop");
   assert.equal(result.levels.paix, "discover");
   assert.equal(result.provisionalThresholds, true);
+  assert.deepEqual(fruitSpiritLevelLabels, {
+    practice: "Ce fruit est déjà bien présent",
+    develop: "Ce fruit est en train de grandir",
+    discover: "Ce fruit commence à germer",
+  });
   delete answers.q27;
   assert.equal(isFruitSpiritV2Complete(answers), false);
 });
@@ -177,5 +183,8 @@ test("la page de résultats affiche le texte complet du niveau calculé", () => 
   assert.match(component, /Comment laisser ce fruit grandir \?/);
   assert.match(component, /Ton défi cette semaine/);
   assert.match(component, /Pour aller plus loin/);
+  assert.doesNotMatch(component, /<details/);
+  assert.doesNotMatch(component, /<summary/);
+  assert.match(component, /styles\.restitutionHeader/);
   assert.match(route, /FRUIT_SPIRIT_RESTITUTION_VERSION/);
 });

@@ -14,9 +14,9 @@ export const fruitSpiritAnswerScale = [
 ] as const;
 
 export const fruitSpiritLevelLabels: Record<FruitSpiritLevel, string> = {
-  practice: "Tu le mets déjà en pratique",
-  develop: "À développer",
-  discover: "À découvrir davantage",
+  practice: "Ce fruit est déjà bien présent",
+  develop: "Ce fruit est en train de grandir",
+  discover: "Ce fruit commence à germer",
 };
 
 export const fruitSpiritSituationsV2 = [

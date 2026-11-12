@@ -110,7 +110,7 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
     <div className={`${styles.frame} ${styles.resultsFrame}`}>
       <p className={styles.eyebrow}>TES NEUF FRUITS AUJOURD’HUI</p>
       <h1 className={`${styles.title} ${styles.resultsTitle}`}>UN PARCOURS DE CROISSANCE.</h1>
-      <p className={styles.lead}>Ces niveaux indiquent des pistes de croissance à partir de tes réponses. Ils ne mesurent pas définitivement ta maturité spirituelle.</p>
+      <p className={styles.lead}>Ces niveaux indiquent des pistes de croissance à partir de tes réponses. Ils ne mesurent pas définitivement ta maturité spirituelle. Fais simplement défiler la page pour découvrir chacun des neuf fruits.</p>
       <section className={styles.summaryGrid}>
         {resultOrder.map((level) => <article className={styles.summary} key={level}><b>{String(fruitSpiritFruitsV2.filter((fruit) => result.levels[fruit.key] === level).length).padStart(2, "0")}</b><div><h2>{fruitSpiritLevelLabels[level]}</h2></div></article>)}
       </section>
@@ -119,12 +119,12 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
           const editorial = fruitSpiritRestitutionByKeyV2[fruit.key];
           const level = result.levels[fruit.key];
           const restitution = editorial.levels[level];
-          return <details className={styles.restitution} key={fruit.key} open={index === 0}>
-            <summary>
+          return <article className={styles.restitution} key={fruit.key}>
+            <header className={styles.restitutionHeader}>
               <b>{String(index + 1).padStart(2, "0")}</b>
               <div><h2>{editorial.name}</h2><p>{fruitSpiritLevelLabels[level]}</p></div>
               <strong>{result.scores[fruit.key].toFixed(2).replace(".", ",")}<small>/5</small></strong>
-            </summary>
+            </header>
             <div className={styles.restitutionBody}>
               <blockquote>{editorial.verse}</blockquote>
               <EditorialSection title={editorial.overviewTitle} content={editorial.overview} />
@@ -134,7 +134,7 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
               <EditorialSection title="Ton défi cette semaine" content={`${restitution.challengeTitle}\n\n${restitution.challenge}`} featured />
               <EditorialSection title="Pour aller plus loin" content={restitution.reflection} reflection />
             </div>
-          </details>;
+          </article>;
         })}
       </section>
       <div className={styles.actions}>
