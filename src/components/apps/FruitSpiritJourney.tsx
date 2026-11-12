@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import {
   calculateFruitSpiritV2,
   fruitSpiritAnswerScale,
@@ -10,13 +10,11 @@ import {
   fruitSpiritSituationsV2,
   isFruitSpiritV2Complete,
   validFruitSpiritAnswer,
-  type FruitSpiritLevel,
 } from "@/lib/apps/fruit-spirit-v2";
 import { fruitSpiritRestitutionByKeyV2 } from "@/lib/apps/fruit-spirit-restitutions-v2";
 import styles from "./FruitSpiritJourney.module.css";
 
 type Page = "discover" | "intro" | "evaluate" | "results";
-const resultOrder: FruitSpiritLevel[] = ["practice", "develop", "discover"];
 
 export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: {
   initial: Record<string, unknown>;
@@ -28,14 +26,19 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
   const firstIncompleteSituation = Math.max(0, fruitSpiritSituationsV2.findIndex((item) => item.questions.some((question) => !validFruitSpiritAnswer(initial[question.id]))));
   const [page, setPage] = useState<Page>(complete ? "results" : "discover");
   const [step, setStep] = useState(firstIncompleteSituation);
+  const [resultStep, setResultStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, unknown>>(initial);
   const [error, setError] = useState("");
   const result = useMemo(() => calculateFruitSpiritV2(answers), [answers]);
 
-  useEffect(() => { window.scrollTo({ top: 0, behavior: "smooth" }); }, [page, step]);
+  useEffect(() => { window.scrollTo({ top: 0, behavior: "smooth" }); }, [page, step, resultStep]);
 
   const situation = fruitSpiritSituationsV2[step];
   const situationComplete = situation?.questions.every((question) => validFruitSpiritAnswer(answers[question.id])) ?? false;
+  const resultFruit = fruitSpiritFruitsV2[resultStep];
+  const resultLevel = result.levels[resultFruit.key];
+  const resultEditorial = fruitSpiritRestitutionByKeyV2[resultFruit.key];
+  const resultRestitution = resultEditorial.levels[resultLevel];
 
   const continueJourney = async () => {
     if (!situationComplete) return;
@@ -108,37 +111,36 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
 
   return <Shell className={styles.softGreen}>
     <div className={`${styles.frame} ${styles.resultsFrame}`}>
-      <p className={styles.eyebrow}>TES NEUF FRUITS AUJOURD’HUI</p>
-      <h1 className={`${styles.title} ${styles.resultsTitle}`}>UN PARCOURS DE CROISSANCE.</h1>
-      <p className={styles.lead}>Ces niveaux indiquent des pistes de croissance à partir de tes réponses. Ils ne mesurent pas définitivement ta maturité spirituelle. Fais simplement défiler la page pour découvrir chacun des neuf fruits.</p>
-      <section className={styles.summaryGrid}>
-        {resultOrder.map((level) => <article className={styles.summary} key={level}><b>{String(fruitSpiritFruitsV2.filter((fruit) => result.levels[fruit.key] === level).length).padStart(2, "0")}</b><div><h2>{fruitSpiritLevelLabels[level]}</h2></div></article>)}
-      </section>
-      <section className={styles.restitutionList} aria-label="Restitutions des neuf fruits">
-        {fruitSpiritFruitsV2.map((fruit, index) => {
-          const editorial = fruitSpiritRestitutionByKeyV2[fruit.key];
-          const level = result.levels[fruit.key];
-          const restitution = editorial.levels[level];
-          return <article className={styles.restitution} key={fruit.key}>
-            <header className={styles.restitutionHeader}>
-              <b>{String(index + 1).padStart(2, "0")}</b>
-              <div><h2>{editorial.name}</h2><p>{fruitSpiritLevelLabels[level]}</p></div>
-              <strong>{result.scores[fruit.key].toFixed(2).replace(".", ",")}<small>/5</small></strong>
-            </header>
-            <div className={styles.restitutionBody}>
-              <blockquote>{editorial.verse}</blockquote>
-              <EditorialSection title={editorial.overviewTitle} content={editorial.overview} />
-              <div className={styles.levelMarker}><span>TON NIVEAU</span><strong>{fruitSpiritLevelLabels[level]}</strong></div>
-              <EditorialSection title="Ce que tu peux découvrir sur toi" content={restitution.discovery} />
-              <EditorialSection title="Comment laisser ce fruit grandir ?" content={restitution.growth} />
-              <EditorialSection title="Ton défi cette semaine" content={`${restitution.challengeTitle}\n\n${restitution.challenge}`} featured />
-              <EditorialSection title="Pour aller plus loin" content={restitution.reflection} reflection />
-            </div>
-          </article>;
-        })}
-      </section>
-      <div className={styles.actions}>
-        <button type="button" onClick={onBack} className={styles.ghost}><Sparkles size={16} /> Retour à Mon identité</button>
+      <div className={styles.resultReaderProgress}>
+        <p className={styles.eyebrow}>TON PARCOURS · FRUIT {String(resultStep + 1).padStart(2, "0")} SUR 09</p>
+        <div className={styles.resultDots} aria-label={`Fruit ${resultStep + 1} sur 9`}>
+          {fruitSpiritFruitsV2.map((fruit, index) => <span key={fruit.key} className={index === resultStep ? styles.resultDotActive : index < resultStep ? styles.resultDotRead : styles.resultDot} />)}
+        </div>
+      </div>
+      <header className={styles.resultHero}>
+        <div><h1 id={`fruit-result-${resultFruit.key}`}>{resultEditorial.name}</h1><p>{fruitSpiritLevelLabels[resultLevel]}</p></div>
+        <strong>{result.scores[resultFruit.key].toFixed(2).replace(".", ",")}<small>/5</small></strong>
+      </header>
+      <p className={styles.resultDisclaimer}>Ce résultat indique une piste de croissance à partir de tes réponses. Il ne mesure pas définitivement ta maturité spirituelle.</p>
+      <article className={styles.restitution} aria-labelledby={`fruit-result-${resultFruit.key}`}>
+        <div className={styles.restitutionBody}>
+          <blockquote>{resultEditorial.verse}</blockquote>
+          <EditorialSection title={resultEditorial.overviewTitle} content={resultEditorial.overview} />
+          <div className={styles.levelMarker}><span>TON NIVEAU</span><strong>{fruitSpiritLevelLabels[resultLevel]}</strong></div>
+          <EditorialSection title="Ce que tu peux découvrir sur toi" content={resultRestitution.discovery} />
+          <EditorialSection title="Comment laisser ce fruit grandir ?" content={resultRestitution.growth} />
+          <EditorialSection title="Ton défi cette semaine" content={`${resultRestitution.challengeTitle}\n\n${resultRestitution.challenge}`} featured />
+          <EditorialSection title="Pour aller plus loin" content={resultRestitution.reflection} reflection />
+        </div>
+      </article>
+      <nav className={styles.resultPager} aria-label="Navigation entre les fruits">
+        <button type="button" disabled={resultStep === 0} onClick={() => setResultStep((current) => Math.max(0, current - 1))}><ArrowLeft size={18} /><span><small>PRÉCÉDENT</small>{resultStep > 0 ? fruitSpiritRestitutionByKeyV2[fruitSpiritFruitsV2[resultStep - 1].key].name : ""}</span></button>
+        {resultStep < fruitSpiritFruitsV2.length - 1
+          ? <button type="button" onClick={() => setResultStep((current) => Math.min(fruitSpiritFruitsV2.length - 1, current + 1))}><span><small>FRUIT SUIVANT</small>{fruitSpiritRestitutionByKeyV2[fruitSpiritFruitsV2[resultStep + 1].key].name}</span><ArrowRight size={18} /></button>
+          : <button type="button" onClick={onBack}><span><small>TERMINER</small>Retour à Mon identité</span><ArrowRight size={18} /></button>}
+      </nav>
+      <div className={styles.resultSecondary}>
+        <button type="button" onClick={onBack} className={styles.ghost}>Retour à Mon identité</button>
         <button type="button" onClick={() => { setStep(0); setPage("evaluate"); }} className={styles.ghost}>Modifier mes réponses</button>
       </div>
     </div>

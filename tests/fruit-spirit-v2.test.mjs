@@ -185,6 +185,9 @@ test("la page de résultats affiche le texte complet du niveau calculé", () => 
   assert.match(component, /Pour aller plus loin/);
   assert.doesNotMatch(component, /<details/);
   assert.doesNotMatch(component, /<summary/);
-  assert.match(component, /styles\.restitutionHeader/);
+  assert.doesNotMatch(component, /styles\.restitutionHeader/);
+  assert.match(component, /styles\.resultPager/);
+  assert.match(component, /FRUIT SUIVANT/);
+  assert.match(component, /Fruit \$\{resultStep \+ 1\} sur 9/);
   assert.match(route, /FRUIT_SPIRIT_RESTITUTION_VERSION/);
 });
