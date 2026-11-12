@@ -2,14 +2,14 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getViewer } from "@/lib/data/viewer";
 import { naturalSkillCategories, spiritualGifts, type GraceTestKey } from "@/lib/apps/grace-identity";
-import { calculateFruitSpiritV2, FRUIT_SPIRIT_QUESTIONNAIRE_VERSION, FRUIT_SPIRIT_SCORING_VERSION, fruitSpiritQuestionIdsV2, isFruitSpiritV2Complete, validFruitSpiritAnswer } from "@/lib/apps/fruit-spirit-v2";
+import { calculateFruitSpiritV2, FRUIT_SPIRIT_QUESTIONNAIRE_VERSION, FRUIT_SPIRIT_RESTITUTION_VERSION, FRUIT_SPIRIT_SCORING_VERSION, fruitSpiritQuestionIdsV2, isFruitSpiritV2Complete, validFruitSpiritAnswer } from "@/lib/apps/fruit-spirit-v2";
 import { classifySpiritualGifts, isSpiritualGiftsV2Complete } from "@/lib/apps/spiritual-gifts-v2";
 import { naturalSkillIds } from "@/lib/apps/natural-skills-v2";
 
 const keys = new Set<GraceTestKey>(["fruit", "gifts", "skills"]);
 const knownSkills = new Set<string>(naturalSkillCategories.flatMap((category) => category.skills));
 const assessmentVersions: Record<GraceTestKey, { questionnaire: string; scoring: string; restitution: string | null }> = {
-  fruit: { questionnaire: FRUIT_SPIRIT_QUESTIONNAIRE_VERSION, scoring: FRUIT_SPIRIT_SCORING_VERSION, restitution: null },
+  fruit: { questionnaire: FRUIT_SPIRIT_QUESTIONNAIRE_VERSION, scoring: FRUIT_SPIRIT_SCORING_VERSION, restitution: FRUIT_SPIRIT_RESTITUTION_VERSION },
   gifts: { questionnaire: "spiritual-gifts-current", scoring: "spiritual-gifts-current", restitution: "spiritual-gifts-current" },
   skills: { questionnaire: "natural-skills-current", scoring: "natural-skills-current", restitution: "natural-skills-current" },
 };

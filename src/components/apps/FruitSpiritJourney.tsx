@@ -12,6 +12,7 @@ import {
   validFruitSpiritAnswer,
   type FruitSpiritLevel,
 } from "@/lib/apps/fruit-spirit-v2";
+import { fruitSpiritRestitutionByKeyV2 } from "@/lib/apps/fruit-spirit-restitutions-v2";
 import styles from "./FruitSpiritJourney.module.css";
 
 type Page = "discover" | "intro" | "evaluate" | "results";
@@ -113,8 +114,28 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
       <section className={styles.summaryGrid}>
         {resultOrder.map((level) => <article className={styles.summary} key={level}><b>{String(fruitSpiritFruitsV2.filter((fruit) => result.levels[fruit.key] === level).length).padStart(2, "0")}</b><div><h2>{fruitSpiritLevelLabels[level]}</h2></div></article>)}
       </section>
-      <section className={styles.resultList} aria-label="Résultats des neuf fruits">
-        {fruitSpiritFruitsV2.map((fruit, index) => <article key={fruit.key}><b>{String(index + 1).padStart(2, "0")}</b><div><h2>{fruit.name}</h2><p>{fruitSpiritLevelLabels[result.levels[fruit.key]]}</p></div><strong>{result.scores[fruit.key].toFixed(2).replace(".", ",")}<small>/5</small></strong></article>)}
+      <section className={styles.restitutionList} aria-label="Restitutions des neuf fruits">
+        {fruitSpiritFruitsV2.map((fruit, index) => {
+          const editorial = fruitSpiritRestitutionByKeyV2[fruit.key];
+          const level = result.levels[fruit.key];
+          const restitution = editorial.levels[level];
+          return <details className={styles.restitution} key={fruit.key} open={index === 0}>
+            <summary>
+              <b>{String(index + 1).padStart(2, "0")}</b>
+              <div><h2>{editorial.name}</h2><p>{fruitSpiritLevelLabels[level]}</p></div>
+              <strong>{result.scores[fruit.key].toFixed(2).replace(".", ",")}<small>/5</small></strong>
+            </summary>
+            <div className={styles.restitutionBody}>
+              <blockquote>{editorial.verse}</blockquote>
+              <EditorialSection title={editorial.overviewTitle} content={editorial.overview} />
+              <div className={styles.levelMarker}><span>TON NIVEAU</span><strong>{fruitSpiritLevelLabels[level]}</strong></div>
+              <EditorialSection title="Ce que tu peux découvrir sur toi" content={restitution.discovery} />
+              <EditorialSection title="Comment laisser ce fruit grandir ?" content={restitution.growth} />
+              <EditorialSection title="Ton défi cette semaine" content={`${restitution.challengeTitle}\n\n${restitution.challenge}`} featured />
+              <EditorialSection title="Pour aller plus loin" content={restitution.reflection} reflection />
+            </div>
+          </details>;
+        })}
       </section>
       <div className={styles.actions}>
         <button type="button" onClick={onBack} className={styles.ghost}><Sparkles size={16} /> Retour à Mon identité</button>
@@ -122,6 +143,13 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
       </div>
     </div>
   </Shell>;
+}
+
+function EditorialSection({ title, content, featured = false, reflection = false }: { title: string; content: string; featured?: boolean; reflection?: boolean }) {
+  return <section className={`${styles.editorialSection} ${featured ? styles.editorialFeatured : ""} ${reflection ? styles.editorialReflection : ""}`}>
+    <h3>{title}</h3>
+    {content.split("\n\n").map((paragraph, index) => <p key={`${title}-${index}`}>{paragraph}</p>)}
+  </section>;
 }
 
 function Shell({ children, className = "" }: { children: React.ReactNode; className?: string }) {

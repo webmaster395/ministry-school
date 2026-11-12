@@ -43,7 +43,7 @@ comment on column public.grace_identity_assessments.questionnaire_version is
 comment on column public.grace_identity_assessments.scoring_version is
   'Scoring rules used to calculate the stored results JSON.';
 comment on column public.grace_identity_assessments.restitution_version is
-  'Editorial restitution version; nullable while the V2 texts remain unpublished.';
+  'Editorial restitution version used to render the historical result.';
 
 -- Mon identité expose uniquement le résultat terminé le plus récent de chaque
 -- outil, tout en laissant toutes les versions historiques conservées en base.

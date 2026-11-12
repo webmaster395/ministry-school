@@ -1,5 +1,6 @@
 export const FRUIT_SPIRIT_QUESTIONNAIRE_VERSION = "fruit-spirit-v2-27";
 export const FRUIT_SPIRIT_SCORING_VERSION = "fruit-spirit-v2-mean-v1";
+export const FRUIT_SPIRIT_RESTITUTION_VERSION = "fruit-spirit-v2-editorial-1";
 
 export type FruitSpiritKey = "amour" | "joie" | "paix" | "patience" | "bonte" | "bienveillance" | "fidelite" | "douceur" | "maitrise";
 export type FruitSpiritLevel = "practice" | "develop" | "discover";

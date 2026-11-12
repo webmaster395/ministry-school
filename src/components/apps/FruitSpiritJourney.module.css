@@ -260,6 +260,155 @@
   font-size: 11px;
 }
 
+.restitutionList {
+  display: grid;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.restitution {
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.22);
+  border-radius: 20px;
+  background: rgb(7 8 30 / 0.48);
+  box-shadow: 0 18px 54px rgb(2 3 18 / 0.18);
+}
+
+.restitution summary {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  min-height: 92px;
+  padding: 18px 22px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.restitution summary::-webkit-details-marker {
+  display: none;
+}
+
+.restitution summary > b {
+  color: #c9b3ef;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+}
+
+.restitution summary h2,
+.restitution summary p {
+  margin: 0;
+}
+
+.restitution summary h2 {
+  font-size: 21px;
+}
+
+.restitution summary p {
+  margin-top: 5px;
+  color: rgb(248 245 255 / 0.72);
+  font-size: 12px;
+}
+
+.restitution summary > strong {
+  font-size: 25px;
+  font-weight: 650;
+}
+
+.restitution summary small {
+  margin-left: 3px;
+  font-size: 11px;
+}
+
+.restitution[open] summary {
+  border-bottom: 1px solid rgb(255 255 255 / 0.18);
+}
+
+.restitutionBody {
+  display: grid;
+  gap: 38px;
+  padding: clamp(28px, 5vw, 60px);
+  background: rgb(247 244 250 / 0.96);
+  color: #17132d;
+}
+
+.restitutionBody blockquote {
+  max-width: 780px;
+  margin: 0;
+  padding-left: 22px;
+  border-left: 3px solid #765d96;
+  color: #5d4576;
+  font-family: Georgia, serif;
+  font-size: clamp(18px, 2vw, 24px);
+  line-height: 1.5;
+}
+
+.editorialSection {
+  max-width: 780px;
+}
+
+.editorialSection h3 {
+  margin: 0 0 18px;
+  font-size: clamp(22px, 2.8vw, 34px);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+
+.editorialSection p {
+  margin: 0 0 15px;
+  white-space: pre-line;
+  color: #40394d;
+  font-size: 15px;
+  line-height: 1.72;
+}
+
+.editorialSection p:last-child {
+  margin-bottom: 0;
+}
+
+.levelMarker {
+  display: grid;
+  gap: 6px;
+  max-width: 780px;
+  padding: 22px 24px;
+  border-radius: 16px;
+  background: #17132d;
+  color: #f8f5ff;
+}
+
+.levelMarker span {
+  color: #c9b3ef;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+}
+
+.levelMarker strong {
+  font-size: clamp(20px, 2.5vw, 30px);
+}
+
+.editorialFeatured,
+.editorialReflection {
+  max-width: 780px;
+  padding: clamp(22px, 4vw, 36px);
+  border-radius: 18px;
+}
+
+.editorialFeatured {
+  background: #e3d8ef;
+}
+
+.editorialReflection {
+  border: 1px solid #bba3dc;
+  background: #fff;
+}
+
+.editorialFeatured p:first-of-type,
+.editorialReflection p {
+  color: #17132d;
+  font-weight: 620;
+}
+
 @media(max-width:1000px) {
   .questionBlock {
     grid-template-columns: 1fr;
@@ -327,5 +476,44 @@
 
   .resultList article > strong {
     font-size: 20px;
+  }
+
+  .restitution {
+    border-radius: 14px;
+  }
+
+  .restitution summary {
+    grid-template-columns: 28px minmax(0, 1fr) auto;
+    gap: 8px;
+    min-height: 78px;
+    padding: 14px 13px;
+  }
+
+  .restitution summary h2 {
+    font-size: 17px;
+  }
+
+  .restitution summary > strong {
+    font-size: 19px;
+  }
+
+  .restitutionBody {
+    gap: 28px;
+    padding: 24px 16px 30px;
+  }
+
+  .restitutionBody blockquote {
+    padding-left: 14px;
+    font-size: 17px;
+  }
+
+  .editorialSection h3 {
+    margin-bottom: 14px;
+    font-size: 23px;
+  }
+
+  .editorialSection p {
+    font-size: 14px;
+    line-height: 1.66;
   }
 }

@@ -3,12 +3,14 @@ import test from "node:test";
 import { readFileSync } from "node:fs";
 import {
   calculateFruitSpiritV2,
+  FRUIT_SPIRIT_RESTITUTION_VERSION,
   fruitSpiritAnswerScale,
   fruitSpiritFruitsV2,
   fruitSpiritQuestionIdsV2,
   fruitSpiritSituationsV2,
   isFruitSpiritV2Complete,
 } from "../src/lib/apps/fruit-spirit-v2.ts";
+import { fruitSpiritRestitutionsV2 } from "../src/lib/apps/fruit-spirit-restitutions-v2.ts";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
@@ -140,4 +142,37 @@ test("la migration versionne sans écraser la V1 et garde une seule publication 
   assert.match(migration, /distinct on \(item\.test_key\)/);
   assert.match(migration, /restitution_version text/);
   assert.doesNotMatch(migration, /delete from public\.grace_identity_assessments/);
+});
+
+test("les vingt-sept restitutions validées sont présentes et complètes", () => {
+  assert.equal(FRUIT_SPIRIT_RESTITUTION_VERSION, "fruit-spirit-v2-editorial-1");
+  assert.deepEqual(fruitSpiritRestitutionsV2.map(({ key }) => key), fruitSpiritFruitsV2.map(({ key }) => key));
+  assert.equal(fruitSpiritRestitutionsV2.length, 9);
+  const levels = ["practice", "develop", "discover"];
+  const restitutions = fruitSpiritRestitutionsV2.flatMap((fruit) => levels.map((level) => fruit.levels[level]));
+  assert.equal(restitutions.length, 27);
+  for (const fruit of fruitSpiritRestitutionsV2) {
+    assert.ok(fruit.verse.length > 30);
+    assert.ok(fruit.overview.length > 300);
+    assert.doesNotMatch(fruit.overview, /<br|&nbsp;/i);
+  }
+  for (const restitution of restitutions) {
+    assert.ok(restitution.discovery.length > 300);
+    assert.ok(restitution.growth.length > 500);
+    assert.ok(restitution.challengeTitle.length > 10);
+    assert.ok(restitution.challenge.length > 100);
+    assert.ok(restitution.reflection.endsWith("?"));
+    assert.doesNotMatch(Object.values(restitution).join("\n"), /<br|&nbsp;/i);
+  }
+});
+
+test("la page de résultats affiche le texte complet du niveau calculé", () => {
+  const component = read("src/components/apps/FruitSpiritJourney.tsx");
+  const route = read("src/app/api/apps/grace-identity/route.ts");
+  assert.match(component, /fruitSpiritRestitutionByKeyV2/);
+  assert.match(component, /Ce que tu peux découvrir sur toi/);
+  assert.match(component, /Comment laisser ce fruit grandir \?/);
+  assert.match(component, /Ton défi cette semaine/);
+  assert.match(component, /Pour aller plus loin/);
+  assert.match(route, /FRUIT_SPIRIT_RESTITUTION_VERSION/);
 });
