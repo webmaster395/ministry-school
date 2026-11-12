@@ -97,21 +97,15 @@ export default function OpportunityEditForms({
   const [serviceName, setServiceName] = useState(o.services?.name ?? o.organizer_label ?? "");
   const [state, formAction, pending] = useActionState(saveOpportunityInline, null);
   const [baseUpdatedAt, setBaseUpdatedAt] = useState(o.updated_at);
-  const [changeRevision, setChangeRevision] = useState(0);
-  const formRef = useRef<HTMLFormElement>(null);
   const saveButtonRef = useRef<HTMLButtonElement>(null);
   const currentRevisionRef = useRef(0);
   const submittedRevisionRef = useRef(0);
-  const lastAutoAttemptRef = useRef(-1);
   const handledStateRef = useRef<typeof state>(null);
 
   const markDirty = () => {
     setDirty(true);
     setConfirmation(null);
-    setChangeRevision((value) => {
-      currentRevisionRef.current = value + 1;
-      return value + 1;
-    });
+    currentRevisionRef.current += 1;
   };
 
   useEffect(() => {
@@ -131,16 +125,6 @@ export default function OpportunityEditForms({
     }, 0);
     return () => window.clearTimeout(timer);
   }, [state]);
-
-  useEffect(() => {
-    if (!editing || !dirty || pending || changeRevision === lastAutoAttemptRef.current) return;
-    const timer = window.setTimeout(() => {
-      lastAutoAttemptRef.current = changeRevision;
-      submittedRevisionRef.current = currentRevisionRef.current;
-      formRef.current?.requestSubmit(saveButtonRef.current ?? undefined);
-    }, 1600);
-    return () => window.clearTimeout(timer);
-  }, [changeRevision, dirty, editing, pending]);
 
   useEffect(() => {
     if (!editing || !dirty) return;
@@ -217,7 +201,7 @@ export default function OpportunityEditForms({
   }
 
   return <div className="space-y-5">
-    <form ref={formRef} action={formAction} noValidate onSubmit={() => { submittedRevisionRef.current = currentRevisionRef.current; }} onChange={markDirty} className="space-y-5">
+    <form action={formAction} noValidate onSubmit={() => { submittedRevisionRef.current = currentRevisionRef.current; }} onChange={markDirty} className="space-y-5">
       <input type="hidden" name="opportunity_id" value={o.id} />
       <input type="hidden" name="base_updated_at" value={baseUpdatedAt} />
       {workspaceHeader ? <WorkspaceCompactHeader
@@ -248,6 +232,7 @@ export default function OpportunityEditForms({
           <section>
             <label><Label>Titre *</Label><input name="title" required readOnly={!canManage} value={title} onChange={(event) => setTitle(event.target.value)} className={field} placeholder="Titre du projet ou de la formation" autoComplete="off" /></label>
             <div className="mt-[clamp(1.5rem,10%,4rem)]"><SectionTitle>Présentation *</SectionTitle><RichTextEditor name="description" rows={8} defaultValue={o.description} onDirty={markDirty} /></div>
+            <SectionSaveButton label="Enregistrer la présentation" pending={pending} dirty={dirty} confirmation={confirmation} />
           </section>
           <section className="rounded-2xl border border-border-soft bg-surface p-4 sm:p-5">
             <p className="label text-[10px] tracking-[.14em] text-muted sm:text-xs">PERSONNALISATION DE LA BANNIÈRE</p>
@@ -256,14 +241,18 @@ export default function OpportunityEditForms({
               {!canManage && <input type="hidden" name="type" value={type} />}
               <OpportunityEmojiPicker value={emoji} onChange={nextEmoji => { setEmoji(nextEmoji); markDirty(); }} />
             </div>
+            <SectionSaveButton label="Enregistrer la bannière" pending={pending} dirty={dirty} confirmation={confirmation} />
           </section>
-          <StrategicAxesFields title={title} type={type} objectives={o.objectives} description={o.description} initial={{ axes: o.strategic_axes }} />
-          <DynamicListInput name="objectives_items" label="Objectifs" initialValue={o.objectives} placeholder="Un objectif" required onDirty={markDirty} />
-          <DynamicListInput name="speakers_items" label="Intervenants" initialValue={o.speakers} placeholder="Nom de l’intervenant" required onDirty={markDirty} />
-          <DynamicListInput name="prerequisites_items" label="Prérequis" initialValue={o.prerequisites} placeholder="Un prérequis" onDirty={markDirty} />
-          <DynamicListInput name="tools_used_items" label="Outils utilisés (facultatif)" initialValue={o.tools_used} placeholder="Ex. ChatGPT, Canva ou Photoshop" onDirty={markDirty} />
-          <DynamicListInput name="participant_material_items" label="Matériel à apporter (facultatif)" initialValue={o.participant_material} placeholder="Un élément à apporter" onDirty={markDirty} />
-          <ParticipationConditionsFields initialAudience={o.participation_audience} initialAudienceDetails={o.participation_audience_details} initialPrerequisitesRequired={o.participation_prerequisites_required} />
+          <section className="space-y-6">
+            <StrategicAxesFields title={title} type={type} objectives={o.objectives} description={o.description} initial={{ axes: o.strategic_axes }} />
+            <DynamicListInput name="objectives_items" label="Objectifs" initialValue={o.objectives} placeholder="Un objectif" required onDirty={markDirty} />
+            <DynamicListInput name="speakers_items" label="Intervenants" initialValue={o.speakers} placeholder="Nom de l’intervenant" required onDirty={markDirty} />
+            <DynamicListInput name="prerequisites_items" label="Prérequis" initialValue={o.prerequisites} placeholder="Un prérequis" onDirty={markDirty} />
+            <DynamicListInput name="tools_used_items" label="Outils utilisés (facultatif)" initialValue={o.tools_used} placeholder="Ex. ChatGPT, Canva ou Photoshop" onDirty={markDirty} />
+            <DynamicListInput name="participant_material_items" label="Matériel à apporter (facultatif)" initialValue={o.participant_material} placeholder="Un élément à apporter" onDirty={markDirty} />
+            <ParticipationConditionsFields initialAudience={o.participation_audience} initialAudienceDetails={o.participation_audience_details} initialPrerequisitesRequired={o.participation_prerequisites_required} />
+            <SectionSaveButton label="Enregistrer le contenu" pending={pending} dirty={dirty} confirmation={confirmation} />
+          </section>
         </article>
 
         <aside className="space-y-5 rounded-3xl border border-border bg-background p-5 sm:p-6">
@@ -272,7 +261,8 @@ export default function OpportunityEditForms({
           <label><Label>Lieu principal *</Label><input name="location" required readOnly={!canManage} defaultValue={o.location ?? ""} className={field} /></label>
           <label><Label>Nombre de places par séance *</Label><input type="number" min={1} name="capacity" required readOnly={!canManage} defaultValue={o.capacity ?? ""} className={field} placeholder="Ex. 20" /></label>
           {canManageInternalMaterial && <WorkshopMaterialsInput initialValue={o.organization_material} onDirty={markDirty} />}
-          {canManage && <div className="rounded-2xl bg-surface p-4"><p className="mb-3 text-sm font-semibold">Inscriptions</p><div className="space-y-3"><label className="flex items-center gap-2 text-sm"><input type="checkbox" name="registration_open" defaultChecked={o.registration_open} /> Inscriptions ouvertes</label><label className="flex items-center gap-2 text-sm"><input type="checkbox" name="cancellation_allowed" defaultChecked={o.cancellation_allowed} /> Annulation autorisée</label><p className="text-xs leading-relaxed text-muted">La publication se décide uniquement dans le bloc de validation, après examen complet de la fiche.</p></div></div>}
+          {canManage && <div className="rounded-2xl bg-surface p-4"><p className="mb-3 text-sm font-semibold">Inscriptions</p><div className="space-y-3"><label className="flex items-center gap-2 text-sm"><input type="checkbox" name="registration_open" defaultChecked={o.registration_open} /> Inscriptions ouvertes</label><label className="flex items-center gap-2 text-sm"><input type="checkbox" name="cancellation_allowed" defaultChecked={o.cancellation_allowed} /> Annulation autorisée</label><p className="text-xs leading-relaxed text-muted">Après la première validation, les modifications enregistrées par un responsable ou un administrateur restent actives sans nouvelle demande à la Super administration.</p></div></div>}
+          <SectionSaveButton label="Enregistrer l’organisation" pending={pending} dirty={dirty} confirmation={confirmation} />
         </aside>
       </div>
 
@@ -294,9 +284,26 @@ export default function OpportunityEditForms({
             <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 px-1 text-xs text-muted"><span><strong className="text-foreground">{registeredCount}{date.capacity === null ? "" : ` / ${date.capacity}`}</strong> inscription{registeredCount === 1 ? "" : "s"}</span>{lastPlaces && <span className="font-semibold text-[#9A5B00]">{lastPlaces}</span>}</p>
           </div>;
         })}</div>
+        <SectionSaveButton label="Enregistrer les dates et séances" pending={pending} dirty={dirty} confirmation={confirmation} />
       </section>
     </form>
     {editExtras}
+  </div>;
+}
+
+function SectionSaveButton({ label, pending, dirty, confirmation }: {
+  label: string;
+  pending: boolean;
+  dirty: boolean;
+  confirmation: string | null;
+}) {
+  const status = pending ? "Enregistrement en cours…" : dirty ? "Modifications à enregistrer" : confirmation ? "Enregistré" : "À jour";
+  return <div className="mt-5 flex flex-col gap-2 border-t border-border-soft pt-4 min-[430px]:flex-row min-[430px]:items-center min-[430px]:justify-between">
+    <span role="status" className={`text-xs font-medium ${dirty ? "text-amber-700" : confirmation ? "text-emerald-700" : "text-muted"}`}>{status}</span>
+    <button type="submit" disabled={pending || !dirty} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-accent px-4 text-sm font-semibold text-on-accent transition disabled:cursor-not-allowed disabled:opacity-50 min-[430px]:w-auto">
+      {pending ? <Clock size={16} className="animate-pulse" /> : dirty ? <Save size={16} /> : <Check size={16} />}
+      {pending ? "Enregistrement…" : dirty ? label : "Enregistré"}
+    </button>
   </div>;
 }
 

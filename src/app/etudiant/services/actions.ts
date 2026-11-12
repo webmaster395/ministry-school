@@ -738,9 +738,17 @@ export async function saveOpportunityInline(_previous: OpportunityFormState, for
     const result = (data ?? {}) as {
       updatedAt?: string;
       dates?: Array<{ id: string; session_date: string; start_time: string; end_time: string; room: string | null; location: string | null; capacity: number | null }>;
+      publishedDirectly?: boolean;
     };
     refreshOpportunity(id);
-    return { ok: true, message: "Enregistré", updatedAt: result.updatedAt, dates: result.dates };
+    return {
+      ok: true,
+      message: result.publishedDirectly
+        ? "Enregistré. Les modifications sont actives sans nouvelle validation."
+        : "Enregistré.",
+      updatedAt: result.updatedAt,
+      dates: result.dates,
+    };
   } catch (error) {
     return { ok: false, message: error instanceof Error ? error.message : "L’enregistrement a échoué." };
   }

@@ -28,7 +28,11 @@ test("une sauvegarde unique est atomique, versionnée et indépendante de la sou
   assert.match(migration, /grant execute on function public\.save_opportunity_form/);
   assert.match(experience, /useActionState\(saveOpportunityInline, null\)/);
   assert.match(experience, /setConfirmation\(state\.message\)/);
-  assert.match(experience, /requestSubmit/);
+  assert.doesNotMatch(experience, /requestSubmit/);
+  assert.equal((experience.match(/<SectionSaveButton/g) ?? []).length, 5);
+  assert.match(experience, /Enregistrer la présentation/);
+  assert.match(experience, /Enregistrer l’organisation/);
+  assert.match(experience, /Enregistrer les dates et séances/);
   assert.match(experience, /Modifications non enregistrées/);
   assert.match(experience, /Enregistrement…/);
   assert.match(experience, /base_updated_at/);
