@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFileSync } from "node:fs";
 import {
   classifySpiritualGifts,
   giftScaleLabels,
@@ -10,6 +11,16 @@ import {
 
 const answersAt = (value) => Object.fromEntries(spiritualGiftQuestions.map((question) => [question.id, value]));
 const categoryOf = (answers, giftId) => classifySpiritualGifts(answers).find((gift) => gift.id === giftId)?.category;
+
+test("les blocs éditoriaux restent dans des rangées distinctes sur grand écran", () => {
+  const styles = readFileSync(new URL("../src/components/apps/SpiritualGiftsJourney.module.css", import.meta.url), "utf8");
+
+  assert.match(styles, /\.frame:has\(> \.steps\)>\.notice\{grid-column:2;grid-row:3/);
+  assert.match(styles, /\.frame:has\(> \.steps\)>\.actions\{grid-column:1\/-1;grid-row:4/);
+  assert.match(styles, /\.frame:has\(> \.giftHeader\)>\.giftHeader\{grid-column:1;grid-row:2;/);
+  assert.doesNotMatch(styles, />\.giftHeader\{grid-column:1;grid-row:2\/4/);
+  assert.match(styles, /\.giftTitle,[^\n]*\{overflow-wrap:anywhere/);
+});
 
 test("le questionnaire contient exactement les 21 questions validées dans l’ordre imposé", () => {
   assert.equal(spiritualGiftQuestions.length, 21);

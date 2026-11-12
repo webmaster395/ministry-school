@@ -66,7 +66,7 @@ function buildStories({
 
   if (graceAvailable) {
     ([
-      ["fruit", "Fruit de l’Esprit", "/apps/grace-identity/fruit-spirit-blueberry-abstract-v1.webp"],
+      ["fruit", "Fruit de l’Esprit", "/apps/grace-identity/fruit-spirit-burgundy-fruit-v5.webp"],
       ["gifts", "Dons spirituels", "/identity/posts/dons-spirituels.webp"],
       ["skills", "Compétences naturelles", "/identity/posts/competences-naturelles.webp"],
     ] as const).forEach(([kind, name, image]) => {

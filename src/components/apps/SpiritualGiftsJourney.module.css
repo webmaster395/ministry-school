@@ -17,6 +17,8 @@
 .giftPage .eyebrow{color:var(--ink)}
 .giftPage .giftTitle{color:var(--ink)}
 .giftPage .giftCard{border-top:5px solid var(--gift-accent);color:var(--ink);box-shadow:0 14px 36px #17314a14}
+.giftHeader,.giftCard,.categoryOverview section,.categoryGift,.chapter>span{min-width:0}
+.giftTitle,.impactTitle,.categoryIntro h1,.categoryGiftHeading h2{overflow-wrap:anywhere;text-wrap:balance}
 .giftLandscape{position:absolute;z-index:0;left:-3%;right:-3%;bottom:-7%;height:29%;background:var(--gift-accent);clip-path:polygon(0 48%,8% 33%,17% 44%,27% 18%,37% 39%,48% 9%,58% 36%,68% 21%,79% 43%,89% 16%,100% 38%,100% 100%,0 100%)}
 .giftLandscape:before{content:"";position:absolute;inset:29% 0 0;background:var(--gift-accent);opacity:.52;clip-path:polygon(0 40%,12% 18%,24% 41%,35% 24%,46% 49%,59% 15%,72% 45%,84% 26%,100% 46%,100% 100%,0 100%)}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -43,12 +45,12 @@
   .frame:has(> .title + .eyebrow)>.title + .eyebrow{align-self:center;text-align:center}
   .frame:has(> .title + .eyebrow)>.actions{width:100%;margin-top:auto}
 
-  .frame:has(> .steps){display:grid;grid-template-columns:minmax(0,1.05fr) minmax(400px,.85fr);grid-template-rows:auto 1fr auto;column-gap:84px}
+  .frame:has(> .steps){display:grid;grid-template-columns:minmax(0,1.05fr) minmax(400px,.85fr);grid-template-rows:auto minmax(0,1fr) auto auto;column-gap:84px}
   .frame:has(> .steps)>.eyebrow{grid-column:1/-1;grid-row:1}
   .frame:has(> .steps)>.title{grid-column:1;grid-row:2;align-self:start;margin-top:74px}
   .frame:has(> .steps)>.steps{grid-column:2;grid-row:2;align-self:center;width:100%;margin:0}
-  .frame:has(> .steps)>.notice{grid-column:2;grid-row:2;align-self:end;margin-bottom:34px}
-  .frame:has(> .steps)>.actions{grid-column:1/-1;grid-row:3;width:100%}
+  .frame:has(> .steps)>.notice{grid-column:2;grid-row:3;align-self:start;margin:18px 0 0}
+  .frame:has(> .steps)>.actions{grid-column:1/-1;grid-row:4;width:100%}
 
   .frame:has(> .progress){justify-content:flex-start}
   .frame:has(> .progress)>.progress{width:100%}
@@ -69,7 +71,7 @@
 
   .frame:has(> .giftHeader){display:grid;grid-template-columns:minmax(320px,.8fr) minmax(520px,1.2fr);grid-template-rows:auto auto auto auto 1fr auto;column-gap:72px;align-items:start}
   .frame:has(> .giftHeader)>.eyebrow{grid-column:1/-1;grid-row:1}
-  .frame:has(> .giftHeader)>.giftHeader{grid-column:1;grid-row:2/4;margin-top:58px}
+  .frame:has(> .giftHeader)>.giftHeader{grid-column:1;grid-row:2;margin-top:58px}
   .frame:has(> .giftHeader)>.giftCard{grid-column:2;margin-top:0}
   .frame:has(> .giftHeader)>.giftCard:nth-of-type(1){grid-row:2;margin-top:58px}
   .frame:has(> .giftHeader)>.giftCard:nth-of-type(2){grid-row:3;margin-top:14px}
