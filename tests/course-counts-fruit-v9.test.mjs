@@ -30,7 +30,7 @@ test("Fruit de l'Esprit keeps v9 for the post and uses the supplied v10 reading 
   for (const source of [identity, experience, page]) {
     assert.match(source, /fruit-spirit-water-fruit-v9\.png/);
   }
-  assert.match(journey, /fruit-spirit-water-fruit-v10\.png/);
+  assert.match(journey, /fruit-spirit-water-bubbles-v11\.png/);
   assert.match(journey, /background: rgb\(255 254 251 \/ 0\.975\)/);
   assert.match(journey, /backdrop-filter: blur\(8px\)/);
 });

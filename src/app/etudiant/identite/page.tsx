@@ -103,7 +103,18 @@ function monthsTogether(memberSince: string | null) {
   if (!memberSince) return 0;
   const start = new Date(memberSince);
   const now = new Date();
-  return Math.max(0, (now.getUTCFullYear() - start.getUTCFullYear()) * 12 + now.getUTCMonth() - start.getUTCMonth());
+  if (Number.isNaN(start.getTime()) || start > now) return 0;
+
+  // Le mois de démarrage compte comme le premier mois du parcours. Ainsi, un
+  // étudiant déjà inscrit au moment de sa première formation voit « 1 mois »
+  // au lieu de zéro, sans ajouter de mois aux comptes dont le parcours n'a pas
+  // encore commencé.
+  return (
+    (now.getUTCFullYear() - start.getUTCFullYear()) * 12 +
+    now.getUTCMonth() -
+    start.getUTCMonth() +
+    1
+  );
 }
 
 function accountStatus(gender: "homme" | "femme" | null | undefined) {

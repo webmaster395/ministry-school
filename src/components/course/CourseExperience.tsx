@@ -290,15 +290,11 @@ function TaskSection({
   eyebrow,
   items,
   completedIds,
-  phase,
-  courseDate,
 }: {
   title: string;
   eyebrow: string;
   items: Assignment[];
   completedIds: Set<string>;
-  phase: "before" | "after";
-  courseDate: string | null;
 }) {
   if (!items.length) return null;
   return (
@@ -309,7 +305,7 @@ function TaskSection({
         {items.map((item, index) => {
           const done = completedIds.has(item.id);
           const url = item.resource_url || item.file_url;
-          const deadline = formatCourseDate(courseDate);
+          const deadline = item.due_at ? formatCourseDate(item.due_at.slice(0, 10)) : null;
           return (
             <article
               key={item.id}
@@ -344,18 +340,13 @@ function TaskSection({
                     <FormattedAssignmentText value={item.description} />
                   </div>
                 )}
-                <div className="mt-3 text-xs">
-                  <p className="font-semibold text-foreground">
-                    {phase === "after"
-                      ? "À terminer avant le prochain cours"
-                      : "À terminer avant le cours concerné"}
-                  </p>
-                  {deadline && (
-                    <p className="mt-0.5 text-muted">
-                      {phase === "after" ? "Prochain cours" : "Cours"} : {deadline}
+                {deadline && (
+                  <div className="mt-3 text-xs">
+                    <p className="font-semibold text-foreground">
+                      Date limite : {deadline}
                     </p>
-                  )}
-                </div>
+                  </div>
+                )}
                 {url && (
                   <a
                     href={url}
@@ -403,7 +394,6 @@ export default function CourseExperience({
   backLabel,
   previous,
   next,
-  nextCourseDate = null,
   previewDemo = false,
 }: {
   session: CourseSession;
@@ -418,7 +408,6 @@ export default function CourseExperience({
   backLabel: string;
   previous?: { id: string; title: string } | null;
   next?: { id: string; title: string } | null;
-  nextCourseDate?: string | null;
   previewDemo?: boolean;
 }) {
   const courseEnd = new Date(`${session.dateIso}T23:59:59`);
@@ -669,8 +658,6 @@ export default function CourseExperience({
               eyebrow="Se préparer"
               items={before}
               completedIds={completedIds}
-              phase="before"
-              courseDate={session.dateIso}
             />
           </div>
           {materials.length > 0 && (
@@ -749,7 +736,7 @@ export default function CourseExperience({
                     : completedStepIds
                 }
                 accent={session.accent}
-                deadlineDate={nextCourseDate}
+                deadlineDate={assignment.due_at}
               />
             ))}
             {simpleAfter.length > 0 && (
@@ -758,8 +745,6 @@ export default function CourseExperience({
                 eyebrow="Mettre en pratique"
                 items={simpleAfter}
                 completedIds={completedIds}
-                phase="after"
-                courseDate={nextCourseDate}
               />
             )}
           </div>

@@ -64,12 +64,13 @@ test("un devoir long retrouve le rendu structuré des sous-consignes", () => {
   assert.match(courseExperience, /rounded-lg bg-surface/);
 });
 
-test("les échéances pédagogiques suivent les cours réels et jamais un délai arbitraire", () => {
-  assert.match(courseExperience, /À terminer avant le cours concerné/);
-  assert.match(courseExperience, /À terminer avant le prochain cours/);
-  assert.match(courseExperience, /nextCourseDate/);
-  assert.match(assignmentStepper, /Prochain cours/);
-  assert.match(studentWork, /dueLabels\(after, targetDate\)/);
+test("les échéances pédagogiques utilisent uniquement la date limite enregistrée", () => {
+  assert.match(courseExperience, /item\.due_at \? formatCourseDate/);
+  assert.match(courseExperience, /Date limite/);
+  assert.match(assignmentStepper, /deadlineDate &&/);
+  assert.match(assignmentStepper, /Date limite/);
+  assert.match(studentWork, /dueLabels\(a\.due_at\)/);
+  assert.doesNotMatch(studentWork, /dueLabels\(after, targetDate\)/);
   assert.doesNotMatch(teacherPanels, /setDate\(/);
   assert.doesNotMatch(teacherPanels, /afterDue/);
   assert.doesNotMatch(teacherSupports, /name="due_at"/);

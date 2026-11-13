@@ -89,13 +89,16 @@ function buildTrackedTools(tools: CatalogApp[], results: IdentityResult[], heroe
   return items;
 }
 
-function dueLabels(after: boolean, date: string | null) {
-  const primary = after
-    ? "À terminer avant le prochain cours"
-    : "À terminer avant le cours concerné";
-  if (!date) return [primary];
-  const prefix = after ? "Prochain cours" : "Cours";
-  return [primary, `${prefix} : ${formatSessionDate(date).toLowerCase()}`];
+function dueLabels(dueAt: string | null) {
+  if (!dueAt) return [];
+  return [
+    `Date limite : ${new Intl.DateTimeFormat("fr-FR", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }).format(new Date(dueAt))}`,
+  ];
 }
 
 export default async function StudentWorkPage({
@@ -156,17 +159,16 @@ export default async function StudentWorkPage({
   const incompleteTools = buildTrackedTools(tools, results, Boolean(heroesMotors)).filter((tool) => !tool.completed);
   if (tab === "outils" && !incompleteTools.length) redirect("/etudiant/travail");
 
-  // Chaque travail est présenté sous la séance pour laquelle il doit être prêt.
+  // Un travail reste rattaché au cours qui l'a réellement créé. Sa date limite
+  // éventuelle est portée par `due_at`, jamais déduite du cours suivant.
   const groups = new Map<string, typeof shown>();
   for (const item of shown) {
-    const key = item.targetId ?? `sans-date:${item.origin.id}`;
+    const key = item.origin.id;
     groups.set(key, [...(groups.get(key) ?? []), item]);
   }
   const orderedGroups = [...groups.entries()]
     .map(([key, items]) => ({
-      session: (key.startsWith("sans-date:")
-        ? sessionById.get(key.replace("sans-date:", ""))
-        : sessionById.get(key)) as StudentSession,
+      session: sessionById.get(key) as StudentSession,
       items,
     }))
     .filter((g) => g.session)
@@ -257,17 +259,17 @@ export default async function StudentWorkPage({
                   />
                 </Link>
 
-                <span className="text-sm text-muted">Pour le {formatSessionDate(s.session_date).toLowerCase()}</span>
+                <span className="text-sm text-muted">Cours du {formatSessionDate(s.session_date).toLowerCase()}</span>
               </div>
 
               <ul className="divide-y divide-border-soft">
-                {items.map(({ assignment: a, targetDate, after }) => {
+                {items.map(({ assignment: a, after }) => {
                   const done = isDone(a);
                   const overdue = !done && Boolean(a.due_at) && new Date(String(a.due_at)).getTime() < Date.now();
                   const meta = [
                     a.kind,
                     a.duration_min ? `${a.duration_min} min` : null,
-                    ...dueLabels(after, targetDate),
+                    ...dueLabels(a.due_at),
                   ].filter(Boolean);
                   return (
                     <li key={a.id}>

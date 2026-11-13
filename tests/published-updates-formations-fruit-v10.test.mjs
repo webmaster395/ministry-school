@@ -32,6 +32,6 @@ test("MAPP novelty ring disappears after completion and Fruit uses the v10 readi
   ]);
   assert.match(identity, /\.story_not-started \.storyRing\[data-story-key="profil-mapp"\]/);
   assert.doesNotMatch(identity, /\n\.storyRing\[data-story-key="profil-mapp"\],\n\.storyRing\[data-story-key="mapp"\] \{/);
-  assert.match(fruit, /fruit-spirit-water-fruit-v10\.png/);
+  assert.match(fruit, /fruit-spirit-water-bubbles-v11\.png/);
   assert.match(fruit, /background: rgb\(255 254 251 \/ 0\.975\)/);
 });
