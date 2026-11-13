@@ -19,7 +19,7 @@ test("admin course inventory counts course records instead of dated sessions", a
   assert.match(data, /s\.formation\?\.category_key \?\? s\.courses\?\.formation\?\.category_key/);
 });
 
-test("Fruit de l'Esprit keeps v9 for the post and uses the supplied v10 reading background", async () => {
+test("Fruit de l'Esprit uses the text-free v12 post and keeps the sober reading background", async () => {
   const [journey, identity, experience, page] = await Promise.all([
     read("src/components/apps/FruitSpiritJourney.module.css"),
     read("src/app/etudiant/identite/identity.module.css"),
@@ -28,7 +28,7 @@ test("Fruit de l'Esprit keeps v9 for the post and uses the supplied v10 reading 
   ]);
 
   for (const source of [identity, experience, page]) {
-    assert.match(source, /fruit-spirit-water-fruit-v9\.png/);
+    assert.match(source, /fruit-spirit-post-story-v12\.webp/);
   }
   assert.match(journey, /fruit-spirit-water-bubbles-v11\.png/);
   assert.match(journey, /background: rgb\(255 254 251 \/ 0\.975\)/);
