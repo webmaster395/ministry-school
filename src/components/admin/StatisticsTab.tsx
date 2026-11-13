@@ -45,10 +45,13 @@ function StatisticsNav({ section }: { section: Section }) {
 }
 
 function UsageSection({ members, trainingDates, monthlyActivity, usage }: { members: Member[]; trainingDates: string[]; monthlyActivity: MonthlyActiveUsers[]; usage: UsageAnalytics }) {
-  const total = members.length;
+  // Même définition que « Étudiants à mes côtés » : profils étudiants actifs,
+  // les comptes de test ayant déjà été retirés par getMembers().
+  const studentMembers = members.filter((member) => member.role === "student" && !member.deactivated);
+  const total = studentMembers.length;
   const activeThisMonth = monthlyActivity.find((row) => row.activity_month === currentParisMonth())?.active_users ?? 0;
   const activityRate = total ? Math.round(activeThisMonth / total * 100) : 0;
-  const cycles = accountsByTrainingCycle(members, trainingDates);
+  const cycles = accountsByTrainingCycle(studentMembers, trainingDates);
   const today = parisDateKey(new Date().toISOString());
   const currentCycle = cycles.find((cycle) => cycle.date >= today) ?? cycles.at(-1);
   const weekly: BarDatum[] = usage.weekly.map((row) => ({ label: weekLabel(row.week_start), value: row.active_users, color: "#00a6a6" }));
@@ -58,7 +61,7 @@ function UsageSection({ members, trainingDates, monthlyActivity, usage }: { memb
 
   return <div className="space-y-6">
     <header><p className="label text-xs tracking-[0.18em] text-muted">UTILISATION</p><h1 className="font-title mt-2 text-[30px] leading-tight text-foreground sm:text-[38px]">Est-ce que les membres utilisent réellement la plateforme&nbsp;?</h1></header>
-    <section className="grid grid-cols-2 gap-2.5 sm:gap-3 xl:grid-cols-4"><Kpi value={total} label="Comptes" detail="Comptes réels, hors comptes de test" /><Kpi value={currentCycle?.value ?? 0} label="Nouveaux comptes du cycle" detail={currentCycle ? `Cycle se terminant en ${currentCycle.label}` : undefined} /><Kpi value={activeThisMonth} label="Utilisateurs actifs ce mois-ci" detail="Personnes uniques" /><Kpi value={`${activityRate} %`} label="Taux d’activité" detail={`${activeThisMonth} utilisateurs sur ${total} comptes`} /></section>
+    <section className="grid grid-cols-2 gap-2.5 sm:gap-3 xl:grid-cols-4"><Kpi value={total} label="Étudiants" detail="Étudiants actifs, hors comptes de test" /><Kpi value={currentCycle?.value ?? 0} label="Nouveaux étudiants du cycle" detail={currentCycle ? `Cycle se terminant en ${currentCycle.label}` : undefined} /><Kpi value={activeThisMonth} label="Utilisateurs actifs ce mois-ci" detail="Personnes uniques" /><Kpi value={`${activityRate} %`} label="Taux d’activité" detail={`${activeThisMonth} utilisateurs sur ${total} étudiants`} /></section>
     <BarChart title="Utilisateurs actifs par semaine" subtitle={`Personnes uniques ayant utilisé la plateforme. Données disponibles depuis le ${TRACKING_START}.`} data={weekly} />
     <div className="grid items-start gap-6 xl:grid-cols-2">
       <BarChart title="Création de comptes" subtitle="Nouveaux comptes par cycle, selon les dates réelles des journées Ministry School." data={cycleBars} />

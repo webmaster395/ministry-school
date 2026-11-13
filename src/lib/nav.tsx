@@ -24,6 +24,7 @@ import {
   ListChecks,
   FolderOpen,
   UsersRound,
+  GraduationCap,
 } from "lucide-react";
 import { isPlainStudent, type ViewerRoles } from "@/lib/roles";
 import { QUESTIONS_ENABLED } from "@/lib/questions";
@@ -69,6 +70,7 @@ const icons = {
   resources: <FolderOpen {...iconProps} />,
   studentTasks: <ListChecks {...iconProps} />,
   studentProjects: <UsersRound {...iconProps} />,
+  formations: <GraduationCap {...iconProps} />,
 };
 
 /** Le menu étudiant, toujours affiché : celui de la maquette de Rose Alice. */
@@ -83,7 +85,7 @@ export const studentSections: NavSection[] = [
     title: "Qui je suis",
     items: [
       { label: "Ma personnalité", href: "/etudiant/identite", icon: icons.identity },
-      { label: "Mon ministère", href: "/etudiant/formation", icon: icons.steer },
+      { label: "Ministère", href: "/etudiant/formation", icon: icons.steer },
     ],
   },
   {
@@ -127,7 +129,7 @@ export function profileTabs(roles: ViewerRoles): ProfileTab[] {
   return tabs;
 }
 
-export type SpaceKey = "admin" | "steering" | "projectsTraining" | "apps";
+export type SpaceKey = "admin" | "steering" | "formations" | "projectsTraining";
 
 /** Une « casquette » : un ensemble d'entrées de menu que la personne choisit d'afficher. */
 export type Space = {
@@ -156,19 +158,19 @@ export function navSpaces(roles: ViewerRoles): Space[] {
       subtitle: "",
       sections: [
         {
-          title: "Super administration",
+          title: "Admin",
           items: [
             { label: "Pilotage", href: "/gestion/admin?onglet=pilotage", icon: icons.adminStats },
             { label: "Membres", href: "/gestion/admin?onglet=membres", icon: icons.profile },
-            { label: "Cours", href: "/gestion/admin/cours-formations", icon: icons.book },
-            { label: "Projets et formations", href: "/gestion/projets-formations?scope=admin", icon: icons.projectPropose },
+            { label: "Gestion des outils", href: "/gestion/admin?onglet=outils", icon: icons.apps },
+            { label: "Gestion des ressources", href: "/gestion/admin?onglet=ressources", icon: icons.resources },
           ],
         },
       ],
     });
   }
 
-  if (roles.steeringMinistryIds.length > 0) {
+  if (roles.superAdmin || roles.steeringMinistryIds.length > 0) {
     spaces.push({
       key: "steering",
       label: "Pilotage ministère",
@@ -186,7 +188,34 @@ export function navSpaces(roles: ViewerRoles): Space[] {
     });
   }
 
-  if (roles.projectsTraining) {
+  if (roles.superAdmin || roles.formationCategoryKeys.length > 0) {
+    const allowed = roles.superAdmin
+      ? ["heart", "character", "sensitivity", "deepening"]
+      : roles.formationCategoryKeys;
+    const candidates = [
+      { key: "heart", label: "Formation du cœur", href: "/gestion/formations?onglet=coeur" },
+      { key: "character", label: "Formation du caractère", href: "/gestion/formations?onglet=caractere" },
+      { key: "sensitivity", label: "Formation des sensibilités", href: "/gestion/formations?onglet=sensibilites" },
+      { key: "deepening", label: "Formations d’approfondissement", href: "/gestion/formations?onglet=approfondissements" },
+    ];
+    spaces.push({
+      key: "formations",
+      label: "Formations",
+      icon: icons.formations,
+      title: "Formations",
+      subtitle: "Gérez les parcours pédagogiques qui vous sont confiés.",
+      sections: [{
+        title: "Formations",
+        items: candidates.filter((item) => allowed.includes(item.key)).map((item) => ({
+          label: item.label,
+          href: item.href,
+          icon: icons.formations,
+        })),
+      }],
+    });
+  }
+
+  if (roles.superAdmin || roles.projectsTraining) {
     spaces.push({
       key: "projectsTraining",
       label: "Projets et formations",
@@ -203,22 +232,6 @@ export function navSpaces(roles: ViewerRoles): Space[] {
               icon: icons.propose,
             },
           ],
-        },
-      ],
-    });
-  }
-
-  if (roles.superAdmin) {
-    spaces.push({
-      key: "apps",
-      label: "Gestion des outils",
-      icon: icons.apps,
-      title: "Gestion des outils",
-      subtitle: "Pilotez les applications pédagogiques Ministry School.",
-      sections: [
-        {
-          title: "Gestion des outils",
-          items: [{ label: "Gestion des outils", href: "/admin/apps", icon: icons.apps }],
         },
       ],
     });

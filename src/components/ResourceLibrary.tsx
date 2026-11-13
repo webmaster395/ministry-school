@@ -40,7 +40,7 @@ export default function ResourceLibrary({ resources }: { resources: LibraryResou
   return <div className="space-y-6">
     <section className="overflow-hidden rounded-[28px] bg-[#252d2c] text-white">
       <div className="grid gap-8 p-6 sm:p-9 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-end">
-        <div><p className="label text-[11px] tracking-[.18em] text-white/60">MA BIBLIOTHÈQUE</p><h1 className="font-title mt-3 max-w-2xl text-[clamp(1.75rem,4vw,3rem)] leading-[1.03]">Tout ce qui t’aide à aller plus loin.</h1><p className="mt-5 max-w-2xl text-sm leading-6 text-white/72 sm:text-base">Retrouve au même endroit les supports de tes cours, tes outils, les tests disponibles et les ressources partagées après tes projets et formations.</p></div>
+        <div><p className="label text-[11px] tracking-[.18em] text-white/60">MA BIBLIOTHÈQUE</p><h1 className="font-title mt-3 max-w-2xl text-[clamp(1.65rem,3vw,2.25rem)] leading-[1.08]">Tout ce qui t’aide à aller plus loin.</h1><p className="mt-5 max-w-2xl text-sm leading-6 text-white/72 sm:text-base">Retrouve au même endroit les supports de tes cours, tes outils, les tests disponibles et les ressources partagées après tes projets et formations.</p></div>
         <div className="grid grid-cols-2 gap-3"><Metric value={resources.length} label="ressources" /><Metric value={new Set(resources.map((resource) => resource.sourceTitle)).size} label="espaces" /></div>
       </div>
     </section>

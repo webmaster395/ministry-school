@@ -7,20 +7,20 @@
 .summary{width:100%;border-left:0;border-right:0;border-bottom:0;color:inherit;text-align:left;font:inherit;cursor:pointer;align-items:flex-start}.summary>svg{flex:none;margin-left:auto;margin-top:3px}.summary:hover{transform:translateY(-2px);box-shadow:0 14px 34px #8e353322}.categoryFrame{min-height:100svh}.categoryHeader{max-width:820px;margin-top:54px}.categoryTitle{margin-top:18px}.categoryBody{max-width:720px;margin:18px 0 0;font-size:14px;line-height:1.6}.emptyCategory{max-width:720px;margin-top:34px;border-radius:18px;background:#fffaf0e8;padding:24px}.emptyCategory h2{margin:0 0 8px;font-size:20px}.emptyCategory p{margin:0;font-size:13px;line-height:1.5}.categoryFrame .fruitGrid{margin-top:38px}
 @media(max-width:720px){.categoryHeader{margin-top:32px}.categoryTitle{margin-top:14px}.categoryBody{font-size:13px}.categoryFrame .fruitGrid{margin-top:24px}.summary:hover{transform:none}}
 
-/* Fruit de l'Esprit — burgundy long-exposure abstraction shared by the test and results. */
+/* Fruit de l'Esprit — abstraction fruitée très floue partagée par le test et les résultats. */
 .shell {
-  --ink: #f8f5ff;
-  --paper: #fff8ef;
-  background-color: #5a101a;
-  background-image: url('/apps/grace-identity/fruit-spirit-burgundy-fruit-v5.webp');
-  background-position: center 50%;
+  --ink: #192735;
+  --paper: #fffdf8;
+  background-color: #eef6ff;
+  background-image: url('/apps/grace-identity/fruit-spirit-abstract-sky-v6.png');
+  background-position: center;
   color: var(--ink);
 }
 
 .shell::before,
 .softGreen::before,
 .softIvory::before {
-  background: linear-gradient(180deg, rgb(65 5 17 / 0.34) 0%, rgb(92 23 19 / 0.14) 47%, rgb(54 45 39 / 0.08) 100%);
+  background: linear-gradient(180deg, rgb(250 253 255 / 0.18), rgb(255 253 248 / 0.08));
 }
 
 .shell::after {
@@ -36,7 +36,7 @@
     radial-gradient(ellipse at 67% 13%, rgb(91 116 66 / 0.24) 0 7%, transparent 18%),
     radial-gradient(ellipse at 48% 57%, rgb(255 180 104 / 0.19) 0 34%, rgb(105 8 25 / 0.16) 54%, transparent 72%);
   filter: blur(28px);
-  opacity: 0.72;
+  opacity: 0.42;
   transform: rotate(-11deg);
 }
 
@@ -44,13 +44,13 @@
 .summary,
 .fruitCard,
 .emptyCategory {
-  background: rgb(246 242 251 / 0.9);
-  color: #17132d;
-  box-shadow: 0 16px 40px rgb(2 3 18 / 0.28);
+  background: rgb(255 253 248 / 0.92);
+  color: #192735;
+  box-shadow: 0 16px 40px rgb(46 74 98 / 0.14);
 }
 
 .pill {
-  color: #17132d;
+  color: #192735;
 }
 
 .ghost,
@@ -58,7 +58,7 @@
 .lead,
 .hint,
 .categoryBody {
-  color: #f8f5ff;
+  color: #192735;
 }
 
 .hint,
@@ -71,33 +71,33 @@
 .red,
 .green,
 .orange {
-  color: #5d4576;
+  color: #b54d3c;
 }
 
 .progress b {
-  background: #f3b38f;
+  background: #e85f47;
 }
 
 .progress i {
-  background: rgb(255 255 255 / 0.22);
+  background: rgb(25 39 53 / 0.13);
 }
 
 .traitList b {
-  background: rgb(255 248 239 / 0.18);
-  color: #f8f5ff;
+  background: rgb(255 253 248 / 0.7);
+  color: #192735;
 }
 
 .choice,
 .choiceActive {
-  border-color: rgb(255 255 255 / 0.68);
-  color: #f8f5ff;
+  border-color: rgb(25 39 53 / 0.48);
+  color: #192735;
 }
 
 .choice:hover,
 .choiceActive {
-  border-color: #efb29f;
-  background: #efb29f;
-  color: #351319;
+  border-color: #e85f47;
+  background: #e85f47;
+  color: #fff;
 }
 
 .red,
@@ -121,7 +121,7 @@
 }
 
 .fruitCard > p {
-  color: #4a405c;
+  color: #455361;
 }
 
 .fruitCard label .done {
@@ -132,7 +132,7 @@
 
 @media(max-width:720px) {
   .shell {
-    background-position: 58% center;
+    background-position: 52% center;
   }
 
   .shell::after {
@@ -146,7 +146,7 @@
   .shell::before,
   .softGreen::before,
   .softIvory::before {
-    background: linear-gradient(180deg, rgb(65 5 17 / 0.34), rgb(92 23 19 / 0.13) 52%, rgb(54 45 39 / 0.08));
+    background: linear-gradient(180deg, rgb(250 253 255 / 0.2), rgb(255 253 248 / 0.08));
   }
 }
 
@@ -172,7 +172,7 @@
 .situationHeader > p:last-child {
   max-width: 740px;
   margin: 0;
-  color: rgb(248 245 255 / 0.78);
+  color: rgb(25 39 53 / 0.78);
   font-size: 15px;
   line-height: 1.58;
 }

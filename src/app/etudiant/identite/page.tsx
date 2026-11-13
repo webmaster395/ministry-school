@@ -66,7 +66,7 @@ function buildStories({
 
   if (graceAvailable) {
     ([
-      ["fruit", "Fruit de l’Esprit", "/apps/grace-identity/fruit-spirit-burgundy-fruit-v5.webp"],
+      ["fruit", "Fruit de l’Esprit", "/apps/grace-identity/fruit-spirit-abstract-sky-v6.png"],
       ["gifts", "Dons spirituels", "/identity/posts/dons-spirituels.webp"],
       ["skills", "Compétences naturelles", "/identity/posts/competences-naturelles.webp"],
     ] as const).forEach(([kind, name, image]) => {
@@ -95,21 +95,6 @@ function buildStories({
       measurable: true,
     });
   }
-
-  const financeLinks = [
-    ...(hasTool("generopoly") ? [{ name: "Généropoly", href: "/apps/generopoly" }] : []),
-    { name: "Simulateur de générosité", href: "https://generosite.jeveuxdonner.fr/", external: true },
-  ];
-  items.push({
-    key: "outils-a-tester",
-    name: "À tester",
-    category: "Finance",
-    href: "#outils-a-tester",
-    image: "/identity/stories/finance-v2.webp",
-    status: "available",
-    measurable: false,
-    links: financeLinks,
-  });
 
   return items;
 }

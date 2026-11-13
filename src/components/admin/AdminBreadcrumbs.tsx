@@ -15,6 +15,8 @@ const tabLabels: Record<string, string> = {
   programme: "Programme",
   membres: "Membres",
   permissions: "Permissions",
+  outils: "Gestion des outils",
+  ressources: "Gestion des ressources",
 };
 
 const pageLabels: Record<string, string> = {
@@ -50,8 +52,8 @@ export default function AdminBreadcrumbs() {
   }, [pathname, query]);
 
   const crumbs = useMemo<Crumb[]>(() => {
-    if (current?.key === "apps" && pathname.startsWith("/admin/apps")) {
-      const root: Crumb[] = [{ label: "Gestion des outils", href: "/admin/apps" }];
+    if (current?.key === "admin" && pathname.startsWith("/admin/apps")) {
+      const root: Crumb[] = [{ label: "Admin", href: "/gestion/admin" }, { label: "Gestion des outils", href: "/gestion/admin?onglet=outils" }];
       if (pathname === "/admin/apps") return [];
       if (pathname.endsWith("/nouveau")) return [...root, { label: "Ajouter un outil" }];
       const segments = pathname.split("/").filter(Boolean);

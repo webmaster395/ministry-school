@@ -22,7 +22,7 @@ import {
 } from "@/app/gestion/cours/actions";
 
 type Choice = { id: string; name: string };
-type CreationContext = "admin" | "ministry";
+type CreationContext = "admin" | "ministry" | "formation";
 
 const field =
   "mt-1.5 min-h-11 w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-[15px] text-foreground outline-none transition focus:border-foreground";
@@ -59,7 +59,8 @@ export default function CourseCreationDialog({
     {},
   );
   const ministry = context === "ministry";
-  const title = ministry ? "Créer un cours ministériel" : "Créer un cours";
+  const formation = context === "formation";
+  const title = ministry ? "Créer un cours ministériel" : formation ? "Créer un cours dans cette formation" : "Créer un cours";
   const nav = useMemo(
     () => [
       ["informations", "Informations"],
@@ -104,6 +105,7 @@ export default function CourseCreationDialog({
               >
                 <input type="hidden" name="creation_context" value={context} />
                 {ministry && <input type="hidden" name="ministry_id" value={parentId ?? ""} />}
+                {formation && <input type="hidden" name="formation_id" value={parentId ?? ""} />}
 
                 <header className="border-b border-border bg-background px-5 py-4 sm:px-7 sm:py-5">
                   <div className="flex items-start justify-between gap-4">
@@ -125,7 +127,7 @@ export default function CourseCreationDialog({
                     <div className="mt-4 grid gap-4">
                       <label className="text-sm font-medium text-foreground">Titre du cours <Required /><input autoFocus name="title" required placeholder="Ex. Développer une écoute qui accompagne" className={field} /></label>
                       <label className="text-sm font-medium text-foreground">Présentation<textarea name="summary" rows={4} placeholder="Présentez le sujet, l’approche et ce que les participants vont découvrir…" className={`${field} resize-y leading-6`} /></label>
-                      {!ministry && (
+                      {!ministry && !formation && (
                         <label className="text-sm font-medium text-foreground">Catégorie
                           <AdminSelect name="track" value={category} onValueChange={setCategory} className="mt-1.5" options={["Formation du cœur", "Formation du caractère", "Sensibilité ministérielle", "Mise en pratique"].map((value) => ({ value, label: value }))} />
                         </label>
@@ -152,7 +154,7 @@ export default function CourseCreationDialog({
                   <section id="creation-pedagogie" className={section}>
                     <SectionTitle icon={<Presentation size={18} />} title="Cadre pédagogique" help="Ajoutez les personnes, objectifs et références utiles. Chaque liste se complète avec Entrée." />
                     <div className="mt-4 space-y-4">
-                      {context === "admin" && trainers.length > 0 && <label className="block text-sm font-medium text-foreground">Intervenant principal<AdminSelect name="trainer_id" className="mt-1.5" placeholder="Choisir dans l’annuaire" searchable options={trainers.map((item) => ({ value: item.id, label: item.name }))} /></label>}
+                      {(context === "admin" || formation) && trainers.length > 0 && <label className="block text-sm font-medium text-foreground">Intervenant principal<AdminSelect name="trainer_id" className="mt-1.5" placeholder="Choisir dans l’annuaire" searchable options={trainers.map((item) => ({ value: item.id, label: item.name }))} /></label>}
                       <DynamicListInput name="speaker_items" label="Intervenants" placeholder="Nom de l’intervenant" />
                       <DynamicListInput name="objective_items" label="Objectifs pédagogiques" placeholder="Un objectif clair et concret" />
                       <label className="block text-sm font-medium text-foreground">Références bibliques <span className="font-normal text-muted">(facultatif)</span><textarea name="bible_refs" rows={3} placeholder="Un passage ou une référence par ligne" className={`${field} resize-y`} /></label>

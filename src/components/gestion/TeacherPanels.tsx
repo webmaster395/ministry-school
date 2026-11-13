@@ -58,6 +58,7 @@ type Assignment = {
   duration_min: number | null;
   due_at: string | null;
   visible_at?: string | null;
+  audience?: "authorized" | "enrolled" | "present";
 };
 type Material = {
   id: string;
@@ -68,6 +69,7 @@ type Material = {
   file_url: string | null;
   visible_at?: string | null;
   resource_type?: string | null;
+  audience?: "authorized" | "enrolled" | "present";
 };
 type AssignmentStep = {
   id: string;
@@ -131,8 +133,10 @@ export function teacherPanels(
   assignments: Assignment[],
   materialRows: readonly unknown[],
   assignmentSteps: AssignmentStep[] = [],
+  options: { privateResources?: boolean } = {},
 ): Record<string, ReactNode> {
   const materials = materialRows as Material[];
+  const privateResources = !!options.privateResources;
   const isScheduled = (value: string | null | undefined) =>
     !!value && new Date(value).getTime() > Date.now();
   const before = assignments.filter((a) =>
@@ -435,6 +439,7 @@ export function teacherPanels(
                   <div className="sm:col-span-2">
                     <AvailabilityPicker value={a.visible_at} scheduled={isScheduled(a.visible_at)} label="Disponibilité du devoir" />
                   </div>
+                  {privateResources && <AdminSelect name="audience" defaultValue={a.audience ?? (a.phase === "before" ? "enrolled" : "present")} options={[{value:"enrolled",label:"Tous les inscrits"},{value:"present",label:"Uniquement les présents à cette séance"}]} />}
                   <FormSubmitButton
                     className={`${save} sm:col-span-2 sm:justify-self-start`}
                   />
@@ -483,6 +488,7 @@ export function teacherPanels(
       >
         <input type="hidden" name="session_id" value={s.id} />
         <input type="hidden" name="phase" value={phase} />
+        {privateResources && <input type="hidden" name="audience" value={phase === "before" ? "enrolled" : "present"} />}
         <input
           name="title"
           required
@@ -672,9 +678,11 @@ export function teacherPanels(
                   <MaterialLink
                     title={m.title}
                     url={m.link_url ?? m.file_url}
+                    materialId={m.id}
                   />
                   <span className="mt-0.5 block text-[13px] text-muted">
                     {[m.resource_type, formatAvailability(m.visible_at)]
+                      .concat(privateResources ? [m.audience === "present" ? "Présents uniquement" : "Tous les inscrits"] : [])
                       .filter(Boolean)
                       .join(" · ")}
                   </span>
@@ -736,13 +744,14 @@ export function teacherPanels(
                     <div className="w-full min-w-[280px]">
                       <AvailabilityPicker value={m.visible_at} scheduled={isScheduled(m.visible_at)} label="Disponibilité du support" />
                     </div>
+                    {privateResources && <AdminSelect name="audience" defaultValue={m.audience ?? "present"} options={[{value:"present",label:"Uniquement les présents à cette séance"},{value:"enrolled",label:"Tous les inscrits"}]} />}
                   </Edit>
                 </div>
               </li>
             ))}
           </ul>
         )}
-        <ResourceDialog sessionId={s.id} withTypes />
+        <ResourceDialog sessionId={s.id} withTypes privateFiles={privateResources} />
       </div>
     ),
     apres: (

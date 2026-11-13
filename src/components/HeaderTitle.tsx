@@ -14,7 +14,7 @@ const TITLES: Record<string, string> = {
   "/gestion/enseignement": "Préparer mes cours",
   "/gestion/pilotage": "Pilotage ministériel",
   "/etudiant/calendrier": "Mon calendrier",
-  "/etudiant/formation": "Mon ministère",
+  "/etudiant/formation": "Ministère",
   "/etudiant/profil": "Profil",
   "/etudiant/preferences": "Préférences",
   "/etudiant/identite/mes-moteurs": "Test des héros",
@@ -42,6 +42,8 @@ const ADMIN_TABS: Record<string, string> = {
   membres: "Membres",
   permissions: "Permissions",
   roles: "Permissions",
+  outils: "Gestion des outils",
+  ressources: "Gestion des ressources",
 };
 
 /**
@@ -64,6 +66,7 @@ function adminPageTitle(pathname: string, tab: string | null) {
   if (pathname.startsWith("/gestion/super-admin/roles")) return "Permissions";
   if (pathname.startsWith("/gestion/super-admin/cours")) return "Cours et formations";
   if (pathname.startsWith("/gestion/projets-formations")) return "Projets et formations";
+  if (pathname.startsWith("/gestion/formations")) return "Formations";
   if (pathname.startsWith("/gestion/enseignement/preparation/")) return "Cours et formations";
   return "Admin";
 }

@@ -26,6 +26,8 @@ export async function addSupport(formData: FormData) {
     session_id: sessionId,
     title: text("title"),
     link_url: text("link_url") || null,
+    file_url: text("file_url") || null,
+    ...(text("audience") ? { audience: text("audience") } : {}),
     visible_at: visibleAt,
     created_by: user.id,
     description: text("description") || null,
@@ -71,6 +73,7 @@ export async function addPilotAssignment(formData: FormData) {
     duration_min: Number.isFinite(duration) && duration > 0 ? duration : null,
     due_at: due ? new Date(due).toISOString() : null,
     visible_at: parseAvailability(formData),
+    ...(text("audience") ? { audience: text("audience") } : {}),
   });
   if (error)
     throw new Error("L'ajout de la consigne a échoué : " + error.message);
@@ -260,6 +263,7 @@ export async function updateAssignment(formData: FormData) {
       resource_url: str(formData, "resource_url") || null,
       duration_min: Number.isFinite(duration) && duration > 0 ? duration : null,
       visible_at: parseAvailability(formData),
+      ...(formData.has("audience") ? { audience: str(formData, "audience") } : {}),
     })
     .eq("id", str(formData, "id"))
     .select("id");
@@ -282,7 +286,7 @@ export async function duplicateAssignment(formData: FormData) {
   const { data: source, error: readError } = await supabase
     .from("assignments")
     .select(
-      "title,description,instructions,content_type,resource_url,file_url,phase,sort_order,kind,duration_min,due_at,visible_at",
+      "title,description,instructions,content_type,resource_url,file_url,phase,sort_order,kind,duration_min,due_at,visible_at,audience",
     )
     .eq("id", id)
     .single();
@@ -311,6 +315,7 @@ export async function updateSupport(formData: FormData) {
     resource_type?: string | null;
     link_url?: string | null;
     visible_at: string;
+    audience?: string;
   } = {
     title,
     description: str(formData, "description") || null,
@@ -319,6 +324,7 @@ export async function updateSupport(formData: FormData) {
   };
   if (formData.has("link_url"))
     changes.link_url = str(formData, "link_url") || null;
+  if (formData.has("audience")) changes.audience = str(formData, "audience");
   const { data, error } = await supabase
     .from("materials")
     .update(changes)

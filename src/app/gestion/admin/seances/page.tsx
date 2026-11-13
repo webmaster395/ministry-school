@@ -115,7 +115,7 @@ export default async function AdminSessionsPage() {
             <datalist id="parcours">
               <option value="Formation du cœur" />
               <option value="Formation du caractère" />
-              <option value="Accélérateur de projet" />
+              <option value="Projets et formations" />
             </datalist>
           </div>
 

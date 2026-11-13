@@ -17,6 +17,8 @@ export type StudentSession = {
   description: string | null;
   objectives: string | null;
   course_id: string | null;
+  formation_id?: string | null;
+  formation?: { category_key: "heart" | "character" | "sensitivity" | "deepening" } | null;
   courses: { id: string; title: string } | null;
   teacher: { full_name: string } | null;
   speaker_name?: string | null;
@@ -37,7 +39,7 @@ export type StudentSession = {
 };
 
 const SESSION_FIELDS =
-  "id, session_date, start_time, end_time, location, room, day, session_type, ministry_id, description, objectives, speaker_name, track, summary, bible_refs, show_parking_notice, editorial_status, publication_at, course_id, courses(id, title), teacher:profiles!sessions_teacher_id_fkey(full_name)";
+  "id, session_date, start_time, end_time, location, room, day, session_type, ministry_id, description, objectives, speaker_name, track, summary, bible_refs, show_parking_notice, editorial_status, publication_at, course_id, formation_id, formation:formations(category_key), courses(id, title), teacher:profiles!sessions_teacher_id_fkey(full_name)";
 
 export function studentSessionTrainerNames(session: StudentSession) {
   if (session.trainers?.length) {
@@ -113,7 +115,7 @@ async function getCommonSessions(supabase: SupabaseClient) {
 
   const sessions: StudentSession[] = (
     (data ?? []) as unknown as StudentSession[]
-  ).map((s) => {
+  ).filter((session) => session.formation?.category_key !== "deepening").map((s) => {
     // Le nom saisi sur la séance prime : il désigne la personne qui donne réellement le cours
     if (s.speaker_name) {
       return { ...s, teacher: { full_name: s.speaker_name } };
@@ -141,9 +143,11 @@ function sortByDateThenTime(a: StudentSession, b: StudentSession) {
 }
 
 function normalizeStudentSessions(sessions: StudentSession[]) {
-  // Aucune donnée éditoriale n'est réécrite ici : Supabase reste l'unique source
-  // de vérité pour l'Accueil, le Calendrier et les pages de cours.
-  return sessions.sort(sortByDateThenTime);
+  // L'ancien intitulé désigne le même créneau pédagogique. On le normalise à
+  // l'affichage sans fusionner ni supprimer ses données historiques.
+  return sessions.map((session) => /accélérateur de projet/i.test(session.track ?? "")
+    ? { ...session, track: "Projets et formations" }
+    : session).sort(sortByDateThenTime);
 }
 
 async function attachCentralizedTrainers(
@@ -255,10 +259,29 @@ export async function getStudentAllSessions(
     .select("ministry_id, preferred_day")
     .eq("id", userId)
     .single();
-  return getStudentProgram(
-    (profile?.ministry_id as string | null | undefined) ?? null,
-    (profile?.preferred_day as string | null | undefined) ?? null,
-  );
+  const [program, deepening] = await Promise.all([
+    getStudentProgram(
+      (profile?.ministry_id as string | null | undefined) ?? null,
+      (profile?.preferred_day as string | null | undefined) ?? null,
+    ),
+    getStudentDeepeningSessions(supabase),
+  ]);
+  return [...program, ...deepening]
+    .filter((session, index, rows) => rows.findIndex((candidate) => candidate.id === session.id) === index)
+    .sort(sortByDateThenTime);
+}
+
+/** Séances d’approfondissement visibles grâce à une inscription active.
+ * La politique restrictive sur sessions constitue le contrôle d’accès final. */
+export async function getStudentDeepeningSessions(supabase: SupabaseClient) {
+  const { data, error } = await supabase
+    .from("sessions")
+    .select(`${SESSION_FIELDS}, formation:formations!inner(category_key)`)
+    .eq("formation.category_key", "deepening")
+    .order("session_date")
+    .order("start_time");
+  if (error) return [];
+  return (data ?? []) as unknown as StudentSession[];
 }
 
 /**

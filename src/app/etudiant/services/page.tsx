@@ -75,7 +75,7 @@ export default async function ServicesPage({
       ? hasUpcomingSession(o) && !mine.has(o.id)
       : tab === "inscriptions"
         ? hasUpcomingSession(o) && mine.has(o.id)
-        : !hasUpcomingSession(o) && mine.has(o.id);
+        : !hasUpcomingSession(o);
 
   const tabbed = published.filter(inTab);
   const tabbedIds = new Set(tabbed.map((opportunity) => opportunity.id));

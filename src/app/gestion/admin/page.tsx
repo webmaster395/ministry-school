@@ -8,6 +8,10 @@ import StatisticsTab from "@/components/admin/StatisticsTab";
 import { getMinistries, getMonthlyActiveUsers, getOpportunityAnalytics, getProgramAnalytics, getTrainingDayDates, getUsageAnalytics } from "@/lib/data/admin";
 import { getViewer } from "@/lib/data/viewer";
 import ManagementPageHeader from "@/components/management/ManagementPageHeader";
+import AppCatalogManager, { StudentToolsSetting } from "@/components/apps-studio/AppCatalogManager";
+import { getCatalogApps, getStudentToolsEnabled } from "@/lib/apps/catalog";
+import AdminResourcesTab from "@/components/admin/AdminResourcesTab";
+import { Plus } from "lucide-react";
 
 type Params = {
   onglet?: string;
@@ -32,9 +36,28 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
   if (!viewer?.roles.superAdmin) redirect("/etudiant");
 
   if (["permissions", "roles"].includes(p.onglet ?? "")) redirect("/gestion/admin?onglet=membres&vue=permissions");
-  if (p.onglet === "programme") redirect("/gestion/admin/cours-formations");
-  const tab = p.onglet === "membres" ? "membres" : "pilotage";
+  if (p.onglet === "programme") redirect("/gestion/formations");
+  const tab = ["membres", "outils", "ressources"].includes(p.onglet ?? "") ? p.onglet! : "pilotage";
   const supabase = await createClient();
+
+  if (tab === "outils") {
+    const [catalog, studentToolsEnabled] = await Promise.all([
+      getCatalogApps({ includeUnpublished: true, includeArchived: true, channel: "admin" }),
+      getStudentToolsEnabled(),
+    ]);
+    return <div className="space-y-6">
+      <ManagementPageHeader eyebrow="ADMIN" title="Gestion des outils" subtitle="Publication, emplacements et présentation des outils pédagogiques." mobileTitleInAppBar actions={<Link href="/admin/apps/nouveau" className="inline-flex min-h-10 items-center gap-2 rounded-full bg-accent px-4 text-xs font-semibold text-on-accent"><Plus size={15} /> Ajouter un outil</Link>} />
+      <StudentToolsSetting enabled={studentToolsEnabled} />
+      <AppCatalogManager apps={catalog.filter((app) => !app.archivedAt)} archivedApps={catalog.filter((app) => !!app.archivedAt)} studentToolsEnabled={studentToolsEnabled} />
+    </div>;
+  }
+
+  if (tab === "ressources") {
+    return <div className="space-y-6">
+      <ManagementPageHeader eyebrow="ADMIN" title="Gestion des ressources" subtitle="Retrouvez les supports partagés dans les cours, projets et formations." mobileTitleInAppBar />
+      <AdminResourcesTab supabase={supabase} q={p.q ?? ""} />
+    </div>;
+  }
 
   if (tab === "pilotage") {
     const [members, ministries, trainingDates, monthlyActivity, usage, opportunities] = await Promise.all([
