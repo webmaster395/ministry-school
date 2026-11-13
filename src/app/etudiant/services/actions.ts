@@ -153,6 +153,32 @@ export async function cancelOpportunityDate(formData: FormData) {
   refreshOpportunity(id);
 }
 
+/** Ajoute l’étudiant à la liste d’attente d’une séance complète. */
+export async function joinOpportunityDateWaitlist(formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Non authentifié");
+  const id = text(formData, "opportunity_id");
+  const dateId = text(formData, "date_id");
+  const { error } = await supabase.rpc("join_opportunity_date_waitlist", { p_date: dateId });
+  if (error?.message.includes("PLACES_AVAILABLE")) throw new Error("Une place est disponible : inscrivez-vous directement.");
+  if (error?.message.includes("ALREADY_REGISTERED")) throw new Error("Vous êtes déjà inscrit à cette séance.");
+  if (error) throw new Error("L’inscription à la liste d’attente a échoué.");
+  refreshOpportunity(id);
+}
+
+/** Retire l’étudiant de la liste d’attente sans modifier les inscriptions confirmées. */
+export async function leaveOpportunityDateWaitlist(formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error("Non authentifié");
+  const id = text(formData, "opportunity_id");
+  const dateId = text(formData, "date_id");
+  const { error } = await supabase.rpc("leave_opportunity_date_waitlist", { p_date: dateId });
+  if (error) throw new Error("La sortie de la liste d’attente a échoué.");
+  refreshOpportunity(id);
+}
+
 /** Crée un élément complet. La fonction SQL vérifie de nouveau le rôle administrateur. */
 export async function createOpportunity(formData: FormData) {
   const supabase = await createClient();

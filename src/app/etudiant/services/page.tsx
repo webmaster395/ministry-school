@@ -119,9 +119,11 @@ export default async function ServicesPage({
       </div>
 
       {shown.length ? (
-        <ul className="overflow-hidden rounded-2xl border border-border bg-background">
+        <ul className="grid gap-4 lg:grid-cols-2">
           {shown.map((o) => {
             const places = placesLabel(o, taken(o));
+            const remaining = o.capacity === null ? null : Math.max(0, o.capacity - taken(o));
+            const fill = o.capacity === null ? 0 : Math.min(100, Math.round((taken(o) / o.capacity) * 100));
             const organizer = o.organizer_label ?? o.services?.name;
             const type = opportunityType(o);
             const accent = type === "projet" ? "var(--f-projet)" : type === "formation" ? "var(--f-coeur)" : "var(--f-sensibilite)";
@@ -129,18 +131,19 @@ export default async function ServicesPage({
               <li key={o.id}>
                 <Link
                   href={`/etudiant/services/${o.id}`}
-                  className="group grid gap-3 border-b border-l-4 border-border-soft p-4 transition last:border-b-0 hover:brightness-[.985] sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:px-5"
-                  style={{ borderLeftColor: accent, background: `color-mix(in srgb, ${accent} 5%, var(--background))` }}
+                  className="group flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-background p-5 shadow-[0_10px_36px_rgba(24,34,30,.06)] transition hover:-translate-y-0.5 hover:shadow-[0_16px_44px_rgba(24,34,30,.1)] sm:p-6"
                 >
-                  <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-2"><span className="grid h-8 w-8 place-items-center rounded-xl text-[17px]" style={{ background: `color-mix(in srgb, ${accent} 18%, white)` }}>{o.banner_emoji || (type === "formation" ? "✦" : "◆")}</span><span className="rounded-full px-2.5 py-1 text-[11px] font-semibold" style={{ color: accent, background: `color-mix(in srgb, ${accent} 13%, white)` }}>{TYPE_LABEL[type]}</span><span className="text-[12px] font-semibold text-muted">
-                      {mine.has(o.id) && status(o) !== "termine" ? "Inscrit" : status(o) === "disponible" ? "M’inscrire" : STATUS_LABEL[status(o)]}
-                    </span></div>
-                    <h2 className="mt-2 text-[17px] font-semibold text-foreground">{o.title}</h2>
-                  <p className="mt-1 line-clamp-2 text-[14px] leading-relaxed text-muted">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex flex-wrap items-center gap-2"><span className="grid h-10 w-10 place-items-center rounded-2xl text-[18px]" style={{ background: `color-mix(in srgb, ${accent} 18%, white)` }}>{o.banner_emoji || (type === "formation" ? "✦" : "◆")}</span><span className="rounded-full px-3 py-1.5 text-[11px] font-semibold" style={{ color: accent, background: `color-mix(in srgb, ${accent} 13%, white)` }}>{TYPE_LABEL[type]}</span></div>
+                    <span className="rounded-full bg-surface px-3 py-1.5 text-[11px] font-semibold text-foreground">
+                      {mine.has(o.id) && status(o) !== "termine" ? "Inscrit" : status(o) === "complet" ? "Liste d’attente" : status(o) === "disponible" ? "Inscriptions ouvertes" : STATUS_LABEL[status(o)]}
+                    </span>
+                  </div>
+                  <h2 className="mt-5 text-[20px] font-semibold leading-tight text-foreground">{o.title}</h2>
+                  <p className="mt-2 line-clamp-3 text-[14px] leading-6 text-muted">
                     {plainTextContent(o.short_description || o.description)}
                   </p>
-                  <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-[13px] text-muted">
+                  <ul className="mt-5 grid gap-2 text-[13px] text-muted sm:grid-cols-2">
                     {organizer && (
                       <li className="flex items-center gap-2.5">
                         <CircleUser size={17} strokeWidth={1.6} /> {organizer}
@@ -152,18 +155,12 @@ export default async function ServicesPage({
                       </li>
                     )}
                     {o.location && <li className="flex items-center gap-2.5"><MapPin size={16} />{o.location}</li>}
-                    <li className="flex items-center gap-2.5">
-                      <span className="flex items-center gap-2.5">
-                        {places && status(o) !== "complet" && (
-                          <>
-                            <Users size={17} strokeWidth={1.6} /> {places}
-                          </>
-                        )}
-                      </span>
-                    </li>
                   </ul>
+                  <div className="mt-5 rounded-2xl p-4" style={{ background: `color-mix(in srgb, ${accent} 8%, var(--background))` }}>
+                    <div className="flex items-start gap-3"><Users size={18} className="mt-0.5 shrink-0" /><div className="min-w-0"><strong className="block text-[14px] text-foreground">{places}</strong>{remaining === 0 && <span className="mt-1 block text-xs text-muted">La séance est complète, mais la liste d’attente est ouverte.</span>}</div></div>
+                    {o.capacity !== null && <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-background/80"><span className="block h-full rounded-full" style={{ width: `${fill}%`, background: accent }} /></div>}
                   </div>
-                  <span className="inline-flex items-center justify-between gap-2 text-[13px] font-semibold text-foreground sm:justify-end">Voir et choisir <ChevronRight size={17} className="transition group-hover:translate-x-1" /></span>
+                  <span className="mt-5 inline-flex items-center justify-between gap-2 border-t border-border-soft pt-4 text-[13px] font-semibold text-foreground">Voir le détail et choisir <ChevronRight size={17} className="transition group-hover:translate-x-1" /></span>
                 </Link>
               </li>
             );

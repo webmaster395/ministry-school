@@ -102,9 +102,19 @@ export function isPublished(o: Opportunity, now = new Date()) {
 }
 
 export function placesLabel(o: Opportunity, taken: number) {
-  if (o.capacity === null) return null;
-  const left = Math.max(0, o.capacity - taken);
-  return studentPlacesLabel(left);
+  return capacityPlacesLabel(taken, o.capacity);
+}
+
+export function capacityPlacesLabel(taken: number, capacity: number | null) {
+  if (capacity === null) return `${taken} inscrit${taken > 1 ? "s" : ""} · places illimitées`;
+  const normalizedTaken = Math.max(0, taken);
+  const remaining = Math.max(0, capacity - normalizedTaken);
+  const availability = remaining === 0
+    ? "Complet"
+    : remaining === 1
+      ? "Encore 1 place disponible"
+      : `Encore ${remaining} places disponibles`;
+  return `${normalizedTaken}/${capacity} places · ${availability}`;
 }
 
 /** L'alerte de rareté n'est affichée que pour les cinq dernières places. */
@@ -163,6 +173,14 @@ export async function getMyRegistrationIds(supabase: SupabaseClient, userId: str
 export async function getMyOpportunityDateRegistrationIds(supabase: SupabaseClient, userId: string) {
   const { data } = await supabase
     .from("opportunity_date_registrations")
+    .select("opportunity_date_id")
+    .eq("user_id", userId);
+  return new Set((data ?? []).map((row) => row.opportunity_date_id as string));
+}
+
+export async function getMyOpportunityDateWaitlistIds(supabase: SupabaseClient, userId: string) {
+  const { data } = await supabase
+    .from("opportunity_date_waitlist")
     .select("opportunity_date_id")
     .eq("user_id", userId);
   return new Set((data ?? []).map((row) => row.opportunity_date_id as string));

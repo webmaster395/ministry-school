@@ -2,20 +2,22 @@ import { CalendarDays, Check, Clock, ExternalLink, FileText, Link2, MapPin, Pack
 import { redirect } from "next/navigation";
 import BackButton from "@/components/BackButton";
 import OpportunityBanner from "@/components/OpportunityBanner";
+import OpportunityRegistrationButton from "@/components/OpportunityRegistrationButton";
 import { createClient } from "@/lib/supabase/server";
 import {
   getMyOpportunityDateRegistrationIds,
+  getMyOpportunityDateWaitlistIds,
   getOpportunities,
   getOpportunityDateCounts,
   getOpportunityDates,
   getProjectsTrainingRights,
   isPublished,
-  studentPlacesLabel,
+  capacityPlacesLabel,
   opportunityType,
   TYPE_LABEL,
 } from "@/lib/data/opportunities";
 import { linesOf } from "@/lib/opportunity-details";
-import { cancelOpportunityDate, registerOpportunityDates } from "../actions";
+import { cancelOpportunityDate, joinOpportunityDateWaitlist, leaveOpportunityDateWaitlist, registerOpportunityDates } from "../actions";
 import { getOpportunityResources } from "@/lib/data/opportunity-resources";
 import StrategicVisionSection from "@/components/StrategicVisionSection";
 import FormattedContent from "@/components/FormattedContent";
@@ -38,9 +40,10 @@ export default async function OpportunityPage({ params, searchParams }: { params
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
-  const [all, registeredDates, rights, dates, dateCounts, resources] = await Promise.all([
+  const [all, registeredDates, waitlistedDates, rights, dates, dateCounts, resources] = await Promise.all([
     getOpportunities(supabase),
     getMyOpportunityDateRegistrationIds(supabase, user.id),
+    getMyOpportunityDateWaitlistIds(supabase, user.id),
     getProjectsTrainingRights(supabase, user.id),
     getOpportunityDates(supabase, id),
     getOpportunityDateCounts(supabase, id),
@@ -89,7 +92,7 @@ export default async function OpportunityPage({ params, searchParams }: { params
           {tools.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Outils utilisés</h2><BulletList items={tools} /></section>}
           {materials.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title flex items-center gap-2 text-[25px]"><PackageCheck size={22} /> Matériel à apporter</h2><BulletList items={materials} /></section>}
 
-          {resources.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Supports et ressources</h2><div className="mt-4 grid gap-3 sm:grid-cols-2">{resources.map((resource) => { const Icon = resource.kind === "support" ? FileText : resource.kind === "link" ? Link2 : PackageOpen; return <a key={resource.id} href={`/etudiant/services/${o.id}/ressources/${resource.id}/ouvrir`} target="_blank" rel="noreferrer" className="group flex items-start gap-3 rounded-2xl border border-border bg-background p-4 transition hover:border-foreground hover:shadow-sm"><span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-surface"><Icon size={20} /></span><span className="min-w-0 flex-1"><strong className="block break-words text-sm">{resource.title}</strong>{resource.description && <span className="mt-1.5 block whitespace-pre-line text-sm leading-5 text-muted">{resource.description}</span>}<small className="mt-1.5 block text-muted">{resource.kind === "support" ? "Support de cours" : resource.kind === "link" ? "Lien" : "Ressource"}</small></span><ExternalLink size={16} className="mt-1 shrink-0 text-muted transition group-hover:text-foreground" /></a>; })}</div></section>}
+          {resources.length > 0 && <section className="border-t border-border-soft pt-7"><h2 className="font-title text-[25px]">Supports et ressources</h2><p className="mt-1 text-sm text-muted">Réservés aux personnes inscrites, ces documents sont disponibles après la séance.</p><div className="mt-4 grid gap-3 sm:grid-cols-2">{resources.map((resource) => { const Icon = resource.kind === "support" ? FileText : resource.kind === "link" ? Link2 : PackageOpen; return <a key={resource.id} href={`/etudiant/services/${o.id}/ressources/${resource.id}/ouvrir`} target="_blank" rel="noreferrer" className="group flex items-start gap-3 rounded-2xl border border-border bg-background p-4 transition hover:border-foreground hover:shadow-sm"><span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-surface"><Icon size={20} /></span><span className="min-w-0 flex-1"><strong className="block break-words text-sm">{resource.title}</strong>{resource.description && <span className="mt-1.5 block whitespace-pre-line text-sm leading-5 text-muted">{resource.description}</span>}<small className="mt-1.5 block text-muted">{resource.kind === "support" ? "Support de cours" : resource.kind === "link" ? "Lien" : "Ressource"}</small></span><ExternalLink size={16} className="mt-1 shrink-0 text-muted transition group-hover:text-foreground" /></a>; })}</div></section>}
 
           <section className="border-t border-border-soft pt-7">
             <h2 className="font-title text-[25px]">Les séances</h2>
@@ -102,17 +105,22 @@ export default async function OpportunityPage({ params, searchParams }: { params
                 const registered = registeredDates.has(date.id);
                 const full = remaining === 0;
                 const past = date.session_date < today;
-                const availability = studentPlacesLabel(remaining);
+                const availability = capacityPlacesLabel(taken, date.capacity);
+                const waitlisted = waitlistedDates.has(date.id);
                 return <div key={date.id} className={`rounded-2xl border p-4 sm:p-5 ${registered ? "border-accent bg-accent/[.06]" : "border-border"}`}>
-                  <div className="flex items-start gap-3">
+                  <div className="flex flex-wrap items-start gap-3">
                     {!registered && !past && !full && o.registration_open && <input type="checkbox" name="date_ids" value={date.id} className="mt-1 h-5 w-5 accent-[var(--accent)]" aria-label={`Sélectionner la séance ${index+1}`} />}
                     {registered && <span className="mt-0.5 grid h-6 w-6 place-items-center rounded-full bg-accent text-on-accent"><Check size={14} /></span>}
-                    <div className="min-w-0 flex-1"><p className="font-semibold capitalize text-foreground">{fullDate(date.session_date)}</p><p className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted"><span className="inline-flex items-center gap-1.5"><Clock size={15} /> {hm(date.start_time)}–{hm(date.end_time)}</span>{(date.location || o.location) && <span className="inline-flex items-center gap-1.5"><MapPin size={15} /> {date.location || o.location}</span>}{registered ? <span className="inline-flex items-center gap-1.5 font-semibold text-foreground"><Check size={15} /> Inscrit</span> : availability && <span className={`inline-flex items-center gap-1.5 font-semibold ${full ? "text-foreground" : "text-[#9A5B00]"}`}><Users size={15} /> {availability}</span>}</p></div>
+                    <div className="min-w-0 flex-1"><p className="font-semibold capitalize text-foreground">{fullDate(date.session_date)}</p><p className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted"><span className="inline-flex items-center gap-1.5"><Clock size={15} /> {hm(date.start_time)}–{hm(date.end_time)}</span>{(date.location || o.location) && <span className="inline-flex items-center gap-1.5"><MapPin size={15} /> {date.location || o.location}</span>}{registered ? <span className="inline-flex items-center gap-1.5 font-semibold text-foreground"><Check size={15} /> Inscrit</span> : <span className={`inline-flex items-center gap-1.5 font-semibold ${full ? "text-foreground" : "text-[#9A5B00]"}`}><Users size={15} /> {availability}</span>}</p></div>
                     {registered && o.cancellation_allowed && <button formAction={cancelOpportunityDate} name="date_id" value={date.id} className="shrink-0 text-xs font-semibold text-muted underline underline-offset-2">Annuler</button>}
+                    {!registered && !past && full && o.registration_open && (waitlisted
+                      ? <button formAction={leaveOpportunityDateWaitlist} name="date_id" value={date.id} className="w-full rounded-full border border-border px-3 py-2 text-xs font-semibold sm:w-auto">Quitter la liste d’attente</button>
+                      : <button formAction={joinOpportunityDateWaitlist} name="date_id" value={date.id} className="w-full rounded-full bg-foreground px-3 py-2 text-xs font-semibold text-background sm:w-auto">Rejoindre la liste d’attente</button>)}
                   </div>
+                  {waitlisted && !registered && <p className="mt-3 rounded-xl bg-surface px-3 py-2 text-xs font-medium text-foreground">Tu es sur la liste d’attente. Si une place se libère, ton inscription sera confirmée automatiquement.</p>}
                 </div>;
               })}
-              {selectable.length > 0 && o.registration_open && <button className="w-full rounded-full bg-accent px-6 py-3.5 text-sm font-semibold text-on-accent sm:w-auto">M’inscrire</button>}
+              {selectable.length > 0 && o.registration_open && <OpportunityRegistrationButton prerequisites={o.participation_prerequisites_required ? prerequisites : []} />}
             </form>
           </section>
         </article>
