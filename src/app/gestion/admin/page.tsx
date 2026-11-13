@@ -37,7 +37,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
   if (!viewer?.roles.superAdmin) redirect("/etudiant");
 
   if (["permissions", "roles"].includes(p.onglet ?? "")) redirect("/gestion/admin?onglet=membres&vue=permissions");
-  if (p.onglet === "programme") redirect("/gestion/formations");
+  if (p.onglet === "programme") redirect("/gestion/formations?scope=admin");
   const tab = ["membres", "outils", "ressources"].includes(p.onglet ?? "") ? p.onglet! : "pilotage";
   const supabase = await createClient();
 
@@ -93,7 +93,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
 
   const permissions = p.vue === "permissions";
   return <div className="space-y-5">
-    <ManagementPageHeader eyebrow="SUPER ADMIN" title="Membres" subtitle="Retrouvez chaque membre, sa fiche, ses résultats MAPP et l’ensemble de ses permissions." mobileTitleInAppBar />
+    <ManagementPageHeader eyebrow="SUPER ADMIN" title="Utilisateurs et accès" subtitle="Retrouvez chaque membre, sa fiche, ses résultats MAPP et l’ensemble de ses permissions." mobileTitleInAppBar />
     <nav aria-label="Sections des membres" className="inline-flex rounded-xl border border-border bg-background p-1">
       <Link href="/gestion/admin?onglet=membres" aria-current={!permissions ? "page" : undefined} className={`rounded-lg px-4 py-2.5 text-sm font-semibold ${!permissions ? "bg-accent text-on-accent" : "text-muted hover:bg-surface hover:text-foreground"}`}>Annuaire</Link>
       <Link href="/gestion/admin?onglet=membres&vue=permissions" aria-current={permissions ? "page" : undefined} className={`rounded-lg px-4 py-2.5 text-sm font-semibold ${permissions ? "bg-accent text-on-accent" : "text-muted hover:bg-surface hover:text-foreground"}`}>Permissions</Link>

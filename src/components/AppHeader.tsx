@@ -3,6 +3,7 @@ import HeaderTitle from "./HeaderTitle";
 import LogoutButton from "./LogoutButton";
 import HeaderBadge from "./HeaderBadge";
 import MobileNav from "./MobileNav";
+import AdminViewSelector from "./AdminViewSelector";
 
 export default async function AppHeader() {
   const viewer = await getViewer();
@@ -22,12 +23,7 @@ export default async function AppHeader() {
         </div>
 
         <div className="app-header__actions flex max-w-full shrink-0 flex-wrap items-center justify-end gap-x-3 gap-y-2 sm:gap-x-4">
-          <HeaderBadge
-            firstName={firstName}
-            ministrySlug={viewer?.ministrySlug ?? null}
-            showPicto={hasPicto}
-            avatarUrl={viewer?.avatarUrl ?? null}
-          />
+          {viewer?.roles.superAdmin ? <AdminViewSelector firstName={firstName} avatarUrl={viewer.avatarUrl} /> : <HeaderBadge firstName={firstName} ministrySlug={viewer?.ministrySlug ?? null} showPicto={hasPicto} avatarUrl={viewer?.avatarUrl ?? null} />}
           <LogoutButton />
         </div>
       </div>

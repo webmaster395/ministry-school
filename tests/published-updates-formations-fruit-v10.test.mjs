@@ -12,17 +12,18 @@ test("a published opportunity stays live after manager or editable contributor c
   assert.match(migration, /status = 'approved'/);
 });
 
-test("formations expose upcoming courses and deepening course creation", async () => {
-  const [formations, detail, courses] = await Promise.all([
+test("formations use one category navigation and expose course creation", async () => {
+  const [formations, detail] = await Promise.all([
     read("src/app/gestion/formations/page.tsx"),
     read("src/app/gestion/formations/[id]/page.tsx"),
-    read("src/app/gestion/admin/cours-formations/page.tsx"),
   ]);
-  assert.match(formations, /Prochaines formations/);
+  assert.doesNotMatch(formations, /Prochaines formations/);
+  assert.match(formations, /Formation du cœur/);
+  assert.match(formations, /Formation du caractère/);
+  assert.match(formations, /Formations d’approfondissement/);
   assert.match(formations, /entry\.date >= today/);
+  assert.match(formations, /triggerLabel="Créer un cours"/);
   assert.match(detail, /triggerLabel="Ajouter un cours"/);
-  assert.match(courses, /label="Approfondissements"/);
-  assert.match(courses, /countCategory\("deepening"\)/);
 });
 
 test("MAPP novelty ring disappears after completion and Fruit uses the v10 reading background", async () => {

@@ -160,10 +160,11 @@ export function navSpaces(roles: ViewerRoles): Space[] {
         {
           title: "Admin",
           items: [
-            { label: "Pilotage", href: "/gestion/admin?onglet=pilotage", icon: icons.adminStats },
-            { label: "Membres", href: "/gestion/admin?onglet=membres", icon: icons.profile },
-            { label: "Cours", href: "/gestion/admin/cours-formations", icon: icons.book },
+            { label: "Tableau de bord", href: "/gestion/admin?onglet=pilotage", icon: icons.adminStats },
+            { label: "Utilisateurs et accès", href: "/gestion/admin?onglet=membres", icon: icons.profile },
+            { label: "Formations", href: "/gestion/formations?scope=admin", icon: icons.formations },
             { label: "Projets et formations", href: "/gestion/projets-formations?scope=admin", icon: icons.studentProjects },
+            { label: "Pilotage ministère", href: "/gestion/pilotage?scope=admin", icon: icons.steer },
             { label: "Gestion des outils", href: "/gestion/admin?onglet=outils", icon: icons.apps },
             { label: "Gestion des ressources", href: "/gestion/admin?onglet=ressources", icon: icons.resources },
           ],
@@ -175,15 +176,7 @@ export function navSpaces(roles: ViewerRoles): Space[] {
   // L’espace Formations vient immédiatement après Admin. Les sensibilités
   // restent pilotées dans l’espace ministériel : cet espace réunit uniquement
   // cœur, caractère et approfondissements.
-  if (roles.superAdmin || roles.formationCategoryKeys.some((key) => ["heart", "character", "deepening"].includes(key))) {
-    const allowed = roles.superAdmin
-      ? ["heart", "character", "deepening"]
-      : roles.formationCategoryKeys;
-    const candidates = [
-      { key: "heart", label: "Formation du cœur", href: "/gestion/formations?onglet=coeur" },
-      { key: "character", label: "Formation du caractère", href: "/gestion/formations?onglet=caractere" },
-      { key: "deepening", label: "Formations d’approfondissement", href: "/gestion/formations?onglet=approfondissements" },
-    ];
+  if (!roles.superAdmin && roles.formationCategoryKeys.some((key) => ["heart", "character", "deepening"].includes(key))) {
     spaces.push({
       key: "formations",
       label: "Formations",
@@ -192,16 +185,12 @@ export function navSpaces(roles: ViewerRoles): Space[] {
       subtitle: "Gérez uniquement les formations qui vous sont confiées.",
       sections: [{
         title: "Formations",
-        items: candidates.filter((item) => allowed.includes(item.key)).map((item) => ({
-          label: item.label,
-          href: item.href,
-          icon: icons.formations,
-        })),
+        items: [{ label: "Mes formations", href: "/gestion/formations", icon: icons.formations }],
       }],
     });
   }
 
-  if (roles.superAdmin || roles.steeringMinistryIds.length > 0) {
+  if (!roles.superAdmin && roles.steeringMinistryIds.length > 0) {
     spaces.push({
       key: "steering",
       label: "Pilotage ministère",
@@ -219,7 +208,7 @@ export function navSpaces(roles: ViewerRoles): Space[] {
     });
   }
 
-  if (roles.superAdmin || roles.projectsTraining) {
+  if (!roles.superAdmin && roles.projectsTraining) {
     spaces.push({
       key: "projectsTraining",
       label: "Projets et formations",

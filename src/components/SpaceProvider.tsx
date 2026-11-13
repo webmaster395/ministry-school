@@ -68,6 +68,8 @@ export function SpaceProvider({
   const administrationPath = pathname.startsWith("/gestion/super-admin")
     || pathname.startsWith("/gestion/a-valider")
     || pathname.startsWith("/admin/apps")
+    || (pathname.startsWith("/gestion/formations") && ["super", "admin"].includes(searchParams.get("scope") ?? ""))
+    || (pathname.startsWith("/gestion/pilotage") && ["super", "admin"].includes(searchParams.get("scope") ?? ""))
     || (pathname.startsWith("/gestion/projets-formations") && ["super", "admin"].includes(searchParams.get("scope") ?? ""));
   const matches = administrationPath && spaces.some((space) => space.key === "admin")
     ? (["admin"] as SpaceKey[])

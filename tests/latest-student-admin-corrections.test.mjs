@@ -30,9 +30,12 @@ test("les mois sans activité future disparaissent et les activités passées ga
 
 test("la super administration retrouve cours et projets au niveau principal", async () => {
   const source = await read("src/lib/nav.tsx");
-  assert.match(source, /label: "Cours", href: "\/gestion\/admin\/cours-formations"/);
+  assert.match(source, /label: "Formations", href: "\/gestion\/formations\?scope=admin"/);
   assert.match(source, /label: "Projets et formations", href: "\/gestion\/projets-formations\?scope=admin"/);
-  assert.ok(source.indexOf('key: "formations"') < source.indexOf('key: "steering"'));
+  assert.match(source, /label: "Pilotage ministère", href: "\/gestion\/pilotage\?scope=admin"/);
+  assert.match(source, /if \(!roles\.superAdmin && roles\.formationCategoryKeys/);
+  assert.match(source, /if \(!roles\.superAdmin && roles\.steeringMinistryIds/);
+  assert.match(source, /if \(!roles\.superAdmin && roles\.projectsTraining/);
 });
 
 test("les contributeurs de formation ne voient que leur périmètre", async () => {

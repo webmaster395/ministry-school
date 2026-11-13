@@ -37,13 +37,14 @@ function monthLabel(month: string) {
   return label.charAt(0).toUpperCase() + label.slice(1);
 }
 
-export default function ProgramTab({ entries, month, today, trainers, ministries, readOnly = false, basePath = "/gestion/admin?onglet=programme", title = "Journées et cours", subtitle, creationContext = "admin", creationParentId }: {
+export default function ProgramTab({ entries, month, today, trainers, ministries, readOnly = false, allowCreate = !readOnly, basePath = "/gestion/admin?onglet=programme", title = "Journées et cours", subtitle, creationContext = "admin", creationParentId }: {
   entries: ProgramEntry[];
   month?: string;
   today: string;
   trainers: Choice[];
   ministries: Choice[];
   readOnly?: boolean;
+  allowCreate?: boolean;
   basePath?: string;
   title?: string;
   subtitle?: string;
@@ -84,7 +85,7 @@ export default function ProgramTab({ entries, month, today, trainers, ministries
               <p className="mt-0.5 text-sm text-muted">{reference.location}{reference.room ? ` · ${reference.room}` : ""} · {courseEntries.length} cours</p>
             </div>
             <DayList entries={list} readOnly={readOnly} />
-            {!readOnly && <QuickCourseForm date={date} parking={courseEntries.some((entry) => entry.parking)} trainers={trainers} ministries={ministries} context={creationContext} parentId={creationParentId} />}
+            {allowCreate && <QuickCourseForm date={date} parking={courseEntries.some((entry) => entry.parking)} trainers={trainers} ministries={ministries} context={creationContext} parentId={creationParentId} />}
           </section>
         );
       }) : (

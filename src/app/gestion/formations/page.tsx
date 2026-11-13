@@ -7,6 +7,7 @@ import { getProgramEntries, type ProgramEntry } from "@/lib/data/admin-hub";
 import ManagementPageHeader from "@/components/management/ManagementPageHeader";
 import ProgramTab from "@/components/admin/ProgramTab";
 import DeepeningAccessManager from "@/components/formations/DeepeningAccessManager";
+import CourseCreationDialog from "@/components/gestion/CourseCreationDialog";
 import { createDeepeningFormation } from "./actions";
 
 type FormationRow = {
@@ -20,16 +21,15 @@ type FormationRow = {
 };
 
 const tabs = [
-  { key: "upcoming", query: "prochaines", label: "Prochaines formations" },
   { key: "heart", query: "coeur", label: "Formation du cœur" },
   { key: "character", query: "caractere", label: "Formation du caractère" },
   { key: "deepening", query: "approfondissements", label: "Formations d’approfondissement" },
 ] as const;
 
-export default async function FormationsPage({ searchParams }: { searchParams: Promise<{ onglet?: string; mois?: string }> }) {
+export default async function FormationsPage({ searchParams }: { searchParams: Promise<{ onglet?: string; mois?: string; scope?: string }> }) {
   const [viewer, query] = await Promise.all([getViewer(), searchParams]);
   if (!viewer) redirect("/login");
-  const allowed = viewer.roles.superAdmin ? tabs : tabs.filter((tab) => tab.key === "upcoming" || viewer.roles.formationCategoryKeys.includes(tab.key));
+  const allowed = viewer.roles.superAdmin ? tabs : tabs.filter((tab) => viewer.roles.formationCategoryKeys.includes(tab.key));
   if (!allowed.length) redirect("/etudiant");
   const selected = allowed.find((tab) => tab.query === query.onglet) ?? allowed[0];
   const supabase = await createClient();
@@ -50,13 +50,12 @@ export default async function FormationsPage({ searchParams }: { searchParams: P
       : supabase.from("formation_assignments").select("formation_id").eq("user_id", viewer.id),
   ]);
   const allFormationRows = (formationsResult.data ?? []) as unknown as FormationRow[];
-  const allFormations = selected.key === "upcoming" ? allFormationRows : allFormationRows.filter((formation) => formation.category_key === selected.key);
+  const allFormations = allFormationRows.filter((formation) => formation.category_key === selected.key);
   const trainers = (trainersResult.data ?? []).map((item) => ({ id: item.id, name: `${item.first_name} ${item.last_name}`.trim() }));
   const ministries = (ministriesResult.data ?? []).map((item) => ({ id: item.id, name: item.name }));
   const managedIds = new Set(((managedIdsResult.data ?? []) as unknown[]).map((item) => typeof item === "string" ? item : String((item as { managed_formation_session_ids?: string }).managed_formation_session_ids ?? "")));
-  const today = new Date().toISOString().slice(0, 10);
   const formationEntries = entries.filter((entry) => entry.kind === "course"
-    && (selected.key === "upcoming" ? entry.date >= today : entry.formationCategory === selected.key)
+    && entry.formationCategory === selected.key
     && (viewer.roles.superAdmin || managedIds.has(entry.key.slice(2))))
     .map((entry) => ({ ...entry, href: `/gestion/enseignement/preparation/${entry.key.slice(2)}` }));
   const visibleFormationIds = new Set([
@@ -68,34 +67,23 @@ export default async function FormationsPage({ searchParams }: { searchParams: P
   const deepeningStudents = ((studentsResult.data ?? []) as { id: string; full_name: string }[]).map((student) => ({ ...student, authorized: authorizedIds.has(student.id) }));
 
   return <div className="space-y-6">
-    <ManagementPageHeader eyebrow="MES ESPACES ADMIN" title="Formations" subtitle="Cours, séances, ressources, devoirs et responsabilités dans une seule organisation." mobileTitleInAppBar />
-    {allowed.length > 1 && <nav aria-label="Catégories de formation" className="flex gap-1 overflow-x-auto rounded-2xl border border-border bg-background p-1.5 [scrollbar-width:none]">{allowed.map((tab) => <Link key={tab.key} href={`/gestion/formations?onglet=${tab.query}`} aria-current={tab.key === selected.key ? "page" : undefined} className={`shrink-0 rounded-xl px-4 py-3 text-sm font-semibold ${tab.key === selected.key ? "bg-accent text-on-accent" : "text-muted hover:bg-surface hover:text-foreground"}`}>{tab.label}</Link>)}</nav>}
-    {selected.key === "upcoming"
-      ? <UpcomingPanel entries={formationEntries} />
-      : selected.key === "deepening"
+    <ManagementPageHeader eyebrow={viewer.roles.superAdmin ? "ADMIN" : "MES ESPACES ADMIN"} title="Formations" subtitle="Une seule navigation pour créer, préparer et retrouver les cours futurs comme passés." mobileTitleInAppBar />
+    {allowed.length > 1 && <nav aria-label="Catégories de formation" className="flex gap-1 overflow-x-auto rounded-2xl border border-border bg-background p-1.5 [scrollbar-width:none]">{allowed.map((tab) => { const params = new URLSearchParams({ onglet: tab.query }); if (viewer.roles.superAdmin) params.set("scope", "admin"); return <Link key={tab.key} href={`/gestion/formations?${params}`} aria-current={tab.key === selected.key ? "page" : undefined} className={`shrink-0 rounded-xl px-4 py-3 text-sm font-semibold ${tab.key === selected.key ? "bg-accent text-on-accent" : "text-muted hover:bg-surface hover:text-foreground"}`}>{tab.label}</Link>; })}</nav>}
+    {selected.key === "deepening"
       ? <DeepeningPanel formations={formations} entries={formationEntries} canCreate={viewer.roles.superAdmin} students={deepeningStudents} />
-      : <StandardPanel formations={formations} entries={formationEntries} month={query.mois} trainers={trainers} ministries={ministries} tabQuery={selected.query} />}
+      : <StandardPanel formations={formations} entries={formationEntries} month={query.mois} trainers={trainers} ministries={ministries} tabQuery={selected.query} categoryLabel={selected.label} adminScope={viewer.roles.superAdmin} />}
   </div>;
 }
 
-function UpcomingPanel({ entries }: { entries: ProgramEntry[] }) {
-  const first = entries.slice().sort((a, b) => a.date.localeCompare(b.date))[0];
-  if (!first) return <Empty title="Aucune prochaine formation" text="Aucun cours futur n’est actuellement planifié dans votre périmètre." />;
-  const month = first.date.slice(0, 7);
-  const visible = entries.filter((entry) => entry.date.startsWith(month)).sort((a, b) => `${a.date}${a.start}`.localeCompare(`${b.date}${b.start}`));
-  const monthLabel = new Intl.DateTimeFormat("fr-FR", { month: "long", year: "numeric" }).format(new Date(`${month}-01T12:00:00`));
-  return <section className="rounded-2xl border border-border bg-background p-4 sm:p-6">
-    <div className="flex flex-col gap-2 border-b border-border-soft pb-5 sm:flex-row sm:items-end sm:justify-between"><div><p className="label text-[10px] tracking-[.14em] text-muted">PROCHAIN CYCLE</p><h2 className="font-title mt-1 text-[28px] capitalize">{monthLabel}</h2><p className="mt-1 text-sm text-muted">Ouvrez un cours pour consulter ses informations, le modifier et enregistrer immédiatement.</p></div><span className="rounded-full bg-surface px-3 py-1.5 text-xs font-semibold">{visible.length} cours</span></div>
-    <div className="mt-4 grid gap-3">{visible.map((entry) => <Link key={entry.key} href={entry.href} className="group grid gap-2 rounded-2xl border border-border p-4 transition hover:border-foreground hover:shadow-sm sm:grid-cols-[9rem_minmax(0,1fr)_auto] sm:items-center"><div><strong className="block text-sm capitalize">{new Intl.DateTimeFormat("fr-FR", { weekday: "short", day: "numeric", month: "short" }).format(new Date(`${entry.date}T12:00:00`))}</strong><span className="text-xs text-muted">{entry.start.slice(0, 5)}–{entry.end.slice(0, 5)}</span></div><div className="min-w-0"><strong className="block truncate text-sm">{entry.title}</strong><span className="text-xs text-muted">{entry.track ?? "Formation"}{entry.location ? ` · ${entry.location}` : ""}</span></div><span className="inline-flex items-center gap-1 text-xs font-semibold">Ouvrir <ChevronRight size={15} className="transition group-hover:translate-x-1" /></span></Link>)}</div>
-  </section>;
-}
-
-function StandardPanel({ formations, entries, month, trainers, ministries, tabQuery }: { formations: FormationRow[]; entries: ProgramEntry[]; month?: string; trainers: { id: string; name: string }[]; ministries: { id: string; name: string }[]; tabQuery: string }) {
+function StandardPanel({ formations, entries, month, trainers, ministries, tabQuery, categoryLabel, adminScope }: { formations: FormationRow[]; entries: ProgramEntry[]; month?: string; trainers: { id: string; name: string }[]; ministries: { id: string; name: string }[]; tabQuery: string; categoryLabel: string; adminScope: boolean }) {
   if (!formations.length) return <Empty title="Aucune formation rattachée" text="Aucun cours n’a été créé ou attribué à votre périmètre." />;
-  return <div className="space-y-6">{formations.map((formation) => {
+  const today = new Date().toISOString().slice(0, 10);
+  const upcoming = entries.filter((entry) => entry.date >= today).length;
+  const past = entries.filter((entry) => entry.date < today).length;
+  return <div className="space-y-6"><header className="rounded-2xl border border-border bg-background p-5 sm:p-6"><p className="label text-[10px] tracking-[.15em] text-muted">CATÉGORIE</p><div className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><h2 className="font-title text-[30px] leading-tight">{categoryLabel}</h2><p className="mt-1 text-sm text-muted">{upcoming} cours à venir · {past} cours passé{past === 1 ? "" : "s"}. Les contenus passés restent consultables.</p></div>{adminScope && formations.length === 1 && <CourseCreationDialog context="formation" parentId={formations[0].id} trainers={trainers} triggerLabel="Créer un cours" />}</div></header>{formations.map((formation) => {
     const scoped = entries.filter((entry) => entry.formationId === formation.id);
     return <section key={formation.id} className="rounded-2xl border border-border bg-background p-4 sm:p-6">
-      <ProgramTab entries={scoped} month={month} today={new Date().toISOString().slice(0, 10)} trainers={trainers} ministries={ministries} basePath={`/gestion/formations?onglet=${tabQuery}`} title={formation.title} subtitle={formation.description ?? `${scoped.length} cours rattachés explicitement à cette formation.`} creationContext="formation" creationParentId={formation.id} />
+      <ProgramTab entries={scoped} month={month} today={today} trainers={trainers} ministries={ministries} allowCreate={adminScope} basePath={`/gestion/formations?onglet=${tabQuery}${adminScope ? "&scope=admin" : ""}`} title={formation.title} subtitle={formation.description ?? `${scoped.length} cours rattachés explicitement à cette formation.`} creationContext="formation" creationParentId={formation.id} />
     </section>;
   })}</div>;
 }
@@ -107,7 +95,7 @@ function DeepeningPanel({ formations, entries, canCreate, students }: { formatio
     {formations.length ? <div className="grid gap-4 lg:grid-cols-2">{formations.map((formation) => {
       const sessions = entries.filter((entry) => entry.formationId === formation.id);
       const next = sessions.find((entry) => entry.date >= new Date().toISOString().slice(0, 10));
-      return <Link key={formation.id} href={`/gestion/formations/${formation.id}`} className="group rounded-2xl border border-border bg-background p-5 transition hover:-translate-y-0.5 hover:shadow-lg"><div className="flex items-start justify-between gap-4"><div><span className="rounded-full bg-surface px-3 py-1 text-xs font-semibold text-muted">{formation.status === "published" ? "Publié" : formation.status === "draft" ? "Brouillon" : "Archivé"}</span><h2 className="font-title mt-3 text-[24px] leading-tight text-foreground">{formation.title}</h2></div><ChevronRight className="mt-1 text-muted transition group-hover:translate-x-1" /></div><p className="mt-2 line-clamp-2 text-sm leading-6 text-muted">{formation.description ?? "Approfondissement du dimanche"}</p><div className="mt-5 grid grid-cols-2 gap-3 rounded-xl bg-surface p-3 text-sm"><span className="inline-flex items-center gap-2"><CalendarDays size={16} /> {sessions.length} séance{sessions.length > 1 ? "s" : ""}</span><span className="inline-flex items-center gap-2"><UsersRound size={16} /> Inscriptions et présences</span></div>{next && <p className="mt-3 text-xs text-muted">Prochaine séance · {new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric" }).format(new Date(`${next.date}T12:00:00`))}</p>}</Link>;
+      return <Link key={formation.id} href={`/gestion/formations/${formation.id}${canCreate ? "?scope=admin" : ""}`} className="group rounded-2xl border border-border bg-background p-5 transition hover:-translate-y-0.5 hover:shadow-lg"><div className="flex items-start justify-between gap-4"><div><span className="rounded-full bg-surface px-3 py-1 text-xs font-semibold text-muted">{formation.status === "published" ? "Publié" : formation.status === "draft" ? "Brouillon" : "Archivé"}</span><h2 className="font-title mt-3 text-[24px] leading-tight text-foreground">{formation.title}</h2></div><ChevronRight className="mt-1 text-muted transition group-hover:translate-x-1" /></div><p className="mt-2 line-clamp-2 text-sm leading-6 text-muted">{formation.description ?? "Approfondissement du dimanche"}</p><div className="mt-5 grid grid-cols-2 gap-3 rounded-xl bg-surface p-3 text-sm"><span className="inline-flex items-center gap-2"><CalendarDays size={16} /> {sessions.length} séance{sessions.length > 1 ? "s" : ""}</span><span className="inline-flex items-center gap-2"><UsersRound size={16} /> Inscriptions et présences</span></div>{next && <p className="mt-3 text-xs text-muted">Prochaine séance · {new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric" }).format(new Date(`${next.date}T12:00:00`))}</p>}</Link>;
     })}</div> : <Empty title="Aucun approfondissement" text="Créez le premier approfondissement sans préremplir de contenu d’exemple." />}
   </div>;
 }
