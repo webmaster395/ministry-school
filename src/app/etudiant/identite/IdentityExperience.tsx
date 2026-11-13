@@ -223,7 +223,7 @@ export default function IdentityExperience(props: Props) {
           </div>
         </div>
         <div className={styles.profileContent}>
-          <p className={styles.eyebrow}>Mon espace personnel</p>
+          <p className={styles.eyebrow}>Ma personnalité</p>
           <div className={styles.nameLine}>
             <h1>{firstName}</h1>
             <span className={styles.certifiedStatus}>{props.status}<BadgeCheck aria-label="Profil certifié" /></span>

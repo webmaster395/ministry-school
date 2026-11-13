@@ -9,7 +9,7 @@ const TITLES: Record<string, string> = {
   "/etudiant/travail": "Travail à faire",
   "/etudiant/notes": "Mes notes",
   "/etudiant/services": "Projets et formations",
-  "/etudiant/ressources": "Ressources",
+  "/etudiant/ressources": "Mes ressources",
   "/etudiant/aide": "Une question ?",
   "/gestion/enseignement": "Préparer mes cours",
   "/gestion/pilotage": "Pilotage ministériel",
@@ -51,7 +51,7 @@ const ADMIN_TABS: Record<string, string> = {
  */
 function adminPageTitle(pathname: string, tab: string | null) {
   if (pathname === "/gestion/admin") return (tab && ADMIN_TABS[tab]) || "Admin";
-  if (pathname.startsWith("/gestion/admin/cours-formations")) return "Cours et formations";
+  if (pathname.startsWith("/gestion/admin/cours-formations")) return "Cours";
   if (pathname.startsWith("/gestion/admin/ministeres")) return "Sensibilités ministérielles";
   if (pathname.startsWith("/gestion/admin/membres/")) return "Membre";
   if (pathname.startsWith("/gestion/admin/programme") || pathname.startsWith("/gestion/admin/seances")) return "Programme";

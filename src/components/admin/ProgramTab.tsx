@@ -37,7 +37,7 @@ function monthLabel(month: string) {
   return label.charAt(0).toUpperCase() + label.slice(1);
 }
 
-export default function ProgramTab({ entries, month, today, trainers, ministries, readOnly = false, basePath = "/gestion/admin?onglet=programme" }: {
+export default function ProgramTab({ entries, month, today, trainers, ministries, readOnly = false, basePath = "/gestion/admin?onglet=programme", title = "Journées et cours", subtitle }: {
   entries: ProgramEntry[];
   month?: string;
   today: string;
@@ -45,6 +45,8 @@ export default function ProgramTab({ entries, month, today, trainers, ministries
   ministries: Choice[];
   readOnly?: boolean;
   basePath?: string;
+  title?: string;
+  subtitle?: string;
 }) {
   const nextDate = entries.find((entry) => entry.date >= today)?.date ?? today;
   const selectedMonth = /^\d{4}-\d{2}$/.test(month ?? "") ? month! : nextDate.slice(0, 7);
@@ -60,8 +62,8 @@ export default function ProgramTab({ entries, month, today, trainers, ministries
       <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-sm text-muted">Programme Ministry School</p>
-          <h1 className="font-title mt-1 text-[30px] leading-tight text-foreground">Journées et cours</h1>
-          <p className="mt-1 text-sm text-muted">{readOnly ? "Consultez les journées, horaires, cours et intervenants." : "Clique sur un cours pour modifier sa fiche et son contenu."}</p>
+          <h1 className="font-title mt-1 text-[30px] leading-tight text-foreground">{title}</h1>
+          <p className="mt-1 text-sm text-muted">{subtitle ?? (readOnly ? "Consultez les journées, horaires, cours et intervenants." : "Clique sur un cours pour modifier sa fiche et son contenu.")}</p>
         </div>
         <nav aria-label="Changer de mois" className="flex w-full items-center justify-between gap-2 sm:w-auto sm:justify-start">
           <Link href={monthHref(shiftMonth(selectedMonth, -1))} aria-label="Mois précédent" className="rounded-full border border-border p-2 text-muted hover:text-foreground"><ChevronLeft size={18} /></Link>

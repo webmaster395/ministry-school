@@ -19,7 +19,7 @@ const tabLabels: Record<string, string> = {
 
 const pageLabels: Record<string, string> = {
   "/gestion/admin/cours": "Cours",
-  "/gestion/admin/cours-formations": "Cours et formations",
+  "/gestion/admin/cours-formations": "Cours",
   "/gestion/admin/ministeres": "Sensibilités ministérielles",
   "/gestion/admin/programme": "Programme",
   "/gestion/admin/seances": "Programme",
@@ -104,7 +104,7 @@ export default function AdminBreadcrumbs() {
     }
 
     if (pathname.startsWith("/gestion/enseignement/preparation/")) {
-      return [...root, { label: "Cours et formations", href: "/gestion/admin/cours-formations" }, ...(pageTitle ? [{ label: pageTitle }] : [])];
+      return [...root, { label: "Cours", href: "/gestion/admin/cours-formations" }, ...(pageTitle ? [{ label: pageTitle }] : [])];
     }
 
     const last = pathname.split("/").filter(Boolean).at(-1) ?? "";

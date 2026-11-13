@@ -22,6 +22,9 @@ type Assignment = {
 type Delegation = { ministry: { name: string } | null };
 type Enrollment = { session: { session_date: string; description: string | null; track: string | null; courses: { title: string } | null } | null };
 type InitiativeRegistration = { date: { session_date: string; opportunity: { title: string } | null } | null };
+type MappProfile = { primary: string | null; secondary: string | null; completedAt: string | null };
+
+const mappLabel = (code: string | null) => ({ D: "Conquérant", I: "Communiquant", S: "Facilitateur", C: "Analyste", conquerant: "Conquérant", communiquant: "Communiquant", facilitateur: "Facilitateur", analyste: "Analyste" }[code ?? ""] ?? code ?? "À préciser");
 
 export default async function AdminMemberProfilePage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ returnTo?: string }> }) {
   const viewer = await getViewer();
@@ -47,6 +50,7 @@ export default async function AdminMemberProfilePage({ params, searchParams }: {
   let delegations: Delegation[] = [];
   let enrollments: Enrollment[] = [];
   let initiativeRegistrations: InitiativeRegistration[] = [];
+  let mappProfile: MappProfile | null = null;
   try {
     const service = createServiceClient();
     const [authResult, assignmentsResult, delegationsResult, enrollmentsResult, registrationsResult] = await Promise.all([
@@ -65,6 +69,16 @@ export default async function AdminMemberProfilePage({ params, searchParams }: {
     delegations = (delegationsResult.data ?? []) as unknown as Delegation[];
     enrollments = (enrollmentsResult.data ?? []) as unknown as Enrollment[];
     initiativeRegistrations = (registrationsResult.data ?? []) as unknown as InitiativeRegistration[];
+    const mapp = service.schema("mapp");
+    const { data: identityLink } = await mapp.from("participant_auth_identities").select("participant_id").eq("auth_user_id", id).is("revoked_at", null).limit(1).maybeSingle();
+    if (identityLink?.participant_id) {
+      const { data: attempt } = await mapp.from("attempts").select("id,completed_at").eq("participant_id", identityLink.participant_id).eq("status", "completed").order("completed_at", { ascending: false }).limit(1).maybeSingle();
+      if (attempt) {
+        const { data: revision } = await mapp.from("result_revisions").select("id").eq("attempt_id", attempt.id).order("revision", { ascending: false }).limit(1).maybeSingle();
+        const { data: ranking } = revision ? await mapp.from("result_rankings").select("primary_code,secondary_code").eq("result_revision_id", revision.id).eq("context", "natural").maybeSingle() : { data: null };
+        mappProfile = { primary: ranking?.primary_code ?? null, secondary: ranking?.secondary_code ?? null, completedAt: attempt.completed_at };
+      }
+    }
   } catch {
     const { data: emails } = await supabase.rpc("admin_user_emails");
     email = ((emails ?? []) as { id: string; email: string }[]).find((item) => item.id === id)?.email ?? "";
@@ -125,9 +139,10 @@ export default async function AdminMemberProfilePage({ params, searchParams }: {
         </dl>
       </section>
 
-      <section className="grid gap-5 md:grid-cols-2">
+      <section className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
         <article className="rounded-xl border border-border bg-background p-5 sm:p-6"><p className="label text-[11px] tracking-[0.16em] text-muted">SENSIBILITÉ MINISTÉRIELLE</p>{ministry ? <div className="mt-5 flex items-center gap-3"><span className="flex h-12 w-12 items-center justify-center rounded-full bg-surface"><MinistryPicto slug={ministry.slug} size={25} /></span><p className="font-title text-[24px] text-foreground">{ministry.name}</p></div> : <p className="mt-5 text-sm text-muted">Non renseignée</p>}</article>
         <article className="rounded-xl border border-border bg-background p-5 sm:p-6"><p className="label text-[11px] tracking-[0.16em] text-muted">IMPLICATION À MLK</p>{engagement.completed && involvement.length ? <div className="mt-4 space-y-3"><div className="flex flex-wrap gap-2">{involvement.map((item) => <span key={item} className="rounded-full bg-surface px-3 py-1.5 text-sm font-medium text-foreground">{item}</span>)}</div>{engagement.equipierServices && <p className="text-sm text-muted"><strong className="text-foreground">Service(s) comme équipier :</strong> {engagement.equipierServices}</p>}{engagement.managerServices && <p className="text-sm text-muted"><strong className="text-foreground">Service(s) comme manager :</strong> {engagement.managerServices}</p>}</div> : <p className="mt-5 text-sm text-muted">Non renseignée</p>}</article>
+        <article className="rounded-xl border border-border bg-background p-5 sm:p-6"><p className="label text-[11px] tracking-[0.16em] text-muted">PROFIL MAPP</p>{mappProfile ? <div className="mt-4 grid gap-2"><div className="flex items-center justify-between gap-3 rounded-lg bg-[#fff7d8] px-3.5 py-3"><span className="text-xs text-muted">Profil principal</span><strong className="text-sm text-[#352700]">{mappLabel(mappProfile.primary)}</strong></div><div className="flex items-center justify-between gap-3 rounded-lg bg-surface px-3.5 py-3"><span className="text-xs text-muted">Profil secondaire</span><strong className="text-sm text-foreground">{mappLabel(mappProfile.secondary)}</strong></div><p className="mt-2 text-xs text-muted">Test terminé le {date(mappProfile.completedAt)}</p></div> : <p className="mt-5 text-sm text-muted">Aucun résultat MAPP dans Ministry.</p>}</article>
       </section>
 
       <section className="rounded-xl border border-border bg-background p-5 sm:p-6"><p className="label text-[11px] tracking-[0.16em] text-muted">DROITS ET RESPONSABILITÉS</p>{access.length ? <ul className="mt-4 grid gap-2 sm:grid-cols-2">{access.map((item) => <li key={item} className="flex items-center gap-2 rounded-lg bg-surface px-3.5 py-3 text-sm font-medium text-foreground"><ShieldCheck size={16} className="shrink-0 text-muted" />{item}</li>)}</ul> : <p className="mt-4 text-sm text-muted">Aucune responsabilité administrative supplémentaire.</p>}</section>

@@ -38,7 +38,7 @@ function weekLabel(date: string) {
   return `Sem. ${text}`;
 }
 
-function sectionHref(section: Section) { return `/gestion/admin?onglet=statistiques&statistiques=${section}`; }
+function sectionHref(section: Section) { return `/gestion/admin?onglet=pilotage&statistiques=${section}`; }
 
 function StatisticsNav({ section }: { section: Section }) {
   return <nav aria-label="Sections des statistiques" className="grid w-full grid-cols-2 gap-1 rounded-xl border border-border bg-background p-1 lg:inline-grid lg:w-auto lg:grid-cols-4">{([['utilisation', 'Engagement'], ['membres', 'Membres'], ['programmes', 'Programme'], ['initiatives', 'Projets et formations']] as const).map(([key, label]) => <Link key={key} href={sectionHref(key)} aria-current={section === key ? "page" : undefined} className={`min-w-0 rounded-lg px-2 py-2.5 text-center text-[12px] font-semibold transition min-[375px]:text-[13px] sm:px-5 sm:text-sm ${section === key ? "bg-accent text-on-accent" : "text-muted hover:bg-surface hover:text-foreground"}`}>{label}</Link>)}</nav>;

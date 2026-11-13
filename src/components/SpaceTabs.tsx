@@ -13,7 +13,7 @@ import { useSpace } from "@/components/SpaceProvider";
 export default function SpaceTabs() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { current } = useSpace();
+  const { current, pendingValidationCount } = useSpace();
   const menu = useRef<HTMLDetailsElement>(null);
   const location = `${pathname}?${searchParams.toString()}`;
 
@@ -57,7 +57,8 @@ export default function SpaceTabs() {
             const expectedTab = query ? new URLSearchParams(query).get("onglet") : null;
             const currentTab = searchParams.get("onglet");
             const active = pathname === itemPath && (expectedTab ? currentTab === expectedTab : !currentTab);
-            return <Link key={item.href} href={item.href} onClick={() => menu.current?.removeAttribute("open")} aria-current={active ? "page" : undefined} className={`block min-h-11 rounded-lg px-3.5 py-3 text-sm font-medium ${active ? "bg-accent text-on-accent" : "text-foreground hover:bg-surface"}`}>{item.label}</Link>;
+            const validationBadge = item.label === "Projets et formations" ? pendingValidationCount : 0;
+            return <Link key={item.href} href={item.href} onClick={() => menu.current?.removeAttribute("open")} aria-current={active ? "page" : undefined} className={`flex min-h-11 items-center justify-between gap-2 rounded-lg px-3.5 py-3 text-sm font-medium ${active ? "bg-accent text-on-accent" : "text-foreground hover:bg-surface"}`}><span>{item.label}</span>{validationBadge > 0 && <span className="grid h-6 min-w-6 place-items-center rounded-full bg-[#C43D32] px-1.5 text-[11px] font-semibold text-white">{validationBadge}</span>}</Link>;
           })}
         </nav>
       </details>
@@ -70,6 +71,7 @@ export default function SpaceTabs() {
         const expectedTab = query ? new URLSearchParams(query).get("onglet") : null;
         const currentTab = searchParams.get("onglet");
         const active = pathname === itemPath && (expectedTab ? currentTab === expectedTab : !currentTab);
+        const validationBadge = item.label === "Projets et formations" ? pendingValidationCount : 0;
         return (
           <Link
             key={item.href}
@@ -79,7 +81,7 @@ export default function SpaceTabs() {
               active ? "bg-accent text-on-accent" : "bg-surface text-muted hover:bg-foreground/[0.08] hover:text-foreground"
             }`}
           >
-            {item.label}
+            <span className="inline-flex items-center gap-2">{item.label}{validationBadge > 0 && <span className="grid h-5 min-w-5 place-items-center rounded-full bg-[#C43D32] px-1 text-[10px] font-semibold text-white">{validationBadge}</span>}</span>
           </Link>
         );
       })}

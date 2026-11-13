@@ -20,8 +20,10 @@ import {
   ChartNoAxesColumnIncreasing,
   BadgeCheck,
   PanelsTopLeft,
-  Fingerprint,
-  LibraryBig,
+  UserRound,
+  ListChecks,
+  FolderOpen,
+  UsersRound,
 } from "lucide-react";
 import { isPlainStudent, type ViewerRoles } from "@/lib/roles";
 import { QUESTIONS_ENABLED } from "@/lib/questions";
@@ -63,8 +65,10 @@ const icons = {
   functions: <Briefcase {...iconProps} />,
   validate: <BadgeCheck {...iconProps} />,
   apps: <PanelsTopLeft {...iconProps} />,
-  identity: <Fingerprint {...iconProps} />,
-  resources: <LibraryBig {...iconProps} />,
+  identity: <UserRound {...iconProps} />,
+  resources: <FolderOpen {...iconProps} />,
+  studentTasks: <ListChecks {...iconProps} />,
+  studentProjects: <UsersRound {...iconProps} />,
 };
 
 /** Le menu étudiant, toujours affiché : celui de la maquette de Rose Alice. */
@@ -73,17 +77,22 @@ export const studentSections: NavSection[] = [
     title: "Principal",
     items: [
       { label: "Accueil", href: "/etudiant", icon: icons.home },
-      { label: "Mon espace", href: "/etudiant/identite", icon: icons.identity },
+    ],
+  },
+  {
+    title: "Qui je suis",
+    items: [
+      { label: "Ma personnalité", href: "/etudiant/identite", icon: icons.identity },
+      { label: "Mon ministère", href: "/etudiant/formation", icon: icons.steer },
     ],
   },
   {
     title: "Mon parcours",
     items: [
-      { label: "Mes cours", href: "/etudiant/cours", icon: icons.calendar },
-      { label: "Travail à faire", href: "/etudiant/travail", icon: icons.task },
-      { label: "Ressources", href: "/etudiant/ressources", icon: icons.resources },
-      { label: "Mon ministère", href: "/etudiant/formation", icon: icons.ministries },
-      { label: "Projets et formations", href: "/etudiant/services", icon: icons.services },
+      { label: "Mes cours", href: "/etudiant/cours", icon: icons.book },
+      { label: "Travail à faire", href: "/etudiant/travail", icon: icons.studentTasks },
+      { label: "Mes ressources", href: "/etudiant/ressources", icon: icons.resources },
+      { label: "Projets et formations", href: "/etudiant/services", icon: icons.studentProjects },
     ],
   },
 ];
@@ -138,7 +147,7 @@ export type Space = {
 export function navSpaces(roles: ViewerRoles): Space[] {
   const spaces: Space[] = [];
 
-  if (roles.admin) {
+  if (roles.superAdmin) {
     spaces.push({
       key: "admin",
       label: "Admin",
@@ -147,13 +156,12 @@ export function navSpaces(roles: ViewerRoles): Space[] {
       subtitle: "",
       sections: [
         {
-          title: "Administration",
+          title: "Super administration",
           items: [
-            {
-              label: "Accueil",
-              href: "/gestion/admin",
-              icon: icons.adminHome,
-            },
+            { label: "Pilotage", href: "/gestion/admin?onglet=pilotage", icon: icons.adminStats },
+            { label: "Membres", href: "/gestion/admin?onglet=membres", icon: icons.profile },
+            { label: "Cours", href: "/gestion/admin/cours-formations", icon: icons.book },
+            { label: "Projets et formations", href: "/gestion/projets-formations?scope=admin", icon: icons.projectPropose },
           ],
         },
       ],

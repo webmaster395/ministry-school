@@ -29,6 +29,8 @@ export default function MemberAccessEditor({
 
   const [state, action, isPending] = useActionState<MemberActionResult, FormData>(updateMember, {});
   const [showSuccess, setShowSuccess] = useState(false);
+  const [dirty, setDirty] = useState(false);
+  const [savedAt, setSavedAt] = useState<Date | null>(null);
 
   // Transitions pour les actions secondaires (avatar et activation)
   const [isAvatarPending, startAvatarTransition] = useTransition();
@@ -39,6 +41,8 @@ export default function MemberAccessEditor({
     if (state.success) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- affiche le message de succès pendant 4 secondes
       setShowSuccess(true);
+      setDirty(false);
+      setSavedAt(new Date());
       const timer = setTimeout(() => setShowSuccess(false), 4000);
       return () => clearTimeout(timer);
     }
@@ -59,6 +63,7 @@ export default function MemberAccessEditor({
           action={action}
           onChange={() => {
             if (showSuccess) setShowSuccess(false);
+            setDirty(true);
           }}
           className="grid gap-3 sm:grid-cols-2"
         >
@@ -158,6 +163,10 @@ export default function MemberAccessEditor({
                 <span>Enregistrer</span>
               )}
             </button>
+
+            <span aria-live="polite" className={`text-xs font-medium ${dirty ? "text-amber-700" : showSuccess ? "text-emerald-700" : "text-muted"}`}>
+              {isPending ? "Enregistrement en cours…" : dirty ? "Modifications non enregistrées" : savedAt ? `Enregistré à ${savedAt.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}` : "Les modifications seront confirmées ici"}
+            </span>
 
             {showSuccess && (
               <span className="inline-flex items-center gap-1.5 rounded-md border border-emerald-200 bg-emerald-50 px-2.5 py-1.5 text-xs font-semibold text-emerald-800 transition">
