@@ -11,5 +11,5 @@ export default async function HeroesMotorsPage() {
   if (!viewer) redirect("/login?next=/etudiant/identite/mes-moteurs");
   const published = await getPublishedHeroesMotorsResult(viewer.id);
   if (!published) redirect("/etudiant/identite");
-  return <StudentToolFrame><HeroesMotorsResultView result={published} embedded /></StudentToolFrame>;
+  return <StudentToolFrame className="max-md:!h-auto max-md:!overflow-visible" contentClassName="max-md:!overflow-visible"><HeroesMotorsResultView result={published} embedded /></StudentToolFrame>;
 }

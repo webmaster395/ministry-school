@@ -15,6 +15,7 @@ import {
   TYPE_LABEL,
   type Opportunity,
 } from "@/lib/data/opportunities";
+import { activeTrainingCycleStart, activeTrainingMonth } from "@/lib/training-cycle";
 
 type Tab = "decouvrir" | "inscriptions" | "termines";
 type Filter = "tout" | "projet" | "formation";
@@ -55,9 +56,10 @@ export default async function ServicesPage({
     getAllOpportunityDates(supabase),
   ]);
 
-  const today = new Date().toISOString().slice(0, 10);
-  const currentMonth = today.slice(0, 7);
-  const now = new Date(`${today}T12:00:00Z`);
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris" }).format(new Date());
+  const currentMonth = activeTrainingMonth(today);
+  const cycleStart = activeTrainingCycleStart(today);
+  const now = new Date(`${currentMonth}-01T12:00:00Z`);
   const endYear = now.getUTCMonth() + 1 <= 6 ? now.getUTCFullYear() : now.getUTCFullYear() + 1;
   const candidateMonthKeys: string[] = [];
   for (let cursor = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)); cursor <= new Date(Date.UTC(endYear, 5, 1)); cursor.setUTCMonth(cursor.getUTCMonth() + 1)) {
@@ -68,8 +70,8 @@ export default async function ServicesPage({
   const countsByOpportunity = new Map(await Promise.all(published.map(async (opportunity) => [opportunity.id, await getOpportunityDateCounts(supabase, opportunity.id)] as const)));
   const datesByOpportunity = new Map<string, typeof dates>();
   for (const date of dates) datesByOpportunity.set(date.opportunity_id, [...(datesByOpportunity.get(date.opportunity_id) ?? []), date]);
-  const hasUpcomingSession = (o: Opportunity) => (datesByOpportunity.get(o.id) ?? []).some((date) => date.session_date >= today);
-  const hasPastSession = (o: Opportunity) => (datesByOpportunity.get(o.id) ?? []).some((date) => date.session_date < today);
+  const hasUpcomingSession = (o: Opportunity) => (datesByOpportunity.get(o.id) ?? []).some((date) => date.session_date >= cycleStart);
+  const hasPastSession = (o: Opportunity) => (datesByOpportunity.get(o.id) ?? []).some((date) => date.session_date < cycleStart);
   const inTab = (o: Opportunity) =>
     tab === "decouvrir"
       ? hasUpcomingSession(o) && !mine.has(o.id)
@@ -79,9 +81,9 @@ export default async function ServicesPage({
 
   const tabbed = published.filter(inTab);
   const tabbedIds = new Set(tabbed.map((opportunity) => opportunity.id));
-  const monthKeys = candidateMonthKeys.filter((month) => dates.some((date) => tabbedIds.has(date.opportunity_id) && date.session_date.startsWith(month) && date.session_date >= today));
+  const monthKeys = candidateMonthKeys.filter((month) => dates.some((date) => tabbedIds.has(date.opportunity_id) && date.session_date.startsWith(month) && date.session_date >= cycleStart));
   const selectedMonth = monthKeys.includes(mois ?? "") ? mois! : (monthKeys[0] ?? currentMonth);
-  const monthDates = dates.filter((date) => tabbedIds.has(date.opportunity_id) && date.session_date.startsWith(selectedMonth) && date.session_date >= today);
+  const monthDates = dates.filter((date) => tabbedIds.has(date.opportunity_id) && date.session_date.startsWith(selectedMonth) && date.session_date >= cycleStart);
   const opportunityIdsForMonth = new Set(monthDates.map((date) => date.opportunity_id));
   const opportunityIdsForDay = jour && jour.startsWith(`${selectedMonth}-`) && /^\d{4}-\d{2}-\d{2}$/.test(jour)
     ? new Set(dates.filter((date) => date.session_date === jour).map((date) => date.opportunity_id))
@@ -120,7 +122,7 @@ export default async function ServicesPage({
       {tab !== "termines" && <section aria-label="Choisir une période" className="rounded-2xl border border-border bg-background p-2 sm:p-3">
         <nav aria-label="Mois" className="flex gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {monthKeys.map((month) => {
-            const count = new Set(dates.filter((date) => tabbedIds.has(date.opportunity_id) && date.session_date.startsWith(month) && date.session_date >= today).map((date) => date.opportunity_id)).size;
+            const count = new Set(dates.filter((date) => tabbedIds.has(date.opportunity_id) && date.session_date.startsWith(month) && date.session_date >= cycleStart).map((date) => date.opportunity_id)).size;
             return <Link key={month} href={href(tab, filter, month)} aria-current={selectedMonth === month ? "page" : undefined} className={`min-w-[92px] shrink-0 rounded-xl px-3 py-2.5 text-center transition ${selectedMonth === month ? "bg-accent text-on-accent" : "hover:bg-surface"}`}><strong className="block text-sm capitalize">{new Intl.DateTimeFormat("fr-FR", { month: "long", timeZone: "UTC" }).format(new Date(`${month}-01T12:00:00Z`))}</strong><span className={`mt-0.5 block text-[11px] ${selectedMonth === month ? "text-on-accent/75" : "text-muted"}`}>{count} activité{count > 1 ? "s" : ""}</span></Link>;
           })}
         </nav>
@@ -153,8 +155,8 @@ export default async function ServicesPage({
         <ul className="grid gap-4 lg:grid-cols-2">
           {shown.map((o) => {
             const sessions = tab === "termines"
-              ? (datesByOpportunity.get(o.id) ?? []).filter((date) => date.session_date < today)
-              : (datesByOpportunity.get(o.id) ?? []).filter((date) => date.session_date.startsWith(selectedMonth) && date.session_date >= today);
+              ? (datesByOpportunity.get(o.id) ?? []).filter((date) => date.session_date < cycleStart)
+              : (datesByOpportunity.get(o.id) ?? []).filter((date) => date.session_date.startsWith(selectedMonth) && date.session_date >= cycleStart);
             const session = tab === "termines"
               ? sessions.at(-1)
               : opportunityIdsForDay ? sessions.find((date) => date.session_date === jour) ?? sessions[0] : sessions[0];

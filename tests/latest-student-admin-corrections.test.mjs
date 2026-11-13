@@ -22,7 +22,7 @@ test("les mois sans activité future disparaissent et les activités passées ga
   const source = await read("src/app/etudiant/services/page.tsx");
   assert.match(source, /candidateMonthKeys\.filter/);
   assert.match(source, /hasPastSession/);
-  assert.match(source, /tab === "termines"[\s\S]*date\.session_date < today/);
+  assert.match(source, /tab === "termines"[\s\S]*date\.session_date < cycleStart/);
   assert.match(source, /"Dernière session"/);
 });
 

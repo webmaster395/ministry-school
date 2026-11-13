@@ -29,9 +29,10 @@ export default function DeepeningAccessManager({ students }: { students: Student
         </div>
       </div>
 
-      <label className="mt-5 flex min-h-11 items-center gap-2 rounded-xl border border-border bg-surface px-3.5 text-sm text-muted focus-within:border-foreground">
-        <Search size={17} />
-        <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Rechercher un étudiant" className="min-w-0 flex-1 bg-transparent text-foreground outline-none placeholder:text-muted" />
+      <label className="mt-5 flex min-h-12 w-full max-w-xl items-center gap-3 rounded-2xl border border-border-soft bg-surface/80 p-1.5 pr-4 text-sm text-muted shadow-[0_8px_28px_rgba(28,35,32,.06)] transition focus-within:border-foreground/40 focus-within:bg-background focus-within:shadow-[0_12px_34px_rgba(28,35,32,.1)]">
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-background text-foreground shadow-sm"><Search size={16} strokeWidth={1.8} /></span>
+        <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Rechercher par nom" className="min-w-0 flex-1 appearance-none border-0 bg-transparent p-0 text-sm text-foreground outline-none ring-0 placeholder:text-muted focus:border-0 focus:outline-none focus:ring-0" />
+        {query && <button type="button" onClick={() => setQuery("")} className="shrink-0 rounded-full px-2 py-1 text-[11px] font-semibold text-muted transition hover:bg-background hover:text-foreground">Effacer</button>}
       </label>
 
       <div className="mt-3 max-h-[360px] divide-y divide-border-soft overflow-y-auto rounded-xl border border-border">

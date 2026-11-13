@@ -6,6 +6,7 @@ import { getAllOpportunityDates, getMyOpportunityDateRegistrationIds, getOpportu
 import { getViewer } from "@/lib/data/viewer";
 import { getMinistry, sessionColor } from "@/lib/ministry";
 import { PROMOTION } from "@/lib/promotion";
+import { activeTrainingCycleStart } from "@/lib/training-cycle";
 
 function isProjectDay(session: StudentSession) {
   const value = `${session.track ?? ""} ${session.description ?? ""} ${session.courses?.title ?? ""}`.toLowerCase();
@@ -113,7 +114,14 @@ export default async function StudentCoursesPage({ searchParams }: { searchParam
   }
 
   const calendarSessions = [...regularSessions, ...choiceSessions, ...registeredSessions].sort((a, b) => a.date.localeCompare(b.date) || a.start.localeCompare(b.start));
-  const initialDate = params.jour && /^\d{4}-\d{2}-\d{2}$/.test(params.jour) ? params.jour : params.mois && /^\d{4}-\d{2}$/.test(params.mois) ? `${params.mois}-01` : undefined;
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris" }).format(new Date());
+  const cycleStart = activeTrainingCycleStart(today);
+  const nextCycleSession = calendarSessions.find((session) => session.date >= cycleStart)?.date;
+  const initialDate = params.jour && /^\d{4}-\d{2}-\d{2}$/.test(params.jour)
+    ? params.jour
+    : params.mois && /^\d{4}-\d{2}$/.test(params.mois)
+      ? `${params.mois}-01`
+      : nextCycleSession ?? cycleStart;
 
   return <div className="mx-auto max-w-6xl space-y-4 pb-8">
     <header><p className="text-[13px] font-medium text-muted">Promotion {PROMOTION}</p><h1 className="mt-0.5 font-title text-[25px] leading-tight text-foreground sm:text-[29px]">Mes cours</h1><p className="mt-1 text-[14px] text-muted">Retrouvez votre calendrier, vos cours et le travail à préparer.</p></header>
