@@ -48,10 +48,8 @@ function weekLabel(date: string) {
   return `Sem. ${text}`;
 }
 
-function sectionHref(section: Section) { return `/gestion/admin?onglet=pilotage&statistiques=${section}`; }
-
 function StatisticsNav({ section }: { section: Section }) {
-  return <nav aria-label="Sections des statistiques" className="grid w-full grid-cols-2 gap-1 rounded-xl border border-border bg-background p-1 lg:inline-grid lg:w-auto lg:grid-cols-4">{([['utilisation', 'Engagement'], ['membres', 'Membres'], ['programmes', 'Programme'], ['initiatives', 'Projets et formations']] as const).map(([key, label]) => <Link key={key} href={sectionHref(key)} aria-current={section === key ? "page" : undefined} className={`min-w-0 rounded-lg px-2 py-2.5 text-center text-[12px] font-semibold transition min-[375px]:text-[13px] sm:px-5 sm:text-sm ${section === key ? "bg-accent text-on-accent" : "text-muted hover:bg-surface hover:text-foreground"}`}>{label}</Link>)}</nav>;
+  return <nav aria-label="Sections des statistiques" className="grid w-full grid-cols-2 gap-1 rounded-xl border border-border bg-background p-1 lg:inline-grid lg:w-auto lg:grid-cols-4">{([['utilisation', 'Engagement'], ['membres', 'Membres'], ['programmes', 'Programme'], ['initiatives', 'Projets et formations']] as const).map(([key, label]) => <a key={key} href={`/gestion/admin?onglet=pilotage&statistiques=${key}`} aria-current={section === key ? "page" : undefined} className={`min-w-0 rounded-lg px-2 py-2.5 text-center text-[12px] font-semibold transition min-[375px]:text-[13px] sm:px-5 sm:text-sm ${section === key ? "bg-accent text-on-accent" : "text-muted hover:bg-surface hover:text-foreground"}`}>{label}</a>)}</nav>;
 }
 
 function UsageSection({ members, trainingDates, monthlyActivity, usage, usagePeople }: { members: Member[]; trainingDates: string[]; monthlyActivity: MonthlyActiveUsers[]; usage: UsageAnalytics; usagePeople: UsagePeople }) {
@@ -242,7 +240,8 @@ function InitiativesSection({ analytics }: { analytics: OpportunityAnalytics }) 
 }
 
 export default function StatisticsTab({ members, ministries, trainingDates, monthlyActivity, usage, usagePeople, program, opportunities, section: requestedSection }: { members: Member[]; ministries: Ministry[]; trainingDates: string[]; monthlyActivity: MonthlyActiveUsers[]; usage: UsageAnalytics; usagePeople: UsagePeople; program: ProgramAnalytics; opportunities: OpportunityAnalytics; section: string }) {
-  const section: Section = requestedSection === "membres" || requestedSection === "programmes" || requestedSection === "initiatives" ? requestedSection : "utilisation";
+  const normalize = (value: string): Section => value === "membres" || value === "programmes" || value === "initiatives" ? value : "utilisation";
+  const section = normalize(requestedSection);
   function downloadCsv() {
     const rows = [["Indicateur", "Valeur"], ["Comptes", String(members.length)], ["Utilisateurs actifs ce mois", String(monthlyActivity.find((item) => item.activity_month === currentParisMonth())?.active_users ?? 0)], ["Cours", String(program.courseCount)], ["Intervenants", String(program.trainerCount)], ["Heures", String(program.hours)], ["Ressources pédagogiques", String(program.resourceCount)], ["Projets et formations", String(opportunities.total)], ["Séances de projets et formations", String(opportunities.sessions)], ["Inscriptions aux séances", String(opportunities.registrations)], ["Participants uniques", String(opportunities.uniqueParticipants)], ["Places proposées", String(opportunities.capacity)]];
     const csv = `\ufeff${rows.map((row) => row.map((cell) => `"${cell.replaceAll('"', '""')}"`).join(";")).join("\n")}`;

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useSpace } from "@/components/SpaceProvider";
@@ -38,10 +37,13 @@ export default function SpaceTabs() {
   const items = current?.sections.flatMap((section) => section.items) ?? [];
   if (!current || items.length < 2) return null;
 
+  const isItemActive = (href: string) => {
+    const [itemPath, query = ""] = href.split("?");
+    if (pathname !== itemPath) return false;
+    return [...new URLSearchParams(query).entries()].every(([key, value]) => searchParams.get(key) === value);
+  };
   const activeItem = items.find((item) => {
-    const [itemPath, query] = item.href.split("?");
-    const expectedTab = query ? new URLSearchParams(query).get("onglet") : null;
-    return pathname === itemPath && (expectedTab ? searchParams.get("onglet") === expectedTab : !searchParams.get("onglet"));
+    return isItemActive(item.href);
   });
 
   return (
@@ -53,12 +55,9 @@ export default function SpaceTabs() {
         </summary>
         <nav aria-label={current.label} className="absolute inset-x-0 top-[calc(100%+6px)] overflow-hidden rounded-xl border border-border bg-background p-1.5 shadow-xl">
           {items.map((item) => {
-            const [itemPath, query] = item.href.split("?");
-            const expectedTab = query ? new URLSearchParams(query).get("onglet") : null;
-            const currentTab = searchParams.get("onglet");
-            const active = pathname === itemPath && (expectedTab ? currentTab === expectedTab : !currentTab);
+            const active = isItemActive(item.href);
             const validationBadge = item.label === "Projets et formations" ? pendingValidationCount : 0;
-            return <Link key={item.href} href={item.href} onClick={() => menu.current?.removeAttribute("open")} aria-current={active ? "page" : undefined} className={`flex min-h-11 items-center justify-between gap-2 rounded-lg px-3.5 py-3 text-sm font-medium ${active ? "bg-accent text-on-accent" : "text-foreground hover:bg-surface"}`}><span>{item.label}</span>{validationBadge > 0 && <span className="grid h-6 min-w-6 place-items-center rounded-full bg-[#C43D32] px-1.5 text-[11px] font-semibold text-white">{validationBadge}</span>}</Link>;
+            return <a key={item.href} href={item.href} onClick={() => menu.current?.removeAttribute("open")} aria-current={active ? "page" : undefined} className={`flex min-h-11 items-center justify-between gap-2 rounded-lg px-3.5 py-3 text-sm font-medium ${active ? "bg-accent text-on-accent" : "text-foreground hover:bg-surface"}`}><span>{item.label}</span>{validationBadge > 0 && <span className="grid h-6 min-w-6 place-items-center rounded-full bg-[#C43D32] px-1.5 text-[11px] font-semibold text-white">{validationBadge}</span>}</a>;
           })}
         </nav>
       </details>
@@ -67,13 +66,10 @@ export default function SpaceTabs() {
       className="tabbar mb-6 hidden flex-wrap items-center gap-2 sm:flex"
     >
       {items.map((item) => {
-        const [itemPath, query] = item.href.split("?");
-        const expectedTab = query ? new URLSearchParams(query).get("onglet") : null;
-        const currentTab = searchParams.get("onglet");
-        const active = pathname === itemPath && (expectedTab ? currentTab === expectedTab : !currentTab);
+        const active = isItemActive(item.href);
         const validationBadge = item.label === "Projets et formations" ? pendingValidationCount : 0;
         return (
-          <Link
+          <a
             key={item.href}
             href={item.href}
             aria-current={active ? "page" : undefined}
@@ -82,7 +78,7 @@ export default function SpaceTabs() {
             }`}
           >
             <span className="inline-flex items-center gap-2">{item.label}{validationBadge > 0 && <span className="grid h-5 min-w-5 place-items-center rounded-full bg-[#C43D32] px-1 text-[10px] font-semibold text-white">{validationBadge}</span>}</span>
-          </Link>
+          </a>
         );
       })}
       </nav>
