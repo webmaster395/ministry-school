@@ -269,8 +269,10 @@
   background: linear-gradient(145deg, #9b351d 0 42%, #ca753f 72%, #7f2f22 100%);
 }
 
-.storyRing[data-story-key="profil-mapp"],
-.storyRing[data-story-key="mapp"] {
+.story_not-started .storyRing[data-story-key="profil-mapp"],
+.story_not-started .storyRing[data-story-key="mapp"],
+.story_available .storyRing[data-story-key="profil-mapp"],
+.story_available .storyRing[data-story-key="mapp"] {
   background: conic-gradient(
     from -28deg,
     #feda75 0deg,
@@ -695,7 +697,7 @@
 
 .fruitArtwork {
   inset: 0;
-  background: #f7f5f1 url('/apps/grace-identity/fruit-spirit-water-fruit-v8.png') center / cover no-repeat;
+  background: #f7f5f1 url('/apps/grace-identity/fruit-spirit-water-fruit-v9.png') center / cover no-repeat;
   filter: none;
   transform: none;
   transition: transform 420ms var(--ease-out-soft);

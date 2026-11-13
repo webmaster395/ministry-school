@@ -150,13 +150,113 @@
   }
 }
 
+/* V10 — composition claire définitive fournie le 13 novembre. */
+.shell,
+.shell.softGreen,
+.shell.softIvory {
+  background: #fbfaf8 url('/apps/grace-identity/fruit-spirit-water-fruit-v10.png') center top / cover fixed;
+  color: #241a27;
+}
+
+.shell::before,
+.softGreen::before,
+.softIvory::before {
+  background: linear-gradient(90deg, rgb(255 255 253 / 0.28), rgb(255 255 253 / 0.08));
+  filter: none;
+  opacity: 1;
+}
+
+.coverCopy,
+.introCopy,
+.situationHeader,
+.overviewHeader,
+.resultHero,
+.questionBlock,
+.summary,
+.fruitCard,
+.emptyCategory,
+.overviewGroup,
+.restitution,
+.resultPager button,
+.resultList {
+  border-color: rgb(78 58 73 / 0.14);
+  background: rgb(255 254 251 / 0.975);
+  color: #241a27;
+  box-shadow: 0 16px 42px rgb(60 35 53 / 0.1);
+  backdrop-filter: blur(8px);
+}
+
+@media(max-width:720px) {
+  .shell,
+  .shell.softGreen,
+  .shell.softIvory {
+    background-attachment: scroll;
+    background-position: 54% top;
+  }
+
+  .shell::before,
+  .softGreen::before,
+  .softIvory::before {
+    background: linear-gradient(180deg, rgb(255 255 253 / 0.22), rgb(255 255 253 / 0.4));
+    filter: none;
+    opacity: 1;
+  }
+}
+
+/* Fond définitif : composition claire et minimale fournie pour le questionnaire
+   et la restitution. Les fruits restent en périphérie ; le contenu demeure sur
+   des cartes opaques au centre. */
+.shell {
+  background-color: #fbfaf8;
+  background-image: url('/apps/grace-identity/fruit-spirit-water-fruit-v10.png');
+  background-position: center top;
+  background-size: cover;
+}
+
+.shell::before,
+.softGreen::before,
+.softIvory::before {
+  background: linear-gradient(90deg, rgb(255 255 253 / 0.3), rgb(255 255 253 / 0.12));
+}
+
+.coverCopy,
+.introCopy,
+.situationHeader,
+.overviewHeader,
+.resultHero,
+.questionBlock,
+.summary,
+.fruitCard,
+.emptyCategory,
+.overviewGroup,
+.restitution,
+.resultPager button,
+.resultList {
+  border-color: rgb(78 58 73 / 0.14);
+  background: rgb(255 254 251 / 0.975);
+  box-shadow: 0 16px 42px rgb(60 35 53 / 0.1);
+  backdrop-filter: blur(8px);
+}
+
+@media(max-width:720px) {
+  .shell {
+    background-position: 54% top;
+  }
+
+  .shell::before,
+  .softGreen::before,
+  .softIvory::before {
+    background: linear-gradient(180deg, rgb(255 255 253 / 0.25), rgb(255 255 253 / 0.42));
+  }
+}
+
 /* Direction artistique fruits violets — image demandée, textes sur surfaces
    réellement opaques afin de rester lisibles sur toutes les zones de l'image. */
 .shell {
   --ink: #241a27;
   --paper: #fffdf8;
   background-color: #f7f5f1;
-  background-image: url('/apps/grace-identity/fruit-spirit-water-fruit-v8.png');
+  background-image: url('/apps/grace-identity/fruit-spirit-water-fruit-v9.png');
   background-position: center top;
   background-size: cover;
   color: var(--ink);
@@ -1110,18 +1210,34 @@
 .shell {
   --ink: #241a27;
   --paper: #fffdf8;
-  background: #f7f5f1 url('/apps/grace-identity/fruit-spirit-water-fruit-v8.png') center top / cover fixed;
+  isolation: isolate;
+  background: #f3efe9;
   color: var(--ink);
 }
 
 .shell::before,
 .softGreen::before,
 .softIvory::before {
-  background: linear-gradient(90deg, rgb(255 253 248 / 0.94) 0%, rgb(255 253 248 / 0.84) 58%, rgb(255 253 248 / 0.56) 100%);
+  inset: -24px;
+  z-index: -2;
+  background: url('/apps/grace-identity/fruit-spirit-water-fruit-v9.png') center / cover fixed;
+  filter: blur(5px) saturate(0.9) brightness(1.04);
+  opacity: 0.86;
+  transform: scale(1.018);
 }
 
 .shell::after {
-  display: none;
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: linear-gradient(90deg, rgb(255 253 248 / 0.92) 0%, rgb(255 253 248 / 0.72) 55%, rgb(255 253 248 / 0.4) 100%);
+  content: "";
+  filter: none;
+  opacity: 1;
 }
 
 .coverCopy,
@@ -1133,11 +1249,11 @@
   max-width: min(820px, 100%);
   border: 1px solid rgb(73 50 75 / 0.12);
   border-radius: 22px;
-  background: rgb(255 253 248 / 0.94);
+  background: rgb(255 253 248 / 0.96);
   padding: clamp(18px, 3vw, 30px);
   color: #241a27;
   box-shadow: 0 18px 48px rgb(33 16 36 / 0.12);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(18px);
 }
 
 .questionBlock,
@@ -1266,6 +1382,29 @@
 }
 
 @media(max-width:720px) {
+  .shell::before,
+  .softGreen::before,
+  .softIvory::before {
+    background-attachment: scroll;
+    background-position: 56% top;
+    filter: blur(6px) saturate(0.84) brightness(1.07);
+  }
+
+  .shell::after {
+    background: linear-gradient(180deg, rgb(255 253 248 / 0.82), rgb(255 253 248 / 0.68));
+  }
+
+  .coverCopy,
+  .introCopy,
+  .situationHeader,
+  .overviewHeader,
+  .resultHero {
+    border-radius: 18px;
+    background: rgb(255 253 248 / 0.97);
+  }
+}
+
+@media(max-width:720px) {
   .shell {
     background-attachment: scroll;
     background-position: 52% top;
@@ -1274,7 +1413,9 @@
   .shell::before,
   .softGreen::before,
   .softIvory::before {
-    background: linear-gradient(180deg, rgb(255 253 248 / 0.78), rgb(255 253 248 / 0.94));
+    background: url('/apps/grace-identity/fruit-spirit-water-fruit-v9.png') 56% top / cover scroll;
+    filter: blur(6px) saturate(0.84) brightness(1.07);
+    opacity: 0.74;
   }
 
   .coverCopy,
@@ -1285,5 +1426,58 @@
     width: 100%;
     border-radius: 16px;
     padding: 16px;
+  }
+}
+
+/* V10 — priorité finale : fond clair fourni, fruits uniquement en périphérie. */
+.shell,
+.shell.softGreen,
+.shell.softIvory {
+  background: #fbfaf8 url('/apps/grace-identity/fruit-spirit-water-fruit-v10.png') center top / cover fixed;
+  color: #241a27;
+}
+
+.shell::before,
+.softGreen::before,
+.softIvory::before {
+  background: linear-gradient(90deg, rgb(255 255 253 / 0.28), rgb(255 255 253 / 0.08));
+  filter: none;
+  opacity: 1;
+}
+
+.coverCopy,
+.introCopy,
+.situationHeader,
+.overviewHeader,
+.resultHero,
+.questionBlock,
+.summary,
+.fruitCard,
+.emptyCategory,
+.overviewGroup,
+.restitution,
+.resultPager button,
+.resultList {
+  border-color: rgb(78 58 73 / 0.14);
+  background: rgb(255 254 251 / 0.975);
+  color: #241a27;
+  box-shadow: 0 16px 42px rgb(60 35 53 / 0.1);
+  backdrop-filter: blur(8px);
+}
+
+@media(max-width:720px) {
+  .shell,
+  .shell.softGreen,
+  .shell.softIvory {
+    background-attachment: scroll;
+    background-position: 54% top;
+  }
+
+  .shell::before,
+  .softGreen::before,
+  .softIvory::before {
+    background: linear-gradient(180deg, rgb(255 255 253 / 0.22), rgb(255 255 253 / 0.4));
+    filter: none;
+    opacity: 1;
   }
 }

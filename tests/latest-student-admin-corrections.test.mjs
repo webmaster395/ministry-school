@@ -45,7 +45,7 @@ test("Fruit de l'Esprit utilise l'image finale sans sacrifier la lisibilité", a
     read("src/components/apps/FruitSpiritJourney.module.css"),
     read("src/app/etudiant/identite/IdentityExperience.tsx"),
   ]);
-  assert.match(css, /fruit-spirit-water-fruit-v8\.png/);
+  assert.match(css, /fruit-spirit-water-fruit-v9\.png/);
   assert.match(css, /background:\s*rgb\(255 253 248 \/ 0\.9[48]\)/);
-  assert.match(identity, /fruit-spirit-water-fruit-v8\.png/);
+  assert.match(identity, /fruit-spirit-water-fruit-v9\.png/);
 });

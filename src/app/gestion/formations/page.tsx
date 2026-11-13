@@ -20,6 +20,7 @@ type FormationRow = {
 };
 
 const tabs = [
+  { key: "upcoming", query: "prochaines", label: "Prochaines formations" },
   { key: "heart", query: "coeur", label: "Formation du cœur" },
   { key: "character", query: "caractere", label: "Formation du caractère" },
   { key: "deepening", query: "approfondissements", label: "Formations d’approfondissement" },
@@ -28,12 +29,12 @@ const tabs = [
 export default async function FormationsPage({ searchParams }: { searchParams: Promise<{ onglet?: string; mois?: string }> }) {
   const [viewer, query] = await Promise.all([getViewer(), searchParams]);
   if (!viewer) redirect("/login");
-  const allowed = viewer.roles.superAdmin ? tabs : tabs.filter((tab) => viewer.roles.formationCategoryKeys.includes(tab.key));
+  const allowed = viewer.roles.superAdmin ? tabs : tabs.filter((tab) => tab.key === "upcoming" || viewer.roles.formationCategoryKeys.includes(tab.key));
   if (!allowed.length) redirect("/etudiant");
   const selected = allowed.find((tab) => tab.query === query.onglet) ?? allowed[0];
   const supabase = await createClient();
   const [formationsResult, trainersResult, ministriesResult, entries, managedIdsResult, studentsResult, accessResult, assignedFormationsResult] = await Promise.all([
-    supabase.from("formations").select("id,category_key,slug,title,description,status,ministry:ministries(name)").eq("category_key", selected.key).order("title"),
+    supabase.from("formations").select("id,category_key,slug,title,description,status,ministry:ministries(name)").order("title"),
     supabase.from("trainers").select("id,first_name,last_name").eq("is_active", true).order("last_name"),
     supabase.from("ministries").select("id,name").order("name"),
     getProgramEntries(supabase, []),
@@ -48,11 +49,16 @@ export default async function FormationsPage({ searchParams }: { searchParams: P
       ? Promise.resolve({ data: [] })
       : supabase.from("formation_assignments").select("formation_id").eq("user_id", viewer.id),
   ]);
-  const allFormations = (formationsResult.data ?? []) as unknown as FormationRow[];
+  const allFormationRows = (formationsResult.data ?? []) as unknown as FormationRow[];
+  const allFormations = selected.key === "upcoming" ? allFormationRows : allFormationRows.filter((formation) => formation.category_key === selected.key);
   const trainers = (trainersResult.data ?? []).map((item) => ({ id: item.id, name: `${item.first_name} ${item.last_name}`.trim() }));
   const ministries = (ministriesResult.data ?? []).map((item) => ({ id: item.id, name: item.name }));
   const managedIds = new Set(((managedIdsResult.data ?? []) as unknown[]).map((item) => typeof item === "string" ? item : String((item as { managed_formation_session_ids?: string }).managed_formation_session_ids ?? "")));
-  const formationEntries = entries.filter((entry) => entry.kind === "course" && entry.formationCategory === selected.key && (viewer.roles.superAdmin || managedIds.has(entry.key.slice(2)))).map((entry) => ({ ...entry, href: `/gestion/enseignement/preparation/${entry.key.slice(2)}` }));
+  const today = new Date().toISOString().slice(0, 10);
+  const formationEntries = entries.filter((entry) => entry.kind === "course"
+    && (selected.key === "upcoming" ? entry.date >= today : entry.formationCategory === selected.key)
+    && (viewer.roles.superAdmin || managedIds.has(entry.key.slice(2))))
+    .map((entry) => ({ ...entry, href: `/gestion/enseignement/preparation/${entry.key.slice(2)}` }));
   const visibleFormationIds = new Set([
     ...formationEntries.map((entry) => entry.formationId).filter(Boolean),
     ...((assignedFormationsResult.data ?? []) as { formation_id: string }[]).map((row) => row.formation_id),
@@ -64,10 +70,24 @@ export default async function FormationsPage({ searchParams }: { searchParams: P
   return <div className="space-y-6">
     <ManagementPageHeader eyebrow="MES ESPACES ADMIN" title="Formations" subtitle="Cours, séances, ressources, devoirs et responsabilités dans une seule organisation." mobileTitleInAppBar />
     {allowed.length > 1 && <nav aria-label="Catégories de formation" className="flex gap-1 overflow-x-auto rounded-2xl border border-border bg-background p-1.5 [scrollbar-width:none]">{allowed.map((tab) => <Link key={tab.key} href={`/gestion/formations?onglet=${tab.query}`} aria-current={tab.key === selected.key ? "page" : undefined} className={`shrink-0 rounded-xl px-4 py-3 text-sm font-semibold ${tab.key === selected.key ? "bg-accent text-on-accent" : "text-muted hover:bg-surface hover:text-foreground"}`}>{tab.label}</Link>)}</nav>}
-    {selected.key === "deepening"
+    {selected.key === "upcoming"
+      ? <UpcomingPanel entries={formationEntries} />
+      : selected.key === "deepening"
       ? <DeepeningPanel formations={formations} entries={formationEntries} canCreate={viewer.roles.superAdmin} students={deepeningStudents} />
       : <StandardPanel formations={formations} entries={formationEntries} month={query.mois} trainers={trainers} ministries={ministries} tabQuery={selected.query} />}
   </div>;
+}
+
+function UpcomingPanel({ entries }: { entries: ProgramEntry[] }) {
+  const first = entries.slice().sort((a, b) => a.date.localeCompare(b.date))[0];
+  if (!first) return <Empty title="Aucune prochaine formation" text="Aucun cours futur n’est actuellement planifié dans votre périmètre." />;
+  const month = first.date.slice(0, 7);
+  const visible = entries.filter((entry) => entry.date.startsWith(month)).sort((a, b) => `${a.date}${a.start}`.localeCompare(`${b.date}${b.start}`));
+  const monthLabel = new Intl.DateTimeFormat("fr-FR", { month: "long", year: "numeric" }).format(new Date(`${month}-01T12:00:00`));
+  return <section className="rounded-2xl border border-border bg-background p-4 sm:p-6">
+    <div className="flex flex-col gap-2 border-b border-border-soft pb-5 sm:flex-row sm:items-end sm:justify-between"><div><p className="label text-[10px] tracking-[.14em] text-muted">PROCHAIN CYCLE</p><h2 className="font-title mt-1 text-[28px] capitalize">{monthLabel}</h2><p className="mt-1 text-sm text-muted">Ouvrez un cours pour consulter ses informations, le modifier et enregistrer immédiatement.</p></div><span className="rounded-full bg-surface px-3 py-1.5 text-xs font-semibold">{visible.length} cours</span></div>
+    <div className="mt-4 grid gap-3">{visible.map((entry) => <Link key={entry.key} href={entry.href} className="group grid gap-2 rounded-2xl border border-border p-4 transition hover:border-foreground hover:shadow-sm sm:grid-cols-[9rem_minmax(0,1fr)_auto] sm:items-center"><div><strong className="block text-sm capitalize">{new Intl.DateTimeFormat("fr-FR", { weekday: "short", day: "numeric", month: "short" }).format(new Date(`${entry.date}T12:00:00`))}</strong><span className="text-xs text-muted">{entry.start.slice(0, 5)}–{entry.end.slice(0, 5)}</span></div><div className="min-w-0"><strong className="block truncate text-sm">{entry.title}</strong><span className="text-xs text-muted">{entry.track ?? "Formation"}{entry.location ? ` · ${entry.location}` : ""}</span></div><span className="inline-flex items-center gap-1 text-xs font-semibold">Ouvrir <ChevronRight size={15} className="transition group-hover:translate-x-1" /></span></Link>)}</div>
+  </section>;
 }
 
 function StandardPanel({ formations, entries, month, trainers, ministries, tabQuery }: { formations: FormationRow[]; entries: ProgramEntry[]; month?: string; trainers: { id: string; name: string }[]; ministries: { id: string; name: string }[]; tabQuery: string }) {

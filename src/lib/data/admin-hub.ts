@@ -165,7 +165,7 @@ export async function getProgramEntries(supabase: SupabaseClient, opps: OppRow[]
   const { data } = await supabase
     .from("sessions")
     .select(
-      "id, session_date, start_time, end_time, location, room, description, track, ministry_id, course_id, formation_id, formation:formations(id,category_key), speaker_name, summary, objectives, show_parking_notice, courses(title), services(name), teacher:profiles!sessions_teacher_id_fkey(full_name)"
+      "id, session_date, start_time, end_time, location, room, description, track, ministry_id, course_id, formation_id, formation:formations(id,category_key), speaker_name, summary, objectives, show_parking_notice, courses(id,title,formation_id,formation:formations(id,category_key)), services(name), teacher:profiles!sessions_teacher_id_fkey(full_name)"
     )
     .order("session_date")
     .order("start_time");
@@ -173,7 +173,7 @@ export async function getProgramEntries(supabase: SupabaseClient, opps: OppRow[]
   type Row = {
     id: string; session_date: string; start_time: string; end_time: string; location: string;
     room: string | null; description: string | null; track: string | null; speaker_name: string | null;
-    summary: string | null; objectives: string | null; ministry_id: string | null; course_id: string | null; formation_id: string | null; formation: { id: string; category_key: ProgramEntry["formationCategory"] } | null; show_parking_notice: boolean; courses: { title: string } | null; services: { name: string } | null; teacher: { full_name: string } | null;
+    summary: string | null; objectives: string | null; ministry_id: string | null; course_id: string | null; formation_id: string | null; formation: { id: string; category_key: ProgramEntry["formationCategory"] } | null; show_parking_notice: boolean; courses: { id: string; title: string; formation_id: string | null; formation: { id: string; category_key: ProgramEntry["formationCategory"] } | null } | null; services: { name: string } | null; teacher: { full_name: string } | null;
   };
 
   const rows = (data ?? []) as unknown as Row[];
@@ -209,9 +209,9 @@ export async function getProgramEntries(supabase: SupabaseClient, opps: OppRow[]
       parking: s.show_parking_notice,
       track: s.track,
       ministryId: s.ministry_id,
-      courseId: s.course_id,
-      formationId: s.formation_id,
-      formationCategory: s.formation?.category_key ?? null,
+      courseId: s.course_id ?? s.courses?.id ?? null,
+      formationId: s.formation_id ?? s.courses?.formation_id ?? s.courses?.formation?.id ?? null,
+      formationCategory: s.formation?.category_key ?? s.courses?.formation?.category_key ?? null,
     };
   });
 

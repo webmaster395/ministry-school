@@ -1,4 +1,5 @@
-import { CalendarDays, Check, Clock, ExternalLink, FileText, Link2, MapPin, PackageCheck, PackageOpen, Users } from "lucide-react";
+import Link from "next/link";
+import { CalendarDays, Check, Clock, ExternalLink, FileText, Link2, MapPin, PackageCheck, PackageOpen, Pencil, Users } from "lucide-react";
 import { redirect } from "next/navigation";
 import BackButton from "@/components/BackButton";
 import OpportunityBanner from "@/components/OpportunityBanner";
@@ -72,7 +73,10 @@ export default async function OpportunityPage({ params, searchParams }: { params
   return (
     <div className="space-y-5 pb-10">
       {!isPublished(o) && <p className="rounded-xl border border-border bg-surface px-4 py-3 text-sm"><strong>Mode aperçu :</strong> cette page est invisible des étudiants.</p>}
-      <BackButton fallbackHref="/etudiant/services" fallbackLabel="Retour aux projets et formations" />
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <BackButton fallbackHref="/etudiant/services" fallbackLabel="Retour aux projets et formations" />
+        {canInspectHistory && <Link href={`/gestion/projets-formations/${id}${rights.admin ? "?scope=admin" : ""}`} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-border bg-background px-4 text-sm font-semibold transition hover:border-foreground"><Pencil size={16} /> Modifier la fiche</Link>}
+      </div>
 
       <header className="overflow-hidden rounded-3xl">
         <OpportunityBanner
