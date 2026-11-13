@@ -9,6 +9,7 @@ const TITLES: Record<string, string> = {
   "/etudiant/travail": "Travail à faire",
   "/etudiant/notes": "Mes notes",
   "/etudiant/services": "Projets et formations",
+  "/etudiant/ressources": "Ressources",
   "/etudiant/aide": "Une question ?",
   "/gestion/enseignement": "Préparer mes cours",
   "/gestion/pilotage": "Pilotage ministériel",

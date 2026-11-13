@@ -90,6 +90,7 @@ export default function OpportunityEditForms({
   const [editing, setEditing] = useState(workspaceStartsEditing);
   const [dirty, setDirty] = useState(false);
   const [confirmation, setConfirmation] = useState<string | null>(null);
+  const [savedAt, setSavedAt] = useState<string | null>(null);
   const [dates, setDates] = useState(initialDates);
   const [title, setTitle] = useState(o.title);
   const [type, setType] = useState(opportunityType(o));
@@ -122,6 +123,7 @@ export default function OpportunityEditForms({
         if (state.dates) setDates(state.dates);
       }
       setConfirmation(state.message);
+      setSavedAt(new Intl.DateTimeFormat("fr-FR", { hour: "2-digit", minute: "2-digit", second: "2-digit" }).format(new Date()));
     }, 0);
     return () => window.clearTimeout(timer);
   }, [state]);
@@ -208,12 +210,12 @@ export default function OpportunityEditForms({
         opportunityId={o.id}
         title={title || o.title}
         {...workspaceHeader}
-        saveState={pending ? "Enregistrement…" : dirty ? "Modifications non enregistrées" : confirmation ? "Enregistré" : null}
+        saveState={pending ? "Enregistrement…" : dirty ? "Modifications non enregistrées" : savedAt ? `Enregistré à ${savedAt}` : null}
         submissionBlocked={pending || dirty}
         saveAction={<button ref={saveButtonRef} disabled={pending || !dirty} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-accent px-4 text-sm font-semibold text-on-accent disabled:opacity-60 min-[430px]:w-auto"><Save size={16} /> {pending ? "Enregistrement…" : "Enregistrer"}</button>}
         error={state && !state.ok ? state.message : null}
       /> : <div className="sticky top-2 z-30 grid gap-3 rounded-2xl border border-border bg-background/95 px-4 py-3 shadow-lg backdrop-blur sm:top-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:px-5">
-        <div className="min-w-0"><p className="text-sm font-semibold">{workspace ? "Préparation du projet ou de la formation" : "Modification de la fiche"}</p><p className="text-xs text-muted">{pending ? "Enregistrement…" : dirty ? "Modifications non enregistrées" : confirmation ? "Enregistré" : "Toutes les modifications sont enregistrées ensemble."}</p></div>
+        <div className="min-w-0"><p className="text-sm font-semibold">{workspace ? "Préparation du projet ou de la formation" : "Modification de la fiche"}</p><p className="text-xs text-muted">{pending ? "Enregistrement en cours…" : dirty ? "Modifications non enregistrées" : savedAt ? `Tout est enregistré · ${savedAt}` : "Toutes les modifications sont enregistrées ensemble."}</p></div>
         <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center">
           <button type="button" onClick={cancel} disabled={pending} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-border px-3 text-sm font-semibold disabled:opacity-50 sm:px-4"><X size={16} /> Annuler</button>
           <button ref={saveButtonRef} disabled={pending || !dirty} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-accent px-3 text-sm font-semibold text-on-accent disabled:opacity-60 sm:px-4"><Save size={16} /> {pending ? "Enregistrement…" : workspace ? "Enregistrer" : "Enregistrer"}</button>

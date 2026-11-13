@@ -21,6 +21,7 @@ import {
   BadgeCheck,
   PanelsTopLeft,
   Fingerprint,
+  LibraryBig,
 } from "lucide-react";
 import { isPlainStudent, type ViewerRoles } from "@/lib/roles";
 import { QUESTIONS_ENABLED } from "@/lib/questions";
@@ -63,6 +64,7 @@ const icons = {
   validate: <BadgeCheck {...iconProps} />,
   apps: <PanelsTopLeft {...iconProps} />,
   identity: <Fingerprint {...iconProps} />,
+  resources: <LibraryBig {...iconProps} />,
 };
 
 /** Le menu étudiant, toujours affiché : celui de la maquette de Rose Alice. */
@@ -79,8 +81,8 @@ export const studentSections: NavSection[] = [
     items: [
       { label: "Mes cours", href: "/etudiant/cours", icon: icons.calendar },
       { label: "Travail à faire", href: "/etudiant/travail", icon: icons.task },
-      // Le ministère reste masqué tant que son espace n'est pas prêt.
-      // { label: "Mon ministère", href: "/etudiant/formation", icon: icons.ministries },
+      { label: "Ressources", href: "/etudiant/ressources", icon: icons.resources },
+      { label: "Mon ministère", href: "/etudiant/formation", icon: icons.ministries },
       { label: "Projets et formations", href: "/etudiant/services", icon: icons.services },
     ],
   },

@@ -720,6 +720,8 @@ export async function saveOpportunityInline(_previous: OpportunityFormState, for
   try {
     const supabase = await createClient();
     const id = text(formData, "opportunity_id");
+    const { data: reviewState } = await supabase.rpc("opportunity_review_state", { p_opportunity: id });
+    const alreadyApproved = Boolean(reviewState && typeof reviewState === "object" && !Array.isArray(reviewState) && (reviewState as { status?: string }).status === "approved");
     const type = text(formData, "type");
     if (!(type === "projet" || type === "formation" || type === "both")) throw new Error("Type invalide.");
     const parsedCapacity = Number.parseInt(text(formData, "capacity"), 10);
@@ -769,7 +771,7 @@ export async function saveOpportunityInline(_previous: OpportunityFormState, for
     refreshOpportunity(id);
     return {
       ok: true,
-      message: result.publishedDirectly
+      message: result.publishedDirectly || alreadyApproved
         ? "Enregistré. Les modifications sont actives sans nouvelle validation."
         : "Enregistré.",
       updatedAt: result.updatedAt,

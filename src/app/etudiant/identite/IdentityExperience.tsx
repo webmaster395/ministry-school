@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element -- avatars et icônes administrables */
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BadgeCheck, BookOpen, Check, Clock3, Grid3X3, Network, Plus, Sparkles } from "lucide-react";
+import { ArrowRight, BadgeCheck, BookOpen, Check, Clock3, Grid3X3, Network, Plus } from "lucide-react";
 import { useRef, useState } from "react";
 import AvatarEditor from "@/components/AvatarEditor";
 import type { IdentityResult } from "@/lib/identity/dashboard";
@@ -190,7 +190,7 @@ function UpcomingPost({ item }: { item: IdentityUpcomingItem }) {
 }
 
 export default function IdentityExperience(props: Props) {
-  const [activeTab, setActiveTab] = useState<"results" | "upcoming" | "resources">("results");
+  const [activeTab, setActiveTab] = useState<"results" | "upcoming">("results");
   const feedRef = useRef<HTMLElement>(null);
   const nameParts = props.fullName.trim().split(/\s+/).filter(Boolean);
   const firstName = nameParts[0] || "Mon identité";
@@ -200,13 +200,10 @@ export default function IdentityExperience(props: Props) {
     requestAnimationFrame(() => feedRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
   }
 
-  const resourceLinks = props.stories.flatMap((story) => story.links ?? []);
-  const activeCount = activeTab === "results" ? props.results.length : activeTab === "upcoming" ? props.upcoming.length : resourceLinks.length;
+  const activeCount = activeTab === "results" ? props.results.length : props.upcoming.length;
   const activeCountLabel = activeTab === "results"
     ? `publication${activeCount > 1 ? "s" : ""}`
-    : activeTab === "upcoming"
-      ? `outil${activeCount > 1 ? "s" : ""} à faire`
-      : `ressource${activeCount > 1 ? "s" : ""}`;
+    : `outil${activeCount > 1 ? "s" : ""} à faire`;
   const measurableStories = props.stories.filter((story) => story.measurable);
   const completedStoryCount = measurableStories.filter((story) => story.status === "completed").length;
   const remainingStoryCount = measurableStories.length - completedStoryCount;
@@ -247,19 +244,18 @@ export default function IdentityExperience(props: Props) {
         <section className={styles.storySection} aria-label="Mes outils">
           <div className={styles.stories}>
             {props.stories.map((story) => story.links ? (
-              <button
+              <Link
                 className={`${styles.story} ${styles[`story_${story.status}`]}`}
                 key={story.key}
-                type="button"
-                onClick={() => setActiveTab("resources")}
-                aria-label={`Ouvrir ${story.name}`}
+                href="/etudiant/ressources"
+                aria-label="Ouvrir la bibliothèque de ressources"
               >
                 <span className={styles.storyRing} data-story-key={story.key}>
                   <span className={styles.storyInner}><Image src={story.image} alt="" fill sizes="112px" /></span>
                   <span className={styles.storyBadge}><Plus /></span>
                 </span>
                 <strong>{story.name}</strong>
-              </button>
+              </Link>
             ) : (
               <Link
                 className={`${styles.story} ${styles[`story_${story.status}`]}`}
@@ -305,9 +301,6 @@ export default function IdentityExperience(props: Props) {
           <button type="button" role="tab" aria-selected={activeTab === "upcoming"} className={activeTab === "upcoming" ? styles.activeTab : ""} onClick={() => setActiveTab("upcoming")}>
             <Clock3 /> À faire
           </button>
-          <button type="button" role="tab" aria-selected={activeTab === "resources"} className={activeTab === "resources" ? styles.activeTab : ""} onClick={() => setActiveTab("resources")}>
-            <Sparkles /> Ressources
-          </button>
         </div>
         <p className={styles.publicationCount} aria-live="polite">{activeCount} {activeCountLabel}</p>
 
@@ -322,12 +315,6 @@ export default function IdentityExperience(props: Props) {
           )
         ) : activeTab === "upcoming" && props.upcoming.length ? (
           <div className={styles.grid}>{props.upcoming.map((item) => <UpcomingPost item={item} key={item.key} />)}</div>
-        ) : activeTab === "resources" && resourceLinks.length ? (
-          <div className={styles.resourceGrid}>{resourceLinks.map((item) => (
-            <Link className={styles.resourceCard} href={item.href} key={item.href} target={item.external ? "_blank" : undefined} rel={item.external ? "noreferrer" : undefined}>
-              <span><small>Finance</small><strong>{item.name}</strong><em>Découvrir la ressource</em></span><ArrowRight />
-            </Link>
-          ))}</div>
         ) : (
           <div className={styles.empty}>
             <span><Clock3 /></span>

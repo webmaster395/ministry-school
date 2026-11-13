@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { CalendarDays, MapPin, Settings2, UserRound } from "lucide-react";
 import { deleteSessionFromCard, updateSessionWithFeedback } from "@/lib/actions/sessions";
 import AdminSelect from "@/components/admin/AdminSelect";
@@ -47,16 +47,23 @@ export default function SessionEditForm({
   admin?: AdminOptions;
 }) {
   const [state, formAction, pending] = useActionState(updateSessionWithFeedback, null);
+  const [dirty, setDirty] = useState(false);
+  const [savedAt, setSavedAt] = useState<string | null>(null);
   const [category, setCategory] = useState(s.track ?? "Formation du cœur");
   const fixedMinistrySchedule = s.session_type === "ministere" && !admin;
   const standardCategories = ["Formation du cœur", "Formation du caractère", "Sensibilité ministérielle", "Mise en pratique"];
+  useEffect(() => {
+    if (!state?.ok) return;
+    setDirty(false);
+    setSavedAt(new Intl.DateTimeFormat("fr-FR", { hour: "2-digit", minute: "2-digit" }).format(new Date()));
+  }, [state]);
   return (
     <details className="group" open={defaultOpen}>
       <summary className="inline-flex min-h-10 cursor-pointer list-none items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-semibold text-foreground transition hover:border-foreground">
         <Settings2 size={16} /> Modifier les informations
       </summary>
 
-      <form action={formAction} className="mt-4 max-w-4xl space-y-4">
+      <form action={formAction} onChange={() => { setDirty(true); setSavedAt(null); }} className="mt-4 max-w-4xl space-y-4">
         <input type="hidden" name="session_id" value={s.id} />
 
         <fieldset className="rounded-2xl border border-border bg-surface/40 p-4 sm:p-5">
@@ -95,7 +102,7 @@ export default function SessionEditForm({
 
         <details className="rounded-2xl border border-border bg-surface/40 px-4 py-3"><summary className="cursor-pointer text-sm font-semibold text-foreground">Paramètres complémentaires</summary><div className="mt-4 space-y-4"><label className="block text-sm font-medium text-foreground">Références bibliques<textarea name="bible_refs" rows={3} defaultValue={s.bible_refs ?? ""} className={`${field} mt-1.5 resize-y`} /></label><label className="flex items-start gap-3 rounded-xl bg-background px-4 py-3 text-sm text-foreground"><input type="hidden" name="show_parking_notice" value="0" /><input type="checkbox" name="show_parking_notice" value="1" defaultChecked={s.show_parking_notice !== false} className="mt-0.5 h-4 w-4 accent-foreground" /><span><strong className="block font-semibold">Afficher l’information parking</strong><span className="text-xs text-muted">Visible avec les informations pratiques.</span></span></label></div></details>
 
-        <div className="sticky bottom-3 z-20 flex flex-wrap items-center justify-end gap-3 rounded-2xl border border-border bg-background/95 px-4 py-3 shadow-lg backdrop-blur"><button type="submit" disabled={pending} className="rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent transition hover:bg-[#1b2221] disabled:opacity-60">{pending ? "Enregistrement…" : "Enregistrer les informations"}</button>{state && <p role="status" className={`w-full text-right text-sm ${state.ok ? "text-foreground" : "text-link"}`}>{state.ok ? "✓ " : ""}{state.message}</p>}</div>
+        <div className="sticky bottom-3 z-20 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-background/95 px-4 py-3 shadow-lg backdrop-blur"><p className={`text-sm font-medium ${dirty ? "text-amber-700" : state?.ok ? "text-emerald-700" : "text-muted"}`}>{pending ? "Enregistrement en cours…" : dirty ? "Modifications non enregistrées" : savedAt ? `Tout est enregistré · ${savedAt}` : "À jour"}</p><button type="submit" disabled={pending || !dirty} className="rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent transition hover:bg-[#1b2221] disabled:opacity-60">{pending ? "Enregistrement…" : dirty ? "Enregistrer les informations" : "Enregistré"}</button>{state && !state.ok && <p role="alert" className="w-full text-right text-sm text-link">{state.message}</p>}</div>
       </form>
       {admin && (
         <form
