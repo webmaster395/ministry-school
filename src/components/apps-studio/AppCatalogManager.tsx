@@ -2,19 +2,23 @@
 /* eslint-disable @next/next/no-img-element -- icônes administrées à domaine dynamique */
 
 import Link from "next/link";
-import { ArrowDown, ArrowUp, ExternalLink, RotateCcw } from "lucide-react";
+import { useMemo, useState } from "react";
+import { ArrowDown, ArrowUp, ExternalLink, RotateCcw, Search } from "lucide-react";
 import type { CatalogApp } from "@/lib/apps/catalog";
 import { formatParisSchedule } from "@/lib/apps/publication";
 import { moveCatalogApp, restoreCatalogApp, saveStudentToolsSetting } from "@/app/admin/apps/actions";
 
 export default function AppCatalogManager({ apps, archivedApps, studentToolsEnabled }: { apps: CatalogApp[]; archivedApps: CatalogApp[]; studentToolsEnabled: boolean }) {
+  const [query,setQuery]=useState(""); const [status,setStatus]=useState("all");
+  const shown=useMemo(()=>apps.filter((app)=>(status==="all"||app.effectiveStatus===status)&&`${app.name} ${app.displayTitle} ${app.category} ${app.tags.join(" ")}`.toLowerCase().includes(query.toLowerCase())),[apps,query,status]);
   return <div className="space-y-6">
+    <div className="flex flex-col gap-3 sm:flex-row"><label className="relative flex-1"><Search size={16} className="absolute left-3 top-3.5 text-muted"/><input value={query} onChange={(e)=>setQuery(e.target.value)} placeholder="Rechercher un outil…" className="min-h-11 w-full rounded-xl border border-border bg-background pl-9 pr-3 text-sm"/></label><select value={status} onChange={(e)=>setStatus(e.target.value)} className="min-h-11 rounded-xl border border-border bg-background px-3 text-sm"><option value="all">Tous les statuts</option><option value="published">Publiés</option><option value="draft">Brouillons</option><option value="disabled">Masqués</option></select></div>
     <section className="overflow-hidden rounded-2xl border border-border bg-background">
       <div className="hidden grid-cols-[minmax(210px,1.5fr)_minmax(180px,1fr)_150px_100px_88px] items-center gap-4 border-b border-border-soft px-5 py-3 text-[10px] font-semibold uppercase tracking-[.12em] text-muted lg:grid">
         <span>Outil</span><span>URL</span><span>Statut</span><span>Modifier</span><span className="text-center">Ordre</span>
       </div>
-      <div className="divide-y divide-border-soft">{apps.map((app, index) => <AppRow key={app.id} app={app} first={index === 0} last={index === apps.length - 1} studentToolsEnabled={studentToolsEnabled} />)}</div>
-      {!apps.length && <div className="p-10 text-center text-sm text-muted">Aucun outil dans le catalogue.</div>}
+      <div className="divide-y divide-border-soft">{shown.map((app, index) => <AppRow key={app.id} app={app} first={index === 0} last={index === shown.length - 1} studentToolsEnabled={studentToolsEnabled} />)}</div>
+      {!shown.length && <div className="p-10 text-center text-sm text-muted">Aucun outil ne correspond aux filtres.</div>}
     </section>
     {!!archivedApps.length && <details className="rounded-2xl border border-border bg-background"><summary className="cursor-pointer list-none px-5 py-4 text-sm font-medium [&::-webkit-details-marker]:hidden">Outils retirés du catalogue ({archivedApps.length})</summary><div className="divide-y divide-border-soft border-t border-border-soft">{archivedApps.map((app) => <div key={app.id} className="flex items-center gap-3 p-4"><AppIcon app={app} /><div className="min-w-0 flex-1"><strong className="block truncate text-sm font-medium">{app.name}</strong><span className="text-xs text-muted">Données et résultats conservés</span></div><form action={restoreCatalogApp}><input type="hidden" name="id" value={app.id} /><button className="inline-flex min-h-10 items-center gap-2 rounded-full border border-border px-3 text-xs font-semibold"><RotateCcw size={13} /> Restaurer</button></form></div>)}</div></details>}
   </div>;
@@ -30,7 +34,7 @@ export function StudentToolsSetting({ enabled }: { enabled: boolean }) {
 function AppRow({ app, first, last, studentToolsEnabled }: { app: CatalogApp; first: boolean; last: boolean; studentToolsEnabled: boolean }) {
   const date = publicationSummary(app);
   return <article className="grid gap-3 px-4 py-4 transition hover:bg-surface/60 lg:grid-cols-[minmax(210px,1.5fr)_minmax(180px,1fr)_150px_100px_88px] lg:items-center lg:gap-4 lg:px-5">
-    <div className="flex min-w-0 items-center gap-3"><AppIcon app={app} /><strong className="truncate text-sm font-medium">{app.name}</strong></div>
+    <div className="flex min-w-0 items-center gap-3"><AppIcon app={app} /><div className="min-w-0"><strong className="block truncate text-sm font-medium">{app.displayTitle}</strong><span className="block truncate text-[11px] text-muted">{app.toolType} · {[app.placementStory&&"Story",app.placementPost&&"Post",app.placementResources&&"Ressources",app.placementWork&&"Travail"].filter(Boolean).join(" · ")||"Aucun emplacement"}</span></div></div>
     <a className="inline-flex min-w-0 items-center gap-1.5 text-xs text-link hover:underline" href={app.url} target="_blank" rel="noreferrer"><span className="truncate">{app.destinationUrl.replace(/^https?:\/\//, "")}</span><ExternalLink size={12} className="shrink-0" /></a>
     <div className="flex flex-wrap items-center gap-2 lg:block"><StatusBadge status={app.effectiveStatus} /><span className="text-[11px] text-muted lg:mt-1 lg:block">{date}{!studentToolsEnabled && app.studentEnabled ? " · espace étudiant masqué" : ""}</span></div>
     <Link href={`/admin/apps/${app.slug}`} className="inline-flex min-h-9 w-fit items-center rounded-full border border-border px-3 text-xs font-medium hover:bg-surface">Modifier</Link>

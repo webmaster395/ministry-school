@@ -150,6 +150,23 @@
   }
 }
 
+/* V13 — l’agrume reste sur les miniatures. Dans le parcours, l’orange est un
+   accent fonctionnel discret sur l’ivoire et les bulles existants. */
+.shell { --fruit-accent: #e79a24; --fruit-accent-dark: #9f5b08; }
+.progress b { background: var(--fruit-accent); }
+.choice:hover,
+.choiceActive { border-color: var(--fruit-accent); background: var(--fruit-accent); color: #241a27; }
+.traitList b,
+.orange>b,
+.levelMarker strong { color: var(--fruit-accent-dark); }
+.summary,
+.fruitCard,
+.questionBlock,
+.restitution { border-color: rgb(231 154 36 / 0.18); }
+.summary.orange { border-color: var(--fruit-accent); }
+.editorialFeatured,
+.levelMarker { border-left-color: var(--fruit-accent); }
+
 /* V11 — fond ivoire minimaliste avec bulles d'eau, sans fruit visible. */
 .shell,
 .shell.softGreen,

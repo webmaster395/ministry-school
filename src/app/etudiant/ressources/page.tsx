@@ -26,16 +26,16 @@ export default async function StudentResourcesPage() {
   ];
   const knownHrefs = new Set(fixedToolResources.map((resource) => resource.href));
   const catalogResources = tools
-    .filter((tool) => !knownHrefs.has(tool.url))
+    .filter((tool) => tool.placementResources && !knownHrefs.has(tool.url))
     .map((tool) => ({
       id: `catalog:${tool.id}`,
-      title: tool.name,
-      description: tool.description,
+      title: tool.resourceTitle,
+      description: tool.resourceDescription || tool.description,
       kind: "tool" as const,
       source: "course" as const,
       sourceLabel: "Outil",
       sourceTitle: "Ministry School",
-      href: tool.url,
+      href: `/etudiant/outils/${tool.slug}/ouvrir`,
       availableAt: null,
     }));
   const toolResources = [...fixedToolResources, ...catalogResources];

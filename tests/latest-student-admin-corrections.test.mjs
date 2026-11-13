@@ -51,9 +51,9 @@ test("Fruit de l'Esprit utilise l'image finale sans sacrifier la lisibilité", a
     read("src/app/etudiant/identite/IdentityExperience.tsx"),
   ]);
   assert.match(css, /fruit-spirit-water-bubbles-v11\.png/);
-  assert.match(css, /fruit-spirit-water-fruit-v9\.png/);
-  assert.match(css, /background:\s*rgb\(255 253 248 \/ 0\.9[48]\)/);
-  assert.match(identity, /fruit-spirit-post-story-v12\.webp/);
+  assert.match(css, /--fruit-accent: #e79a24/);
+  assert.match(css, /background:\s*rgb\(255 254 251 \/ 0\.985\)/);
+  assert.match(identity, /fruit-spirit-citrus-post-v13\.webp/);
 });
 
 test("le premier mois du parcours est compté dès son démarrage réel", async () => {

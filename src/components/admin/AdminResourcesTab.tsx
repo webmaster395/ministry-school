@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { ExternalLink, FileText, Link2, Search, Video } from "lucide-react";
+import { ExternalLink, FileText, Link2, Plus, Search, Video } from "lucide-react";
 
 type Row = {
   id: string;
@@ -48,10 +48,11 @@ type OpportunityResourceRow = {
 };
 
 export default async function AdminResourcesTab({ supabase, q }: { supabase: SupabaseClient; q: string }) {
-  const [materialsResult, videosResult, opportunityResult] = await Promise.all([
+  const [materialsResult, videosResult, opportunityResult, managedResult] = await Promise.all([
     supabase.from("materials").select("id,title,description,file_url,link_url,visible_at,session:sessions(id,description,course:courses(title))").order("created_at", { ascending: false }),
     supabase.from("session_videos").select("session_id,url,visible_at,session:sessions(id,description,course:courses(title))").order("visible_at", { ascending: false }),
     supabase.from("opportunity_resources").select("id,title,description,kind,external_url,file_path,created_at,opportunity:opportunities(id,title)").order("created_at", { ascending: false }),
+    supabase.from("managed_resources").select("id,title,description,kind,status,updated_at,placements").order("updated_at", { ascending: false }),
   ]);
   const materials: Row[] = ((materialsResult.data ?? []) as unknown as MaterialRow[]).map((item) => ({
     id: `material-${item.id}`,
@@ -83,15 +84,16 @@ export default async function AdminResourcesTab({ supabase, q }: { supabase: Sup
     href: `/gestion/projets-formations/${item.opportunity?.id ?? ""}?scope=admin`,
     availableAt: item.created_at,
   }));
+  const managed: Row[] = (managedResult.data ?? []).map((item) => ({ id: `managed-${item.id}`, title: item.title, description: item.description, type: item.kind === "video" ? "video" : item.kind === "link" ? "link" : "document", source: `Bibliothèque · ${item.status}`, context: (item.placements ?? []).join(" · ") || "Mes ressources", href: `/admin/apps/resources/${item.id}`, availableAt: item.updated_at }));
   const words = q.toLocaleLowerCase("fr-FR").trim().split(/\s+/).filter(Boolean);
-  const rows = [...materials, ...videos, ...opportunities].filter((row) => words.every((word) => `${row.title} ${row.description ?? ""} ${row.context} ${row.source}`.toLocaleLowerCase("fr-FR").includes(word)));
+  const rows = [...managed, ...materials, ...videos, ...opportunities].filter((row) => words.every((word) => `${row.title} ${row.description ?? ""} ${row.context} ${row.source}`.toLocaleLowerCase("fr-FR").includes(word)));
   const icons = { document: FileText, video: Video, link: Link2 };
   return <div className="space-y-5">
-    <form className="relative max-w-xl" method="get"><input type="hidden" name="onglet" value="ressources" /><Search size={17} className="pointer-events-none absolute left-3.5 top-3.5 text-muted" /><input name="q" defaultValue={q} placeholder="Rechercher un titre, un cours ou une formation…" className="min-h-11 w-full rounded-xl border border-border bg-background pl-10 pr-4 text-sm outline-none focus:border-foreground" /></form>
-    <div className="flex flex-wrap gap-2 text-xs text-muted"><span className="rounded-full bg-surface px-3 py-1.5"><strong className="text-foreground">{rows.length}</strong> ressources</span><span className="rounded-full bg-surface px-3 py-1.5">{materials.length + videos.length} liées aux cours</span><span className="rounded-full bg-surface px-3 py-1.5">{opportunities.length} liées aux projets et formations</span></div>
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center"><form className="relative max-w-xl flex-1" method="get"><input type="hidden" name="onglet" value="ressources" /><Search size={17} className="pointer-events-none absolute left-3.5 top-3.5 text-muted" /><input name="q" defaultValue={q} placeholder="Rechercher un titre, un cours ou une formation…" className="min-h-11 w-full rounded-xl border border-border bg-background pl-10 pr-4 text-sm outline-none focus:border-foreground" /></form><Link href="/admin/apps/resources/nouveau" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-foreground px-4 text-xs font-semibold text-on-accent"><Plus size={15}/> Ajouter une ressource</Link></div>
+    <div className="flex flex-wrap gap-2 text-xs text-muted"><span className="rounded-full bg-surface px-3 py-1.5"><strong className="text-foreground">{rows.length}</strong> ressources</span><span className="rounded-full bg-surface px-3 py-1.5">{managed.length} gérées ici</span><span className="rounded-full bg-surface px-3 py-1.5">{materials.length + videos.length} liées aux cours</span><span className="rounded-full bg-surface px-3 py-1.5">{opportunities.length} liées aux projets et formations</span></div>
     <section className="overflow-hidden rounded-2xl border border-border bg-background">
       {rows.length ? <div className="divide-y divide-border-soft">{rows.map((row) => { const Icon = icons[row.type]; return <article key={row.id} className="grid gap-3 px-4 py-4 sm:grid-cols-[40px_minmax(0,1fr)_auto] sm:items-center sm:px-5"><span className="grid h-10 w-10 place-items-center rounded-xl bg-surface text-muted"><Icon size={18} /></span><div className="min-w-0"><strong className="block truncate text-sm text-foreground">{row.title}</strong><p className="mt-0.5 truncate text-xs text-muted">{row.source} · {row.context}</p></div><Link href={row.href} className="inline-flex min-h-9 items-center gap-1.5 text-xs font-semibold text-link hover:underline">Gérer à la source <ExternalLink size={13} /></Link></article>; })}</div> : <p className="px-5 py-12 text-center text-sm text-muted">Aucune ressource ne correspond à cette recherche.</p>}
     </section>
-    <p className="text-xs leading-5 text-muted">Les autorisations restent celles du cours, de la séance ou du projet d’origine. Cette vue globale ne rend aucune ressource publique.</p>
+    <p className="text-xs leading-5 text-muted">Les ressources historiques restent gérées à leur source. Les nouvelles ressources peuvent être associées à plusieurs emplacements sans dupliquer leur fichier.</p>
   </div>;
 }

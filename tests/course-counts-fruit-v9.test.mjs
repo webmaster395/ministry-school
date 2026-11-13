@@ -19,7 +19,7 @@ test("admin course inventory counts course records instead of dated sessions", a
   assert.match(data, /s\.formation\?\.category_key \?\? s\.courses\?\.formation\?\.category_key/);
 });
 
-test("Fruit de l'Esprit uses the text-free v12 post and keeps the sober reading background", async () => {
+test("Fruit de l'Esprit uses dedicated text-free v13 crops and keeps the sober reading background", async () => {
   const [journey, identity, experience, page] = await Promise.all([
     read("src/components/apps/FruitSpiritJourney.module.css"),
     read("src/app/etudiant/identite/identity.module.css"),
@@ -27,10 +27,10 @@ test("Fruit de l'Esprit uses the text-free v12 post and keeps the sober reading 
     read("src/app/etudiant/identite/page.tsx"),
   ]);
 
-  for (const source of [identity, experience, page]) {
-    assert.match(source, /fruit-spirit-post-story-v12\.webp/);
-  }
+  assert.match(identity, /fruit-spirit-citrus-post-v13\.webp/);
+  assert.match(experience, /fruit-spirit-citrus-post-v13\.webp/);
+  assert.match(page, /fruit-spirit-citrus-story-v13\.webp/);
   assert.match(journey, /fruit-spirit-water-bubbles-v11\.png/);
-  assert.match(journey, /background: rgb\(255 254 251 \/ 0\.975\)/);
+  assert.match(journey, /--fruit-accent: #e79a24/);
   assert.match(journey, /backdrop-filter: blur\(8px\)/);
 });

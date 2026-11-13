@@ -16,6 +16,7 @@ const sources: Array<{ key: "all" | LibraryResourceSource; label: string }> = [
   { key: "all", label: "Tout" },
   { key: "course", label: "Cours" },
   { key: "opportunity", label: "Projets et formations" },
+  { key: "library", label: "Bibliothèque" },
 ];
 
 const kindMeta = {

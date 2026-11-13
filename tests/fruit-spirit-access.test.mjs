@@ -22,16 +22,14 @@ test("Fruit de l’Esprit est masqué du tableau de bord étudiant standard", ()
   assert.match(identity, /upcoming=\{buildUpcoming\(visibleTools, completedKinds\)\}/);
 });
 
-test("la DA Fruit de l’Esprit utilise l’abstraction bordeaux fruitée sur le post et le parcours", () => {
+test("la DA Fruit de l’Esprit utilise les agrumes sur les miniatures et garde le parcours clair", () => {
   const identity = read("src/app/etudiant/identite/identity.module.css");
   const stories = read("src/app/etudiant/identite/page.tsx");
   const journey = read("src/components/apps/FruitSpiritJourney.module.css");
 
-  assert.match(identity, /fruit-spirit-burgundy-fruit-v5\.webp/);
-  assert.match(identity, /storyRing\[data-story-key="fruit"\][\s\S]*#4d0f20/);
+  assert.match(identity, /fruit-spirit-citrus-post-v13\.webp/);
   assert.doesNotMatch(identity, /storyRing\[data-story-key="fruit"\] \.storyInner img\s*\{\s*display: none/);
-  assert.match(stories, /fruit-spirit-burgundy-fruit-v5\.webp/);
-  assert.match(journey, /fruit-spirit-burgundy-fruit-v5\.webp/);
-  assert.match(journey, /background-color: #5a101a/);
-  assert.match(journey, /radial-gradient\(ellipse at 48% 57%/);
+  assert.match(stories, /fruit-spirit-citrus-story-v13\.webp/);
+  assert.match(journey, /fruit-spirit-water-bubbles-v11\.png/);
+  assert.match(journey, /--fruit-accent: #e79a24/);
 });

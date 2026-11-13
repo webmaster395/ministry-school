@@ -2,7 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { getStudentAllSessions, getStudentMaterials } from "@/lib/data/student";
 
 export type LibraryResourceKind = "pdf" | "video" | "link" | "tool";
-export type LibraryResourceSource = "course" | "opportunity";
+export type LibraryResourceSource = "course" | "opportunity" | "library";
 
 export type LibraryResource = {
   id: string;
@@ -43,12 +43,13 @@ function opportunityKind(resource: { kind: string; mime_type: string | null; ext
 export async function getStudentResourceLibrary(supabase: SupabaseClient, userId: string): Promise<LibraryResource[]> {
   const sessions = await getStudentAllSessions(supabase, userId);
   const sessionIds = sessions.map((session) => session.id);
-  const [materials, videosResult, opportunityResourcesResult] = await Promise.all([
+  const [materials, videosResult, opportunityResourcesResult, managedResult] = await Promise.all([
     getStudentMaterials(supabase, sessionIds),
     sessionIds.length
       ? supabase.from("session_videos").select("session_id,url,visible_at").in("session_id", sessionIds).lte("visible_at", new Date().toISOString())
       : Promise.resolve({ data: [] }),
     supabase.from("opportunity_resources").select("id,opportunity_id,title,description,kind,external_url,file_path,file_name,mime_type,created_at").order("created_at", { ascending: false }),
+    supabase.from("managed_resources").select("id,title,description,kind,category,updated_at").contains("placements", ["resources"]).eq("status", "published").order("updated_at", { ascending: false }),
   ]);
 
   const sessionsById = new Map(sessions.map((session) => [session.id, session]));
@@ -111,6 +112,18 @@ export async function getStudentResourceLibrary(supabase: SupabaseClient, userId
     }];
   });
 
-  return [...courseMaterials, ...courseVideos, ...opportunityItems]
+  const managedItems: LibraryResource[] = (managedResult.data ?? []).map((resource) => ({
+    id: `managed:${resource.id}`,
+    title: resource.title,
+    description: resource.description,
+    kind: resource.kind === "video" || resource.kind === "audio" ? "video" : resource.kind === "link" ? "link" : resource.kind === "tool" ? "tool" : "pdf",
+    source: "library",
+    sourceLabel: resource.category || "Bibliothèque",
+    sourceTitle: "Ministry School",
+    href: `/etudiant/ressources/gerees/${resource.id}/ouvrir`,
+    availableAt: resource.updated_at,
+  }));
+
+  return [...managedItems, ...courseMaterials, ...courseVideos, ...opportunityItems]
     .sort((left, right) => (right.availableAt ?? "").localeCompare(left.availableAt ?? ""));
 }

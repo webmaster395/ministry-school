@@ -35,8 +35,8 @@ test("la Home et Travail à faire partagent la même projection des travaux", ()
   assert.match(studentData, /export function getStudentWorkItems/);
   assert.match(workPage, /getStudentWorkItems\(assignments, sessions\)/);
   assert.match(homePage, /getStudentWorkItems\(assignments, allSessions\)/);
-  assert.match(homePage, /const todoCount = todo\.length/);
-  assert.doesNotMatch(homePage, /const todoCount = toPrepare\.length/);
+  assert.match(homePage, /const todo = work\.filter\(\(\{ assignment \}\) => !doneIds\.has\(assignment\.id\)\)/);
+  assert.match(homePage, /À ne pas manquer/);
 });
 
 test("la validation globale synchronise aussi les sous-consignes", () => {
