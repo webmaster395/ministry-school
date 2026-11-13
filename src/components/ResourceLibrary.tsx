@@ -40,7 +40,7 @@ export default function ResourceLibrary({ resources }: { resources: LibraryResou
   return <div className="space-y-6">
     <section className="overflow-hidden rounded-[28px] bg-[#252d2c] text-white">
       <div className="grid gap-8 p-6 sm:p-9 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-end">
-        <div><p className="label text-[11px] tracking-[.18em] text-white/60">MA BIBLIOTHÈQUE</p><h1 className="font-title mt-3 max-w-2xl text-[clamp(2rem,6vw,4.2rem)] leading-[.96]">Tout ce qui t’aide à aller plus loin.</h1><p className="mt-5 max-w-2xl text-sm leading-6 text-white/72 sm:text-base">Retrouve au même endroit les supports de tes cours et les ressources partagées après tes projets et formations.</p></div>
+        <div><p className="label text-[11px] tracking-[.18em] text-white/60">MA BIBLIOTHÈQUE</p><h1 className="font-title mt-3 max-w-2xl text-[clamp(1.75rem,4vw,3rem)] leading-[1.03]">Tout ce qui t’aide à aller plus loin.</h1><p className="mt-5 max-w-2xl text-sm leading-6 text-white/72 sm:text-base">Retrouve au même endroit les supports de tes cours, tes outils, les tests disponibles et les ressources partagées après tes projets et formations.</p></div>
         <div className="grid grid-cols-2 gap-3"><Metric value={resources.length} label="ressources" /><Metric value={new Set(resources.map((resource) => resource.sourceTitle)).size} label="espaces" /></div>
       </div>
     </section>
@@ -58,7 +58,8 @@ export default function ResourceLibrary({ resources }: { resources: LibraryResou
     {filtered.length ? <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{filtered.map((resource) => {
       const meta = kindMeta[resource.kind];
       const Icon = meta.icon;
-      return <a key={resource.id} href={resource.href} target="_blank" rel="noreferrer" className="group flex min-h-[220px] flex-col rounded-3xl border border-border bg-background p-5 transition hover:-translate-y-0.5 hover:border-foreground hover:shadow-[0_14px_35px_rgba(24,31,30,.08)]">
+      const external = /^https?:\/\//.test(resource.href);
+      return <a key={resource.id} href={resource.href} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined} className="group flex min-h-[220px] flex-col rounded-3xl border border-border bg-background p-5 transition hover:-translate-y-0.5 hover:border-foreground hover:shadow-[0_14px_35px_rgba(24,31,30,.08)]">
         <div className="flex items-start justify-between gap-3"><span className={`grid h-11 w-11 place-items-center rounded-2xl ${meta.tone}`}><Icon size={21} /></span><ExternalLink size={16} className="text-muted transition group-hover:text-foreground" /></div>
         <div className="mt-8 flex-1"><p className="text-[10px] font-semibold uppercase tracking-[.16em] text-muted">{resource.sourceLabel} · {meta.label}</p><h3 className="font-title mt-2 text-[21px] leading-tight text-foreground">{resource.title}</h3>{resource.description && <p className="mt-2 line-clamp-2 text-sm leading-5 text-muted">{resource.description}</p>}</div>
         <p className="mt-5 flex items-center gap-2 border-t border-border-soft pt-4 text-xs font-medium text-muted"><BookOpen size={14} /><span className="truncate">{resource.sourceTitle}</span></p>

@@ -22,6 +22,13 @@ test("la bibliothèque Ressources agrège les cours et les projets sans contourn
   assert.match(library, /Projets et formations/);
   assert.match(library, /PDF/);
   assert.match(library, /Vidéos/);
+  assert.match(page, /Généropoly/);
+  assert.match(page, /Profil MAPP/);
+  assert.match(page, /Fruit de l’Esprit/);
+  assert.match(page, /Dons spirituels/);
+  assert.match(page, /Compétences naturelles/);
+  assert.match(page, /Ma ligne de vie/);
+  assert.match(library, /clamp\(1\.75rem,4vw,3rem\)/);
   assert.doesNotMatch(identity, /> Ressources\s*</);
 });
 
