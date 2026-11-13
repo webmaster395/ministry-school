@@ -59,10 +59,12 @@ export default async function OpportunityPage({ params, searchParams }: { params
   const materials = linesOf(o.participant_material);
   const tools = linesOf(o.tools_used);
   const speakers = linesOf(o.speakers);
-  const weekends = new Set(dates.map((date) => weekendKey(date.session_date))).size;
   const today = new Date().toISOString().slice(0,10);
-  const featuredDate = dates.find((date) => date.session_date >= today) ?? dates[0];
-  const selectable = dates.filter((date) => {
+  const canInspectHistory = rights.admin || rights.assignments.has(id);
+  const visibleDates = canInspectHistory ? dates : dates.filter((date) => date.session_date >= today);
+  const visibleWeekends = new Set(visibleDates.map((date) => weekendKey(date.session_date))).size;
+  const featuredDate = visibleDates.find((date) => date.session_date >= today) ?? visibleDates[0];
+  const selectable = visibleDates.filter((date) => {
     const taken = dateCounts.get(date.id) ?? 0;
     return !registeredDates.has(date.id) && date.session_date >= today && (date.capacity === null || taken < date.capacity);
   });
@@ -77,7 +79,7 @@ export default async function OpportunityPage({ params, searchParams }: { params
           emoji={o.banner_emoji}
           title={o.title}
           typeLabel={TYPE_LABEL[opportunityType(o)]}
-          meta={`${opportunityType(o) === "formation" ? "Une formation" : "Un parcours"} sur ${weekends} week-end${weekends > 1 ? "s" : ""}`}
+          meta={`${opportunityType(o) === "formation" ? "Une formation" : "Un parcours"} sur ${visibleWeekends} week-end${visibleWeekends > 1 ? "s" : ""}`}
           details={featuredDate ? <div className="grid gap-2.5"><span className="flex items-center gap-2"><CalendarDays size={17} /> <span className="capitalize">{fullDate(featuredDate.session_date)}</span></span><span className="flex items-center gap-2"><Clock size={17} /> {hm(featuredDate.start_time)}–{hm(featuredDate.end_time)}</span>{(featuredDate.location || o.location) && <span className="flex items-start gap-2"><MapPin className="mt-0.5 shrink-0" size={17} /><strong className="font-medium text-white">{featuredDate.location || o.location}</strong></span>}</div> : undefined}
         />
       </header>
@@ -99,7 +101,7 @@ export default async function OpportunityPage({ params, searchParams }: { params
             <p className="mt-1 text-sm text-muted">Choisissez uniquement les séances auxquelles vous souhaitez participer.</p>
             <form action={registerOpportunityDates} className="mt-5 space-y-3">
               <input type="hidden" name="opportunity_id" value={o.id} />
-              {dates.map((date,index) => {
+              {visibleDates.map((date,index) => {
                 const taken = dateCounts.get(date.id) ?? 0;
                 const remaining = date.capacity === null ? null : Math.max(0,date.capacity-taken);
                 const registered = registeredDates.has(date.id);
@@ -120,6 +122,7 @@ export default async function OpportunityPage({ params, searchParams }: { params
                   {waitlisted && !registered && <p className="mt-3 rounded-xl bg-surface px-3 py-2 text-xs font-medium text-foreground">Tu es sur la liste d’attente. Si une place se libère, ton inscription sera confirmée automatiquement.</p>}
                 </div>;
               })}
+              {visibleDates.length === 0 && <p className="rounded-2xl bg-surface px-4 py-5 text-sm text-muted">Aucune nouvelle séance n’est programmée pour le moment.</p>}
               {selectable.length > 0 && o.registration_open && <OpportunityRegistrationButton prerequisites={o.participation_prerequisites_required ? prerequisites : []} />}
             </form>
           </section>
@@ -129,7 +132,7 @@ export default async function OpportunityPage({ params, searchParams }: { params
           <p className="label text-xs tracking-[.14em] text-muted">Informations pratiques</p>
           <dl className="mt-4 divide-y divide-border-soft text-sm">
             <div className="py-3"><dt className="text-muted">Service pilote</dt><dd className="mt-1 font-semibold">{o.services?.name || o.organizer_label || "Non renseigné"}</dd></div>
-            <div className="py-3"><dt className="text-muted">Durée</dt><dd className="mt-1 font-semibold">{weekends} week-end{weekends === 1 ? "" : "s"} · {dates.length} séance{dates.length === 1 ? "" : "s"}</dd></div>
+            <div className="py-3"><dt className="text-muted">Durée</dt><dd className="mt-1 font-semibold">{visibleWeekends} week-end{visibleWeekends === 1 ? "" : "s"} · {visibleDates.length} séance{visibleDates.length === 1 ? "" : "s"}</dd></div>
             <div className="py-3"><dt className="text-muted">Nombre de places</dt><dd className="mt-1 font-semibold">{o.capacity ? `${o.capacity} place${o.capacity === 1 ? "" : "s"} par séance` : "Non limité"}</dd></div>
             <div className="py-3">
               <dt className="text-muted">Conditions de participation</dt>
@@ -139,7 +142,7 @@ export default async function OpportunityPage({ params, searchParams }: { params
               </dd>
             </div>
           </dl>
-          {registeredDates.size > 0 && <p className="mt-4 rounded-xl bg-surface px-4 py-3 text-sm font-medium">Vous êtes inscrit à {dates.filter((date) => registeredDates.has(date.id)).length} séance{dates.filter((date) => registeredDates.has(date.id)).length>1?"s":""}.</p>}
+          {visibleDates.some((date) => registeredDates.has(date.id)) && <p className="mt-4 rounded-xl bg-surface px-4 py-3 text-sm font-medium">Vous êtes inscrit à {visibleDates.filter((date) => registeredDates.has(date.id)).length} séance{visibleDates.filter((date) => registeredDates.has(date.id)).length>1?"s":""}.</p>}
         </aside>
       </div>
     </div>
