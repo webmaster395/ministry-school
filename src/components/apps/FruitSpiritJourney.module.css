@@ -150,6 +150,198 @@
   }
 }
 
+/* Direction artistique fruits violets — image demandée, textes sur surfaces
+   réellement opaques afin de rester lisibles sur toutes les zones de l'image. */
+.shell {
+  --ink: #241a27;
+  --paper: #fffdf8;
+  background-color: #f7f5f1;
+  background-image: url('/apps/grace-identity/fruit-spirit-water-fruit-v8.png');
+  background-position: center top;
+  background-size: cover;
+  color: var(--ink);
+}
+
+.shell::before,
+.softGreen::before,
+.softIvory::before {
+  background: linear-gradient(90deg, rgb(255 253 248 / 0.94) 0%, rgb(255 253 248 / 0.82) 56%, rgb(255 253 248 / 0.5) 100%);
+}
+
+.shell::after {
+  display: none;
+}
+
+.coverCopy,
+.introCopy,
+.situationHeader,
+.overviewHeader,
+.resultHero {
+  width: fit-content;
+  max-width: min(820px, 100%);
+  border-radius: 22px;
+  background: rgb(255 253 248 / 0.9);
+  padding: clamp(18px, 3vw, 30px);
+  box-shadow: 0 18px 48px rgb(33 16 36 / 0.12);
+  backdrop-filter: blur(12px);
+}
+
+.questionBlock,
+.summary,
+.fruitCard,
+.emptyCategory,
+.overviewGroup,
+.restitution,
+.resultPager button {
+  border-color: rgb(73 50 75 / 0.2);
+  background: rgb(255 253 248 / 0.97);
+  color: #241a27;
+  box-shadow: 0 18px 46px rgb(33 16 36 / 0.13);
+}
+
+.questionHeading > b,
+.resultList article > b,
+.overviewFruitIndex,
+.overviewGroupHeader span,
+.overviewGroupHeader > strong,
+.resultPager button small {
+  color: #765078;
+}
+
+.questionScale .choice,
+.questionScale .choiceActive {
+  border-color: rgb(73 50 75 / 0.3);
+  background: #fff;
+  color: #241a27;
+}
+
+.questionScale .choice:hover,
+.questionScale .choiceActive {
+  border-color: #68426d;
+  background: #68426d;
+  color: #fff;
+}
+
+.resultList {
+  overflow: hidden;
+  border: 1px solid rgb(73 50 75 / 0.18);
+  border-radius: 18px;
+  background: rgb(255 253 248 / 0.96);
+  padding: 0 18px;
+  box-shadow: 0 18px 46px rgb(33 16 36 / 0.12);
+}
+
+.resultList article {
+  border-color: rgb(73 50 75 / 0.14);
+}
+
+.resultList p,
+.overviewHeader > p:last-child,
+.overviewFruitScore small,
+.overviewFruitAction,
+.overviewEmpty,
+.resultDisclaimer {
+  color: rgb(36 26 39 / 0.72);
+}
+
+.overviewGroup {
+  --group-accent: #8a638d;
+}
+
+.overviewGroup_practice {
+  --group-accent: #547a51;
+}
+
+.overviewGroup_develop {
+  --group-accent: #806184;
+}
+
+.overviewGroup_discover {
+  --group-accent: #9b734c;
+}
+
+.overviewFruitList,
+.overviewEmpty {
+  border-color: rgb(73 50 75 / 0.14);
+}
+
+.overviewFruit {
+  border-color: rgb(73 50 75 / 0.12);
+  background: transparent;
+  color: #241a27;
+}
+
+.overviewFruit:hover {
+  background: rgb(118 80 120 / 0.09);
+}
+
+.resultDot,
+.resultDotRead,
+.resultDotActive {
+  background: rgb(73 50 75 / 0.18);
+}
+
+.resultDotRead {
+  background: rgb(118 80 120 / 0.48);
+}
+
+.resultDotActive {
+  background: #68426d;
+}
+
+.resultHero {
+  align-items: center;
+  border-bottom: 0;
+}
+
+.resultHero p {
+  background: #eadfeb;
+  color: #4e3152;
+}
+
+.restitutionBody {
+  background: #fffdf9;
+  color: #2f202f;
+}
+
+.levelMarker {
+  background: #553359;
+}
+
+.resultPager button span,
+.resultPager button {
+  color: #241a27;
+}
+
+@media(max-width:720px) {
+  .shell {
+    background-position: 52% top;
+  }
+
+  .shell::before,
+  .softGreen::before,
+  .softIvory::before {
+    background: linear-gradient(180deg, rgb(255 253 248 / 0.72), rgb(255 253 248 / 0.9));
+  }
+
+  .coverCopy,
+  .introCopy,
+  .situationHeader,
+  .overviewHeader,
+  .resultHero {
+    width: 100%;
+    border-radius: 16px;
+    padding: 16px;
+  }
+
+  .questionBlock,
+  .overviewGroup,
+  .restitution,
+  .resultPager button {
+    background: rgb(255 253 248 / 0.985);
+  }
+}
+
 /* Questionnaire V2 : une situation et ses trois questions sur chaque étape. */
 .situationHeader {
   max-width: 860px;
@@ -910,5 +1102,188 @@
   .resultSecondary {
     align-items: flex-start;
     flex-direction: column;
+  }
+}
+
+/* Couche de contraste finale : elle doit rester après tous les styles du
+   questionnaire V2 et des résultats pour éviter toute régression de cascade. */
+.shell {
+  --ink: #241a27;
+  --paper: #fffdf8;
+  background: #f7f5f1 url('/apps/grace-identity/fruit-spirit-water-fruit-v8.png') center top / cover fixed;
+  color: var(--ink);
+}
+
+.shell::before,
+.softGreen::before,
+.softIvory::before {
+  background: linear-gradient(90deg, rgb(255 253 248 / 0.94) 0%, rgb(255 253 248 / 0.84) 58%, rgb(255 253 248 / 0.56) 100%);
+}
+
+.shell::after {
+  display: none;
+}
+
+.coverCopy,
+.introCopy,
+.situationHeader,
+.overviewHeader,
+.resultHero {
+  width: fit-content;
+  max-width: min(820px, 100%);
+  border: 1px solid rgb(73 50 75 / 0.12);
+  border-radius: 22px;
+  background: rgb(255 253 248 / 0.94);
+  padding: clamp(18px, 3vw, 30px);
+  color: #241a27;
+  box-shadow: 0 18px 48px rgb(33 16 36 / 0.12);
+  backdrop-filter: blur(12px);
+}
+
+.questionBlock,
+.summary,
+.fruitCard,
+.emptyCategory,
+.overviewGroup,
+.restitution,
+.resultPager button,
+.resultList {
+  border-color: rgb(73 50 75 / 0.2);
+  background: rgb(255 253 248 / 0.98);
+  color: #241a27;
+  box-shadow: 0 18px 46px rgb(33 16 36 / 0.13);
+}
+
+.questionScale .choice,
+.questionScale .choiceActive {
+  border-color: rgb(73 50 75 / 0.32);
+  background: #fff;
+  color: #241a27;
+}
+
+.questionScale .choice:hover,
+.questionScale .choiceActive {
+  border-color: #68426d;
+  background: #68426d;
+  color: #fff;
+}
+
+.resultList {
+  overflow: hidden;
+  border: 1px solid rgb(73 50 75 / 0.18);
+  border-radius: 18px;
+  padding: 0 18px;
+}
+
+.resultList article,
+.overviewFruitList,
+.overviewFruit,
+.overviewEmpty {
+  border-color: rgb(73 50 75 / 0.14);
+}
+
+.resultList p,
+.overviewHeader > p:last-child,
+.overviewFruitScore small,
+.overviewFruitAction,
+.overviewEmpty,
+.resultDisclaimer,
+.categoryBody,
+.situationHeader > p:last-child {
+  color: rgb(36 26 39 / 0.74);
+}
+
+.questionHeading > b,
+.resultList article > b,
+.overviewFruitIndex,
+.overviewGroupHeader span,
+.overviewGroupHeader > strong,
+.resultPager button small {
+  color: #765078;
+}
+
+.overviewGroup {
+  --group-accent: #8a638d;
+}
+
+.overviewGroup_practice {
+  --group-accent: #547a51;
+}
+
+.overviewGroup_develop {
+  --group-accent: #806184;
+}
+
+.overviewGroup_discover {
+  --group-accent: #9b734c;
+}
+
+.overviewFruit {
+  background: transparent;
+  color: #241a27;
+}
+
+.overviewFruit:hover {
+  background: rgb(118 80 120 / 0.09);
+}
+
+.resultDot,
+.resultDotRead,
+.resultDotActive {
+  background: rgb(73 50 75 / 0.18);
+}
+
+.resultDotRead {
+  background: rgb(118 80 120 / 0.48);
+}
+
+.resultDotActive {
+  background: #68426d;
+}
+
+.resultHero {
+  align-items: center;
+  border-bottom: 0;
+}
+
+.resultHero p {
+  background: #eadfeb;
+  color: #4e3152;
+}
+
+.restitutionBody {
+  background: #fffdf9;
+  color: #2f202f;
+}
+
+.levelMarker {
+  background: #553359;
+}
+
+.resultPager button,
+.resultPager button span {
+  color: #241a27;
+}
+
+@media(max-width:720px) {
+  .shell {
+    background-attachment: scroll;
+    background-position: 52% top;
+  }
+
+  .shell::before,
+  .softGreen::before,
+  .softIvory::before {
+    background: linear-gradient(180deg, rgb(255 253 248 / 0.78), rgb(255 253 248 / 0.94));
+  }
+
+  .coverCopy,
+  .introCopy,
+  .situationHeader,
+  .overviewHeader,
+  .resultHero {
+    width: 100%;
+    border-radius: 16px;
+    padding: 16px;
   }
 }

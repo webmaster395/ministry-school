@@ -12,6 +12,7 @@ import AppCatalogManager, { StudentToolsSetting } from "@/components/apps-studio
 import { getCatalogApps, getStudentToolsEnabled } from "@/lib/apps/catalog";
 import AdminResourcesTab from "@/components/admin/AdminResourcesTab";
 import { Plus } from "lucide-react";
+import { createServiceClient } from "@/lib/supabase/service";
 
 type Params = {
   onglet?: string;
@@ -68,10 +69,25 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
       getUsageAnalytics(supabase),
       getOpportunityAnalytics(supabase),
     ]);
+    const memberById = new Map(members.map((member) => [member.id, member]));
+    const service = createServiceClient();
+    const [authUsersResult, downloadUsageResult] = await Promise.all([
+      service.auth.admin.listUsers({ page: 1, perPage: 1000 }),
+      service.from("material_download_usage").select("material_id,user_id,open_count").order("open_count", { ascending: false }),
+    ]);
+    const neverSignedIn = authUsersResult.data.users
+      .filter((user) => !user.last_sign_in_at && memberById.has(user.id))
+      .map((user) => ({ id: user.id, name: memberById.get(user.id)?.full_name ?? "Membre", email: user.email ?? memberById.get(user.id)?.email ?? "" }));
+    const downloaders: Record<string, { id: string; name: string; email: string; opens: number }[]> = {};
+    for (const row of downloadUsageResult.data ?? []) {
+      const member = memberById.get(row.user_id);
+      if (!member) continue;
+      (downloaders[row.material_id] ??= []).push({ id: member.id, name: member.full_name, email: member.email, opens: Number(row.open_count) });
+    }
     const program = await getProgramAnalytics(supabase, usage.downloads);
     return <div className="space-y-6">
       <ManagementPageHeader eyebrow="SUPER ADMIN" title="Pilotage" subtitle="Toutes les statistiques de Ministry School, avec des vues globales et des filtres par sensibilité." mobileTitleInAppBar />
-      <StatisticsTab members={members} ministries={ministries} trainingDates={trainingDates} monthlyActivity={monthlyActivity} usage={usage} program={program} opportunities={opportunities} section={p.statistiques ?? "utilisation"} />
+      <StatisticsTab members={members} ministries={ministries} trainingDates={trainingDates} monthlyActivity={monthlyActivity} usage={usage} usagePeople={{ neverSignedIn, downloaders }} program={program} opportunities={opportunities} section={p.statistiques ?? "utilisation"} />
     </div>;
   }
 

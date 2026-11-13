@@ -59,26 +59,28 @@ export default async function ServicesPage({
   const currentMonth = today.slice(0, 7);
   const now = new Date(`${today}T12:00:00Z`);
   const endYear = now.getUTCMonth() + 1 <= 6 ? now.getUTCFullYear() : now.getUTCFullYear() + 1;
-  const monthKeys: string[] = [];
+  const candidateMonthKeys: string[] = [];
   for (let cursor = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)); cursor <= new Date(Date.UTC(endYear, 5, 1)); cursor.setUTCMonth(cursor.getUTCMonth() + 1)) {
-    monthKeys.push(cursor.toISOString().slice(0, 7));
+    candidateMonthKeys.push(cursor.toISOString().slice(0, 7));
   }
-  const selectedMonth = monthKeys.includes(mois ?? "") ? mois! : currentMonth;
 
   const published = all.filter((o) => isPublished(o));
   const countsByOpportunity = new Map(await Promise.all(published.map(async (opportunity) => [opportunity.id, await getOpportunityDateCounts(supabase, opportunity.id)] as const)));
   const datesByOpportunity = new Map<string, typeof dates>();
   for (const date of dates) datesByOpportunity.set(date.opportunity_id, [...(datesByOpportunity.get(date.opportunity_id) ?? []), date]);
   const hasUpcomingSession = (o: Opportunity) => (datesByOpportunity.get(o.id) ?? []).some((date) => date.session_date >= today);
+  const hasPastSession = (o: Opportunity) => (datesByOpportunity.get(o.id) ?? []).some((date) => date.session_date < today);
   const inTab = (o: Opportunity) =>
     tab === "decouvrir"
       ? hasUpcomingSession(o) && !mine.has(o.id)
       : tab === "inscriptions"
         ? hasUpcomingSession(o) && mine.has(o.id)
-        : !hasUpcomingSession(o);
+        : hasPastSession(o);
 
   const tabbed = published.filter(inTab);
   const tabbedIds = new Set(tabbed.map((opportunity) => opportunity.id));
+  const monthKeys = candidateMonthKeys.filter((month) => dates.some((date) => tabbedIds.has(date.opportunity_id) && date.session_date.startsWith(month) && date.session_date >= today));
+  const selectedMonth = monthKeys.includes(mois ?? "") ? mois! : (monthKeys[0] ?? currentMonth);
   const monthDates = dates.filter((date) => tabbedIds.has(date.opportunity_id) && date.session_date.startsWith(selectedMonth) && date.session_date >= today);
   const opportunityIdsForMonth = new Set(monthDates.map((date) => date.opportunity_id));
   const opportunityIdsForDay = jour && jour.startsWith(`${selectedMonth}-`) && /^\d{4}-\d{2}-\d{2}$/.test(jour)
@@ -150,8 +152,12 @@ export default async function ServicesPage({
       {shown.length ? (
         <ul className="grid gap-4 lg:grid-cols-2">
           {shown.map((o) => {
-            const sessions = (datesByOpportunity.get(o.id) ?? []).filter((date) => date.session_date.startsWith(selectedMonth) && date.session_date >= today);
-            const session = opportunityIdsForDay ? sessions.find((date) => date.session_date === jour) ?? sessions[0] : sessions[0];
+            const sessions = tab === "termines"
+              ? (datesByOpportunity.get(o.id) ?? []).filter((date) => date.session_date < today)
+              : (datesByOpportunity.get(o.id) ?? []).filter((date) => date.session_date.startsWith(selectedMonth) && date.session_date >= today);
+            const session = tab === "termines"
+              ? sessions.at(-1)
+              : opportunityIdsForDay ? sessions.find((date) => date.session_date === jour) ?? sessions[0] : sessions[0];
             const sessionTaken = session ? countsByOpportunity.get(o.id)?.get(session.id) ?? 0 : 0;
             const sessionCapacity = session?.capacity ?? o.capacity;
             const places = capacityPlacesLabel(sessionTaken, sessionCapacity);
@@ -160,7 +166,7 @@ export default async function ServicesPage({
             const organizer = o.organizer_label ?? o.services?.name;
             const type = opportunityType(o);
             const accent = type === "projet" ? "var(--f-projet)" : type === "formation" ? "var(--f-coeur)" : "var(--f-sensibilite)";
-            const cardStatus = !session ? "termine" as const : !o.registration_open ? "a_venir" as const : sessionCapacity !== null && sessionTaken >= sessionCapacity ? "complet" as const : "disponible" as const;
+            const cardStatus = tab === "termines" || !session ? "termine" as const : !o.registration_open ? "a_venir" as const : sessionCapacity !== null && sessionTaken >= sessionCapacity ? "complet" as const : "disponible" as const;
             return (
               <li key={o.id}>
                 <Link
@@ -191,7 +197,7 @@ export default async function ServicesPage({
                     {o.location && <li className="flex items-center gap-2.5"><MapPin size={16} />{o.location}</li>}
                   </ul>
                   {session ? <div className="mt-5 rounded-2xl p-4" style={{ background: `color-mix(in srgb, ${accent} 8%, var(--background))` }}>
-                    <div className="flex items-start gap-3"><Users size={18} className="mt-0.5 shrink-0" /><div className="min-w-0"><span className="block text-[11px] font-semibold uppercase tracking-[.08em] text-muted">Prochaine session{session ? ` · ${new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", timeZone: "UTC" }).format(new Date(`${session.session_date}T12:00:00Z`))}` : ""}</span><strong className="mt-1 block text-[14px] text-foreground">{places.replace(" places ·", " inscrits ·")}</strong>{remaining === 0 && <span className="mt-1 block text-xs text-muted">La séance est complète, mais la liste d’attente est ouverte.</span>}</div></div>
+                    <div className="flex items-start gap-3"><Users size={18} className="mt-0.5 shrink-0" /><div className="min-w-0"><span className="block text-[11px] font-semibold uppercase tracking-[.08em] text-muted">{tab === "termines" ? "Dernière session" : "Prochaine session"}{session ? ` · ${new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", timeZone: "UTC" }).format(new Date(`${session.session_date}T12:00:00Z`))}` : ""}</span><strong className="mt-1 block text-[14px] text-foreground">{places.replace(" places ·", " inscrits ·")}</strong>{tab !== "termines" && remaining === 0 && <span className="mt-1 block text-xs text-muted">La séance est complète, mais la liste d’attente est ouverte.</span>}</div></div>
                     {sessionCapacity !== null && <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-background/80"><span className="block h-full rounded-full" style={{ width: `${fill}%`, background: accent }} /></div>}
                   </div> : <div className="mt-5 rounded-2xl bg-surface p-4 text-sm font-semibold text-muted">Parcours terminé</div>}
                   <span className="mt-5 inline-flex items-center justify-between gap-2 border-t border-border-soft pt-4 text-[13px] font-semibold text-foreground">Voir le détail et choisir <ChevronRight size={17} className="transition group-hover:translate-x-1" /></span>

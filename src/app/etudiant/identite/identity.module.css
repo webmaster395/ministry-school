@@ -695,7 +695,7 @@
 
 .fruitArtwork {
   inset: 0;
-  background: #eef6ff url('/apps/grace-identity/fruit-spirit-abstract-sky-v6.png') center / cover no-repeat;
+  background: #f7f5f1 url('/apps/grace-identity/fruit-spirit-water-fruit-v8.png') center / cover no-repeat;
   filter: none;
   transform: none;
   transition: transform 420ms var(--ease-out-soft);
@@ -704,17 +704,17 @@
 .fruitPost .postShade {
   background: linear-gradient(
     180deg,
-    rgb(238 246 255 / 0.02) 18%,
-    rgb(255 253 248 / 0.24) 52%,
-    rgb(235 242 248 / 0.94) 100%
+    rgb(255 255 255 / 0.02) 15%,
+    rgb(255 255 255 / 0.18) 48%,
+    rgb(249 247 241 / 0.96) 100%
   );
 }
 
 .fruitPost .postCopy,
 .fruitPost .postKicker,
 .fruitPost .openPost {
-  color: #192735;
-  text-shadow: 0 1px 16px rgb(255 255 255 / 0.72);
+  color: #241a27;
+  text-shadow: 0 1px 16px rgb(255 255 255 / 0.86);
 }
 
 .fruitPost:hover .fruitArtwork {

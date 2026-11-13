@@ -162,11 +162,42 @@ export function navSpaces(roles: ViewerRoles): Space[] {
           items: [
             { label: "Pilotage", href: "/gestion/admin?onglet=pilotage", icon: icons.adminStats },
             { label: "Membres", href: "/gestion/admin?onglet=membres", icon: icons.profile },
+            { label: "Cours", href: "/gestion/admin/cours-formations", icon: icons.book },
+            { label: "Projets et formations", href: "/gestion/projets-formations?scope=admin", icon: icons.studentProjects },
             { label: "Gestion des outils", href: "/gestion/admin?onglet=outils", icon: icons.apps },
             { label: "Gestion des ressources", href: "/gestion/admin?onglet=ressources", icon: icons.resources },
           ],
         },
       ],
+    });
+  }
+
+  // L’espace Formations vient immédiatement après Admin. Les sensibilités
+  // restent pilotées dans l’espace ministériel : cet espace réunit uniquement
+  // cœur, caractère et approfondissements.
+  if (roles.superAdmin || roles.formationCategoryKeys.some((key) => ["heart", "character", "deepening"].includes(key))) {
+    const allowed = roles.superAdmin
+      ? ["heart", "character", "deepening"]
+      : roles.formationCategoryKeys;
+    const candidates = [
+      { key: "heart", label: "Formation du cœur", href: "/gestion/formations?onglet=coeur" },
+      { key: "character", label: "Formation du caractère", href: "/gestion/formations?onglet=caractere" },
+      { key: "deepening", label: "Formations d’approfondissement", href: "/gestion/formations?onglet=approfondissements" },
+    ];
+    spaces.push({
+      key: "formations",
+      label: "Formations",
+      icon: icons.formations,
+      title: "Formations",
+      subtitle: "Gérez uniquement les formations qui vous sont confiées.",
+      sections: [{
+        title: "Formations",
+        items: candidates.filter((item) => allowed.includes(item.key)).map((item) => ({
+          label: item.label,
+          href: item.href,
+          icon: icons.formations,
+        })),
+      }],
     });
   }
 
@@ -185,33 +216,6 @@ export function navSpaces(roles: ViewerRoles): Space[] {
           ],
         },
       ],
-    });
-  }
-
-  if (roles.superAdmin || roles.formationCategoryKeys.length > 0) {
-    const allowed = roles.superAdmin
-      ? ["heart", "character", "sensitivity", "deepening"]
-      : roles.formationCategoryKeys;
-    const candidates = [
-      { key: "heart", label: "Formation du cœur", href: "/gestion/formations?onglet=coeur" },
-      { key: "character", label: "Formation du caractère", href: "/gestion/formations?onglet=caractere" },
-      { key: "sensitivity", label: "Formation des sensibilités", href: "/gestion/formations?onglet=sensibilites" },
-      { key: "deepening", label: "Formations d’approfondissement", href: "/gestion/formations?onglet=approfondissements" },
-    ];
-    spaces.push({
-      key: "formations",
-      label: "Formations",
-      icon: icons.formations,
-      title: "Formations",
-      subtitle: "Gérez les parcours pédagogiques qui vous sont confiés.",
-      sections: [{
-        title: "Formations",
-        items: candidates.filter((item) => allowed.includes(item.key)).map((item) => ({
-          label: item.label,
-          href: item.href,
-          icon: icons.formations,
-        })),
-      }],
     });
   }
 

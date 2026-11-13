@@ -6,6 +6,7 @@ import { getViewer } from "@/lib/data/viewer";
 import { getProgramEntries, type ProgramEntry } from "@/lib/data/admin-hub";
 import ManagementPageHeader from "@/components/management/ManagementPageHeader";
 import ProgramTab from "@/components/admin/ProgramTab";
+import DeepeningAccessManager from "@/components/formations/DeepeningAccessManager";
 import { createDeepeningFormation } from "./actions";
 
 type FormationRow = {
@@ -21,7 +22,6 @@ type FormationRow = {
 const tabs = [
   { key: "heart", query: "coeur", label: "Formation du cœur" },
   { key: "character", query: "caractere", label: "Formation du caractère" },
-  { key: "sensitivity", query: "sensibilites", label: "Formation des sensibilités" },
   { key: "deepening", query: "approfondissements", label: "Formations d’approfondissement" },
 ] as const;
 
@@ -32,24 +32,40 @@ export default async function FormationsPage({ searchParams }: { searchParams: P
   if (!allowed.length) redirect("/etudiant");
   const selected = allowed.find((tab) => tab.query === query.onglet) ?? allowed[0];
   const supabase = await createClient();
-  const [formationsResult, trainersResult, ministriesResult, entries, managedIdsResult] = await Promise.all([
+  const [formationsResult, trainersResult, ministriesResult, entries, managedIdsResult, studentsResult, accessResult, assignedFormationsResult] = await Promise.all([
     supabase.from("formations").select("id,category_key,slug,title,description,status,ministry:ministries(name)").eq("category_key", selected.key).order("title"),
     supabase.from("trainers").select("id,first_name,last_name").eq("is_active", true).order("last_name"),
     supabase.from("ministries").select("id,name").order("name"),
     getProgramEntries(supabase, []),
     viewer.roles.superAdmin ? Promise.resolve({ data: null }) : supabase.rpc("managed_formation_session_ids"),
+    selected.key === "deepening" && viewer.roles.superAdmin
+      ? supabase.from("profiles").select("id,full_name").eq("role", "student").eq("is_test_account", false).eq("deactivated", false).order("full_name")
+      : Promise.resolve({ data: [] }),
+    selected.key === "deepening" && viewer.roles.superAdmin
+      ? supabase.from("deepening_access").select("user_id,enabled")
+      : Promise.resolve({ data: [] }),
+    viewer.roles.superAdmin
+      ? Promise.resolve({ data: [] })
+      : supabase.from("formation_assignments").select("formation_id").eq("user_id", viewer.id),
   ]);
-  const formations = (formationsResult.data ?? []) as unknown as FormationRow[];
+  const allFormations = (formationsResult.data ?? []) as unknown as FormationRow[];
   const trainers = (trainersResult.data ?? []).map((item) => ({ id: item.id, name: `${item.first_name} ${item.last_name}`.trim() }));
   const ministries = (ministriesResult.data ?? []).map((item) => ({ id: item.id, name: item.name }));
   const managedIds = new Set(((managedIdsResult.data ?? []) as unknown[]).map((item) => typeof item === "string" ? item : String((item as { managed_formation_session_ids?: string }).managed_formation_session_ids ?? "")));
   const formationEntries = entries.filter((entry) => entry.kind === "course" && entry.formationCategory === selected.key && (viewer.roles.superAdmin || managedIds.has(entry.key.slice(2)))).map((entry) => ({ ...entry, href: `/gestion/enseignement/preparation/${entry.key.slice(2)}` }));
+  const visibleFormationIds = new Set([
+    ...formationEntries.map((entry) => entry.formationId).filter(Boolean),
+    ...((assignedFormationsResult.data ?? []) as { formation_id: string }[]).map((row) => row.formation_id),
+  ]);
+  const formations = viewer.roles.superAdmin ? allFormations : allFormations.filter((formation) => visibleFormationIds.has(formation.id));
+  const authorizedIds = new Set(((accessResult.data ?? []) as { user_id: string; enabled: boolean }[]).filter((row) => row.enabled).map((row) => row.user_id));
+  const deepeningStudents = ((studentsResult.data ?? []) as { id: string; full_name: string }[]).map((student) => ({ ...student, authorized: authorizedIds.has(student.id) }));
 
   return <div className="space-y-6">
     <ManagementPageHeader eyebrow="MES ESPACES ADMIN" title="Formations" subtitle="Cours, séances, ressources, devoirs et responsabilités dans une seule organisation." mobileTitleInAppBar />
     {allowed.length > 1 && <nav aria-label="Catégories de formation" className="flex gap-1 overflow-x-auto rounded-2xl border border-border bg-background p-1.5 [scrollbar-width:none]">{allowed.map((tab) => <Link key={tab.key} href={`/gestion/formations?onglet=${tab.query}`} aria-current={tab.key === selected.key ? "page" : undefined} className={`shrink-0 rounded-xl px-4 py-3 text-sm font-semibold ${tab.key === selected.key ? "bg-accent text-on-accent" : "text-muted hover:bg-surface hover:text-foreground"}`}>{tab.label}</Link>)}</nav>}
     {selected.key === "deepening"
-      ? <DeepeningPanel formations={formations} entries={formationEntries} canCreate={viewer.roles.superAdmin} />
+      ? <DeepeningPanel formations={formations} entries={formationEntries} canCreate={viewer.roles.superAdmin} students={deepeningStudents} />
       : <StandardPanel formations={formations} entries={formationEntries} month={query.mois} trainers={trainers} ministries={ministries} tabQuery={selected.query} />}
   </div>;
 }
@@ -64,8 +80,9 @@ function StandardPanel({ formations, entries, month, trainers, ministries, tabQu
   })}</div>;
 }
 
-function DeepeningPanel({ formations, entries, canCreate }: { formations: FormationRow[]; entries: ProgramEntry[]; canCreate: boolean }) {
+function DeepeningPanel({ formations, entries, canCreate, students }: { formations: FormationRow[]; entries: ProgramEntry[]; canCreate: boolean; students: { id: string; full_name: string; authorized: boolean }[] }) {
   return <div className="space-y-5">
+    {canCreate && <DeepeningAccessManager students={students} />}
     {canCreate && <details className="rounded-2xl border border-border bg-background p-4 sm:p-5"><summary className="flex cursor-pointer list-none items-center gap-2 text-sm font-semibold"><Plus size={17} /> Créer un approfondissement</summary><form action={createDeepeningFormation} className="mt-4 grid gap-3 sm:grid-cols-[1fr_1.5fr_auto]"><input name="title" required placeholder="Titre de l’approfondissement" className="min-h-11 rounded-xl border border-border bg-background px-3.5 text-sm" /><input name="description" placeholder="Description courte" className="min-h-11 rounded-xl border border-border bg-background px-3.5 text-sm" /><button className="rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-on-accent">Créer le brouillon</button></form></details>}
     {formations.length ? <div className="grid gap-4 lg:grid-cols-2">{formations.map((formation) => {
       const sessions = entries.filter((entry) => entry.formationId === formation.id);

@@ -7,6 +7,10 @@ import { signedAvatarUrls } from "@/lib/avatars";
 import { parseMlkEngagement } from "@/lib/mlk-engagement";
 import MinistryPicto from "@/components/MinistryPicto";
 import { getViewer } from "@/lib/data/viewer";
+import MemberProfileEditor from "@/components/admin/MemberProfileEditor";
+import MemberAccessEditor from "@/components/admin/MemberAccessEditor";
+import { setDeepeningAuthorization } from "@/app/gestion/formations/actions";
+import type { Member } from "@/lib/data/admin-hub";
 
 const date = (value?: string | null) => value
   ? new Intl.DateTimeFormat("fr-FR", { dateStyle: "long", timeZone: "Europe/Paris" }).format(new Date(value))
@@ -37,7 +41,7 @@ export default async function AdminMemberProfilePage({ params, searchParams }: {
   const supabase = await createClient();
   const { data: profile } = await supabase
     .from("profiles")
-    .select("id, full_name, gender, role, created_at, avatar_path, notification_prefs, preferred_day, email_confirmed, deactivated, is_teacher, is_service_lead, is_project_lead, is_projects_training_member, service_id, ministry_id, ministry_lead_of, ministries!profiles_ministry_id_fkey(name, slug)")
+    .select("id, full_name, gender, role, created_at, avatar_path, notification_prefs, preferred_day, email_confirmed, deactivated, is_teacher, is_service_lead, is_project_lead, is_projects_training_member, can_create_opportunities, service_id, ministry_id, ministry_lead_of, ministries!profiles_ministry_id_fkey(name, slug)")
     .eq("id", id)
     .single();
   if (!profile) notFound();
@@ -84,10 +88,13 @@ export default async function AdminMemberProfilePage({ params, searchParams }: {
     email = ((emails ?? []) as { id: string; email: string }[]).find((item) => item.id === id)?.email ?? "";
   }
 
-  const [{ data: superAdmin }, { data: service }, { data: leadMinistry }] = await Promise.all([
+  const [{ data: superAdmin }, { data: service }, { data: leadMinistry }, ministriesResult, servicesResult, deepeningResult] = await Promise.all([
     supabase.rpc("is_super_admin", { p_user: id }),
     profile.service_id ? supabase.from("services").select("name").eq("id", profile.service_id).maybeSingle() : Promise.resolve({ data: null }),
     profile.ministry_lead_of ? supabase.from("ministries").select("name").eq("id", profile.ministry_lead_of).maybeSingle() : Promise.resolve({ data: null }),
+    supabase.from("ministries").select("id,name").order("name"),
+    supabase.from("services").select("id,name").order("name"),
+    supabase.from("deepening_access").select("enabled").eq("user_id", id).maybeSingle(),
   ]);
 
   const ministry = profile.ministries as unknown as { name: string; slug: string } | null;
@@ -112,6 +119,31 @@ export default async function AdminMemberProfilePage({ params, searchParams }: {
   const sortedEnrollments = [...enrollments].sort((a, b) => (b.session?.session_date ?? "").localeCompare(a.session?.session_date ?? ""));
   const sortedInitiatives = [...initiativeRegistrations].sort((a, b) => (b.date?.session_date ?? "").localeCompare(a.date?.session_date ?? ""));
   const initiativeNames = new Set(sortedInitiatives.map((item) => item.date?.opportunity?.title).filter(Boolean));
+  const ministries = (ministriesResult.data ?? []) as { id: string; name: string }[];
+  const services = (servicesResult.data ?? []) as { id: string; name: string }[];
+  const deepeningAuthorized = Boolean(deepeningResult.data?.enabled);
+  const editableMember: Member = {
+    id: profile.id,
+    full_name: profile.full_name ?? "",
+    email,
+    role: profile.role,
+    is_super_admin: Boolean(superAdmin),
+    gender: profile.gender,
+    is_teacher: profile.is_teacher,
+    is_service_lead: profile.is_service_lead,
+    is_project_lead: profile.is_project_lead,
+    is_projects_training_member: profile.is_projects_training_member,
+    can_create_opportunities: profile.can_create_opportunities,
+    service_id: profile.service_id,
+    ministry_lead_of: profile.ministry_lead_of,
+    ministry_id: profile.ministry_id,
+    email_confirmed: profile.email_confirmed,
+    deactivated: profile.deactivated,
+    created_at: profile.created_at,
+    preferred_day: profile.preferred_day,
+    avatar_path: profile.avatar_path,
+    notification_prefs: profile.notification_prefs,
+  };
 
   return (
     <div className="mx-auto max-w-[1040px] space-y-5">
@@ -137,6 +169,27 @@ export default async function AdminMemberProfilePage({ params, searchParams }: {
           <Info icon={<ShieldCheck size={18} />} label="Service rattaché" value={service?.name || "Aucun"} />
           <Info icon={<UsersRound size={18} />} label="Parcours étudiant" value={`${enrollments.length} inscription${enrollments.length > 1 ? "s" : ""} à un cours`} />
         </dl>
+      </section>
+
+      <div className="grid gap-5 lg:grid-cols-2">
+        <MemberProfileEditor member={{ id: profile.id, full_name: profile.full_name ?? "", gender: profile.gender, ministry_id: profile.ministry_id, preferred_day: profile.preferred_day }} ministries={ministries} />
+        <section className="rounded-xl border border-border bg-background p-5 sm:p-6">
+          <p className="label text-[10px] tracking-[0.15em] text-muted">ACCÈS SPÉCIFIQUE</p>
+          <h2 className="font-title mt-2 text-[23px] text-foreground">Approfondissements</h2>
+          <p className="mt-2 text-sm leading-6 text-muted">Cette autorisation générale est requise avant toute inscription à une formation d’approfondissement.</p>
+          <form action={setDeepeningAuthorization} className="mt-4 flex items-center justify-between gap-3 rounded-xl bg-surface p-3">
+            <input type="hidden" name="user_id" value={profile.id} />
+            <input type="hidden" name="enabled" value={deepeningAuthorized ? "0" : "1"} />
+            <strong className="text-sm text-foreground">{deepeningAuthorized ? "Accès autorisé" : "Accès non autorisé"}</strong>
+            <button className={`rounded-full px-3.5 py-2 text-xs font-semibold ${deepeningAuthorized ? "bg-emerald-100 text-emerald-800" : "bg-accent text-on-accent"}`}>{deepeningAuthorized ? "Retirer l’accès" : "Autoriser l’accès"}</button>
+          </form>
+        </section>
+      </div>
+
+      <section className="rounded-xl border border-border bg-background p-5 sm:p-6">
+        <p className="label text-[10px] tracking-[0.15em] text-muted">RÔLES ET COMPTE</p>
+        <h2 className="font-title mt-2 text-[23px] text-foreground">Modifier les accès administratifs</h2>
+        <MemberAccessEditor member={editableMember} services={services} ministries={ministries} />
       </section>
 
       <section className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">

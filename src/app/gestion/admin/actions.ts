@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 import { getViewer } from "@/lib/data/viewer";
 
 async function assertSuperAdmin() {
@@ -15,6 +16,29 @@ export type MemberActionResult = {
 };
 
 export type NotificationSettingsActionResult = MemberActionResult;
+
+/** Modifie les informations de la fiche étudiante sans toucher à ses historiques. */
+export async function updateMemberProfile(
+  _previous: MemberActionResult,
+  formData: FormData,
+): Promise<MemberActionResult> {
+  await assertSuperAdmin();
+  const userId = String(formData.get("user_id") ?? "").trim();
+  const fullName = String(formData.get("full_name") ?? "").trim();
+  if (!userId || !fullName) return { success: false, error: "Le nom de l’étudiant est obligatoire." };
+  const service = createServiceClient();
+  const { error } = await service.from("profiles").update({
+    full_name: fullName,
+    gender: String(formData.get("gender") ?? "").trim() || null,
+    ministry_id: String(formData.get("ministry_id") ?? "").trim() || null,
+    preferred_day: String(formData.get("preferred_day") ?? "").trim() || null,
+  }).eq("id", userId);
+  if (error) return { success: false, error: `La fiche n’a pas pu être enregistrée : ${error.message}` };
+  revalidatePath(`/gestion/admin/membres/${userId}`);
+  revalidatePath("/gestion/admin");
+  revalidatePath("/etudiant", "layout");
+  return { success: true };
+}
 
 /** Modifie l'ordonnancement réel du digest. La RPC répète le contrôle Super admin. */
 export async function saveNotificationDigestSettings(

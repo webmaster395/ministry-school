@@ -263,6 +263,7 @@ export default async function StudentWorkPage({
               <ul className="divide-y divide-border-soft">
                 {items.map(({ assignment: a, targetDate, after }) => {
                   const done = isDone(a);
+                  const overdue = !done && Boolean(a.due_at) && new Date(String(a.due_at)).getTime() < Date.now();
                   const meta = [
                     a.kind,
                     a.duration_min ? `${a.duration_min} min` : null,
@@ -323,9 +324,9 @@ export default async function StudentWorkPage({
                           )}
                         </div>
                         <span
-                          className={`ml-auto shrink-0 rounded-full px-3 py-1 text-xs font-medium ${done ? "bg-emerald-50 text-emerald-800" : "bg-surface text-foreground"}`}
+                          className={`ml-auto shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${done ? "bg-emerald-50 text-emerald-800" : overdue ? "bg-rose-100 text-rose-800" : "bg-surface text-foreground"}`}
                         >
-                          {done ? "Terminé" : "À faire"}
+                          {done ? "Terminé" : overdue ? "En retard" : "À faire"}
                         </span>
                       </form>
                     </li>

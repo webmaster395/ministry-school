@@ -51,7 +51,8 @@ export default async function StudentCoursesPage({ searchParams }: { searchParam
   });
 
   const opportunityById = new Map(opportunities.filter((opportunity) => isPublished(opportunity)).map((opportunity) => [opportunity.id, opportunity]));
-  const registeredDates = opportunityDates.filter((date) => registeredDateIds.has(date.id) && opportunityById.has(date.opportunity_id));
+  const publishedOpportunityDates = opportunityDates.filter((date) => opportunityById.has(date.opportunity_id));
+  const registeredDates = publishedOpportunityDates.filter((date) => registeredDateIds.has(date.id));
   const registeredDays = new Set(registeredDates.map((date) => date.session_date));
   const registeredSessions: MonthSession[] = registeredDates.map((date) => {
     const opportunity = opportunityById.get(date.opportunity_id)!;
@@ -63,25 +64,53 @@ export default async function StudentCoursesPage({ searchParams }: { searchParam
       title: opportunity.title,
       description: "Vous êtes inscrit à ce projet ou à cette formation.",
       label: TYPE_LABEL[opportunityType(opportunity)],
-      location: date.room ? `${date.location ?? opportunity.location ?? ""} · ${date.room}` : (date.location ?? opportunity.location),
+      location: [date.location ?? opportunity.location, date.room].filter(Boolean).join(" · ") || null,
       teacher: opportunity.organizer_label ?? opportunity.services?.name ?? null,
       color: "var(--f-projet)",
       href: `/etudiant/services/${opportunity.id}`,
     };
   });
-  const choiceSessions: MonthSession[] = sessions.filter((session) => isProjectDay(session) && !registeredDays.has(session.session_date)).map((session) => ({
-    id: `choice-${session.id}`,
-    date: session.session_date,
-    start: session.start_time,
-    end: session.end_time,
-    title: "Choisir mon projet ou ma formation",
-    description: "Découvrez les propositions disponibles pour cette journée et inscrivez-vous.",
-    label: "Projets et formations",
-    location: session.room ? `${session.location} · ${session.room}` : session.location,
-    teacher: null,
-    color: "var(--f-projet)",
-    href: `/etudiant/services?jour=${session.session_date}`,
-  }));
+  const opportunityDateByDay = new Map<string, (typeof publishedOpportunityDates)[number]>();
+  for (const date of publishedOpportunityDates) {
+    const current = opportunityDateByDay.get(date.session_date);
+    if (!current || date.start_time.localeCompare(current.start_time) < 0) opportunityDateByDay.set(date.session_date, date);
+  }
+  // La date réelle des propositions est la source de vérité. Une journée
+  // « Projets et formations » reste donc visible, même sans séance générique.
+  const choiceSessions: MonthSession[] = [...opportunityDateByDay.values()]
+    .filter((date) => !registeredDays.has(date.session_date))
+    .map((date) => ({
+      id: `choice-opportunity-${date.session_date}`,
+      date: date.session_date,
+      start: date.start_time,
+      end: date.end_time,
+      title: "Projets et formations",
+      description: "Choisissez le projet ou la formation auquel vous souhaitez participer.",
+      label: "Projets et formations",
+      location: [date.location, date.room].filter(Boolean).join(" · ") || null,
+      teacher: null,
+      color: "var(--f-projet)",
+      href: `/etudiant/services?jour=${date.session_date}&mois=${date.session_date.slice(0, 7)}`,
+    }));
+
+  // Compatibilité avec les anciennes journées qui n'avaient pas encore de
+  // propositions rattachées dans opportunity_dates.
+  const knownChoiceDays = new Set(choiceSessions.map((session) => session.date));
+  for (const session of sessions.filter((item) => isProjectDay(item) && !registeredDays.has(item.session_date) && !knownChoiceDays.has(item.session_date))) {
+    choiceSessions.push({
+      id: `choice-${session.id}`,
+      date: session.session_date,
+      start: session.start_time,
+      end: session.end_time,
+      title: "Projets et formations",
+      description: "Choisissez le projet ou la formation auquel vous souhaitez participer.",
+      label: "Projets et formations",
+      location: session.room ? `${session.location} · ${session.room}` : session.location,
+      teacher: null,
+      color: "var(--f-projet)",
+      href: `/etudiant/services?jour=${session.session_date}&mois=${session.session_date.slice(0, 7)}`,
+    });
+  }
 
   const calendarSessions = [...regularSessions, ...choiceSessions, ...registeredSessions].sort((a, b) => a.date.localeCompare(b.date) || a.start.localeCompare(b.start));
   const initialDate = params.jour && /^\d{4}-\d{2}-\d{2}$/.test(params.jour) ? params.jour : params.mois && /^\d{4}-\d{2}$/.test(params.mois) ? `${params.mois}-01` : undefined;
