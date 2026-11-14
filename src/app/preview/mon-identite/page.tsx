@@ -4,7 +4,7 @@ import IdentityExperience, { type IdentityStoryItem } from "@/app/etudiant/ident
 const stories: IdentityStoryItem[] = [
   { key: "mapp", name: "Profil MAPP", category: "Identité", href: "#", image: "/identity/stories/identity-v2.webp", status: "completed", measurable: true },
   { key: "heroes", name: "Test des héros", category: "Identité", href: "#", image: "/identity/stories/identity.webp", status: "completed", measurable: true },
-  { key: "fruit", name: "Fruit de l’Esprit", category: "Identité", href: "#", image: "/apps/grace-identity/fruit-spirit-water-berries-post-v15.png", status: "completed", measurable: true },
+  { key: "fruit", name: "Fruit de l’Esprit", category: "Identité", href: "#", image: "/apps/grace-identity/fruit-spirit-water-berries-post-v17.png", status: "completed", measurable: true },
   { key: "gifts", name: "Dons spirituels", category: "Identité", href: "#", image: "/identity/posts/dons-spirituels.webp", status: "not-started", measurable: true },
   { key: "skills", name: "Compétences naturelles", category: "Identité", href: "#", image: "/identity/posts/competences-naturelles.webp", status: "not-started", measurable: true },
   { key: "life-line", name: "Ma ligne de vie", category: "Identité", href: "#", image: "/identity/posts/ligne-de-vie.webp", status: "not-started", measurable: true },
