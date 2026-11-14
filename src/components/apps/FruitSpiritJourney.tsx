@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import {
   calculateFruitSpiritV2,
@@ -18,6 +18,22 @@ import styles from "./FruitSpiritJourney.module.css";
 type Page = "discover" | "intro" | "evaluate" | "overview" | "results";
 
 const resultLevelOrder: FruitSpiritLevel[] = ["practice", "develop", "discover"];
+
+const fruitSpiritFruitColors: Record<string, string> = {
+  amour: "#E8A4AD",
+  joie: "#F0A62E",
+  paix: "#7EC5E9",
+  patience: "#B6A4DB",
+  bonte: "#E8B879",
+  bienveillance: "#A9CF7A",
+  fidelite: "#9DAEDB",
+  douceur: "#D6A3CF",
+  maitrise: "#8FC8BA",
+};
+
+const fruitColorStyle = (key: string) => ({
+  "--fruit-color": fruitSpiritFruitColors[key] ?? "#A483BD",
+} as CSSProperties);
 
 export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: {
   initial: Record<string, unknown>;
@@ -94,7 +110,7 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
     </div>
   </Shell>;
 
-  if (page === "evaluate") return <Shell className={styles.softIvory}>
+  if (page === "evaluate") return <Shell className={`${styles.softIvory} ${styles.questionExperience}`}>
     <div className={`${styles.frame} ${styles.questionFrame}`}>
       <div className={styles.progress}><span>{String(step + 1).padStart(2, "0")} / 09</span><i><b style={{ width: `${((step + 1) / fruitSpiritSituationsV2.length) * 100}%` }} /></i></div>
       <header className={styles.situationHeader}>
@@ -119,7 +135,7 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
     </div>
   </Shell>;
 
-  if (page === "overview") return <Shell className={styles.softGreen}>
+  if (page === "overview") return <Shell className={`${styles.softGreen} ${styles.resultsOverviewExperience}`}>
     <div className={`${styles.frame} ${styles.resultsFrame} ${styles.overviewFrame}`}>
       <header className={styles.overviewHeader}>
         <p className={styles.eyebrow}>TES RÉSULTATS</p>
@@ -134,8 +150,8 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
           </header>
           {group.fruits.length > 0
             ? <div className={styles.overviewFruitList}>
-              {group.fruits.map(({ fruit, index, score }) => <button type="button" className={styles.overviewFruit} key={fruit.key} onClick={() => { setResultStep(index); setPage("results"); }}>
-                <span className={styles.overviewFruitIndex}>{String(index + 1).padStart(2, "0")}</span>
+              {group.fruits.map(({ fruit, index, score }) => <button type="button" className={styles.overviewFruit} style={fruitColorStyle(fruit.key)} key={fruit.key} onClick={() => { setResultStep(index); setPage("results"); }}>
+                <span className={styles.overviewFruitMarker} aria-hidden="true" />
                 <strong>{fruit.name}</strong>
                 <span className={styles.overviewFruitScore}>{score.toFixed(2).replace(".", ",")}<small>/5</small></span>
                 <span className={styles.overviewFruitAction}><span>Voir le détail</span><ArrowRight size={17} /></span>
@@ -152,7 +168,7 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
     </div>
   </Shell>;
 
-  return <Shell className={styles.softGreen}>
+  return <Shell className={`${styles.softGreen} ${styles.resultDetailExperience} ${styles[`fruitTheme_${resultFruit.key}`]}`}>
     <div className={`${styles.frame} ${styles.resultsFrame}`}>
       <button type="button" onClick={() => setPage("overview")} className={`${styles.ghost} ${styles.resultOverviewBack}`}><ArrowLeft size={16} /> Vue d’ensemble des 9 fruits</button>
       <nav className={styles.resultQuickNav} aria-label="Choisir le fruit à consulter">
@@ -160,10 +176,11 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
           type="button"
           key={fruit.key}
           className={index === resultStep ? styles.resultQuickNavActive : styles.resultQuickNavItem}
+          style={fruitColorStyle(fruit.key)}
           aria-current={index === resultStep ? "page" : undefined}
           onClick={() => setResultStep(index)}
         >
-          <span>{String(index + 1).padStart(2, "0")}</span>
+          <span className={styles.resultQuickNavDot} aria-hidden="true" />
           <strong>{fruit.name}</strong>
           <small>{result.scores[fruit.key].toFixed(2).replace(".", ",")}</small>
         </button>)}

@@ -1778,3 +1778,337 @@
   .restitutionAside .levelMarker { margin-top: 0; }
   .restitutionBody { padding: 28px 18px 34px; }
 }
+
+/* V17 — parcours premium : catégories violettes, repères propres à chaque fruit. */
+.shell.questionExperience {
+  background-color: #17162b;
+  background-image: url('/apps/grace-identity/fruit-spirit-abstract-blue-violet-bg-v27.png');
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.questionExperience::before {
+  inset: 0;
+  background: linear-gradient(115deg, rgb(18 16 38 / 0.58), rgb(46 38 91 / 0.2) 55%, rgb(14 15 34 / 0.5));
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+
+.questionExperience::after {
+  inset: 0;
+  background: radial-gradient(circle at 72% 18%, rgb(188 168 230 / 0.15), transparent 34%);
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+
+.questionExperience .progress,
+.questionExperience .hint,
+.questionExperience .actions { color: #fff; }
+
+.questionExperience .progress i { background: rgb(255 255 255 / 0.24); }
+.questionExperience .progress b { background: #c6b2dd; }
+
+.questionExperience .situationHeader,
+.questionExperience .questionBlock {
+  border: 1px solid rgb(255 255 255 / 0.58);
+  background: rgb(255 254 251 / 0.965);
+  box-shadow: 0 22px 70px rgb(7 5 22 / 0.2);
+  backdrop-filter: blur(20px);
+}
+
+.questionExperience .questionBlock { border-radius: 20px; }
+
+.questionExperience .questionScale .choice:hover:not(.choiceActive) {
+  border-color: rgb(75 41 95 / 0.42);
+  background: #f4eff7;
+}
+
+.questionExperience .questionScale .choiceActive,
+.questionExperience .questionScale .choiceActive:hover {
+  border-color: #4b295f;
+  background: #4b295f;
+}
+
+.shell.resultsOverviewExperience {
+  background: #f5f2f7;
+  color: #242129;
+}
+
+.resultsOverviewExperience::before,
+.resultsOverviewExperience::after,
+.resultDetailExperience::before,
+.resultDetailExperience::after {
+  background: none;
+  opacity: 0;
+  filter: none;
+  transform: none;
+}
+
+.resultsOverviewExperience .overviewHeader {
+  border: 0;
+  background: transparent;
+  padding: 4px 0 10px;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.resultsOverviewExperience .overviewHeader h1,
+.resultDetailExperience .resultHero h1,
+.resultDetailExperience .restitutionAside blockquote {
+  font-family: inherit;
+}
+
+.resultsOverviewExperience .overviewGroups { gap: 16px; }
+
+.resultsOverviewExperience .overviewGroup {
+  overflow: hidden;
+  border: 0;
+  border-radius: 24px;
+  box-shadow: 0 16px 44px rgb(43 28 52 / 0.11);
+}
+
+.resultsOverviewExperience .overviewGroup_practice { background: #4b295f; color: #fff; }
+.resultsOverviewExperience .overviewGroup_develop { background: #a483bd; color: #fff; }
+.resultsOverviewExperience .overviewGroup_discover { background: #e2d7ea; color: #2a2030; }
+
+.resultsOverviewExperience .overviewGroupHeader {
+  border: 0;
+  background: transparent;
+  padding: 22px 22px 17px;
+}
+
+.resultsOverviewExperience .overviewGroupHeader span,
+.resultsOverviewExperience .overviewGroupHeader > strong,
+.resultsOverviewExperience .overviewGroupHeader h2 { color: inherit; }
+
+.resultsOverviewExperience .overviewGroupHeader span { opacity: 0.72; }
+.resultsOverviewExperience .overviewGroupHeader > strong { opacity: 0.92; }
+
+.resultsOverviewExperience .overviewFruitList {
+  display: grid;
+  gap: 9px;
+  border: 0;
+  background: transparent;
+  padding: 0 12px 12px;
+}
+
+.resultsOverviewExperience .overviewFruit {
+  grid-template-columns: 14px minmax(0, 1fr) auto 22px;
+  gap: 12px;
+  min-height: 68px;
+  border: 0;
+  border-radius: 15px;
+  background: rgb(255 255 255 / 0.96);
+  padding: 13px 16px;
+  color: #28242c;
+  box-shadow: 0 5px 18px rgb(31 20 39 / 0.09);
+}
+
+.resultsOverviewExperience .overviewFruit:hover {
+  background: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 9px 24px rgb(31 20 39 / 0.13);
+}
+
+.overviewFruitMarker {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--fruit-color);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--fruit-color) 18%, transparent);
+}
+
+.resultsOverviewExperience .overviewFruitScore,
+.resultsOverviewExperience .overviewFruitScore small,
+.resultsOverviewExperience .overviewFruitAction { color: #6f6874; }
+
+.resultsOverviewExperience .overviewEmpty {
+  margin: 0 12px 12px;
+  border: 0;
+  border-radius: 15px;
+  background: rgb(255 255 255 / 0.7);
+  color: #554d5b;
+}
+
+.shell.resultDetailExperience {
+  background: var(--fruit-page, #e2d7ea);
+  color: #242129;
+  transition: background-color 220ms ease;
+}
+
+.fruitTheme_amour { --fruit-page: #e8a4ad; }
+.fruitTheme_joie { --fruit-page: #f0a62e; }
+.fruitTheme_paix { --fruit-page: #7ec5e9; }
+.fruitTheme_patience { --fruit-page: #b6a4db; }
+.fruitTheme_bonte { --fruit-page: #e8b879; }
+.fruitTheme_bienveillance { --fruit-page: #a9cf7a; }
+.fruitTheme_fidelite { --fruit-page: #9daedb; }
+.fruitTheme_douceur { --fruit-page: #d6a3cf; }
+.fruitTheme_maitrise { --fruit-page: #8fc8ba; }
+
+.resultDetailExperience .resultOverviewBack { margin-bottom: 18px; }
+
+.resultDetailExperience .resultQuickNav {
+  border: 0;
+  background: rgb(255 255 255 / 0.78);
+  box-shadow: 0 12px 38px rgb(32 26 37 / 0.1);
+  backdrop-filter: blur(18px);
+}
+
+.resultDetailExperience .resultQuickNavItem,
+.resultDetailExperience .resultQuickNavActive {
+  grid-template-columns: 14px minmax(0, 1fr) auto;
+}
+
+.resultQuickNavDot {
+  display: block;
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--fruit-color);
+  opacity: 1;
+}
+
+.resultDetailExperience .resultQuickNavItem:hover {
+  background: color-mix(in srgb, var(--fruit-color) 22%, #fff);
+}
+
+.resultDetailExperience .resultQuickNavActive {
+  background: var(--fruit-color);
+  color: #211d24;
+}
+
+.resultDetailExperience .resultQuickNavActive .resultQuickNavDot {
+  background: #fff;
+  box-shadow: 0 0 0 3px rgb(255 255 255 / 0.28);
+}
+
+.resultDetailExperience .resultReaderProgress { color: #28232c; }
+.resultDetailExperience .resultDotRead { background: rgb(35 30 40 / 0.35); }
+.resultDetailExperience .resultDotActive { background: #242129; }
+
+.resultDetailExperience .resultHero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(190px, 0.48fr);
+  gap: 12px;
+  margin-top: 22px;
+  border: 0;
+  border-radius: 26px;
+  background: rgb(255 255 255 / 0.38);
+  padding: 12px;
+  box-shadow: 0 18px 60px rgb(35 27 40 / 0.12);
+  backdrop-filter: blur(14px);
+}
+
+.resultDetailExperience .resultHero > div {
+  border-radius: 18px;
+  background: rgb(255 255 255 / 0.57);
+  padding: clamp(22px, 4vw, 42px);
+}
+
+.resultDetailExperience .resultHero h1 {
+  color: #211d24;
+  font-size: clamp(42px, 5.5vw, 76px);
+  font-weight: 710;
+  letter-spacing: -0.045em;
+}
+
+.resultDetailExperience .resultHero p {
+  display: inline-flex;
+  margin-top: 18px;
+  border-radius: 999px;
+  background: #fff;
+  padding: 8px 12px;
+  color: #4b295f;
+  font-weight: 760;
+}
+
+.resultDetailExperience .resultHero > strong {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  align-self: stretch;
+  border-radius: 18px;
+  background: #242129;
+  padding: 28px 20px;
+  color: #fff;
+}
+
+.resultDetailExperience .resultDisclaimer { color: rgb(35 30 40 / 0.72); }
+
+.resultDetailExperience .restitution {
+  overflow: hidden;
+  border: 0;
+  border-radius: 26px;
+  background: rgb(255 255 255 / 0.88);
+  box-shadow: 0 20px 70px rgb(35 27 40 / 0.13);
+  backdrop-filter: blur(16px);
+}
+
+.resultDetailExperience .restitutionAside {
+  border-color: rgb(38 31 43 / 0.1);
+  background: rgb(255 255 255 / 0.42);
+}
+
+.resultDetailExperience .restitutionAside blockquote {
+  border-left-color: #242129;
+  color: #302932;
+  font-size: clamp(18px, 1.8vw, 24px);
+  font-weight: 540;
+}
+
+.resultDetailExperience .levelMarker {
+  border: 0;
+  background: #242129;
+}
+
+.resultDetailExperience .levelMarker span { color: rgb(255 255 255 / 0.66); }
+.resultDetailExperience .restitutionBody { background: rgb(255 255 255 / 0.72); }
+.resultDetailExperience .editorialSection p { color: rgb(36 31 39 / 0.82); }
+
+.resultDetailExperience .editorialFeatured {
+  border: 0;
+  background: color-mix(in srgb, var(--fruit-page) 45%, #fff);
+}
+
+.resultDetailExperience .editorialReflection {
+  border-color: rgb(36 31 39 / 0.15);
+  background: rgb(255 255 255 / 0.7);
+}
+
+.resultDetailExperience .resultPager button {
+  border-color: rgb(36 31 39 / 0.12);
+  background: rgb(255 255 255 / 0.7);
+  color: #242129;
+  box-shadow: 0 8px 24px rgb(35 27 40 / 0.08);
+}
+
+@media(max-width:720px) {
+  .shell.questionExperience { background-attachment: scroll; }
+
+  .questionExperience .situationHeader,
+  .questionExperience .questionBlock { backdrop-filter: blur(12px); }
+
+  .resultsOverviewExperience .overviewHeader { padding: 4px 2px 12px; }
+  .resultsOverviewExperience .overviewGroupHeader { padding: 20px 18px 15px; }
+
+  .resultsOverviewExperience .overviewFruit {
+    grid-template-columns: 14px minmax(0, 1fr) auto 20px;
+    min-height: 66px;
+    padding: 12px 14px;
+  }
+
+  .resultDetailExperience .resultQuickNavItem,
+  .resultDetailExperience .resultQuickNavActive {
+    flex-basis: 144px;
+    grid-template-columns: 14px minmax(0, 1fr);
+  }
+
+  .resultDetailExperience .resultHero { grid-template-columns: 1fr; }
+  .resultDetailExperience .resultHero > strong { justify-content: flex-start; padding: 18px 22px; }
+  .resultDetailExperience .resultHero h1 { font-size: clamp(40px, 13vw, 56px); }
+}
