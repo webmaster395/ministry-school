@@ -709,19 +709,16 @@
 }
 
 .fruitPost .postShade {
-  background: linear-gradient(
-    180deg,
-    rgb(255 255 255 / 0.02) 15%,
-    rgb(255 255 255 / 0.18) 48%,
-    rgb(249 247 241 / 0.96) 100%
-  );
+  background: none;
 }
 
 .fruitPost .postCopy,
 .fruitPost .postKicker,
 .fruitPost .openPost {
   color: #241a27;
-  text-shadow: 0 1px 16px rgb(255 255 255 / 0.86);
+  text-shadow:
+    0 1px 2px rgb(255 255 255 / 0.96),
+    0 0 14px rgb(255 255 255 / 0.72);
 }
 
 .fruitPost:hover .fruitArtwork {

@@ -47,3 +47,10 @@ test("Qui je suis conserve son contenu sans répéter le titre Ma personnalité"
   assert.match(identity, /props\.stories/);
   assert.match(identity, /props\.results/);
 });
+
+test("la carte Fruit de l’Esprit conserve la photo sans voile blanc", () => {
+  const styles = read("src/app/etudiant/identite/identity.module.css");
+  const finalFruitShade = styles.lastIndexOf(".fruitPost .postShade");
+  const nextRule = styles.indexOf("}", finalFruitShade);
+  assert.match(styles.slice(finalFruitShade, nextRule + 1), /background: none/);
+});
