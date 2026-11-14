@@ -7,7 +7,7 @@ with source as (
   select * from public.app_catalog where slug = 'je-suis-par-la-grace-de-dieu'
 ), tools(slug, name, description, destination, result_url, story_image, post_image, display_order, integration_key) as (
   values
-    ('fruit-de-lesprit', 'Fruit de l''Esprit', 'Découvre comment le fruit de l''Esprit se manifeste dans ton quotidien.', '/apps/je-suis-par-la-grace-de-dieu?test=fruit', '/etudiant/identite/fruit-de-lesprit', '/apps/grace-identity/fruit-spirit-abstract-violet-story-v22.png', '/apps/grace-identity/fruit-spirit-abstract-violet-post-v22.png', 40, 'grace-identity-fruit'),
+    ('fruit-de-lesprit', 'Fruit de l''Esprit', 'Découvre comment le fruit de l''Esprit se manifeste dans ton quotidien.', '/apps/je-suis-par-la-grace-de-dieu?test=fruit', '/etudiant/identite/fruit-de-lesprit', '/apps/grace-identity/fruit-spirit-purple-lime-story-v23.png', '/apps/grace-identity/fruit-spirit-purple-lime-post-v23.png', 40, 'grace-identity-fruit'),
     ('dons-spirituels', 'Dons spirituels', 'Explore les dons spirituels qui se manifestent et ceux que tu peux développer.', '/apps/je-suis-par-la-grace-de-dieu?test=gifts', '/etudiant/identite/dons-spirituels', '/identity/posts/dons-spirituels.webp', '/identity/posts/dons-spirituels.webp', 41, 'grace-identity-gifts'),
     ('competences-naturelles', 'Compétences naturelles', 'Identifie tes forces et les compétences que tu souhaites faire grandir.', '/apps/je-suis-par-la-grace-de-dieu?test=skills', '/etudiant/identite/competences-naturelles', '/identity/posts/competences-naturelles.webp', '/identity/posts/competences-naturelles.webp', 42, 'grace-identity-skills')
 )

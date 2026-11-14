@@ -64,7 +64,7 @@ function buildStories({
 
   const legacyGraceTool = tools.find((tool) => tool.slug === graceIdentitySlug);
   ([
-    ["fruit", "Fruit de l’Esprit", "/apps/grace-identity/fruit-spirit-abstract-violet-story-v22.png"],
+    ["fruit", "Fruit de l’Esprit", "/apps/grace-identity/fruit-spirit-purple-lime-story-v23.png"],
     ["gifts", "Dons spirituels", "/identity/posts/dons-spirituels.webp"],
     ["skills", "Compétences naturelles", "/identity/posts/competences-naturelles.webp"],
   ] as const).forEach(([kind, fallbackName, fallbackImage]) => {
@@ -219,7 +219,7 @@ export default async function StudentIdentityPage() {
     heroesAvailable: Boolean(heroesMotors),
   });
   const defaultPostArtwork = {
-    fruit: { title: "Fruit de l’Esprit", image: "/apps/grace-identity/fruit-spirit-abstract-violet-post-v22.png", href: graceTestHref("fruit") },
+    fruit: { title: "Fruit de l’Esprit", image: "/apps/grace-identity/fruit-spirit-purple-lime-post-v23.png", href: graceTestHref("fruit") },
     gifts: { title: "Dons spirituels", image: "/identity/posts/dons-spirituels.webp", href: graceTestHref("gifts") },
     skills: { title: "Compétences naturelles", image: "/identity/posts/competences-naturelles.webp", href: graceTestHref("skills") },
   };

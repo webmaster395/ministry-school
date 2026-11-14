@@ -27,9 +27,9 @@ test("Fruit de l'Esprit uses the final plum and lime crops and keeps the sober r
     read("src/app/etudiant/identite/page.tsx"),
   ]);
 
-  assert.match(identity, /fruit-spirit-abstract-violet-post-v22\.png/);
-  assert.match(experience, /fruit-spirit-abstract-violet-post-v22\.png/);
-  assert.match(page, /fruit-spirit-abstract-violet-story-v22\.png/);
+  assert.match(identity, /fruit-spirit-purple-lime-post-v23\.png/);
+  assert.match(experience, /fruit-spirit-purple-lime-post-v23\.png/);
+  assert.match(page, /fruit-spirit-purple-lime-story-v23\.png/);
   assert.match(journey, /fruit-spirit-water-bubbles-v11\.png/);
   assert.match(journey, /--fruit-accent: #e79a24/);
   assert.match(journey, /backdrop-filter: blur\(8px\)/);

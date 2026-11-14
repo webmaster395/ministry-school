@@ -27,13 +27,13 @@ test("les trois tests de grâce obtiennent des fiches indépendantes sans touche
   assert.doesNotMatch(migration, /delete\s+from\s+public\.grace_identity_assessments/i);
 });
 
-test("Fruit de l’Esprit utilise le cadrage abstrait violet et citron vert", () => {
+test("Fruit de l’Esprit utilise le visuel violet et citron vert", () => {
   const identity = read("src/app/etudiant/identite/page.tsx");
   const migration = read("supabase/migrations/20261114033000_split_grace_identity_catalog.sql");
-  assert.match(identity, /fruit-spirit-abstract-violet-story-v22\.png/);
-  assert.match(identity, /fruit-spirit-abstract-violet-post-v22\.png/);
-  assert.match(migration, /fruit-spirit-abstract-violet-story-v22\.png/);
-  assert.match(migration, /fruit-spirit-abstract-violet-post-v22\.png/);
+  assert.match(identity, /fruit-spirit-purple-lime-story-v23\.png/);
+  assert.match(identity, /fruit-spirit-purple-lime-post-v23\.png/);
+  assert.match(migration, /fruit-spirit-purple-lime-story-v23\.png/);
+  assert.match(migration, /fruit-spirit-purple-lime-post-v23\.png/);
 });
 
 test("les super administrateurs voient tous les outils, même avant publication", () => {
