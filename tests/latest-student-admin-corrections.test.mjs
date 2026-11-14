@@ -53,7 +53,7 @@ test("Fruit de l'Esprit utilise l'image finale sans sacrifier la lisibilité", a
   assert.match(css, /fruit-spirit-water-bubbles-v11\.png/);
   assert.match(css, /--fruit-accent: #e79a24/);
   assert.match(css, /background:\s*rgb\(255 254 251 \/ 0\.985\)/);
-  assert.match(identity, /fruit-spirit-citrus-post-v13\.webp/);
+  assert.match(identity, /fruit-spirit-water-berries-post-v15\.png/);
 });
 
 test("le premier mois du parcours est compté dès son démarrage réel", async () => {

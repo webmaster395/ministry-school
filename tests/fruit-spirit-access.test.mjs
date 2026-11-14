@@ -22,14 +22,14 @@ test("Fruit de l’Esprit est masqué du tableau de bord étudiant standard", ()
   assert.match(identity, /upcoming=\{buildUpcoming\(visibleTools, completedKinds\)\}/);
 });
 
-test("la DA Fruit de l’Esprit utilise les agrumes sur les miniatures et garde le parcours clair", () => {
+test("la DA Fruit de l’Esprit utilise les baies dans l’eau et garde le parcours clair", () => {
   const identity = read("src/app/etudiant/identite/identity.module.css");
   const stories = read("src/app/etudiant/identite/page.tsx");
   const journey = read("src/components/apps/FruitSpiritJourney.module.css");
 
-  assert.match(identity, /fruit-spirit-citrus-post-v13\.webp/);
+  assert.match(identity, /fruit-spirit-water-berries-post-v15\.png/);
   assert.doesNotMatch(identity, /storyRing\[data-story-key="fruit"\] \.storyInner img\s*\{\s*display: none/);
-  assert.match(stories, /fruit-spirit-citrus-story-v13\.webp/);
+  assert.match(stories, /fruit-spirit-water-berries-story-v15\.png/);
   assert.match(journey, /fruit-spirit-water-bubbles-v11\.png/);
   assert.match(journey, /--fruit-accent: #e79a24/);
 });

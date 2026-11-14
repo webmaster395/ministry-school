@@ -1498,3 +1498,172 @@
     opacity: 1;
   }
 }
+
+/* V15 final — palette issue du visuel aux baies, placée après les anciens thèmes. */
+.shell,
+.shell.softGreen,
+.shell.softIvory {
+  --fruit-ink: #231e24;
+  --fruit-plum: #67405c;
+  --fruit-plum-deep: #4f3047;
+  --fruit-blue: #355169;
+  --fruit-green: #68752e;
+  --fruit-line: rgb(54 46 54 / 0.15);
+  color: var(--fruit-ink);
+}
+
+.title {
+  max-width: 760px;
+  font-size: clamp(42px, 6.2vw, 74px);
+  line-height: 0.96;
+  letter-spacing: -0.055em;
+  text-transform: none;
+}
+
+.eyebrow,
+.questionHeading > b,
+.overviewFruitIndex,
+.overviewGroupHeader span,
+.overviewGroupHeader > strong,
+.resultPager button small { color: var(--fruit-plum); }
+
+.progress b { background: linear-gradient(90deg, var(--fruit-green), var(--fruit-plum)); }
+
+.pill,
+.questionScale .choiceActive,
+.questionScale .choiceActive:hover {
+  border-color: var(--fruit-plum-deep);
+  background: var(--fruit-plum-deep);
+  color: #fff;
+}
+
+.questionScale .choice:hover:not(.choiceActive) {
+  border-color: rgb(103 64 92 / 0.48);
+  background: #f6f1f4;
+  color: var(--fruit-ink);
+}
+
+.overviewGroup {
+  --group-accent: var(--fruit-plum);
+  border-color: var(--fruit-line);
+  border-radius: 18px;
+  box-shadow: 0 10px 32px rgb(44 34 43 / 0.075);
+}
+
+.overviewGroup_practice { --group-accent: var(--fruit-green); }
+.overviewGroup_develop { --group-accent: var(--fruit-plum); }
+.overviewGroup_discover { --group-accent: var(--fruit-blue); }
+
+.overviewFruit { border-color: rgb(54 46 54 / 0.1); color: var(--fruit-ink); }
+.overviewFruit:hover { background: color-mix(in srgb, var(--group-accent) 8%, #fff); }
+
+.overviewFruitAction,
+.overviewFruitScore small,
+.overviewHeader > p:last-child,
+.resultDisclaimer { color: rgb(35 30 36 / 0.66); }
+
+.resultQuickNav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin: 0 0 28px;
+  border: 1px solid var(--fruit-line);
+  border-radius: 18px;
+  background: rgb(255 254 251 / 0.985);
+  padding: 8px;
+  box-shadow: 0 10px 32px rgb(44 34 43 / 0.075);
+}
+
+.resultQuickNavItem,
+.resultQuickNavActive {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  padding: 8px 11px;
+  color: var(--fruit-ink);
+  text-align: left;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.resultQuickNavItem:hover { background: #f4eff2; }
+.resultQuickNavActive { background: var(--fruit-plum-deep); color: #fff; }
+
+.resultQuickNavItem span,
+.resultQuickNavActive span {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  opacity: 0.65;
+}
+
+.resultQuickNavItem strong,
+.resultQuickNavActive strong {
+  overflow: hidden;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.resultQuickNavItem small,
+.resultQuickNavActive small { font-size: 11px; font-weight: 750; }
+
+.resultQuickNavItem:focus-visible,
+.resultQuickNavActive:focus-visible {
+  outline: 3px solid rgb(103 64 92 / 0.32);
+  outline-offset: 2px;
+}
+
+.resultDotRead { background: rgb(103 64 92 / 0.42); }
+.resultDotActive { background: var(--fruit-plum-deep); }
+
+.resultHero { margin-top: 28px; border-left: 4px solid var(--fruit-plum); }
+.resultHero h1 { color: var(--fruit-ink); }
+.resultHero p { background: #f0e8ed; color: var(--fruit-plum-deep); }
+
+.restitutionBody { gap: 30px; background: #fffefb; color: var(--fruit-ink); }
+.restitutionBody blockquote { border-left-color: var(--fruit-green); color: #4d3f24; }
+.editorialSection p { color: rgb(35 30 36 / 0.78); }
+.editorialSection + .editorialSection { border-top-color: var(--fruit-line); }
+
+.levelMarker { border-left: 5px solid #8da04a; background: var(--fruit-plum-deep); }
+.levelMarker span { color: #d9e1ae; }
+.editorialFeatured { background: #f0f2e3; }
+.editorialReflection { border-color: rgb(53 81 105 / 0.24); background: #f7f9fa; }
+
+@media(max-width:720px) {
+  .title { font-size: clamp(38px, 13vw, 54px); }
+  .overviewHeader h1,
+  .resultHero h1 { font-size: clamp(36px, 12vw, 52px); }
+
+  .resultQuickNav {
+    display: flex;
+    gap: 7px;
+    overflow-x: auto;
+    margin-right: -16px;
+    margin-left: -16px;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+    padding: 8px 16px;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+
+  .resultQuickNav::-webkit-scrollbar { display: none; }
+
+  .resultQuickNavItem,
+  .resultQuickNavActive {
+    flex: 0 0 152px;
+    grid-template-columns: 24px minmax(0, 1fr);
+    scroll-snap-align: start;
+  }
+
+  .resultQuickNavItem small,
+  .resultQuickNavActive small { display: none; }
+}

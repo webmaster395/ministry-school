@@ -69,7 +69,7 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
       <p className={styles.eyebrow}>MINISTRY SCHOOL <span /></p>
       <div className={styles.coverCopy}>
         <p className={styles.eyebrow}>UN CHEMIN DE CROISSANCE</p>
-        <h1 className={styles.title}>LE FRUIT<br />DE L’ESPRIT.</h1>
+        <h1 className={styles.title}>Fruit de l’Esprit</h1>
         <p className={styles.lead}>Découvre comment les fruits de l’Esprit se manifestent dans ton quotidien et identifie des pistes concrètes de croissance.</p>
       </div>
       <div className={styles.actions}>
@@ -155,6 +155,19 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
   return <Shell className={styles.softGreen}>
     <div className={`${styles.frame} ${styles.resultsFrame}`}>
       <button type="button" onClick={() => setPage("overview")} className={`${styles.ghost} ${styles.resultOverviewBack}`}><ArrowLeft size={16} /> Vue d’ensemble des 9 fruits</button>
+      <nav className={styles.resultQuickNav} aria-label="Choisir le fruit à consulter">
+        {fruitSpiritFruitsV2.map((fruit, index) => <button
+          type="button"
+          key={fruit.key}
+          className={index === resultStep ? styles.resultQuickNavActive : styles.resultQuickNavItem}
+          aria-current={index === resultStep ? "page" : undefined}
+          onClick={() => setResultStep(index)}
+        >
+          <span>{String(index + 1).padStart(2, "0")}</span>
+          <strong>{fruit.name}</strong>
+          <small>{result.scores[fruit.key].toFixed(2).replace(".", ",")}</small>
+        </button>)}
+      </nav>
       <div className={styles.resultReaderProgress}>
         <p className={styles.eyebrow}>TON PARCOURS · FRUIT {String(resultStep + 1).padStart(2, "0")} SUR 09</p>
         <div className={styles.resultDots} aria-label={`Fruit ${resultStep + 1} sur 9`}>
