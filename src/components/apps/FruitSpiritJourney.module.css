@@ -1667,3 +1667,114 @@
   .resultQuickNavItem small,
   .resultQuickNavActive small { display: none; }
 }
+
+/* V16 — résultats éditoriaux : panorama compact puis lecture guidée. */
+.overviewHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+  align-items: end;
+  gap: 10px 42px;
+  width: 100%;
+  max-width: none;
+}
+
+.overviewHeader > .eyebrow { grid-column: 1 / -1; }
+.overviewHeader h1 { grid-column: 1; }
+.overviewHeader > p:last-child { grid-column: 2; margin: 0 0 4px; }
+
+.overviewGroups {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.overviewGroupHeader {
+  min-height: 132px;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.overviewGroupHeader h2 {
+  max-width: 12ch;
+  font-size: clamp(20px, 2vw, 27px);
+  line-height: 1.08;
+}
+
+.overviewFruit {
+  grid-template-columns: 30px minmax(0, 1fr) auto 22px;
+  gap: 10px;
+  min-height: 66px;
+  padding: 13px 18px;
+}
+
+.overviewFruit > strong { font-size: 16px; }
+.overviewFruitScore { font-size: 19px; }
+.overviewFruitAction { min-width: 22px; }
+.overviewFruitAction > span { position: absolute; overflow: hidden; width: 1px; height: 1px; clip: rect(0 0 0 0); }
+
+.restitution {
+  display: grid;
+  grid-template-columns: minmax(250px, 0.72fr) minmax(0, 1.65fr);
+  background: #fffefb;
+}
+
+.restitutionAside {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  border-right: 1px solid var(--fruit-line);
+  background: #f5f3ef;
+  padding: clamp(28px, 4vw, 48px) clamp(22px, 3vw, 34px);
+}
+
+.restitutionAside blockquote {
+  margin: 0;
+  padding-left: 18px;
+  border-left: 3px solid var(--fruit-green);
+  color: #4d3f24;
+  font-family: Georgia, serif;
+  font-size: clamp(18px, 1.8vw, 24px);
+  line-height: 1.5;
+}
+
+.restitutionAside .levelMarker {
+  margin-top: auto;
+  padding: 18px;
+}
+
+.restitutionBody {
+  padding: clamp(30px, 5vw, 58px);
+}
+
+.restitutionBody > * {
+  width: 100%;
+  max-width: 820px;
+}
+
+.restitutionBody .editorialSection:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+@media(max-width:980px) {
+  .overviewGroups { grid-template-columns: 1fr; }
+  .overviewGroupHeader { min-height: 0; }
+  .overviewGroupHeader h2 { max-width: none; }
+}
+
+@media(max-width:720px) {
+  .overviewHeader { display: block; padding: 18px; }
+  .overviewHeader > p:last-child { margin-top: 16px; }
+  .overviewGroups { margin-top: 14px; }
+
+  .overviewFruit {
+    grid-template-columns: 30px minmax(0, 1fr) auto 20px;
+    padding: 13px 14px;
+  }
+
+  .restitution { grid-template-columns: 1fr; }
+  .restitutionAside { border-right: 0; border-bottom: 1px solid var(--fruit-line); }
+  .restitutionAside .levelMarker { margin-top: 0; }
+  .restitutionBody { padding: 28px 18px 34px; }
+}

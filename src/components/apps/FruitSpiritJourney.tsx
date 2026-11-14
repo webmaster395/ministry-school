@@ -138,7 +138,7 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
                 <span className={styles.overviewFruitIndex}>{String(index + 1).padStart(2, "0")}</span>
                 <strong>{fruit.name}</strong>
                 <span className={styles.overviewFruitScore}>{score.toFixed(2).replace(".", ",")}<small>/5</small></span>
-                <span className={styles.overviewFruitAction}>Voir le détail <ArrowRight size={17} /></span>
+                <span className={styles.overviewFruitAction}><span>Voir le détail</span><ArrowRight size={17} /></span>
               </button>)}
             </div>
             : <p className={styles.overviewEmpty}>Aucun fruit dans cette catégorie.</p>}
@@ -180,10 +180,12 @@ export default function FruitSpiritJourney({ initial, saving, onBack, onSave }: 
       </header>
       <p className={styles.resultDisclaimer}>Ce résultat indique une piste de croissance à partir de tes réponses. Il ne mesure pas définitivement ta maturité spirituelle.</p>
       <article className={styles.restitution} aria-labelledby={`fruit-result-${resultFruit.key}`}>
-        <div className={styles.restitutionBody}>
+        <aside className={styles.restitutionAside}>
           <blockquote>{resultEditorial.verse}</blockquote>
-          <EditorialSection title={resultEditorial.overviewTitle} content={resultEditorial.overview} />
           <div className={styles.levelMarker}><span>TON NIVEAU</span><strong>{fruitSpiritLevelLabels[resultLevel]}</strong></div>
+        </aside>
+        <div className={styles.restitutionBody}>
+          <EditorialSection title={resultEditorial.overviewTitle} content={resultEditorial.overview} />
           <EditorialSection title="Ce que tu peux découvrir sur toi" content={resultRestitution.discovery} />
           <EditorialSection title="Comment laisser ce fruit grandir ?" content={resultRestitution.growth} />
           <EditorialSection title="Ton défi cette semaine" content={`${resultRestitution.challengeTitle}\n\n${resultRestitution.challenge}`} featured />
