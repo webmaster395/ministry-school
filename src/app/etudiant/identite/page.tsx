@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { IdentityResult } from "@/lib/identity/dashboard";
 import { getPublishedHeroesMotorsResult } from "@/lib/identity/heroes-motors";
-import { graceIdentitySlug } from "@/lib/apps/grace-identity";
+import { graceIdentitySlug, graceIdentityToolSlugs, graceTestKeyFromSlug, type GraceTestKey } from "@/lib/apps/grace-identity";
 
 export const dynamic = "force-dynamic";
 
@@ -22,12 +22,10 @@ function buildStories({
   tools,
   results,
   heroesAvailable,
-  graceAvailable,
 }: {
   tools: CatalogApp[];
   results: IdentityResult[];
   heroesAvailable: boolean;
-  graceAvailable: boolean;
 }): IdentityStoryItem[] {
   const hasTool = (slug: string) => tools.some((tool) => tool.slug === slug);
   const items: IdentityStoryItem[] = [];
@@ -64,24 +62,25 @@ function buildStories({
     });
   }
 
-  if (graceAvailable) {
-    ([
-      ["fruit", "Fruit de l’Esprit", "/apps/grace-identity/fruit-spirit-water-berries-story-v17.png"],
-      ["gifts", "Dons spirituels", "/identity/posts/dons-spirituels.webp"],
-      ["skills", "Compétences naturelles", "/identity/posts/competences-naturelles.webp"],
-    ] as const).forEach(([kind, name, image]) => {
+  const legacyGraceTool = tools.find((tool) => tool.slug === graceIdentitySlug);
+  ([
+    ["fruit", "Fruit de l’Esprit", "/apps/grace-identity/fruit-spirit-plum-lime-story-v19.png"],
+    ["gifts", "Dons spirituels", "/identity/posts/dons-spirituels.webp"],
+    ["skills", "Compétences naturelles", "/identity/posts/competences-naturelles.webp"],
+  ] as const).forEach(([kind, fallbackName, fallbackImage]) => {
+      const tool = tools.find((candidate) => candidate.slug === graceIdentityToolSlugs[kind]) ?? legacyGraceTool;
+      if (!tool || (!tool.placementStory && tool.slug !== graceIdentitySlug)) return;
       const completed = latestResult(results, kind);
       items.push({
         key: kind,
-        name,
+        name: tool.storyTitle || fallbackName,
         category: "Identité",
-        href: graceTestHref(kind),
-        image,
+        href: tool.storyDestinationUrl || graceTestHref(kind),
+        image: tool.storyImageUrl || fallbackImage,
         status: completed ? "completed" : "not-started",
         measurable: true,
       });
     });
-  }
 
   if (hasTool("ma-ligne-de-vie")) {
     const lifeLine = latestResult(results, "life-line");
@@ -151,6 +150,10 @@ function buildUpcoming(tools: CatalogApp[], completedKinds: Set<string>) {
       const kind = resultKindForItem(item);
       return kind && !completedKinds.has(kind) ? [{ ...item, category: "Identité" }] : [];
     });
+    const graceKind = graceTestKeyFromSlug(tool.slug);
+    if (graceKind) return completedKinds.has(graceKind) || !tool.placementWork
+      ? []
+      : [{ key: tool.id, name: tool.displayTitle, href: tool.destinationUrl, iconUrl: tool.iconUrl, category: "Identité" }];
     if (tool.slug === "ma-ligne-de-vie") return completedKinds.has("life-line") ? [] : [{ key: tool.id, name: "Ma ligne de vie", href: tool.url, iconUrl: tool.iconUrl, category: "Identité" }];
     // Généropoly et le simulateur sont des ressources non suivables : ils sont
     // regroupés dans l'onglet Ressources et ne faussent pas la progression.
@@ -202,16 +205,32 @@ export default async function StudentIdentityPage() {
     ...chronologicalResults.filter((result) => result.kind === "mapp"),
     ...chronologicalResults.filter((result) => result.kind !== "mapp" && result.kind !== "heroes-motors"),
   ];
-  const visibleTools = viewer.roles.superAdmin ? tools : tools.filter((tool) => tool.slug !== graceIdentitySlug);
-  const visibleResults = viewer.roles.superAdmin ? allResults : allResults.filter((result) => !graceResultKinds.has(result.kind));
+  const visibleTools = tools;
+  const availableGraceKinds = new Set<GraceTestKey>();
+  if (visibleTools.some((tool) => tool.slug === graceIdentitySlug)) (["fruit", "gifts", "skills"] as const).forEach((kind) => availableGraceKinds.add(kind));
+  visibleTools.forEach((tool) => { const kind = graceTestKeyFromSlug(tool.slug); if (kind) availableGraceKinds.add(kind); });
+  const visibleResults = allResults.filter((result) => !graceResultKinds.has(result.kind) || availableGraceKinds.has(result.kind as GraceTestKey));
   const completedKinds = new Set(visibleResults.map((result) => result.kind));
-  const graceAvailable = viewer.roles.superAdmin;
   const stories = buildStories({
     tools: visibleTools,
     results: visibleResults,
     heroesAvailable: Boolean(heroesMotors),
-    graceAvailable,
   });
+  const defaultPostArtwork = {
+    fruit: { title: "Fruit de l’Esprit", image: "/apps/grace-identity/fruit-spirit-plum-lime-post-v19.png", href: graceTestHref("fruit") },
+    gifts: { title: "Dons spirituels", image: "/identity/posts/dons-spirituels.webp", href: graceTestHref("gifts") },
+    skills: { title: "Compétences naturelles", image: "/identity/posts/competences-naturelles.webp", href: graceTestHref("skills") },
+  };
+  const legacyGraceTool = visibleTools.find((tool) => tool.slug === graceIdentitySlug);
+  const toolArtwork = Object.fromEntries(((["fruit", "gifts", "skills"] as const)).map((kind) => {
+    const tool = visibleTools.find((candidate) => candidate.slug === graceIdentityToolSlugs[kind]) ?? legacyGraceTool;
+    const fallback = defaultPostArtwork[kind];
+    return [kind, {
+      title: tool?.postTitle || fallback.title,
+      image: tool?.postImageUrl || fallback.image,
+      href: tool?.postDestinationUrl || fallback.href,
+    }];
+  }));
   return <IdentityExperience
     userId={viewer.id}
     fullName={viewer.fullName || dashboard.profile.firstName || "Mon identité"}
@@ -223,5 +242,6 @@ export default async function StudentIdentityPage() {
     stories={stories}
     results={visibleResults}
     upcoming={buildUpcoming(visibleTools, completedKinds)}
+    toolArtwork={toolArtwork}
   />;
 }

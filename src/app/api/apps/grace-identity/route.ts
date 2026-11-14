@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getViewer } from "@/lib/data/viewer";
-import { naturalSkillCategories, spiritualGifts, type GraceTestKey } from "@/lib/apps/grace-identity";
+import { graceIdentitySlug, graceIdentityToolSlugs, naturalSkillCategories, spiritualGifts, type GraceTestKey } from "@/lib/apps/grace-identity";
 import { calculateFruitSpiritV2, FRUIT_SPIRIT_QUESTIONNAIRE_VERSION, FRUIT_SPIRIT_RESTITUTION_VERSION, FRUIT_SPIRIT_SCORING_VERSION, fruitSpiritQuestionIdsV2, isFruitSpiritV2Complete, validFruitSpiritAnswer } from "@/lib/apps/fruit-spirit-v2";
 import { classifySpiritualGifts, isSpiritualGiftsV2Complete } from "@/lib/apps/spiritual-gifts-v2";
 import { naturalSkillIds } from "@/lib/apps/natural-skills-v2";
+import { getStudentTools } from "@/lib/apps/catalog";
 
 const keys = new Set<GraceTestKey>(["fruit", "gifts", "skills"]);
 const knownSkills = new Set<string>(naturalSkillCategories.flatMap((category) => category.skills));
@@ -42,6 +43,11 @@ export async function PUT(request: Request) {
   const body = await request.json().catch(() => null) as { testKey?: string; answers?: unknown; completed?: unknown } | null;
   if (!body || !keys.has(body.testKey as GraceTestKey) || !body.answers || typeof body.answers !== "object" || Array.isArray(body.answers)) return NextResponse.json({ error: "Données invalides." }, { status: 400 });
   const testKey = body.testKey as GraceTestKey;
+  if (!viewer.roles.superAdmin) {
+    const tools = await getStudentTools();
+    const canAccess = tools.some((tool) => tool.slug === graceIdentityToolSlugs[testKey] || tool.slug === graceIdentitySlug);
+    if (!canAccess) return NextResponse.json({ error: "Cet outil ne vous est pas accessible." }, { status: 403 });
+  }
   const rawAnswers = body.answers as Record<string, unknown>;
   const answers = testKey === "fruit" ? fruitAnswers(rawAnswers) : rawAnswers;
   const completed = testKey === "fruit" ? body.completed === true : true;

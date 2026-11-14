@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import AppsStudioShell, { StudioPageHeader } from "@/components/apps-studio/AppsStudioShell";
 import AppSettingsForm from "@/components/apps-studio/AppSettingsForm";
 import { getCatalogAppBySlug } from "@/lib/apps/catalog";
+import { graceTestKeyFromSlug } from "@/lib/apps/grace-identity";
 
 export const dynamic = "force-dynamic";
 
@@ -11,7 +12,8 @@ export default async function CatalogAppSettingsPage({ params }: { params: Promi
   if (!app || app.archivedAt) notFound();
   const isProfilMapp = app.slug === "profil-mapp";
   const isHeroes = app.slug === "test-des-heros";
-  return <AppsStudioShell active="applications" appTab="settings" appSlug={app.slug} appName={app.name} appIconUrl={app.iconUrl} hasResults={isProfilMapp || isHeroes} hasEditor={isProfilMapp}>
+  const isGraceTest = Boolean(graceTestKeyFromSlug(app.slug));
+  return <AppsStudioShell active="applications" appTab="settings" appSlug={app.slug} appName={app.name} appIconUrl={app.iconUrl} hasResults={isProfilMapp || isHeroes || isGraceTest} hasEditor={isProfilMapp}>
     <StudioPageHeader eyebrow={app.name.toUpperCase()} title="Paramètres" description="Identité, accès, publication et affichage." />
     {isProfilMapp && <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-950">
       <strong className="block">Validation avant publication</strong>

@@ -66,7 +66,7 @@ function buildTrackedTools(tools: CatalogApp[], results: IdentityResult[], heroe
     });
   }
 
-  if (hasCatalogTool(tools, "je-suis-par-la-grace-de-dieu")) {
+  if (hasCatalogTool(tools, "je-suis-par-la-grace-de-dieu") || tools.some((tool) => ["fruit-de-lesprit", "dons-spirituels", "competences-naturelles"].includes(tool.slug))) {
     ([
       ["fruit", "Fruit de l’Esprit", "Observe ce qui porte déjà du fruit et ce qui peut encore grandir.", "/etudiant/identite/fruit-de-lesprit"],
       ["gifts", "Dons spirituels", "Explore les dons qui se manifestent et ceux que tu peux développer.", "/etudiant/identite/dons-spirituels"],

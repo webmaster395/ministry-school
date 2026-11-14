@@ -1,4 +1,16 @@
+/** Ancienne fiche composite, conservée uniquement pour la compatibilité des liens. */
 export const graceIdentitySlug = "je-suis-par-la-grace-de-dieu";
+
+export const graceIdentityToolSlugs = {
+  fruit: "fruit-de-lesprit",
+  gifts: "dons-spirituels",
+  skills: "competences-naturelles",
+} as const;
+
+export function graceTestKeyFromSlug(slug: string): GraceTestKey | null {
+  const entry = Object.entries(graceIdentityToolSlugs).find(([, toolSlug]) => toolSlug === slug);
+  return entry ? entry[0] as GraceTestKey : null;
+}
 
 export const fruitTraits = [
   { key: "amour", name: "Amour", description: "Aimer les autres et chercher leur bien, même quand c’est difficile.", encouragements: ["Commence par accueillir l’amour de Dieu pour toi.", "Un petit geste d’attention peut ouvrir un chemin.", "Ton attention aux autres porte déjà du fruit.", "Ta manière d’aimer devient un repère rassurant.", "Ton amour peut encourager quelqu’un à son tour."], challenges: ["Envoie aujourd’hui un message bienveillant à une personne que tu évites parfois.", "Choisis une personne et prends cinq minutes pour l’écouter sans te distraire.", "Pose un acte de service discret pour alléger la journée de quelqu’un.", "Invite ou appelle une personne qui pourrait se sentir seule.", "Encourage une personne à aimer concrètement par ton exemple."] },

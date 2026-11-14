@@ -33,6 +33,7 @@ type Props = {
   stories: IdentityStoryItem[];
   results: IdentityResult[];
   upcoming: IdentityUpcomingItem[];
+  toolArtwork?: Partial<Record<"fruit" | "gifts" | "skills", { title: string; image: string; href: string }>>;
 };
 
 const profileNames: Record<string, string> = {
@@ -65,7 +66,7 @@ const resultArtwork = {
   fruit: {
     title: "Fruit de l’Esprit",
     eyebrow: "Je suis ce que je suis",
-    image: "/apps/grace-identity/fruit-spirit-water-berries-post-v17.png",
+    image: "/apps/grace-identity/fruit-spirit-plum-lime-post-v19.png",
     href: "/etudiant/identite/fruit-de-lesprit",
   },
   gifts: {
@@ -94,7 +95,7 @@ const resultArtwork = {
   },
 } as const;
 
-function ResultPost({ result, firstName }: { result: IdentityResult; firstName: string }) {
+function ResultPost({ result, firstName, toolArtwork }: { result: IdentityResult; firstName: string; toolArtwork?: Props["toolArtwork"] }) {
   if (result.kind === "heroes-motors") {
     return (
       <Link
@@ -139,16 +140,18 @@ function ResultPost({ result, firstName }: { result: IdentityResult; firstName: 
   }
 
   if (result.kind in resultArtwork) {
-    const artwork = resultArtwork[result.kind as keyof typeof resultArtwork];
+    const baseArtwork = resultArtwork[result.kind as keyof typeof resultArtwork];
+    const override = result.kind === "fruit" || result.kind === "gifts" || result.kind === "skills" ? toolArtwork?.[result.kind] : undefined;
+    const artwork = { ...baseArtwork, ...override };
     return (
       <Link className={`${styles.post} ${styles.imagePost} ${result.kind === "fruit" ? styles.fruitPost : ""}`} href={artwork.href} aria-label={`Ouvrir mon résultat ${artwork.title}`}>
-        {result.kind === "fruit" ? <span className={styles.fruitArtwork} aria-hidden="true" /> : <Image
+        <Image
           className={styles.postImage}
           src={artwork.image}
           alt=""
           fill
           sizes="(max-width: 767px) 33vw, 320px"
-        />}
+        />
         <span className={styles.postShade} />
         <span className={styles.postCopy}>
           <span className={styles.postKicker}>{artwork.eyebrow}</span>
@@ -306,7 +309,7 @@ export default function IdentityExperience(props: Props) {
 
         {activeTab === "results" ? (
           props.results.length ? (
-            <div className={styles.grid}>{props.results.map((result) => <ResultPost key={`${result.kind}-${result.attemptId ?? result.completedAt}`} result={result} firstName={firstName} />)}</div>
+            <div className={styles.grid}>{props.results.map((result) => <ResultPost key={`${result.kind}-${result.attemptId ?? result.completedAt}`} result={result} firstName={firstName} toolArtwork={props.toolArtwork} />)}</div>
           ) : (
             <div className={styles.empty}>
               <span><BookOpen /></span>

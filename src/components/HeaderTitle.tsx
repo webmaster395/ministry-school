@@ -42,8 +42,9 @@ const ADMIN_TABS: Record<string, string> = {
   membres: "Membres",
   permissions: "Permissions",
   roles: "Permissions",
-  outils: "Gestion des outils",
-  ressources: "Gestion des ressources",
+  contenus: "Outils et ressources",
+  outils: "Outils et ressources",
+  ressources: "Outils et ressources",
 };
 
 /**

@@ -19,7 +19,7 @@ test("admin course inventory counts course records instead of dated sessions", a
   assert.match(data, /s\.formation\?\.category_key \?\? s\.courses\?\.formation\?\.category_key/);
 });
 
-test("Fruit de l'Esprit uses dedicated text-free v17 berry crops and keeps the sober reading background", async () => {
+test("Fruit de l'Esprit uses the final plum and lime crops and keeps the sober reading background", async () => {
   const [journey, identity, experience, page] = await Promise.all([
     read("src/components/apps/FruitSpiritJourney.module.css"),
     read("src/app/etudiant/identite/identity.module.css"),
@@ -27,9 +27,9 @@ test("Fruit de l'Esprit uses dedicated text-free v17 berry crops and keeps the s
     read("src/app/etudiant/identite/page.tsx"),
   ]);
 
-  assert.match(identity, /fruit-spirit-water-berries-post-v17\.png/);
-  assert.match(experience, /fruit-spirit-water-berries-post-v17\.png/);
-  assert.match(page, /fruit-spirit-water-berries-story-v17\.png/);
+  assert.match(identity, /fruit-spirit-plum-lime-post-v19\.png/);
+  assert.match(experience, /fruit-spirit-plum-lime-post-v19\.png/);
+  assert.match(page, /fruit-spirit-plum-lime-story-v19\.png/);
   assert.match(journey, /fruit-spirit-water-bubbles-v11\.png/);
   assert.match(journey, /--fruit-accent: #e79a24/);
   assert.match(journey, /backdrop-filter: blur\(8px\)/);

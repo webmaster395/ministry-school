@@ -1,0 +1,37 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import { readFileSync } from "node:fs";
+
+const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
+
+test("l’administration réunit outils et ressources dans un espace à deux onglets", () => {
+  const page = read("src/app/gestion/admin/page.tsx");
+  const nav = read("src/lib/nav.tsx");
+  assert.match(page, /title="Outils et ressources"/);
+  assert.match(page, /contenu=outils/);
+  assert.match(page, /contenu=ressources/);
+  assert.match(page, /title="Outils"/);
+  assert.match(page, /title="Ressources"/);
+  assert.equal((nav.match(/label: "Outils et ressources"/g) || []).length, 1);
+  assert.doesNotMatch(nav, /label: "Gestion des outils"|label: "Gestion des ressources"/);
+});
+
+test("les trois tests de grâce obtiennent des fiches indépendantes sans toucher aux résultats", () => {
+  const migration = read("supabase/migrations/20261114033000_split_grace_identity_catalog.sql");
+  const slugs = read("src/lib/apps/grace-identity.ts");
+  for (const slug of ["fruit-de-lesprit", "dons-spirituels", "competences-naturelles"]) {
+    assert.match(migration, new RegExp(slug));
+    assert.match(slugs, new RegExp(slug));
+  }
+  assert.match(migration, /archived_at = coalesce\(archived_at, now\(\)\)/);
+  assert.doesNotMatch(migration, /delete\s+from\s+public\.grace_identity_assessments/i);
+});
+
+test("Fruit de l’Esprit utilise le cadrage final prune et citron vert", () => {
+  const identity = read("src/app/etudiant/identite/page.tsx");
+  const migration = read("supabase/migrations/20261114033000_split_grace_identity_catalog.sql");
+  assert.match(identity, /fruit-spirit-plum-lime-story-v19\.png/);
+  assert.match(identity, /fruit-spirit-plum-lime-post-v19\.png/);
+  assert.match(migration, /fruit-spirit-plum-lime-story-v19\.png/);
+  assert.match(migration, /fruit-spirit-plum-lime-post-v19\.png/);
+});

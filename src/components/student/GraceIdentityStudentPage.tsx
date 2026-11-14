@@ -1,13 +1,19 @@
 import { notFound } from "next/navigation";
 import GraceIdentityTool from "@/components/apps/GraceIdentityTool";
 import StudentToolFrame from "@/components/student/StudentToolFrame";
-import { type GraceTestKey } from "@/lib/apps/grace-identity";
+import { graceIdentitySlug, graceIdentityToolSlugs, type GraceTestKey } from "@/lib/apps/grace-identity";
+import { getStudentTools } from "@/lib/apps/catalog";
 import { getViewer } from "@/lib/data/viewer";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function GraceIdentityStudentPage({ test }: { test: GraceTestKey }) {
   const viewer = await getViewer();
-  if (!viewer || viewer.deactivated || !viewer.roles.superAdmin) notFound();
+  if (!viewer || viewer.deactivated) notFound();
+  if (!viewer.roles.superAdmin) {
+    const tools = await getStudentTools();
+    const canAccess = tools.some((tool) => tool.slug === graceIdentityToolSlugs[test] || tool.slug === graceIdentitySlug);
+    if (!canAccess) notFound();
+  }
   const supabase = await createClient();
   const { data } = await supabase
     .from("grace_identity_assessments")
@@ -15,7 +21,7 @@ export default async function GraceIdentityStudentPage({ test }: { test: GraceTe
     .eq("user_id", viewer.id);
   return (
     <StudentToolFrame>
-      <GraceIdentityTool initial={(data ?? []) as never[]} preview initialTest={test} independent />
+      <GraceIdentityTool initial={(data ?? []) as never[]} preview={viewer.roles.superAdmin} initialTest={test} independent />
     </StudentToolFrame>
   );
 }

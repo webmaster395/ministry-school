@@ -13,10 +13,12 @@ test("Profil MAPP est accessible à tout compte Ministry connecté et actif", ()
   assert.match(migration, /grant execute on function mapp\.current_student_is_eligible\(\) to authenticated/);
 });
 
-test("la restriction Fruit de l’Esprit reste distincte et réservée aux super admins", () => {
+test("Fruit de l’Esprit conserve une autorisation distincte pilotée par son catalogue", () => {
   const fruitRoute = read("src/components/student/GraceIdentityStudentPage.tsx");
 
-  assert.match(fruitRoute, /!viewer\.roles\.superAdmin\) notFound\(\)/);
+  assert.match(fruitRoute, /getStudentTools\(\)/);
+  assert.match(fruitRoute, /graceIdentityToolSlugs\[test\]/);
+  assert.match(fruitRoute, /if \(!canAccess\) notFound\(\)/);
 });
 
 test("MAPP ouvre le test à faire ou le résultat déjà finalisé", () => {

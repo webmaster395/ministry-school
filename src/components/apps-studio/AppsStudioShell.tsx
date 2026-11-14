@@ -27,7 +27,7 @@ export default function AppsStudioShell({
   return <div data-tools-section={active}>
       {appTab && (
         <section className="mb-7 border-b border-border pb-1">
-          <Link href="/admin/apps" className="inline-flex items-center gap-1.5 text-xs font-medium text-muted hover:text-foreground"><ArrowLeft size={14} /> Gestion des outils</Link>
+          <Link href="/gestion/admin?onglet=contenus&contenu=outils" className="inline-flex items-center gap-1.5 text-xs font-medium text-muted hover:text-foreground"><ArrowLeft size={14} /> Outils et ressources</Link>
           <div className="mt-4 flex items-center gap-3">{appIconUrl ? <span className="grid h-11 w-11 place-items-center overflow-hidden rounded-xl bg-background"><img src={appIconUrl} alt="" className="h-full w-full object-contain" /></span> : <span className="grid h-11 w-11 place-items-center rounded-xl bg-background font-title text-xl">{appName.slice(0, 1)}</span>}<h1 className="font-title text-3xl font-normal sm:text-4xl">{appName}</h1></div>
           <nav className="mt-5 flex gap-2 overflow-x-auto pb-4" aria-label={`Navigation ${appName}`}>
             <AppLink href={`/admin/apps/${appSlug}/settings`} active={appTab === "settings"}>Paramètres</AppLink>
