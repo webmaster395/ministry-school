@@ -43,7 +43,7 @@ test("un approfondissement exige autorisation générale et inscription précise
 
 test("la navigation étudiante ne crée pas d'espace approfondissements", () => {
   const nav = read("src/lib/nav.tsx");
-  assert.match(nav, /label: "Ministère"/);
+  assert.match(nav, /label: "Mon ministère"/);
   assert.doesNotMatch(nav, /Mes approfondissements/);
   assert.doesNotMatch(nav, /\/etudiant\/approfondissements/);
 });

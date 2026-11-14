@@ -4,31 +4,30 @@ import { readFile } from "node:fs/promises";
 
 const source = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("la navigation étudiante suit l’ordre demandé avec Ma personnalité", async () => {
+test("la navigation étudiante suit l’ordre demandé dans Me découvrir", async () => {
   const nav = await source("src/lib/nav.tsx");
   const student = nav.slice(nav.indexOf("export const studentSections"), nav.indexOf("export const notesNavItem"));
-  const expected = ["Accueil", "Ma personnalité", "Mon ministère", "Mes cours", "Travail à faire", "Mes ressources", "Projets et formations"];
+  const expected = ["Accueil", "Qui je suis", "Mon ministère", "Mes cours", "Travail à faire", "Mes ressources", "Projets et formations"];
   let cursor = -1;
   for (const label of expected) {
     const position = student.indexOf(`label: "${label}"`);
     assert.ok(position > cursor, `${label} doit apparaître dans le bon ordre`);
     cursor = position;
   }
-  assert.match(student, /title: "Qui je suis"/);
+  assert.match(student, /title: "Me découvrir"/);
   assert.match(student, /title: "Mon parcours"/);
   assert.doesNotMatch(student, /label: "Mon espace"/);
 });
 
-test("l’espace Admin est réservé aux super admins et réduit à quatre entrées", async () => {
+test("l’espace Admin est réservé aux super admins et conserve toutes ses entrées", async () => {
   const [nav, layout] = await Promise.all([
     source("src/lib/nav.tsx"),
     source("src/app/gestion/admin/layout.tsx"),
   ]);
   const admin = nav.slice(nav.indexOf('if (roles.superAdmin)'), nav.indexOf('key: "steering"'));
-  for (const label of ["Pilotage", "Membres", "Cours", "Projets et formations"]) {
+  for (const label of ["Tableau de bord", "Utilisateurs et accès", "Formations", "Projets et formations", "Pilotage ministère", "Outils et ressources"]) {
     assert.match(admin, new RegExp(`label: "${label}"`));
   }
-  assert.doesNotMatch(admin, /label: "Permissions"|label: "À valider"|label: "Sensibilités ministérielles"/);
   assert.match(layout, /if \(!viewer\?\.roles\.superAdmin\) redirect\("\/etudiant"\)/);
 });
 

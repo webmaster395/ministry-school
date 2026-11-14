@@ -35,3 +35,15 @@ test("Fruit de l’Esprit utilise le cadrage final prune et citron vert", () => 
   assert.match(migration, /fruit-spirit-plum-lime-story-v19\.png/);
   assert.match(migration, /fruit-spirit-plum-lime-post-v19\.png/);
 });
+
+test("les super administrateurs voient tous les outils, même avant publication", () => {
+  const identityPage = read("src/app/etudiant/identite/page.tsx");
+  assert.match(identityPage, /viewer\.roles\.superAdmin[\s\S]*getCatalogApps\(\{ includeUnpublished: true, includeArchived: false, channel: "admin" \}\)/);
+});
+
+test("Qui je suis conserve son contenu sans répéter le titre Ma personnalité", () => {
+  const identity = read("src/app/etudiant/identite/IdentityExperience.tsx");
+  assert.doesNotMatch(identity, />Ma personnalité</);
+  assert.match(identity, /props\.stories/);
+  assert.match(identity, /props\.results/);
+});

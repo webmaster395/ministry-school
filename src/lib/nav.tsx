@@ -82,10 +82,10 @@ export const studentSections: NavSection[] = [
     ],
   },
   {
-    title: "Qui je suis",
+    title: "Me découvrir",
     items: [
-      { label: "Ma personnalité", href: "/etudiant/identite", icon: icons.identity },
-      { label: "Ministère", href: "/etudiant/formation", icon: icons.steer },
+      { label: "Qui je suis", href: "/etudiant/identite", icon: icons.identity },
+      { label: "Mon ministère", href: "/etudiant/formation", icon: icons.steer },
     ],
   },
   {

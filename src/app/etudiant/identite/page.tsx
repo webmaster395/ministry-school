@@ -1,4 +1,4 @@
-import { getStudentTools, type CatalogApp } from "@/lib/apps/catalog";
+import { getCatalogApps, getStudentTools, type CatalogApp } from "@/lib/apps/catalog";
 import { getViewer } from "@/lib/data/viewer";
 import { getIdentityDashboard } from "@/lib/identity/dashboard";
 import { getOfficialMappIdentityResults } from "@/lib/mapp/official-results";
@@ -171,7 +171,9 @@ export default async function StudentIdentityPage() {
   const supabase = await createClient();
   const [dashboard, tools, officialMappResults, lifeLine, heroesMotors] = await Promise.all([
     getIdentityDashboard(),
-    getStudentTools(),
+    viewer.roles.superAdmin
+      ? getCatalogApps({ includeUnpublished: true, includeArchived: false, channel: "admin" })
+      : getStudentTools(),
     getOfficialMappIdentityResults(),
     supabase.from("life_line_journeys").select("events,reflection,completed_at,updated_at").eq("user_id", viewer.id).maybeSingle(),
     getPublishedHeroesMotorsResult(viewer.id),
