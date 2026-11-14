@@ -12,6 +12,19 @@ import { graceIdentitySlug, graceIdentityToolSlugs, graceTestKeyFromSlug, type G
 
 export const dynamic = "force-dynamic";
 
+const selectedFruitStoryImage = "/apps/grace-identity/fruit-spirit-blue-violet-grape-story-v26.png";
+const selectedFruitPostImage = "/apps/grace-identity/fruit-spirit-blue-violet-grape-post-v26.png";
+
+function selectedFruitImage(configuredImage: string | null | undefined, selectedImage: string) {
+  if (!configuredImage) return selectedImage;
+  if (
+    configuredImage.startsWith("/apps/grace-identity/fruit-spirit-") &&
+    configuredImage !== selectedFruitStoryImage &&
+    configuredImage !== selectedFruitPostImage
+  ) return selectedImage;
+  return configuredImage;
+}
+
 function latestResult(results: IdentityResult[], kind: IdentityResult["kind"]) {
   return results.find((result) => result.kind === kind);
 }
@@ -64,7 +77,7 @@ function buildStories({
 
   const legacyGraceTool = tools.find((tool) => tool.slug === graceIdentitySlug);
   ([
-    ["fruit", "Fruit de l’Esprit", "/apps/grace-identity/fruit-spirit-purple-lime-story-v23.png"],
+    ["fruit", "Fruit de l’Esprit", selectedFruitStoryImage],
     ["gifts", "Dons spirituels", "/identity/posts/dons-spirituels.webp"],
     ["skills", "Compétences naturelles", "/identity/posts/competences-naturelles.webp"],
   ] as const).forEach(([kind, fallbackName, fallbackImage]) => {
@@ -76,7 +89,9 @@ function buildStories({
         name: tool.storyTitle || fallbackName,
         category: "Identité",
         href: tool.storyDestinationUrl || graceTestHref(kind),
-        image: tool.storyImageUrl || fallbackImage,
+        image: kind === "fruit"
+          ? selectedFruitImage(tool.storyImageUrl, fallbackImage)
+          : tool.storyImageUrl || fallbackImage,
         status: completed ? "completed" : "not-started",
         measurable: true,
       });
@@ -219,7 +234,7 @@ export default async function StudentIdentityPage() {
     heroesAvailable: Boolean(heroesMotors),
   });
   const defaultPostArtwork = {
-    fruit: { title: "Fruit de l’Esprit", image: "/apps/grace-identity/fruit-spirit-purple-lime-post-v23.png", href: graceTestHref("fruit") },
+    fruit: { title: "Fruit de l’Esprit", image: selectedFruitPostImage, href: graceTestHref("fruit") },
     gifts: { title: "Dons spirituels", image: "/identity/posts/dons-spirituels.webp", href: graceTestHref("gifts") },
     skills: { title: "Compétences naturelles", image: "/identity/posts/competences-naturelles.webp", href: graceTestHref("skills") },
   };
@@ -229,7 +244,9 @@ export default async function StudentIdentityPage() {
     const fallback = defaultPostArtwork[kind];
     return [kind, {
       title: tool?.postTitle || fallback.title,
-      image: tool?.postImageUrl || fallback.image,
+      image: kind === "fruit"
+        ? selectedFruitImage(tool?.postImageUrl, fallback.image)
+        : tool?.postImageUrl || fallback.image,
       href: tool?.postDestinationUrl || fallback.href,
     }];
   }));
