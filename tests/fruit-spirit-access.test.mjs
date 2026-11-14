@@ -32,9 +32,9 @@ test("la DA Fruit de l’Esprit utilise les baies dans l’eau et garde le parco
   const stories = read("src/app/etudiant/identite/page.tsx");
   const journey = read("src/components/apps/FruitSpiritJourney.module.css");
 
-  assert.match(identity, /fruit-spirit-abstract-dark-post-v21\.png/);
+  assert.match(identity, /fruit-spirit-abstract-violet-post-v22\.png/);
   assert.doesNotMatch(identity, /storyRing\[data-story-key="fruit"\] \.storyInner img\s*\{\s*display: none/);
-  assert.match(stories, /fruit-spirit-abstract-dark-story-v21\.png/);
+  assert.match(stories, /fruit-spirit-abstract-violet-story-v22\.png/);
   assert.match(journey, /fruit-spirit-water-bubbles-v11\.png/);
   assert.match(journey, /--fruit-accent: #e79a24/);
 });
