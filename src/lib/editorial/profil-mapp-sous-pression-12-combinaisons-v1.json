@@ -81,7 +81,7 @@
     "I": {
       "primary": "I",
       "secondary": null,
-      "label": "Communiquant",
+      "label": "Communicant",
       "introduction": "Sous pression, tu peux multiplier les échanges, chercher à mobiliser les autres et maintenir l’enthousiasme. Cette énergie relationnelle peut aider, mais aussi disperser l’attention.",
       "sections": {
         "reactions": [
@@ -290,8 +290,8 @@
     "DI": {
       "primary": "D",
       "secondary": "I",
-      "label": "Conquérant + Communiquant",
-      "introduction": "Sous pression, tu peux chercher à reprendre la main, décider rapidement et obtenir des résultats. Cette détermination peut aider à débloquer la situation, mais aussi te rendre plus directif. Ta tendance Communiquant secondaire peut ajouter une recherche de contact et d’adhésion.",
+      "label": "Conquérant + Communicant",
+      "introduction": "Sous pression, tu peux chercher à reprendre la main, décider rapidement et obtenir des résultats. Cette détermination peut aider à débloquer la situation, mais aussi te rendre plus directif. Ta tendance Communicant secondaire peut ajouter une recherche de contact et d’adhésion.",
       "sections": {
         "reactions": [
           {
@@ -497,7 +497,7 @@
     "ID": {
       "primary": "I",
       "secondary": "D",
-      "label": "Communiquant + Conquérant",
+      "label": "Communicant + Conquérant",
       "introduction": "Sous pression, tu peux multiplier les échanges, chercher à mobiliser les autres et maintenir l’enthousiasme. Cette énergie relationnelle peut aider, mais aussi disperser l’attention. Ta tendance Conquérant secondaire peut ajouter un besoin d’accélérer et de trancher.",
       "sections": {
         "reactions": [
@@ -566,7 +566,7 @@
     "IS": {
       "primary": "I",
       "secondary": "S",
-      "label": "Communiquant + Facilitateur",
+      "label": "Communicant + Facilitateur",
       "introduction": "Sous pression, tu peux multiplier les échanges, chercher à mobiliser les autres et maintenir l’enthousiasme. Cette énergie relationnelle peut aider, mais aussi disperser l’attention. Ta tendance Facilitateur secondaire peut renforcer ton souci de préserver la relation.",
       "sections": {
         "reactions": [
@@ -635,7 +635,7 @@
     "IC": {
       "primary": "I",
       "secondary": "C",
-      "label": "Communiquant + Analyste",
+      "label": "Communicant + Analyste",
       "introduction": "Sous pression, tu peux multiplier les échanges, chercher à mobiliser les autres et maintenir l’enthousiasme. Cette énergie relationnelle peut aider, mais aussi disperser l’attention. Ta tendance Analyste secondaire peut ajouter un besoin de vérifier les faits et les risques.",
       "sections": {
         "reactions": [
@@ -773,8 +773,8 @@
     "SI": {
       "primary": "S",
       "secondary": "I",
-      "label": "Facilitateur + Communiquant",
-      "introduction": "Sous pression, tu peux chercher à préserver la stabilité et la qualité des relations. Cette constance peut rassurer, mais elle peut aussi retarder une décision difficile. Ta tendance Communiquant secondaire peut ajouter une recherche de contact et d’adhésion.",
+      "label": "Facilitateur + Communicant",
+      "introduction": "Sous pression, tu peux chercher à préserver la stabilité et la qualité des relations. Cette constance peut rassurer, mais elle peut aussi retarder une décision difficile. Ta tendance Communicant secondaire peut ajouter une recherche de contact et d’adhésion.",
       "sections": {
         "reactions": [
           {
@@ -980,8 +980,8 @@
     "CI": {
       "primary": "C",
       "secondary": "I",
-      "label": "Analyste + Communiquant",
-      "introduction": "Sous pression, tu peux chercher davantage de précision, de preuves et de maîtrise des risques. Cette rigueur peut sécuriser les choix, mais ralentir l’action. Ta tendance Communiquant secondaire peut ajouter une recherche de contact et d’adhésion.",
+      "label": "Analyste + Communicant",
+      "introduction": "Sous pression, tu peux chercher davantage de précision, de preuves et de maîtrise des risques. Cette rigueur peut sécuriser les choix, mais ralentir l’action. Ta tendance Communicant secondaire peut ajouter une recherche de contact et d’adhésion.",
       "sections": {
         "reactions": [
           {

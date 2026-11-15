@@ -5,7 +5,7 @@
   "status": "editorial-review",
   "profiles": {
     "D": "Conquérant",
-    "I": "Communiquant",
+    "I": "Communicant",
     "S": "Facilitateur",
     "C": "Analyste"
   },
@@ -150,14 +150,14 @@
       "secondary": "I",
       "pageIntro": {
         "title": "Grandir.",
-        "subtitle": "Tu sais décider, prendre des initiatives et relancer un projet qui stagne. Ta capacité à donner une direction peut rassurer une équipe et l’aider à avancer. Ton côté Communiquant apporte de la spontanéité, des idées et une capacité à mobiliser. Les pistes qui suivent t’aident à faire évoluer tes habitudes sans perdre ce qui fait ta force."
+        "subtitle": "Tu sais décider, prendre des initiatives et relancer un projet qui stagne. Ta capacité à donner une direction peut rassurer une équipe et l’aider à avancer. Ton côté Communicant apporte de la spontanéité, des idées et une capacité à mobiliser. Les pistes qui suivent t’aident à faire évoluer tes habitudes sans perdre ce qui fait ta force."
       },
       "nextCap": {
         "eyebrow": "01 / TON PROCHAIN CAP",
         "title": "Faire de ton énergie une force qui fait grandir les autres.",
-        "subtitle": "Ton côté Communiquant apporte de la spontanéité, des idées et une capacité à mobiliser. L’envie d’entraîner les autres peut parfois précéder la clarification des engagements.",
+        "subtitle": "Ton côté Communicant apporte de la spontanéité, des idées et une capacité à mobiliser. L’envie d’entraîner les autres peut parfois précéder la clarification des engagements.",
         "paragraphs": [
-          "Tu sais décider, prendre des initiatives et relancer un projet qui stagne. Ta capacité à donner une direction peut rassurer une équipe et l’aider à avancer. Ton côté Communiquant apporte de la spontanéité, des idées et une capacité à mobiliser.",
+          "Tu sais décider, prendre des initiatives et relancer un projet qui stagne. Ta capacité à donner une direction peut rassurer une équipe et l’aider à avancer. Ton côté Communicant apporte de la spontanéité, des idées et une capacité à mobiliser.",
           "Mais décider vite peut aussi laisser peu de place aux idées, aux contraintes ou au rythme des autres. Le défi est de partager une responsabilité réelle sans renoncer à ton courage d’agir. L’envie d’entraîner les autres peut parfois précéder la clarification des engagements."
         ],
         "goal": "Utilise ton aisance relationnelle pour solliciter un avis, puis conclus par une action explicite."
@@ -165,7 +165,7 @@
       "leversSection": {
         "eyebrow": "02 / TES CINQ LEVIERS",
         "title": "Ce que tu peux faire évoluer.",
-        "subtitle": "Cinq situations pour faire de ton sens de l’initiative un atout durable : consulter sans ralentir, déléguer sans reprendre la main et distinguer l’urgence réelle de l’impatience. Ton côté Communiquant apporte de la spontanéité, des idées et une capacité à mobiliser."
+        "subtitle": "Cinq situations pour faire de ton sens de l’initiative un atout durable : consulter sans ralentir, déléguer sans reprendre la main et distinguer l’urgence réelle de l’impatience. Ton côté Communicant apporte de la spontanéité, des idées et une capacité à mobiliser."
       },
       "levers": [
         {
@@ -178,7 +178,7 @@
           "action": "Demande deux avis distincts avant ta prochaine décision collective.",
           "shortDescription": "Quand une solution te paraît évidente, tu peux vouloir décider avant d'avoir entendu les personnes concernées.",
           "secondaryContribution": "Invite un avis contradictoire avant d’utiliser ton enthousiasme pour rallier le groupe.",
-          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+          "reflectionPrompt": "Avec ton côté Communicant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
         },
         {
           "id": "02",
@@ -190,7 +190,7 @@
           "action": "Délègue une décision réversible avec des critères clairs.",
           "shortDescription": "Tu peux reprendre naturellement la main lorsque le projet ralentit.",
           "secondaryContribution": "Encourage publiquement la personne responsable, mais laisse-la présenter elle-même sa solution.",
-          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+          "reflectionPrompt": "Avec ton côté Communicant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
         },
         {
           "id": "03",
@@ -202,7 +202,7 @@
           "action": "Demande à une personne ce qui rendrait ton calendrier réaliste.",
           "shortDescription": "Tu avances vite et peux considérer une hésitation comme un frein.",
           "secondaryContribution": "Quand tu mobilises les autres, distingue l’urgence réelle de l’énergie du moment.",
-          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+          "reflectionPrompt": "Avec ton côté Communicant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
         },
         {
           "id": "04",
@@ -214,7 +214,7 @@
           "action": "Reformule une objection et demande ce qu'elle permet d'améliorer.",
           "shortDescription": "Une réserve peut te sembler contester ta décision ou ralentir ton projet.",
           "secondaryContribution": "Écoute la réserve jusqu’au bout avant de chercher à convaincre.",
-          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+          "reflectionPrompt": "Avec ton côté Communicant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
         },
         {
           "id": "05",
@@ -226,7 +226,7 @@
           "action": "Écarte ou reporte une initiative cette semaine pour terminer l'essentiel.",
           "shortDescription": "Tu peux investir beaucoup d'énergie dans plusieurs sujets que tu juges importants.",
           "secondaryContribution": "Ton talent pour enthousiasmer peut ouvrir trop de projets : choisis-en un à terminer.",
-          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+          "reflectionPrompt": "Avec ton côté Communicant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
         }
       ],
       "sevenDayChallenge": {
@@ -258,7 +258,7 @@
         "questions": [
           "Quelle décision as-tu prise trop vite alors qu'un avis complémentaire aurait été utile ?",
           "Quand ton rythme devient-il difficile à suivre pour les autres ?",
-          "Quelle responsabilité pourrais-tu réellement confier cette semaine ? Comment ton côté Communiquant pourrait-il t’aider à passer à l’action sans renforcer tes automatismes ?"
+          "Quelle responsabilité pourrais-tu réellement confier cette semaine ? Comment ton côté Communicant pourrait-il t’aider à passer à l’action sans renforcer tes automatismes ?"
         ],
         "eyebrow": "04 / PRENDRE DU RECUL",
         "subtitle": "Reviens sur une décision, un désaccord et une responsabilité récente. Cherche un ajustement concret que tu pourrais essayer, pas un défaut à corriger. L’envie d’entraîner les autres peut parfois précéder la clarification des engagements."
@@ -1201,14 +1201,14 @@
       "secondary": "I",
       "pageIntro": {
         "title": "Grandir.",
-        "subtitle": "Tu sais écouter, soutenir et construire la confiance dans la durée. Ta constance peut aider les autres à traverser une période incertaine. Ton côté Communiquant apporte de la spontanéité, des idées et une capacité à mobiliser. Les pistes qui suivent t’aident à faire évoluer tes habitudes sans perdre ce qui fait ta force."
+        "subtitle": "Tu sais écouter, soutenir et construire la confiance dans la durée. Ta constance peut aider les autres à traverser une période incertaine. Ton côté Communicant apporte de la spontanéité, des idées et une capacité à mobiliser. Les pistes qui suivent t’aident à faire évoluer tes habitudes sans perdre ce qui fait ta force."
       },
       "nextCap": {
         "eyebrow": "01 / TON PROCHAIN CAP",
         "title": "Prendre ta place sans perdre ton sens des autres.",
-        "subtitle": "Ton côté Communiquant apporte de la spontanéité, des idées et une capacité à mobiliser. L’envie d’entraîner les autres peut parfois précéder la clarification des engagements.",
+        "subtitle": "Ton côté Communicant apporte de la spontanéité, des idées et une capacité à mobiliser. L’envie d’entraîner les autres peut parfois précéder la clarification des engagements.",
         "paragraphs": [
-          "Tu sais écouter, soutenir et construire la confiance dans la durée. Ta constance peut aider les autres à traverser une période incertaine. Ton côté Communiquant apporte de la spontanéité, des idées et une capacité à mobiliser.",
+          "Tu sais écouter, soutenir et construire la confiance dans la durée. Ta constance peut aider les autres à traverser une période incertaine. Ton côté Communicant apporte de la spontanéité, des idées et une capacité à mobiliser.",
           "Mais vouloir préserver la relation peut te conduire à taire un désaccord ou accepter une charge excessive. Grandir consiste à exprimer tes besoins assez tôt pour protéger la relation autant que toi-même. L’envie d’entraîner les autres peut parfois précéder la clarification des engagements."
         ],
         "goal": "Utilise ton aisance relationnelle pour solliciter un avis, puis conclus par une action explicite."
@@ -1216,7 +1216,7 @@
       "leversSection": {
         "eyebrow": "02 / TES CINQ LEVIERS",
         "title": "Ce que tu peux faire évoluer.",
-        "subtitle": "Cinq gestes pour préserver la qualité de tes relations sans t’effacer : exprimer tes besoins, accueillir les désaccords et poser des limites avec respect. Ton côté Communiquant apporte de la spontanéité, des idées et une capacité à mobiliser."
+        "subtitle": "Cinq gestes pour préserver la qualité de tes relations sans t’effacer : exprimer tes besoins, accueillir les désaccords et poser des limites avec respect. Ton côté Communicant apporte de la spontanéité, des idées et une capacité à mobiliser."
       },
       "levers": [
         {
@@ -1229,7 +1229,7 @@
           "action": "Exprime une préférence claire dans une décision partagée.",
           "shortDescription": "Tu peux t'adapter aux autres et éviter de demander quelque chose pour toi.",
           "secondaryContribution": "Ta spontanéité peut rendre la demande plus naturelle, à condition de ne pas la masquer derrière l’humour.",
-          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+          "reflectionPrompt": "Avec ton côté Communicant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
         },
         {
           "id": "02",
@@ -1241,7 +1241,7 @@
           "action": "Exprime une réserve avec un fait et une proposition.",
           "shortDescription": "Tu peux garder une réserve pour ne pas créer de tension.",
           "secondaryContribution": "Une conversation chaleureuse peut accueillir un vrai désaccord : nomme-le.",
-          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+          "reflectionPrompt": "Avec ton côté Communicant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
         },
         {
           "id": "03",
@@ -1253,7 +1253,7 @@
           "action": "Essaie une nouvelle méthode pendant une durée définie.",
           "shortDescription": "Tu peux préférer les repères connus lorsque de nouvelles habitudes sont proposées.",
           "secondaryContribution": "Ton enthousiasme peut faciliter un essai, mais prends ensuite le temps de faire le point.",
-          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+          "reflectionPrompt": "Avec ton côté Communicant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
         },
         {
           "id": "04",
@@ -1265,7 +1265,7 @@
           "action": "Exprime ton avis avant qu'une décision collective soit arrêtée.",
           "shortDescription": "Tu peux soutenir les propositions des autres avant d'exprimer la tienne.",
           "secondaryContribution": "Prends la parole même lorsque d’autres occupent déjà beaucoup l’échange.",
-          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+          "reflectionPrompt": "Avec ton côté Communicant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
         },
         {
           "id": "05",
@@ -1277,7 +1277,7 @@
           "action": "Pose une limite précise à une demande cette semaine.",
           "shortDescription": "Tu peux accepter une demande supplémentaire pour aider ou préserver la relation.",
           "secondaryContribution": "Préserver une bonne ambiance n’exige pas de dire oui à tout.",
-          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+          "reflectionPrompt": "Avec ton côté Communicant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
         }
       ],
       "sevenDayChallenge": {
@@ -1309,7 +1309,7 @@
         "questions": [
           "Quelle préférence as-tu tue pour préserver la paix ?",
           "Quel changement pourrais-tu essayer sans mettre en danger l'essentiel ?",
-          "À quelle demande pourrais-tu poser une limite claire et respectueuse ? Comment ton côté Communiquant pourrait-il t’aider à passer à l’action sans renforcer tes automatismes ?"
+          "À quelle demande pourrais-tu poser une limite claire et respectueuse ? Comment ton côté Communicant pourrait-il t’aider à passer à l’action sans renforcer tes automatismes ?"
         ],
         "eyebrow": "04 / PRENDRE DU RECUL",
         "subtitle": "Pense à une attente non exprimée, un changement repoussé et une limite difficile à poser. Cherche une petite action réalisable dès cette semaine. L’envie d’entraîner les autres peut parfois précéder la clarification des engagements."
@@ -1667,14 +1667,14 @@
       "secondary": "I",
       "pageIntro": {
         "title": "Grandir.",
-        "subtitle": "Tu sais analyser les faits, identifier les incohérences et sécuriser une décision. Cette rigueur peut éviter des erreurs et rendre tes contributions particulièrement fiables. Ton côté Communiquant apporte de la spontanéité, des idées et une capacité à mobiliser. Les pistes qui suivent t’aident à faire évoluer tes habitudes sans perdre ce qui fait ta force."
+        "subtitle": "Tu sais analyser les faits, identifier les incohérences et sécuriser une décision. Cette rigueur peut éviter des erreurs et rendre tes contributions particulièrement fiables. Ton côté Communicant apporte de la spontanéité, des idées et une capacité à mobiliser. Les pistes qui suivent t’aident à faire évoluer tes habitudes sans perdre ce qui fait ta force."
       },
       "nextCap": {
         "eyebrow": "01 / TON PROCHAIN CAP",
         "title": "Passer de la maîtrise à la confiance.",
-        "subtitle": "Ton côté Communiquant apporte de la spontanéité, des idées et une capacité à mobiliser. L’envie d’entraîner les autres peut parfois précéder la clarification des engagements.",
+        "subtitle": "Ton côté Communicant apporte de la spontanéité, des idées et une capacité à mobiliser. L’envie d’entraîner les autres peut parfois précéder la clarification des engagements.",
         "paragraphs": [
-          "Tu sais analyser les faits, identifier les incohérences et sécuriser une décision. Cette rigueur peut éviter des erreurs et rendre tes contributions particulièrement fiables. Ton côté Communiquant apporte de la spontanéité, des idées et une capacité à mobiliser.",
+          "Tu sais analyser les faits, identifier les incohérences et sécuriser une décision. Cette rigueur peut éviter des erreurs et rendre tes contributions particulièrement fiables. Ton côté Communicant apporte de la spontanéité, des idées et une capacité à mobiliser.",
           "Mais chercher à tout vérifier peut retarder une action utile ou rendre ton raisonnement difficile à partager. Grandir consiste à ajuster ton exigence à l’enjeu et à agir quand les informations essentielles sont réunies. L’envie d’entraîner les autres peut parfois précéder la clarification des engagements."
         ],
         "goal": "Utilise ton aisance relationnelle pour solliciter un avis, puis conclus par une action explicite."
@@ -1682,7 +1682,7 @@
       "leversSection": {
         "eyebrow": "02 / TES CINQ LEVIERS",
         "title": "Ce que tu peux faire évoluer.",
-        "subtitle": "Cinq façons de mettre ta rigueur au service de l’action : savoir quand l’analyse suffit, partager plus tôt et faire de tes questions un dialogue. Ton côté Communiquant apporte de la spontanéité, des idées et une capacité à mobiliser."
+        "subtitle": "Cinq façons de mettre ta rigueur au service de l’action : savoir quand l’analyse suffit, partager plus tôt et faire de tes questions un dialogue. Ton côté Communicant apporte de la spontanéité, des idées et une capacité à mobiliser."
       },
       "levers": [
         {
@@ -1695,7 +1695,7 @@
           "action": "Prends une décision réversible avec trois critères et une échéance fixée à l'avance.",
           "shortDescription": "Tu continues parfois à chercher des informations alors que les éléments essentiels sont déjà disponibles.",
           "secondaryContribution": "Demande des retours ciblés plutôt que de multiplier les échanges autour d’un détail.",
-          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+          "reflectionPrompt": "Avec ton côté Communicant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
         },
         {
           "id": "02",
@@ -1707,7 +1707,7 @@
           "action": "Partage une première version imparfaite et demande un avis sur une question précise.",
           "shortDescription": "Tu peux attendre qu'une proposition soit entièrement aboutie avant de la présenter.",
           "secondaryContribution": "Appuie-toi sur ton aisance relationnelle pour partager une ébauche plus tôt.",
-          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+          "reflectionPrompt": "Avec ton côté Communicant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
         },
         {
           "id": "03",
@@ -1719,7 +1719,7 @@
           "action": "Explique l'intention derrière une question importante avant de la poser.",
           "shortDescription": "Tu identifies rapidement les incohérences et poses des questions pour comprendre.",
           "secondaryContribution": "Ta spontanéité peut rendre tes questions vivantes : laisse aussi le temps d’y répondre.",
-          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+          "reflectionPrompt": "Avec ton côté Communicant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
         },
         {
           "id": "04",
@@ -1731,7 +1731,7 @@
           "action": "Laisse quelqu'un expérimenter une autre méthode sur une tâche à faible risque.",
           "shortDescription": "Une approche plus intuitive ou spontanée peut te sembler insuffisamment structurée.",
           "secondaryContribution": "Invite l’autre à expliquer son approche avant de présenter la tienne.",
-          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+          "reflectionPrompt": "Avec ton côté Communicant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
         },
         {
           "id": "05",
@@ -1743,7 +1743,7 @@
           "action": "Exprime une recommandation claire même si un détail secondaire reste à confirmer.",
           "shortDescription": "Tu peux attendre d'avoir préparé toutes les réponses avant de défendre une idée.",
           "secondaryContribution": "Illustre ton argument avec un exemple clair au lieu d’accumuler les précisions.",
-          "reflectionPrompt": "Avec ton côté Communiquant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
+          "reflectionPrompt": "Avec ton côté Communicant, qu’est-ce qui rendrait ce geste plus facile, et qu’est-ce qui pourrait t’en détourner ?"
         }
       ],
       "sevenDayChallenge": {
@@ -1775,7 +1775,7 @@
         "questions": [
           "Quelle décision réversible pourrait avancer avec les informations déjà disponibles ?",
           "Quand une question pertinente a-t-elle été perçue comme une critique ?",
-          "Quelle idée pourrais-tu partager avant qu'elle soit totalement finalisée ? Comment ton côté Communiquant pourrait-il t’aider à passer à l’action sans renforcer tes automatismes ?"
+          "Quelle idée pourrais-tu partager avant qu'elle soit totalement finalisée ? Comment ton côté Communicant pourrait-il t’aider à passer à l’action sans renforcer tes automatismes ?"
         ],
         "eyebrow": "04 / PRENDRE DU RECUL",
         "subtitle": "Repense à une décision, une discussion et une proposition récente. Identifie où une précision supplémentaire a réellement aidé et où elle t’a retenu. L’envie d’entraîner les autres peut parfois précéder la clarification des engagements."

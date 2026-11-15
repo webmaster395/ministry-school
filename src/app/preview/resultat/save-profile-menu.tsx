@@ -1,15 +1,21 @@
 "use client";
 
-import { Check, ChevronDown, Download, Link2, Share2 } from "lucide-react";
+import { Check, ChevronDown, Copy, Download, Link2, UserPlus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import styles from "./result-preview.module.css";
 
-export function SaveProfileMenu({ attemptId, revisionId, accessToken, isPreview }: { attemptId?: string; revisionId?: string; accessToken?: string; isPreview: boolean }) {
+type Invitation = { id: string; status: "created" | "started" | "completed"; guestName?: string | null; guestEmail?: string | null };
+export function SaveProfileMenu({ attemptId, revisionId, accessToken, isPreview, canInvite = true }: { attemptId?: string; revisionId?: string; accessToken?: string; isPreview: boolean; canInvite?: boolean }) {
   const root = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
-  const [url, setUrl] = useState(accessToken && typeof window !== "undefined" ? window.location.href : "");
+  void accessToken;
   const [busy] = useState(false);
   const [status, setStatus] = useState("");
+  const [inviting, setInviting] = useState(false);
+  const [remaining, setRemaining] = useState(3);
+  const [invitations, setInvitations] = useState<Invitation[]>([]);
+  const [createdUrl, setCreatedUrl] = useState("");
+  const [showInvitations, setShowInvitations] = useState(false);
 
   useEffect(() => {
     const close = (event: MouseEvent) => { if (!root.current?.contains(event.target as Node)) setOpen(false); };
@@ -17,13 +23,6 @@ export function SaveProfileMenu({ attemptId, revisionId, accessToken, isPreview 
     document.addEventListener("pointerdown", close); document.addEventListener("keydown", escape);
     return () => { document.removeEventListener("pointerdown", close); document.removeEventListener("keydown", escape); };
   }, []);
-
-  async function personalUrl() {
-    if (url) return url;
-    const current = window.location.href;
-    setUrl(current);
-    return current;
-  }
 
   function pdf() {
     if (isPreview || !attemptId) {
@@ -35,12 +34,24 @@ export function SaveProfileMenu({ attemptId, revisionId, accessToken, isPreview 
     window.location.assign(`/api/apps/profil-mapp/results/${encodeURIComponent(attemptId)}/pdf${query}`);
   }
 
-  async function share() {
-    try {
-      const link = await personalUrl();
-      if (navigator.share) await navigator.share({ title: "Mes résultats Profil MAPP", text: "Voici mon profil MAPP.", url: link });
-      else { await navigator.clipboard.writeText(link); setStatus("Lien personnel copié."); }
-    } catch (cause) { if ((cause as DOMException)?.name !== "AbortError") setStatus(cause instanceof Error ? cause.message : "Partage impossible."); }
+  async function loadInvitations() {
+    setShowInvitations(true);
+    setInviting(true); setStatus("");
+    const response = await fetch("/api/mapp/invitations", { cache: "no-store" });
+    const data = await response.json();
+    setInviting(false);
+    if (!response.ok) { setStatus(data.error ?? "Invitations indisponibles."); return; }
+    setRemaining(Number(data.remaining ?? 0)); setInvitations(data.invitations ?? []);
+  }
+  async function createInvitation() {
+    setInviting(true); setStatus("");
+    const response = await fetch("/api/mapp/invitations", { method: "POST" });
+    const data = await response.json();
+    setInviting(false);
+    if (!response.ok) { setStatus(data.error ?? "Invitation impossible."); return; }
+    setCreatedUrl(data.url); setRemaining(Number(data.remaining ?? Math.max(0, remaining - 1)));
+    await navigator.clipboard.writeText(data.url);
+    setStatus("Lien d’invitation copié.");
   }
 
   return <div className={styles.saveProfile} ref={root}>
@@ -49,8 +60,15 @@ export function SaveProfileMenu({ attemptId, revisionId, accessToken, isPreview 
     </button>
     {open && <div className={styles.saveProfileMenu} role="menu">
       <button role="menuitem" type="button" onClick={pdf}><Download size={18} /><span><strong>Télécharger en PDF</strong><small>Toute la restitution</small></span></button>
-      <button role="menuitem" type="button" disabled={busy} onClick={() => void share()}><Share2 size={18} /><span><strong>Partager</strong><small>Lien personnel sécurisé</small></span></button>
+      {canInvite && !isPreview && <button role="menuitem" type="button" disabled={busy || inviting} onClick={() => { setOpen(false); void loadInvitations(); setCreatedUrl(""); }}><UserPlus size={18} /><span><strong>Inviter à faire le test</strong><small>3 invitations personnelles maximum</small></span></button>}
       {status && <p role="status"><Check size={14} />{status}</p>}
+    </div>}
+    {canInvite && !isPreview && showInvitations && <div className={styles.invitationPanel} role="dialog" aria-label="Invitations Profil MAPP">
+      <div><strong>Inviter à faire le test</strong><button type="button" aria-label="Fermer" onClick={() => setShowInvitations(false)}>×</button></div>
+      <p><b>{remaining}</b> invitation{remaining > 1 ? "s" : ""} restante{remaining > 1 ? "s" : ""}</p>
+      {createdUrl && <button type="button" onClick={() => void navigator.clipboard.writeText(createdUrl)}><Copy size={16} /> Copier le nouveau lien</button>}
+      {remaining > 0 && <button type="button" disabled={inviting} onClick={() => void createInvitation()}>{inviting ? "Création…" : "Générer une invitation"}</button>}
+      {invitations.length > 0 && <ul>{invitations.map((invitation) => <li key={invitation.id}><span>{invitation.guestName || invitation.guestEmail || "Invitation créée"}</span><b>{invitation.status === "completed" ? "Test terminé" : invitation.status === "started" ? "Test commencé" : "Lien créé"}</b></li>)}</ul>}
     </div>}
   </div>;
 }

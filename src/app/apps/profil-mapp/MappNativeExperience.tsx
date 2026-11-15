@@ -20,6 +20,8 @@ import type {
   MappResultBundle,
 } from "@/lib/mapp/types";
 import styles from "./profil-mapp.module.css";
+import MappTieBreakExperience, { unresolvedTie } from "./MappTieBreakExperience";
+import { visibleMappProfileName } from "@/lib/mapp/visible-profile";
 
 const pageSize = 5;
 const fallbackOptions = [
@@ -37,7 +39,7 @@ function resultScores(bundle: MappResultBundle) {
     .filter((row) => !row.context || row.context === "natural")
     .map((row) => ({
       code: String(row.dimensionCode ?? ""),
-      name: String(row.dimensionName ?? row.dimensionCode ?? "Profil"),
+      name: visibleMappProfileName(String(row.dimensionCode ?? row.dimensionName ?? "")),
       percentage: Number(row.percentage ?? 0),
     }))
     .filter((row) => Number.isFinite(row.percentage))
@@ -70,7 +72,8 @@ function storedNaturalOrder(bundle: MappResultBundle) {
     .filter((value, index, all) => all.indexOf(value) === index);
 }
 
-export function ResultPanel({ bundle }: { bundle: MappResultBundle }) {
+export function ResultPanel({ bundle, onBundleChange, canInvite = true }: { bundle: MappResultBundle; onBundleChange?: (bundle: MappResultBundle) => void; canInvite?: boolean }) {
+  if (unresolvedTie(bundle)) return <MappTieBreakExperience bundle={bundle} onResolved={onBundleChange ?? (() => window.location.reload())} />;
   const scores = resultScores(bundle);
   const calculated = applyTieBreak(
     scores.map((score) => ({ code: score.code, value: score.percentage })),
@@ -100,6 +103,7 @@ export function ResultPanel({ bundle }: { bundle: MappResultBundle }) {
     isPreview={false}
     attemptId={bundle.attemptId}
     revisionId={bundle.resultRevisionId}
+    canInvite={canInvite}
     />
   </div>;
 }
@@ -260,7 +264,7 @@ export default function MappNativeExperience({
     }
   }
 
-  if (result) return <ResultPanel bundle={result} />;
+  if (result) return <ResultPanel bundle={result} onBundleChange={setResult} />;
 
   return (
     <main className={styles.shell}>

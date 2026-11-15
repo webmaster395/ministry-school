@@ -28,7 +28,7 @@ type Enrollment = { session: { session_date: string; description: string | null;
 type InitiativeRegistration = { date: { session_date: string; opportunity: { title: string } | null } | null };
 type MappProfile = { primary: string | null; secondary: string | null; completedAt: string | null };
 
-const mappLabel = (code: string | null) => ({ D: "Conquérant", I: "Communiquant", S: "Facilitateur", C: "Analyste", conquerant: "Conquérant", communiquant: "Communiquant", facilitateur: "Facilitateur", analyste: "Analyste" }[code ?? ""] ?? code ?? "À préciser");
+const mappLabel = (code: string | null) => ({ D: "Conquérant", I: "Communicant", S: "Facilitateur", C: "Analyste", conquerant: "Conquérant", communiquant: "Communicant", communicant: "Communicant", facilitateur: "Facilitateur", analyste: "Analyste" }[code ?? ""] ?? "À préciser");
 
 export default async function AdminMemberProfilePage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ returnTo?: string }> }) {
   const viewer = await getViewer();

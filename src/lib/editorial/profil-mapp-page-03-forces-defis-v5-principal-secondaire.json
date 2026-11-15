@@ -180,7 +180,7 @@
     "I": {
       "primary": "I",
       "secondary": null,
-      "label": "Communiquant",
+      "label": "Communicant",
       "intro": "Tu mobilises par ton enthousiasme et ton sens du contact.",
       "characteristics": [
         {
@@ -530,7 +530,7 @@
     "DI": {
       "primary": "D",
       "secondary": "I",
-      "label": "Conquérant + Communiquant",
+      "label": "Conquérant + Communicant",
       "intro": "Tu avances en prenant des initiatives et en recherchant des résultats concrets. Ton aisance relationnelle lui donne plus d’élan.",
       "characteristics": [
         {
@@ -878,7 +878,7 @@
     "ID": {
       "primary": "I",
       "secondary": "D",
-      "label": "Communiquant + Conquérant",
+      "label": "Communicant + Conquérant",
       "intro": "Tu mobilises par ton enthousiasme et ton sens du contact. Ton sens de l’action renforce cette dynamique.",
       "characteristics": [
         {
@@ -994,7 +994,7 @@
     "IS": {
       "primary": "I",
       "secondary": "S",
-      "label": "Communiquant + Facilitateur",
+      "label": "Communicant + Facilitateur",
       "intro": "Tu mobilises par ton enthousiasme et ton sens du contact. Ton attention aux autres lui apporte de la stabilité.",
       "characteristics": [
         {
@@ -1110,7 +1110,7 @@
     "IC": {
       "primary": "I",
       "secondary": "C",
-      "label": "Communiquant + Analyste",
+      "label": "Communicant + Analyste",
       "intro": "Tu mobilises par ton enthousiasme et ton sens du contact. Ton exigence de précision lui donne de la solidité.",
       "characteristics": [
         {
@@ -1342,7 +1342,7 @@
     "SI": {
       "primary": "S",
       "secondary": "I",
-      "label": "Facilitateur + Communiquant",
+      "label": "Facilitateur + Communicant",
       "intro": "Tu construis dans la durée grâce à ton écoute et ta constance. Ton aisance relationnelle lui donne plus d’élan.",
       "characteristics": [
         {
@@ -1690,7 +1690,7 @@
     "CI": {
       "primary": "C",
       "secondary": "I",
-      "label": "Analyste + Communiquant",
+      "label": "Analyste + Communicant",
       "intro": "Tu apportes de la rigueur par ton analyse et ton attention à la qualité. Ton aisance relationnelle lui donne plus d’élan.",
       "characteristics": [
         {

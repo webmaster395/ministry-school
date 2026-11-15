@@ -26,7 +26,7 @@ type ProfileCode = keyof typeof dailyColors;
 type PressureCombination = keyof typeof pressureEditorial.orderedCombinations;
 type PressureSection = "reactions" | "communication" | "balance";
 export type StoredPressureResult = { primary: ProfileCode; secondary: ProfileCode | null; percentages: Record<ProfileCode, number> };
-const profileNames: Record<ProfileCode, string> = { D: "Conquérant", I: "Communiquant", S: "Facilitateur", C: "Analyste" };
+const profileNames: Record<ProfileCode, string> = { D: "Conquérant", I: "Communicant", S: "Facilitateur", C: "Analyste" };
 const pressurePhotos = {
   reactions: { src: withMappAssetPath("/images/functioning/pressure-reactions-mlk.webp"), alt: "Homme en noir et blanc, tête baissée et mains ouvertes", position: "center 42%" },
   communication: { src: withMappAssetPath("/images/functioning/pressure-communication-mlk.webp"), alt: "Personne agenouillée soutenue par une autre personne lors d'un rassemblement MLK", position: "center 50%" },

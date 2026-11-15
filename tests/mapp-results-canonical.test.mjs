@@ -8,6 +8,6 @@ test("la gestion Ministry liste les nouveaux résultats natifs et conserve l'acc
   const page = read("src/app/admin/apps/profil-mapp/results/page.tsx");
   assert.match(page, /admin_list_attempts_page/);
   assert.match(page, /createServiceClient/);
-  assert.match(page, /Voir les résultats historiques/);
+  assert.match(page, /Résultats historiques/);
   assert.match(page, /participant_auth_identities/);
 });

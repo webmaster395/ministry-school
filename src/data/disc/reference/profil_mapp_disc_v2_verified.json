@@ -5,7 +5,7 @@
   "change_summary": "Remplace les anciennes questions et l’ancien scoring. 28 groupes naturels + 8 affirmations sous pression; duels conditionnels. Préserver le design existant.",
   "profiles": {
     "D": "Conquérant",
-    "I": "Communiquant",
+    "I": "Communicant",
     "S": "Facilitateur",
     "C": "Analyste"
   },

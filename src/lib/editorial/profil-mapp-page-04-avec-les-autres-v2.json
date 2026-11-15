@@ -28,7 +28,7 @@
       "photo": null
     },
     "I": {
-      "name": "Communiquant",
+      "name": "Communicant",
       "color": "#F2C94C",
       "anchor": "profil-i",
       "illustrativeQuote": "« Et si on en parlait ensemble ? »",
@@ -193,11 +193,11 @@
     "DI": {
       "primary": "D",
       "secondary": "I",
-      "label": "Conquérant + Communiquant",
+      "label": "Conquérant + Communicant",
       "intro": {
-        "eyebrow": "Conquérant + Communiquant",
+        "eyebrow": "Conquérant + Communicant",
         "title": "Avancer ensemble, sans perdre le lien.",
-        "text": "Tu abordes souvent les relations en cherchant à aller droit au but et fixer une direction. Ton profil secondaire Communiquant ajoute une attention à le lien, l’enthousiasme et la participation. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
+        "text": "Tu abordes souvent les relations en cherchant à aller droit au but et fixer une direction. Ton profil secondaire Communicant ajoute une attention à le lien, l’enthousiasme et la participation. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
         "orbitLabel": "Ensemble."
       },
       "portraits": {
@@ -207,27 +207,27 @@
             {
               "id": "functioning",
               "title": "Comprendre son fonctionnement",
-              "text": "Tout comme toi, un autre Conquérant apprécie généralement les objectifs clairs, la décision et l'autonomie. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. Ton côté Communiquant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
+              "text": "Tout comme toi, un autre Conquérant apprécie généralement les objectifs clairs, la décision et l'autonomie. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. Ton côté Communicant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
             },
             {
               "id": "connection",
               "title": "Ce qui vous rapproche",
-              "text": "Vous partagez l'envie de prendre des initiatives et de voir rapidement des résultats. Vous pouvez vous comprendre sans devoir justifier longtemps votre besoin d'autonomie. Ton secondaire Communiquant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
+              "text": "Vous partagez l'envie de prendre des initiatives et de voir rapidement des résultats. Vous pouvez vous comprendre sans devoir justifier longtemps votre besoin d'autonomie. Ton secondaire Communicant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
             },
             {
               "id": "friction",
               "title": "Ce qui peut coincer",
-              "text": "Vous pouvez chacun vouloir décider ou imposer votre rythme. Si vos objectifs divergent, clarifiez les responsabilités avant que le désaccord ne devienne une compétition. Ton secondaire Communiquant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
+              "text": "Vous pouvez chacun vouloir décider ou imposer votre rythme. Si vos objectifs divergent, clarifiez les responsabilités avant que le désaccord ne devienne une compétition. Ton secondaire Communicant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
             },
             {
               "id": "communication",
               "title": "Comment bien communiquer",
-              "text": "Présente l'enjeu dès le début, puis la décision ou l'action attendue. Une question directe sur ses priorités peut être plus utile qu'un long préambule. Annonce l'objet, la demande et l'échéance dès les premières lignes. Ajoute les informations nécessaires à la décision sans cacher l'essentiel dans un long texte. Avec ton secondaire Communiquant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
+              "text": "Présente l'enjeu dès le début, puis la décision ou l'action attendue. Une question directe sur ses priorités peut être plus utile qu'un long préambule. Annonce l'objet, la demande et l'échéance dès les premières lignes. Ajoute les informations nécessaires à la décision sans cacher l'essentiel dans un long texte. Avec ton secondaire Communicant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
             },
             {
               "id": "relationship",
               "title": "Construire une bonne relation",
-              "text": "Dans un projet, clarifier les responsabilités et l'autonomie peut prévenir les rapports de force. Dans la vie personnelle, prends aussi le temps d'écouter ce qui compte pour lui au-delà des solutions. Ton secondaire Communiquant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
+              "text": "Dans un projet, clarifier les responsabilités et l'autonomie peut prévenir les rapports de force. Dans la vie personnelle, prends aussi le temps d'écouter ce qui compte pour lui au-delà des solutions. Ton secondaire Communicant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
             }
           ]
         },
@@ -237,27 +237,27 @@
             {
               "id": "functioning",
               "title": "Comprendre son fonctionnement",
-              "text": "Il aime souvent créer du lien, partager des idées et entraîner les autres dans un échange vivant. Son enthousiasme ne signifie pas qu'il manque de sérieux ou qu'il cherche toujours à attirer l'attention. Ton côté Communiquant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
+              "text": "Il aime souvent créer du lien, partager des idées et entraîner les autres dans un échange vivant. Son enthousiasme ne signifie pas qu'il manque de sérieux ou qu'il cherche toujours à attirer l'attention. Ton côté Communicant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
             },
             {
               "id": "connection",
               "title": "Ce qui vous rapproche",
-              "text": "Ton sens de la décision peut donner une direction à ses idées et à son enthousiasme. Son aisance relationnelle peut aider ton projet à rencontrer l'adhésion des autres. Ton secondaire Communiquant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
+              "text": "Ton sens de la décision peut donner une direction à ses idées et à son enthousiasme. Son aisance relationnelle peut aider ton projet à rencontrer l'adhésion des autres. Ton secondaire Communicant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
             },
             {
               "id": "friction",
               "title": "Ce qui peut coincer",
-              "text": "Tu peux vouloir conclure alors qu'il souhaite prolonger l'échange. Prévoyez un temps pour explorer les idées puis un moment explicite pour choisir. Ton secondaire Communiquant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
+              "text": "Tu peux vouloir conclure alors qu'il souhaite prolonger l'échange. Prévoyez un temps pour explorer les idées puis un moment explicite pour choisir. Ton secondaire Communicant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
             },
             {
               "id": "communication",
               "title": "Comment bien communiquer",
-              "text": "Commence par un contact chaleureux et laisse de la place à la conversation. Quand une décision est nécessaire, reformule ensemble les idées et la prochaine étape. Personnalise l'ouverture et garde un ton humain, puis distingue clairement l'information et l'action attendue. Un message chaleureux reste plus utile lorsqu'il est facile à parcourir. Avec ton secondaire Communiquant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
+              "text": "Commence par un contact chaleureux et laisse de la place à la conversation. Quand une décision est nécessaire, reformule ensemble les idées et la prochaine étape. Personnalise l'ouverture et garde un ton humain, puis distingue clairement l'information et l'action attendue. Un message chaleureux reste plus utile lorsqu'il est facile à parcourir. Avec ton secondaire Communicant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
             },
             {
               "id": "relationship",
               "title": "Construire une bonne relation",
-              "text": "Au travail, laisse une place aux idées collectives tout en précisant les engagements. En famille ou entre amis, l'écoute et les signes de reconnaissance peuvent compter autant que l'activité partagée. Ton secondaire Communiquant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
+              "text": "Au travail, laisse une place aux idées collectives tout en précisant les engagements. En famille ou entre amis, l'écoute et les signes de reconnaissance peuvent compter autant que l'activité partagée. Ton secondaire Communicant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
             }
           ]
         },
@@ -267,27 +267,27 @@
             {
               "id": "functioning",
               "title": "Comprendre son fonctionnement",
-              "text": "Il accorde souvent de la valeur à la confiance, à la stabilité et à l'attention portée aux personnes. Sa réserve éventuelle ne signifie ni absence d'avis ni manque d'initiative. Ton côté Communiquant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
+              "text": "Il accorde souvent de la valeur à la confiance, à la stabilité et à l'attention portée aux personnes. Sa réserve éventuelle ne signifie ni absence d'avis ni manque d'initiative. Ton côté Communicant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
             },
             {
               "id": "connection",
               "title": "Ce qui vous rapproche",
-              "text": "Ton envie de faire avancer les choses peut compléter sa capacité à soutenir le collectif dans la durée. Ensemble, vous pouvez allier initiative et continuité. Ton secondaire Communiquant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
+              "text": "Ton envie de faire avancer les choses peut compléter sa capacité à soutenir le collectif dans la durée. Ensemble, vous pouvez allier initiative et continuité. Ton secondaire Communicant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
             },
             {
               "id": "friction",
               "title": "Ce qui peut coincer",
-              "text": "Tu peux accélérer un changement qu'il aurait préféré préparer. Explique le pourquoi et laisse-lui le temps de signaler les conséquences humaines. Ton secondaire Communiquant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
+              "text": "Tu peux accélérer un changement qu'il aurait préféré préparer. Explique le pourquoi et laisse-lui le temps de signaler les conséquences humaines. Ton secondaire Communicant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
             },
             {
               "id": "communication",
               "title": "Comment bien communiquer",
-              "text": "Installe un échange calme et laisse le temps de répondre. Explique ce qui change, demande son avis et ne confonds pas un temps de réflexion avec un accord. Donne le contexte, les étapes et les personnes concernées dans un ton courtois. Évite d'annoncer un changement important sans possibilité de poser des questions. Avec ton secondaire Communiquant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
+              "text": "Installe un échange calme et laisse le temps de répondre. Explique ce qui change, demande son avis et ne confonds pas un temps de réflexion avec un accord. Donne le contexte, les étapes et les personnes concernées dans un ton courtois. Évite d'annoncer un changement important sans possibilité de poser des questions. Avec ton secondaire Communicant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
             },
             {
               "id": "relationship",
               "title": "Construire une bonne relation",
-              "text": "Dans un projet, prépare les changements et reconnais sa contribution à l'équipe. Dans les relations personnelles, la constance et la possibilité de parler sans pression peuvent nourrir la confiance. Ton secondaire Communiquant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
+              "text": "Dans un projet, prépare les changements et reconnais sa contribution à l'équipe. Dans les relations personnelles, la constance et la possibilité de parler sans pression peuvent nourrir la confiance. Ton secondaire Communicant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
             }
           ]
         },
@@ -297,27 +297,27 @@
             {
               "id": "functioning",
               "title": "Comprendre son fonctionnement",
-              "text": "Il cherche souvent à comprendre les faits, les critères et les risques avant de conclure. Son besoin de précision ne signifie pas qu'il refuse le changement ou qu'il manque d'émotions. Ton côté Communiquant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
+              "text": "Il cherche souvent à comprendre les faits, les critères et les risques avant de conclure. Son besoin de précision ne signifie pas qu'il refuse le changement ou qu'il manque d'émotions. Ton côté Communicant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
             },
             {
               "id": "connection",
               "title": "Ce qui vous rapproche",
-              "text": "Tu apportes l'impulsion et il apporte un regard attentif aux détails et aux risques. Cette complémentarité peut transformer une décision rapide en action plus solide. Ton secondaire Communiquant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
+              "text": "Tu apportes l'impulsion et il apporte un regard attentif aux détails et aux risques. Cette complémentarité peut transformer une décision rapide en action plus solide. Ton secondaire Communicant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
             },
             {
               "id": "friction",
               "title": "Ce qui peut coincer",
-              "text": "Tu peux considérer ses vérifications comme un retard, tandis qu'il peut juger ta décision prématurée. Convenez des trois informations indispensables et d'une échéance pour trancher. Ton secondaire Communiquant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
+              "text": "Tu peux considérer ses vérifications comme un retard, tandis qu'il peut juger ta décision prématurée. Convenez des trois informations indispensables et d'une échéance pour trancher. Ton secondaire Communicant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
             },
             {
               "id": "communication",
               "title": "Comment bien communiquer",
-              "text": "Annonce le sujet, distingue faits et hypothèses et laisse un temps pour les questions. Évite de lui demander une conclusion immédiate lorsque les critères ne sont pas clairs. Structure le message avec les faits, les références utiles et la décision attendue. Des pièces jointes pertinentes peuvent aider, à condition d'indiquer précisément ce qu'il faut examiner. Avec ton secondaire Communiquant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
+              "text": "Annonce le sujet, distingue faits et hypothèses et laisse un temps pour les questions. Évite de lui demander une conclusion immédiate lorsque les critères ne sont pas clairs. Structure le message avec les faits, les références utiles et la décision attendue. Des pièces jointes pertinentes peuvent aider, à condition d'indiquer précisément ce qu'il faut examiner. Avec ton secondaire Communicant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
             },
             {
               "id": "relationship",
               "title": "Construire une bonne relation",
-              "text": "Au travail, convenez des critères de qualité et d'un moment pour décider. En famille ou entre amis, respecte son besoin de réfléchir sans réduire la relation à une discussion de preuves. Ton secondaire Communiquant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
+              "text": "Au travail, convenez des critères de qualité et d'un moment pour décider. En famille ou entre amis, respecte son besoin de réfléchir sans réduire la relation à une discussion de preuves. Ton secondaire Communicant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
             }
           ]
         }
@@ -592,9 +592,9 @@
     "I": {
       "primary": "I",
       "secondary": null,
-      "label": "Communiquant",
+      "label": "Communicant",
       "intro": {
-        "eyebrow": "Communiquant",
+        "eyebrow": "Communicant",
         "title": "Créer du lien, accueillir les différences.",
         "text": "Tu abordes souvent les relations en cherchant à faire circuler les idées et créer un échange vivant. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
         "orbitLabel": "Ensemble."
@@ -636,7 +636,7 @@
             {
               "id": "functioning",
               "title": "Comprendre son fonctionnement",
-              "text": "Tout comme toi, un autre Communiquant accorde souvent de l'importance aux échanges, aux idées partagées et au contact humain. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. S'il lance spontanément la conversation, raconte des exemples ou cherche les réactions du groupe, il apprécie peut-être l'interaction. Demande-lui s'il préfère réfléchir en échangeant ou seul."
+              "text": "Tout comme toi, un autre Communicant accorde souvent de l'importance aux échanges, aux idées partagées et au contact humain. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. S'il lance spontanément la conversation, raconte des exemples ou cherche les réactions du groupe, il apprécie peut-être l'interaction. Demande-lui s'il préfère réfléchir en échangeant ou seul."
             },
             {
               "id": "connection",
@@ -725,9 +725,9 @@
     "ID": {
       "primary": "I",
       "secondary": "D",
-      "label": "Communiquant + Conquérant",
+      "label": "Communicant + Conquérant",
       "intro": {
-        "eyebrow": "Communiquant + Conquérant",
+        "eyebrow": "Communicant + Conquérant",
         "title": "Créer du lien, accueillir les différences.",
         "text": "Tu abordes souvent les relations en cherchant à faire circuler les idées et créer un échange vivant. Ton profil secondaire Conquérant ajoute une attention à la décision et les résultats. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
         "orbitLabel": "Ensemble."
@@ -769,7 +769,7 @@
             {
               "id": "functioning",
               "title": "Comprendre son fonctionnement",
-              "text": "Tout comme toi, un autre Communiquant accorde souvent de l'importance aux échanges, aux idées partagées et au contact humain. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. Ton côté Conquérant peut te rendre particulièrement attentif à sa capacité à prendre une décision et à agir."
+              "text": "Tout comme toi, un autre Communicant accorde souvent de l'importance aux échanges, aux idées partagées et au contact humain. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. Ton côté Conquérant peut te rendre particulièrement attentif à sa capacité à prendre une décision et à agir."
             },
             {
               "id": "connection",
@@ -858,9 +858,9 @@
     "IS": {
       "primary": "I",
       "secondary": "S",
-      "label": "Communiquant + Facilitateur",
+      "label": "Communicant + Facilitateur",
       "intro": {
-        "eyebrow": "Communiquant + Facilitateur",
+        "eyebrow": "Communicant + Facilitateur",
         "title": "Créer du lien, accueillir les différences.",
         "text": "Tu abordes souvent les relations en cherchant à faire circuler les idées et créer un échange vivant. Ton profil secondaire Facilitateur ajoute une attention à la confiance, l’écoute et la stabilité. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
         "orbitLabel": "Ensemble."
@@ -902,7 +902,7 @@
             {
               "id": "functioning",
               "title": "Comprendre son fonctionnement",
-              "text": "Tout comme toi, un autre Communiquant accorde souvent de l'importance aux échanges, aux idées partagées et au contact humain. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. Ton côté Facilitateur peut t'amener à remarquer davantage ses besoins de confiance et sa façon d'accueillir les autres."
+              "text": "Tout comme toi, un autre Communicant accorde souvent de l'importance aux échanges, aux idées partagées et au contact humain. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. Ton côté Facilitateur peut t'amener à remarquer davantage ses besoins de confiance et sa façon d'accueillir les autres."
             },
             {
               "id": "connection",
@@ -991,9 +991,9 @@
     "IC": {
       "primary": "I",
       "secondary": "C",
-      "label": "Communiquant + Analyste",
+      "label": "Communicant + Analyste",
       "intro": {
-        "eyebrow": "Communiquant + Analyste",
+        "eyebrow": "Communicant + Analyste",
         "title": "Créer du lien, accueillir les différences.",
         "text": "Tu abordes souvent les relations en cherchant à faire circuler les idées et créer un échange vivant. Ton profil secondaire Analyste ajoute une attention à la précision, la cohérence et la fiabilité. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
         "orbitLabel": "Ensemble."
@@ -1035,7 +1035,7 @@
             {
               "id": "functioning",
               "title": "Comprendre son fonctionnement",
-              "text": "Tout comme toi, un autre Communiquant accorde souvent de l'importance aux échanges, aux idées partagées et au contact humain. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. Ton côté Analyste peut te rendre sensible aux arguments, aux critères et aux informations qu'il utilise."
+              "text": "Tout comme toi, un autre Communicant accorde souvent de l'importance aux échanges, aux idées partagées et au contact humain. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. Ton côté Analyste peut te rendre sensible aux arguments, aux critères et aux informations qu'il utilise."
             },
             {
               "id": "connection",
@@ -1390,11 +1390,11 @@
     "SI": {
       "primary": "S",
       "secondary": "I",
-      "label": "Facilitateur + Communiquant",
+      "label": "Facilitateur + Communicant",
       "intro": {
-        "eyebrow": "Facilitateur + Communiquant",
+        "eyebrow": "Facilitateur + Communicant",
         "title": "Préserver le lien, sans t’effacer.",
-        "text": "Tu abordes souvent les relations en cherchant à prendre le temps de comprendre les personnes et leurs besoins. Ton profil secondaire Communiquant ajoute une attention à le lien, l’enthousiasme et la participation. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
+        "text": "Tu abordes souvent les relations en cherchant à prendre le temps de comprendre les personnes et leurs besoins. Ton profil secondaire Communicant ajoute une attention à le lien, l’enthousiasme et la participation. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
         "orbitLabel": "Ensemble."
       },
       "portraits": {
@@ -1404,27 +1404,27 @@
             {
               "id": "functioning",
               "title": "Comprendre son fonctionnement",
-              "text": "Il cherche volontiers un objectif clair, une décision et la liberté de passer à l'action. Il peut aller droit au but sans que cela signifie qu'il veut toujours diriger. Ton côté Communiquant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
+              "text": "Il cherche volontiers un objectif clair, une décision et la liberté de passer à l'action. Il peut aller droit au but sans que cela signifie qu'il veut toujours diriger. Ton côté Communicant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
             },
             {
               "id": "connection",
               "title": "Ce qui vous rapproche",
-              "text": "Tu peux apporter l'écoute et la continuité dont ses initiatives ont besoin. Sa capacité à trancher peut aider un projet collectif à ne pas rester dans l'attente. Ton secondaire Communiquant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
+              "text": "Tu peux apporter l'écoute et la continuité dont ses initiatives ont besoin. Sa capacité à trancher peut aider un projet collectif à ne pas rester dans l'attente. Ton secondaire Communicant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
             },
             {
               "id": "friction",
               "title": "Ce qui peut coincer",
-              "text": "Il peut aller trop vite pour toi et prendre ton silence pour un accord. Exprime clairement tes réserves avant la décision et convenez d'un rythme. Ton secondaire Communiquant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
+              "text": "Il peut aller trop vite pour toi et prendre ton silence pour un accord. Exprime clairement tes réserves avant la décision et convenez d'un rythme. Ton secondaire Communicant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
             },
             {
               "id": "communication",
               "title": "Comment bien communiquer",
-              "text": "Présente l'enjeu dès le début, puis la décision ou l'action attendue. Une question directe sur ses priorités peut être plus utile qu'un long préambule. Annonce l'objet, la demande et l'échéance dès les premières lignes. Ajoute les informations nécessaires à la décision sans cacher l'essentiel dans un long texte. Avec ton secondaire Communiquant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
+              "text": "Présente l'enjeu dès le début, puis la décision ou l'action attendue. Une question directe sur ses priorités peut être plus utile qu'un long préambule. Annonce l'objet, la demande et l'échéance dès les premières lignes. Ajoute les informations nécessaires à la décision sans cacher l'essentiel dans un long texte. Avec ton secondaire Communicant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
             },
             {
               "id": "relationship",
               "title": "Construire une bonne relation",
-              "text": "Dans un projet, clarifier les responsabilités et l'autonomie peut prévenir les rapports de force. Dans la vie personnelle, prends aussi le temps d'écouter ce qui compte pour lui au-delà des solutions. Ton secondaire Communiquant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
+              "text": "Dans un projet, clarifier les responsabilités et l'autonomie peut prévenir les rapports de force. Dans la vie personnelle, prends aussi le temps d'écouter ce qui compte pour lui au-delà des solutions. Ton secondaire Communicant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
             }
           ]
         },
@@ -1434,27 +1434,27 @@
             {
               "id": "functioning",
               "title": "Comprendre son fonctionnement",
-              "text": "Il aime souvent créer du lien, partager des idées et entraîner les autres dans un échange vivant. Son enthousiasme ne signifie pas qu'il manque de sérieux ou qu'il cherche toujours à attirer l'attention. Ton côté Communiquant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
+              "text": "Il aime souvent créer du lien, partager des idées et entraîner les autres dans un échange vivant. Son enthousiasme ne signifie pas qu'il manque de sérieux ou qu'il cherche toujours à attirer l'attention. Ton côté Communicant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
             },
             {
               "id": "connection",
               "title": "Ce qui vous rapproche",
-              "text": "Tu peux apporter de la stabilité à ses idées et soutenir les personnes qu'il mobilise. Son enthousiasme peut t'encourager à essayer des approches nouvelles. Ton secondaire Communiquant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
+              "text": "Tu peux apporter de la stabilité à ses idées et soutenir les personnes qu'il mobilise. Son enthousiasme peut t'encourager à essayer des approches nouvelles. Ton secondaire Communicant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
             },
             {
               "id": "friction",
               "title": "Ce qui peut coincer",
-              "text": "Il peut multiplier les propositions alors que tu cherches à préserver un cadre fiable. Explique les conditions nécessaires pour que le groupe suive. Ton secondaire Communiquant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
+              "text": "Il peut multiplier les propositions alors que tu cherches à préserver un cadre fiable. Explique les conditions nécessaires pour que le groupe suive. Ton secondaire Communicant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
             },
             {
               "id": "communication",
               "title": "Comment bien communiquer",
-              "text": "Commence par un contact chaleureux et laisse de la place à la conversation. Quand une décision est nécessaire, reformule ensemble les idées et la prochaine étape. Personnalise l'ouverture et garde un ton humain, puis distingue clairement l'information et l'action attendue. Un message chaleureux reste plus utile lorsqu'il est facile à parcourir. Avec ton secondaire Communiquant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
+              "text": "Commence par un contact chaleureux et laisse de la place à la conversation. Quand une décision est nécessaire, reformule ensemble les idées et la prochaine étape. Personnalise l'ouverture et garde un ton humain, puis distingue clairement l'information et l'action attendue. Un message chaleureux reste plus utile lorsqu'il est facile à parcourir. Avec ton secondaire Communicant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
             },
             {
               "id": "relationship",
               "title": "Construire une bonne relation",
-              "text": "Au travail, laisse une place aux idées collectives tout en précisant les engagements. En famille ou entre amis, l'écoute et les signes de reconnaissance peuvent compter autant que l'activité partagée. Ton secondaire Communiquant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
+              "text": "Au travail, laisse une place aux idées collectives tout en précisant les engagements. En famille ou entre amis, l'écoute et les signes de reconnaissance peuvent compter autant que l'activité partagée. Ton secondaire Communicant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
             }
           ]
         },
@@ -1464,27 +1464,27 @@
             {
               "id": "functioning",
               "title": "Comprendre son fonctionnement",
-              "text": "Tout comme toi, un autre Facilitateur recherche volontiers la confiance, l'écoute et des repères stables. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. Ton côté Communiquant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
+              "text": "Tout comme toi, un autre Facilitateur recherche volontiers la confiance, l'écoute et des repères stables. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. Ton côté Communicant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
             },
             {
               "id": "connection",
               "title": "Ce qui vous rapproche",
-              "text": "Vous partagez l'importance de la confiance, de la fiabilité et de l'attention aux autres. Vous pouvez construire une relation patiente et solide. Ton secondaire Communiquant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
+              "text": "Vous partagez l'importance de la confiance, de la fiabilité et de l'attention aux autres. Vous pouvez construire une relation patiente et solide. Ton secondaire Communicant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
             },
             {
               "id": "friction",
               "title": "Ce qui peut coincer",
-              "text": "Vous pouvez tous les deux éviter un désaccord pour préserver l'harmonie. Osez nommer les attentes différentes avant qu'une frustration silencieuse ne s'installe. Ton secondaire Communiquant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
+              "text": "Vous pouvez tous les deux éviter un désaccord pour préserver l'harmonie. Osez nommer les attentes différentes avant qu'une frustration silencieuse ne s'installe. Ton secondaire Communicant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
             },
             {
               "id": "communication",
               "title": "Comment bien communiquer",
-              "text": "Installe un échange calme et laisse le temps de répondre. Explique ce qui change, demande son avis et ne confonds pas un temps de réflexion avec un accord. Donne le contexte, les étapes et les personnes concernées dans un ton courtois. Évite d'annoncer un changement important sans possibilité de poser des questions. Avec ton secondaire Communiquant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
+              "text": "Installe un échange calme et laisse le temps de répondre. Explique ce qui change, demande son avis et ne confonds pas un temps de réflexion avec un accord. Donne le contexte, les étapes et les personnes concernées dans un ton courtois. Évite d'annoncer un changement important sans possibilité de poser des questions. Avec ton secondaire Communicant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
             },
             {
               "id": "relationship",
               "title": "Construire une bonne relation",
-              "text": "Dans un projet, prépare les changements et reconnais sa contribution à l'équipe. Dans les relations personnelles, la constance et la possibilité de parler sans pression peuvent nourrir la confiance. Ton secondaire Communiquant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
+              "text": "Dans un projet, prépare les changements et reconnais sa contribution à l'équipe. Dans les relations personnelles, la constance et la possibilité de parler sans pression peuvent nourrir la confiance. Ton secondaire Communicant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
             }
           ]
         },
@@ -1494,27 +1494,27 @@
             {
               "id": "functioning",
               "title": "Comprendre son fonctionnement",
-              "text": "Il cherche souvent à comprendre les faits, les critères et les risques avant de conclure. Son besoin de précision ne signifie pas qu'il refuse le changement ou qu'il manque d'émotions. Ton côté Communiquant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
+              "text": "Il cherche souvent à comprendre les faits, les critères et les risques avant de conclure. Son besoin de précision ne signifie pas qu'il refuse le changement ou qu'il manque d'émotions. Ton côté Communicant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
             },
             {
               "id": "connection",
               "title": "Ce qui vous rapproche",
-              "text": "Ton attention aux personnes complète son exigence de précision. Ensemble, vous pouvez préparer des décisions à la fois fiables et acceptables pour le collectif. Ton secondaire Communiquant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
+              "text": "Ton attention aux personnes complète son exigence de précision. Ensemble, vous pouvez préparer des décisions à la fois fiables et acceptables pour le collectif. Ton secondaire Communicant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
             },
             {
               "id": "friction",
               "title": "Ce qui peut coincer",
-              "text": "Vous pouvez hésiter longtemps, toi pour préserver l'équilibre et lui pour vérifier les détails. Fixez une date et les critères suffisants pour avancer. Ton secondaire Communiquant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
+              "text": "Vous pouvez hésiter longtemps, toi pour préserver l'équilibre et lui pour vérifier les détails. Fixez une date et les critères suffisants pour avancer. Ton secondaire Communicant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
             },
             {
               "id": "communication",
               "title": "Comment bien communiquer",
-              "text": "Annonce le sujet, distingue faits et hypothèses et laisse un temps pour les questions. Évite de lui demander une conclusion immédiate lorsque les critères ne sont pas clairs. Structure le message avec les faits, les références utiles et la décision attendue. Des pièces jointes pertinentes peuvent aider, à condition d'indiquer précisément ce qu'il faut examiner. Avec ton secondaire Communiquant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
+              "text": "Annonce le sujet, distingue faits et hypothèses et laisse un temps pour les questions. Évite de lui demander une conclusion immédiate lorsque les critères ne sont pas clairs. Structure le message avec les faits, les références utiles et la décision attendue. Des pièces jointes pertinentes peuvent aider, à condition d'indiquer précisément ce qu'il faut examiner. Avec ton secondaire Communicant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
             },
             {
               "id": "relationship",
               "title": "Construire une bonne relation",
-              "text": "Au travail, convenez des critères de qualité et d'un moment pour décider. En famille ou entre amis, respecte son besoin de réfléchir sans réduire la relation à une discussion de preuves. Ton secondaire Communiquant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
+              "text": "Au travail, convenez des critères de qualité et d'un moment pour décider. En famille ou entre amis, respecte son besoin de réfléchir sans réduire la relation à une discussion de preuves. Ton secondaire Communicant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
             }
           ]
         }
@@ -1922,11 +1922,11 @@
     "CI": {
       "primary": "C",
       "secondary": "I",
-      "label": "Analyste + Communiquant",
+      "label": "Analyste + Communicant",
       "intro": {
-        "eyebrow": "Analyste + Communiquant",
+        "eyebrow": "Analyste + Communicant",
         "title": "Comprendre avant de conclure.",
-        "text": "Tu abordes souvent les relations en cherchant à examiner les informations avant de conclure. Ton profil secondaire Communiquant ajoute une attention à le lien, l’enthousiasme et la participation. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
+        "text": "Tu abordes souvent les relations en cherchant à examiner les informations avant de conclure. Ton profil secondaire Communicant ajoute une attention à le lien, l’enthousiasme et la participation. Comprendre les préférences de chacun peut t’aider à ajuster tes échanges sans enfermer les autres dans une étiquette.",
         "orbitLabel": "Ensemble."
       },
       "portraits": {
@@ -1936,27 +1936,27 @@
             {
               "id": "functioning",
               "title": "Comprendre son fonctionnement",
-              "text": "Il cherche volontiers un objectif clair, une décision et la liberté de passer à l'action. Il peut aller droit au but sans que cela signifie qu'il veut toujours diriger. Ton côté Communiquant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
+              "text": "Il cherche volontiers un objectif clair, une décision et la liberté de passer à l'action. Il peut aller droit au but sans que cela signifie qu'il veut toujours diriger. Ton côté Communicant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
             },
             {
               "id": "connection",
               "title": "Ce qui vous rapproche",
-              "text": "Tu peux sécuriser ses décisions en identifiant les risques utiles à examiner. Sa capacité à agir peut aider ton analyse à déboucher sur un résultat. Ton secondaire Communiquant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
+              "text": "Tu peux sécuriser ses décisions en identifiant les risques utiles à examiner. Sa capacité à agir peut aider ton analyse à déboucher sur un résultat. Ton secondaire Communicant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
             },
             {
               "id": "friction",
               "title": "Ce qui peut coincer",
-              "text": "Il peut réclamer une réponse avant que tu aies terminé tes vérifications. Explique quelles données sont indispensables et quand tu pourras conclure. Ton secondaire Communiquant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
+              "text": "Il peut réclamer une réponse avant que tu aies terminé tes vérifications. Explique quelles données sont indispensables et quand tu pourras conclure. Ton secondaire Communicant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
             },
             {
               "id": "communication",
               "title": "Comment bien communiquer",
-              "text": "Présente l'enjeu dès le début, puis la décision ou l'action attendue. Une question directe sur ses priorités peut être plus utile qu'un long préambule. Annonce l'objet, la demande et l'échéance dès les premières lignes. Ajoute les informations nécessaires à la décision sans cacher l'essentiel dans un long texte. Avec ton secondaire Communiquant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
+              "text": "Présente l'enjeu dès le début, puis la décision ou l'action attendue. Une question directe sur ses priorités peut être plus utile qu'un long préambule. Annonce l'objet, la demande et l'échéance dès les premières lignes. Ajoute les informations nécessaires à la décision sans cacher l'essentiel dans un long texte. Avec ton secondaire Communicant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
             },
             {
               "id": "relationship",
               "title": "Construire une bonne relation",
-              "text": "Dans un projet, clarifier les responsabilités et l'autonomie peut prévenir les rapports de force. Dans la vie personnelle, prends aussi le temps d'écouter ce qui compte pour lui au-delà des solutions. Ton secondaire Communiquant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
+              "text": "Dans un projet, clarifier les responsabilités et l'autonomie peut prévenir les rapports de force. Dans la vie personnelle, prends aussi le temps d'écouter ce qui compte pour lui au-delà des solutions. Ton secondaire Communicant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
             }
           ]
         },
@@ -1966,27 +1966,27 @@
             {
               "id": "functioning",
               "title": "Comprendre son fonctionnement",
-              "text": "Il aime souvent créer du lien, partager des idées et entraîner les autres dans un échange vivant. Son enthousiasme ne signifie pas qu'il manque de sérieux ou qu'il cherche toujours à attirer l'attention. Ton côté Communiquant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
+              "text": "Il aime souvent créer du lien, partager des idées et entraîner les autres dans un échange vivant. Son enthousiasme ne signifie pas qu'il manque de sérieux ou qu'il cherche toujours à attirer l'attention. Ton côté Communicant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
             },
             {
               "id": "connection",
               "title": "Ce qui vous rapproche",
-              "text": "Tu peux donner de la structure à ses idées et lui permettre de mieux les présenter. Son enthousiasme peut ouvrir des perspectives auxquelles tu n'aurais pas pensé seul. Ton secondaire Communiquant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
+              "text": "Tu peux donner de la structure à ses idées et lui permettre de mieux les présenter. Son enthousiasme peut ouvrir des perspectives auxquelles tu n'aurais pas pensé seul. Ton secondaire Communicant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
             },
             {
               "id": "friction",
               "title": "Ce qui peut coincer",
-              "text": "Tu peux rechercher la précision alors qu'il explore librement plusieurs pistes. Accordez-vous sur le moment où l'on brainstorme et celui où l'on valide. Ton secondaire Communiquant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
+              "text": "Tu peux rechercher la précision alors qu'il explore librement plusieurs pistes. Accordez-vous sur le moment où l'on brainstorme et celui où l'on valide. Ton secondaire Communicant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
             },
             {
               "id": "communication",
               "title": "Comment bien communiquer",
-              "text": "Commence par un contact chaleureux et laisse de la place à la conversation. Quand une décision est nécessaire, reformule ensemble les idées et la prochaine étape. Personnalise l'ouverture et garde un ton humain, puis distingue clairement l'information et l'action attendue. Un message chaleureux reste plus utile lorsqu'il est facile à parcourir. Avec ton secondaire Communiquant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
+              "text": "Commence par un contact chaleureux et laisse de la place à la conversation. Quand une décision est nécessaire, reformule ensemble les idées et la prochaine étape. Personnalise l'ouverture et garde un ton humain, puis distingue clairement l'information et l'action attendue. Un message chaleureux reste plus utile lorsqu'il est facile à parcourir. Avec ton secondaire Communicant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
             },
             {
               "id": "relationship",
               "title": "Construire une bonne relation",
-              "text": "Au travail, laisse une place aux idées collectives tout en précisant les engagements. En famille ou entre amis, l'écoute et les signes de reconnaissance peuvent compter autant que l'activité partagée. Ton secondaire Communiquant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
+              "text": "Au travail, laisse une place aux idées collectives tout en précisant les engagements. En famille ou entre amis, l'écoute et les signes de reconnaissance peuvent compter autant que l'activité partagée. Ton secondaire Communicant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
             }
           ]
         },
@@ -1996,27 +1996,27 @@
             {
               "id": "functioning",
               "title": "Comprendre son fonctionnement",
-              "text": "Il accorde souvent de la valeur à la confiance, à la stabilité et à l'attention portée aux personnes. Sa réserve éventuelle ne signifie ni absence d'avis ni manque d'initiative. Ton côté Communiquant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
+              "text": "Il accorde souvent de la valeur à la confiance, à la stabilité et à l'attention portée aux personnes. Sa réserve éventuelle ne signifie ni absence d'avis ni manque d'initiative. Ton côté Communicant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
             },
             {
               "id": "connection",
               "title": "Ce qui vous rapproche",
-              "text": "Tu peux clarifier les méthodes tandis qu'il veille à la continuité et à l'impact humain. Vos approches peuvent rendre un changement plus fiable et mieux accepté. Ton secondaire Communiquant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
+              "text": "Tu peux clarifier les méthodes tandis qu'il veille à la continuité et à l'impact humain. Vos approches peuvent rendre un changement plus fiable et mieux accepté. Ton secondaire Communicant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
             },
             {
               "id": "friction",
               "title": "Ce qui peut coincer",
-              "text": "Vous pouvez tous les deux préférer attendre, pour des raisons différentes. Distinguez les vérifications indispensables des inquiétudes à discuter. Ton secondaire Communiquant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
+              "text": "Vous pouvez tous les deux préférer attendre, pour des raisons différentes. Distinguez les vérifications indispensables des inquiétudes à discuter. Ton secondaire Communicant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
             },
             {
               "id": "communication",
               "title": "Comment bien communiquer",
-              "text": "Installe un échange calme et laisse le temps de répondre. Explique ce qui change, demande son avis et ne confonds pas un temps de réflexion avec un accord. Donne le contexte, les étapes et les personnes concernées dans un ton courtois. Évite d'annoncer un changement important sans possibilité de poser des questions. Avec ton secondaire Communiquant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
+              "text": "Installe un échange calme et laisse le temps de répondre. Explique ce qui change, demande son avis et ne confonds pas un temps de réflexion avec un accord. Donne le contexte, les étapes et les personnes concernées dans un ton courtois. Évite d'annoncer un changement important sans possibilité de poser des questions. Avec ton secondaire Communicant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
             },
             {
               "id": "relationship",
               "title": "Construire une bonne relation",
-              "text": "Dans un projet, prépare les changements et reconnais sa contribution à l'équipe. Dans les relations personnelles, la constance et la possibilité de parler sans pression peuvent nourrir la confiance. Ton secondaire Communiquant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
+              "text": "Dans un projet, prépare les changements et reconnais sa contribution à l'équipe. Dans les relations personnelles, la constance et la possibilité de parler sans pression peuvent nourrir la confiance. Ton secondaire Communicant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
             }
           ]
         },
@@ -2026,27 +2026,27 @@
             {
               "id": "functioning",
               "title": "Comprendre son fonctionnement",
-              "text": "Tout comme toi, un autre Analyste privilégie souvent les faits, la précision et le temps nécessaire pour réfléchir. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. Ton côté Communiquant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
+              "text": "Tout comme toi, un autre Analyste privilégie souvent les faits, la précision et le temps nécessaire pour réfléchir. Vous pouvez reconnaître chez l'autre des réflexes familiers, sans pour autant avoir les mêmes priorités. Ton côté Communicant peut te rendre plus attentif à la chaleur de l'échange et à la manière dont il partage ses idées."
             },
             {
               "id": "connection",
               "title": "Ce qui vous rapproche",
-              "text": "Vous partagez le souci des faits, de la qualité et de la cohérence. Vous pouvez approfondir ensemble une question complexe sans négliger les détails. Ton secondaire Communiquant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
+              "text": "Vous partagez le souci des faits, de la qualité et de la cohérence. Vous pouvez approfondir ensemble une question complexe sans négliger les détails. Ton secondaire Communicant peut faciliter le dialogue et aider à entraîner d'autres personnes dans ce que vous construisez."
             },
             {
               "id": "friction",
               "title": "Ce qui peut coincer",
-              "text": "Vous pouvez prolonger les vérifications et multiplier les objections. Définissez à l'avance ce qui constituera une information suffisante pour décider. Ton secondaire Communiquant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
+              "text": "Vous pouvez prolonger les vérifications et multiplier les objections. Définissez à l'avance ce qui constituera une information suffisante pour décider. Ton secondaire Communicant peut t'amener à développer davantage tes idées quand l'autre attend une conclusion."
             },
             {
               "id": "communication",
               "title": "Comment bien communiquer",
-              "text": "Annonce le sujet, distingue faits et hypothèses et laisse un temps pour les questions. Évite de lui demander une conclusion immédiate lorsque les critères ne sont pas clairs. Structure le message avec les faits, les références utiles et la décision attendue. Des pièces jointes pertinentes peuvent aider, à condition d'indiquer précisément ce qu'il faut examiner. Avec ton secondaire Communiquant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
+              "text": "Annonce le sujet, distingue faits et hypothèses et laisse un temps pour les questions. Évite de lui demander une conclusion immédiate lorsque les critères ne sont pas clairs. Structure le message avec les faits, les références utiles et la décision attendue. Des pièces jointes pertinentes peuvent aider, à condition d'indiquer précisément ce qu'il faut examiner. Avec ton secondaire Communicant, utilise ta spontanéité pour créer du lien sans perdre de vue ses préférences."
             },
             {
               "id": "relationship",
               "title": "Construire une bonne relation",
-              "text": "Au travail, convenez des critères de qualité et d'un moment pour décider. En famille ou entre amis, respecte son besoin de réfléchir sans réduire la relation à une discussion de preuves. Ton secondaire Communiquant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
+              "text": "Au travail, convenez des critères de qualité et d'un moment pour décider. En famille ou entre amis, respecte son besoin de réfléchir sans réduire la relation à une discussion de preuves. Ton secondaire Communicant peut nourrir la proximité, à condition de laisser aussi de la place à son rythme."
             }
           ]
         }

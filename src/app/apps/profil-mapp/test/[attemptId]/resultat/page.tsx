@@ -13,5 +13,5 @@ export default async function OfficialMappResultPage({ params }: { params: Promi
   if (!guest && (!viewer || viewer.deactivated)) notFound();
   const bundle = guest ? await getGuestResult(attemptId) : await getMappResultBundle(attemptId).catch(() => null);
   if (!bundle) notFound();
-  return <><OfficialResultClient bundle={bundle} />{guest && <aside className="recovery-code" aria-label="Code de récupération"><strong>Code de récupération personnel</strong><code>{guest.recoveryCode}</code><p>Conserve ce code. Il sera exigé, avec ta connexion Ministry confirmée, pour rattacher ce résultat à ton compte.</p></aside>}</>;
+  return <><OfficialResultClient bundle={bundle} canInvite={!guest} />{guest && <aside className="recovery-code" aria-label="Code de récupération"><strong>Code de récupération personnel</strong><code>{guest.recoveryCode}</code><p>Conserve ce code. Il permet de retrouver ce résultat invité sans compte Ministry School.</p></aside>}</>;
 }

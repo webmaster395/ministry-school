@@ -311,7 +311,7 @@
       },
       "communiquant": {
         "code": "communiquant",
-        "name": "Communiquant",
+        "name": "Communicant",
         "biblicalFigure": "Pierre",
         "color": "#E7B93E",
         "hero": {
@@ -1146,17 +1146,17 @@
         "primary": "conquerant",
         "secondary": "communiquant",
         "title": "L’initiateur fédérateur",
-        "subtitle": "Conquérant → Communiquant",
+        "subtitle": "Conquérant → Communicant",
         "pages": {
           "01_identite": {
             "heading": "L’initiateur fédérateur",
             "summary": "Tu sais décider et donner envie aux autres d'avancer avec toi. Ton énergie se traduit souvent par un objectif concret que tu rends mobilisateur.",
             "synergy": "Tu peux obtenir un démarrage rapide, car tu combines une direction ferme et la capacité de la faire comprendre à un groupe.",
             "watchpoint": "Tu risques d'entraîner les autres dans ton enthousiasme avant d'avoir clarifié les engagements et les limites du projet.",
-            "explanation": "Ton profil principal est Conquérant. La tendance Communiquant apporte une nuance à ta manière d'agir, sans modifier les quatre indices du radar."
+            "explanation": "Ton profil principal est Conquérant. La tendance Communicant apporte une nuance à ta manière d'agir, sans modifier les quatre indices du radar."
           },
           "02_fonctionnement": {
-            "intro": "Le profil Conquérant reste ton point de départ. La tendance Communiquant nuance notamment ta manière de gérer la décision et les échanges.",
+            "intro": "Le profil Conquérant reste ton point de départ. La tendance Communicant nuance notamment ta manière de gérer la décision et les échanges.",
             "decision": "Décider vite peut aussi demander de convaincre. Avant d'annoncer ton choix, identifie l'argument qui permettra au groupe de comprendre pourquoi cette direction compte.",
             "action": "Lance une action visible, puis prends le temps de mobiliser ceux qui devront la poursuivre.",
             "change": "Lorsque le plan change, explique la nouvelle priorité avant de demander un nouvel effort.",
@@ -1198,7 +1198,7 @@
           },
           "06_bible": {
             "intro": "Le parcours de Paul illustre ton profil principal Conquérant.",
-            "reflection": "Ta tendance secondaire Communiquant peut enrichir ta lecture sans être attribuée au personnage.",
+            "reflection": "Ta tendance secondaire Communicant peut enrichir ta lecture sans être attribuée au personnage.",
             "ruleRef": "sharedRules.biblicalPrimaryOnly"
           }
         },
@@ -1332,17 +1332,17 @@
         "primary": "communiquant",
         "secondary": "conquerant",
         "title": "Le mobilisateur audacieux",
-        "subtitle": "Communiquant → Conquérant",
+        "subtitle": "Communicant → Conquérant",
         "pages": {
           "01_identite": {
             "heading": "Le mobilisateur audacieux",
             "summary": "Tu rassembles les personnes autour d'une idée, puis tu cherches rapidement comment la faire exister.",
             "synergy": "Ton enthousiasme devient particulièrement efficace lorsqu'il débouche sur des initiatives visibles.",
             "watchpoint": "Tu peux promettre beaucoup dans l'élan de la discussion et sous-estimer le suivi nécessaire.",
-            "explanation": "Ton profil principal est Communiquant. La tendance Conquérant apporte une nuance à ta manière d'agir, sans modifier les quatre indices du radar."
+            "explanation": "Ton profil principal est Communicant. La tendance Conquérant apporte une nuance à ta manière d'agir, sans modifier les quatre indices du radar."
           },
           "02_fonctionnement": {
-            "intro": "Le profil Communiquant reste ton point de départ. La tendance Conquérant nuance notamment ta manière de gérer les échanges et la décision.",
+            "intro": "Le profil Communicant reste ton point de départ. La tendance Conquérant nuance notamment ta manière de gérer les échanges et la décision.",
             "decision": "Tu clarifies souvent ta décision en parlant du projet, puis tu cherches une action immédiate.",
             "action": "Après avoir mobilisé, définis un premier livrable et une personne responsable.",
             "change": "En cas de changement, garde ton énergie mais reformule la priorité avant d'ouvrir de nouvelles pistes.",
@@ -1383,7 +1383,7 @@
             ]
           },
           "06_bible": {
-            "intro": "Le parcours de Pierre illustre ton profil principal Communiquant.",
+            "intro": "Le parcours de Pierre illustre ton profil principal Communicant.",
             "reflection": "Ta tendance secondaire Conquérant peut enrichir ta lecture sans être attribuée au personnage.",
             "ruleRef": "sharedRules.biblicalPrimaryOnly"
           }
@@ -1394,17 +1394,17 @@
         "primary": "communiquant",
         "secondary": "facilitateur",
         "title": "Le rassembleur attentif",
-        "subtitle": "Communiquant → Facilitateur",
+        "subtitle": "Communicant → Facilitateur",
         "pages": {
           "01_identite": {
             "heading": "Le rassembleur attentif",
             "summary": "Tu crées facilement du lien et tu prends soin de l'ambiance dans laquelle les échanges se déroulent.",
             "synergy": "Tu peux aider des personnes très différentes à participer sans se sentir mises à l'écart.",
             "watchpoint": "À force de préserver une atmosphère positive, tu peux laisser des décisions délicates sans réponse.",
-            "explanation": "Ton profil principal est Communiquant. La tendance Facilitateur apporte une nuance à ta manière d'agir, sans modifier les quatre indices du radar."
+            "explanation": "Ton profil principal est Communicant. La tendance Facilitateur apporte une nuance à ta manière d'agir, sans modifier les quatre indices du radar."
           },
           "02_fonctionnement": {
-            "intro": "Le profil Communiquant reste ton point de départ. La tendance Facilitateur nuance notamment ta manière de gérer les échanges et la confiance.",
+            "intro": "Le profil Communicant reste ton point de départ. La tendance Facilitateur nuance notamment ta manière de gérer les échanges et la confiance.",
             "decision": "Tu aimes faire participer les autres et peux prendre le temps de recueillir leurs ressentis avant de décider.",
             "action": "Transforme une discussion chaleureuse en engagements clairs, sans brusquer les personnes.",
             "change": "Lorsque les habitudes changent, rassure sur les relations tout en présentant les possibilités nouvelles.",
@@ -1445,7 +1445,7 @@
             ]
           },
           "06_bible": {
-            "intro": "Le parcours de Pierre illustre ton profil principal Communiquant.",
+            "intro": "Le parcours de Pierre illustre ton profil principal Communicant.",
             "reflection": "Ta tendance secondaire Facilitateur peut enrichir ta lecture sans être attribuée au personnage.",
             "ruleRef": "sharedRules.biblicalPrimaryOnly"
           }
@@ -1456,17 +1456,17 @@
         "primary": "communiquant",
         "secondary": "analyste",
         "title": "Le pédagogue structuré",
-        "subtitle": "Communiquant → Analyste",
+        "subtitle": "Communicant → Analyste",
         "pages": {
           "01_identite": {
             "heading": "Le pédagogue structuré",
             "summary": "Tu sais rendre accessibles des idées complexes et tu apprécies d'avoir des arguments solides pour les transmettre.",
             "synergy": "Tu peux faire comprendre une analyse à des personnes qui n'en maîtrisent pas encore le vocabulaire.",
             "watchpoint": "Tu peux multiplier les explications, au risque de perdre le message essentiel dans les détails.",
-            "explanation": "Ton profil principal est Communiquant. La tendance Analyste apporte une nuance à ta manière d'agir, sans modifier les quatre indices du radar."
+            "explanation": "Ton profil principal est Communicant. La tendance Analyste apporte une nuance à ta manière d'agir, sans modifier les quatre indices du radar."
           },
           "02_fonctionnement": {
-            "intro": "Le profil Communiquant reste ton point de départ. La tendance Analyste nuance notamment ta manière de gérer les échanges et les faits.",
+            "intro": "Le profil Communicant reste ton point de départ. La tendance Analyste nuance notamment ta manière de gérer les échanges et les faits.",
             "decision": "Tu peux présenter une décision en la rendant compréhensible et en montrant les faits qui la soutiennent.",
             "action": "Prépare une synthèse claire avant de multiplier les explications.",
             "change": "Lorsqu'une information nouvelle apparaît, corrige ton message ouvertement au lieu de défendre une première version.",
@@ -1507,7 +1507,7 @@
             ]
           },
           "06_bible": {
-            "intro": "Le parcours de Pierre illustre ton profil principal Communiquant.",
+            "intro": "Le parcours de Pierre illustre ton profil principal Communicant.",
             "reflection": "Ta tendance secondaire Analyste peut enrichir ta lecture sans être attribuée au personnage.",
             "ruleRef": "sharedRules.biblicalPrimaryOnly"
           }
@@ -1580,17 +1580,17 @@
         "primary": "facilitateur",
         "secondary": "communiquant",
         "title": "Le rassembleur chaleureux",
-        "subtitle": "Facilitateur → Communiquant",
+        "subtitle": "Facilitateur → Communicant",
         "pages": {
           "01_identite": {
             "heading": "Le rassembleur chaleureux",
             "summary": "Tu favorises les relations fiables et tu sais aussi créer une atmosphère chaleureuse qui encourage la participation.",
             "synergy": "Tu peux aider une équipe à se sentir accueillie, puis à retrouver de l'énergie dans un projet commun.",
             "watchpoint": "Tu peux accorder tant de place aux échanges que les responsabilités restent implicites.",
-            "explanation": "Ton profil principal est Facilitateur. La tendance Communiquant apporte une nuance à ta manière d'agir, sans modifier les quatre indices du radar."
+            "explanation": "Ton profil principal est Facilitateur. La tendance Communicant apporte une nuance à ta manière d'agir, sans modifier les quatre indices du radar."
           },
           "02_fonctionnement": {
-            "intro": "Le profil Facilitateur reste ton point de départ. La tendance Communiquant nuance notamment ta manière de gérer la confiance et les échanges.",
+            "intro": "Le profil Facilitateur reste ton point de départ. La tendance Communicant nuance notamment ta manière de gérer la confiance et les échanges.",
             "decision": "Tu cherches un accord et sais faire circuler la parole pour que chacun se sente concerné.",
             "action": "Après avoir créé une bonne dynamique, fixe les responsabilités pour qu'elle dure.",
             "change": "Présente les nouveautés à travers leurs bénéfices concrets pour les personnes.",
@@ -1632,7 +1632,7 @@
           },
           "06_bible": {
             "intro": "Le parcours de Abraham illustre ton profil principal Facilitateur.",
-            "reflection": "Ta tendance secondaire Communiquant peut enrichir ta lecture sans être attribuée au personnage.",
+            "reflection": "Ta tendance secondaire Communicant peut enrichir ta lecture sans être attribuée au personnage.",
             "ruleRef": "sharedRules.biblicalPrimaryOnly"
           }
         },
@@ -1766,17 +1766,17 @@
         "primary": "analyste",
         "secondary": "communiquant",
         "title": "L’explorateur pédagogue",
-        "subtitle": "Analyste → Communiquant",
+        "subtitle": "Analyste → Communicant",
         "pages": {
           "01_identite": {
             "heading": "L’explorateur pédagogue",
             "summary": "Tu analyses en profondeur, puis tu peux trouver une manière claire et vivante de transmettre tes conclusions.",
             "synergy": "Tu peux rendre un sujet technique compréhensible sans sacrifier ce qui fait sa précision.",
             "watchpoint": "Le plaisir d'expliquer peut t'amener à multiplier les exemples et à masquer la conclusion.",
-            "explanation": "Ton profil principal est Analyste. La tendance Communiquant apporte une nuance à ta manière d'agir, sans modifier les quatre indices du radar."
+            "explanation": "Ton profil principal est Analyste. La tendance Communicant apporte une nuance à ta manière d'agir, sans modifier les quatre indices du radar."
           },
           "02_fonctionnement": {
-            "intro": "Le profil Analyste reste ton point de départ. La tendance Communiquant nuance notamment ta manière de gérer les faits et les échanges.",
+            "intro": "Le profil Analyste reste ton point de départ. La tendance Communicant nuance notamment ta manière de gérer les faits et les échanges.",
             "decision": "Tu peux expliquer ton raisonnement de façon accessible avant de demander une décision.",
             "action": "Teste la compréhension de ton idée auprès d'une personne qui n'en connaît pas les détails.",
             "change": "Lorsqu'une hypothèse change, explique simplement ce qui a été appris.",
@@ -1818,7 +1818,7 @@
           },
           "06_bible": {
             "intro": "Le parcours de Moïse illustre ton profil principal Analyste.",
-            "reflection": "Ta tendance secondaire Communiquant peut enrichir ta lecture sans être attribuée au personnage.",
+            "reflection": "Ta tendance secondaire Communicant peut enrichir ta lecture sans être attribuée au personnage.",
             "ruleRef": "sharedRules.biblicalPrimaryOnly"
           }
         },
@@ -1905,7 +1905,7 @@
       "conquerant__communiquant": {
         "source": "conquerant",
         "target": "communiquant",
-        "title": "Conquérant avec Communiquant",
+        "title": "Conquérant avec Communicant",
         "whatHelps": "Son enthousiasme peut aider le groupe à adhérer à ton objectif.",
         "whatYouMayAppreciate": "Son enthousiasme peut aider le groupe à adhérer à ton objectif.",
         "possibleMisunderstanding": "Tu peux vouloir conclure alors qu'il souhaite encore explorer les idées.",
@@ -1947,7 +1947,7 @@
       "communiquant__conquerant": {
         "source": "communiquant",
         "target": "conquerant",
-        "title": "Communiquant avec Conquérant",
+        "title": "Communicant avec Conquérant",
         "whatHelps": "Sa capacité à décider peut donner une suite concrète à tes idées.",
         "whatYouMayAppreciate": "Sa capacité à décider peut donner une suite concrète à tes idées.",
         "possibleMisunderstanding": "Tu peux avoir le sentiment qu'il ferme la discussion trop tôt.",
@@ -1961,7 +1961,7 @@
       "communiquant__communiquant": {
         "source": "communiquant",
         "target": "communiquant",
-        "title": "Communiquant avec Communiquant",
+        "title": "Communicant avec Communicant",
         "whatHelps": "Vos échanges peuvent produire rapidement des idées stimulantes.",
         "whatYouMayAppreciate": "Vos échanges peuvent produire rapidement des idées stimulantes.",
         "possibleMisunderstanding": "Vous risquez d'accumuler des projets sans choisir celui qui sera suivi.",
@@ -1975,7 +1975,7 @@
       "communiquant__facilitateur": {
         "source": "communiquant",
         "target": "facilitateur",
-        "title": "Communiquant avec Facilitateur",
+        "title": "Communicant avec Facilitateur",
         "whatHelps": "Son écoute peut rendre tes initiatives plus accueillantes.",
         "whatYouMayAppreciate": "Son écoute peut rendre tes initiatives plus accueillantes.",
         "possibleMisunderstanding": "Des nouveautés trop fréquentes peuvent fragiliser ses repères.",
@@ -1989,7 +1989,7 @@
       "communiquant__analyste": {
         "source": "communiquant",
         "target": "analyste",
-        "title": "Communiquant avec Analyste",
+        "title": "Communicant avec Analyste",
         "whatHelps": "Sa précision peut renforcer la crédibilité de ton message.",
         "whatYouMayAppreciate": "Sa précision peut renforcer la crédibilité de ton message.",
         "possibleMisunderstanding": "Tu peux interpréter sa prudence comme un manque d'enthousiasme.",
@@ -2017,7 +2017,7 @@
       "facilitateur__communiquant": {
         "source": "facilitateur",
         "target": "communiquant",
-        "title": "Facilitateur avec Communiquant",
+        "title": "Facilitateur avec Communicant",
         "whatHelps": "Sa chaleur relationnelle peut rendre le collectif plus ouvert.",
         "whatYouMayAppreciate": "Sa chaleur relationnelle peut rendre le collectif plus ouvert.",
         "possibleMisunderstanding": "Tu peux accepter trop d'idées pour préserver son enthousiasme.",
@@ -2073,7 +2073,7 @@
       "analyste__communiquant": {
         "source": "analyste",
         "target": "communiquant",
-        "title": "Analyste avec Communiquant",
+        "title": "Analyste avec Communicant",
         "whatHelps": "Il peut rendre tes conclusions compréhensibles et engageantes.",
         "whatYouMayAppreciate": "Il peut rendre tes conclusions compréhensibles et engageantes.",
         "possibleMisunderstanding": "Tu peux craindre qu'il simplifie trop une information importante.",
@@ -2334,11 +2334,11 @@
         },
         "communiquant": {
           "profileCode": "communiquant",
-          "profileName": "Communiquant",
+          "profileName": "Communicant",
           "biblicalFigure": "Pierre",
           "publicationStatus": "approved",
           "title": "Pierre : une spontanéité qui gagne en profondeur",
-          "introduction": "Pierre est l'un des disciples les plus expressifs de Jésus. Spontané, enthousiaste et profondément engagé, il n'hésite pas à prendre la parole, à poser des questions ou à se lancer dans des expériences que les autres n'osent pas toujours tenter. Mais son histoire est aussi celle d'un homme qui apprend à mieux écouter, à traverser ses peurs et à transformer ses paroles en engagements durables.\n\nDécouvre cinq caractéristiques du Communiquant à travers la vie de Pierre, et comment Jésus l'amène à développer une influence qui dépasse son enthousiasme naturel.",
+          "introduction": "Pierre est l'un des disciples les plus expressifs de Jésus. Spontané, enthousiaste et profondément engagé, il n'hésite pas à prendre la parole, à poser des questions ou à se lancer dans des expériences que les autres n'osent pas toujours tenter. Mais son histoire est aussi celle d'un homme qui apprend à mieux écouter, à traverser ses peurs et à transformer ses paroles en engagements durables.\n\nDécouvre cinq caractéristiques du Communicant à travers la vie de Pierre, et comment Jésus l'amène à développer une influence qui dépasse son enthousiasme naturel.",
           "episodes": [
             {
               "id": "pierre-01",
@@ -2347,7 +2347,7 @@
               "characteristic": "Portrait",
               "title": "Un homme qui réagit avec tout son cœur",
               "story": "Avant de devenir l'apôtre Pierre, il s'appelle Simon. Il est pêcheur sur le lac de Galilée et travaille notamment avec son frère André. Sa vie est rythmée par les sorties en bateau, les longues nuits de pêche et le travail avec ses compagnons. Un jour, après une nuit entière sans avoir attrapé de poisson, Jésus lui demande de repartir jeter ses filets. Simon explique qu'ils ont travaillé toute la nuit sans résultat, mais accepte tout de même. Cette fois, ils remontent une quantité de poissons si importante que leurs filets commencent à se déchirer. Simon est bouleversé. Il tombe aux pieds de Jésus et lui dit de s'éloigner de lui, car il est un homme pécheur. Jésus le rassure et l'appelle à une nouvelle mission : devenir pêcheur d'hommes. Simon laisse alors tout pour le suivre.\n\nAu fil des Évangiles, Pierre apparaît comme un disciple qui exprime facilement ce qu'il pense et ce qu'il ressent. Il pose des questions, réagit rapidement, prend des initiatives et n'hésite pas à intervenir au milieu des autres disciples. Lorsque Jésus leur demande qui ils pensent qu'il est, Pierre prend la parole et déclare : « Tu es le Christ, le Fils du Dieu vivant. » (Matthieu 16:16). Mais cette spontanéité s'accompagne parfois de réactions précipitées. Pierre peut manifester une grande assurance à un moment, puis découvrir ses propres limites quelques heures plus tard.",
-              "profileReading": "Le Communiquant peut avoir une facilité à exprimer ses idées, à partager son enthousiasme et à créer du mouvement autour de lui. Il aime participer, échanger et transmettre ce qui le passionne. Il n'attend pas toujours d'avoir entièrement organisé sa pensée avant de prendre la parole. Évidemment, Pierre n'a jamais passé de test de personnalité ! Pourtant, plusieurs de ses comportements illustrent particulièrement bien le profil Communiquant. Jésus ne cherche pas à faire disparaître sa spontanéité. Il lui apprend progressivement à mieux l'utiliser.",
+              "profileReading": "Le Communicant peut avoir une facilité à exprimer ses idées, à partager son enthousiasme et à créer du mouvement autour de lui. Il aime participer, échanger et transmettre ce qui le passionne. Il n'attend pas toujours d'avoir entièrement organisé sa pensée avant de prendre la parole. Évidemment, Pierre n'a jamais passé de test de personnalité ! Pourtant, plusieurs de ses comportements illustrent particulièrement bien le profil Communicant. Jésus ne cherche pas à faire disparaître sa spontanéité. Il lui apprend progressivement à mieux l'utiliser.",
               "takeaway": "Ton enthousiasme, ta facilité à communiquer et ta capacité à créer du lien peuvent être de véritables forces. Mais pour que ces qualités portent du fruit dans la durée, elles ont besoin de s'accompagner d'écoute, de discernement et de constance. Dieu peut utiliser ta spontanéité pour toucher les autres, tout en t'apprenant à donner davantage de profondeur et de stabilité à tes engagements.",
               "scriptureQuote": {
                 "reference": "Matthieu 16:16",
@@ -2368,7 +2368,7 @@
               "characteristic": "L'enthousiasme",
               "title": "Quand son enthousiasme le pousse à sortir de la barque",
               "story": "Une nuit, les disciples traversent le lac de Galilée en bateau. Le vent est fort et les vagues rendent leur progression difficile. Ils aperçoivent soudain Jésus qui marche sur l'eau. Effrayés, ils pensent voir un fantôme, mais Jésus les rassure en leur disant que c'est bien lui. Pierre réagit immédiatement : « Seigneur, si c'est toi, ordonne que j'aille vers toi sur les eaux. » Jésus lui répond simplement : « Viens ! » Pierre sort alors de la barque et commence à marcher sur l'eau vers Jésus. Mais lorsqu'il remarque la violence du vent, il prend peur et commence à s'enfoncer. Il appelle Jésus à son secours, et celui-ci lui tend la main. Ce qui est remarquable, c'est que Pierre est le seul disciple dont le récit rapporte qu'il demande à sortir de la barque. Là où les autres restent à bord, lui veut tenter l'expérience.",
-              "profileReading": "Pierre illustre une caractéristique forte du Communiquant : son enthousiasme peut le pousser à saisir rapidement une occasion et à s'engager avec beaucoup d'énergie. Lorsqu'une idée le stimule ou qu'une possibilité l'enthousiasme, le Communiquant peut avoir envie de se lancer sans attendre. Cette spontanéité peut lui permettre de vivre des expériences qu'il n'aurait jamais connues s'il avait attendu que toutes les conditions soient parfaites. Mais l'enthousiasme initial ne suffit pas toujours à maintenir la même assurance lorsque les difficultés apparaissent.",
+              "profileReading": "Pierre illustre une caractéristique forte du Communicant : son enthousiasme peut le pousser à saisir rapidement une occasion et à s'engager avec beaucoup d'énergie. Lorsqu'une idée le stimule ou qu'une possibilité l'enthousiasme, le Communicant peut avoir envie de se lancer sans attendre. Cette spontanéité peut lui permettre de vivre des expériences qu'il n'aurait jamais connues s'il avait attendu que toutes les conditions soient parfaites. Mais l'enthousiasme initial ne suffit pas toujours à maintenir la même assurance lorsque les difficultés apparaissent.",
               "takeaway": "Ton enthousiasme peut t'aider à commencer des projets, à saisir des occasions et à entraîner les autres. Mais lorsque l'excitation du départ diminue, tu peux avoir besoin de développer davantage de constance. Avant de t'engager, demande-toi aussi ce qui t'aidera à continuer lorsque les circonstances deviendront moins favorables. L'enthousiasme te donne l'élan pour commencer. La persévérance et la foi t'aident à aller jusqu'au bout.",
               "references": [
                 "Matthieu 14:22-33"
@@ -2381,7 +2381,7 @@
               "characteristic": "La spontanéité",
               "title": "Quand il parle alors qu'il aurait surtout besoin d'écouter",
               "story": "Jésus emmène Pierre, Jacques et Jean sur une montagne. Les trois disciples assistent à un événement extraordinaire : l'apparence de Jésus change, ses vêtements deviennent éclatants et deux grandes figures de l'Ancien Testament, Moïse et Élie, apparaissent auprès de lui. Pierre réagit aussitôt. Il propose de construire trois tentes, une pour Jésus, une pour Moïse et une pour Élie. L'Évangile de Marc précise qu'il ne savait pas quoi dire, tant les disciples étaient effrayés. Pourtant, il prend quand même la parole. Alors qu'il parle encore, une nuée lumineuse les enveloppe et une voix venue du ciel les invite à écouter Jésus. Dans ce moment exceptionnel, Pierre voulait participer et proposer quelque chose, alors que l'invitation essentielle était d'écouter.",
-              "profileReading": "Le Communiquant peut avoir une grande facilité à réagir spontanément. Lorsqu'une situation le touche, qu'une idée lui vient ou qu'un échange devient intéressant, il peut ressentir le besoin de participer immédiatement. Cette capacité à s'exprimer nourrit les conversations, apporte de l'énergie et peut aider un groupe à avancer. Mais elle peut aussi conduire à intervenir avant d'avoir pleinement compris ce qui se passe. Pierre nous montre qu'on peut avoir quelque chose à dire sans que ce soit nécessairement le bon moment pour le dire.",
+              "profileReading": "Le Communicant peut avoir une grande facilité à réagir spontanément. Lorsqu'une situation le touche, qu'une idée lui vient ou qu'un échange devient intéressant, il peut ressentir le besoin de participer immédiatement. Cette capacité à s'exprimer nourrit les conversations, apporte de l'énergie et peut aider un groupe à avancer. Mais elle peut aussi conduire à intervenir avant d'avoir pleinement compris ce qui se passe. Pierre nous montre qu'on peut avoir quelque chose à dire sans que ce soit nécessairement le bon moment pour le dire.",
               "takeaway": "Ta facilité à communiquer est précieuse, mais tu n'as pas besoin de remplir chaque silence ou de réagir immédiatement à chaque situation. Parfois, prendre quelques instants pour écouter, observer et réfléchir permet de formuler une intervention beaucoup plus juste. Ta parole peut faire avancer les autres. Mais ton écoute peut lui donner encore davantage de profondeur.",
               "scriptureQuote": {
                 "reference": "Matthieu 17:5",
@@ -2401,7 +2401,7 @@
               "characteristic": "L'expression des convictions",
               "title": "Quand ses paroles dépassent ce qu'il est prêt à affronter",
               "story": "Peu avant son arrestation, Jésus annonce à ses disciples qu'ils vont traverser une période difficile. Pierre lui affirme avec assurance qu'il est prêt à l'accompagner jusque dans la prison et même jusqu'à la mort. Mais Jésus lui annonce qu'avant le chant du coq, il aura nié trois fois le connaître. Quelques heures plus tard, Jésus est arrêté. Pierre le suit à distance et se retrouve dans la cour de la maison du grand prêtre. Plusieurs personnes le reconnaissent comme un disciple de Jésus. À trois reprises, Pierre nie le connaître. Lorsque le coq chante, Pierre se souvient des paroles de Jésus. L'Évangile de Luc raconte que Jésus se retourne et pose son regard sur lui. Bouleversé, Pierre sort et pleure amèrement. Quelques heures auparavant, il était convaincu d'être prêt à tout affronter. Mais lorsque la situation devient réellement dangereuse, sa réaction est différente de ce qu'il avait imaginé.",
-              "profileReading": "Pierre exprime ses convictions avec beaucoup d'intensité. Lorsqu'il affirme qu'il restera fidèle à Jésus, son engagement semble sincère. Le Communiquant peut lui aussi exprimer avec enthousiasme ses intentions, ses convictions et ses projets. Il peut facilement transmettre son assurance aux autres et leur donner envie de s'engager. Mais une conviction sincère ne garantit pas toujours que l'on sera prêt à affronter toutes les difficultés qu'elle implique. Ce que nous affirmons avec enthousiasme doit parfois encore être éprouvé dans la réalité.",
+              "profileReading": "Pierre exprime ses convictions avec beaucoup d'intensité. Lorsqu'il affirme qu'il restera fidèle à Jésus, son engagement semble sincère. Le Communicant peut lui aussi exprimer avec enthousiasme ses intentions, ses convictions et ses projets. Il peut facilement transmettre son assurance aux autres et leur donner envie de s'engager. Mais une conviction sincère ne garantit pas toujours que l'on sera prêt à affronter toutes les difficultés qu'elle implique. Ce que nous affirmons avec enthousiasme doit parfois encore être éprouvé dans la réalité.",
               "takeaway": "Ta capacité à exprimer tes convictions peut encourager et inspirer les autres. Mais avant de prendre un engagement important, prends aussi le temps d'en mesurer les conséquences. Demande-toi comment tu réagiras lorsque la situation deviendra plus difficile et ce qui pourra t'aider à rester fidèle à ta décision. Une parole sincère est précieuse. Mais c'est lorsqu'elle devient un engagement durable qu'elle révèle toute sa force.",
               "references": [
                 "Luc 22:31-34",
@@ -2415,7 +2415,7 @@
               "characteristic": "Les relations",
               "title": "Quand Jésus lui apprend à transformer ses paroles en actes",
               "story": "Après la résurrection de Jésus, Pierre retrouve plusieurs disciples au bord du lac de Tibériade. Ils ont passé la nuit à pêcher sans rien prendre. Au matin, Jésus leur apparaît, les aide à réaliser une pêche abondante, puis partage un repas avec eux. Après le repas, Jésus s'adresse personnellement à Pierre et lui demande : « M'aimes-tu ? » Pierre répond qu'il l'aime. Jésus lui confie alors une responsabilité : prendre soin de ses brebis, c'est-à-dire des personnes qui lui appartiennent. Jésus répète sa question trois fois. À chaque réponse de Pierre, il lui confie à nouveau cette mission. Ce dialogue rappelle les trois fois où Pierre avait renié Jésus. Celui qui avait promis une fidélité sans faille, puis avait échoué, reçoit maintenant une responsabilité concrète. Jésus ne lui demande pas simplement de refaire une belle déclaration. Il l'invite à traduire son amour en prenant soin des autres.",
-              "profileReading": "Le Communiquant peut avoir une grande facilité à créer du lien, à exprimer son affection et à encourager les personnes qui l'entourent. Pierre illustre cette dimension relationnelle, mais Jésus l'amène à aller plus loin. Il ne s'agit plus seulement de dire qu'il aime ou qu'il est engagé. Il s'agit de prendre soin des personnes qui lui sont confiées, avec fidélité et responsabilité. Les relations ne se construisent pas uniquement par ce que nous exprimons, mais aussi par ce que nous faisons dans la durée.",
+              "profileReading": "Le Communicant peut avoir une grande facilité à créer du lien, à exprimer son affection et à encourager les personnes qui l'entourent. Pierre illustre cette dimension relationnelle, mais Jésus l'amène à aller plus loin. Il ne s'agit plus seulement de dire qu'il aime ou qu'il est engagé. Il s'agit de prendre soin des personnes qui lui sont confiées, avec fidélité et responsabilité. Les relations ne se construisent pas uniquement par ce que nous exprimons, mais aussi par ce que nous faisons dans la durée.",
               "takeaway": "Ta capacité à créer du lien et à encourager les autres peut avoir un véritable impact. Mais les personnes qui t'entourent ont aussi besoin de pouvoir compter sur toi lorsque l'enthousiasme du moment est passé. Apprends à traduire tes paroles en gestes concrets, en engagements tenus et en attention régulière. Les paroles peuvent créer un lien. Ce sont aussi les actes qui lui donnent de la profondeur.",
               "references": [
                 "Jean 21:1-19"
@@ -2428,8 +2428,8 @@
               "characteristic": "La maturité",
               "title": "Quand sa spontanéité devient une parole qui rassemble",
               "story": "Après la résurrection et l'ascension de Jésus, les disciples se retrouvent à Jérusalem pour la fête de la Pentecôte. Ils vivent un événement extraordinaire : le Saint-Esprit vient sur eux et ils commencent à parler dans différentes langues. Une foule se rassemble, surprise d'entendre les disciples annoncer les merveilles de Dieu dans les langues de différentes régions. Certains cherchent à comprendre ce qui se passe. D'autres se moquent d'eux. Pierre se lève alors avec les onze autres apôtres et prend la parole devant la foule. Mais cette fois, son intervention ne se limite pas à une réaction spontanée. Il explique les événements, s'appuie sur les Écritures et présente clairement le message de Jésus. Lorsque les personnes présentes lui demandent ce qu'elles doivent faire, Pierre leur répond de manière précise. Le livre des Actes rapporte qu'environ trois mille personnes accueillent son message ce jour-là.",
-              "profileReading": "Pierre reste un homme expressif, capable de prendre la parole avec assurance et de communiquer avec conviction. Mais son enthousiasme s'accompagne désormais d'une communication structurée, fondée sur les Écritures et tournée vers les personnes qui l'écoutent. Il ne parle pas simplement parce qu'il a quelque chose à dire. Il parle pour aider les autres à comprendre et à répondre. C'est une évolution particulièrement intéressante pour le Communiquant : sa spontanéité devient une force d'influence lorsqu'elle s'accompagne de clarté, de préparation et d'un véritable sens des responsabilités.",
-              "takeaway": "Ta capacité à communiquer peut devenir une force précieuse pour encourager, enseigner et mobiliser les autres. Mais pour que tes paroles aient un impact durable, prends le temps de clarifier ce que tu souhaites transmettre. Avant de prendre la parole, demande-toi ce que les personnes doivent comprendre, pourquoi cela les concerne et ce qu'elles pourront en faire. La maturité du Communiquant ne consiste pas à parler moins, mais à apprendre à donner davantage de sens et de portée à ses paroles.",
+              "profileReading": "Pierre reste un homme expressif, capable de prendre la parole avec assurance et de communiquer avec conviction. Mais son enthousiasme s'accompagne désormais d'une communication structurée, fondée sur les Écritures et tournée vers les personnes qui l'écoutent. Il ne parle pas simplement parce qu'il a quelque chose à dire. Il parle pour aider les autres à comprendre et à répondre. C'est une évolution particulièrement intéressante pour le Communicant : sa spontanéité devient une force d'influence lorsqu'elle s'accompagne de clarté, de préparation et d'un véritable sens des responsabilités.",
+              "takeaway": "Ta capacité à communiquer peut devenir une force précieuse pour encourager, enseigner et mobiliser les autres. Mais pour que tes paroles aient un impact durable, prends le temps de clarifier ce que tu souhaites transmettre. Avant de prendre la parole, demande-toi ce que les personnes doivent comprendre, pourquoi cela les concerne et ce qu'elles pourront en faire. La maturité du Communicant ne consiste pas à parler moins, mais à apprendre à donner davantage de sens et de portée à ses paroles.",
               "references": [
                 "Actes 2:1-41"
               ]
@@ -2437,10 +2437,10 @@
           ],
           "whatYouMayHaveInCommon": {
             "title": "Ce que vous pouvez avoir en commun",
-            "text": "Comme Pierre, tu peux aimer exprimer tes idées, partager ton enthousiasme et participer pleinement aux échanges. Sa spontanéité et sa capacité à entraîner les autres peuvent faire écho à ton profil Communiquant. Mais son parcours rappelle qu'une parole sincère a besoin d'écoute, de constance et d'actes pour porter du fruit. L'objectif n'est pas de parler ou de réagir exactement comme Pierre, mais d'apprendre comment ton énergie relationnelle peut devenir une influence plus profonde et plus durable."
+            "text": "Comme Pierre, tu peux aimer exprimer tes idées, partager ton enthousiasme et participer pleinement aux échanges. Sa spontanéité et sa capacité à entraîner les autres peuvent faire écho à ton profil Communicant. Mais son parcours rappelle qu'une parole sincère a besoin d'écoute, de constance et d'actes pour porter du fruit. L'objectif n'est pas de parler ou de réagir exactement comme Pierre, mais d'apprendre comment ton énergie relationnelle peut devenir une influence plus profonde et plus durable."
           },
           "closing": {
-            "title": "À retenir : la force du Communiquant",
+            "title": "À retenir : la force du Communicant",
             "paragraphs": [
               "Pierre ne perd pas sa spontanéité au fil de son parcours. Il apprend progressivement à mieux l'utiliser. Son enthousiasme devient plus constant, sa parole gagne en profondeur et ses engagements se traduisent davantage dans ses actes.",
               "C'est ce qui rend son histoire particulièrement inspirante. Jésus ne lui demande pas de devenir quelqu'un d'autre. Il fait grandir cet homme expressif et passionné pour que ses qualités deviennent des ressources au service des autres.",
@@ -2705,7 +2705,7 @@
           {
             "profileCode": "communiquant",
             "figure": "Pierre",
-            "profile": "Communiquant",
+            "profile": "Communicant",
             "target": "biblical:communiquant",
             "label": "Communiquer avec passion"
           },

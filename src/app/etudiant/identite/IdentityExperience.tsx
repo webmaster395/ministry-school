@@ -7,6 +7,7 @@ import { ArrowRight, BadgeCheck, BookOpen, Check, Clock3, Grid3X3, Network, Plus
 import { useRef, useState } from "react";
 import AvatarEditor from "@/components/AvatarEditor";
 import type { IdentityResult } from "@/lib/identity/dashboard";
+import { visibleMappProfileName } from "@/lib/mapp/visible-profile";
 import styles from "./identity.module.css";
 
 export type IdentityStoryItem = {
@@ -34,17 +35,6 @@ type Props = {
   results: IdentityResult[];
   upcoming: IdentityUpcomingItem[];
   toolArtwork?: Partial<Record<"fruit" | "gifts" | "skills", { title: string; image: string; href: string }>>;
-};
-
-const profileNames: Record<string, string> = {
-  D: "Conquérant",
-  I: "Communiquant",
-  S: "Facilitateur",
-  C: "Analyste",
-  conquerant: "Conquérant",
-  communiquant: "Communiquant",
-  facilitateur: "Facilitateur",
-  analyste: "Analyste",
 };
 
 const mappImages: Record<string, string> = {
@@ -115,8 +105,8 @@ function ResultPost({ result, firstName, toolArtwork }: { result: IdentityResult
   }
 
   if (result.kind === "mapp") {
-    const primary = result.primaryCode ? profileNames[result.primaryCode] ?? result.primaryCode : "Profil MAPP";
-    const secondary = result.secondaryCode ? profileNames[result.secondaryCode] ?? result.secondaryCode : null;
+    const primary = visibleMappProfileName(result.primaryCode, "Profil MAPP");
+    const secondary = result.secondaryCode ? visibleMappProfileName(result.secondaryCode, "") || null : null;
     const image = result.primaryCode ? mappImages[result.primaryCode] : null;
     const resultQuery = new URLSearchParams();
     if (result.resultRevisionId) resultQuery.set("revision", result.resultRevisionId);

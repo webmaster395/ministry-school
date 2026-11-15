@@ -2,6 +2,11 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function proxy(request: NextRequest) {
+  // Route locale de contrôle visuel du livret MAPP. Elle répond elle-même 404 en
+  // production et ne doit pas dépendre d'une session Supabase pour la QA locale.
+  if (request.nextUrl.pathname === "/api/preview/mapp-pdf" && process.env.NODE_ENV !== "production") {
+    return NextResponse.next({ request });
+  }
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -55,6 +60,9 @@ export async function proxy(request: NextRequest) {
     request.nextUrl.pathname.startsWith("/apps/je-suis-par-la-grace-de-dieu/evaluation/") ||
     request.nextUrl.pathname.startsWith("/apps/generopoly") ||
     request.nextUrl.pathname.startsWith("/api/apps/grace-identity/reviews/") ||
+    request.nextUrl.pathname.startsWith("/mapp/invitation/") ||
+    request.nextUrl.pathname.startsWith("/api/mapp/invitations/") ||
+    request.nextUrl.pathname.startsWith("/apps/profil-mapp/test/") ||
     request.nextUrl.pathname === "/api/deployment-version" ||
     request.nextUrl.pathname === "/mentions-legales" ||
     request.nextUrl.pathname === "/mot-de-passe-oublie" ||
