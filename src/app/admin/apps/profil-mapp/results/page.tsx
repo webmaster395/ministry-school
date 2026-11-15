@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import AppsStudioShell, { StudioCard, StudioPageHeader } from "@/components/apps-studio/AppsStudioShell";
 import { createServiceClient } from "@/lib/supabase/service";
 
@@ -9,6 +10,10 @@ type MappAdminRow = {
   attempt_id: string; participant_id: string; first_name: string | null; last_name: string | null;
   email: string | null; attempt_status: string; started_at: string; completed_at: string | null;
   primary_code: string | null; secondary_code: string | null; pressure_code: string | null; total_count: number;
+};
+type ArchivedAttempt = {
+  id: string; name: string; email: string | null; accountLinked: boolean; status: string;
+  completedAt: string | null; startedAt: string; primary: string | null; secondary: string | null;
 };
 
 const PAGE_SIZE = 50;
@@ -25,7 +30,19 @@ export default async function ProfilMappResultsPage({ searchParams }: { searchPa
   const offset = (currentPage - 1) * PAGE_SIZE;
   const service = createServiceClient();
   const mapp = service.schema("mapp");
-  const { data, error } = await mapp.rpc("admin_list_attempts_page", { p_offset: offset, p_limit: PAGE_SIZE, p_search: q || null, p_status: status || null });
+  const cookieHeader = (await cookies()).getAll().map(({ name, value }) => `${name}=${value}`).join("; ");
+  const [{ data, error }, archivedResponse] = await Promise.all([
+    mapp.rpc("admin_list_attempts_page", { p_offset: offset, p_limit: PAGE_SIZE, p_search: q || null, p_status: status || null }),
+    fetch("https://profil-mapp.vercel.app/apps/profil-mapp/api/integrations/ministry/admin-results", {
+      method: "POST", headers: { cookie: cookieHeader, "content-type": "application/json" },
+      body: JSON.stringify({ page: currentPage, pageSize: PAGE_SIZE, search: q, status }), cache: "no-store",
+    }).catch(() => null),
+  ]);
+  const archivedPayload = archivedResponse?.ok
+    ? await archivedResponse.json() as { attempts?: ArchivedAttempt[]; total?: number }
+    : { attempts: [], total: 0 };
+  const archivedAttempts = archivedPayload.attempts ?? [];
+  const archivedTotal = Number(archivedPayload.total ?? 0);
   const rows = (data ?? []) as MappAdminRow[];
   const total = Number(rows[0]?.total_count ?? 0);
   const participantIds = [...new Set(rows.map((row) => row.participant_id))];
@@ -43,7 +60,7 @@ export default async function ProfilMappResultsPage({ searchParams }: { searchPa
   };
 
   return <AppsStudioShell active="results" appTab="results" appSlug="profil-mapp" appName="Profil MAPP" appIconUrl="/apps/profil-mapp/icon.svg" hasResults hasEditor={false}>
-    <StudioPageHeader eyebrow="PROFIL MAPP" title="Résultats" description="Les nouveaux tests réalisés dans Ministry apparaissent ici dès leur enregistrement. Les résultats historiques restent accessibles séparément." action={<div className="flex gap-2"><Link href="/admin/apps/profil-mapp/invitations" className="rounded-xl bg-[#27302f] px-4 py-2.5 text-sm font-semibold text-white">Invitations MAPP</Link><Link href="/apps/profil-mapp/admin/participants" className="rounded-xl border border-border bg-white px-4 py-2.5 text-sm font-semibold">Résultats historiques</Link></div>} />
+    <StudioPageHeader eyebrow="PROFIL MAPP" title="Résultats" description="Les résultats Ministry et les résultats historiques sont réunis ici, sans modifier leurs scores d’origine." action={<Link href="/admin/apps/profil-mapp/invitations" className="rounded-xl bg-[#27302f] px-4 py-2.5 text-sm font-semibold text-white">Invitations MAPP</Link>} />
     <StudioCard>
       <form className="mb-5 grid gap-3 md:grid-cols-[minmax(0,1fr)_220px_auto]">
         <input name="q" defaultValue={q} placeholder="Rechercher par nom ou e-mail" className="min-h-11 rounded-xl border border-border bg-white px-3" />
@@ -59,6 +76,10 @@ export default async function ProfilMappResultsPage({ searchParams }: { searchPa
         })}</tbody></table></div>
         {totalPages > 1 ? <nav className="mt-6 flex items-center justify-between" aria-label="Pagination des résultats MAPP">{currentPage > 1 ? <Link href={queryForPage(currentPage - 1)} className="rounded-xl border border-border px-4 py-2 text-sm font-semibold">Précédent</Link> : <span />}{currentPage < totalPages ? <Link href={queryForPage(currentPage + 1)} className="rounded-xl border border-border px-4 py-2 text-sm font-semibold">Suivant</Link> : <span />}</nav> : null}
       </>}
+    </StudioCard>
+    <StudioCard>
+      <div className="mb-5 flex flex-wrap items-end justify-between gap-3"><div><p className="text-xs font-semibold uppercase tracking-[.18em] text-muted">Archive MAPP</p><h2 className="mt-1 font-title text-2xl">Résultats historiques</h2></div><p className="text-sm text-muted"><strong className="text-foreground">{archivedTotal}</strong> test{archivedTotal > 1 ? "s" : ""}</p></div>
+      {!archivedResponse?.ok ? <div role="alert" className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm text-amber-950">L’archive MAPP est momentanément indisponible. Les résultats Ministry restent accessibles ci-dessus.</div> : archivedAttempts.length === 0 ? <p className="rounded-2xl bg-surface p-6 text-sm text-muted">Aucun résultat historique ne correspond aux filtres.</p> : <div className="overflow-x-auto"><table className="w-full min-w-[820px] text-left text-sm"><thead><tr className="border-b border-border text-muted"><th className="p-3">Participant</th><th className="p-3">Statut</th><th className="p-3">Terminé le</th><th className="p-3">Profil principal</th><th className="p-3">Profil secondaire</th><th className="p-3">Résultat</th></tr></thead><tbody>{archivedAttempts.map((attempt) => <tr key={attempt.id} className="border-b border-border/70"><td className="p-3"><strong className="block">{attempt.name}</strong><span className="text-xs text-muted">{attempt.email || "E-mail non renseigné"}</span></td><td className="p-3">{statusLabel(attempt.status)}</td><td className="p-3">{date(attempt.completedAt ?? attempt.startedAt)}</td><td className="p-3 font-semibold">{profileLabel(attempt.primary)}</td><td className="p-3">{profileLabel(attempt.secondary)}</td><td className="p-3"><a href={`https://profil-mapp.vercel.app/apps/profil-mapp/admin/participants/${attempt.id}`} className="font-semibold underline underline-offset-4">Ouvrir</a></td></tr>)}</tbody></table></div>}
     </StudioCard>
   </AppsStudioShell>;
 }
