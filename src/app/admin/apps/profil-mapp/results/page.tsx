@@ -1,7 +1,63 @@
-import { redirect } from "next/navigation";
+import Link from "next/link";
+import AppsStudioShell, { StudioCard, StudioPageHeader } from "@/components/apps-studio/AppsStudioShell";
+import { createServiceClient } from "@/lib/supabase/service";
 
 export const dynamic = "force-dynamic";
 
-export default function ProfilMappResultsPage() {
-  redirect("/apps/profil-mapp/admin/participants");
+type SearchParams = { q?: string; status?: string; page?: string };
+type MappAdminRow = {
+  attempt_id: string; participant_id: string; first_name: string | null; last_name: string | null;
+  email: string | null; attempt_status: string; started_at: string; completed_at: string | null;
+  primary_code: string | null; secondary_code: string | null; pressure_code: string | null; total_count: number;
+};
+
+const PAGE_SIZE = 50;
+const profileLabels: Record<string, string> = { conquerant: "Conquérant", communicant: "Communicant", facilitateur: "Facilitateur", analyste: "Analyste" };
+const profileLabel = (code: string | null) => code ? (profileLabels[code] ?? code) : "—";
+const date = (value: string | null) => value ? new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value)) : "—";
+const statusLabel = (status: string) => ({ completed: "Terminé", in_progress: "En cours", abandoned: "Interrompu" } as Record<string, string>)[status] ?? status;
+
+export default async function ProfilMappResultsPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
+  const params = await searchParams;
+  const q = (params.q ?? "").trim();
+  const status = (params.status ?? "").trim();
+  const currentPage = Math.max(1, Number.parseInt(params.page ?? "1", 10) || 1);
+  const offset = (currentPage - 1) * PAGE_SIZE;
+  const service = createServiceClient();
+  const mapp = service.schema("mapp");
+  const { data, error } = await mapp.rpc("admin_list_attempts_page", { p_offset: offset, p_limit: PAGE_SIZE, p_search: q || null, p_status: status || null });
+  const rows = (data ?? []) as MappAdminRow[];
+  const total = Number(rows[0]?.total_count ?? 0);
+  const participantIds = [...new Set(rows.map((row) => row.participant_id))];
+  const { data: identities } = participantIds.length
+    ? await mapp.from("participant_auth_identities").select("participant_id,auth_user_id").in("participant_id", participantIds).is("revoked_at", null)
+    : { data: [] };
+  const accountByParticipant = new Map((identities ?? []).map((identity) => [identity.participant_id, identity.auth_user_id]));
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const queryForPage = (page: number) => {
+    const search = new URLSearchParams();
+    if (q) search.set("q", q);
+    if (status) search.set("status", status);
+    search.set("page", String(page));
+    return `?${search.toString()}`;
+  };
+
+  return <AppsStudioShell active="results" appTab="results" appSlug="profil-mapp" appName="Profil MAPP" appIconUrl="/apps/profil-mapp/icon.svg" hasResults hasEditor={false}>
+    <StudioPageHeader eyebrow="PROFIL MAPP" title="Résultats" description="Les nouveaux tests réalisés dans Ministry apparaissent ici dès leur enregistrement. Les résultats historiques restent accessibles séparément." action={<Link href="/apps/profil-mapp/admin/participants" className="rounded-xl border border-border bg-white px-4 py-2.5 text-sm font-semibold">Voir les résultats historiques</Link>} />
+    <StudioCard>
+      <form className="mb-5 grid gap-3 md:grid-cols-[minmax(0,1fr)_220px_auto]">
+        <input name="q" defaultValue={q} placeholder="Rechercher par nom ou e-mail" className="min-h-11 rounded-xl border border-border bg-white px-3" />
+        <select name="status" defaultValue={status} className="min-h-11 rounded-xl border border-border bg-white px-3"><option value="">Tous les statuts</option><option value="completed">Terminés</option><option value="in_progress">En cours</option><option value="abandoned">Interrompus</option></select>
+        <button className="min-h-11 rounded-xl bg-[#27302f] px-5 text-sm font-semibold text-white">Filtrer</button>
+      </form>
+      {error ? <div role="alert" className="rounded-2xl border border-red-200 bg-red-50 p-5 text-sm text-red-900"><strong>Impossible de charger les résultats.</strong><p className="mt-1">{error.message}</p></div> : rows.length === 0 ? <div className="rounded-2xl bg-surface p-8 text-center"><h2 className="font-title text-2xl">Aucun résultat trouvé</h2><p className="mt-2 text-sm text-muted">Modifie la recherche ou consulte les résultats historiques.</p></div> : <>
+        <div className="mb-4 flex items-center justify-between gap-4 text-sm"><p><strong>{total}</strong> test{total > 1 ? "s" : ""}</p><p className="text-muted">Page {currentPage} sur {totalPages}</p></div>
+        <div className="overflow-x-auto"><table className="w-full min-w-[900px] text-left text-sm"><thead><tr className="border-b border-border text-muted"><th className="p-3">Participant</th><th className="p-3">Statut</th><th className="p-3">Terminé le</th><th className="p-3">Profil principal</th><th className="p-3">Profil secondaire</th><th className="p-3">Compte Ministry</th></tr></thead><tbody>{rows.map((row) => {
+          const accountId = accountByParticipant.get(row.participant_id);
+          return <tr key={row.attempt_id} className="border-b border-border/70 align-middle"><td className="p-3"><strong className="block">{[row.first_name, row.last_name].filter(Boolean).join(" ") || "Sans nom"}</strong><span className="text-xs text-muted">{row.email || "E-mail non renseigné"}</span></td><td className="p-3"><span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${row.attempt_status === "completed" ? "bg-emerald-50 text-emerald-800" : "bg-amber-50 text-amber-900"}`}>{statusLabel(row.attempt_status)}</span></td><td className="p-3">{date(row.completed_at ?? row.started_at)}</td><td className="p-3 font-semibold">{profileLabel(row.primary_code)}</td><td className="p-3">{profileLabel(row.secondary_code)}</td><td className="p-3">{accountId ? <Link href={`/gestion/admin/membres/${accountId}`} className="font-semibold text-[#7b4b78] underline-offset-4 hover:underline">Ouvrir la fiche</Link> : <span className="text-muted">Non rattaché</span>}</td></tr>;
+        })}</tbody></table></div>
+        {totalPages > 1 ? <nav className="mt-6 flex items-center justify-between" aria-label="Pagination des résultats MAPP">{currentPage > 1 ? <Link href={queryForPage(currentPage - 1)} className="rounded-xl border border-border px-4 py-2 text-sm font-semibold">Précédent</Link> : <span />}{currentPage < totalPages ? <Link href={queryForPage(currentPage + 1)} className="rounded-xl border border-border px-4 py-2 text-sm font-semibold">Suivant</Link> : <span />}</nav> : null}
+      </>}
+    </StudioCard>
+  </AppsStudioShell>;
 }

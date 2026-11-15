@@ -32,6 +32,25 @@ const resultProfileColor: Record<PreviewProfileCode, string> = {
   analyste: "#477CB9",
 };
 
+/**
+ * The new native MAPP result injects CSS-module React sections into the
+ * historical static result iframe. Stylesheets from the Ministry document do
+ * not cross that iframe boundary automatically, which leaves those sections
+ * looking like raw HTML. Mirror the host styles into the frame before
+ * hydrating its interactive sections.
+ */
+function mirrorHostStylesIntoFrame(frameDocument: Document) {
+  frameDocument.head.querySelectorAll("[data-mapp-host-style]").forEach((node) => node.remove());
+
+  document.head.querySelectorAll<HTMLLinkElement | HTMLStyleElement>('link[rel="stylesheet"], style').forEach((source) => {
+    const clone = source.cloneNode(true) as HTMLLinkElement | HTMLStyleElement;
+    clone.removeAttribute("id");
+    clone.setAttribute("data-mapp-host-style", "true");
+    if (source instanceof HTMLLinkElement) clone.setAttribute("href", source.href);
+    frameDocument.head.appendChild(clone);
+  });
+}
+
 function assignTypographyRoles(doc: Document) {
   doc.body.classList.add("results-design-system");
   for (const page of doc.querySelectorAll<HTMLElement>("#page-1,#page-3,#page-4,#page-5,#page-6,#page-7")) {
@@ -1032,7 +1051,12 @@ export default function CompleteExperience({
   const prepareFrame = useCallback(() => {
     const frame = frameRef.current;
     const doc = frame?.contentDocument;
-    if (!frame || !doc?.body || !doc.getElementById("page-1") || doc.body.dataset.mappHydrated === "true") return;
+    if (!frame || !doc?.body || !doc.getElementById("page-1")) return;
+    mirrorHostStylesIntoFrame(doc);
+    if (doc.body.dataset.mappHydrated === "true") {
+      requestAnimationFrame(() => setReady(true));
+      return;
+    }
     const activeDoc = doc;
     const body = doc.body;
 

@@ -4,9 +4,10 @@ import { readFileSync } from "node:fs";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("la gestion Ministry ouvre la liste officielle des participants MAPP", () => {
+test("la gestion Ministry liste les nouveaux résultats natifs et conserve l'accès à l'historique", () => {
   const page = read("src/app/admin/apps/profil-mapp/results/page.tsx");
-  assert.match(page, /redirect\("\/apps\/profil-mapp\/admin\/participants"\)/);
-  assert.doesNotMatch(page, /admin_list_attempts_page/);
-  assert.doesNotMatch(page, /createServiceClient/);
+  assert.match(page, /admin_list_attempts_page/);
+  assert.match(page, /createServiceClient/);
+  assert.match(page, /Voir les résultats historiques/);
+  assert.match(page, /participant_auth_identities/);
 });
