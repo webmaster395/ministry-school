@@ -57,6 +57,14 @@ const profileCodeByDimension: Record<string, ResultProfileCode> = {
   analyste: "analyste",
 };
 
+function toResultProfileCode(value: unknown): ResultProfileCode | null {
+  const code = String(value ?? "").trim();
+  return profileCodeByDimension[code]
+    ?? profileCodeByDimension[code.toUpperCase()]
+    ?? profileCodeByDimension[code.toLowerCase()]
+    ?? null;
+}
+
 function storedNaturalOrder(bundle: MappResultBundle) {
   const ranking = bundle.rankings.find((row) => row.context === "natural");
   if (!ranking) return [];
@@ -76,15 +84,15 @@ export function ResultPanel({ bundle, onBundleChange, canInvite = true }: { bund
   if (unresolvedTie(bundle)) return <MappTieBreakExperience bundle={bundle} onResolved={onBundleChange ?? (() => window.location.reload())} />;
   const scores = resultScores(bundle);
   const calculated = applyTieBreak(
-    scores.map((score) => ({ code: score.code, value: score.percentage })),
+    scores.map((score) => ({ code: toResultProfileCode(score.code) ?? score.code, value: score.percentage })),
     bundle.tieBreak as TieBreakRecord | null,
   );
   const storedOrder = storedNaturalOrder(bundle);
   const scoreOrder = scores
     .map((score) => profileCodeByDimension[score.code] ?? null)
     .filter((value): value is ResultProfileCode => Boolean(value));
-  const primary = calculated.primary ?? storedOrder[0] ?? scoreOrder[0] ?? null;
-  const secondary = calculated.secondary
+  const primary = toResultProfileCode(calculated.primary) ?? storedOrder[0] ?? scoreOrder[0] ?? null;
+  const secondary = toResultProfileCode(calculated.secondary)
     ?? storedOrder.find((code) => code !== primary)
     ?? scoreOrder.find((code) => code !== primary)
     ?? null;
