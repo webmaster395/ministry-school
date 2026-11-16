@@ -14,6 +14,12 @@ test("le middleware laisse passer toutes les écritures sécurisées du question
   ]) assert.match(proxy, new RegExp(path.replaceAll("/", "\\/")));
 });
 
+test("le document statique de restitution reste accessible aux invités", () => {
+  const proxy = read("src/proxy.ts");
+  assert.match(proxy, /html\?/);
+  assert.equal(fs.existsSync(new URL("../public/apps/profil-mapp/preview/profil-mapp-complet.html", import.meta.url)), true);
+});
+
 test("une invitation commencée reprend automatiquement la tentative possédée", () => {
   const page = read("src/app/mapp/invitation/[token]/page.tsx");
   const invitations = read("src/lib/mapp/invitations.ts");
