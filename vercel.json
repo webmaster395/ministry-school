@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/apps/profil-mapp/admin/:path*",
-      "destination": "https://profil-mapp.vercel.app/apps/profil-mapp/admin/:path*"
+      "destination": "https://profil-mapp.vercel.app/apps/profil-mapp/admin/:path*?ministry_proxy=1"
     },
     {
       "source": "/apps/profil-mapp/test/:path*",
