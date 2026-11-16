@@ -62,6 +62,13 @@ export async function proxy(request: NextRequest) {
     request.nextUrl.pathname.startsWith("/api/apps/grace-identity/reviews/") ||
     request.nextUrl.pathname.startsWith("/mapp/invitation/") ||
     request.nextUrl.pathname.startsWith("/api/mapp/invitations/") ||
+    // Le questionnaire invité est protégé par son cookie HttpOnly et vérifie
+    // son secret dans chaque route. Il ne possède volontairement pas de session
+    // Supabase Ministry School.
+    request.nextUrl.pathname.startsWith("/api/mapp/attempts/") ||
+    request.nextUrl.pathname.startsWith("/api/mapp/hybrid-44/attempts/") ||
+    request.nextUrl.pathname.startsWith("/api/mapp/hybrid-44/results/") ||
+    request.nextUrl.pathname.startsWith("/api/mapp/results/") ||
     request.nextUrl.pathname.startsWith("/apps/profil-mapp/test/") ||
     request.nextUrl.pathname === "/api/deployment-version" ||
     request.nextUrl.pathname === "/mentions-legales" ||
