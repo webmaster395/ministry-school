@@ -31,6 +31,23 @@ export default async function MappInvitationsAdminPage({ searchParams }: { searc
     if (ranking.primary_code) counts[ranking.primary_code] = (counts[ranking.primary_code] ?? 0) + 1;
     return counts;
   }, {});
+  const churchCounts = (invitations ?? []).reduce<Record<string, number>>((counts, invitation) => {
+    const church = invitation.belongs_to_church ? invitation.church_name?.trim() || "Église non précisée" : "Sans église";
+    counts[church] = (counts[church] ?? 0) + 1; return counts;
+  }, {});
+  const combinationCounts = (rankings ?? []).reduce<Record<string, number>>((counts, ranking) => {
+    if (ranking.primary_code && ranking.secondary_code) {
+      const key = `${profileLabels[ranking.primary_code] ?? ranking.primary_code} + ${profileLabels[ranking.secondary_code] ?? ranking.secondary_code}`;
+      counts[key] = (counts[key] ?? 0) + 1;
+    }
+    return counts;
+  }, {});
+  const inviterCounts = (invitations ?? []).reduce<Record<string, { total: number; completed: number }>>((counts, invitation) => {
+    const name = invitation.invitation_kind === "admin" ? "Liens administrateur" : invitation.inviter_user_id ? inviterById.get(invitation.inviter_user_id) ?? "Compte étudiant" : "Compte étudiant";
+    const current = counts[name] ?? { total: 0, completed: 0 }; current.total += 1;
+    if (invitation.attempt_id && attemptById.get(invitation.attempt_id)?.completed_at) current.completed += 1;
+    counts[name] = current; return counts;
+  }, {});
   const q = filters.q?.trim().toLowerCase() ?? "";
   const visibleInvitations = (invitations ?? []).filter((invitation) => {
     const attempt = invitation.attempt_id ? attemptById.get(invitation.attempt_id) : null;
@@ -43,8 +60,13 @@ export default async function MappInvitationsAdminPage({ searchParams }: { searc
   return <AppsStudioShell active="results" appTab="results" appSlug="profil-mapp" appName="Profil MAPP" appIconUrl="/apps/profil-mapp/icon.svg" hasResults hasEditor={false}>
     <StudioPageHeader eyebrow="PROFIL MAPP" title="Invitations MAPP" description="Invitations personnelles et liens administrateur, participants et résultats dans une vue unique." action={<Link href="/admin/apps/profil-mapp/results" className="rounded-xl border border-border bg-white px-4 py-2.5 text-sm font-semibold">Résultats MAPP</Link>} />
     <StudioCard><div className="flex flex-wrap items-center justify-between gap-4"><div><h2 className="font-title text-2xl">Lien public secret administrateur</h2><p className="mt-1 text-sm text-muted">Hors quota étudiant. Chaque lien reste personnel et à usage unique.</p></div><AdminInvitationButton /></div></StudioCard>
-    <div className="grid gap-4 md:grid-cols-5"><StudioCard><strong className="text-3xl">{total}</strong><p className="text-sm text-muted">Invitations</p></StudioCard><StudioCard><strong className="text-3xl">{started}</strong><p className="text-sm text-muted">Tests commencés</p></StudioCard><StudioCard><strong className="text-3xl">{completed}</strong><p className="text-sm text-muted">Tests terminés · {started ? Math.round(completed / started * 100) : 0} %</p></StudioCard><StudioCard><strong className="text-3xl">{women} / {men}</strong><p className="text-sm text-muted">Femmes / Hommes</p></StudioCard><StudioCard><strong className="text-3xl">{churchMembers}</strong><p className="text-sm text-muted">Personnes en église</p></StudioCard></div>
+    <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-6"><StudioCard><strong className="text-3xl">{total}</strong><p className="text-sm text-muted">Invitations</p></StudioCard><StudioCard><strong className="text-3xl">{started}</strong><p className="text-sm text-muted">Tests commencés</p></StudioCard><StudioCard><strong className="text-3xl">{completed}</strong><p className="text-sm text-muted">Tests terminés · {started ? Math.round(completed / started * 100) : 0} %</p></StudioCard><StudioCard><strong className="text-3xl">{women} / {men}</strong><p className="text-sm text-muted">Femmes / Hommes</p></StudioCard><StudioCard><strong className="text-3xl">{churchMembers}</strong><p className="text-sm text-muted">Personnes en église</p></StudioCard><StudioCard><strong className="text-3xl">{new Set((invitations ?? []).filter((item) => item.invitation_kind === "student").map((item) => item.inviter_user_id)).size}</strong><p className="text-sm text-muted">Étudiants invitants</p></StudioCard></div>
     <StudioCard><div className="flex flex-wrap gap-5">{["D","I","S","C"].map((code) => <div key={code}><strong className="text-2xl">{profileCounts[code] ?? 0}</strong><p className="text-sm text-muted">{profileLabels[code]}</p></div>)}</div></StudioCard>
+    <div className="grid gap-4 lg:grid-cols-3">
+      <StudioCard><h2 className="font-title text-xl">Églises représentées</h2><div className="mt-4 space-y-2">{Object.entries(churchCounts).sort((a,b) => b[1]-a[1]).map(([name,count]) => <p key={name} className="flex justify-between gap-4 text-sm"><span>{name}</span><strong>{count}</strong></p>)}{!total && <p className="text-sm text-muted">Aucune donnée.</p>}</div></StudioCard>
+      <StudioCard><h2 className="font-title text-xl">Combinaisons fréquentes</h2><div className="mt-4 space-y-2">{Object.entries(combinationCounts).sort((a,b) => b[1]-a[1]).map(([name,count]) => <p key={name} className="flex justify-between gap-4 text-sm"><span>{name}</span><strong>{count}</strong></p>)}{!Object.keys(combinationCounts).length && <p className="text-sm text-muted">Aucun test terminé.</p>}</div></StudioCard>
+      <StudioCard><h2 className="font-title text-xl">Origine des invitations</h2><div className="mt-4 space-y-2">{Object.entries(inviterCounts).sort((a,b) => b[1].total-a[1].total).map(([name,count]) => <p key={name} className="flex justify-between gap-4 text-sm"><span>{name}</span><strong>{count.completed}/{count.total} terminées</strong></p>)}{!total && <p className="text-sm text-muted">Aucune invitation.</p>}</div></StudioCard>
+    </div>
     <StudioCard><form className="grid gap-3 md:grid-cols-[1fr_auto_auto_auto]"><input name="q" defaultValue={filters.q} placeholder="Rechercher un invité, une église ou un étudiant" className="min-h-11 rounded-xl border border-border px-4 text-sm" /><select name="origin" defaultValue={filters.origin} className="min-h-11 rounded-xl border border-border bg-white px-3 text-sm"><option value="">Toutes les origines</option><option value="student">Invitations étudiantes</option><option value="admin">Liens administrateur</option></select><select name="status" defaultValue={filters.status} className="min-h-11 rounded-xl border border-border bg-white px-3 text-sm"><option value="">Tous les statuts</option><option value="created">Lien créé</option><option value="started">Commencé</option><option value="tie">Départage requis</option><option value="completed">Terminé</option></select><button className="min-h-11 rounded-xl bg-[#27302f] px-5 text-sm font-semibold text-white">Filtrer</button></form></StudioCard>
     <StudioCard><div className="overflow-x-auto"><table className="w-full min-w-[1180px] text-left text-sm"><thead><tr className="border-b border-border text-muted"><th className="p-3">Invité</th><th className="p-3">Origine</th><th className="p-3">Église</th><th className="p-3">Créée le</th><th className="p-3">Début</th><th className="p-3">Statut</th><th className="p-3">Profil principal</th><th className="p-3">Profil secondaire</th><th className="p-3">Résultat</th></tr></thead><tbody>{visibleInvitations.map((invitation) => {
       const attempt = invitation.attempt_id ? attemptById.get(invitation.attempt_id) : null; const revisionId = invitation.attempt_id ? latestRevision.get(invitation.attempt_id) : null; const ranking = revisionId ? rankingByRevision.get(revisionId) : null;
