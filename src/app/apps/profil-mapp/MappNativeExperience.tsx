@@ -12,7 +12,7 @@ import {
 } from "@/lib/mapp/client";
 import { applyTieBreak, type TieBreakRecord } from "@/lib/results/tie-breaker";
 import type { ResultProfileCode } from "@/lib/results/premium-result-model";
-import { toRelativePercentages } from "@/lib/results/relative-percentages";
+import { resolveDisplayPercentageTies, toRelativePercentages } from "@/lib/results/relative-percentages";
 import type {
   MappAnswerValue,
   MappQuestion,
@@ -101,7 +101,7 @@ function naturalTieNote(scores: ReturnType<typeof resultScores>, order: ResultPr
   const first = scores.find((score) => toResultProfileCode(score.code) === order[0]);
   const second = scores.find((score) => toResultProfileCode(score.code) === order[1]);
   if (!first || !second || first.percentage !== second.percentage) return null;
-  return `Le départage final place ${visibleMappProfileName(order[0])} devant ${visibleMappProfileName(order[1])}. Les pourcentages identiques correspondent aux réponses initiales, mais le classement est bien enregistré sans ex æquo.`;
+  return `Les scores initiaux plaçaient ${visibleMappProfileName(order[0])} et ${visibleMappProfileName(order[1])} à égalité. Le départage final place ${visibleMappProfileName(order[0])} devant ${visibleMappProfileName(order[1])} et le classement est bien enregistré sans ex æquo.`;
 }
 
 export function ResultPanel({ bundle, onBundleChange, canInvite = true }: { bundle: MappResultBundle; onBundleChange?: (bundle: MappResultBundle) => void; canInvite?: boolean }) {
@@ -121,9 +121,18 @@ export function ResultPanel({ bundle, onBundleChange, canInvite = true }: { bund
     ?? storedOrder.find((code) => code !== primary)
     ?? scoreOrder.find((code) => code !== primary)
     ?? null;
-  const displayScores = toRelativePercentages(scores.map((score) => ({ code: score.code, value: score.percentage })));
+  const resolvedNaturalOrder = [primary, secondary, ...storedOrder, ...scoreOrder]
+    .filter((code): code is ResultProfileCode => Boolean(code))
+    .filter((code, index, all) => all.indexOf(code) === index);
+  const displayScores = resolveDisplayPercentageTies(
+    toRelativePercentages(scores.map((score) => ({ code: score.code, value: score.percentage }))),
+    resolvedNaturalOrder,
+  );
   const pressureOrder = storedContextOrder(bundle, "under_pressure");
-  const pressureScores = metricPercentages(bundle, "under_pressure");
+  const pressureScoresRaw = metricPercentages(bundle, "under_pressure");
+  const pressureScores = pressureScoresRaw
+    ? resolveDisplayPercentageTies(pressureScoresRaw, pressureOrder)
+    : null;
   const pressurePrimary = pressureOrder[0] ?? null;
   const pressureSecondary = pressureOrder.find((code) => code !== pressurePrimary) ?? null;
   const tieNote = naturalTieNote(scores, storedOrder);
