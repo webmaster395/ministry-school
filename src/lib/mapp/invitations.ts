@@ -11,7 +11,29 @@ export function invitationUrl(token: string, origin?: string) {
   return `${base.replace(/\/$/, "")}/mapp/invitation/${encodeURIComponent(token)}`;
 }
 export async function invitationSummary(token: string) {
-  const { data, error } = await createServiceClient().schema("mapp").rpc("invitation_public_summary", { p_token_hash: invitationHash(token) });
+  const service = createServiceClient();
+  const tokenHash = invitationHash(token);
+  const { data, error } = await service.schema("mapp").rpc("invitation_public_summary", { p_token_hash: tokenHash });
   if (error || !data) return null;
-  return data as { id: string; inviterFirstName: string; kind: "student" | "admin"; available: boolean };
+  const { data: invitation } = await service
+    .schema("mapp")
+    .from("invitations")
+    .select("attempt_id")
+    .eq("token_hash", tokenHash)
+    .maybeSingle();
+  let attemptStatus: "in_progress" | "completed" | null = null;
+  if (invitation?.attempt_id) {
+    const { data: attempt } = await service
+      .schema("mapp")
+      .from("attempts")
+      .select("status")
+      .eq("id", invitation.attempt_id)
+      .maybeSingle();
+    if (attempt?.status === "in_progress" || attempt?.status === "completed") attemptStatus = attempt.status;
+  }
+  return {
+    ...(data as { id: string; inviterFirstName: string; kind: "student" | "admin"; available: boolean }),
+    attemptId: (invitation?.attempt_id as string | null) ?? null,
+    attemptStatus,
+  };
 }
