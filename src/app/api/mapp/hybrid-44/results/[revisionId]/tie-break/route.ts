@@ -63,7 +63,7 @@ async function pending(revisionId: string) {
       admin.from("result_dimension_scores").update({ raw_score: applied.postScores[code], percentage: applied.percentages?.[code] }).eq("result_revision_id", revisionId).eq("context", ranking.context).eq("dimension_id", dimensionIds.get(names[code])!),
     ]));
     await admin.from("result_tie_break_runs").update({ status: "completed", final_order: resolved, resolution_state: "unique", completed_at: new Date().toISOString() }).eq("id", run.id);
-    await admin.from("result_rankings").update({ basis: applied.postScores, resolved_order: resolved, primary_code: resolved[0], secondary_code: resolved[1] }).eq("id", ranking.id);
+    await admin.from("result_rankings").update({ basis: applied.postScores, resolved_order: resolved, primary_code: resolved[0], secondary_code: resolved[1], tie_break_required: false }).eq("id", ranking.id);
   }
   return { done: true as const };
 }

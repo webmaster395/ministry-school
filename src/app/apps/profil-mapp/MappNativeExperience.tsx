@@ -21,6 +21,7 @@ import type {
 } from "@/lib/mapp/types";
 import styles from "./profil-mapp.module.css";
 import MappTieBreakExperience, { unresolvedTie } from "./MappTieBreakExperience";
+import MappHybridTieBreakExperience, { hasPendingHybridTieBreak } from "./MappHybridTieBreakExperience";
 import { visibleMappProfileName } from "@/lib/mapp/visible-profile";
 
 const pageSize = 5;
@@ -66,7 +67,11 @@ function toResultProfileCode(value: unknown): ResultProfileCode | null {
 }
 
 function storedNaturalOrder(bundle: MappResultBundle) {
-  const ranking = bundle.rankings.find((row) => row.context === "natural");
+  return storedContextOrder(bundle, "natural");
+}
+
+function storedContextOrder(bundle: MappResultBundle, context: "natural" | "under_pressure") {
+  const ranking = bundle.rankings.find((row) => row.context === context);
   if (!ranking) return [];
   const values = [
     ranking.primary_code,
@@ -75,12 +80,32 @@ function storedNaturalOrder(bundle: MappResultBundle) {
     ...(Array.isArray(ranking.initial_order) ? ranking.initial_order : []),
   ];
   return values
-    .map((value) => profileCodeByDimension[String(value)] ?? null)
+    .map((value) => toResultProfileCode(value))
     .filter((value): value is ResultProfileCode => Boolean(value))
     .filter((value, index, all) => all.indexOf(value) === index);
 }
 
+function metricPercentages(bundle: MappResultBundle, context: "natural" | "under_pressure") {
+  const rows = bundle.metrics
+    .filter((row) => row.context === context)
+    .map((row) => ({
+      code: toResultProfileCode(row.dimensionCode ?? row.dimension_code),
+      value: Number(row.displayPercentage ?? row.display_percentage ?? row.percentage),
+    }))
+    .filter((row): row is { code: ResultProfileCode; value: number } => Boolean(row.code) && Number.isFinite(row.value));
+  return rows.length === 4 ? toRelativePercentages(rows) : null;
+}
+
+function naturalTieNote(scores: ReturnType<typeof resultScores>, order: ResultProfileCode[]) {
+  if (order.length < 2) return null;
+  const first = scores.find((score) => toResultProfileCode(score.code) === order[0]);
+  const second = scores.find((score) => toResultProfileCode(score.code) === order[1]);
+  if (!first || !second || first.percentage !== second.percentage) return null;
+  return `Le départage final place ${visibleMappProfileName(order[0])} devant ${visibleMappProfileName(order[1])}. Les pourcentages identiques correspondent aux réponses initiales, mais le classement est bien enregistré sans ex æquo.`;
+}
+
 export function ResultPanel({ bundle, onBundleChange, canInvite = true }: { bundle: MappResultBundle; onBundleChange?: (bundle: MappResultBundle) => void; canInvite?: boolean }) {
+  if (hasPendingHybridTieBreak(bundle)) return <MappHybridTieBreakExperience bundle={bundle} />;
   if (unresolvedTie(bundle)) return <MappTieBreakExperience bundle={bundle} onResolved={onBundleChange ?? (() => window.location.reload())} />;
   const scores = resultScores(bundle);
   const calculated = applyTieBreak(
@@ -97,6 +122,11 @@ export function ResultPanel({ bundle, onBundleChange, canInvite = true }: { bund
     ?? scoreOrder.find((code) => code !== primary)
     ?? null;
   const displayScores = toRelativePercentages(scores.map((score) => ({ code: score.code, value: score.percentage })));
+  const pressureOrder = storedContextOrder(bundle, "under_pressure");
+  const pressureScores = metricPercentages(bundle, "under_pressure");
+  const pressurePrimary = pressureOrder[0] ?? null;
+  const pressureSecondary = pressureOrder.find((code) => code !== pressurePrimary) ?? null;
+  const tieNote = naturalTieNote(scores, storedOrder);
 
   if (!primary || !secondary) return <main className={styles.resultShell}><header className={styles.resultHero}><a href="/etudiant/identite" className={styles.backLink}>← Mon identité</a><p className={styles.eyebrow}>PROFIL MAPP · RÉSULTAT</p><h1>Résultat indisponible</h1><p>Le classement de ce passage doit être vérifié par l’équipe Ministry.</p></header></main>;
 
@@ -107,6 +137,10 @@ export function ResultPanel({ bundle, onBundleChange, canInvite = true }: { bund
     initialSecondary={secondary}
     participantName={bundle.participantName || "Ton résultat"}
     scores={displayScores}
+    pressureScores={pressureScores ?? undefined}
+    pressureProfile={pressurePrimary}
+    pressureSecondary={pressureSecondary}
+    tieNote={tieNote}
     showControls={false}
     isPreview={false}
     attemptId={bundle.attemptId}

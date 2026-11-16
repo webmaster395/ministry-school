@@ -237,7 +237,15 @@ export function hydrateDraftProfile(
     : { ...demoValues, [profileCode]: 87, [secondaryCode]: 72 };
   const normalized = toRelativePercentages(dimensionOrder.map((code) => ({ code, value: Number(rawDisplayScores[code] ?? 0) })));
   const scores = Object.fromEntries(dimensionOrder.map((code) => [code, normalized[code] ?? 0])) as Record<PreviewProfileCode, number>;
-  const scoreOrder = [...dimensionOrder].sort((left, right) => scores[right] - scores[left]);
+  const resolvedPriority = [profileCode, secondaryCode, ...dimensionOrder.filter((code) => code !== profileCode && code !== secondaryCode)];
+  const scoreOrder = [...dimensionOrder].sort((left, right) => {
+    const scoreDifference = scores[right] - scores[left];
+    if (scoreDifference !== 0) return scoreDifference;
+    // Les pourcentages bruts restent immuables. Lorsqu'un départage officiel a
+    // résolu une égalité, l'ordre affiché doit toutefois respecter ce classement
+    // final au lieu de retomber sur l'ordre technique D/I/S/C.
+    return resolvedPriority.indexOf(left) - resolvedPriority.indexOf(right);
+  });
   doc.documentElement.style.setProperty("--red", color);
   let dynamicStyle = doc.querySelector<HTMLStyleElement>("#profile-dynamic-color");
   if (!dynamicStyle) { dynamicStyle = doc.createElement("style"); dynamicStyle.id = "profile-dynamic-color"; doc.head.appendChild(dynamicStyle); }
