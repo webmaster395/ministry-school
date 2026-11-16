@@ -8,16 +8,28 @@ export async function POST(request: Request, { params }: { params: Promise<{ att
   const guest = await getGuestCredential(attemptId);
   if (body.kind === "step") {
     if (guest) {
-      const { data, error } = await createServiceClient().schema("mapp").rpc("save_guest_hybrid_step", {
+      const mapp = createServiceClient().schema("mapp");
+      const tokenHash = sha256(guest.secret);
+      const { data: allowed, error: accessError } = await mapp.rpc("guest_access_allowed", {
         p_attempt_id: attemptId,
-        p_token_hash: sha256(guest.secret),
+        p_token_hash: tokenHash,
+      });
+      if (accessError || allowed !== true) {
+        console.error("[mapp] guest step access denied", { attemptId, code: accessError?.code });
+        return Response.json({ error: "Sauvegarde refusée." }, { status: 403 });
+      }
+      const { data, error } = await mapp.rpc("save_hybrid_step", {
+        p_attempt_id: attemptId,
         p_mutation_id: body.mutationId,
         p_expected_revision: body.expectedRevision,
         p_client_sequence: body.clientSequence,
         p_scale_answers: body.scaleAnswers,
         p_duel_answers: body.duelAnswers,
       });
-      if (error) return Response.json({ error: "Conflit de sauvegarde." }, { status: error.code === "42501" ? 403 : 409 });
+      if (error) {
+        console.error("[mapp] guest step save failed", { attemptId, code: error.code, message: error.message });
+        return Response.json({ error: "Conflit de sauvegarde." }, { status: error.code === "42501" ? 403 : 409 });
+      }
       return Response.json(data);
     }
 
