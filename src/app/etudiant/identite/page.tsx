@@ -62,10 +62,12 @@ function buildStories({
   tools,
   results,
   heroesAvailable,
+  progressByApp,
 }: {
   tools: IdentityTool[];
   results: IdentityResult[];
   heroesAvailable: boolean;
+  progressByApp: Map<string, ToolProgress>;
 }): IdentityStoryItem[] {
   const hasTool = (slug: string) => tools.some((tool) => tool.slug === slug);
   const items: IdentityStoryItem[] = [];
@@ -100,6 +102,21 @@ function buildStories({
       status: "completed",
       measurable: true,
     });
+  } else {
+    const heroesTool = tools.find((tool) => tool.slug === "test-des-heros");
+    if (heroesTool && !wasOpenedAfterReset(progressByApp.get(heroesTool.id))) {
+      items.push({
+        key: "heroes-motors-todo",
+        name: "Test des héros",
+        category: "Identité",
+        href: "/etudiant/outils/test-des-heros/ouvrir",
+        image: "/identity/heroes/dove-abstract-v1.webp",
+        status: "not-started",
+        measurable: true,
+        external: true,
+        dismissOnOpen: true,
+      });
+    }
   }
 
   // Les liens externes sans résultat quittent la galerie après leur première
@@ -279,6 +296,7 @@ export default async function StudentIdentityPage() {
     tools: visibleTools,
     results: visibleResults,
     heroesAvailable: Boolean(heroesMotors),
+    progressByApp,
   });
   const defaultPostArtwork = {
     fruit: { title: "Fruit de l’Esprit", image: selectedFruitPostImage, href: graceTestHref("fruit") },

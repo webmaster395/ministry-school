@@ -7,7 +7,7 @@ import { getViewer } from "@/lib/data/viewer";
 import { createClient } from "@/lib/supabase/server";
 
 const value = (form: FormData, key: string, max = 20000) => String(form.get(key) ?? "").trim().slice(0, max);
-const lines = (form: FormData, key: string) => value(form, key).split(/\n+/).map((item) => item.trim()).filter(Boolean);
+const lines = (form: FormData, key: string) => value(form, key).split(/[\n;,]+/).map((item) => item.trim()).filter(Boolean);
 const APPROVED_SOURCE_HASH = "c1a79b91d32efa13801e649cfdc4ab672f4004bd8c369ff18210bb47669de040";
 const normalizeEmail = (raw: unknown) => String(raw ?? "").trim().toLowerCase();
 const validEmail = (raw: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw);
@@ -129,15 +129,18 @@ export async function importHeroesCsv(formData: FormData) {
   redirect(`/admin/apps/test-des-heros/results?imported=${inserted}&updated=${updated}&preserved=${preserved}`);
 }
 
-export async function saveHeroesResult(formData: FormData) {
+export type HeroesResultFormState = { error: string | null };
+
+async function persistHeroesResult(formData: FormData) {
   const viewer = await getViewer();
   if (!viewer?.roles.superAdmin || viewer.deactivated) throw new Error("Accès refusé.");
   const id = value(formData, "id", 100); const userId = value(formData, "userId", 100) || null;
   const communication = value(formData, "communication", 20);
   if (!['authorized', 'refused'].includes(communication)) throw new Error("Statut de communication invalide.");
   const portrait = value(formData, "portrait"); const motors = lines(formData, "motors"); const heroes = lines(formData, "heroes").slice(0, 3);
-  if (communication === "authorized" && (!portrait || !motors.length || heroes.length < 2)) throw new Error("Le portrait, les moteurs et au moins deux héros sont requis.");
+  if (communication === "authorized" && (!portrait || !motors.length || !heroes.length)) throw new Error("Le portrait, au moins un moteur et au moins un héros sont requis.");
   const visible = formData.get("visible") === "on";
+  if (visible && !userId) throw new Error("Sélectionnez un compte Ministry avant de publier le résultat.");
   const supabase = await createClient();
   const { data: current, error: currentError } = id ? await supabase.from("heroes_motors_results").select("*").eq("id", id).single() : { data: null, error: null };
   if (currentError) throw new Error(`Résultat introuvable : ${currentError.message}`);
@@ -160,6 +163,16 @@ export async function saveHeroesResult(formData: FormData) {
   const changed = current ? Object.keys(payload).filter((key) => JSON.stringify(current[key]) !== JSON.stringify(payload[key as keyof typeof payload])) : Object.keys(payload);
   const { error: auditError } = await supabase.from("heroes_motors_result_audit").insert({ result_id: saved.id, actor_id: viewer.id, action: current ? (current.user_id !== userId ? "assignment" : "update") : "insert", changed_fields: changed, previous_value: current, next_value: payload });
   if (auditError) throw new Error(`Résultat enregistré mais journalisation impossible : ${auditError.message}`);
+}
+
+export async function saveHeroesResult(_previousState: HeroesResultFormState, formData: FormData): Promise<HeroesResultFormState> {
+  try {
+    await persistHeroesResult(formData);
+  } catch (cause) {
+    const error = cause instanceof Error ? cause.message : "L’enregistrement a échoué.";
+    console.error("heroes_manual_result_save_failed", { error });
+    return { error };
+  }
   revalidatePath("/admin/apps/test-des-heros/results"); revalidatePath("/etudiant/identite"); revalidatePath("/etudiant/identite/mes-moteurs");
   redirect("/admin/apps/test-des-heros/results?saved=1");
 }
