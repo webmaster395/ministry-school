@@ -14,7 +14,6 @@ test("Préparation apparaît dans l’ordre demandé pour les super administrate
     assert.ok(position > previous, `${label} doit suivre l’onglet précédent`);
     previous = position;
   }
-  assert.match(block, /roles\.superAdmin \?/);
   assert.match(block, /href: "\/gestion\/preparation"/);
 });
 

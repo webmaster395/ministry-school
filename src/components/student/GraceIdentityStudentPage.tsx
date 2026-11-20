@@ -7,8 +7,8 @@ import { getGraceIdentityToolData } from "@/lib/identity/feed";
 
 export default async function GraceIdentityStudentPage({ test }: { test: GraceTestKey }) {
   const viewer = await getViewer();
-  if (!viewer) notFound();
-  const data = await getGraceIdentityToolData(viewer.id, viewer.roles.superAdmin);
+  if (!viewer || viewer.deactivated) notFound();
+  const data = await getGraceIdentityToolData(viewer.id, viewer.roles.superAdmin, test);
   if (!data.allowed) notFound();
   return (
     <StudentToolFrame>

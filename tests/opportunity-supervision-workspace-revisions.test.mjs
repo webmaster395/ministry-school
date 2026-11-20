@@ -18,15 +18,22 @@ test("supervision et préparation utilisent deux parcours explicites", () => {
   assert.match(review, /Valider et programmer/);
 });
 
-test("une version publiée reste intacte jusqu'à l'approbation suivante", () => {
+test("une version publiée peut être enregistrée par son responsable sans nouvelle validation", () => {
   const action = source("src/app/etudiant/services/actions.ts");
   const data = source("src/lib/data/opportunities.ts");
   const migration = source("supabase/migrations/20261030230000_opportunity_draft_revisions.sql");
   const reliableSaving = source("supabase/migrations/20261030280000_reliable_opportunity_saving.sql");
+  const directSaving = source("supabase/migrations/20261112023000_approved_opportunity_direct_saving.sql");
   const student = source("src/app/etudiant/services/[id]/page.tsx");
   assert.match(action, /save_opportunity_form/);
   assert.match(reliableSaving, /opportunity_row\.publication_status in \('published','scheduled'\)/);
   assert.match(reliableSaving, /insert into public\.opportunity_draft_revisions/);
+  assert.match(directSaving, /direct_published_save := opportunity_row\.publication_status in \('published','scheduled'\)/);
+  assert.match(directSaving, /and can_manage and not active_review/);
+  assert.match(directSaving, /'_direct_snapshot',true/);
+  assert.match(directSaving, /not coalesce\(\(revision\.payload->>'_direct_snapshot'\)::boolean,false\)/);
+  assert.doesNotMatch(directSaving, /delete from public\.opportunity_draft_revisions/);
+  assert.match(action, /sans nouvelle validation/);
   assert.match(data, /opportunity_management_revision/);
   assert.match(migration, /create table if not exists public\.opportunity_draft_revisions/);
   assert.match(migration, /delete from public\.opportunity_draft_revisions where opportunity_id=p_opportunity/);

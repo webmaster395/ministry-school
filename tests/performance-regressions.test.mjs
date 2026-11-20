@@ -106,11 +106,10 @@ test("Qui je suis utilise un flux Supabase consolidé sans N+1", () => {
   const page = read("src/app/etudiant/identite/page.tsx");
   const feed = read("src/lib/identity/feed.ts");
   const migration = read("supabase/migrations/20261120170000_student_identity_feed.sql");
-  assert.match(page, /getStudentIdentityFeed\(viewer\.id\)/);
+  assert.match(page, /getStudentIdentityFeed\(viewer\.id/);
   assert.doesNotMatch(page, /getStudentTools|getIdentityDashboard|life_line_journeys|heroes_motors_results/);
   assert.equal((feed.match(/rpc\("student_identity_feed"\)/g) ?? []).length, 1);
-  assert.match(migration, /left join public\.resource_access_controls/);
-  assert.match(migration, /join public\.user_list_members/);
+  assert.match(migration, /public\.can_access_catalog_app\(app\.id, current_user_id\)/);
   assert.match(migration, /grace_identity_assessments_user_completed_idx/);
   assert.match(migration, /profiles_active_student_count_idx/);
 });

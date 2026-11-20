@@ -3,7 +3,7 @@ import "server-only";
 import { cookies } from "next/headers";
 import type { IdentityResult } from "@/lib/identity/dashboard";
 
-const OFFICIAL_RESULTS_ENDPOINT = "https://profil-mapp.vercel.app/apps/profil-mapp/api/integrations/ministry/claim-results";
+const OFFICIAL_RESULTS_ENDPOINT = "https://profil-mapp.vercel.app/apps/profil-mapp/api/integrations/ministry/results";
 
 type RankingRow = {
   context: string;
@@ -25,9 +25,8 @@ type AttemptRow = {
 };
 
 /**
- * Le serveur officiel MAPP vérifie lui-même la session Ministry, rattache les
- * tentatives par e-mail vérifié et renvoie les résultats dans le même appel.
- * Ministry ne reçoit jamais de clé de service MAPP.
+ * Transitional read-only bridge for completed results kept in the archived
+ * MAPP application. Native Ministry results always take precedence.
  */
 export async function getOfficialMappIdentityResults(): Promise<IdentityResult[]> {
   const cookieHeader = (await cookies()).getAll()
@@ -41,9 +40,8 @@ export async function getOfficialMappIdentityResults(): Promise<IdentityResult[]
   });
   if (!response.ok) return [];
   const payload = await response.json() as { results?: AttemptRow[] };
-  const data = payload.results ?? [];
 
-  return data.flatMap((attempt) => {
+  return (payload.results ?? []).flatMap((attempt) => {
     const revision = [...(attempt.result_revisions ?? [])]
       .sort((left, right) => right.revision - left.revision)[0];
     if (!revision || !attempt.completed_at) return [];

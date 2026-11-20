@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronRight, FileText, Video } from "lucide-react";
+import { BookOpen, ChevronRight, FileText, Wrench } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import {
   getStudentProgramAssignments,
@@ -50,15 +50,23 @@ export default async function StudentDashboardPage() {
     getStudentCompletedIds(supabase, viewer!.id),
   ]);
   const work = getStudentWorkItems(assignments, allSessions);
-  const todo = !nextSession
-    ? []
-    : work.filter(
-        ({ assignment, targetDate }) =>
-          targetDate === nextSession.session_date && !doneIds.has(assignment.id),
-      );
-  // L'accueil ne montre que les deux premiers travaux ; « Voir tout » ouvre la liste complète
-  const toPrepare = todo.slice(0, 2);
-  const todoCount = todo.length;
+  // Les anciens travaux restent visibles jusqu’à leur validation. La date de la
+  // prochaine journée ne doit jamais faire disparaître un devoir non terminé.
+  const todo = work.filter(({ assignment }) => !doneIds.has(assignment.id));
+  const nowIso = new Date().toISOString();
+  const [featuredAppsResult, featuredResourcesResult, viewedResult, materialsResult] = await Promise.all([
+    supabase.from("app_catalog").select("id,slug,featured_generation").eq("featured", true).in("status", ["scheduled", "published"]).or(`featured_start_at.is.null,featured_start_at.lte.${nowIso}`).or(`featured_end_at.is.null,featured_end_at.gte.${nowIso}`),
+    supabase.from("managed_resources").select("id,featured_generation").eq("featured", true).eq("status", "published").or(`featured_start_at.is.null,featured_start_at.lte.${nowIso}`).or(`featured_end_at.is.null,featured_end_at.gte.${nowIso}`),
+    supabase.from("featured_content_views").select("content_type,content_id,generation").eq("user_id", viewer!.id),
+    supabase.from("opportunity_date_registrations").select("opportunity_date:opportunity_dates!inner(session_date,opportunity:opportunities!inner(id,title,participant_material))").eq("user_id", viewer!.id).gte("opportunity_date.session_date", today),
+  ]);
+  const seen = new Set((viewedResult.data ?? []).map((item) => `${item.content_type}:${item.content_id}:${item.generation}`));
+  const featuredTools = (featuredAppsResult.data ?? []).filter((item) => !seen.has(`tool:${item.id}:${item.featured_generation}`));
+  const featuredResources = (featuredResourcesResult.data ?? []).filter((item) => !seen.has(`resource:${item.id}:${item.featured_generation}`));
+  const materials = (materialsResult.data ?? []).flatMap((row) => {
+    const date = row.opportunity_date as unknown as { session_date: string; opportunity: { id: string; title: string; participant_material: string | null } } | null;
+    return date?.opportunity.participant_material ? [{ ...date.opportunity, date: date.session_date }] : [];
+  });
 
   return (
     <div className="grid items-start gap-5 lg:grid-cols-[1fr_360px]">
@@ -205,58 +213,20 @@ export default async function StudentDashboardPage() {
 
       <div className="space-y-4">
         <section className="rounded-lg border border-border bg-background p-4 sm:p-5">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <h2 className="font-title text-[19px] text-foreground">À préparer</h2>
-              {nextSession && (
-                <p className="mt-1 text-sm text-muted">
-                  Avant le {formatSessionDate(nextSession.session_date)}
-                </p>
-              )}
-            </div>
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface text-sm font-semibold text-foreground">
-              {todoCount}
-            </span>
+          <h2 className="font-title text-[19px] text-foreground">À ne pas manquer</h2>
+          <div className="mt-3 divide-y divide-border-soft">
+            {todo.length > 0 && <DashboardLine href="/etudiant/travail" icon={<FileText size={17} />} title="Travail à faire" detail="Les travaux non terminés restent ici, même après leur mois d’origine." count={todo.length} alert />}
+            {featuredResources.length > 0 && <DashboardLine href="/etudiant/ressources?selection=alaune" icon={<BookOpen size={17} />} title="Nouvelles ressources" detail="Sélectionnées pour toi" count={featuredResources.length} />}
+            {featuredTools.length > 0 && <DashboardLine href={`/etudiant/outils/${featuredTools[0].slug}/ouvrir`} icon={<Wrench size={17} />} title="Outils à découvrir" detail={featuredTools.length === 1 ? "Sélectionné pour toi" : "Ouvre la première sélection, puis retrouve les autres ici."} count={featuredTools.length} />}
+            {materials.slice(0, 2).map((material) => <DashboardLine key={`${material.id}-${material.date}`} href={`/etudiant/services/${material.id}`} icon={<Wrench size={17} />} title="Matériel à prévoir" detail={`${material.title} · ${formatSessionDate(material.date)}`} />)}
+            {!todo.length && !featuredResources.length && !featuredTools.length && !materials.length && <p className="py-4 text-sm text-muted">Tout est à jour.</p>}
           </div>
-
-          {toPrepare.length ? (
-            <ul className="mt-3 divide-y divide-border-soft">
-              {toPrepare.map(({ assignment: a, origin, after }) => {
-                const Icon = /vid[ée]o/i.test(a.kind ?? "") ? Video : FileText;
-                const title = a.title || a.instructions;
-                const course = origin.courses?.title ?? origin.description ?? "Cours";
-                return (
-                  <li key={a.id}>
-                    <Link
-                      href={`/etudiant/seances/${origin.id}#${after ? "after-course" : "before-course"}`}
-                      className="group flex items-center gap-3 py-3 text-[15px] text-foreground"
-                    >
-                      <span className="h-6 w-6 shrink-0 rounded-full border border-border" />
-                      <Icon size={18} strokeWidth={1.6} className="shrink-0 text-muted" />
-                      <span className="min-w-0 flex-1">
-                        <span className="line-clamp-1 font-medium group-hover:underline">{title}</span>
-                        <span className="mt-0.5 block truncate text-xs text-muted">{course}</span>
-                        {a.duration_min && (
-                          <span className="block text-xs text-muted">{a.duration_min} min</span>
-                        )}
-                      </span>
-                      <ChevronRight size={16} className="shrink-0 text-muted" />
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          ) : (
-            <p className="mt-4 text-sm text-muted">Rien à préparer pour cette journée.</p>
-          )}
-          <Link
-            href="/etudiant/travail?onglet=prochaine"
-            className="mt-3 inline-block text-sm font-medium text-foreground hover:underline"
-          >
-            Voir tout →
-          </Link>
         </section>
       </div>
     </div>
   );
+}
+
+function DashboardLine({ href, icon, title, detail, count, alert = false }: { href: string; icon: React.ReactNode; title: string; detail: string; count?: number; alert?: boolean }) {
+  return <Link href={href} className="group flex items-center gap-3 py-3"><span className="grid h-8 w-8 place-items-center rounded-full bg-surface text-muted">{icon}</span><span className="min-w-0 flex-1"><strong className="block text-sm group-hover:underline">{title}</strong><span className="block truncate text-xs text-muted">{detail}</span></span>{typeof count === "number" && <span className={`grid h-7 min-w-7 place-items-center rounded-full px-2 text-xs font-bold ${alert ? "bg-[#b42318] text-white" : "bg-surface text-foreground"}`}>{count}</span>}<ChevronRight size={16} className="text-muted" /></Link>;
 }

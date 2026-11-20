@@ -3,10 +3,11 @@
 /* eslint-disable @next/next/no-img-element -- avatars et icônes administrables */
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BadgeCheck, BookOpen, Check, Clock3, Grid3X3, Network, Plus, Sparkles } from "lucide-react";
+import { ArrowRight, BadgeCheck, BookOpen, Check, Clock3, Grid3X3, Network, Plus } from "lucide-react";
 import { useRef, useState } from "react";
 import AvatarEditor from "@/components/AvatarEditor";
 import type { IdentityResult } from "@/lib/identity/dashboard";
+import { visibleMappProfileName } from "@/lib/mapp/visible-profile";
 import styles from "./identity.module.css";
 
 export type IdentityStoryItem = {
@@ -33,17 +34,7 @@ type Props = {
   stories: IdentityStoryItem[];
   results: IdentityResult[];
   upcoming: IdentityUpcomingItem[];
-};
-
-const profileNames: Record<string, string> = {
-  D: "Conquérant",
-  I: "Communiquant",
-  S: "Facilitateur",
-  C: "Analyste",
-  conquerant: "Conquérant",
-  communiquant: "Communiquant",
-  facilitateur: "Facilitateur",
-  analyste: "Analyste",
+  toolArtwork?: Partial<Record<"fruit" | "gifts" | "skills", { title: string; image: string; href: string }>>;
 };
 
 const mappImages: Record<string, string> = {
@@ -65,7 +56,7 @@ const resultArtwork = {
   fruit: {
     title: "Fruit de l’Esprit",
     eyebrow: "Je suis ce que je suis",
-    image: "/apps/grace-identity/fruit-spirit-bg-v1.webp",
+    image: "/apps/grace-identity/fruit-spirit-blue-violet-grape-post-v26.png",
     href: "/etudiant/identite/fruit-de-lesprit",
   },
   gifts: {
@@ -94,7 +85,7 @@ const resultArtwork = {
   },
 } as const;
 
-function ResultPost({ result, firstName }: { result: IdentityResult; firstName: string }) {
+function ResultPost({ result, firstName, toolArtwork }: { result: IdentityResult; firstName: string; toolArtwork?: Props["toolArtwork"] }) {
   if (result.kind === "heroes-motors") {
     return (
       <Link
@@ -105,7 +96,7 @@ function ResultPost({ result, firstName }: { result: IdentityResult; firstName: 
         <span className={styles.heroesGlow} aria-hidden="true" />
         <span className={styles.postShade} />
         <span className={styles.postCopy}>
-          <span className={styles.postKicker}>Mes moteurs</span>
+          <span className={styles.postKicker}>Test des héros</span>
           <strong>Moi, {firstName}, je suis…</strong>
           <span className={styles.openPost}>Voir le résultat <ArrowRight size={15} /></span>
         </span>
@@ -114,11 +105,15 @@ function ResultPost({ result, firstName }: { result: IdentityResult; firstName: 
   }
 
   if (result.kind === "mapp") {
-    const primary = result.primaryCode ? profileNames[result.primaryCode] ?? result.primaryCode : "Profil MAPP";
-    const secondary = result.secondaryCode ? profileNames[result.secondaryCode] ?? result.secondaryCode : null;
+    const primary = visibleMappProfileName(result.primaryCode, "Profil MAPP");
+    const secondary = result.secondaryCode ? visibleMappProfileName(result.secondaryCode, "") || null : null;
     const image = result.primaryCode ? mappImages[result.primaryCode] : null;
+    const resultQuery = new URLSearchParams();
+    if (result.resultRevisionId) resultQuery.set("revision", result.resultRevisionId);
+    if (result.native) resultQuery.set("native", "1");
+    if (result.legacy) resultQuery.set("legacy", "1");
     const resultHref = result.attemptId
-      ? `/apps/profil-mapp/test/${result.attemptId}/resultat${result.resultRevisionId ? `?revision=${result.resultRevisionId}` : ""}`
+      ? `/apps/profil-mapp/test/${result.attemptId}/resultat${resultQuery.size ? `?${resultQuery.toString()}` : ""}`
       : "/apps/profil-mapp";
     return (
       <Link className={`${styles.post} ${styles.mappPost}`} href={resultHref} aria-label="Ouvrir mon résultat Profil MAPP">
@@ -135,16 +130,18 @@ function ResultPost({ result, firstName }: { result: IdentityResult; firstName: 
   }
 
   if (result.kind in resultArtwork) {
-    const artwork = resultArtwork[result.kind as keyof typeof resultArtwork];
+    const baseArtwork = resultArtwork[result.kind as keyof typeof resultArtwork];
+    const override = result.kind === "fruit" || result.kind === "gifts" || result.kind === "skills" ? toolArtwork?.[result.kind] : undefined;
+    const artwork = { ...baseArtwork, ...override };
     return (
       <Link className={`${styles.post} ${styles.imagePost} ${result.kind === "fruit" ? styles.fruitPost : ""}`} href={artwork.href} aria-label={`Ouvrir mon résultat ${artwork.title}`}>
-        {result.kind === "fruit" ? <span className={styles.fruitArtwork} aria-hidden="true" /> : <Image
+        <Image
           className={styles.postImage}
           src={artwork.image}
           alt=""
           fill
           sizes="(max-width: 767px) 33vw, 320px"
-        />}
+        />
         <span className={styles.postShade} />
         <span className={styles.postCopy}>
           <span className={styles.postKicker}>{artwork.eyebrow}</span>
@@ -186,7 +183,7 @@ function UpcomingPost({ item }: { item: IdentityUpcomingItem }) {
 }
 
 export default function IdentityExperience(props: Props) {
-  const [activeTab, setActiveTab] = useState<"results" | "upcoming" | "resources">("results");
+  const [activeTab, setActiveTab] = useState<"results" | "upcoming">("results");
   const feedRef = useRef<HTMLElement>(null);
   const nameParts = props.fullName.trim().split(/\s+/).filter(Boolean);
   const firstName = nameParts[0] || "Mon identité";
@@ -196,13 +193,10 @@ export default function IdentityExperience(props: Props) {
     requestAnimationFrame(() => feedRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
   }
 
-  const resourceLinks = props.stories.flatMap((story) => story.links ?? []);
-  const activeCount = activeTab === "results" ? props.results.length : activeTab === "upcoming" ? props.upcoming.length : resourceLinks.length;
+  const activeCount = activeTab === "results" ? props.results.length : props.upcoming.length;
   const activeCountLabel = activeTab === "results"
     ? `publication${activeCount > 1 ? "s" : ""}`
-    : activeTab === "upcoming"
-      ? `outil${activeCount > 1 ? "s" : ""} à faire`
-      : `ressource${activeCount > 1 ? "s" : ""}`;
+    : `outil${activeCount > 1 ? "s" : ""} à faire`;
   const measurableStories = props.stories.filter((story) => story.measurable);
   const completedStoryCount = measurableStories.filter((story) => story.status === "completed").length;
   const remainingStoryCount = measurableStories.length - completedStoryCount;
@@ -222,7 +216,6 @@ export default function IdentityExperience(props: Props) {
           </div>
         </div>
         <div className={styles.profileContent}>
-          <p className={styles.eyebrow}>Mon espace personnel</p>
           <div className={styles.nameLine}>
             <h1>{firstName}</h1>
             <span className={styles.certifiedStatus}>{props.status}<BadgeCheck aria-label="Profil certifié" /></span>
@@ -243,19 +236,18 @@ export default function IdentityExperience(props: Props) {
         <section className={styles.storySection} aria-label="Mes outils">
           <div className={styles.stories}>
             {props.stories.map((story) => story.links ? (
-              <button
+              <Link
                 className={`${styles.story} ${styles[`story_${story.status}`]}`}
                 key={story.key}
-                type="button"
-                onClick={() => setActiveTab("resources")}
-                aria-label={`Ouvrir ${story.name}`}
+                href="/etudiant/ressources"
+                aria-label="Ouvrir la bibliothèque de ressources"
               >
                 <span className={styles.storyRing} data-story-key={story.key}>
                   <span className={styles.storyInner}><Image src={story.image} alt="" fill sizes="112px" /></span>
                   <span className={styles.storyBadge}><Plus /></span>
                 </span>
                 <strong>{story.name}</strong>
-              </button>
+              </Link>
             ) : (
               <Link
                 className={`${styles.story} ${styles[`story_${story.status}`]}`}
@@ -301,15 +293,12 @@ export default function IdentityExperience(props: Props) {
           <button type="button" role="tab" aria-selected={activeTab === "upcoming"} className={activeTab === "upcoming" ? styles.activeTab : ""} onClick={() => setActiveTab("upcoming")}>
             <Clock3 /> À faire
           </button>
-          <button type="button" role="tab" aria-selected={activeTab === "resources"} className={activeTab === "resources" ? styles.activeTab : ""} onClick={() => setActiveTab("resources")}>
-            <Sparkles /> Ressources
-          </button>
         </div>
         <p className={styles.publicationCount} aria-live="polite">{activeCount} {activeCountLabel}</p>
 
         {activeTab === "results" ? (
           props.results.length ? (
-            <div className={styles.grid}>{props.results.map((result) => <ResultPost key={`${result.kind}-${result.attemptId ?? result.completedAt}`} result={result} firstName={firstName} />)}</div>
+            <div className={styles.grid}>{props.results.map((result) => <ResultPost key={`${result.kind}-${result.attemptId ?? result.completedAt}`} result={result} firstName={firstName} toolArtwork={props.toolArtwork} />)}</div>
           ) : (
             <div className={styles.empty}>
               <span><BookOpen /></span>
@@ -318,12 +307,6 @@ export default function IdentityExperience(props: Props) {
           )
         ) : activeTab === "upcoming" && props.upcoming.length ? (
           <div className={styles.grid}>{props.upcoming.map((item) => <UpcomingPost item={item} key={item.key} />)}</div>
-        ) : activeTab === "resources" && resourceLinks.length ? (
-          <div className={styles.resourceGrid}>{resourceLinks.map((item) => (
-            <Link className={styles.resourceCard} href={item.href} key={item.href} target={item.external ? "_blank" : undefined} rel={item.external ? "noreferrer" : undefined}>
-              <span><small>Finance</small><strong>{item.name}</strong><em>Découvrir la ressource</em></span><ArrowRight />
-            </Link>
-          ))}</div>
         ) : (
           <div className={styles.empty}>
             <span><Clock3 /></span>

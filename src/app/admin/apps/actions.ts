@@ -51,20 +51,36 @@ function revalidateCatalog() {
   invalidateStudentToolsSettings();
   revalidatePath("/apps");
   revalidatePath("/etudiant/outils");
+  revalidatePath("/etudiant/identite");
+  revalidatePath("/etudiant/ressources");
+  revalidatePath("/etudiant/travail");
+  revalidatePath("/etudiant");
   revalidatePath("/etudiant", "layout");
   revalidatePath("/gestion", "layout");
   revalidatePath("/admin/apps");
 }
 
-async function uploadIcon(file: File, slug: string) {
+async function uploadImage(file: File, slug: string, slot = "icon") {
   if (!file.size) return null;
   if (file.size > 5 * 1024 * 1024 || !["image/jpeg", "image/png", "image/webp", "image/svg+xml"].includes(file.type)) throw new Error("L’icône doit être une image JPG, PNG, WebP ou SVG de moins de 5 Mo.");
   const extension = file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "") || "png";
-  const path = `${slug}/${crypto.randomUUID()}.${extension}`;
+  const path = `${slug}/${slot}-${crypto.randomUUID()}.${extension}`;
   const supabase = await createClient();
   const { error } = await supabase.storage.from("app-icons").upload(path, file, { contentType: file.type, upsert: false });
   if (error) throw new Error(`Import de l’icône impossible : ${error.message}`);
   return supabase.storage.from("app-icons").getPublicUrl(path).data.publicUrl;
+}
+
+function list(formData: FormData, key: string) {
+  return value(formData, key, 4000).split(/[\n,]/).map((item) => item.trim()).filter(Boolean);
+}
+
+function uuidList(formData: FormData, key: string) {
+  return formData
+    .getAll(key)
+    .flatMap((item) => String(item).split(/[\n,]/))
+    .map((item) => item.trim())
+    .filter((item) => /^[0-9a-f-]{36}$/i.test(item));
 }
 
 export async function saveCatalogApp(formData: FormData) {
@@ -79,7 +95,18 @@ export async function saveCatalogApp(formData: FormData) {
   const status = requestedStatus === "published" && publishAt && new Date(publishAt).getTime() > Date.now() ? "scheduled" : requestedStatus;
   const currentIcon = value(formData, "currentIcon", 1000) || null;
   const file = formData.get("icon");
-  const iconUrl = file instanceof File && file.size ? await uploadIcon(file, slug) : currentIcon;
+  const iconUrl = file instanceof File && file.size ? await uploadImage(file, slug) : currentIcon;
+  async function imageFor(input: string, current: string) {
+    const candidate = formData.get(input);
+    return candidate instanceof File && candidate.size ? uploadImage(candidate, slug, input) : value(formData, current, 1200) || null;
+  }
+  const storyImageUrl = await imageFor("storyImage", "currentStoryImage");
+  const postImageUrl = await imageFor("postImage", "currentPostImage");
+  const resourceImageUrl = await imageFor("resourceImage", "currentResourceImage");
+  const toolType = value(formData, "toolType", 20);
+  const trackingMode = value(formData, "trackingMode", 20);
+  const accessScope = value(formData, "accessScope", 20);
+  if (!["test","interactive","simulator","external"].includes(toolType) || !["result","explicit","none"].includes(trackingMode) || !["super_admin","students","selected"].includes(accessScope)) throw new Error("Configuration de l’outil invalide.");
   const payload = {
     slug,
     name,
@@ -90,12 +117,37 @@ export async function saveCatalogApp(formData: FormData) {
     status,
     display_order: Number.parseInt(value(formData, "order", 8), 10) || 0,
     integration_key: value(formData, "integrationKey", 80) || null,
-    public_enabled: checked(formData, "publicEnabled"),
-    public_publish_at: checked(formData, "publicEnabled") ? publishAt : null,
-    student_enabled: checked(formData, "studentEnabled"),
-    student_publish_at: checked(formData, "studentEnabled") ? publishAt : null,
+    public_enabled: checked(formData, "publicAccess"),
+    public_publish_at: checked(formData, "publicAccess") ? publishAt : null,
+    student_enabled: accessScope !== "super_admin",
+    student_publish_at: accessScope !== "super_admin" ? publishAt : null,
     archived_at: null,
     updated_by: viewer.id,
+    display_title: value(formData, "displayTitle", 140) || name,
+    long_description: value(formData, "longDescription", 4000) || null,
+    tags: list(formData, "tags"),
+    result_url: value(formData, "resultUrl", 1000) ? validUrl(value(formData, "resultUrl", 1000)) : null,
+    tool_type: toolType, tracking_mode: trackingMode,
+    story_title: value(formData, "storyTitle", 140) || name,
+    story_image_url: storyImageUrl,
+    story_destination_url: validUrl(value(formData, "storyDestination", 1000) || value(formData, "url", 1000)),
+    story_order: Number.parseInt(value(formData, "storyOrder", 8), 10) || 0,
+    post_title: value(formData, "postTitle", 140) || name,
+    post_image_url: postImageUrl,
+    post_destination_url: validUrl(value(formData, "postDestination", 1000) || value(formData, "url", 1000)),
+    post_order: Number.parseInt(value(formData, "postOrder", 8), 10) || 0,
+    resource_title: value(formData, "resourceTitle", 140) || name,
+    resource_description: value(formData, "resourceDescription", 500) || null,
+    resource_image_url: resourceImageUrl,
+    resource_category: value(formData, "resourceCategory", 80) || category,
+    resource_tags: list(formData, "resourceTags"),
+    resource_destination_url: validUrl(value(formData, "resourceDestination", 1000) || value(formData, "url", 1000)),
+    resource_order: Number.parseInt(value(formData, "resourceOrder", 8), 10) || 0,
+    placement_story: checked(formData, "placementStory"), placement_post: checked(formData, "placementPost"), placement_resources: checked(formData, "placementResources"), placement_work: checked(formData, "placementWork"), placement_ministry: checked(formData, "placementMinistry"),
+    access_scope: accessScope, allowed_user_ids: uuidList(formData, "allowedUsers"), allowed_ministry_ids: uuidList(formData, "allowedMinistries"), public_access: checked(formData, "publicAccess"),
+    featured: checked(formData, "featured"),
+    featured_start_at: value(formData, "featuredStart", 40) ? parisLocalToIso(...value(formData, "featuredStart", 40).split("T") as [string,string]) : null,
+    featured_end_at: value(formData, "featuredEnd", 40) ? parisLocalToIso(...value(formData, "featuredEnd", 40).split("T") as [string,string]) : null,
   };
   const supabase = await createClient();
   const mutation = id ? supabase.from("app_catalog").update(payload).eq("id", id) : supabase.from("app_catalog").insert(payload);
@@ -105,6 +157,18 @@ export async function saveCatalogApp(formData: FormData) {
   const requestedReturn = value(formData, "returnTo", 300);
   const returnTo = requestedReturn.startsWith("/admin/apps/") ? requestedReturn : `/admin/apps/${data.slug}/settings`;
   redirect(`${returnTo}${returnTo.includes("?") ? "&" : "?"}saved=1`);
+}
+
+export async function resetFeaturedCatalogApp(formData: FormData) {
+  const viewer = await requireSuperAdmin();
+  const id = value(formData, "id", 100);
+  const supabase = await createClient();
+  const { data, error: loadError } = await supabase.from("app_catalog").select("featured_generation").eq("id", id).single();
+  if (loadError) throw new Error(`Outil introuvable : ${loadError.message}`);
+  const { error } = await supabase.from("app_catalog").update({ featured_generation: (data.featured_generation || 1) + 1, updated_by: viewer.id }).eq("id", id);
+  if (error) throw new Error(`Remise à la une impossible : ${error.message}`);
+  revalidateCatalog();
+  redirect(`/admin/apps/${value(formData, "slug", 80)}/settings?reset=1`);
 }
 
 export async function deleteCatalogApp(formData: FormData) {

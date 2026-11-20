@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getViewer } from "@/lib/data/viewer";
-import { buildRows, getMinistrySessions, getSteeredMinistries } from "@/lib/data/pilotage";
+import { buildRows, getAllSteeringMinistries, getMinistrySessions, getSteeredMinistries } from "@/lib/data/pilotage";
 import { getMinistry } from "@/lib/ministry";
 import MinistryPicto from "@/components/MinistryPicto";
 import PrepBoard, { type PrepTab } from "@/components/PrepBoard";
@@ -12,29 +12,41 @@ import PilotageCreateMenu from "@/components/gestion/PilotageCreateMenu";
 export default async function PilotagePage({
   searchParams,
 }: {
-  searchParams: Promise<{ onglet?: string; m?: string; filtre?: string }>;
+  searchParams: Promise<{ onglet?: string; m?: string; filtre?: string; scope?: string }>;
 }) {
-  const { onglet, m } = await searchParams;
+  const { onglet, m, scope } = await searchParams;
   const tab: PrepTab = onglet === "avenir" || onglet === "passes" ? onglet : "prochain";
 
   const viewer = await getViewer();
-  if (!viewer || viewer.roles.steeringMinistryIds.length === 0) redirect("/etudiant");
+  if (!viewer) redirect("/etudiant");
+  const adminScope = viewer.roles.superAdmin && ["admin", "super"].includes(scope ?? "");
+  if (!adminScope && viewer.roles.steeringMinistryIds.length === 0) redirect("/etudiant");
 
   const supabase = await createClient();
   // La casquette Pilotage reste strictement limitée aux responsabilités explicites,
   // même lorsque la personne possède aussi le rôle Administrateur.
   const ministryIds = viewer.roles.steeringMinistryIds;
-  const steered = await getSteeredMinistries(supabase, ministryIds);
+  let steered: Awaited<ReturnType<typeof getSteeredMinistries>>;
+  try {
+    steered = adminScope ? await getAllSteeringMinistries(supabase) : await getSteeredMinistries(supabase, ministryIds);
+  } catch (error) {
+    return <LoadError message={error instanceof Error ? error.message : "Le pilotage n’a pas pu être chargé."} />;
+  }
   const ministry = steered.find((x) => x.slug === m) ?? steered[0];
-  if (!ministry) redirect("/etudiant");
+  if (!ministry) return <LoadError message="Aucun ministère n’est disponible dans ce périmètre." />;
 
-  const rows = await buildRows(supabase, await getMinistrySessions(supabase, ministry.id), "pilotage");
+  let rows: Awaited<ReturnType<typeof buildRows>>;
+  try {
+    rows = await buildRows(supabase, await getMinistrySessions(supabase, ministry.id), "pilotage");
+  } catch (error) {
+    return <LoadError message={error instanceof Error ? error.message : "Les cours n’ont pas pu être chargés."} />;
+  }
   const { data: leadProfile } = await supabase
     .from("profiles")
     .select("ministry_lead_of")
     .eq("id", viewer.id)
     .single();
-  const canCreateCourse = leadProfile?.ministry_lead_of === ministry.id;
+  const canCreateCourse = adminScope || leadProfile?.ministry_lead_of === ministry.id;
   const { data: ministryStudents } = await supabase
     .from("profiles")
     .select("id, full_name, preferred_day")
@@ -52,6 +64,7 @@ export default async function PilotagePage({
     const q = new URLSearchParams();
     if (t !== "prochain") q.set("onglet", t);
     if (steered.length > 1) q.set("m", ministry.slug);
+    if (adminScope) q.set("scope", "admin");
     const s = q.toString();
     return `/gestion/pilotage${s ? `?${s}` : ""}`;
   };
@@ -69,7 +82,7 @@ export default async function PilotagePage({
           {steered.map((x) => (
             <Link
               key={x.id}
-              href={`/gestion/pilotage?m=${x.slug}`}
+              href={`/gestion/pilotage?m=${x.slug}${adminScope ? "&scope=admin" : ""}`}
               className={`rounded-lg px-4 py-2 text-sm ${
                 x.id === ministry.id
                   ? "bg-accent font-medium text-on-accent"
@@ -140,4 +153,8 @@ export default async function PilotagePage({
       </details>
     </div>
   );
+}
+
+function LoadError({ message }: { message: string }) {
+  return <section className="mx-auto max-w-3xl rounded-2xl border border-red-200 bg-red-50 p-6 text-red-950"><p className="label text-xs tracking-[.14em]">PILOTAGE MINISTÈRE</p><h1 className="font-title mt-2 text-[30px]">Chargement impossible</h1><p className="mt-3 text-sm leading-6">{message}</p><p className="mt-2 text-xs">Aucune redirection silencieuse n’a été appliquée. Réessayez ou contactez l’administration si le problème persiste.</p></section>;
 }

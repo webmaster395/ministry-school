@@ -20,11 +20,11 @@ import {
   ChartNoAxesColumnIncreasing,
   BadgeCheck,
   PanelsTopLeft,
-  Fingerprint,
-  FolderKanban,
-  GraduationCap,
-  LibraryBig,
+  UserRound,
+  ListChecks,
+  FolderOpen,
   UsersRound,
+  GraduationCap,
   WandSparkles,
 } from "lucide-react";
 import { isPlainStudent, type ViewerRoles } from "@/lib/roles";
@@ -67,11 +67,11 @@ const icons = {
   functions: <Briefcase {...iconProps} />,
   validate: <BadgeCheck {...iconProps} />,
   apps: <PanelsTopLeft {...iconProps} />,
-  identity: <Fingerprint {...iconProps} />,
-  adminAccess: <UsersRound {...iconProps} />,
-  adminCourses: <GraduationCap {...iconProps} />,
-  adminProjects: <FolderKanban {...iconProps} />,
-  adminTools: <LibraryBig {...iconProps} />,
+  identity: <UserRound {...iconProps} />,
+  resources: <FolderOpen {...iconProps} />,
+  studentTasks: <ListChecks {...iconProps} />,
+  studentProjects: <UsersRound {...iconProps} />,
+  formations: <GraduationCap {...iconProps} />,
   preparation: <WandSparkles {...iconProps} />,
 };
 
@@ -81,17 +81,22 @@ export const studentSections: NavSection[] = [
     title: "Principal",
     items: [
       { label: "Accueil", href: "/etudiant", icon: icons.home },
-      { label: "Mon espace", href: "/etudiant/identite", icon: icons.identity },
+    ],
+  },
+  {
+    title: "Me découvrir",
+    items: [
+      { label: "Qui je suis", href: "/etudiant/identite", icon: icons.identity },
+      { label: "Mon ministère", href: "/etudiant/formation", icon: icons.steer },
     ],
   },
   {
     title: "Mon parcours",
     items: [
-      { label: "Mes cours", href: "/etudiant/cours", icon: icons.calendar },
-      { label: "Travail à faire", href: "/etudiant/travail", icon: icons.task },
-      // Le ministère reste masqué tant que son espace n'est pas prêt.
-      // { label: "Mon ministère", href: "/etudiant/formation", icon: icons.ministries },
-      { label: "Projets et formations", href: "/etudiant/services", icon: icons.services },
+      { label: "Mes cours", href: "/etudiant/cours", icon: icons.book },
+      { label: "Travail à faire", href: "/etudiant/travail", icon: icons.studentTasks },
+      { label: "Mes ressources", href: "/etudiant/ressources", icon: icons.resources },
+      { label: "Projets et formations", href: "/etudiant/services", icon: icons.studentProjects },
     ],
   },
 ];
@@ -126,7 +131,7 @@ export function profileTabs(roles: ViewerRoles): ProfileTab[] {
   return tabs;
 }
 
-export type SpaceKey = "admin" | "steering" | "projectsTraining" | "apps";
+export type SpaceKey = "admin" | "steering" | "formations" | "projectsTraining";
 
 /** Une « casquette » : un ensemble d'entrées de menu que la personne choisit d'afficher. */
 export type Space = {
@@ -146,7 +151,7 @@ export type Space = {
 export function navSpaces(roles: ViewerRoles): Space[] {
   const spaces: Space[] = [];
 
-  if (roles.admin) {
+  if (roles.superAdmin) {
     spaces.push({
       key: "admin",
       label: "Admin",
@@ -155,24 +160,39 @@ export function navSpaces(roles: ViewerRoles): Space[] {
       subtitle: "",
       sections: [
         {
-          title: "Administration",
-          items: roles.superAdmin ? [
-            { label: "Tableau de bord", href: "/gestion/admin", icon: icons.adminHome },
-            { label: "Utilisateurs et accès", href: "/gestion/admin?onglet=membres", icon: icons.adminAccess },
-            { label: "Formations", href: "/gestion/admin/cours-formations", icon: icons.adminCourses },
-            { label: "Projets et formations", href: "/gestion/admin/projets-formations", icon: icons.adminProjects },
-            { label: "Pilotage ministère", href: "/gestion/super-admin/pilotage", icon: icons.adminStats },
-            { label: "Outils et ressources", href: "/admin/apps", icon: icons.adminTools },
+          title: "Admin",
+          items: [
+            { label: "Tableau de bord", href: "/gestion/admin?onglet=pilotage", icon: icons.adminStats },
+            { label: "Utilisateurs et accès", href: "/gestion/admin?onglet=membres", icon: icons.profile },
+            { label: "Formations", href: "/gestion/formations?scope=admin", icon: icons.formations },
+            { label: "Projets et formations", href: "/gestion/projets-formations?scope=admin", icon: icons.studentProjects },
+            { label: "Pilotage ministère", href: "/gestion/pilotage?scope=admin", icon: icons.steer },
+            { label: "Outils et ressources", href: "/gestion/admin?onglet=contenus&contenu=outils", icon: icons.apps },
             { label: "Préparation", href: "/gestion/preparation", icon: icons.preparation },
-          ] : [
-            { label: "Tableau de bord", href: "/gestion/admin", icon: icons.adminHome },
           ],
         },
       ],
     });
   }
 
-  if (roles.steeringMinistryIds.length > 0) {
+  // L’espace Formations vient immédiatement après Admin. Les sensibilités
+  // restent pilotées dans l’espace ministériel : cet espace réunit uniquement
+  // cœur, caractère et approfondissements.
+  if (!roles.superAdmin && roles.formationCategoryKeys.some((key) => ["heart", "character", "deepening"].includes(key))) {
+    spaces.push({
+      key: "formations",
+      label: "Formations",
+      icon: icons.formations,
+      title: "Formations",
+      subtitle: "Gérez uniquement les formations qui vous sont confiées.",
+      sections: [{
+        title: "Formations",
+        items: [{ label: "Mes formations", href: "/gestion/formations", icon: icons.formations }],
+      }],
+    });
+  }
+
+  if (!roles.superAdmin && roles.steeringMinistryIds.length > 0) {
     spaces.push({
       key: "steering",
       label: "Pilotage ministère",
@@ -190,7 +210,7 @@ export function navSpaces(roles: ViewerRoles): Space[] {
     });
   }
 
-  if (roles.projectsTraining) {
+  if (!roles.superAdmin && roles.projectsTraining) {
     spaces.push({
       key: "projectsTraining",
       label: "Projets et formations",
@@ -207,22 +227,6 @@ export function navSpaces(roles: ViewerRoles): Space[] {
               icon: icons.propose,
             },
           ],
-        },
-      ],
-    });
-  }
-
-  if (roles.superAdmin) {
-    spaces.push({
-      key: "apps",
-      label: "Gestion des outils",
-      icon: icons.apps,
-      title: "Gestion des outils",
-      subtitle: "Pilotez les applications pédagogiques Ministry School.",
-      sections: [
-        {
-          title: "Gestion des outils",
-          items: [{ label: "Gestion des outils", href: "/admin/apps", icon: icons.apps }],
         },
       ],
     });

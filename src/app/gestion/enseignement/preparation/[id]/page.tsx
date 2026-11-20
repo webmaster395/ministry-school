@@ -29,6 +29,8 @@ type FullSession = PilotSession & {
   ministry_id: string | null;
   service_id: string | null;
   opportunity_id: string | null;
+  formation_id: string | null;
+  formation: { category_key: string } | null;
 };
 
 const SECTIONS = [
@@ -69,7 +71,7 @@ export async function PreparationPageContent({
   const { data } = await supabase
     .from("sessions")
     .select(
-      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, show_parking_notice, session_type, course_id, day, teacher_id, ministry_id, service_id, opportunity_id, editorial_status, publication_at, revision_of, teacher:profiles!sessions_teacher_id_fkey(full_name)" +
+      "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, show_parking_notice, session_type, course_id, day, teacher_id, ministry_id, service_id, opportunity_id, formation_id, formation:formations(category_key), editorial_status, publication_at, revision_of, teacher:profiles!sessions_teacher_id_fkey(full_name)" +
         DRAFT_COLUMN,
     )
     .eq("id", id)
@@ -96,9 +98,10 @@ export async function PreparationPageContent({
   const strictPilot = s.session_type === "ministere" &&
       !!s.ministry_id &&
       viewer.roles.steeringMinistryIds.includes(s.ministry_id);
-  const { data: scopedCanEdit } = accessMode !== "administration"
-    ? await supabase.rpc("can_edit_ministry_course", { p_session: id })
-    : { data: false };
+  const [{ data: scopedCanEdit }, { data: formationCanEdit }] = await Promise.all([
+    supabase.rpc("can_edit_ministry_course", { p_session: id }),
+    supabase.rpc("can_manage_formation_session", { p_session: id }),
+  ]);
   const { data: managedCanView } = accessMode === "opportunity"
     ? await supabase.rpc("can_view_managed_course", { p_session: id })
     : { data: false };
@@ -106,19 +109,19 @@ export async function PreparationPageContent({
     ? strictPilot
     : accessMode === "opportunity"
       ? !!managedCanView && !!s.opportunity_id && s.opportunity_id === opportunityId
-      : viewer.roles.admin;
+      : viewer.roles.superAdmin || !!formationCanEdit;
   const canEdit = accessMode === "pilotage"
     ? !!scopedCanEdit
     : accessMode === "opportunity"
       ? !!scopedCanEdit
-      : viewer.roles.superAdmin;
+      : viewer.roles.superAdmin || !!formationCanEdit;
   if (!canView) redirect("/etudiant");
 
   const [{ data: materials }, { data: assignments }] = await Promise.all([
     supabase
       .from("materials")
       .select(
-        "id, title, description, sort_order, link_url, file_url, visible_at" +
+        "id, title, description, sort_order, link_url, file_url, visible_at, audience" +
           TYPE_COLUMN,
       )
       .eq("session_id", id)
@@ -127,7 +130,7 @@ export async function PreparationPageContent({
     supabase
       .from("assignments")
       .select(
-        "id, title, description, instructions, content_type, resource_url, file_url, phase, sort_order, kind, duration_min, due_at, visible_at",
+        "id, title, description, instructions, content_type, resource_url, file_url, phase, sort_order, kind, duration_min, due_at, visible_at, audience",
       )
       .eq("session_id", id)
       .order("created_at"),
@@ -170,6 +173,8 @@ export async function PreparationPageContent({
     ? "/gestion/pilotage"
     : accessMode === "opportunity" && s.opportunity_id
     ? `/gestion/projets-formations/${s.opportunity_id}`
+    : s.formation_id
+    ? "/gestion/formations"
     : viewer.roles.admin
     ? "/gestion/admin?onglet=programme"
     : isPilot
@@ -179,16 +184,20 @@ export async function PreparationPageContent({
     ? "Retour à la préparation"
     : accessMode === "opportunity"
     ? "Retour au projet ou à la formation"
+    : s.formation_id
+    ? "Retour aux formations"
     : viewer.roles.admin
     ? "Retour au programme"
     : isPilot
       ? "Retour à la préparation"
       : "Retour à l’espace d’enseignement";
+  const isDeepening = s.formation?.category_key === "deepening";
   const panels = teacherPanels(
     s,
     assignments ?? [],
     materials ?? [],
     assignmentSteps ?? [],
+    { privateResources: isDeepening },
   );
   const color = sessionColor(s.track, "commun", "#1d2625");
   const teacher = s.speaker_name ?? s.teacher?.full_name;

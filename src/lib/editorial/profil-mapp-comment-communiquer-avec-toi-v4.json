@@ -69,7 +69,7 @@
       }
     },
     "I": {
-      "name": "Communiquant",
+      "name": "Communicant",
       "natural": {
         "accordions": [
           {
@@ -226,7 +226,7 @@
     "DI": {
       "primary": "D",
       "secondary": "I",
-      "label": "Conquérant + Communiquant",
+      "label": "Conquérant + Communicant",
       "natural": {
         "accordions": [
           {
@@ -385,7 +385,7 @@
     "ID": {
       "primary": "I",
       "secondary": "D",
-      "label": "Communiquant + Conquérant",
+      "label": "Communicant + Conquérant",
       "natural": {
         "accordions": [
           {
@@ -438,7 +438,7 @@
     "IS": {
       "primary": "I",
       "secondary": "S",
-      "label": "Communiquant + Facilitateur",
+      "label": "Communicant + Facilitateur",
       "natural": {
         "accordions": [
           {
@@ -491,7 +491,7 @@
     "IC": {
       "primary": "I",
       "secondary": "C",
-      "label": "Communiquant + Analyste",
+      "label": "Communicant + Analyste",
       "natural": {
         "accordions": [
           {
@@ -597,7 +597,7 @@
     "SI": {
       "primary": "S",
       "secondary": "I",
-      "label": "Facilitateur + Communiquant",
+      "label": "Facilitateur + Communicant",
       "natural": {
         "accordions": [
           {
@@ -756,7 +756,7 @@
     "CI": {
       "primary": "C",
       "secondary": "I",
-      "label": "Analyste + Communiquant",
+      "label": "Analyste + Communicant",
       "natural": {
         "accordions": [
           {

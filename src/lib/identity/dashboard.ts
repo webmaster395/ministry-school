@@ -10,7 +10,12 @@ export type IdentityResult = {
   primaryCode?: string | null;
   secondaryCode?: string | null;
   tieBreakRequired?: boolean;
+  native?: boolean;
+  legacy?: boolean;
   results?: Record<string, unknown>;
+  questionnaireVersion?: string | null;
+  scoringVersion?: string | null;
+  restitutionVersion?: string | null;
 };
 
 export type IdentityDashboard = {

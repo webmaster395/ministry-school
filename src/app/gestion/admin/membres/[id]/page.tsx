@@ -7,6 +7,10 @@ import { signedAvatarUrls } from "@/lib/avatars";
 import { parseMlkEngagement } from "@/lib/mlk-engagement";
 import MinistryPicto from "@/components/MinistryPicto";
 import { getViewer } from "@/lib/data/viewer";
+import MemberProfileEditor from "@/components/admin/MemberProfileEditor";
+import MemberAccessEditor from "@/components/admin/MemberAccessEditor";
+import { setDeepeningAuthorization } from "@/app/gestion/formations/actions";
+import type { Member } from "@/lib/data/admin-hub";
 
 const date = (value?: string | null) => value
   ? new Intl.DateTimeFormat("fr-FR", { dateStyle: "long", timeZone: "Europe/Paris" }).format(new Date(value))
@@ -22,6 +26,9 @@ type Assignment = {
 type Delegation = { ministry: { name: string } | null };
 type Enrollment = { session: { session_date: string; description: string | null; track: string | null; courses: { title: string } | null } | null };
 type InitiativeRegistration = { date: { session_date: string; opportunity: { title: string } | null } | null };
+type MappProfile = { primary: string | null; secondary: string | null; completedAt: string | null };
+
+const mappLabel = (code: string | null) => ({ D: "Conquérant", I: "Communicant", S: "Facilitateur", C: "Analyste", conquerant: "Conquérant", communiquant: "Communicant", communicant: "Communicant", facilitateur: "Facilitateur", analyste: "Analyste" }[code ?? ""] ?? "À préciser");
 
 export default async function AdminMemberProfilePage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ returnTo?: string }> }) {
   const viewer = await getViewer();
@@ -34,7 +41,7 @@ export default async function AdminMemberProfilePage({ params, searchParams }: {
   const supabase = await createClient();
   const { data: profile } = await supabase
     .from("profiles")
-    .select("id, full_name, gender, role, created_at, avatar_path, notification_prefs, preferred_day, email_confirmed, deactivated, is_teacher, is_service_lead, is_project_lead, is_projects_training_member, service_id, ministry_id, ministry_lead_of, ministries!profiles_ministry_id_fkey(name, slug)")
+    .select("id, full_name, gender, role, created_at, avatar_path, notification_prefs, preferred_day, email_confirmed, deactivated, is_teacher, is_service_lead, is_project_lead, is_projects_training_member, can_create_opportunities, service_id, ministry_id, ministry_lead_of, ministries!profiles_ministry_id_fkey(name, slug)")
     .eq("id", id)
     .single();
   if (!profile) notFound();
@@ -47,6 +54,7 @@ export default async function AdminMemberProfilePage({ params, searchParams }: {
   let delegations: Delegation[] = [];
   let enrollments: Enrollment[] = [];
   let initiativeRegistrations: InitiativeRegistration[] = [];
+  let mappProfile: MappProfile | null = null;
   try {
     const service = createServiceClient();
     const [authResult, assignmentsResult, delegationsResult, enrollmentsResult, registrationsResult] = await Promise.all([
@@ -65,15 +73,28 @@ export default async function AdminMemberProfilePage({ params, searchParams }: {
     delegations = (delegationsResult.data ?? []) as unknown as Delegation[];
     enrollments = (enrollmentsResult.data ?? []) as unknown as Enrollment[];
     initiativeRegistrations = (registrationsResult.data ?? []) as unknown as InitiativeRegistration[];
+    const mapp = service.schema("mapp");
+    const { data: identityLink } = await mapp.from("participant_auth_identities").select("participant_id").eq("auth_user_id", id).is("revoked_at", null).limit(1).maybeSingle();
+    if (identityLink?.participant_id) {
+      const { data: attempt } = await mapp.from("attempts").select("id,completed_at").eq("participant_id", identityLink.participant_id).eq("status", "completed").order("completed_at", { ascending: false }).limit(1).maybeSingle();
+      if (attempt) {
+        const { data: revision } = await mapp.from("result_revisions").select("id").eq("attempt_id", attempt.id).order("revision", { ascending: false }).limit(1).maybeSingle();
+        const { data: ranking } = revision ? await mapp.from("result_rankings").select("primary_code,secondary_code").eq("result_revision_id", revision.id).eq("context", "natural").maybeSingle() : { data: null };
+        mappProfile = { primary: ranking?.primary_code ?? null, secondary: ranking?.secondary_code ?? null, completedAt: attempt.completed_at };
+      }
+    }
   } catch {
     const { data: emails } = await supabase.rpc("admin_user_emails");
     email = ((emails ?? []) as { id: string; email: string }[]).find((item) => item.id === id)?.email ?? "";
   }
 
-  const [{ data: superAdmin }, { data: service }, { data: leadMinistry }] = await Promise.all([
+  const [{ data: superAdmin }, { data: service }, { data: leadMinistry }, ministriesResult, servicesResult, deepeningResult] = await Promise.all([
     supabase.rpc("is_super_admin", { p_user: id }),
     profile.service_id ? supabase.from("services").select("name").eq("id", profile.service_id).maybeSingle() : Promise.resolve({ data: null }),
     profile.ministry_lead_of ? supabase.from("ministries").select("name").eq("id", profile.ministry_lead_of).maybeSingle() : Promise.resolve({ data: null }),
+    supabase.from("ministries").select("id,name").order("name"),
+    supabase.from("services").select("id,name").order("name"),
+    supabase.from("deepening_access").select("enabled").eq("user_id", id).maybeSingle(),
   ]);
 
   const ministry = profile.ministries as unknown as { name: string; slug: string } | null;
@@ -98,6 +119,31 @@ export default async function AdminMemberProfilePage({ params, searchParams }: {
   const sortedEnrollments = [...enrollments].sort((a, b) => (b.session?.session_date ?? "").localeCompare(a.session?.session_date ?? ""));
   const sortedInitiatives = [...initiativeRegistrations].sort((a, b) => (b.date?.session_date ?? "").localeCompare(a.date?.session_date ?? ""));
   const initiativeNames = new Set(sortedInitiatives.map((item) => item.date?.opportunity?.title).filter(Boolean));
+  const ministries = (ministriesResult.data ?? []) as { id: string; name: string }[];
+  const services = (servicesResult.data ?? []) as { id: string; name: string }[];
+  const deepeningAuthorized = Boolean(deepeningResult.data?.enabled);
+  const editableMember: Member = {
+    id: profile.id,
+    full_name: profile.full_name ?? "",
+    email,
+    role: profile.role,
+    is_super_admin: Boolean(superAdmin),
+    gender: profile.gender,
+    is_teacher: profile.is_teacher,
+    is_service_lead: profile.is_service_lead,
+    is_project_lead: profile.is_project_lead,
+    is_projects_training_member: profile.is_projects_training_member,
+    can_create_opportunities: profile.can_create_opportunities,
+    service_id: profile.service_id,
+    ministry_lead_of: profile.ministry_lead_of,
+    ministry_id: profile.ministry_id,
+    email_confirmed: profile.email_confirmed,
+    deactivated: profile.deactivated,
+    created_at: profile.created_at,
+    preferred_day: profile.preferred_day,
+    avatar_path: profile.avatar_path,
+    notification_prefs: profile.notification_prefs,
+  };
 
   return (
     <div className="mx-auto max-w-[1040px] space-y-5">
@@ -125,9 +171,31 @@ export default async function AdminMemberProfilePage({ params, searchParams }: {
         </dl>
       </section>
 
-      <section className="grid gap-5 md:grid-cols-2">
+      <div className="grid gap-5 lg:grid-cols-2">
+        <MemberProfileEditor member={{ id: profile.id, full_name: profile.full_name ?? "", gender: profile.gender, ministry_id: profile.ministry_id, preferred_day: profile.preferred_day }} ministries={ministries} />
+        <section className="rounded-xl border border-border bg-background p-5 sm:p-6">
+          <p className="label text-[10px] tracking-[0.15em] text-muted">ACCÈS SPÉCIFIQUE</p>
+          <h2 className="font-title mt-2 text-[23px] text-foreground">Approfondissements</h2>
+          <p className="mt-2 text-sm leading-6 text-muted">Cette autorisation générale est requise avant toute inscription à une formation d’approfondissement.</p>
+          <form action={setDeepeningAuthorization} className="mt-4 flex items-center justify-between gap-3 rounded-xl bg-surface p-3">
+            <input type="hidden" name="user_id" value={profile.id} />
+            <input type="hidden" name="enabled" value={deepeningAuthorized ? "0" : "1"} />
+            <strong className="text-sm text-foreground">{deepeningAuthorized ? "Accès autorisé" : "Accès non autorisé"}</strong>
+            <button className={`rounded-full px-3.5 py-2 text-xs font-semibold ${deepeningAuthorized ? "bg-emerald-100 text-emerald-800" : "bg-accent text-on-accent"}`}>{deepeningAuthorized ? "Retirer l’accès" : "Autoriser l’accès"}</button>
+          </form>
+        </section>
+      </div>
+
+      <section className="rounded-xl border border-border bg-background p-5 sm:p-6">
+        <p className="label text-[10px] tracking-[0.15em] text-muted">RÔLES ET COMPTE</p>
+        <h2 className="font-title mt-2 text-[23px] text-foreground">Modifier les accès administratifs</h2>
+        <MemberAccessEditor member={editableMember} services={services} ministries={ministries} />
+      </section>
+
+      <section className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
         <article className="rounded-xl border border-border bg-background p-5 sm:p-6"><p className="label text-[11px] tracking-[0.16em] text-muted">SENSIBILITÉ MINISTÉRIELLE</p>{ministry ? <div className="mt-5 flex items-center gap-3"><span className="flex h-12 w-12 items-center justify-center rounded-full bg-surface"><MinistryPicto slug={ministry.slug} size={25} /></span><p className="font-title text-[24px] text-foreground">{ministry.name}</p></div> : <p className="mt-5 text-sm text-muted">Non renseignée</p>}</article>
         <article className="rounded-xl border border-border bg-background p-5 sm:p-6"><p className="label text-[11px] tracking-[0.16em] text-muted">IMPLICATION À MLK</p>{engagement.completed && involvement.length ? <div className="mt-4 space-y-3"><div className="flex flex-wrap gap-2">{involvement.map((item) => <span key={item} className="rounded-full bg-surface px-3 py-1.5 text-sm font-medium text-foreground">{item}</span>)}</div>{engagement.equipierServices && <p className="text-sm text-muted"><strong className="text-foreground">Service(s) comme équipier :</strong> {engagement.equipierServices}</p>}{engagement.managerServices && <p className="text-sm text-muted"><strong className="text-foreground">Service(s) comme manager :</strong> {engagement.managerServices}</p>}</div> : <p className="mt-5 text-sm text-muted">Non renseignée</p>}</article>
+        <article className="rounded-xl border border-border bg-background p-5 sm:p-6"><p className="label text-[11px] tracking-[0.16em] text-muted">PROFIL MAPP</p>{mappProfile ? <div className="mt-4 grid gap-2"><div className="flex items-center justify-between gap-3 rounded-lg bg-[#fff7d8] px-3.5 py-3"><span className="text-xs text-muted">Profil principal</span><strong className="text-sm text-[#352700]">{mappLabel(mappProfile.primary)}</strong></div><div className="flex items-center justify-between gap-3 rounded-lg bg-surface px-3.5 py-3"><span className="text-xs text-muted">Profil secondaire</span><strong className="text-sm text-foreground">{mappLabel(mappProfile.secondary)}</strong></div><p className="mt-2 text-xs text-muted">Test terminé le {date(mappProfile.completedAt)}</p></div> : <p className="mt-5 text-sm text-muted">Aucun résultat MAPP dans Ministry.</p>}</article>
       </section>
 
       <section className="rounded-xl border border-border bg-background p-5 sm:p-6"><p className="label text-[11px] tracking-[0.16em] text-muted">DROITS ET RESPONSABILITÉS</p>{access.length ? <ul className="mt-4 grid gap-2 sm:grid-cols-2">{access.map((item) => <li key={item} className="flex items-center gap-2 rounded-lg bg-surface px-3.5 py-3 text-sm font-medium text-foreground"><ShieldCheck size={16} className="shrink-0 text-muted" />{item}</li>)}</ul> : <p className="mt-4 text-sm text-muted">Aucune responsabilité administrative supplémentaire.</p>}</section>

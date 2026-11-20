@@ -4,7 +4,7 @@ export type IdentityInterpretation = { subtitle: string; parts: IdentityTiePart[
 export type InitialNaturalScores = Partial<Record<IdentityTieCode, number>>;
 
 const profileNames: Record<IdentityTieCode, string> = {
-  D: "Conquérant", I: "Communiquant", S: "Facilitateur", C: "Analyste",
+  D: "Conquérant", I: "Communicant", S: "Facilitateur", C: "Analyste",
 };
 const order: IdentityTieCode[] = ["D", "I", "S", "C"];
 const combinationCopy: Record<IdentityTieCode, Partial<Record<IdentityTieCode, string>>> = {

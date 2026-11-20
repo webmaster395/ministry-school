@@ -16,6 +16,7 @@ import Grandir from "../grandir-v1/preview";
 import OrganisationPreview from "../dans-une-organisation-v1/preview";
 import { ORGANISATION_MANUAL_SOURCE, defaultContextForRole, normalizeManualOrganisationContent } from "../dans-une-organisation-v1/dataset";
 import { withMappBasePath } from "@/lib/routing/base-path";
+import { normalizeVisibleMappText, visibleMappProfileName } from "@/lib/mapp/visible-profile";
 
 const source = normalizeIntegralV10();
 const editorialLibrary = source;
@@ -23,11 +24,33 @@ const biblicalV10 = source.biblical;
 export type PreviewProfileCode = "conquerant" | "communiquant" | "facilitateur" | "analyste";
 
 const resultProfileColor: Record<PreviewProfileCode, string> = {
-  conquerant: "var(--results-conquerant)",
-  communiquant: "var(--results-communiquant)",
-  facilitateur: "var(--results-facilitateur)",
-  analyste: "var(--results-analyste)",
+  // This result is rendered inside an iframe. Keep the official palette
+  // self-contained: CSS variables defined by Ministry's parent document do
+  // not reliably cross the iframe boundary on a cold production load.
+  conquerant: "#D94334",
+  communiquant: "#F2C94C",
+  facilitateur: "#57A773",
+  analyste: "#477CB9",
 };
+
+/**
+ * The new native MAPP result injects CSS-module React sections into the
+ * historical static result iframe. Stylesheets from the Ministry document do
+ * not cross that iframe boundary automatically, which leaves those sections
+ * looking like raw HTML. Mirror the host styles into the frame before
+ * hydrating its interactive sections.
+ */
+function mirrorHostStylesIntoFrame(frameDocument: Document) {
+  frameDocument.head.querySelectorAll("[data-mapp-host-style]").forEach((node) => node.remove());
+
+  document.head.querySelectorAll<HTMLLinkElement | HTMLStyleElement>('link[rel="stylesheet"], style').forEach((source) => {
+    const clone = source.cloneNode(true) as HTMLLinkElement | HTMLStyleElement;
+    clone.removeAttribute("id");
+    clone.setAttribute("data-mapp-host-style", "true");
+    if (source instanceof HTMLLinkElement) clone.setAttribute("href", source.href);
+    frameDocument.head.appendChild(clone);
+  });
+}
 
 function assignTypographyRoles(doc: Document) {
   doc.body.classList.add("results-design-system");
@@ -41,8 +64,31 @@ function assignTypographyRoles(doc: Document) {
   }
 }
 
+function normalizeVisibleMappVocabulary(doc: Document) {
+  const walker = doc.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT);
+  let current = walker.nextNode();
+  while (current) {
+    if (current.nodeValue) {
+      const normalized = normalizeVisibleMappText(current.nodeValue);
+      if (normalized !== current.nodeValue) current.nodeValue = normalized;
+    }
+    current = walker.nextNode();
+  }
+  doc.querySelectorAll<HTMLElement>("[aria-label],[title],[alt],[placeholder]").forEach((element) => {
+    for (const attribute of ["aria-label", "title", "alt", "placeholder"]) {
+      const value = element.getAttribute(attribute);
+      if (!value) continue;
+      const normalized = normalizeVisibleMappText(value);
+      if (normalized !== value) element.setAttribute(attribute, normalized);
+    }
+  });
+  doc.querySelectorAll<HTMLElement>(".combination-symbols [title]").forEach((element) => {
+    element.textContent = visibleMappProfileName(element.getAttribute("title"), "Profil MAPP");
+  });
+}
+
 const dimensionOrder: PreviewProfileCode[] = ["conquerant", "communiquant", "analyste", "facilitateur"];
-const profileLabels: Record<PreviewProfileCode, string> = { conquerant: "Conquérant", communiquant: "Communiquant", facilitateur: "Facilitateur", analyste: "Analyste" };
+const profileLabels: Record<PreviewProfileCode, string> = { conquerant: "Conquérant", communiquant: "Communicant", facilitateur: "Facilitateur", analyste: "Analyste" };
 const demoValues: Record<PreviewProfileCode, number> = { conquerant: 48, communiquant: 56, facilitateur: 61, analyste: 52 };
 
 function setText(root: ParentNode, selector: string, value?: string | null) {
@@ -545,7 +591,7 @@ export function hydrateDraftProfile(
   [[0,-scores.conquerant*scale],[scores.communiquant*scale,0],[0,scores.analyste*scale],[-scores.facilitateur*scale,0]].forEach(([x,y],i)=>{dots[i]?.setAttribute("cx",String(x));dots[i]?.setAttribute("cy",String(y));});
   doc.querySelector<HTMLElement>("#page-1 [aria-label^='Radar :']")?.setAttribute(
     "aria-label",
-    `Radar : Conquérant ${scores.conquerant} sur 100, Communiquant ${scores.communiquant}, Analyste ${scores.analyste}, Facilitateur ${scores.facilitateur}`,
+    `Radar : Conquérant ${scores.conquerant} sur 100, Communicant ${scores.communiquant}, Analyste ${scores.analyste}, Facilitateur ${scores.facilitateur}`,
   );
   const shape = doc.querySelector<SVGPolygonElement>("#page-1 #shape");
   shape?.style.setProperty("--accent", color);
@@ -1029,7 +1075,12 @@ export default function CompleteExperience({
   const prepareFrame = useCallback(() => {
     const frame = frameRef.current;
     const doc = frame?.contentDocument;
-    if (!frame || !doc?.body || !doc.getElementById("page-1") || doc.body.dataset.mappHydrated === "true") return;
+    if (!frame || !doc?.body || !doc.getElementById("page-1")) return;
+    mirrorHostStylesIntoFrame(doc);
+    if (doc.body.dataset.mappHydrated === "true") {
+      requestAnimationFrame(() => setReady(true));
+      return;
+    }
     const activeDoc = doc;
     const body = doc.body;
 
@@ -1074,6 +1125,7 @@ export default function CompleteExperience({
       if (identity) { const note = doc.createElement("p"); note.id = "disc-v2-tie-note"; note.className = "disc-v2-tie-note"; note.textContent = tieNote; identity.insertAdjacentElement("afterend", note); }
     }
     assignTypographyRoles(doc);
+    normalizeVisibleMappVocabulary(doc);
     functioningRoot.current?.unmount();
     forcesRoot.current?.unmount();
     relationsRoot.current?.unmount();
@@ -1236,7 +1288,10 @@ export default function CompleteExperience({
     const FrameMutationObserver = doc.defaultView?.MutationObserver;
     if (FrameMutationObserver && body.isConnected) {
       try {
-        const observer = new FrameMutationObserver(() => requestAnimationFrame(syncHeight));
+        const observer = new FrameMutationObserver(() => requestAnimationFrame(() => {
+          normalizeVisibleMappVocabulary(activeDoc);
+          syncHeight();
+        }));
         observer.observe(body, { attributes: true, childList: true, subtree: true });
       } catch {
         // An iframe can be replaced during fast navigation. Button, image and

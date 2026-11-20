@@ -18,7 +18,7 @@ const label = "mb-1.5 block text-[14px] text-muted";
  * « Ajouter une ressource » : type, titre, lien ou fichier (PDF, PowerPoint, Word, Excel ; 20 Mo)
  * et moment où elle devient visible pour les étudiants.
  */
-export default function ResourceDialog({ sessionId, withTypes }: { sessionId: string; withTypes: boolean }) {
+export default function ResourceDialog({ sessionId, withTypes, privateFiles = false }: { sessionId: string; withTypes: boolean; privateFiles?: boolean }) {
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -54,14 +54,16 @@ export default function ResourceDialog({ sessionId, withTypes }: { sessionId: st
         const supabase = createClient();
         const safe = file.name.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-zA-Z0-9._-]+/g, "-");
         const path = `${sessionId}/${crypto.randomUUID()}/${safe}`;
+        const bucket = privateFiles ? "formation-private-resources" : "supports-cours";
         const { error: uploadError } = await supabase.storage
-          .from("supports-cours")
+          .from(bucket)
           .upload(path, file, { contentType: file.type || undefined });
         if (uploadError) throw new Error("Le dépôt du fichier a échoué. Réessayez dans un instant.");
-        url = supabase.storage.from("supports-cours").getPublicUrl(path).data.publicUrl;
+        url = privateFiles ? `private://${path}` : supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl;
       }
-      form.set("link_url", url);
+      form.set(privateFiles && file ? "file_url" : "link_url", url);
       form.set("session_id", sessionId);
+      if (privateFiles && !form.get("audience")) form.set("audience", "present");
       if (!String(form.get("title") ?? "").trim() && file) form.set("title", file.name.replace(/\.[^.]+$/, ""));
       await addSupport(form);
       close();
@@ -144,6 +146,8 @@ export default function ResourceDialog({ sessionId, withTypes }: { sessionId: st
             </div>
 
             <AvailabilityPicker label="Disponibilité du support" />
+
+            {privateFiles && <div><label className={label}>Accès</label><AdminSelect name="audience" defaultValue="present" options={[{value:"present",label:"Uniquement les présents à cette séance"},{value:"enrolled",label:"Tous les inscrits à l’approfondissement"}]} /></div>}
 
             {error && <p role="alert" className="rounded-lg border border-m-doctoral/30 bg-m-doctoral/10 px-3 py-2 text-[14px] text-link">{error}</p>}
 

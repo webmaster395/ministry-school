@@ -26,7 +26,7 @@ declare
   current_user_id uuid := (select auth.uid());
   current_profile public.profiles;
   is_super_admin boolean := false;
-  grace_results jsonb := '[]'::jsonb;
+  dashboard_result jsonb := '{}'::jsonb;
   life_line_result jsonb;
   heroes_result jsonb;
   visible_tools jsonb := '[]'::jsonb;
@@ -46,15 +46,7 @@ begin
 
   is_super_admin := public.is_super_admin(current_user_id);
 
-  select coalesce(jsonb_agg(jsonb_build_object(
-    'kind', assessment.test_key,
-    'completedAt', assessment.completed_at,
-    'results', assessment.results
-  ) order by assessment.completed_at desc), '[]'::jsonb)
-  into grace_results
-  from public.grace_identity_assessments assessment
-  where assessment.user_id = current_user_id
-    and assessment.completed_at is not null;
+  dashboard_result := public.student_identity_dashboard();
 
   select jsonb_build_object(
     'completedAt', coalesce(journey.completed_at, journey.updated_at)
@@ -80,68 +72,36 @@ begin
     'slug', app.slug,
     'name', app.name,
     'iconUrl', app.icon_url,
-    'destinationUrl', app.destination_url
+    'destinationUrl', app.destination_url,
+    'displayTitle', coalesce(app.display_title, app.name),
+    'storyTitle', coalesce(app.story_title, app.name),
+    'storyImageUrl', coalesce(app.story_image_url, app.icon_url),
+    'storyDestinationUrl', coalesce(app.story_destination_url, app.destination_url),
+    'postTitle', coalesce(app.post_title, app.name),
+    'postImageUrl', coalesce(app.post_image_url, app.icon_url),
+    'postDestinationUrl', coalesce(app.post_destination_url, app.destination_url),
+    'placementStory', app.placement_story,
+    'placementWork', app.placement_work
   ) order by app.display_order, app.name), '[]'::jsonb)
   into visible_tools
   from public.app_catalog app
-  left join public.resource_access_controls access
-    on access.resource_type = 'app_catalog' and access.resource_id = app.id
   where app.archived_at is null
-    and app.status in ('scheduled', 'published')
-    and app.student_enabled
-    and (app.student_publish_at is null or app.student_publish_at <= now())
-    and exists(
-      select 1 from public.app_studio_settings settings
-      where settings.singleton and settings.student_tools_enabled
-    )
     and (
-      access.resource_id is null
-      or is_super_admin
-      or access.visibility_mode = 'all_authenticated'
+      is_super_admin
       or (
-        access.visibility_mode = 'selected_users'
+        app.status in ('scheduled', 'published')
+        and app.student_enabled
+        and (app.student_publish_at is null or app.student_publish_at <= now())
         and exists(
-          select 1 from public.resource_access_users direct_access
-          where direct_access.resource_type = 'app_catalog'
-            and direct_access.resource_id = app.id
-            and direct_access.user_id = current_user_id
+          select 1 from public.app_studio_settings settings
+          where settings.singleton and settings.student_tools_enabled
         )
-      )
-      or (
-        access.visibility_mode = 'selected_lists'
-        and exists(
-          select 1
-          from public.resource_access_lists list_access
-          join public.user_list_members membership on membership.list_id = list_access.list_id
-          where list_access.resource_type = 'app_catalog'
-            and list_access.resource_id = app.id
-            and membership.user_id = current_user_id
-        )
+        and public.can_access_catalog_app(app.id, current_user_id)
       )
     );
 
   return jsonb_build_object(
-    'dashboard', jsonb_build_object(
-      'profile', jsonb_build_object(
-        'firstName', split_part(trim(coalesce(current_profile.full_name, '')), ' ', 1),
-        'memberSince', current_profile.created_at,
-        'certified', false,
-        'gender', current_profile.gender
-      ),
-      'metrics', jsonb_build_object(
-        'studentCount', (
-          select count(*)::integer
-          from public.profiles profile
-          where profile.role = 'student'
-            and not coalesce(profile.deactivated, false)
-            and not coalesce(profile.is_test_account, false)
-        ),
-        'completedTests', jsonb_array_length(grace_results)
-      ),
-      'identityResults', grace_results,
-      'financeResults', '[]'::jsonb,
-      'recommendations', '[]'::jsonb
-    ),
+    'dashboard', dashboard_result,
     'lifeLine', life_line_result,
     'heroesMotors', heroes_result,
     'tools', visible_tools
@@ -153,9 +113,9 @@ revoke all on function public.student_identity_feed() from public, anon;
 grant execute on function public.student_identity_feed() to authenticated;
 
 comment on function public.student_identity_feed() is
-  'Single private read model for the identity gallery, including set-based list access.';
+  'Single private read model for the identity gallery, reusing the catalog access policy.';
 
-create or replace function public.student_grace_identity_tool()
+create or replace function public.student_grace_identity_tool(p_test_key text)
 returns jsonb
 language plpgsql
 stable
@@ -169,6 +129,9 @@ declare
   student_visible boolean := false;
   assessments jsonb := '[]'::jsonb;
 begin
+  if p_test_key not in ('fruit', 'gifts', 'skills') then
+    raise exception 'INVALID_TEST_KEY' using errcode = '22023';
+  end if;
   if current_user_id is null or not exists(
     select 1 from public.profiles profile
     where profile.id = current_user_id and not coalesce(profile.deactivated, false)
@@ -180,7 +143,14 @@ begin
 
   select app.* into tool_record
   from public.app_catalog app
-  where app.slug = 'je-suis-par-la-grace-de-dieu'
+  where app.slug in (
+      'je-suis-par-la-grace-de-dieu',
+      case p_test_key
+        when 'fruit' then 'fruit-de-lesprit'
+        when 'gifts' then 'dons-spirituels'
+        else 'competences-naturelles'
+      end
+    )
     and (
       is_super_admin
       or (
@@ -192,9 +162,10 @@ begin
           select 1 from public.app_studio_settings settings
           where settings.singleton and settings.student_tools_enabled
         )
-        and public.can_access_resource('app_catalog', app.id, current_user_id)
+        and public.can_access_catalog_app(app.id, current_user_id)
       )
     )
+  order by (app.slug = 'je-suis-par-la-grace-de-dieu') asc
   limit 1;
 
   if tool_record.id is null then
@@ -208,6 +179,9 @@ begin
 
   select coalesce(jsonb_agg(jsonb_build_object(
     'test_key', assessment.test_key,
+    'questionnaire_version', assessment.questionnaire_version,
+    'scoring_version', assessment.scoring_version,
+    'restitution_version', assessment.restitution_version,
     'answers', assessment.answers,
     'results', assessment.results,
     'completed_at', assessment.completed_at,
@@ -225,13 +199,17 @@ begin
 end;
 $$;
 
-revoke all on function public.student_grace_identity_tool() from public, anon;
-grant execute on function public.student_grace_identity_tool() to authenticated;
+revoke all on function public.student_grace_identity_tool(text) from public, anon;
+grant execute on function public.student_grace_identity_tool(text) to authenticated;
 
 create or replace function public.save_grace_identity_assessment(
   p_test_key text,
   p_answers jsonb,
-  p_results jsonb
+  p_results jsonb,
+  p_questionnaire_version text,
+  p_scoring_version text,
+  p_restitution_version text,
+  p_completed boolean
 )
 returns jsonb
 language plpgsql
@@ -242,6 +220,7 @@ as $$
 declare
   current_user_id uuid := (select auth.uid());
   saved public.grace_identity_assessments;
+  target_slug text;
 begin
   if current_user_id is null or not exists(
     select 1 from public.profiles profile
@@ -252,14 +231,48 @@ begin
   if p_test_key not in ('fruit', 'gifts', 'skills') then
     raise exception 'INVALID_TEST_KEY' using errcode = '22023';
   end if;
+  target_slug := case p_test_key
+    when 'fruit' then 'fruit-de-lesprit'
+    when 'gifts' then 'dons-spirituels'
+    else 'competences-naturelles'
+  end;
+  if not public.is_super_admin(current_user_id) and not exists(
+    select 1
+    from public.app_catalog app
+    where app.slug in (target_slug, 'je-suis-par-la-grace-de-dieu')
+      and app.archived_at is null
+      and app.status in ('scheduled', 'published')
+      and app.student_enabled
+      and (app.student_publish_at is null or app.student_publish_at <= now())
+      and exists(
+        select 1 from public.app_studio_settings settings
+        where settings.singleton and settings.student_tools_enabled
+      )
+      and public.can_access_catalog_app(app.id, current_user_id)
+  ) then
+    raise exception 'IDENTITY_ACCESS_DENIED' using errcode = '42501';
+  end if;
   if jsonb_typeof(p_answers) is distinct from 'object'
     or jsonb_typeof(p_results) is distinct from 'object' then
     raise exception 'INVALID_ASSESSMENT' using errcode = '22023';
   end if;
 
-  insert into public.grace_identity_assessments(user_id, test_key, answers, results, completed_at)
-  values(current_user_id, p_test_key, p_answers, p_results, now())
-  on conflict(user_id, test_key) do update set
+  if nullif(trim(p_questionnaire_version), '') is null
+    or nullif(trim(p_scoring_version), '') is null then
+    raise exception 'INVALID_ASSESSMENT_VERSION' using errcode = '22023';
+  end if;
+
+  insert into public.grace_identity_assessments(
+    user_id, test_key, questionnaire_version, scoring_version,
+    restitution_version, answers, results, completed_at
+  )
+  values(
+    current_user_id, p_test_key, p_questionnaire_version, p_scoring_version,
+    p_restitution_version, p_answers, p_results, case when p_completed then now() else null end
+  )
+  on conflict(user_id, test_key, questionnaire_version) do update set
+    scoring_version = excluded.scoring_version,
+    restitution_version = excluded.restitution_version,
     answers = excluded.answers,
     results = excluded.results,
     completed_at = excluded.completed_at,
@@ -268,6 +281,9 @@ begin
 
   return jsonb_build_object(
     'test_key', saved.test_key,
+    'questionnaire_version', saved.questionnaire_version,
+    'scoring_version', saved.scoring_version,
+    'restitution_version', saved.restitution_version,
     'answers', saved.answers,
     'results', saved.results,
     'completed_at', saved.completed_at,
@@ -276,7 +292,7 @@ begin
 end;
 $$;
 
-revoke all on function public.save_grace_identity_assessment(text,jsonb,jsonb) from public, anon;
-grant execute on function public.save_grace_identity_assessment(text,jsonb,jsonb) to authenticated;
+revoke all on function public.save_grace_identity_assessment(text,jsonb,jsonb,text,text,text,boolean) from public, anon;
+grant execute on function public.save_grace_identity_assessment(text,jsonb,jsonb,text,text,text,boolean) to authenticated;
 
 commit;

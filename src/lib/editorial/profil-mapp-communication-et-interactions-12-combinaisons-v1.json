@@ -30,7 +30,7 @@
       }
     },
     "I": {
-      "name": "Communiquant",
+      "name": "Communicant",
       "colorReference": "#E6B800",
       "texts": {
         "intro": "Tu donnes volontiers une dimension chaleureuse et expressive aux échanges. Le contact humain, les idées partagées et les réactions des autres peuvent nourrir ta communication.",
@@ -89,7 +89,7 @@
     "DI": {
       "primary": "D",
       "secondary": "I",
-      "label": "Conquérant + Communiquant",
+      "label": "Conquérant + Communicant",
       "communication": {
         "title": "Comment tu communiques.",
         "intro": "Tu privilégies une communication directe, tournée vers les faits et les résultats. Tu apprécies de savoir rapidement où va l'échange. Ta tendance secondaire apporte davantage de spontanéité et d'énergie relationnelle.",
@@ -97,12 +97,12 @@
           {
             "id": "expression",
             "title": "Ta façon de t'exprimer",
-            "text": "Tu tends à annoncer ton avis ou ta conclusion sans détour, avec des formulations affirmées et des questions qui vont à l'essentiel. Ton débit peut être soutenu, ta voix ferme et ton ton plus pressant lorsque tu veux obtenir une réponse. Tu peux interrompre si la discussion s'éloigne de son objectif. Ton côté Communiquant peut ajouter des anecdotes, des réactions spontanées et davantage de variations dans la voix."
+            "text": "Tu tends à annoncer ton avis ou ta conclusion sans détour, avec des formulations affirmées et des questions qui vont à l'essentiel. Ton débit peut être soutenu, ta voix ferme et ton ton plus pressant lorsque tu veux obtenir une réponse. Tu peux interrompre si la discussion s'éloigne de son objectif. Ton côté Communicant peut ajouter des anecdotes, des réactions spontanées et davantage de variations dans la voix."
           },
           {
             "id": "nonverbal",
             "title": "Ton langage non verbal",
-            "text": "Dans les descriptions classiques du profil, le regard est franc, la poignée de main ferme et la gestuelle assurée. Tu peux occuper l'espace avec une posture déterminée et peu de gestes hésitants. Ces signes restent des tendances possibles, non observées par le questionnaire. L'expressivité du Communiquant peut se traduire par des sourires et des gestes plus spontanés."
+            "text": "Dans les descriptions classiques du profil, le regard est franc, la poignée de main ferme et la gestuelle assurée. Tu peux occuper l'espace avec une posture déterminée et peu de gestes hésitants. Ces signes restent des tendances possibles, non observées par le questionnaire. L'expressivité du Communicant peut se traduire par des sourires et des gestes plus spontanés."
           },
           {
             "id": "ecoute",
@@ -260,7 +260,7 @@
     "ID": {
       "primary": "I",
       "secondary": "D",
-      "label": "Communiquant + Conquérant",
+      "label": "Communicant + Conquérant",
       "communication": {
         "title": "Comment tu communiques.",
         "intro": "Tu donnes volontiers une dimension chaleureuse et expressive aux échanges. Le contact humain, les idées partagées et les réactions des autres peuvent nourrir ta communication. Ta tendance secondaire peut renforcer ton goût pour les échanges qui débouchent sur une décision.",
@@ -317,7 +317,7 @@
     "IS": {
       "primary": "I",
       "secondary": "S",
-      "label": "Communiquant + Facilitateur",
+      "label": "Communicant + Facilitateur",
       "communication": {
         "title": "Comment tu communiques.",
         "intro": "Tu donnes volontiers une dimension chaleureuse et expressive aux échanges. Le contact humain, les idées partagées et les réactions des autres peuvent nourrir ta communication. Ta tendance secondaire peut apporter plus d'attention au rythme et aux besoins des autres.",
@@ -374,7 +374,7 @@
     "IC": {
       "primary": "I",
       "secondary": "C",
-      "label": "Communiquant + Analyste",
+      "label": "Communicant + Analyste",
       "communication": {
         "title": "Comment tu communiques.",
         "intro": "Tu donnes volontiers une dimension chaleureuse et expressive aux échanges. Le contact humain, les idées partagées et les réactions des autres peuvent nourrir ta communication. Ta tendance secondaire peut renforcer ton souci de précision et de cohérence.",
@@ -488,7 +488,7 @@
     "SI": {
       "primary": "S",
       "secondary": "I",
-      "label": "Facilitateur + Communiquant",
+      "label": "Facilitateur + Communicant",
       "communication": {
         "title": "Comment tu communiques.",
         "intro": "Tu peux rechercher des échanges calmes, respectueux et rassurants. L'écoute, la confiance et la continuité des relations occupent une place importante. Ta tendance secondaire apporte davantage de spontanéité et d'énergie relationnelle.",
@@ -496,12 +496,12 @@
           {
             "id": "expression",
             "title": "Ta façon de t'exprimer",
-            "text": "Tu peux choisir des mots mesurés et vérifier l'effet de tes propos sur l'autre. Ta voix est souvent décrite comme posée, avec un débit régulier et peu de brusques changements de ton. Tu peux t'interrompre dès qu'une autre personne souhaite parler. Ton côté Communiquant peut ajouter des anecdotes, des réactions spontanées et davantage de variations dans la voix."
+            "text": "Tu peux choisir des mots mesurés et vérifier l'effet de tes propos sur l'autre. Ta voix est souvent décrite comme posée, avec un débit régulier et peu de brusques changements de ton. Tu peux t'interrompre dès qu'une autre personne souhaite parler. Ton côté Communicant peut ajouter des anecdotes, des réactions spontanées et davantage de variations dans la voix."
           },
           {
             "id": "nonverbal",
             "title": "Ton langage non verbal",
-            "text": "Les descriptions du profil évoquent une gestuelle discrète, des mouvements mesurés et une expression du visage plutôt calme. Tu peux éviter un regard trop insistant et préserver une distance confortable. Le test ne mesure toutefois ni tes gestes ni ton regard. L'expressivité du Communiquant peut se traduire par des sourires et des gestes plus spontanés."
+            "text": "Les descriptions du profil évoquent une gestuelle discrète, des mouvements mesurés et une expression du visage plutôt calme. Tu peux éviter un regard trop insistant et préserver une distance confortable. Le test ne mesure toutefois ni tes gestes ni ton regard. L'expressivité du Communicant peut se traduire par des sourires et des gestes plus spontanés."
           },
           {
             "id": "ecoute",
@@ -659,7 +659,7 @@
     "CI": {
       "primary": "C",
       "secondary": "I",
-      "label": "Analyste + Communiquant",
+      "label": "Analyste + Communicant",
       "communication": {
         "title": "Comment tu communiques.",
         "intro": "Tu peux privilégier une communication précise, réfléchie et structurée. La cohérence des informations et la possibilité de vérifier les détails comptent beaucoup. Ta tendance secondaire apporte davantage de spontanéité et d'énergie relationnelle.",
@@ -667,12 +667,12 @@
           {
             "id": "expression",
             "title": "Ta façon de t'exprimer",
-            "text": "Tu peux choisir soigneusement tes mots, poser des questions précises et distinguer les faits des impressions. Ton ton est souvent décrit comme réservé, ton débit maîtrisé et tes interventions organisées. Tu peux demander des précisions avant de prendre position. Ton côté Communiquant peut ajouter des anecdotes, des réactions spontanées et davantage de variations dans la voix."
+            "text": "Tu peux choisir soigneusement tes mots, poser des questions précises et distinguer les faits des impressions. Ton ton est souvent décrit comme réservé, ton débit maîtrisé et tes interventions organisées. Tu peux demander des précisions avant de prendre position. Ton côté Communicant peut ajouter des anecdotes, des réactions spontanées et davantage de variations dans la voix."
           },
           {
             "id": "nonverbal",
             "title": "Ton langage non verbal",
-            "text": "Le profil est souvent associé à une gestuelle contenue, une posture réservée et une expression faciale peu démonstrative. Tu peux garder une distance physique et préférer des signes sobres. Ces observations générales ne sont pas établies individuellement par MAPP. L'expressivité du Communiquant peut se traduire par des sourires et des gestes plus spontanés."
+            "text": "Le profil est souvent associé à une gestuelle contenue, une posture réservée et une expression faciale peu démonstrative. Tu peux garder une distance physique et préférer des signes sobres. Ces observations générales ne sont pas établies individuellement par MAPP. L'expressivité du Communicant peut se traduire par des sourires et des gestes plus spontanés."
           },
           {
             "id": "ecoute",

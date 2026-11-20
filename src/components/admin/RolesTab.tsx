@@ -32,7 +32,7 @@ function roleSummary(row: DirectoryRow) {
   return row.role_level === "Contributeur" ? "Contributeur ministériel" : "Responsable ministériel";
 }
 
-export default async function RolesTab({ q, category, canManageAccess, basePath, selectedMemberId = "", projectsTrainingAccess = false, ministryAccess = false }: {
+export default async function RolesTab({ q, category, canManageAccess, basePath, selectedMemberId = "", projectsTrainingAccess = false, ministryAccess = false, embedded = false }: {
   q: string;
   category: string;
   canManageAccess: boolean;
@@ -40,6 +40,7 @@ export default async function RolesTab({ q, category, canManageAccess, basePath,
   selectedMemberId?: string;
   projectsTrainingAccess?: boolean;
   ministryAccess?: boolean;
+  embedded?: boolean;
 }) {
   const supabase = await createClient();
   const [members, ministries, services, opportunities, directoryResult, notesResult, auditResult] = await Promise.all([
@@ -68,7 +69,7 @@ export default async function RolesTab({ q, category, canManageAccess, basePath,
   const audits = (auditResult.data ?? []) as Audit[];
   const isAdminPath = basePath === "/gestion/admin";
   const assignmentHref = (memberId: string) => {
-    const params = new URLSearchParams({ onglet: "permissions", membre: memberId });
+    const params = new URLSearchParams({ onglet: "membres", vue: "permissions", membre: memberId });
     if (q) params.set("q", q);
     if (category !== "toutes") params.set("categorie", category);
     return `${basePath}?${params.toString()}#attribuer-role`;
@@ -80,10 +81,10 @@ export default async function RolesTab({ q, category, canManageAccess, basePath,
   ] as const;
 
   return <div className="space-y-5">
-    <ManagementPageHeader eyebrow="PERMISSIONS" title="Rôles et périmètres" subtitle="Uniquement les personnes disposant d’une responsabilité administrative, ministérielle ou liée à un projet ou une formation." mobileTitleInAppBar />
+    {!embedded && <ManagementPageHeader eyebrow="PERMISSIONS" title="Rôles et périmètres" subtitle="Uniquement les personnes disposant d’une responsabilité administrative, ministérielle ou liée à un projet ou une formation." mobileTitleInAppBar />}
 
     <form method="get" action={basePath} className="grid gap-2 rounded-xl border border-border bg-background p-3 sm:grid-cols-[minmax(0,1fr)_240px_auto]">
-      {isAdminPath && <input type="hidden" name="onglet" value="permissions" />}
+      {isAdminPath && <><input type="hidden" name="onglet" value="membres" /><input type="hidden" name="vue" value="permissions" /></>}
       <input name="q" defaultValue={q} placeholder="Rechercher une personne ou un périmètre…" className="min-h-11 rounded-xl border border-border bg-background px-3.5 text-sm text-foreground outline-none placeholder:text-muted focus:border-accent focus:ring-4 focus:ring-accent/10" />
       <AdminSelect name="categorie" defaultValue={category} ariaLabel="Catégorie" options={[{ value: "toutes", label: "Toutes les catégories" }, { value: "administration", label: "Administration" }, { value: "projects_training", label: "Projets et formations" }, { value: "ministry", label: "Pilotage Ministère" }]} />
       <button type="submit" className="label min-h-11 rounded-md bg-accent px-5 text-xs tracking-[0.12em] text-on-accent">Filtrer</button>
@@ -115,7 +116,7 @@ export default async function RolesTab({ q, category, canManageAccess, basePath,
           <ChevronDown aria-hidden="true" size={18} className="shrink-0 text-muted transition group-open/member:rotate-180" />
         </summary>
         <div className="border-t border-border-soft bg-surface/30 px-4 py-5 sm:px-5">
-          <div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="font-title text-[20px] text-foreground">Rôles et affectations</h2><p className="mt-0.5 text-xs text-muted">{member.email}</p></div><Link href={`/gestion/admin/membres/${member.id}?returnTo=${encodeURIComponent(`${basePath}${isAdminPath ? "?onglet=permissions" : ""}`)}`} className="text-xs font-medium text-link hover:underline">Voir la fiche membre</Link></div>
+          <div className="flex flex-wrap items-center justify-between gap-3"><div><h2 className="font-title text-[20px] text-foreground">Rôles et affectations</h2><p className="mt-0.5 text-xs text-muted">{member.email}</p></div><Link href={`/gestion/admin/membres/${member.id}?returnTo=${encodeURIComponent(`${basePath}${isAdminPath ? "?onglet=membres&vue=permissions" : ""}`)}`} className="text-xs font-medium text-link hover:underline">Voir la fiche membre</Link></div>
           <div className="mt-4 space-y-2">{rows.map((row, index) => <div key={`${row.category}-${row.scope_id ?? "global"}-${row.role_level}-${index}`} className="flex flex-col gap-2 rounded-lg border border-border-soft bg-background px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between">
           <span className="flex min-w-0 items-center gap-2"><span className={`h-2 w-2 shrink-0 rounded-full ${categories[row.category].dot}`} /><span className="truncate text-sm font-semibold text-foreground">{categories[row.category].label}</span></span>
           <span className="flex flex-wrap items-center gap-1.5 sm:justify-end"><span className={`rounded-full border px-2.5 py-1 text-[11px] font-medium ${categories[row.category].badge}`}>{row.role_level}</span>{row.scope_label && <span className="max-w-full truncate rounded-full bg-surface px-2.5 py-1 text-[11px] text-muted">{row.scope_label}</span>}{row.role_level === "Contributeur" && canManageAccess && <form action={toggleMemberRoleAccess}><input type="hidden" name="user_id" value={member.id} /><input type="hidden" name="role_key" value={row.role_key} /><input type="hidden" name="scope_id" value={row.scope_id ?? ""} /><input type="hidden" name="can_edit" value={row.can_edit ? "" : "on"} /><button type="submit" className="rounded-full bg-surface px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[.08em] text-muted hover:text-foreground">{row.can_edit ? "Peut modifier" : "Lecture seule"}</button></form>}{canManageAccess && <RemoveRoleButton userId={member.id} roleKey={row.role_key} scopeId={row.scope_id} label={`${row.role_level}${row.scope_label ? ` · ${row.scope_label}` : ""}`} />}</span>

@@ -4,6 +4,7 @@ import { useState, type CSSProperties } from "react";
 import editorial from "@/lib/editorial/profil-mapp-page-04-avec-les-autres-v2.json";
 import { BodyText, Eyebrow, PageIntro, SectionIntro } from "@/components/results/typography";
 import { withMappAssetPath } from "@/lib/routing/base-path";
+import { visibleMappProfileName } from "@/lib/mapp/visible-profile";
 import styles from "./preview.module.css";
 
 type Code = "D" | "I" | "S" | "C";
@@ -52,7 +53,7 @@ const relationshipApproaches: Record<Code, string> = {
 };
 const secondaryInfluences: Record<Code, string> = {
   D: "Ton côté Conquérant peut aussi t'amener à décider plus vite, à poser un cap et à rechercher des résultats concrets.",
-  I: "Ton côté Communiquant peut aussi t'amener à rechercher le contact, à partager tes idées et à créer du lien.",
+  I: "Ton côté Communicant peut aussi t'amener à rechercher le contact, à partager tes idées et à créer du lien.",
   S: "Ton côté Facilitateur peut aussi t'amener à privilégier l'écoute, la coopération et un climat relationnel stable.",
   C: "Ton côté Analyste peut aussi t'amener à vérifier les faits, à structurer les échanges et à rechercher plus de précision.",
 };
@@ -62,14 +63,14 @@ function ProfileSection({ code, portrait }: { code: Code; portrait: (typeof edit
   const profile = editorial.profiles[code];
   return <section id={profile.anchor} className={styles.profileSection} data-profile={code} style={{ "--section-accent": profile.color } as CSSProperties} aria-labelledby={`${profile.anchor}-heading`}>
     <div className={styles.sectionHeading}>
-      <Eyebrow>{profile.name}</Eyebrow>
-      <h2 id={`${profile.anchor}-heading`}>Avec un {profile.name}.</h2>
+      <Eyebrow>{visibleMappProfileName(code)}</Eyebrow>
+      <h2 id={`${profile.anchor}-heading`}>Avec un {visibleMappProfileName(code)}.</h2>
       <SectionIntro>{profileIntroductions[code]}</SectionIntro>
     </div>
     <div className={styles.colorBlock}>
       <div className={styles.sectionLayout}>
         <figure className={styles.portrait}>
-          <img src={images[code]} alt={`${biblicalCharacters[code]}, personnage biblique associé au profil ${profile.name}`} loading="eager" decoding="async" />
+          <img src={images[code]} alt={`${biblicalCharacters[code]}, personnage biblique associé au profil ${visibleMappProfileName(code)}`} loading="eager" decoding="async" />
           <figcaption>{keywords[code].map(keyword => <span key={keyword}>{keyword}</span>)}</figcaption>
         </figure>
         <div className={styles.accordions}>{portrait.accordions.map((item, index) => {
@@ -119,7 +120,7 @@ export default function Preview({ combination, embedded = false }: { combination
         event.preventDefault();
         window.history.replaceState(null, "", `#${editorial.profiles[code].anchor}`);
         target.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "start" });
-      }}>{editorial.profiles[code].name}</a>)}</nav>
+      }}>{visibleMappProfileName(code)}</a>)}</nav>
       {order.map(code => <ProfileSection key={`${key}-${code}`} code={code} portrait={entry.portraits[code]} />)}
       {!embedded && <div className={styles.miniNav}><div><small>Prochaine étape · 05</small><strong>Dans une organisation</strong></div><a href={nextUrl}>Continuer →</a></div>}
     </div>

@@ -18,7 +18,7 @@ test("les cours classiques et ministériels réutilisent le même formulaire com
 test("les fiches Projets et formations et leur validation n’affichent plus le bloc de cours associés", async () => {
   const [opportunity, validation] = await Promise.all([
     source("src/app/gestion/projets-formations/[id]/page.tsx"),
-    source("src/app/gestion/a-valider/page.tsx"),
+    source("src/components/admin/ValidationQueueContent.tsx"),
   ]);
   assert.doesNotMatch(opportunity, /Cours associés|Parcours pédagogique|Créer le premier cours|LinkedCourses/);
   assert.match(validation, /\/gestion\/projets-formations\/\$\{item\.id\}\?scope=admin/);

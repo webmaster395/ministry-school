@@ -15,11 +15,14 @@ const tabLabels: Record<string, string> = {
   programme: "Programme",
   membres: "Membres",
   permissions: "Permissions",
+  contenus: "Outils et ressources",
+  outils: "Outils et ressources",
+  ressources: "Outils et ressources",
 };
 
 const pageLabels: Record<string, string> = {
   "/gestion/admin/cours": "Cours",
-  "/gestion/admin/cours-formations": "Cours et formations",
+  "/gestion/admin/cours-formations": "Cours",
   "/gestion/admin/ministeres": "Sensibilités ministérielles",
   "/gestion/admin/programme": "Programme",
   "/gestion/admin/seances": "Programme",
@@ -51,8 +54,8 @@ export default function AdminBreadcrumbs() {
   }, [pathname, query]);
 
   const crumbs = useMemo<Crumb[]>(() => {
-    if (current?.key === "apps" && pathname.startsWith("/admin/apps")) {
-      const root: Crumb[] = [{ label: "Gestion des outils", href: "/admin/apps" }];
+    if (current?.key === "admin" && pathname.startsWith("/admin/apps")) {
+      const root: Crumb[] = [{ label: "Admin", href: "/gestion/admin" }, { label: "Outils et ressources", href: "/gestion/admin?onglet=contenus&contenu=outils" }];
       if (pathname === "/admin/apps") return [];
       if (pathname.endsWith("/nouveau")) return [...root, { label: "Ajouter un outil" }];
       const segments = pathname.split("/").filter(Boolean);
@@ -105,7 +108,7 @@ export default function AdminBreadcrumbs() {
     }
 
     if (pathname.startsWith("/gestion/enseignement/preparation/")) {
-      return [...root, { label: "Cours et formations", href: "/gestion/admin/cours-formations" }, ...(pageTitle ? [{ label: pageTitle }] : [])];
+      return [...root, { label: "Cours", href: "/gestion/admin/cours-formations" }, ...(pageTitle ? [{ label: pageTitle }] : [])];
     }
 
     const last = pathname.split("/").filter(Boolean).at(-1) ?? "";

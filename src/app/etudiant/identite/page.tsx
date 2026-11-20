@@ -5,29 +5,47 @@ import { isMappGuestOpen } from "@/lib/mapp/access-window";
 import { redirect } from "next/navigation";
 import type { IdentityResult } from "@/lib/identity/dashboard";
 import { getStudentIdentityFeed, type IdentityTool } from "@/lib/identity/feed";
+import { graceIdentitySlug, graceIdentityToolSlugs, graceTestKeyFromSlug, type GraceTestKey } from "@/lib/apps/grace-identity";
 
 export const dynamic = "force-dynamic";
+
+const selectedFruitStoryImage = "/apps/grace-identity/fruit-spirit-blue-violet-grape-story-v26.png";
+const selectedFruitPostImage = "/apps/grace-identity/fruit-spirit-blue-violet-grape-post-v26.png";
+
+function selectedFruitImage(configuredImage: string | null | undefined, selectedImage: string) {
+  if (!configuredImage) return selectedImage;
+  if (
+    configuredImage.startsWith("/apps/grace-identity/fruit-spirit-") &&
+    configuredImage !== selectedFruitStoryImage &&
+    configuredImage !== selectedFruitPostImage
+  ) return selectedImage;
+  return configuredImage;
+}
 
 function latestResult(results: IdentityResult[], kind: IdentityResult["kind"]) {
   return results.find((result) => result.kind === kind);
 }
 
+const graceResultKinds = new Set<IdentityResult["kind"]>(["fruit", "gifts", "skills"]);
+
 function buildStories({
   tools,
   results,
   heroesAvailable,
-  graceAvailable,
 }: {
   tools: IdentityTool[];
   results: IdentityResult[];
   heroesAvailable: boolean;
-  graceAvailable: boolean;
 }): IdentityStoryItem[] {
   const hasTool = (slug: string) => tools.some((tool) => tool.slug === slug);
   const items: IdentityStoryItem[] = [];
   const mapp = latestResult(results, "mapp");
+  const mappQuery = new URLSearchParams();
+  if (mapp?.resultRevisionId) mappQuery.set("revision", mapp.resultRevisionId);
+  if (mapp?.native) mappQuery.set("native", "1");
+  if (mapp?.legacy) mappQuery.set("legacy", "1");
   const mappHref = mapp?.attemptId
-    ? `/apps/profil-mapp/test/${mapp.attemptId}/resultat${mapp.resultRevisionId ? `?revision=${mapp.resultRevisionId}` : ""}`
+    ? `/apps/profil-mapp/test/${mapp.attemptId}/resultat${mappQuery.size ? `?${mappQuery.toString()}` : ""}`
     : "/apps/profil-mapp";
 
   // MAPP reste l'accès principal de Mon identité, même pendant une mise à jour
@@ -48,30 +66,33 @@ function buildStories({
       name: "Test des héros",
       category: "Identité",
       href: "/etudiant/identite/mes-moteurs",
-      image: "/identity/stories/identity.webp",
+      image: "/identity/heroes/dove-abstract-v1.webp",
       status: "completed",
       measurable: true,
     });
   }
 
-  if (graceAvailable) {
-    ([
-      ["fruit", "Fruit de l’Esprit", "/apps/grace-identity/fruit-spirit-bg-v1.webp"],
-      ["gifts", "Dons spirituels", "/identity/posts/dons-spirituels.webp"],
-      ["skills", "Compétences naturelles", "/identity/posts/competences-naturelles.webp"],
-    ] as const).forEach(([kind, name, image]) => {
+  const legacyGraceTool = tools.find((tool) => tool.slug === graceIdentitySlug);
+  ([
+    ["fruit", "Fruit de l’Esprit", selectedFruitStoryImage],
+    ["gifts", "Dons spirituels", "/identity/posts/dons-spirituels.webp"],
+    ["skills", "Compétences naturelles", "/identity/posts/competences-naturelles.webp"],
+  ] as const).forEach(([kind, fallbackName, fallbackImage]) => {
+      const tool = tools.find((candidate) => candidate.slug === graceIdentityToolSlugs[kind]) ?? legacyGraceTool;
+      if (!tool || (!tool.placementStory && tool.slug !== graceIdentitySlug)) return;
       const completed = latestResult(results, kind);
       items.push({
         key: kind,
-        name,
+        name: tool.storyTitle || fallbackName,
         category: "Identité",
-        href: graceTestHref(kind),
-        image,
+        href: tool.storyDestinationUrl || graceTestHref(kind),
+        image: kind === "fruit"
+          ? selectedFruitImage(tool.storyImageUrl, fallbackImage)
+          : tool.storyImageUrl || fallbackImage,
         status: completed ? "completed" : "not-started",
         measurable: true,
       });
     });
-  }
 
   if (hasTool("ma-ligne-de-vie")) {
     const lifeLine = latestResult(results, "life-line");
@@ -86,21 +107,6 @@ function buildStories({
     });
   }
 
-  const financeLinks = [
-    ...(hasTool("generopoly") ? [{ name: "Généropoly", href: "/apps/generopoly" }] : []),
-    { name: "Simulateur de générosité", href: "https://generosite.jeveuxdonner.fr/", external: true },
-  ];
-  items.push({
-    key: "outils-a-tester",
-    name: "À tester",
-    category: "Finance",
-    href: "#outils-a-tester",
-    image: "/identity/stories/finance-v2.webp",
-    status: "available",
-    measurable: false,
-    links: financeLinks,
-  });
-
   return items;
 }
 
@@ -108,7 +114,18 @@ function monthsTogether(memberSince: string | null) {
   if (!memberSince) return 0;
   const start = new Date(memberSince);
   const now = new Date();
-  return Math.max(0, (now.getUTCFullYear() - start.getUTCFullYear()) * 12 + now.getUTCMonth() - start.getUTCMonth());
+  if (Number.isNaN(start.getTime()) || start > now) return 0;
+
+  // Le mois de démarrage compte comme le premier mois du parcours. Ainsi, un
+  // étudiant déjà inscrit au moment de sa première formation voit « 1 mois »
+  // au lieu de zéro, sans ajouter de mois aux comptes dont le parcours n'a pas
+  // encore commencé.
+  return (
+    (now.getUTCFullYear() - start.getUTCFullYear()) * 12 +
+    now.getUTCMonth() -
+    start.getUTCMonth() +
+    1
+  );
 }
 
 function accountStatus(gender: "homme" | "femme" | null | undefined) {
@@ -145,6 +162,10 @@ function buildUpcoming(tools: IdentityTool[], completedKinds: Set<string>) {
       const kind = resultKindForItem(item);
       return kind && !completedKinds.has(kind) ? [{ ...item, category: "Identité" }] : [];
     });
+    const graceKind = graceTestKeyFromSlug(tool.slug);
+    if (graceKind) return completedKinds.has(graceKind) || !tool.placementWork
+      ? []
+      : [{ key: tool.id, name: tool.displayTitle, href: tool.destinationUrl, iconUrl: tool.iconUrl, category: "Identité" }];
     if (tool.slug === "ma-ligne-de-vie") return completedKinds.has("life-line") ? [] : [{ key: tool.id, name: "Ma ligne de vie", href: tool.url, iconUrl: tool.iconUrl, category: "Identité" }];
     // Généropoly et le simulateur sont des ressources non suivables : ils sont
     // regroupés dans l'onglet Ressources et ne faussent pas la progression.
@@ -160,7 +181,7 @@ export default async function StudentIdentityPage() {
   if (viewer.deactivated) redirect("/auth/desactive");
   if (!viewer.roles.superAdmin && !isMappGuestOpen()) redirect("/etudiant");
   const [feed, officialMappResults] = await Promise.all([
-    getStudentIdentityFeed(viewer.id),
+    getStudentIdentityFeed(viewer.id, viewer.roles.superAdmin),
     getOfficialMappIdentityResults(),
   ]);
   const { dashboard, tools, lifeLine, heroesMotors } = feed;
@@ -170,11 +191,20 @@ export default async function StudentIdentityPage() {
   const lifeLineResults: IdentityResult[] = lifeLine
     ? [{ kind: "life-line", completedAt: lifeLine.completedAt }]
     : [];
+  const nativeMappResults = dashboard.identityResults
+    .filter((result) => result.kind === "mapp")
+    .map((result) => ({ ...result, native: true }));
+  const selectedMappResults = [
+    ...nativeMappResults,
+    ...officialMappResults.map((result) => ({ ...result, legacy: true })),
+  ]
+    .filter((result, index, results) => !result.attemptId || results.findIndex((candidate) => candidate.attemptId === result.attemptId) === index)
+    .sort((left, right) => new Date(right.completedAt).getTime() - new Date(left.completedAt).getTime());
   const nonMappIdentityResults = dashboard.identityResults.filter((result) => result.kind !== "mapp");
   const heroesResults: IdentityResult[] = heroesMotors
     ? [{ kind: "heroes-motors", completedAt: heroesMotors.publishedAt }]
     : [];
-  const chronologicalResults = [...officialMappResults, ...nonMappIdentityResults, ...dashboard.financeResults, ...lifeLineResults, ...heroesResults]
+  const chronologicalResults = [...selectedMappResults, ...nonMappIdentityResults, ...dashboard.financeResults, ...lifeLineResults, ...heroesResults]
     .sort((left, right) => new Date(right.completedAt).getTime() - new Date(left.completedAt).getTime());
   // Mes moteurs devient la publication éditoriale épinglée lorsqu'un véritable
   // résultat a été publié. MAPP reste ensuite la première publication de test.
@@ -183,14 +213,34 @@ export default async function StudentIdentityPage() {
     ...chronologicalResults.filter((result) => result.kind === "mapp"),
     ...chronologicalResults.filter((result) => result.kind !== "mapp" && result.kind !== "heroes-motors"),
   ];
-  const completedKinds = new Set(allResults.map((result) => result.kind));
-  const graceAvailable = tools.some((tool) => tool.slug === "je-suis-par-la-grace-de-dieu");
+  const visibleTools = tools;
+  const availableGraceKinds = new Set<GraceTestKey>();
+  if (visibleTools.some((tool) => tool.slug === graceIdentitySlug)) (["fruit", "gifts", "skills"] as const).forEach((kind) => availableGraceKinds.add(kind));
+  visibleTools.forEach((tool) => { const kind = graceTestKeyFromSlug(tool.slug); if (kind) availableGraceKinds.add(kind); });
+  const visibleResults = allResults.filter((result) => !graceResultKinds.has(result.kind) || availableGraceKinds.has(result.kind as GraceTestKey));
+  const completedKinds = new Set(visibleResults.map((result) => result.kind));
   const stories = buildStories({
-    tools,
-    results: allResults,
+    tools: visibleTools,
+    results: visibleResults,
     heroesAvailable: Boolean(heroesMotors),
-    graceAvailable,
   });
+  const defaultPostArtwork = {
+    fruit: { title: "Fruit de l’Esprit", image: selectedFruitPostImage, href: graceTestHref("fruit") },
+    gifts: { title: "Dons spirituels", image: "/identity/posts/dons-spirituels.webp", href: graceTestHref("gifts") },
+    skills: { title: "Compétences naturelles", image: "/identity/posts/competences-naturelles.webp", href: graceTestHref("skills") },
+  };
+  const legacyGraceTool = visibleTools.find((tool) => tool.slug === graceIdentitySlug);
+  const toolArtwork = Object.fromEntries(((["fruit", "gifts", "skills"] as const)).map((kind) => {
+    const tool = visibleTools.find((candidate) => candidate.slug === graceIdentityToolSlugs[kind]) ?? legacyGraceTool;
+    const fallback = defaultPostArtwork[kind];
+    return [kind, {
+      title: tool?.postTitle || fallback.title,
+      image: kind === "fruit"
+        ? selectedFruitImage(tool?.postImageUrl, fallback.image)
+        : tool?.postImageUrl || fallback.image,
+      href: tool?.postDestinationUrl || fallback.href,
+    }];
+  }));
   return <IdentityExperience
     userId={viewer.id}
     fullName={viewer.fullName || dashboard.profile.firstName || "Mon identité"}
@@ -198,9 +248,10 @@ export default async function StudentIdentityPage() {
     avatarUrl={viewer.avatarUrl}
     studentCount={dashboard.metrics.studentCount}
     months={monthsTogether(dashboard.profile.memberSince)}
-    completedTests={allResults.length}
+    completedTests={visibleResults.length}
     stories={stories}
-    results={allResults}
-    upcoming={buildUpcoming(tools, completedKinds)}
+    results={visibleResults}
+    upcoming={buildUpcoming(visibleTools, completedKinds)}
+    toolArtwork={toolArtwork}
   />;
 }

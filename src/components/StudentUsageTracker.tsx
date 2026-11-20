@@ -12,6 +12,7 @@ const trackedPage = (pathname: string) => {
   if (pathname.startsWith("/etudiant/profil")) return "profile";
   if (pathname.startsWith("/etudiant/notes")) return "notes";
   if (pathname.startsWith("/etudiant/services")) return "services_projects";
+  if (pathname.startsWith("/etudiant/ressources")) return "resources";
   return null;
 };
 

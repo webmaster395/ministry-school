@@ -67,7 +67,7 @@ const CATEGORY_BLUEPRINT = [
 ] as const;
 
 const PROFILE_COLORS: Record<ProfileCode, string> = { D: "#D94334", I: "#F2C94C", S: "#57A773", C: "#477CB9" };
-const PROFILE_NAMES: Record<ProfileCode, string> = { D: "Conquérant", I: "Communiquant", S: "Facilitateur", C: "Analyste" };
+const PROFILE_NAMES: Record<ProfileCode, string> = { D: "Conquérant", I: "Communicant", S: "Facilitateur", C: "Analyste" };
 const ROLE_META: OrganisationManifest["roles"] = {
   direction: { label: "Je dirige", context: "tu écoutes, donnes le cap et assumes les arbitrages" },
   management: { label: "J’encadre", context: "tu accompagnes l’équipe et fais remonter les besoins du terrain" },

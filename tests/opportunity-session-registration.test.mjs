@@ -18,18 +18,41 @@ test("la fiche étudiante permet une sélection multiple et une annulation cibl�
   const catalogue = await source("src/app/etudiant/services/page.tsx");
   const data = await source("src/lib/data/opportunities.ts");
   const actions = await source("src/app/etudiant/services/actions.ts");
+  const waitlist = await source("supabase/migrations/20261113083000_opportunity_waitlist_and_private_resources.sql");
   assert.match(page, /name="date_ids"/);
   assert.match(page, /registerOpportunityDates/);
   assert.match(page, /formAction=\{cancelOpportunityDate\}/);
-  assert.match(page, /studentPlacesLabel\(remaining\)/);
-  assert.match(page, />M’inscrire</);
+  assert.match(page, /capacityPlacesLabel\(taken, date\.capacity\)/);
+  assert.match(page, /<OpportunityRegistrationButton/);
   assert.match(page, /> Inscrit</);
-  assert.match(catalogue, /status\(o\) === "disponible" \? "M’inscrire"/);
-  assert.match(data, /remaining > 5/);
-  assert.match(data, /Plus qu’une place disponible/);
-  assert.match(data, /Plus que \$\{remaining\} places disponibles/);
+  assert.match(catalogue, /status\(o\) === "disponible" \? "Inscriptions ouvertes"/);
+  assert.match(data, /\$\{normalizedTaken\}\/\$\{capacity\} places/);
+  assert.match(data, /Encore \$\{remaining\} places disponibles/);
   assert.match(actions, /register_for_opportunity_dates/);
   assert.match(actions, /cancel_opportunity_date_registration/);
+  assert.match(actions, /join_opportunity_date_waitlist/);
+  assert.match(actions, /leave_opportunity_date_waitlist/);
+  assert.match(waitlist, /create table if not exists public\.opportunity_date_waitlist/);
+  assert.match(waitlist, /order by created_at,user_id[\s\S]*for update skip locked/);
+  assert.match(waitlist, /insert into public\.opportunity_date_registrations[\s\S]*next_user/);
+});
+
+test("les prérequis sont confirmés dans une fenêtre avant l’inscription", async () => {
+  const page = await source("src/app/etudiant/services/[id]/page.tsx");
+  const modal = await source("src/components/OpportunityRegistrationButton.tsx");
+  assert.match(page, /participation_prerequisites_required \? prerequisites : \[\]/);
+  assert.match(modal, /showModal\(\)/);
+  assert.match(modal, /As-tu bien les prérequis/);
+  assert.match(modal, /Je confirme remplir ces prérequis/);
+  assert.match(modal, /disabled=\{!confirmed\}/);
+});
+
+test("les cartes du catalogue montrent la capacité et restent visuellement séparées", async () => {
+  const catalogue = await source("src/app/etudiant/services/page.tsx");
+  assert.match(catalogue, /grid gap-4 lg:grid-cols-2/);
+  assert.match(catalogue, /rounded-3xl border border-border/);
+  assert.match(catalogue, /placesLabel\(o, taken\(o\)\)/);
+  assert.match(catalogue, /Liste d’attente/);
 });
 
 test("les vues de gestion gardent les ratios précis et l’alerte des dernières places", async () => {

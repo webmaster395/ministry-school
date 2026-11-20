@@ -43,3 +43,16 @@ test("prérequis et matériel à apporter restent visibles aux participants", ()
   assert.match(student, /> Matériel à apporter<\/h2>/);
   assert.doesNotMatch(student, /organization_material|Matériel nécessaire à l’atelier/);
 });
+
+test("les ressources ne sont lisibles qu’après une séance suivie", () => {
+  const migration = source("supabase/migrations/20261113083000_opportunity_waitlist_and_private_resources.sql");
+  const page = source("src/app/etudiant/services/[id]/page.tsx");
+  const route = source("src/app/etudiant/services/[id]/ressources/[resourceId]/ouvrir/route.ts");
+  assert.match(migration, /can_read_opportunity_resources/);
+  assert.match(migration, /r\.user_id=auth\.uid\(\)[\s\S]*d\.session_date \+ d\.end_time[\s\S]*Europe\/Paris/);
+  assert.match(migration, /create policy opportunity_resources_read[\s\S]*can_read_opportunity_resources/);
+  assert.match(migration, /opportunity resources authorized read[\s\S]*can_read_opportunity_resources/);
+  assert.match(page, /ces documents sont disponibles après la séance/);
+  assert.match(route, /can_read_opportunity_resources/);
+  assert.match(route, /status: 403/);
+});

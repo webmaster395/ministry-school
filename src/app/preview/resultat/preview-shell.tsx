@@ -8,6 +8,7 @@ import styles from "./result-preview.module.css";
 import type { IdentityInterpretation } from "@/lib/results/identity-interpretation";
 import { withMappAssetPath } from "@/lib/routing/base-path";
 import { SaveProfileMenu } from "./save-profile-menu";
+import { visibleMappProfileName } from "@/lib/mapp/visible-profile";
 
 const source = normalizeIntegralV10();
 
@@ -45,6 +46,7 @@ export default function PreviewShell({
   revisionId,
   accessToken,
   previewViewport,
+  canInvite = true,
 }: {
   initialProfile?: PreviewProfileCode;
   initialSecondary?: PreviewProfileCode;
@@ -64,6 +66,7 @@ export default function PreviewShell({
   revisionId?: string;
   accessToken?: string;
   previewViewport?: number;
+  canInvite?: boolean;
 }) {
   const [profileCode, setProfileCode] = useState<PreviewProfileCode>(initialProfile);
   const [secondaryCode, setSecondaryCode] = useState<PreviewProfileCode>(initialSecondary === initialProfile ? (codes.find((code) => code !== initialProfile) ?? "conquerant") : initialSecondary);
@@ -82,15 +85,15 @@ export default function PreviewShell({
   return <main className={`${styles.page} results-design-system`}>
     {showControls && <aside className={styles.previewControls} aria-label="Contrôles de la preview brouillon">
       <strong>Preview éditoriale · contenus draft</strong>
-      <label>Profil<select value={profileCode} onChange={(event) => changeProfile(event.target.value as PreviewProfileCode)}>{codes.map((code) => <option value={code} key={code}>{source.profiles[code].name}</option>)}</select></label>
-      <label>Secondaire<select value={secondaryCode} onChange={(event) => setSecondaryCode(event.target.value as PreviewProfileCode)}>{secondaryOptions.map((code) => <option value={code} key={code}>{source.profiles[code].name}</option>)}</select></label>
+      <label>Profil<select value={profileCode} onChange={(event) => changeProfile(event.target.value as PreviewProfileCode)}>{codes.map((code) => <option value={code} key={code}>{visibleMappProfileName(code)}</option>)}</select></label>
+      <label>Secondaire<select value={secondaryCode} onChange={(event) => setSecondaryCode(event.target.value as PreviewProfileCode)}>{secondaryOptions.map((code) => <option value={code} key={code}>{visibleMappProfileName(code)}</option>)}</select></label>
       <span>Aperçu visuel : les chiffres sous pression sont fictifs. Les résultats réels utilisent exclusivement les scores enregistrés.</span>
     </aside>}
     <section id="top" className={styles.hero}>
-      <header className={styles.topbar}><a className={styles.brand} href="#top" aria-label="Profil MAPP, haut de page" style={{ "--brand-profile-color": resultColors[profileCode] } as React.CSSProperties}><span className={styles.brandMarks} aria-hidden="true"><b /><b /><b /><b /></span><span><small>Profil</small> <strong>mapp<span className={styles.brandDot}>.</span></strong></span><i aria-hidden="true" /> <small>Église MLK</small></a><SaveProfileMenu attemptId={attemptId} revisionId={revisionId} accessToken={accessToken} isPreview={isPreview} /></header>
+      <header className={styles.topbar}><a className={styles.brand} href="#top" aria-label="Profil MAPP, haut de page" style={{ "--brand-profile-color": resultColors[profileCode] } as React.CSSProperties}><span className={styles.brandMarks} aria-hidden="true"><b /><b /><b /><b /></span><span><small>Profil</small> <strong>mapp<span className={styles.brandDot}>.</span></strong></span><i aria-hidden="true" /> <small>Église MLK</small></a><SaveProfileMenu attemptId={attemptId} revisionId={revisionId} accessToken={accessToken} isPreview={isPreview} canInvite={canInvite} /></header>
       <Image src={landscapes[profileCode]} alt="Paysage associé au profil" fill priority sizes="100vw" quality={90} />
       <div className={styles.heroVeil} />
-      <div className={styles.heroContent}><p className={styles.kicker}>{participantName}</p><h1>Ton profil est <em className={styles.profileName} style={{ "--hero-profile-color": resultColors[profileCode] } as React.CSSProperties}>{profile.name}</em>,<br /> comme <strong>{characters[profileCode]}</strong>.</h1><p className={styles.asset}>{heroPhrases[profileCode]}</p></div>
+      <div className={styles.heroContent}><p className={styles.kicker}>{participantName}</p><h1>Ton profil est <em className={styles.profileName} style={{ "--hero-profile-color": resultColors[profileCode] } as React.CSSProperties}>{visibleMappProfileName(profileCode)}</em>,<br /> comme <strong>{characters[profileCode]}</strong>.</h1><p className={styles.asset}>{heroPhrases[profileCode]}</p></div>
       <a href="#results" className={styles.discover}>Découvrir</a>
     </section>
     <CompleteExperience profileCode={profileCode} secondaryCode={secondaryCode} initialPage={initialPage} scores={scores} pressureScores={illustrativePressureScores} pressureProfile={isPreview ? profileCode : pressureProfile} pressureSecondary={isPreview ? secondaryCode : pressureSecondary} pressureTieNote={pressureTieNote} tieNote={tieNote} identityNarrative={identityNarrative} isPreview={isPreview} attemptId={attemptId} revisionId={revisionId} previewViewport={isPreview ? previewViewport : undefined} />

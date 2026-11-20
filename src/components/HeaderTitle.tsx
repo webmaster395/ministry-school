@@ -9,14 +9,15 @@ const TITLES: Record<string, string> = {
   "/etudiant/travail": "Travail à faire",
   "/etudiant/notes": "Mes notes",
   "/etudiant/services": "Projets et formations",
+  "/etudiant/ressources": "Mes ressources",
   "/etudiant/aide": "Une question ?",
   "/gestion/enseignement": "Préparer mes cours",
   "/gestion/pilotage": "Pilotage ministériel",
   "/etudiant/calendrier": "Mon calendrier",
-  "/etudiant/formation": "Mon ministère",
+  "/etudiant/formation": "Ministère",
   "/etudiant/profil": "Profil",
   "/etudiant/preferences": "Préférences",
-  "/etudiant/identite/mes-moteurs": "Mes moteurs",
+  "/etudiant/identite/mes-moteurs": "Test des héros",
   "/enseignant/calendrier": "Mon calendrier",
   "/enseignant/supports": "Supports & consignes",
   "/enseignant/seances": "Séances",
@@ -41,6 +42,9 @@ const ADMIN_TABS: Record<string, string> = {
   membres: "Membres",
   permissions: "Permissions",
   roles: "Permissions",
+  contenus: "Outils et ressources",
+  outils: "Outils et ressources",
+  ressources: "Outils et ressources",
 };
 
 /**
@@ -50,7 +54,7 @@ const ADMIN_TABS: Record<string, string> = {
  */
 function adminPageTitle(pathname: string, tab: string | null) {
   if (pathname === "/gestion/admin") return (tab && ADMIN_TABS[tab]) || "Admin";
-  if (pathname.startsWith("/gestion/admin/cours-formations")) return "Cours et formations";
+  if (pathname.startsWith("/gestion/admin/cours-formations")) return "Cours";
   if (pathname.startsWith("/gestion/admin/ministeres")) return "Sensibilités ministérielles";
   if (pathname.startsWith("/gestion/admin/membres/")) return "Membre";
   if (pathname.startsWith("/gestion/admin/programme") || pathname.startsWith("/gestion/admin/seances")) return "Programme";
@@ -64,6 +68,7 @@ function adminPageTitle(pathname: string, tab: string | null) {
   if (pathname.startsWith("/gestion/super-admin/roles")) return "Permissions";
   if (pathname.startsWith("/gestion/super-admin/cours")) return "Cours et formations";
   if (pathname.startsWith("/gestion/projets-formations")) return "Projets et formations";
+  if (pathname.startsWith("/gestion/formations")) return "Formations";
   if (pathname.startsWith("/gestion/enseignement/preparation/")) return "Cours et formations";
   return "Admin";
 }

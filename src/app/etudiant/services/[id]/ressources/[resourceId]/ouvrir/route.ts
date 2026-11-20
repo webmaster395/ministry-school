@@ -6,6 +6,8 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.redirect(new URL("/login", _request.url));
+  const { data: canRead } = await supabase.rpc("can_read_opportunity_resources", { p_opportunity: id });
+  if (!canRead) return new NextResponse("Cette ressource sera disponible après la séance pour les personnes inscrites.", { status: 403 });
   const { data: resource } = await supabase.from("opportunity_resources").select("external_url,file_path").eq("id", resourceId).eq("opportunity_id", id).maybeSingle();
   if (!resource) return new NextResponse("Ressource introuvable", { status: 404 });
   if (resource.external_url) {

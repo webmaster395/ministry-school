@@ -1,17 +1,10 @@
-import { CardSkeleton } from "@/components/Skeleton";
-
-export default function Loading() {
-  return (
-    <>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: 6 }, (_, i) => (
-          <div key={i} className="rounded-lg border border-border bg-background p-6">
-            <div className="h-3 w-24 animate-pulse rounded bg-[#efe9dd]" />
-            <div className="mt-3 h-8 w-16 animate-pulse rounded bg-[#efe9dd]" />
-          </div>
-        ))}
-      </div>
-      <CardSkeleton lines={5} />
-    </>
-  );
+export default function AdminLoading() {
+  return <div className="space-y-5" role="status" aria-live="polite">
+    <div className="h-5 w-32 animate-pulse rounded bg-border-soft" />
+    <div className="h-12 w-72 max-w-full animate-pulse rounded-lg bg-border-soft" />
+    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      {Array.from({ length: 4 }, (_, index) => <div key={index} className="h-32 animate-pulse rounded-xl border border-border bg-background" />)}
+    </div>
+    <p className="text-sm text-muted">Chargement des données administratives…</p>
+  </div>;
 }

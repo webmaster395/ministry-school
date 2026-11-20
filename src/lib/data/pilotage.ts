@@ -44,12 +44,19 @@ const plural = (n: number, one: string, many: string) => `${n} ${n > 1 ? many : 
 /** Ministères que pilote la personne (en propre ou par délégation). */
 export async function getSteeredMinistries(supabase: SupabaseClient, ids: string[]) {
   if (!ids.length) return [];
-  const { data } = await supabase.from("ministries").select("id, slug, name").in("id", ids);
+  const { data, error } = await supabase.from("ministries").select("id, slug, name").in("id", ids);
+  if (error) throw new Error(`Impossible de charger les ministères attribués : ${error.message}`);
+  return (data ?? []) as { id: string; slug: string; name: string }[];
+}
+
+export async function getAllSteeringMinistries(supabase: SupabaseClient) {
+  const { data, error } = await supabase.from("ministries").select("id, slug, name").order("name");
+  if (error) throw new Error(`Impossible de charger les ministères : ${error.message}`);
   return (data ?? []) as { id: string; slug: string; name: string }[];
 }
 
 export async function getMinistrySessions(supabase: SupabaseClient, ministryId: string) {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("sessions")
     .select(
       "id, session_date, start_time, end_time, location, room, description, track, speaker_name, summary, objectives, bible_refs, editorial_status, publication_at, revision_of, teacher:profiles!sessions_teacher_id_fkey(full_name)" + DRAFT_COLUMN
@@ -58,6 +65,7 @@ export async function getMinistrySessions(supabase: SupabaseClient, ministryId: 
     .eq("session_type", "ministere")
     .order("session_date", { ascending: true })
     .order("start_time", { ascending: true });
+  if (error) throw new Error(`Impossible de charger les cours de ce ministère : ${error.message}`);
   return attachVideos(supabase, (data ?? []) as unknown as PilotSession[]);
 }
 

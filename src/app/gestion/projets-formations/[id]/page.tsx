@@ -107,7 +107,7 @@ export default async function ProjectsTrainingManageDetail({ params, searchParam
       </div>
     </section>}
     {query.creation === "ok" && <p role="status" className="flex items-center gap-2 rounded-xl border border-border bg-background px-4 py-3 text-sm"><CheckCircle2 size={18} /> Élément créé en brouillon.</p>}
-    {managementRevision && <p role="status" className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950"><strong>Version de travail non publiée.</strong> La fiche étudiante conserve la dernière version validée jusqu’à la prochaine approbation.</p>}
+    {managementRevision && <p role="status" className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">{["published", "scheduled"].includes(publicOpportunity.publication_status) ? <><strong>Modifications récupérées.</strong> Cliquez sur « Enregistrer » : elles remplaceront immédiatement la version publiée, sans nouvelle validation.</> : <><strong>Version de travail enregistrée.</strong> Elle sera publiée après sa première validation.</>}</p>}
     {globalScope
       ? <OpportunityEditForms {...commonEditorProps} canManageInternalMaterial={maySeeInternalMaterial} experience="supervision" />
       : <OpportunityOperationalWorkspace {...commonEditorProps} roleLabel={responsibility === "manager" ? "Responsable" : "Contributeur"} readOnly={!canEdit} workflow={workflow} />}

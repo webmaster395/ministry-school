@@ -52,7 +52,7 @@ function quoteWords(words: string) {
 
 const profileTerms: Record<ProfileCode, string[]> = {
   D: ["Conquérante", "Conquérant"],
-  I: ["Communicante", "Communiquant"],
+  I: ["Communicante", "Communicant"],
   S: ["Facilitatrice", "Facilitateur"],
   C: ["Analyste"],
 };
@@ -225,7 +225,7 @@ export default function OrganisationPreview({ combination, configuration, manife
           {manifest.configurationKeys.map(code => {
             const primary = code[0] as ProfileCode;
             const secondary = code.length === 2 ? code[1] as ProfileCode : null;
-            const label = secondary ? `${profileNames[primary]} + ${profileNames[secondary]} (${code})` : `${profileNames[primary]} (${code})`;
+            const label = secondary ? `${profileNames[primary]} + ${profileNames[secondary]}` : profileNames[primary];
             return <option value={code} key={code}>{label}</option>;
           })}
         </select>

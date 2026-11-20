@@ -1,121 +1,143 @@
 #!/usr/bin/env node
-import { readFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { readFile, writeFile } from "node:fs/promises";
 import process from "node:process";
 import { createClient } from "@supabase/supabase-js";
 
 const args = process.argv.slice(2);
 const file = args.find((arg) => !arg.startsWith("--"));
 const apply = args.includes("--apply");
-
-if (!file) {
-  console.error("Usage: npm run import:heroes-motors -- chemin/resultats.json [--apply]");
-  process.exit(1);
-}
-
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-if (!url || !key) throw new Error("NEXT_PUBLIC_SUPABASE_URL et SUPABASE_SERVICE_ROLE_KEY sont requis.");
+const confirmed = args.includes("--confirm-production-import");
+const reportPath = args.find((arg) => arg.startsWith("--report="))?.slice(9);
+if (!file) { console.error("Usage: npm run import:heroes-motors -- resultats.csv [--report=rapport.json] [--apply --confirm-production-import]"); process.exit(1); }
+if (apply && !confirmed) throw new Error("Import bloqué : ajoutez --confirm-production-import uniquement après validation du rapport de préimport.");
 
 const normalizeEmail = (value) => String(value ?? "").trim().toLowerCase();
-const cleanStrings = (value) => Array.isArray(value) ? value.map((item) => typeof item === "string" ? item.trim() : "").filter(Boolean) : [];
-const source = JSON.parse(await readFile(file, "utf8"));
-const rows = Array.isArray(source) ? source : source.results;
-if (!Array.isArray(rows)) throw new Error("Le JSON doit être un tableau ou contenir une propriété results.");
+const validEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+const normalizedText = (value) => String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 
-const issues = [];
-const candidates = [];
-const emails = new Map();
-const responseIds = new Set();
-
-for (const [index, row] of rows.entries()) {
-  const line = index + 1;
-  const email = normalizeEmail(row.email);
-  const sourceResponseId = String(row.source_response_id ?? row.response_id ?? "").trim();
-  const firstName = String(row.first_name ?? row.prenom ?? "").trim();
-  const portrait = String(row.portrait ?? "").trim();
-  const motors = cleanStrings(row.motors);
-  const heroes = cleanStrings(row.heroes);
-  const errors = [];
-  if (!sourceResponseId) errors.push("identifiant source manquant");
-  if (!email || !email.includes("@")) errors.push("e-mail manquant ou invalide");
-  if (!firstName) errors.push("prénom manquant");
-  if (!portrait) errors.push("portrait manquant");
-  if (motors.length < 3 || motors.length > 6) errors.push("3 à 6 moteurs requis");
-  if (heroes.length !== 3) errors.push("3 héros requis");
-  if (responseIds.has(sourceResponseId)) errors.push("identifiant source en double");
-  responseIds.add(sourceResponseId);
-  emails.set(email, (emails.get(email) ?? 0) + 1);
-  if (errors.length) issues.push({ line, email, errors });
-  else candidates.push({ line, sourceResponseId, email, firstName, portrait, motors, heroes, sourcePayload: row });
+// RFC 4180 : les portraits contiennent des retours à la ligne et deux colonnes
+// ont volontairement le même titre. Un objet indexé par en-tête perdrait une colonne.
+function parseCsv(source) {
+  const rows = []; let row = [], field = "", quoted = false;
+  for (let index = 0; index < source.length; index += 1) {
+    const char = source[index];
+    if (quoted) {
+      if (char === '"' && source[index + 1] === '"') { field += '"'; index += 1; }
+      else if (char === '"') quoted = false;
+      else field += char;
+    } else if (char === '"') quoted = true;
+    else if (char === ",") { row.push(field); field = ""; }
+    else if (char === "\n") { row.push(field.replace(/\r$/, "")); rows.push(row); row = []; field = ""; }
+    else field += char;
+  }
+  if (field.length || row.length) { row.push(field.replace(/\r$/, "")); rows.push(row); }
+  return rows.filter((item) => item.some((cell) => cell.trim()));
 }
 
-for (const candidate of candidates) {
-  if ((emails.get(candidate.email) ?? 0) > 1) issues.push({ line: candidate.line, email: candidate.email, errors: ["plusieurs réponses pour cet e-mail"] });
-}
+const source = await readFile(file, "utf8");
+const csv = parseCsv(source.replace(/^\uFEFF/, ""));
+if (csv.length < 2 || csv[0].length < 13) throw new Error("Le fichier ne correspond pas au formulaire Test des héros attendu.");
+const [header, ...rawRows] = csv;
+for (const label of ["Horodateur", "Adresse e-mail", "Texte", "Moteurs"]) if (!header.includes(label)) throw new Error(`Colonne requise absente : ${label}`);
 
-const uniqueCandidates = candidates.filter((candidate) => (emails.get(candidate.email) ?? 0) === 1);
-const supabase = createClient(url, key, { auth: { autoRefreshToken: false, persistSession: false } });
-const authUsers = [];
-for (let page = 1; ; page += 1) {
-  const { data, error } = await supabase.auth.admin.listUsers({ page, perPage: 1000 });
-  if (error) throw error;
-  authUsers.push(...data.users);
-  if (data.users.length < 1000) break;
-}
+const noneHero = /^(aucun|aucune|personne|n[ée]ant|non)$/i;
+// Correspondances validées manuellement par Rose-Alice le 11 novembre 2026.
+// Elles évitent de modifier les portraits tout en levant les faux positifs liés
+// à un surnom, un nom de famille seul ou une abréviation de prénom.
+const verifiedPortraitNames = new Map([
+  ["lantonirinananou@yahoo.fr", "nanou"],
+  ["giseleamouzou37@gmail.com", "gisele"],
+  ["jpmag95@gmail.com", "jean paul"],
+]);
+const rows = rawRows.map((cells, index) => {
+  const sourceRow = index + 2;
+  const submittedAt = cells[0]?.trim() || null;
+  const respondentEmail = normalizeEmail(cells[1]);
+  const heroesRaw = [cells[2], cells[4], cells[6]].map((item) => String(item ?? "").trim());
+  const heroes = heroesRaw.filter((item) => item && !noneHero.test(item));
+  const fullName = String(cells[8] ?? "").trim();
+  const accountEmail = normalizeEmail(cells[9]);
+  const portrait = String(cells[10] ?? "").trim();
+  const motors = String(cells[11] ?? "").split(/\s*;\s*|\n+/).map((item) => item.trim()).filter(Boolean);
+  const confidentialNote = String(cells[12] ?? "").trim();
+  const readablePortrait = portrait.replace(/&nbsp;/gi, " ").replace(/<br\s*\/?\s*>/gi, "\n");
+  const openingMatch = readablePortrait.match(/^Moi,\s*([^,]+),\s*je suis(?:…|\.\.\.)?/i);
+  const confidentialAnswer = ["non", "no", "c est confidentiel"].includes(normalizedText(fullName));
+  const confidentialPortrait = normalizedText(readablePortrait).startsWith("tu as choisi de garder tes reponses au test des heros confidentielles");
+  const communicationStatus = confidentialNote || confidentialAnswer || confidentialPortrait ? "refused" : "authorized";
+  const firstName = openingMatch?.[1].trim() || fullName.split(/\s+/)[0] || "";
+  const sourceResponseId = `heroes-form-${sha256([submittedAt, respondentEmail, accountEmail, fullName].join("|")).slice(0, 32)}`;
+  const anomalies = [];
+  if (!validEmail(accountEmail)) anomalies.push("invalid_account_email");
+  if (!fullName) anomalies.push("missing_name");
+  if (!portrait) anomalies.push("missing_portrait");
+  if (!motors.length) anomalies.push("missing_motors");
+  if (heroes.length < 2) anomalies.push("incomplete_heroes");
+  if (communicationStatus === "authorized" && portrait && !openingMatch) anomalies.push("unexpected_portrait_opening");
+  if (communicationStatus === "authorized" && openingMatch && fullName) {
+    const portraitName = normalizedText(openingMatch[1]);
+    const fullNameNormalized = normalizedText(fullName);
+    const nameTokens = fullNameNormalized.split(" ").filter(Boolean);
+    const verifiedName = verifiedPortraitNames.get(accountEmail);
+    if (!fullNameNormalized.includes(portraitName) && !nameTokens.some((token) => portraitName.includes(token)) && verifiedName !== portraitName) anomalies.push("portrait_name_mismatch");
+  }
+  return { sourceRow, sourceResponseId, submittedAt, respondentEmail, accountEmail, fullName, firstName, portrait, motors, heroes, heroesRaw, communicationStatus, confidentialNote, anomalies, sourcePayload: Object.fromEntries(header.map((label, column) => [`${column + 1}:${label}`, cells[column] ?? ""])) };
+});
 
+const byEmail = new Map();
+for (const row of rows) { if (!row.accountEmail) continue; const group = byEmail.get(row.accountEmail) ?? []; group.push(row.sourceRow); byEmail.set(row.accountEmail, group); }
+for (const row of rows) if ((byEmail.get(row.accountEmail)?.length ?? 0) > 1) row.anomalies.push("duplicate_account_email");
+
+let accountMatching = "not_run"; const accounts = [];
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL; const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+if (url && key) {
+  const supabase = createClient(url, key, { auth: { autoRefreshToken: false, persistSession: false } });
+  for (let page = 1; ; page += 1) { const { data, error } = await supabase.auth.admin.listUsers({ page, perPage: 1000 }); if (error) throw error; accounts.push(...data.users); if (data.users.length < 1000) break; }
+  accountMatching = "complete";
+}
 const usersByEmail = new Map();
-for (const user of authUsers) {
-  const email = normalizeEmail(user.email);
-  if (!email) continue;
-  const list = usersByEmail.get(email) ?? [];
-  list.push(user);
-  usersByEmail.set(email, list);
+for (const user of accounts) { const email = normalizeEmail(user.email); if (!email) continue; const matches = usersByEmail.get(email) ?? []; matches.push(user); usersByEmail.set(email, matches); }
+for (const row of rows) {
+  row.userId = null; row.assignmentStatus = "unassigned";
+  if (accountMatching !== "complete" || !validEmail(row.accountEmail)) continue;
+  const matches = usersByEmail.get(row.accountEmail) ?? [];
+  if (matches.length === 1) { row.userId = matches[0].id; row.assignmentStatus = "assigned"; }
+  else if (matches.length > 1) { row.assignmentStatus = "anomaly"; row.anomalies.push("multiple_accounts"); }
+  else row.anomalies.push("account_not_found");
 }
 
-const ready = [];
-for (const candidate of uniqueCandidates) {
-  const matches = usersByEmail.get(candidate.email) ?? [];
-  if (matches.length !== 1) {
-    issues.push({ line: candidate.line, email: candidate.email, errors: [matches.length ? "plusieurs comptes correspondent" : "aucun compte trouvé"] });
-    continue;
-  }
-  const user = matches[0];
-  const { data: profile } = await supabase.from("profiles").select("id,deactivated").eq("id", user.id).maybeSingle();
-  if (!profile) {
-    issues.push({ line: candidate.line, email: candidate.email, errors: ["compte Auth sans profil Ministry"] });
-    continue;
-  }
-  ready.push({
-    user_id: user.id,
-    source_response_id: candidate.sourceResponseId,
-    source_email: candidate.email,
-    first_name: candidate.firstName,
-    portrait: candidate.portrait,
-    motors: candidate.motors,
-    heroes: candidate.heroes,
-    source_payload: candidate.sourcePayload,
-    validation_status: "validated",
-    publication_status: "draft",
-  });
-}
-
-const report = { mode: apply ? "IMPORT" : "SIMULATION", received: rows.length, ready: ready.length, anomalies: issues.length, issues };
+const counts = {
+  linesAnalyzed: rows.length,
+  communicationRefused: rows.filter((row) => row.communicationStatus === "refused").length,
+  validAccountEmails: rows.filter((row) => validEmail(row.accountEmail)).length,
+  invalidAccountEmails: rows.filter((row) => !validEmail(row.accountEmail)).length,
+  duplicateEmails: [...byEmail.values()].filter((group) => group.length > 1).length,
+  completePortraits: rows.filter((row) => row.portrait).length,
+  portraitsWithDisplayHtml: rows.filter((row) => /<br\s*\/?\s*>|&nbsp;/i.test(row.portrait)).length,
+  expectedPortraitOpening: rows.filter((row) => row.communicationStatus === "authorized" && !row.anomalies.includes("unexpected_portrait_opening")).length,
+  portraitNameMismatches: rows.filter((row) => row.anomalies.includes("portrait_name_mismatch")).length,
+  completeMotors: rows.filter((row) => row.motors.length).length,
+  twoHeroes: rows.filter((row) => row.heroes.length === 2).length,
+  threeHeroes: rows.filter((row) => row.heroes.length === 3).length,
+  assigned: rows.filter((row) => row.assignmentStatus === "assigned").length,
+  unassigned: rows.filter((row) => row.assignmentStatus === "unassigned").length,
+  anomalies: rows.filter((row) => row.anomalies.length).length,
+};
+const report = { mode: apply ? "IMPORT" : "PREIMPORT", sourceFileHash: sha256(source), accountMatching, counts, issues: rows.filter((row) => row.anomalies.length).map((row) => ({ sourceRow: row.sourceRow, email: row.accountEmail, anomalies: [...new Set(row.anomalies)] })) };
 console.log(JSON.stringify(report, null, 2));
+if (reportPath) await writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
+if (!apply) { console.log("\nAucune donnée modifiée. L'import reste bloqué jusqu'à validation explicite du rapport."); process.exit(0); }
+if (!url || !key) throw new Error("Import impossible sans NEXT_PUBLIC_SUPABASE_URL et SUPABASE_SERVICE_ROLE_KEY.");
 
-if (!apply) {
-  console.log("\nAucune donnée modifiée. Relancez avec --apply après validation du rapport.");
-  process.exit(issues.length ? 2 : 0);
-}
-if (issues.length) throw new Error("Import refusé : corrigez toutes les anomalies avant --apply.");
-
-for (const row of ready) {
-  const { data: existing, error: readError } = await supabase.from("heroes_motors_results").select("id,publication_status").or(`user_id.eq.${row.user_id},source_response_id.eq.${row.source_response_id}`).maybeSingle();
+const supabase = createClient(url, key, { auth: { autoRefreshToken: false, persistSession: false } });
+for (const row of rows) {
+  const payload = { user_id: row.userId, source_response_id: row.sourceResponseId, source_email: row.accountEmail || row.respondentEmail || null, first_name: row.firstName, portrait: row.portrait || null, motors: row.motors, heroes: row.heroes, source_payload: row.sourcePayload, communication_status: row.communicationStatus, visible: false, assignment_status: row.assignmentStatus, anomalies: [...new Set(row.anomalies)], source_submitted_at: row.submittedAt, source_file_hash: report.sourceFileHash, validation_status: row.anomalies.length ? "pending" : "validated", publication_status: "draft" };
+  const { data: existing, error: readError } = await supabase.from("heroes_motors_results").select("id,publication_status").eq("source_response_id", row.sourceResponseId).maybeSingle();
   if (readError) throw readError;
-  if (existing?.publication_status === "published") throw new Error(`Résultat déjà publié, non écrasé : ${row.source_email}`);
-  const query = existing
-    ? supabase.from("heroes_motors_results").update(row).eq("id", existing.id)
-    : supabase.from("heroes_motors_results").insert(row);
-  const { error } = await query;
-  if (error) throw new Error(`${row.source_email}: ${error.message}`);
+  if (existing?.publication_status === "published") continue;
+  const mutation = existing ? supabase.from("heroes_motors_results").update(payload).eq("id", existing.id) : supabase.from("heroes_motors_results").insert(payload);
+  const { error } = await mutation; if (error) throw new Error(`Ligne ${row.sourceRow}: ${error.message}`);
 }
-console.log(`${ready.length} restitution(s) importée(s) en brouillon. Aucune publication automatique.`);
+console.log(`${rows.length} ligne(s) préparée(s) en brouillon, sans publication automatique.`);

@@ -45,7 +45,10 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
   const userId = auth.claims.sub;
   const userEmail = typeof auth.claims.email === "string" ? auth.claims.email : undefined;
 
-  const { data: raw, error } = await supabase.rpc("student_viewer_context");
+  const [{ data: raw, error }, formationAccessResult] = await Promise.all([
+    supabase.rpc("student_viewer_context"),
+    supabase.rpc("formation_access_summary"),
+  ]);
   if (error) throw new Error(`Chargement du contexte utilisateur impossible : ${error.message}`);
   if (!raw) return null;
   const data = raw as unknown as {
@@ -72,6 +75,8 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
     pending_validation_count?: number;
     course_notes_enabled?: boolean;
     unread_messages?: number;
+    formation_category_keys?: string[];
+    has_deepening_enrollment?: boolean;
   };
 
   const demoAdmin = isDemoAdminEmail(userEmail);
@@ -80,6 +85,7 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
   const avatarUrl = avatarPath ? ((await signedAvatarUrls(supabase, [avatarPath])).get(avatarPath) ?? null) : null;
   const seenAt = data.notifications_seen_at ?? "1970-01-01T00:00:00Z";
   const createdAt = data.created_at ?? null;
+  const formationAccess = (formationAccessResult.data ?? {}) as { categoryKeys?: string[]; hasDeepeningEnrollment?: boolean };
 
   return {
     id: userId,
@@ -104,6 +110,8 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
       projectsTraining: !!data.projects_training_member,
       editorialReviewer: !!data.editorial_reviewer,
       steeringMinistryIds: data.steering_ministry_ids ?? [],
+      formationCategoryKeys: formationAccess.categoryKeys ?? data.formation_category_keys ?? [],
+      hasDeepeningEnrollment: !!(formationAccess.hasDeepeningEnrollment ?? data.has_deepening_enrollment),
     },
   };
 });

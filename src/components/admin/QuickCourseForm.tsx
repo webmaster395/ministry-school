@@ -10,15 +10,20 @@ export default function QuickCourseForm({
   parking,
   trainers,
   ministries,
+  context = "admin",
+  parentId,
 }: {
   date: string;
   parking: boolean;
   trainers: Choice[];
   ministries: Choice[];
+  context?: "admin" | "formation";
+  parentId?: string;
 }) {
   return (
     <CourseCreationDialog
-      context="admin"
+      context={context}
+      parentId={parentId}
       defaultDate={date}
       defaultParking={parking}
       trainers={trainers}

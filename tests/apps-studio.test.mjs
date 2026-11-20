@@ -4,10 +4,10 @@ import { readFileSync } from "node:fs";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("Gestion des outils is restricted to super admins in navigation and route layout", () => {
+test("Outils et ressources est regroupé dans l’administration réservée aux super admins", () => {
   const nav = read("src/lib/nav.tsx");
   const layout = read("src/app/admin/apps/layout.tsx");
-  assert.match(nav, /if \(roles\.superAdmin\)[\s\S]*label: "Gestion des outils"[\s\S]*href: "\/admin\/apps"/);
+  assert.match(nav, /if \(roles\.superAdmin\)[\s\S]*label: "Outils et ressources"[\s\S]*href: "\/gestion\/admin\?onglet=contenus&contenu=outils"/);
   assert.match(layout, /if \(!viewer\.roles\.superAdmin\) redirect\("\/etudiant"\)/);
 });
 
@@ -48,15 +48,16 @@ test("Le portail public reste accessible sans entrée Mes outils séparée dans 
   assert.doesNotMatch(navBlocks, /item\.label !== "Mes outils" \|\| toolsVisible/);
 });
 
-test("les publications publique et étudiante sont indépendantes et programmées à l'heure réelle", () => {
+test("publication, accès et emplacements sont enregistrés indépendamment", () => {
   const migration = read("supabase/migrations/20261101190000_tools_visibility_and_scheduling.sql");
   const actions = read("src/app/admin/apps/actions.ts");
   assert.match(migration, /public_enabled[\s\S]*public_publish_at[\s\S]*student_enabled[\s\S]*student_publish_at/);
   assert.match(migration, /public_publish_at <= now\(\)/);
   assert.match(migration, /student_publish_at <= now\(\)/);
   assert.match(actions, /parisLocalToIso/);
-  assert.match(actions, /public_enabled: checked\(formData, "publicEnabled"\)/);
-  assert.match(actions, /student_enabled: checked\(formData, "studentEnabled"\)/);
+  assert.match(actions, /public_enabled: checked\(formData, "publicAccess"\)/);
+  assert.match(actions, /student_enabled: accessScope !== "super_admin"/);
+  assert.match(actions, /placement_story: checked\(formData, "placementStory"\)/);
 });
 
 test("le retrait archive le catalogue sans détruire les applications externes", () => {
@@ -79,9 +80,10 @@ test("le catalogue est une liste compacte sans formulaire accordéon", () => {
   assert.match(table, /<span>Outil<\/span><span>URL<\/span><span>Statut<\/span><span>Modifier<\/span>/);
   assert.doesNotMatch(table, /<details className="group rounded/);
   assert.doesNotMatch(table, /saveCatalogApp/);
-  assert.match(settings, /Identité/);
+  assert.match(settings, /title="Informations"/);
+  assert.match(settings, /title="Apparence"/);
   assert.match(settings, /Publication/);
-  assert.match(settings, /Zone de danger/);
+  assert.match(settings, /Archiver/);
 });
 
 test("chaque application possède sa fiche et ses paramètres dédiés", () => {
@@ -107,12 +109,12 @@ test("le Launchpad centre le nombre réel d’applications sans colonnes fantôm
   assert.match(styles, /\.appName \{[^}]*text-align:center/);
 });
 
-test("Gestion des outils reste privée tandis que le portail public conserve sa route", () => {
+test("Outils et ressources reste privé tandis que le portail public conserve sa route", () => {
   const nav = read("src/lib/nav.tsx");
   const links = read("src/components/NavBlocks.tsx");
   const provider = read("src/components/SpaceProvider.tsx");
   assert.doesNotMatch(nav, /label: "Mes outils"[\s\S]*href: "\/apps"/);
-  assert.match(nav, /label: "Gestion des outils"[\s\S]*href: "\/admin\/apps"/);
+  assert.match(nav, /label: "Outils et ressources"[\s\S]*href: "\/gestion\/admin\?onglet=contenus&contenu=outils"/);
   assert.doesNotMatch(nav, /href: "\/admin\/apps"[\s\S]{0,120}target: "_blank"/);
   assert.match(links, /target=\{target\}/);
   assert.match(provider, /window\.open\(destination\.href, "_blank", "noopener,noreferrer"\)/);

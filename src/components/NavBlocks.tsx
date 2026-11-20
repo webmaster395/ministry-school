@@ -82,9 +82,9 @@ function NavLink({
  */
 export function NavSections({ collapsed = false, onNavigate }: { collapsed?: boolean; onNavigate?: () => void }) {
   const pathname = usePathname();
-  const { spaces, current, pendingValidationCount, studentWorkCount } = useSpace();
+  const { spaces, current, pendingValidationCount, studentWorkCount, roles } = useSpace();
   const multiple = spaces.length > 1;
-  const isSuperAdmin = spaces.some((space) => space.key === "apps");
+  const isSuperAdmin = roles.superAdmin;
   const [adminOpen, setAdminOpen] = useState(!!current);
   const toolsOpenAt = new Date("2026-11-07T06:00:00.000Z").getTime();
   const [toolsVisible, setToolsVisible] = useState(() => Date.now() >= toolsOpenAt);
@@ -135,7 +135,7 @@ export function NavSections({ collapsed = false, onNavigate }: { collapsed?: boo
           )}
           <ul className="space-y-0.5">
             {section.items.filter((item) =>
-              item.label !== "Mon espace" || isSuperAdmin || toolsVisible
+              item.href !== "/etudiant/identite" || isSuperAdmin || toolsVisible
             ).map((item) => (
               <li key={item.label}>
                 <NavLink

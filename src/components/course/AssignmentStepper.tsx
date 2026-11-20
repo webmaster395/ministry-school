@@ -111,21 +111,18 @@ export default function AssignmentStepper({
           />
         </div>
         <p className="mt-5 text-xs font-medium text-muted">{title}</p>
-        <div className="mt-3 text-xs">
-          <p className="font-semibold text-foreground">
-            À terminer avant le prochain cours
-          </p>
-          {deadlineDate && (
-            <p className="mt-0.5 text-muted">
-              Prochain cours :{" "}
+        {deadlineDate && (
+          <div className="mt-3 text-xs">
+            <p className="font-semibold text-foreground">
+              Date limite :{" "}
               {new Intl.DateTimeFormat("fr-FR", {
                 day: "numeric",
                 month: "long",
                 year: "numeric",
-              }).format(new Date(`${deadlineDate}T00:00:00`))}
+              }).format(new Date(deadlineDate))}
             </p>
-          )}
-        </div>
+          </div>
+        )}
       </div>
       <div className="mt-4 max-w-3xl border-t border-border">
         {steps.map((step, index) => {

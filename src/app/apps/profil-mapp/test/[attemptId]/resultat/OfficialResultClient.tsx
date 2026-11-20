@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { ResultPanel } from "../../../MappNativeExperience";
+import { useState } from "react";
 import type { MappResultBundle } from "@/lib/mapp/types";
 
-export function OfficialResultClient({ bundle }: { bundle: MappResultBundle }) {
+export function OfficialResultClient({ bundle, canInvite }: { bundle: MappResultBundle; canInvite: boolean }) {
   const [current, setCurrent] = useState(bundle);
-  return <ResultPanel bundle={current} onResolved={setCurrent} />;
+  return <ResultPanel bundle={current} onBundleChange={setCurrent} canInvite={canInvite} />;
 }

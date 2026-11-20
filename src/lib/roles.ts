@@ -13,6 +13,10 @@ export type ViewerRoles = {
   editorialReviewer: boolean;
   /** Ministères pilotés (en propre ou par délégation), par identifiant */
   steeringMinistryIds: string[];
+  /** Catégories de formation administrables (responsable ou contributeur). */
+  formationCategoryKeys: string[];
+  /** Affiche le parcours étudiant uniquement lorsqu'une inscription active existe. */
+  hasDeepeningEnrollment: boolean;
 };
 
 /** Un étudiant « simple » : aucun rôle en plus de la vue étudiant. Seul lui peut poser des questions. */
@@ -22,6 +26,7 @@ export function isPlainStudent(roles: ViewerRoles) {
     !roles.superAdmin &&
     !roles.projectsTraining &&
     !roles.editorialReviewer &&
-    roles.steeringMinistryIds.length === 0
+    roles.steeringMinistryIds.length === 0 &&
+    roles.formationCategoryKeys.length === 0
   );
 }

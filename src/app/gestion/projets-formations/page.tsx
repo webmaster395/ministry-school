@@ -10,10 +10,11 @@ import { plainTextContent } from "@/components/FormattedContent";
 import { getViewer } from "@/lib/data/viewer";
 import { opportunityWorkflow } from "@/lib/opportunity-workflow";
 import ManagementPageHeader from "@/components/management/ManagementPageHeader";
+import ValidationQueueContent from "@/components/admin/ValidationQueueContent";
 
 type StatusKey = "all" | "draft" | "pending" | "published" | "past";
 
-export default async function ProjectsTrainingManagementPage({ searchParams }: { searchParams: Promise<{ statut?: string; scope?: string }> }) {
+export default async function ProjectsTrainingManagementPage({ searchParams }: { searchParams: Promise<{ statut?: string; scope?: string; vue?: string; validation?: string }> }) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/auth/connexion");
@@ -24,8 +25,14 @@ export default async function ProjectsTrainingManagementPage({ searchParams }: {
     getViewer(),
   ]);
   const query = await searchParams;
-  const globalScope = !!viewer?.roles.admin && ["admin", "super"].includes(query.scope ?? "");
+  const globalScope = !!viewer?.roles.superAdmin && ["admin", "super"].includes(query.scope ?? "");
+  if (globalScope && !viewer?.roles.superAdmin) redirect("/etudiant");
   if (!globalScope && !rights.member && !rights.canCreate) redirect("/etudiant");
+  if (globalScope && query.vue === "validation") return <div className="space-y-5">
+    <ManagementPageHeader eyebrow="SUPER ADMIN" title="Projets et formations" subtitle="Gérez les initiatives et traitez les validations sans changer d’espace." mobileTitleInAppBar />
+    <AdminProjectTabs active="validation" pending={viewer?.pendingValidationCount ?? 0} />
+    <ValidationQueueContent requested={query.validation} embedded />
+  </div>;
   const mine = globalScope ? rows : rows.filter((row) => rights.assignments.has(row.id));
   const requested = query.statut;
   const filter: StatusKey = (["draft", "pending", "published", "past"] as string[]).includes(requested ?? "") ? requested as StatusKey : "all";
@@ -48,6 +55,7 @@ export default async function ProjectsTrainingManagementPage({ searchParams }: {
       actions={createAction}
       mobileTitleInAppBar={globalScope}
     />
+    {globalScope && <AdminProjectTabs active="projects" pending={viewer?.pendingValidationCount ?? 0} />}
     <nav className="grid grid-cols-2 gap-2 rounded-2xl border border-border bg-background p-1.5 min-[430px]:grid-cols-3 sm:grid-cols-5">{[
       ["all", "Tous"], ["draft", "Brouillons"], ["pending", "Soumis"], ["published", "Publiés"], ["past", "Passés"],
     ].map(([key, label]) => { const params = new URLSearchParams(); if (key !== "all") params.set("statut", key); if (globalScope) params.set("scope", "admin"); const suffix = params.toString(); return <Link key={key} href={`/gestion/projets-formations${suffix ? `?${suffix}` : ""}`} className={`rounded-xl px-3 py-2.5 text-center text-sm font-medium ${filter === key ? "bg-accent text-on-accent" : "text-muted hover:bg-surface hover:text-foreground"}`}>{label}</Link>; })}</nav>
@@ -57,4 +65,11 @@ export default async function ProjectsTrainingManagementPage({ searchParams }: {
       return <li key={row.id}><Link href={`/gestion/projets-formations/${row.id}${globalScope ? "?scope=admin" : ""}`} className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-background transition hover:border-foreground"><OpportunityBanner emoji={row.banner_emoji} title={row.title} typeLabel={TYPE_LABEL[opportunityType(row)]} status={workflow.label} variant="card" /><div className="flex flex-1 flex-col p-5"><div className="mb-3 flex items-center justify-between gap-3"><span className="rounded-full bg-surface px-2.5 py-1 text-xs font-medium text-foreground">{workflow.label}</span><span className="text-xs text-muted">{responsibility}</span></div><p className="line-clamp-2 text-sm text-muted">{plainTextContent(row.short_description || row.description)}</p><ul className="mt-auto space-y-2 pt-5 text-sm text-muted">{dates[0] && <li className="flex gap-2"><CalendarDays size={16} /> {formatSessionDate(dates[0].session_date)} · {dates[0].start_time.slice(0, 5)}</li>}{row.location && <li className="flex gap-2"><MapPin size={16} /> {row.location}</li>}<li className="flex items-center justify-between"><span className="flex gap-2"><Users size={16} /> {taken} participant{taken > 1 ? "s" : ""} distinct{taken > 1 ? "s" : ""} · {dates.length} séance{dates.length > 1 ? "s" : ""}</span><ChevronRight size={16} /></li></ul></div></Link></li>;
     })}</ul> : <section className="rounded-2xl border border-border bg-background px-5 py-8 text-center sm:p-10"><h2 className="font-title text-[22px] text-foreground">{filter === "all" ? "Aucun projet pour le moment" : "Aucun élément dans ce statut"}</h2><p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted">{filter === "all" && canCreate ? "Crée ton premier projet ou ta première formation." : "Les initiatives correspondantes apparaîtront ici."}</p>{filter === "all" && canCreate && <div className="mx-auto mt-5 max-w-sm">{createAction}</div>}</section>}
   </div>;
+}
+
+function AdminProjectTabs({ active, pending }: { active: "projects" | "validation"; pending: number }) {
+  return <nav aria-label="Sections des projets et formations" className="inline-flex rounded-xl border border-border bg-background p-1">
+    <Link href="/gestion/projets-formations?scope=admin" aria-current={active === "projects" ? "page" : undefined} className={`rounded-lg px-4 py-2.5 text-sm font-semibold ${active === "projects" ? "bg-accent text-on-accent" : "text-muted hover:bg-surface hover:text-foreground"}`}>Tous les projets</Link>
+    <Link href="/gestion/projets-formations?scope=admin&vue=validation" aria-current={active === "validation" ? "page" : undefined} className={`inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold ${active === "validation" ? "bg-accent text-on-accent" : "text-muted hover:bg-surface hover:text-foreground"}`}>À valider{pending > 0 && <span className="grid h-6 min-w-6 place-items-center rounded-full bg-[#C43D32] px-1.5 text-[11px] font-semibold text-white">{pending}</span>}</Link>
+  </nav>;
 }
