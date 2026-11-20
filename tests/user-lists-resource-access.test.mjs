@@ -49,7 +49,7 @@ test("les listes, catégories et personnes sont des audiences cumulables", () =>
   assert.match(editor, /type="checkbox"/);
   assert.doesNotMatch(editor, /type="radio"/);
   assert.match(editor, /title="Super administrateurs"/);
-  assert.doesNotMatch(editor, /Super administrateurs uniquement/);
+  assert.match(editor, /Super administrateurs uniquement/);
 });
 
 test("l'accès individuel est indépendant des listes", () => {
@@ -71,7 +71,7 @@ test("ajout et retrait d'une liste sont dynamiques sans matérialiser les permis
 test("une sélection de listes vide reste inaccessible aux utilisateurs ordinaires", () => {
   assert.match(migration, /if access_mode = 'selected_lists' then[\s\S]*return exists/);
   assert.match(audienceMigration, /if access_mode in \('selected_lists', 'selected_audiences'\) then[\s\S]*return exists/);
-  assert.match(read("src/components/admin/ResourceAccessEditor.tsx"), /allUsers \? "all_authenticated" : "selected_audiences"/);
+  assert.match(read("src/components/admin/ResourceAccessEditor.tsx"), /hasSelectedAudience[\s\S]*"selected_audiences"[\s\S]*"super_admin_only"/);
 });
 
 test("les ressources historiques sans règle conservent leur visibilité", () => {

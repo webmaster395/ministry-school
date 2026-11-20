@@ -70,10 +70,17 @@ export default function ResourceAccessEditor({ resourceType, resourceId, configu
   const listNames = listsAudience ? lists.filter((list) => selectedLists.includes(list.id)).map((list) => list.name) : [];
   const categoryNames = listsAudience ? selectedCategories.map((category) => LIST_CATEGORY_LABELS[category]) : [];
   const selectedPeopleCount = peopleAudience ? selectedUsers.length : 0;
-  const accessMode: ResourceVisibilityMode = allUsers ? "all_authenticated" : "selected_audiences";
+  const hasSelectedAudience = listsAudience || peopleAudience;
+  const accessMode: ResourceVisibilityMode = allUsers
+    ? "all_authenticated"
+    : hasSelectedAudience
+      ? "selected_audiences"
+      : "super_admin_only";
   const summary = allUsers
     ? "Tous les utilisateurs authentifiés (super administrateurs inclus)"
-    : `Super administrateurs${listNames.length ? ` + listes : ${listNames.join(", ")}` : ""}${categoryNames.length ? ` + catégories : ${categoryNames.join(", ")}` : ""}${selectedPeopleCount ? ` + ${selectedPeopleCount} personne${selectedPeopleCount > 1 ? "s" : ""} sélectionnée${selectedPeopleCount > 1 ? "s" : ""}` : ""}`;
+    : hasSelectedAudience
+      ? `Super administrateurs${listNames.length ? ` + listes : ${listNames.join(", ")}` : ""}${categoryNames.length ? ` + catégories : ${categoryNames.join(", ")}` : ""}${selectedPeopleCount ? ` + ${selectedPeopleCount} personne${selectedPeopleCount > 1 ? "s" : ""} sélectionnée${selectedPeopleCount > 1 ? "s" : ""}` : ""}`
+      : "Super administrateurs uniquement";
 
   const selectAllUsers = (checked: boolean) => {
     setConfigured(true);
