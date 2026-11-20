@@ -5,6 +5,7 @@ import test from "node:test";
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 const migration = read("supabase/migrations/20261120113000_user_lists_and_resource_access.sql");
 const categoryMigration = read("supabase/migrations/20261120170000_resource_access_list_categories.sql");
+const audienceMigration = read("supabase/migrations/20261120180000_composable_resource_audiences.sql");
 
 test("les listes sont distinctes des rôles et modifiables uniquement par un super administrateur", () => {
   assert.match(migration, /create table if not exists public\.user_lists/);
@@ -40,6 +41,17 @@ test("les accès peuvent cumuler plusieurs listes et plusieurs catégories de li
   assert.match(editor, /Super administrateurs[\s\S]*listes[\s\S]*catégories/);
 });
 
+test("les listes, catégories et personnes sont des audiences cumulables", () => {
+  assert.match(audienceMigration, /selected_audiences/);
+  assert.match(audienceMigration, /selected_users', 'selected_audiences'[\s\S]*return true/);
+  assert.match(audienceMigration, /selected_lists', 'selected_audiences'[\s\S]*resource_access_categories/);
+  const editor = read("src/components/admin/ResourceAccessEditor.tsx");
+  assert.match(editor, /type="checkbox"/);
+  assert.doesNotMatch(editor, /type="radio"/);
+  assert.match(editor, /title="Super administrateurs"/);
+  assert.doesNotMatch(editor, /Super administrateurs uniquement/);
+});
+
 test("l'accès individuel est indépendant des listes", () => {
   assert.match(migration, /create table if not exists public\.resource_access_users/);
   assert.match(migration, /access_mode = 'selected_users'[\s\S]*resource_access_users direct_access/);
@@ -58,7 +70,8 @@ test("ajout et retrait d'une liste sont dynamiques sans matérialiser les permis
 
 test("une sélection de listes vide reste inaccessible aux utilisateurs ordinaires", () => {
   assert.match(migration, /if access_mode = 'selected_lists' then[\s\S]*return exists/);
-  assert.match(read("src/components/admin/ResourceAccessEditor.tsx"), /Une sélection vide rend la ressource inaccessible/);
+  assert.match(audienceMigration, /if access_mode in \('selected_lists', 'selected_audiences'\) then[\s\S]*return exists/);
+  assert.match(read("src/components/admin/ResourceAccessEditor.tsx"), /allUsers \? "all_authenticated" : "selected_audiences"/);
 });
 
 test("les ressources historiques sans règle conservent leur visibilité", () => {
@@ -80,9 +93,9 @@ test("les nouveaux fichiers privés sont servis après contrôle et sans bucket 
   assert.match(read("src/app/etudiant/ressources/[materialId]/ouvrir/route.ts"), /download\(path\)[\s\S]*private, no-store/);
 });
 
-test("l'interface expose exactement les quatre modes et les sélections multiples", () => {
+test("l'interface expose les audiences cumulables et les sélections multiples", () => {
   const editor = read("src/components/admin/ResourceAccessEditor.tsx");
-  for (const mode of ["all_authenticated", "super_admin_only", "selected_lists", "selected_users"]) assert.match(editor, new RegExp(mode));
+  assert.match(editor, /selected_audiences/);
   assert.match(editor, /name="accessListIds"/);
   assert.match(editor, /name="accessUserIds"/);
 });

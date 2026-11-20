@@ -3,7 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 export const RESOURCE_TYPES = ["app_catalog", "material", "opportunity_resource", "managed_resource"] as const;
 export type ResourceAccessType = (typeof RESOURCE_TYPES)[number];
 
-export const VISIBILITY_MODES = ["all_authenticated", "super_admin_only", "selected_lists", "selected_users"] as const;
+export const VISIBILITY_MODES = ["all_authenticated", "super_admin_only", "selected_lists", "selected_users", "selected_audiences"] as const;
 export type ResourceVisibilityMode = (typeof VISIBILITY_MODES)[number];
 
 export const LIST_CATEGORY_LABELS = {
@@ -44,9 +44,9 @@ export async function saveResourceAccessFromForm(
     p_resource_type: resourceType,
     p_resource_id: resourceId,
     p_visibility_mode: rawMode,
-    p_list_ids: rawMode === "selected_lists" ? uuidValues(formData, "accessListIds") : [],
-    p_categories: rawMode === "selected_lists" ? categoryValues(formData, "accessCategories") : [],
-    p_user_ids: rawMode === "selected_users" ? uuidValues(formData, "accessUserIds") : [],
+    p_list_ids: ["selected_lists", "selected_audiences"].includes(rawMode) ? uuidValues(formData, "accessListIds") : [],
+    p_categories: ["selected_lists", "selected_audiences"].includes(rawMode) ? categoryValues(formData, "accessCategories") : [],
+    p_user_ids: ["selected_users", "selected_audiences"].includes(rawMode) ? uuidValues(formData, "accessUserIds") : [],
   });
   if (error) throw new Error(`Enregistrement des accès impossible : ${error.message}`);
 }
