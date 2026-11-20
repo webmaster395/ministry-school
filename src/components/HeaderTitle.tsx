@@ -56,6 +56,7 @@ function adminPageTitle(pathname: string, tab: string | null) {
   if (pathname.startsWith("/gestion/admin/programme") || pathname.startsWith("/gestion/admin/seances")) return "Programme";
   if (pathname.startsWith("/gestion/admin/cours")) return "Cours et formations";
   if (pathname.startsWith("/gestion/admin/profil")) return "Profil";
+  if (pathname.startsWith("/gestion/preparation")) return "Préparation";
   if (pathname.startsWith("/gestion/a-valider") || pathname.startsWith("/gestion/super-admin/a-valider")) return "À valider";
   if (pathname.startsWith("/gestion/super-admin/pilotage")) return "Pilotage global";
   if (pathname.startsWith("/gestion/super-admin/ministeres")) return "Sensibilités ministérielles";

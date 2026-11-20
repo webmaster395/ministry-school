@@ -21,6 +21,11 @@ import {
   BadgeCheck,
   PanelsTopLeft,
   Fingerprint,
+  FolderKanban,
+  GraduationCap,
+  LibraryBig,
+  UsersRound,
+  WandSparkles,
 } from "lucide-react";
 import { isPlainStudent, type ViewerRoles } from "@/lib/roles";
 import { QUESTIONS_ENABLED } from "@/lib/questions";
@@ -63,6 +68,11 @@ const icons = {
   validate: <BadgeCheck {...iconProps} />,
   apps: <PanelsTopLeft {...iconProps} />,
   identity: <Fingerprint {...iconProps} />,
+  adminAccess: <UsersRound {...iconProps} />,
+  adminCourses: <GraduationCap {...iconProps} />,
+  adminProjects: <FolderKanban {...iconProps} />,
+  adminTools: <LibraryBig {...iconProps} />,
+  preparation: <WandSparkles {...iconProps} />,
 };
 
 /** Le menu étudiant, toujours affiché : celui de la maquette de Rose Alice. */
@@ -146,12 +156,16 @@ export function navSpaces(roles: ViewerRoles): Space[] {
       sections: [
         {
           title: "Administration",
-          items: [
-            {
-              label: "Accueil",
-              href: "/gestion/admin",
-              icon: icons.adminHome,
-            },
+          items: roles.superAdmin ? [
+            { label: "Tableau de bord", href: "/gestion/admin", icon: icons.adminHome },
+            { label: "Utilisateurs et accès", href: "/gestion/admin?onglet=membres", icon: icons.adminAccess },
+            { label: "Formations", href: "/gestion/admin/cours-formations", icon: icons.adminCourses },
+            { label: "Projets et formations", href: "/gestion/admin/projets-formations", icon: icons.adminProjects },
+            { label: "Pilotage ministère", href: "/gestion/super-admin/pilotage", icon: icons.adminStats },
+            { label: "Outils et ressources", href: "/admin/apps", icon: icons.adminTools },
+            { label: "Préparation", href: "/gestion/preparation", icon: icons.preparation },
+          ] : [
+            { label: "Tableau de bord", href: "/gestion/admin", icon: icons.adminHome },
           ],
         },
       ],

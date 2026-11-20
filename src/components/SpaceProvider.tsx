@@ -67,6 +67,7 @@ export function SpaceProvider({
   // Une page partagée entre deux espaces garde celui que la personne a choisi.
   const administrationPath = pathname.startsWith("/gestion/super-admin")
     || pathname.startsWith("/gestion/a-valider")
+    || pathname.startsWith("/gestion/preparation")
     || (pathname.startsWith("/gestion/projets-formations") && ["super", "admin"].includes(searchParams.get("scope") ?? ""));
   const matches = administrationPath && spaces.some((space) => space.key === "admin")
     ? (["admin"] as SpaceKey[])
