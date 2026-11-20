@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BadgeCheck, BookOpen, ChartNoAxesColumnIncreasing, ChevronRight, Church, FolderKanban, ListTree, ShieldCheck, UsersRound } from "lucide-react";
+import { BadgeCheck, BookOpen, ChartNoAxesColumnIncreasing, ChevronRight, Church, FolderKanban, ListTree, ShieldCheck, UsersRound, WandSparkles } from "lucide-react";
 import type { Viewer } from "@/lib/data/viewer";
 
 const commonSections = [
@@ -16,6 +16,7 @@ export default function AdminHome({ viewer }: { viewer: Viewer }) {
     { title: "Listes", description: "Groupes réutilisables pour les accès aux outils et aux documents.", href: "/gestion/admin?onglet=listes", icon: ListTree },
     { title: "Permissions", description: "Rôles, affectations, niveaux d’accès et commentaires internes.", href: "/gestion/admin?onglet=permissions", icon: ShieldCheck },
     { title: "Pilotage global", description: "Vue d’ensemble, statistiques réelles et organisation du programme.", href: "/gestion/super-admin/pilotage", icon: ChartNoAxesColumnIncreasing },
+    { title: "Préparation", description: "Composez et exportez les programmes de formation Ministry School.", href: "/gestion/preparation", icon: WandSparkles },
   ] : [
     ...commonSections,
     { title: "Pilotage", description: "Les cinq indicateurs essentiels de Ministry School.", href: "/gestion/admin?onglet=pilotage", icon: ChartNoAxesColumnIncreasing },

@@ -29,6 +29,7 @@ const pageLabels: Record<string, string> = {
   "/gestion/admin/seances": "Programme",
   "/gestion/a-valider": "À valider",
   "/gestion/super-admin/pilotage": "Pilotage global",
+  "/gestion/preparation": "Préparation",
 };
 
 function isIdentifier(segment: string) {

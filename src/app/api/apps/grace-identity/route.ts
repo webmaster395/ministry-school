@@ -38,16 +38,9 @@ function resultsFor(testKey: GraceTestKey, answers: Record<string, unknown>) {
 }
 
 export async function PUT(request: Request) {
-  const viewer = await getViewer();
-  if (!viewer || viewer.deactivated) return NextResponse.json({ error: "Connexion requise." }, { status: 401 });
   const body = await request.json().catch(() => null) as { testKey?: string; answers?: unknown; completed?: unknown } | null;
   if (!body || !keys.has(body.testKey as GraceTestKey) || !body.answers || typeof body.answers !== "object" || Array.isArray(body.answers)) return NextResponse.json({ error: "Données invalides." }, { status: 400 });
   const testKey = body.testKey as GraceTestKey;
-  if (!viewer.roles.superAdmin) {
-    const tools = await getStudentTools();
-    const canAccess = tools.some((tool) => tool.slug === graceIdentityToolSlugs[testKey] || tool.slug === graceIdentitySlug);
-    if (!canAccess) return NextResponse.json({ error: "Cet outil ne vous est pas accessible." }, { status: 403 });
-  }
   const rawAnswers = body.answers as Record<string, unknown>;
   const answers = testKey === "fruit" ? fruitAnswers(rawAnswers) : rawAnswers;
   const completed = testKey === "fruit" ? body.completed === true : true;
@@ -55,16 +48,37 @@ export async function PUT(request: Request) {
   const results = resultsFor(testKey, answers);
   const version = assessmentVersions[testKey];
   const supabase = await createClient();
-  const { data, error } = await supabase.from("grace_identity_assessments").upsert({
-    user_id: viewer.id,
-    test_key: testKey,
-    questionnaire_version: version.questionnaire,
-    scoring_version: version.scoring,
-    restitution_version: version.restitution,
-    answers,
-    results,
-    completed_at: completed ? new Date().toISOString() : null,
-  }, { onConflict: "user_id,test_key,questionnaire_version" }).select("test_key,questionnaire_version,scoring_version,restitution_version,answers,results,completed_at,updated_at").single();
+  let { data, error } = await supabase.rpc("save_grace_identity_assessment", {
+    p_test_key: testKey,
+    p_answers: answers,
+    p_results: results,
+    p_questionnaire_version: version.questionnaire,
+    p_scoring_version: version.scoring,
+    p_restitution_version: version.restitution,
+    p_completed: completed,
+  });
+  if (error?.code === "PGRST202" || error?.code === "42883") {
+    const viewer = await getViewer();
+    if (!viewer || viewer.deactivated) return NextResponse.json({ error: "Connexion requise." }, { status: 401 });
+    if (!viewer.roles.superAdmin) {
+      const tools = await getStudentTools();
+      const canAccess = tools.some((tool) => tool.slug === graceIdentityToolSlugs[testKey] || tool.slug === graceIdentitySlug);
+      if (!canAccess) return NextResponse.json({ error: "Cet outil ne vous est pas accessible." }, { status: 403 });
+    }
+    const fallback = await supabase.from("grace_identity_assessments").upsert({
+      user_id: viewer.id,
+      test_key: testKey,
+      questionnaire_version: version.questionnaire,
+      scoring_version: version.scoring,
+      restitution_version: version.restitution,
+      answers,
+      results,
+      completed_at: completed ? new Date().toISOString() : null,
+    }, { onConflict: "user_id,test_key,questionnaire_version" }).select("test_key,questionnaire_version,scoring_version,restitution_version,answers,results,completed_at,updated_at").single();
+    data = fallback.data;
+    error = fallback.error;
+  }
+  if (error?.code === "42501") return NextResponse.json({ error: "Connexion requise ou outil inaccessible." }, { status: 401 });
   if (error) return NextResponse.json({ error: "Les réponses n’ont pas pu être enregistrées." }, { status: 500 });
   return NextResponse.json({ record: data });
 }

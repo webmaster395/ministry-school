@@ -1,13 +1,10 @@
-import { getCatalogApps, getStudentTools, type CatalogApp } from "@/lib/apps/catalog";
 import { getViewer } from "@/lib/data/viewer";
-import { getIdentityDashboard } from "@/lib/identity/dashboard";
 import { getOfficialMappIdentityResults } from "@/lib/mapp/official-results";
 import IdentityExperience, { type IdentityFeedItem, type IdentityStoryItem, type IdentityTodoItem } from "./IdentityExperience";
 import { isMappGuestOpen } from "@/lib/mapp/access-window";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import type { IdentityResult } from "@/lib/identity/dashboard";
-import { getPublishedHeroesMotorsResult } from "@/lib/identity/heroes-motors";
+import { getStudentIdentityFeed, type IdentityTool } from "@/lib/identity/feed";
 import { graceIdentitySlug, graceIdentityToolSlugs, graceTestKeyFromSlug } from "@/lib/apps/grace-identity";
 
 export const dynamic = "force-dynamic";
@@ -38,13 +35,13 @@ type ToolProgress = {
   reset_at: string | null;
 };
 
-const importanceOrder: Record<CatalogApp["identityImportance"], number> = {
+const importanceOrder: Record<IdentityTool["identityImportance"], number> = {
   priority: 0,
   recommended: 1,
   optional: 2,
 };
 
-function providerKinds(tool: CatalogApp): IdentityResult["kind"][] {
+function providerKinds(tool: IdentityTool): IdentityResult["kind"][] {
   const configured = tool.resultProvider;
   if (configured === "mapp" || configured === "fruit" || configured === "gifts" || configured === "skills" || configured === "generopoly" || configured === "apest" || configured === "life-line" || configured === "heroes-motors") return [configured];
   const graceKind = graceTestKeyFromSlug(tool.slug);
@@ -66,7 +63,7 @@ function buildStories({
   results,
   heroesAvailable,
 }: {
-  tools: CatalogApp[];
+  tools: IdentityTool[];
   results: IdentityResult[];
   heroesAvailable: boolean;
 }): IdentityStoryItem[] {
@@ -173,7 +170,7 @@ function graceTestHref(kind: "fruit" | "gifts" | "skills") {
   }[kind];
 }
 
-function buildTodoItems(tools: CatalogApp[], completedKinds: Set<string>, progressByApp: Map<string, ToolProgress>) {
+function buildTodoItems(tools: IdentityTool[], completedKinds: Set<string>, progressByApp: Map<string, ToolProgress>) {
   const items = tools.flatMap<IdentityTodoItem>((tool) => {
     if (!tool.placementPost) return [];
     const completed = providerKinds(tool).some((kind) => completedKinds.has(kind));
@@ -211,23 +208,16 @@ export default async function StudentIdentityPage() {
   if (!viewer) redirect("/login");
   if (viewer.deactivated) redirect("/auth/desactive");
   if (!viewer.roles.superAdmin && !isMappGuestOpen()) redirect("/etudiant");
-  const supabase = await createClient();
-  const [dashboard, tools, officialMappResults, lifeLine, heroesMotors, progress] = await Promise.all([
-    getIdentityDashboard(),
-    viewer.roles.superAdmin
-      ? getCatalogApps({ includeUnpublished: true, includeArchived: false, channel: "admin" })
-      : getStudentTools(),
+  const [identityData, officialMappResults] = await Promise.all([
+    getStudentIdentityFeed(viewer.id, viewer.roles.superAdmin),
     getOfficialMappIdentityResults(),
-    supabase.from("life_line_journeys").select("events,reflection,completed_at,updated_at").eq("user_id", viewer.id).maybeSingle(),
-    getPublishedHeroesMotorsResult(viewer.id),
-    supabase.from("app_user_progress").select("app_id,first_opened_at,last_opened_at,reset_at").eq("user_id", viewer.id),
   ]);
+  const { dashboard, tools, lifeLine, heroesMotors, progress } = identityData;
   // La création de la ligne de vie est déjà une réalisation personnelle : elle
   // doit être retrouvable depuis Identité, même si certains champs sont restés
   // volontairement vides ou si elle a été enregistrée avant ce correctif.
-  const hasLifeLineContent = Boolean(lifeLine.data);
-  const lifeLineResults: IdentityResult[] = hasLifeLineContent
-    ? [{ kind: "life-line", completedAt: lifeLine.data?.completed_at ?? lifeLine.data?.updated_at ?? new Date().toISOString() }]
+  const lifeLineResults: IdentityResult[] = lifeLine
+    ? [{ kind: "life-line", completedAt: lifeLine.completedAt }]
     : [];
   const nativeMappResults = dashboard.identityResults
     .filter((result) => result.kind === "mapp")
@@ -255,9 +245,9 @@ export default async function StudentIdentityPage() {
   const accessibleResultKinds = new Set(visibleTools.flatMap(providerKinds));
   const visibleResults = allResults.filter((result) => !controlledResultKinds.has(result.kind) || accessibleResultKinds.has(result.kind));
   const completedKinds = new Set(visibleResults.map((result) => result.kind));
-  const progressByApp = new Map(((progress.data ?? []) as ToolProgress[]).map((item) => [item.app_id, item]));
+  const progressByApp = new Map((progress as ToolProgress[]).map((item) => [item.app_id, item]));
   const todoItems = buildTodoItems(visibleTools, completedKinds, progressByApp);
-  const feed: IdentityFeedItem[] = [
+  const feedItems: IdentityFeedItem[] = [
     ...todoItems.map((todo) => ({ type: "todo" as const, key: `todo-${todo.key}`, todo })),
     ...visibleResults.map((result) => ({
       type: "result" as const,
@@ -296,7 +286,7 @@ export default async function StudentIdentityPage() {
     months={monthsTogether(dashboard.profile.memberSince)}
     completedTests={visibleResults.length}
     stories={stories}
-    feed={feed}
+    feed={feedItems}
     toolArtwork={toolArtwork}
   />;
 }

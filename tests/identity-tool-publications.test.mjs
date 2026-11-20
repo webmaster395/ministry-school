@@ -9,7 +9,7 @@ test("Mes résultats est une galerie unique avec les publications À faire en pr
   const experience = read("src/app/etudiant/identite/IdentityExperience.tsx");
   const styles = read("src/app/etudiant/identite/identity.module.css");
 
-  assert.match(page, /const feed: IdentityFeedItem\[\] = \[[\s\S]*?todoItems\.map[\s\S]*?visibleResults\.map/);
+  assert.match(page, /const feedItems: IdentityFeedItem\[\] = \[[\s\S]*?todoItems\.map[\s\S]*?visibleResults\.map/);
   assert.match(page, /importanceOrder\[left\.importance\] - importanceOrder\[right\.importance\]/);
   assert.match(experience, /<Grid3X3 \/> Mes résultats/);
   assert.doesNotMatch(experience, /role="tablist"|setActiveTab\(|props\.upcoming/);
@@ -56,10 +56,11 @@ test("le Test des héros reste en attente après le clic et n’apparaît qu’u
 test("les listes contrôlent aussi les publications et les accès directs", () => {
   const page = read("src/app/etudiant/identite/page.tsx");
   const migration = read("supabase/migrations/20261120213000_identity_tool_publications.sql");
+  const consolidatedFeed = read("supabase/migrations/20261120221000_student_identity_feed.sql");
 
-  assert.match(page, /getStudentTools\(\)/);
+  assert.match(page, /getStudentIdentityFeed\(viewer\.id, viewer\.roles\.superAdmin\)/);
   assert.match(page, /accessibleResultKinds = new Set\(visibleTools\.flatMap\(providerKinds\)\)/);
-  assert.match(migration, /public\.can_access_resource\('app_catalog', app\.id, current_user_id\)/);
+  assert.match(consolidatedFeed, /public\.can_access_resource\('app_catalog', app\.id, current_user_id\)/);
   assert.match(migration, /public\.can_access_resource\('app_catalog', app\.id, auth\.uid\(\)\)/);
 });
 
