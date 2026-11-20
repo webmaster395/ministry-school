@@ -8,6 +8,7 @@ export type HeroesAdminRow = {
   communication: "authorized" | "refused" | "unknown"; visible: boolean;
   assignment: "assigned" | "unassigned" | "anomaly"; anomalies: string[];
   publication: "draft" | "published" | "archived"; updatedAt: string;
+  accountDeactivated: boolean;
 };
 export type HeroesAccount = { userId: string; email: string; fullName: string; deactivated: boolean };
 
@@ -22,7 +23,6 @@ export async function getHeroesAdminData() {
     supabase.rpc("heroes_motors_admin_accounts"),
   ]);
   if (error) throw new Error(`Chargement des résultats impossible : ${error.message}`);
-  if (accountError) throw new Error(`Chargement des comptes impossible : ${accountError.message}`);
   const accounts: HeroesAccount[] = (rawAccounts ?? []).map((row: Record<string, unknown>) => ({ userId: String(row.user_id), email: String(row.email ?? ""), fullName: String(row.full_name ?? ""), deactivated: Boolean(row.deactivated) }));
   const byId = new Map(accounts.map((account) => [account.userId, account]));
   const rows: HeroesAdminRow[] = (rawRows ?? []).map((row: Record<string, unknown>) => ({
@@ -35,8 +35,13 @@ export async function getHeroesAdminData() {
     visible: Boolean(row.visible), assignment: row.assignment_status === "assigned" ? "assigned" : row.assignment_status === "anomaly" ? "anomaly" : "unassigned",
     anomalies: strings(row.anomalies), publication: row.publication_status === "published" ? "published" : row.publication_status === "archived" ? "archived" : "draft",
     updatedAt: String(row.updated_at ?? ""),
+    accountDeactivated: byId.get(String(row.user_id))?.deactivated ?? false,
   }));
-  return { rows, accounts };
+  return {
+    rows,
+    accounts,
+    accountWarning: accountError ? `La liste des comptes n’a pas pu être actualisée : ${accountError.message}` : null,
+  };
 }
 
 const fold = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
@@ -48,10 +53,12 @@ function rank(values: string[][], limit: number, normalize: (value: string) => s
 }
 export function heroesStatistics(rows: HeroesAdminRow[]) {
   const communicable = rows.filter((row) => row.communication === "authorized" && row.publication !== "archived");
+  const published = rows.filter((row) => row.userId && !row.accountDeactivated && row.visible && row.publication === "published").length;
   return {
     total: rows.length, assigned: rows.filter((row) => row.assignment === "assigned").length,
-    visible: rows.filter((row) => row.visible && row.publication === "published").length,
-    disabled: rows.filter((row) => !row.visible || row.publication !== "published").length,
+    published,
+    pending: rows.filter((row) => row.assignment === "assigned" && !row.accountDeactivated && (!row.visible || row.publication !== "published")).length,
+    disabled: rows.filter((row) => !row.visible || row.publication !== "published" || row.accountDeactivated).length,
     refused: rows.filter((row) => row.communication === "refused").length,
     unassigned: rows.filter((row) => row.assignment !== "assigned").length,
     denominator: communicable.length,
