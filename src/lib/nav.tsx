@@ -25,6 +25,7 @@ import {
   FolderOpen,
   UsersRound,
   GraduationCap,
+  WandSparkles,
 } from "lucide-react";
 import { isPlainStudent, type ViewerRoles } from "@/lib/roles";
 import { QUESTIONS_ENABLED } from "@/lib/questions";
@@ -71,6 +72,7 @@ const icons = {
   studentTasks: <ListChecks {...iconProps} />,
   studentProjects: <UsersRound {...iconProps} />,
   formations: <GraduationCap {...iconProps} />,
+  preparation: <WandSparkles {...iconProps} />,
 };
 
 /** Le menu étudiant, toujours affiché : celui de la maquette de Rose Alice. */
@@ -166,6 +168,7 @@ export function navSpaces(roles: ViewerRoles): Space[] {
             { label: "Projets et formations", href: "/gestion/projets-formations?scope=admin", icon: icons.studentProjects },
             { label: "Pilotage ministère", href: "/gestion/pilotage?scope=admin", icon: icons.steer },
             { label: "Outils et ressources", href: "/gestion/admin?onglet=contenus&contenu=outils", icon: icons.apps },
+            { label: "Préparation", href: "/gestion/preparation", icon: icons.preparation },
           ],
         },
       ],

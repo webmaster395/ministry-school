@@ -88,3 +88,12 @@ test("la super administration gère résultats, statistiques et anomalies", () =
   assert.match(actions, /confirmImport/);
   assert.match(lib, /communication === "authorized"/);
 });
+
+test("Mon identité ne montre que la restitution publiée de l'étudiant via le flux consolidé", () => {
+  const identityPage = read("src/app/etudiant/identite/page.tsx");
+  const identityFeed = read("supabase/migrations/20261120170000_student_identity_feed.sql");
+  assert.match(identityPage, /getStudentIdentityFeed\(viewer\.id/);
+  assert.match(identityPage, /kind: "heroes-motors"/);
+  assert.match(identityFeed, /result\.user_id = current_user_id/);
+  assert.match(identityFeed, /result\.publication_status = 'published'/);
+});

@@ -67,6 +67,7 @@ export function SpaceProvider({
   // Une page partagée entre deux espaces garde celui que la personne a choisi.
   const administrationPath = pathname.startsWith("/gestion/super-admin")
     || pathname.startsWith("/gestion/a-valider")
+    || pathname.startsWith("/gestion/preparation")
     || pathname.startsWith("/admin/apps")
     || (pathname.startsWith("/gestion/formations") && ["super", "admin"].includes(searchParams.get("scope") ?? ""))
     || (pathname.startsWith("/gestion/pilotage") && ["super", "admin"].includes(searchParams.get("scope") ?? ""))
