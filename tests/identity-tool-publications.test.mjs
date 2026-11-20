@@ -92,3 +92,12 @@ test("les quatre outils demandés sont publiés pour tous avec le bon comporteme
   assert.match(defaults, /identity_result_mode = 'none',[\s\S]*where slug in \('generopoly', 'ma-generosite'\)/);
 });
 
+test("les outils externes restent accessibles dans Mes outils après leur retrait du feed", () => {
+  const page = read("src/app/etudiant/identite/page.tsx");
+
+  assert.match(page, /\["generopoly", "Généropoly"\]/);
+  assert.match(page, /\["ma-generosite", "Simulateur de générosité"\]/);
+  assert.match(page, /href: `\/etudiant\/outils\/\$\{slug\}\/ouvrir`/);
+  assert.match(page, /status: "available"[\s\S]*measurable: false/);
+});
+
