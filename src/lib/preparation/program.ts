@@ -4,6 +4,16 @@ export type ProgramDayKind = "samedi" | "dimanche";
 export type ProgramDayMode = ProgramDayKind | "weekend";
 export type ProgramSlotType = "formation" | "pause" | "atelier" | "autre";
 
+export const MINISTRY_PROGRAM_COLORS = [
+  { value: "#f19f00", label: "Pastoral" },
+  { value: "#59c9ca", label: "Prophétique" },
+  { value: "#e34d1b", label: "Doctoral" },
+  { value: "#ee9a9c", label: "Évangélique" },
+  { value: "#c9dc6a", label: "Apostolique" },
+] as const;
+
+export type MinistryProgramColor = typeof MINISTRY_PROGRAM_COLORS[number]["value"];
+
 export type ProgramSlot = {
   id: string;
   start: string;
@@ -14,6 +24,7 @@ export type ProgramSlot = {
   speaker: string;
   description: string;
   location: string;
+  color: MinistryProgramColor;
   sourceId?: string;
 };
 
@@ -54,6 +65,10 @@ const text = (value: unknown, max = 5000) =>
 const isDate = (value: unknown): value is string =>
   typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value);
 
+function ministryColor(value: unknown, fallback: MinistryProgramColor): MinistryProgramColor {
+  return MINISTRY_PROGRAM_COLORS.some((color) => color.value === value) ? value as MinistryProgramColor : fallback;
+}
+
 const time = (value: unknown) => {
   const candidate = text(value, 5);
   return /^\d{2}:\d{2}$/.test(candidate) ? candidate : "";
@@ -72,6 +87,7 @@ function normalizeSlot(value: unknown, index: number): ProgramSlot {
     speaker: text(source.speaker, 320),
     description: text(source.description, 1600),
     location: text(source.location, 220),
+    color: ministryColor(source.color, MINISTRY_PROGRAM_COLORS[index % MINISTRY_PROGRAM_COLORS.length].value),
     ...(text(source.sourceId, 120) ? { sourceId: text(source.sourceId, 120) } : {}),
   };
 }

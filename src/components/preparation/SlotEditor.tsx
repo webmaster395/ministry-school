@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowDown, ArrowUp, Copy, GripVertical, Trash2 } from "lucide-react";
-import type { ProgramSlot } from "@/lib/preparation/program";
+import { MINISTRY_PROGRAM_COLORS, type ProgramSlot } from "@/lib/preparation/program";
 
 export default function SlotEditor({
   slot,
@@ -40,6 +40,7 @@ export default function SlotEditor({
       <label className="text-xs font-medium text-muted">Début<input type="time" value={slot.start} onChange={(event) => onChange({ start: event.target.value })} className={`${fieldClass} mt-1`} /></label>
       <label className="text-xs font-medium text-muted">Fin <span className="font-normal">(facultatif)</span><input type="time" value={slot.end} onChange={(event) => onChange({ end: event.target.value })} className={`${fieldClass} mt-1`} /></label>
       <label className="col-span-2 flex min-h-11 cursor-pointer items-center gap-3 rounded-lg border border-border bg-surface px-3 text-sm font-semibold"><input type="checkbox" checked={isPause} onChange={(event) => onChange(event.target.checked ? { type: "pause", title: "Pause", description: "" } : { type: "formation", title: slot.title === "Pause" ? "" : slot.title })} className="h-4 w-4 accent-[#27302f]" /> Ce créneau est une pause</label>
+      <fieldset className="col-span-2 flex min-h-11 items-center justify-between gap-3 rounded-lg border border-border bg-surface px-3 py-2"><legend className="sr-only">Couleur du créneau</legend><span className="text-xs font-medium text-muted">Couleur</span><div className="flex items-center gap-2">{MINISTRY_PROGRAM_COLORS.map((color) => <button key={color.value} type="button" aria-label={`Couleur ${color.label}`} aria-pressed={slot.color === color.value} title={color.label} onClick={() => onChange({ color: color.value })} className={`h-7 w-7 rounded-full border-2 border-background shadow-sm transition hover:scale-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground ${slot.color === color.value ? "ring-2 ring-foreground ring-offset-1" : "ring-1 ring-black/10"}`} style={{ backgroundColor: color.value }} />)}</div></fieldset>
       {!isPause ? <>
         <label className="col-span-2 text-xs font-medium text-muted">Titre<input value={slot.title} onChange={(event) => onChange({ title: event.target.value })} placeholder="Titre du créneau" className={`${fieldClass} mt-1`} /></label>
         <label className="col-span-2 text-xs font-medium text-muted">Description <span className="font-normal">(2 lignes maximum)</span><textarea value={slot.description} maxLength={220} onChange={(event) => onChange({ description: event.target.value })} rows={2} className={`${fieldClass} mt-1 resize-none`} /></label>

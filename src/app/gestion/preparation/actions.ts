@@ -61,7 +61,7 @@ export async function importTrainingDay(date: string): Promise<{ slots: ProgramS
     trainers.set(link.session_id, current);
   }
 
-  const courseSlots: ProgramSlot[] = sessions.map((session) => ({
+  const courseSlots: ProgramSlot[] = sessions.map((session, index) => ({
     id: crypto.randomUUID(),
     sourceId: `session:${session.id}`,
     start: shortTime(session.start_time),
@@ -72,13 +72,14 @@ export async function importTrainingDay(date: string): Promise<{ slots: ProgramS
     speaker: "",
     description: [session.track, session.services?.name, trainers.get(session.id)?.join(" · ") || session.speaker_name || session.teacher?.full_name, session.summary || session.objectives].filter(Boolean).join(" · ").slice(0, 220),
     location: [session.location, session.room].filter(Boolean).join(" · "),
+    color: (["#e34d1b", "#59c9ca", "#f19f00", "#ee9a9c", "#c9dc6a"] as const)[index % 5],
   }));
 
   type OpportunityRow = {
     opportunity_id: string; start_time: string; end_time: string; location: string | null; room: string | null;
     opportunity: { title: string; description: string | null; speakers: string | null; kind: string | null; organizer_label: string | null } | null;
   };
-  const opportunitySlots: ProgramSlot[] = ((opportunitiesResult.data ?? []) as unknown as OpportunityRow[]).map((row) => ({
+  const opportunitySlots: ProgramSlot[] = ((opportunitiesResult.data ?? []) as unknown as OpportunityRow[]).map((row, index) => ({
     id: crypto.randomUUID(),
     sourceId: `opportunity:${row.opportunity_id}:${date}`,
     start: shortTime(row.start_time),
@@ -89,6 +90,7 @@ export async function importTrainingDay(date: string): Promise<{ slots: ProgramS
     speaker: "",
     description: [row.opportunity?.organizer_label, row.opportunity?.speakers, row.opportunity?.description].filter(Boolean).join(" · ").slice(0, 220),
     location: [row.location, row.room].filter(Boolean).join(" · "),
+    color: (["#59c9ca", "#f19f00", "#ee9a9c", "#c9dc6a", "#e34d1b"] as const)[index % 5],
   }));
 
   const slots = sortSlots([...courseSlots, ...opportunitySlots]);

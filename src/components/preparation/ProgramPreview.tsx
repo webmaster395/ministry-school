@@ -46,7 +46,7 @@ function paginate(program: TrainingProgram): PreviewPage[] {
 
 function Slot({ slot }: { slot: ProgramSlot }) {
   const time = slot.end ? `${slot.start || "—"}\n${slot.end}` : (slot.start || "—");
-  return <article className={styles.slot}>
+  return <article className={styles.slot} style={{ "--slot-color": slot.color } as React.CSSProperties}>
     <div className={styles.time}>{time.replaceAll(":", "h")}</div>
     <div className={styles.slotRule} />
     <div>
@@ -58,11 +58,12 @@ function Slot({ slot }: { slot: ProgramSlot }) {
 
 export default function ProgramPreview({ program, zoom, fitWidth }: { program: TrainingProgram; zoom: number; fitWidth: boolean }) {
   const pages = useMemo(() => paginate(program), [program]);
+  const primaryColor = program.days.flatMap((day) => [...day.morning, ...day.afternoon])[0]?.color ?? "#e34d1b";
   return <div className={`${styles.viewport} h-full min-h-[640px] rounded-2xl p-4 sm:p-7`}>
     {pages.map((previewPage, index) => {
-      const color = previewPage.sections[0]?.key === "afternoon" ? "#59c9ca" : "#e34d1b";
+      const color = previewPage.sections[0]?.slots[0]?.color ?? primaryColor;
       return <div key={`${previewPage.day.kind}-${index}`} className={`${styles.pageSpace} ${fitWidth ? styles.fitWidth : ""}`} style={{ "--preview-scale": zoom } as React.CSSProperties}>
-        <div data-program-page className={styles.page} style={{ "--section-color": color } as React.CSSProperties}>
+        <div data-program-page className={styles.page} style={{ "--section-color": color, "--program-primary": primaryColor } as React.CSSProperties}>
           {previewPage.cover ? <header className={styles.cover}>
             <Image src={program.coverImage} alt="" fill sizes="720px" className={styles.coverImage} priority={index === 0} />
             <div className={styles.coverOverlay} />
@@ -78,7 +79,7 @@ export default function ProgramPreview({ program, zoom, fitWidth }: { program: T
           </header>}
           <main className={styles.body}>
             {previewPage.showIntro && program.introduction ? <p className={styles.intro}>{program.introduction}</p> : null}
-            {previewPage.sections.map((section) => <section key={`${section.key}-${section.label}`} className={styles.section} style={{ "--section-color": section.key === "morning" ? "#e34d1b" : "#59c9ca" } as React.CSSProperties}>
+            {previewPage.sections.map((section) => <section key={`${section.key}-${section.label}`} className={styles.section} style={{ "--section-color": section.slots[0]?.color ?? primaryColor } as React.CSSProperties}>
               <h3 className={styles.sectionHeading}>{section.label}</h3>
               {section.slots.length ? section.slots.map((slot) => <Slot key={slot.id} slot={slot} />) : <p className={styles.empty}>Programme à compléter</p>}
             </section>)}

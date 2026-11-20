@@ -64,6 +64,8 @@ test("l’éditeur reste minimal, couvre deux jours et le parcours mobile", () =
   assert.match(studio, /Exporter en PNG/);
   assert.match(studio, /html-to-image/);
   assert.match(studio, /\.png`/);
+  assert.match(slot, /MINISTRY_PROGRAM_COLORS/);
+  assert.match(slot, /Couleur du créneau/);
   assert.match(studio, /Dupliquer/);
   assert.match(studio, /Supprimer/);
   assert.match(slot, /Ce créneau est une pause/);
@@ -74,6 +76,17 @@ test("l’éditeur reste minimal, couvre deux jours et le parcours mobile", () =
 test("l’aperçu expose chaque page à l’export PNG", () => {
   const preview = source("src/components/preparation/ProgramPreview.tsx");
   assert.match(preview, /data-program-page/);
+  assert.match(preview, /slot\.color/);
+  assert.match(preview, /--slot-color/);
+});
+
+test("les couleurs Ministry sont normalisées, sauvegardées et exportées dans le PDF", () => {
+  const program = source("src/lib/preparation/program.ts");
+  const pdf = source("src/app/api/admin/preparation/pdf/route.ts");
+  for (const color of ["#f19f00", "#59c9ca", "#e34d1b", "#ee9a9c", "#c9dc6a"]) assert.match(program, new RegExp(color));
+  assert.match(program, /color: ministryColor\(source\.color/);
+  assert.match(pdf, /pdfColor\(slot\.color\)/);
+  assert.match(pdf, /fonts\.title, 15, accent/);
 });
 
 test("l’export produit un PDF vectoriel A4 avec les polices et assets officiels", () => {

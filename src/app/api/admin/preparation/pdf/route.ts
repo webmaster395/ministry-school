@@ -56,8 +56,10 @@ function slotHeight(slot: ProgramSlot, fonts: Fonts) {
   return Math.max(54, 13 + titleLines * 18 + descriptionLines * 13);
 }
 
-function sectionColor(section: "morning" | "afternoon") {
-  return section === "morning" ? COLORS.orange : COLORS.turquoise;
+function pdfColor(value: string) {
+  const match = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(value);
+  if (!match) return COLORS.orange;
+  return rgb(Number.parseInt(match[1], 16) / 255, Number.parseInt(match[2], 16) / 255, Number.parseInt(match[3], 16) / 255);
 }
 
 function drawSectionHeading(page: PDFPage, label: string, y: number, fonts: Fonts, color: ReturnType<typeof rgb>) {
@@ -77,7 +79,7 @@ function drawSlot(page: PDFPage, slot: ProgramSlot, y: number, fonts: Fonts, acc
   const width = PAGE.width - MARGIN - contentX;
   let cursor = y;
   cursor -= 4;
-  cursor = drawLines(page, wrap(slot.title || "Sans titre", fonts.title, 15, width), contentX, cursor, fonts.title, 15, COLORS.ink, 17.5);
+  cursor = drawLines(page, wrap(slot.title || "Sans titre", fonts.title, 15, width), contentX, cursor, fonts.title, 15, accent, 17.5);
   if (slot.description) drawLines(page, wrap(slot.description, fonts.body, 9, width).slice(0, 2), contentX, cursor - 3, fonts.body, 9, COLORS.muted, 12.5);
   page.drawLine({ start: { x: MARGIN + 88, y: y - height + 8 }, end: { x: PAGE.width - MARGIN, y: y - height + 8 }, thickness: 0.45, color: COLORS.line });
   return y - height;
@@ -99,6 +101,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "Document invalide." }, { status: 400 });
   }
   const program = normalizeTrainingProgram((raw as { program?: unknown })?.program);
+  const primaryColor = program.days.flatMap((day) => [...day.morning, ...day.afternoon])[0]?.color ?? "#e34d1b";
   const pdf = await PDFDocument.create();
   pdf.registerFontkit(fontkit);
   pdf.setTitle(program.title);
@@ -136,12 +139,12 @@ export async function POST(request: Request) {
       page.drawRectangle({ x: 0, y: PAGE.height - height, width: PAGE.width, height, color: COLORS.dark, opacity: 0.74 });
       const logoWidth = 174;
       page.drawImage(logo, { x: MARGIN, y: PAGE.height - 77, width: logoWidth, height: logoWidth * logo.height / logo.width });
-      page.drawText(day.kind.toLocaleUpperCase("fr-FR"), { x: MARGIN, y: PAGE.height - 112, font: fonts.label, size: 8.5, color: COLORS.green });
+      page.drawText(day.kind.toLocaleUpperCase("fr-FR"), { x: MARGIN, y: PAGE.height - 112, font: fonts.label, size: 8.5, color: pdfColor(primaryColor) });
       drawLines(page, wrap(program.title, fonts.title, 24, PAGE.width - MARGIN * 2).slice(0, 2), MARGIN, PAGE.height - 145, fonts.title, 24, COLORS.cream, 27);
       page.drawText(formatProgramDate(day.date, { day: "numeric", month: "long", year: "numeric" }), { x: MARGIN, y: PAGE.height - 224, font: fonts.label, size: 11, color: COLORS.cream });
       y = PAGE.height - height - 33;
     } else {
-      page.drawText("MINISTRY SCHOOL", { x: MARGIN, y: PAGE.height - 47, font: fonts.label, size: 8.5, color: COLORS.orange });
+      page.drawText("MINISTRY SCHOOL", { x: MARGIN, y: PAGE.height - 47, font: fonts.label, size: 8.5, color: pdfColor(primaryColor) });
       page.drawText(`${program.title} · ${formatProgramDate(day.date, { day: "numeric", month: "long", year: "numeric" })}`, { x: MARGIN, y: PAGE.height - 70, font: fonts.title, size: 15, color: COLORS.ink });
       page.drawLine({ start: { x: MARGIN, y: PAGE.height - 84 }, end: { x: PAGE.width - MARGIN, y: PAGE.height - 84 }, thickness: 0.7, color: COLORS.line });
       y = PAGE.height - 112;
@@ -161,7 +164,7 @@ export async function POST(request: Request) {
       ...(day.includeAfternoon ? [{ key: "afternoon" as const, label: "Après-midi", slots: day.afternoon }] : []),
     ];
     for (const section of sections) {
-      const accent = sectionColor(section.key);
+      const accent = pdfColor(section.slots[0]?.color ?? primaryColor);
       if (y < 118) ({ page, y } = addPage(day, false));
       y = drawSectionHeading(page, section.label, y, fonts, accent);
       if (!section.slots.length) {
@@ -174,7 +177,7 @@ export async function POST(request: Request) {
           ({ page, y } = addPage(day, false));
           y = drawSectionHeading(page, `${section.label} — suite`, y, fonts, accent);
         }
-        y = drawSlot(page, slot, y, fonts, accent);
+        y = drawSlot(page, slot, y, fonts, pdfColor(slot.color));
       }
       y -= 12;
     }

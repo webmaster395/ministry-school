@@ -44,7 +44,7 @@ type SectionKey = "morning" | "afternoon";
 const fieldClass = "mt-1 min-h-11 w-full rounded-lg border border-border px-3 py-2.5 text-sm";
 
 function emptySlot(type: ProgramSlot["type"] = "formation"): ProgramSlot {
-  return { id: crypto.randomUUID(), start: "", end: "", type, title: type === "pause" ? "Pause" : "", subtitle: "", speaker: "", description: "", location: "" };
+  return { id: crypto.randomUUID(), start: "", end: "", type, title: type === "pause" ? "Pause" : "", subtitle: "", speaker: "", description: "", location: "", color: "#e34d1b" };
 }
 
 function dayLabel(kind: ProgramDayKind) {
