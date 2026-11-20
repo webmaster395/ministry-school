@@ -100,12 +100,13 @@ test("Mon identité affiche seulement le prénom dans un titre plus discret", ()
   assert.match(styles, /font-size: clamp\(27px, 3\.4vw, 36px\)/);
 });
 
-test("les stories MAPP et Généropoly restent visibles avec leurs bons liens", () => {
+test("MAPP et les outils financiers restent accessibles dans Mes outils", () => {
   const page = read("src/app/etudiant/identite/page.tsx");
-  assert.match(page, /name: "Profil MAPP", href: "\/apps\/profil-mapp"/);
-  assert.match(page, /name: "Généropoly", href: "\/apps\/generopoly"/);
-  assert.match(page, /name: "Ta générosité"/);
-  assert.match(page, /https:\/\/generosite\.jeveuxdonner\.fr\//);
+  assert.match(page, /name: "Profil MAPP"/);
+  assert.match(page, /\["generopoly", "Généropoly"\]/);
+  assert.match(page, /\["ma-generosite", "Simulateur de générosité"\]/);
+  assert.match(page, /href: `\/etudiant\/outils\/\$\{slug\}\/ouvrir`/);
+  assert.match(page, /status: "available"[\s\S]*measurable: false[\s\S]*external: true/);
   assert.match(page, /image: "\/identity\/stories\/identity-v2\.webp"/);
   assert.match(page, /image: "\/identity\/stories\/finance-v2\.webp"/);
 });

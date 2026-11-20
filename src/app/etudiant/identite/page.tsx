@@ -102,6 +102,26 @@ function buildStories({
     });
   }
 
+  // Les liens externes sans résultat quittent la galerie après leur première
+  // ouverture, mais restent toujours retrouvables dans « Mes outils ».
+  ([
+    ["generopoly", "Généropoly"],
+    ["ma-generosite", "Simulateur de générosité"],
+  ] as const).forEach(([slug, fallbackName]) => {
+    const tool = tools.find((candidate) => candidate.slug === slug);
+    if (!tool) return;
+    items.push({
+      key: slug,
+      name: tool.storyTitle || fallbackName,
+      category: "Finance",
+      href: `/etudiant/outils/${slug}/ouvrir`,
+      image: "/identity/stories/finance-v2.webp",
+      status: "available",
+      measurable: false,
+      external: true,
+    });
+  });
+
   const legacyGraceTool = tools.find((tool) => tool.slug === graceIdentitySlug);
   ([
     ["fruit", "Fruit de l’Esprit", selectedFruitStoryImage],
