@@ -14,6 +14,8 @@ import AdminResourcesTab from "@/components/admin/AdminResourcesTab";
 import { FolderOpen, Plus, Wrench } from "lucide-react";
 import { createServiceClient } from "@/lib/supabase/service";
 import { graceIdentitySlug } from "@/lib/apps/grace-identity";
+import ListsTab from "@/components/admin/ListsTab";
+import AdminAccessTabs from "@/components/admin/AdminAccessTabs";
 
 type Params = {
   onglet?: string;
@@ -31,6 +33,7 @@ type Params = {
   categorie?: string;
   membre?: string;
   contenu?: string;
+  liste?: string;
 };
 
 export default async function AdminPage({ searchParams }: { searchParams: Promise<Params> }) {
@@ -41,7 +44,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
   if (["permissions", "roles"].includes(p.onglet ?? "")) redirect("/gestion/admin?onglet=membres&vue=permissions");
   if (p.onglet === "programme") redirect("/gestion/formations?scope=admin");
   const legacyContentTab = p.onglet === "ressources" ? "ressources" : p.onglet === "outils" ? "outils" : null;
-  const tab = ["membres", "contenus", "outils", "ressources"].includes(p.onglet ?? "")
+  const tab = ["membres", "listes", "contenus", "outils", "ressources"].includes(p.onglet ?? "")
     ? (["outils", "ressources"].includes(p.onglet ?? "") ? "contenus" : p.onglet!)
     : "pilotage";
   const supabase = await createClient();
@@ -107,13 +110,16 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
     </div>;
   }
 
+  if (tab === "listes") return <div className="space-y-5">
+    <ManagementPageHeader eyebrow="SUPER ADMIN" title="Utilisateurs et accès" subtitle="Créez des groupes, gérez leurs membres et contrôlez précisément l’accès aux ressources." mobileTitleInAppBar />
+    <AdminAccessTabs active="listes" />
+    <ListsTab q={p.q ?? ""} category={p.categorie ?? "all"} selectedId={p.liste ?? ""} embedded />
+  </div>;
+
   const permissions = p.vue === "permissions";
   return <div className="space-y-5">
     <ManagementPageHeader eyebrow="SUPER ADMIN" title="Utilisateurs et accès" subtitle="Retrouvez chaque membre, sa fiche, ses résultats MAPP et l’ensemble de ses permissions." mobileTitleInAppBar />
-    <nav aria-label="Sections des membres" className="inline-flex rounded-xl border border-border bg-background p-1">
-      <Link href="/gestion/admin?onglet=membres" aria-current={!permissions ? "page" : undefined} className={`rounded-lg px-4 py-2.5 text-sm font-semibold ${!permissions ? "bg-accent text-on-accent" : "text-muted hover:bg-surface hover:text-foreground"}`}>Annuaire</Link>
-      <Link href="/gestion/admin?onglet=membres&vue=permissions" aria-current={permissions ? "page" : undefined} className={`rounded-lg px-4 py-2.5 text-sm font-semibold ${permissions ? "bg-accent text-on-accent" : "text-muted hover:bg-surface hover:text-foreground"}`}>Permissions</Link>
-    </nav>
+    <AdminAccessTabs active={permissions ? "permissions" : "membres"} />
     {permissions ? <RolesTab
       q={p.q ?? ""}
       category={p.categorie ?? "toutes"}

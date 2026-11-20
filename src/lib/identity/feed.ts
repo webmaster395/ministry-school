@@ -7,16 +7,26 @@ import { getPublishedHeroesMotorsResult, type HeroesMotorsResult } from "@/lib/i
 
 export type IdentityTool = Pick<CatalogApp,
   | "id" | "slug" | "name" | "iconUrl" | "url" | "destinationUrl"
+  | "category" | "toolType"
   | "displayTitle" | "storyTitle" | "storyImageUrl" | "storyDestinationUrl"
   | "postTitle" | "postImageUrl" | "postDestinationUrl"
-  | "placementStory" | "placementWork"
+  | "postDescription" | "postOrder" | "placementStory" | "placementPost" | "placementWork"
+  | "identityResultMode" | "identityImportance" | "resultProvider"
 >;
+
+export type IdentityToolProgress = {
+  app_id: string;
+  first_opened_at: string | null;
+  last_opened_at: string | null;
+  reset_at: string | null;
+};
 
 export type StudentIdentityFeed = {
   dashboard: IdentityDashboard;
   lifeLine: { completedAt: string } | null;
   heroesMotors: HeroesMotorsResult | null;
   tools: IdentityTool[];
+  progress: IdentityToolProgress[];
 };
 
 export type GraceIdentityAssessment = {
@@ -51,6 +61,7 @@ function mapPayload(payload: FeedPayload): StudentIdentityFeed {
     dashboard: payload.dashboard,
     lifeLine: payload.lifeLine ?? null,
     heroesMotors: payload.heroesMotors ?? null,
+    progress: payload.progress ?? [],
     tools: (payload.tools ?? []).map((tool) => ({
       id: tool.id,
       slug: tool.slug,
@@ -58,6 +69,8 @@ function mapPayload(payload: FeedPayload): StudentIdentityFeed {
       iconUrl: tool.iconUrl,
       url: ministryAppUrls[tool.slug] ?? tool.destinationUrl,
       destinationUrl: tool.destinationUrl,
+      category: tool.category,
+      toolType: tool.toolType,
       displayTitle: tool.displayTitle,
       storyTitle: tool.storyTitle,
       storyImageUrl: tool.storyImageUrl,
@@ -65,27 +78,35 @@ function mapPayload(payload: FeedPayload): StudentIdentityFeed {
       postTitle: tool.postTitle,
       postImageUrl: tool.postImageUrl,
       postDestinationUrl: tool.postDestinationUrl,
+      postDescription: tool.postDescription,
+      postOrder: tool.postOrder,
       placementStory: tool.placementStory,
+      placementPost: tool.placementPost,
       placementWork: tool.placementWork,
+      identityResultMode: tool.identityResultMode,
+      identityImportance: tool.identityImportance,
+      resultProvider: tool.resultProvider,
     })),
   };
 }
 
 async function legacyIdentityFeed(userId: string, superAdmin: boolean): Promise<StudentIdentityFeed> {
   const supabase = await createClient();
-  const [dashboard, tools, lifeLine, heroesMotors] = await Promise.all([
+  const [dashboard, tools, lifeLine, heroesMotors, progress] = await Promise.all([
     getIdentityDashboard(),
     superAdmin
       ? import("@/lib/apps/catalog").then(({ getCatalogApps }) => getCatalogApps({ includeUnpublished: true, includeArchived: false, channel: "admin" }))
       : getStudentTools(),
     supabase.from("life_line_journeys").select("completed_at,updated_at").eq("user_id", userId).maybeSingle(),
     getPublishedHeroesMotorsResult(userId),
+    supabase.from("app_user_progress").select("app_id,first_opened_at,last_opened_at,reset_at").eq("user_id", userId),
   ]);
   return {
     dashboard,
     tools,
     lifeLine: lifeLine.data ? { completedAt: lifeLine.data.completed_at ?? lifeLine.data.updated_at } : null,
     heroesMotors,
+    progress: (progress.data ?? []) as IdentityToolProgress[],
   };
 }
 

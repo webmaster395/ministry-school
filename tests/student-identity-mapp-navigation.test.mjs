@@ -13,7 +13,7 @@ test("la story MAPP et l'entrée principale ouvrent un résultat existant sans r
 
   assert.match(page, /const mappHref = mapp\?\.attemptId[\s\S]*?\/apps\/profil-mapp\/test\/\$\{mapp\.attemptId\}\/resultat/);
   assert.match(page, /key: "profil-mapp",[\s\S]*?href: mappHref/);
-  assert.match(page, /tool\.slug === "profil-mapp"[\s\S]*?href: "\/apps\/profil-mapp"/);
+  assert.match(page, /tool\.slug === "profil-mapp"[\s\S]*?return \["mapp"\]/);
   assert.match(mappRoute, /const viewer = await getViewer\(\)/);
   assert.match(mappRoute, /const nativeResult = dashboard\.identityResults\.find/);
   assert.match(mappRoute, /const \[archivedResult\] = nativeResult \? \[\] : await getOfficialMappIdentityResults\(\)/);
@@ -54,10 +54,11 @@ test("les publications de résultats conservent le moteur natif ou historique", 
   assert.match(experience, /\/apps\/profil-mapp\/test\/\$\{result\.attemptId\}\/resultat\$\{resultQuery\.size/);
 });
 
-test("la jauge ouvre l'onglet À faire et le recadre", () => {
+test("la jauge recadre la galerie unique Mes résultats", () => {
   const experience = read("src/app/etudiant/identite/IdentityExperience.tsx");
 
-  assert.match(experience, /function openUpcoming\(\)[\s\S]*?setActiveTab\("upcoming"\)/);
+  assert.match(experience, /function openUpcoming\(\)[\s\S]*?requestAnimationFrame/);
+  assert.doesNotMatch(experience, /setActiveTab/);
   assert.match(experience, /feedRef\.current\?\.scrollIntoView/);
   assert.match(experience, /className=\{styles\.discoveryProgress\}[\s\S]*?onClick=\{openUpcoming\}/);
   assert.match(experience, /<section ref=\{feedRef\} className=\{styles\.feed\}/);

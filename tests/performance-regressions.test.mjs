@@ -105,7 +105,7 @@ test("les lectures globales du premier écran sont mutualisées", () => {
 test("Qui je suis utilise un flux Supabase consolidé sans N+1", () => {
   const page = read("src/app/etudiant/identite/page.tsx");
   const feed = read("src/lib/identity/feed.ts");
-  const migration = read("supabase/migrations/20261120170000_student_identity_feed.sql");
+  const migration = read("supabase/migrations/20261120221000_student_identity_feed.sql");
   assert.match(page, /getStudentIdentityFeed\(viewer\.id/);
   assert.doesNotMatch(page, /getStudentTools|getIdentityDashboard|life_line_journeys|heroes_motors_results/);
   assert.equal((feed.match(/rpc\("student_identity_feed"\)/g) ?? []).length, 1);

@@ -32,6 +32,24 @@ export async function proxy(request: NextRequest) {
   // Le layout résout ensuite l'utilisateur complet une seule fois pour le rendu.
   const { data: auth } = await supabase.auth.getClaims();
   const isAuthenticated = !!auth?.claims?.sub;
+  const catalogMatch = request.nextUrl.pathname.match(/^\/apps\/([a-z0-9-]+)(?:\/|$)/);
+  const catalogApiMatch = request.nextUrl.pathname.match(/^\/api\/apps\/([a-z0-9-]+)(?:\/|$)/);
+  const isPublicGraceEvaluation = request.nextUrl.pathname.startsWith("/apps/je-suis-par-la-grace-de-dieu/evaluation/");
+  const isPublicGraceReview = request.nextUrl.pathname.startsWith("/api/apps/grace-identity/reviews/");
+  const isPublicMappTest = request.nextUrl.pathname.startsWith("/apps/profil-mapp/test/");
+  const catalogSlug = catalogMatch?.[1] ?? (catalogApiMatch?.[1] === "grace-identity" ? "je-suis-par-la-grace-de-dieu" : catalogApiMatch?.[1]);
+  let catalogAppAllowed = false;
+  if (catalogSlug && !isPublicGraceEvaluation && !isPublicGraceReview && !isPublicMappTest) {
+    const { data: catalogApp } = await supabase.from("app_catalog").select("id").eq("slug", catalogSlug).maybeSingle();
+    catalogAppAllowed = Boolean(catalogApp);
+    if (catalogApiMatch && !catalogAppAllowed) return NextResponse.json({ error: "Accès refusé." }, { status: 403 });
+    if (isAuthenticated && !catalogAppAllowed) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/etudiant";
+      url.search = "";
+      return NextResponse.redirect(url);
+    }
+  }
 
   // La création de compte n'est pas publique : son lien n'est communiqué qu'après le paiement.
   // « /inscription » lui-même reste fermé à tous ; seule l'adresse secrète INSCRIPTION_CHEMIN
@@ -57,12 +75,12 @@ export async function proxy(request: NextRequest) {
     request.nextUrl.pathname === "/" ||
     isDevelopmentPreview ||
     request.nextUrl.pathname === "/apps" ||
-    request.nextUrl.pathname.startsWith("/apps/je-suis-par-la-grace-de-dieu/evaluation/") ||
-    request.nextUrl.pathname.startsWith("/apps/generopoly") ||
-    request.nextUrl.pathname.startsWith("/api/apps/grace-identity/reviews/") ||
+    isPublicGraceEvaluation ||
+    catalogAppAllowed ||
+    isPublicGraceReview ||
     request.nextUrl.pathname.startsWith("/mapp/invitation/") ||
     request.nextUrl.pathname.startsWith("/api/mapp/invitations/") ||
-    request.nextUrl.pathname.startsWith("/apps/profil-mapp/test/") ||
+    isPublicMappTest ||
     request.nextUrl.pathname === "/api/deployment-version" ||
     request.nextUrl.pathname === "/mentions-legales" ||
     request.nextUrl.pathname === "/mot-de-passe-oublie" ||

@@ -45,7 +45,7 @@ test("Qui je suis conserve son contenu sans répéter le titre Ma personnalité"
   const identity = read("src/app/etudiant/identite/IdentityExperience.tsx");
   assert.doesNotMatch(identity, />Ma personnalité</);
   assert.match(identity, /props\.stories/);
-  assert.match(identity, /props\.results/);
+  assert.match(identity, /props\.feed/);
 });
 
 test("la carte Fruit de l’Esprit conserve la photo sans voile blanc", () => {

@@ -80,6 +80,9 @@ test("la super administration gère résultats, statistiques et anomalies", () =
   assert.match(page, /Top 5 des héros/);
   assert.match(page, /Top 10 des moteurs/);
   assert.match(page, /Réponses confidentielles/);
+  assert.match(page, /Toute publication/);
+  assert.match(page, /Publiés aux étudiants/);
+  assert.match(page, /Chargement interrompu/);
   assert.match(actions, /viewer\?\.roles\.superAdmin/);
   assert.match(actions, /heroes_motors_result_audit/);
   assert.match(actions, /confirmReassignment/);
@@ -87,11 +90,13 @@ test("la super administration gère résultats, statistiques et anomalies", () =
   assert.match(actions, /rawRows\.length !== 249/);
   assert.match(actions, /confirmImport/);
   assert.match(lib, /communication === "authorized"/);
+  assert.match(lib, /accountWarning/);
+  assert.match(lib, /accountDeactivated/);
 });
 
 test("Mon identité ne montre que la restitution publiée de l'étudiant via le flux consolidé", () => {
   const identityPage = read("src/app/etudiant/identite/page.tsx");
-  const identityFeed = read("supabase/migrations/20261120170000_student_identity_feed.sql");
+  const identityFeed = read("supabase/migrations/20261120221000_student_identity_feed.sql");
   assert.match(identityPage, /getStudentIdentityFeed\(viewer\.id/);
   assert.match(identityPage, /kind: "heroes-motors"/);
   assert.match(identityFeed, /result\.user_id = current_user_id/);

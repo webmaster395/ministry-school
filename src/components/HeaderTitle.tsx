@@ -40,6 +40,7 @@ const ADMIN_TABS: Record<string, string> = {
   statistiques: "Statistiques",
   programme: "Programme",
   membres: "Membres",
+  listes: "Listes",
   permissions: "Permissions",
   roles: "Permissions",
   contenus: "Outils et ressources",

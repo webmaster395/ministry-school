@@ -1,11 +1,11 @@
 import { getViewer } from "@/lib/data/viewer";
 import { getOfficialMappIdentityResults } from "@/lib/mapp/official-results";
-import IdentityExperience, { type IdentityStoryItem } from "./IdentityExperience";
+import IdentityExperience, { type IdentityFeedItem, type IdentityStoryItem, type IdentityTodoItem } from "./IdentityExperience";
 import { isMappGuestOpen } from "@/lib/mapp/access-window";
 import { redirect } from "next/navigation";
 import type { IdentityResult } from "@/lib/identity/dashboard";
 import { getStudentIdentityFeed, type IdentityTool } from "@/lib/identity/feed";
-import { graceIdentitySlug, graceIdentityToolSlugs, graceTestKeyFromSlug, type GraceTestKey } from "@/lib/apps/grace-identity";
+import { graceIdentitySlug, graceIdentityToolSlugs, graceTestKeyFromSlug } from "@/lib/apps/grace-identity";
 
 export const dynamic = "force-dynamic";
 
@@ -26,7 +26,37 @@ function latestResult(results: IdentityResult[], kind: IdentityResult["kind"]) {
   return results.find((result) => result.kind === kind);
 }
 
-const graceResultKinds = new Set<IdentityResult["kind"]>(["fruit", "gifts", "skills"]);
+const controlledResultKinds = new Set<IdentityResult["kind"]>(["mapp", "fruit", "gifts", "skills", "generopoly", "apest", "life-line", "heroes-motors"]);
+
+type ToolProgress = {
+  app_id: string;
+  first_opened_at: string | null;
+  last_opened_at: string | null;
+  reset_at: string | null;
+};
+
+const importanceOrder: Record<IdentityTool["identityImportance"], number> = {
+  priority: 0,
+  recommended: 1,
+  optional: 2,
+};
+
+function providerKinds(tool: IdentityTool): IdentityResult["kind"][] {
+  const configured = tool.resultProvider;
+  if (configured === "mapp" || configured === "fruit" || configured === "gifts" || configured === "skills" || configured === "generopoly" || configured === "apest" || configured === "life-line" || configured === "heroes-motors") return [configured];
+  const graceKind = graceTestKeyFromSlug(tool.slug);
+  if (graceKind) return [graceKind];
+  if (tool.slug === "profil-mapp") return ["mapp"];
+  if (tool.slug === "test-des-heros") return ["heroes-motors"];
+  if (tool.slug === "ma-ligne-de-vie") return ["life-line"];
+  if (tool.slug.includes("apest")) return ["apest"];
+  return [];
+}
+
+function wasOpenedAfterReset(progress: ToolProgress | undefined) {
+  if (!progress?.last_opened_at) return false;
+  return !progress.reset_at || new Date(progress.last_opened_at).getTime() > new Date(progress.reset_at).getTime();
+}
 
 function buildStories({
   tools,
@@ -48,17 +78,17 @@ function buildStories({
     ? `/apps/profil-mapp/test/${mapp.attemptId}/resultat${mappQuery.size ? `?${mappQuery.toString()}` : ""}`
     : "/apps/profil-mapp";
 
-  // MAPP reste l'accès principal de Mon identité, même pendant une mise à jour
-  // de sa fiche catalogue. Son résultat officiel est déjà chargé plus haut.
-  items.push({
-    key: "profil-mapp",
-    name: "Profil MAPP",
-    category: "Identité",
-    href: mappHref,
-    image: "/identity/stories/identity-v2.webp",
-    status: mapp ? "completed" : "not-started",
-    measurable: true,
-  });
+  if (hasTool("profil-mapp")) {
+    items.push({
+      key: "profil-mapp",
+      name: "Profil MAPP",
+      category: "Identité",
+      href: mappHref,
+      image: "/identity/stories/identity-v2.webp",
+      status: mapp ? "completed" : "not-started",
+      measurable: true,
+    });
+  }
 
   if (heroesAvailable) {
     items.push({
@@ -132,21 +162,6 @@ function accountStatus(gender: "homme" | "femme" | null | undefined) {
   return gender === "femme" ? "Aimée" : gender === "homme" ? "Aimé" : "Aimé·e";
 }
 
-function resultKindForItem(item: { key: string }) {
-  if (item.key.endsWith("-fruit") || item.key === "fruit") return "fruit";
-  if (item.key.endsWith("-gifts") || item.key === "gifts") return "gifts";
-  if (item.key.endsWith("-skills") || item.key === "skills") return "skills";
-  return null;
-}
-
-function graceToolItems(tool: IdentityTool) {
-  return [
-    { key: `${tool.id}-fruit`, name: "Fruit de l’Esprit", href: graceTestHref("fruit"), iconUrl: tool.iconUrl },
-    { key: `${tool.id}-gifts`, name: "Dons spirituels", href: graceTestHref("gifts"), iconUrl: tool.iconUrl },
-    { key: `${tool.id}-skills`, name: "Compétences naturelles", href: graceTestHref("skills"), iconUrl: tool.iconUrl },
-  ];
-}
-
 function graceTestHref(kind: "fruit" | "gifts" | "skills") {
   return {
     fruit: "/etudiant/identite/fruit-de-lesprit",
@@ -155,24 +170,37 @@ function graceTestHref(kind: "fruit" | "gifts" | "skills") {
   }[kind];
 }
 
-function buildUpcoming(tools: IdentityTool[], completedKinds: Set<string>) {
-  return tools.flatMap((tool) => {
-    if (tool.slug === "profil-mapp") return completedKinds.has("mapp") ? [] : [{ key: tool.id, name: "Profil MAPP", href: "/apps/profil-mapp", iconUrl: tool.iconUrl, category: "Identité" }];
-    if (tool.slug === "je-suis-par-la-grace-de-dieu") return graceToolItems(tool).flatMap((item) => {
-      const kind = resultKindForItem(item);
-      return kind && !completedKinds.has(kind) ? [{ ...item, category: "Identité" }] : [];
-    });
+function buildTodoItems(tools: IdentityTool[], completedKinds: Set<string>, progressByApp: Map<string, ToolProgress>) {
+  const items = tools.flatMap<IdentityTodoItem>((tool) => {
+    if (!tool.placementPost) return [];
+    const completed = providerKinds(tool).some((kind) => completedKinds.has(kind));
+    if (completed) return [];
+
+    const external = tool.toolType === "external";
+    if (!external && tool.identityResultMode === "none") return [];
+    if (external && tool.identityResultMode !== "automatic" && wasOpenedAfterReset(progressByApp.get(tool.id))) return [];
+
     const graceKind = graceTestKeyFromSlug(tool.slug);
-    if (graceKind) return completedKinds.has(graceKind) || !tool.placementWork
-      ? []
-      : [{ key: tool.id, name: tool.displayTitle, href: tool.destinationUrl, iconUrl: tool.iconUrl, category: "Identité" }];
-    if (tool.slug === "ma-ligne-de-vie") return completedKinds.has("life-line") ? [] : [{ key: tool.id, name: "Ma ligne de vie", href: tool.url, iconUrl: tool.iconUrl, category: "Identité" }];
-    // Généropoly et le simulateur sont des ressources non suivables : ils sont
-    // regroupés dans l'onglet Ressources et ne faussent pas la progression.
-    if (tool.slug === "generopoly") return [];
-    if (tool.slug.includes("apest")) return completedKinds.has("apest") ? [] : [{ key: tool.id, name: tool.name, href: tool.url, iconUrl: tool.iconUrl, category: "Identité" }];
-    return [];
+    const href = external ? `/etudiant/outils/${tool.slug}/ouvrir` : tool.postDestinationUrl || tool.url;
+    return [{
+      key: tool.id,
+      appId: tool.id,
+      name: tool.postTitle || tool.displayTitle,
+      description: tool.postDescription,
+      href: graceKind && !external ? graceTestHref(graceKind) : href,
+      imageUrl: tool.postImageUrl || tool.iconUrl || "/identity/stories/identity-v2.webp",
+      category: tool.category || "Identité",
+      importance: tool.identityImportance,
+      order: tool.postOrder,
+      external,
+    }];
   });
+
+  return items.sort((left, right) =>
+    importanceOrder[left.importance] - importanceOrder[right.importance]
+    || left.order - right.order
+    || left.name.localeCompare(right.name, "fr"),
+  );
 }
 
 export default async function StudentIdentityPage() {
@@ -180,11 +208,11 @@ export default async function StudentIdentityPage() {
   if (!viewer) redirect("/login");
   if (viewer.deactivated) redirect("/auth/desactive");
   if (!viewer.roles.superAdmin && !isMappGuestOpen()) redirect("/etudiant");
-  const [feed, officialMappResults] = await Promise.all([
+  const [identityData, officialMappResults] = await Promise.all([
     getStudentIdentityFeed(viewer.id, viewer.roles.superAdmin),
     getOfficialMappIdentityResults(),
   ]);
-  const { dashboard, tools, lifeLine, heroesMotors } = feed;
+  const { dashboard, tools, lifeLine, heroesMotors, progress } = identityData;
   // La création de la ligne de vie est déjà une réalisation personnelle : elle
   // doit être retrouvable depuis Identité, même si certains champs sont restés
   // volontairement vides ou si elle a été enregistrée avant ce correctif.
@@ -214,11 +242,19 @@ export default async function StudentIdentityPage() {
     ...chronologicalResults.filter((result) => result.kind !== "mapp" && result.kind !== "heroes-motors"),
   ];
   const visibleTools = tools;
-  const availableGraceKinds = new Set<GraceTestKey>();
-  if (visibleTools.some((tool) => tool.slug === graceIdentitySlug)) (["fruit", "gifts", "skills"] as const).forEach((kind) => availableGraceKinds.add(kind));
-  visibleTools.forEach((tool) => { const kind = graceTestKeyFromSlug(tool.slug); if (kind) availableGraceKinds.add(kind); });
-  const visibleResults = allResults.filter((result) => !graceResultKinds.has(result.kind) || availableGraceKinds.has(result.kind as GraceTestKey));
+  const accessibleResultKinds = new Set(visibleTools.flatMap(providerKinds));
+  const visibleResults = allResults.filter((result) => !controlledResultKinds.has(result.kind) || accessibleResultKinds.has(result.kind));
   const completedKinds = new Set(visibleResults.map((result) => result.kind));
+  const progressByApp = new Map((progress as ToolProgress[]).map((item) => [item.app_id, item]));
+  const todoItems = buildTodoItems(visibleTools, completedKinds, progressByApp);
+  const feedItems: IdentityFeedItem[] = [
+    ...todoItems.map((todo) => ({ type: "todo" as const, key: `todo-${todo.key}`, todo })),
+    ...visibleResults.map((result) => ({
+      type: "result" as const,
+      key: `result-${result.kind}-${result.attemptId ?? result.completedAt}`,
+      result,
+    })),
+  ];
   const stories = buildStories({
     tools: visibleTools,
     results: visibleResults,
@@ -250,8 +286,7 @@ export default async function StudentIdentityPage() {
     months={monthsTogether(dashboard.profile.memberSince)}
     completedTests={visibleResults.length}
     stories={stories}
-    results={visibleResults}
-    upcoming={buildUpcoming(visibleTools, completedKinds)}
+    feed={feedItems}
     toolArtwork={toolArtwork}
   />;
 }

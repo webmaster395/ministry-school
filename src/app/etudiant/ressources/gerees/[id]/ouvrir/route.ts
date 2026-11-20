@@ -11,7 +11,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   if (!resource) return new NextResponse("Ressource introuvable", { status: 404 });
   await supabase.from("featured_content_views").upsert({ content_type: "resource", content_id: id, user_id: user.id, generation: resource.featured_generation || 1 }, { onConflict: "content_type,content_id,user_id,generation", ignoreDuplicates: true });
   if (resource.external_url) return NextResponse.redirect(resource.external_url);
-  const { data, error } = await supabase.storage.from("managed-resources").createSignedUrl(resource.file_path, 300);
-  if (error || !data?.signedUrl) return new NextResponse("Fichier indisponible", { status: 404 });
-  return NextResponse.redirect(data.signedUrl);
+  const { data, error } = await supabase.storage.from("managed-resources").download(resource.file_path);
+  if (error || !data) return new NextResponse("Fichier indisponible", { status: 404 });
+  const filename = encodeURIComponent(resource.file_path?.split("/").pop() || "ressource");
+  return new NextResponse(data, { headers: { "Content-Type": data.type || "application/octet-stream", "Content-Disposition": `inline; filename*=UTF-8''${filename}`, "Cache-Control": "private, no-store" } });
 }

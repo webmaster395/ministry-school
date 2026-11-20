@@ -31,9 +31,18 @@ export async function GET(request: Request, { params }: { params: Promise<{ mate
   await supabase.rpc("record_material_download", { p_material_id: materialId });
   if (privatePath) {
     const service = createServiceClient();
-    const { data, error } = await service.storage.from("formation-private-resources").createSignedUrl(privatePath, 60);
-    if (error || !data?.signedUrl) return new NextResponse("Accès refusé", { status: 403 });
-    return NextResponse.redirect(data.signedUrl);
+    const { data, error } = await service.storage.from("formation-private-resources").download(privatePath);
+    if (error || !data) return new NextResponse("Accès refusé", { status: 403 });
+    const filename = encodeURIComponent(privatePath.split("/").pop() || "ressource");
+    return new NextResponse(data, { headers: { "Content-Type": data.type || "application/octet-stream", "Content-Disposition": `inline; filename*=UTF-8''${filename}`, "Cache-Control": "private, no-store" } });
+  }
+  const courseMaterialPrefix = "storage://course-materials/";
+  if (destination.startsWith(courseMaterialPrefix)) {
+    const path = destination.slice(courseMaterialPrefix.length);
+    const { data, error } = await supabase.storage.from("course-materials").download(path);
+    if (error || !data) return new NextResponse("Accès refusé", { status: 403 });
+    const filename = encodeURIComponent(path.split("/").pop() || "ressource");
+    return new NextResponse(data, { headers: { "Content-Type": data.type || "application/octet-stream", "Content-Disposition": `inline; filename*=UTF-8''${filename}`, "Cache-Control": "private, no-store" } });
   }
   const target = new URL(destination, request.url);
   if (target.protocol !== "https:" && target.protocol !== "http:") {

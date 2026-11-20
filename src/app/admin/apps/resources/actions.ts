@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getViewer } from "@/lib/data/viewer";
 import { createClient } from "@/lib/supabase/server";
+import { saveResourceAccessFromForm } from "@/lib/resource-access";
 
 const text = (f: FormData, k: string, n = 3000) => String(f.get(k) ?? "").trim().slice(0, n);
 const checked = (f: FormData, k: string) => f.get(k) === "on";
@@ -32,12 +33,18 @@ export async function saveManagedResource(formData: FormData) {
   }
   const externalUrl = text(formData, "externalUrl", 1200) || null;
   if (!filePath && !externalUrl) throw new Error("Ajoutez un fichier ou une URL.");
+  const accessConfigured = formData.get("accessConfigured") === "1";
+  const resourceAccessMode = text(formData, "accessMode", 40);
+  const legacyAccessScope = text(formData, "accessScope", 30);
+  const effectiveAccessScope = accessConfigured
+    ? resourceAccessMode === "super_admin_only" ? "super_admin" : "students"
+    : legacyAccessScope;
   const payload = {
     title: text(formData, "title", 180), description: text(formData, "description") || null,
     kind: text(formData, "kind", 30), external_url: externalUrl, file_path: filePath, file_name: fileName, mime_type: mimeType, file_size: fileSize,
     thumbnail_url: text(formData, "thumbnailUrl", 1200) || null, category: text(formData, "category", 100) || null, tags: list(formData, "tags"),
     placements: formData.getAll("placements").map(String), session_ids: ids(formData, "sessionIds"), opportunity_ids: ids(formData, "opportunityIds"),
-    access_scope: text(formData, "accessScope", 30), allowed_user_ids: ids(formData, "allowedUsers"), allowed_ministry_ids: ids(formData, "allowedMinistries"), attendance_session_id: text(formData, "attendanceSessionId", 80) || null,
+    access_scope: effectiveAccessScope, allowed_user_ids: ids(formData, "allowedUsers"), allowed_ministry_ids: ids(formData, "allowedMinistries"), attendance_session_id: text(formData, "attendanceSessionId", 80) || null,
     status: text(formData, "status", 30), publish_at: text(formData, "publishAt", 60) || null,
     featured: checked(formData, "featured"), featured_start_at: text(formData, "featuredStart", 60) || null, featured_end_at: text(formData, "featuredEnd", 60) || null,
     updated_by: viewer.id, ...(id ? {} : { created_by: viewer.id }),
@@ -46,6 +53,7 @@ export async function saveManagedResource(formData: FormData) {
   const mutation = id ? supabase.from("managed_resources").update(payload).eq("id", id) : supabase.from("managed_resources").insert(payload);
   const { data, error } = await mutation.select("id").single();
   if (error) throw new Error(`Enregistrement impossible : ${error.message}`);
+  await saveResourceAccessFromForm(supabase, "managed_resource", data.id, formData);
   revalidatePath("/gestion/admin"); revalidatePath("/etudiant/ressources"); revalidatePath("/etudiant");
   redirect(`/admin/apps/resources/${data.id}?saved=1`);
 }

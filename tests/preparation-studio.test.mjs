@@ -29,7 +29,7 @@ test("la page, les mutations et le PDF répètent le contrôle super admin", () 
 });
 
 test("les brouillons sont des instantanés protégés par RLS", () => {
-  const migration = source("supabase/migrations/20261120150000_training_program_preparation.sql");
+  const migration = source("supabase/migrations/20261120220000_training_program_preparation.sql");
   assert.match(migration, /training_program_drafts/);
   assert.match(migration, /payload jsonb not null/);
   assert.match(migration, /created_by uuid not null/);

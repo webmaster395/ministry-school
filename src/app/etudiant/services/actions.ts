@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { saveResourceAccessFromForm } from "@/lib/resource-access";
 import { opportunityEmoji } from "@/lib/opportunity-banner";
 import { strategicAxesComplete, type StrategicAxis } from "@/lib/opportunity-strategy";
 
@@ -432,7 +433,7 @@ export async function addOpportunityResource(formData: FormData) {
     if (uploadError) throw new Error("Le fichier n’a pas pu être déposé : " + uploadError.message);
   }
 
-  const { error } = await supabase.from("opportunity_resources").insert({
+  const { data: created, error } = await supabase.from("opportunity_resources").insert({
     opportunity_id: opportunityId,
     title,
     description,
@@ -442,11 +443,12 @@ export async function addOpportunityResource(formData: FormData) {
     file_name: fileName,
     mime_type: mimeType,
     created_by: user.id,
-  });
+  }).select("id").single();
   if (error) {
     if (filePath) await supabase.storage.from("opportunity-resources").remove([filePath]);
     throw new Error("La ressource n’a pas pu être ajoutée : " + error.message);
   }
+  await saveResourceAccessFromForm(supabase, "opportunity_resource", created.id, formData);
   refreshOpportunity(opportunityId);
 }
 
@@ -523,6 +525,7 @@ export async function updateOpportunityResource(formData: FormData) {
   if (current.file_path && current.file_path !== filePath) {
     await supabase.storage.from("opportunity-resources").remove([current.file_path]);
   }
+  await saveResourceAccessFromForm(supabase, "opportunity_resource", resourceId, formData);
   refreshOpportunity(opportunityId);
 }
 

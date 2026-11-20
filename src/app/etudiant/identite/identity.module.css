@@ -584,15 +584,16 @@
   min-height: 66px;
 }
 
-.tabs button {
+.tabs button,
+.singleTab {
   display: inline-flex;
   align-items: center;
   gap: 7px;
+  margin: 0;
   border: 0;
   border-bottom: 2px solid transparent;
   background: transparent;
   color: var(--muted);
-  cursor: pointer;
   font-family: var(--font-label);
   font-size: 11px;
   font-weight: 600;
@@ -600,13 +601,19 @@
   text-transform: uppercase;
 }
 
-.tabs button svg {
+.tabs button {
+  cursor: pointer;
+}
+
+.tabs button svg,
+.singleTab svg {
   width: 16px;
   height: 16px;
   stroke-width: 1.7;
 }
 
-.tabs button.activeTab {
+.tabs button.activeTab,
+.singleTab.activeTab {
   border-bottom-color: var(--foreground);
   color: var(--foreground);
 }
@@ -891,45 +898,50 @@
   stroke-width: 1.5;
 }
 
-.upcomingPost {
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--foreground);
+.todoPost {
+  background: #3e4542;
 }
 
-.upcomingPost::after {
-  border-color: transparent;
+.todoPost .postImage {
+  filter: grayscale(0.78) saturate(0.45) brightness(0.72);
 }
 
-.upcomingPost .postKicker {
-  color: var(--muted);
-}
-
-.upcomingIcon {
+.todoShade {
   position: absolute;
-  top: 18px;
-  left: 18px;
-  display: grid;
-  width: 52px;
-  height: 52px;
-  place-items: center;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(23 29 27 / 0.12) 10%, rgb(23 29 27 / 0.84) 100%);
+}
+
+.todoBadge {
+  position: absolute;
+  z-index: 3;
+  top: 14px;
+  right: 14px;
+  padding: 6px 9px;
+  border: 1px solid rgb(255 255 255 / 0.48);
+  border-radius: 999px;
+  background: rgb(30 38 35 / 0.72);
+  color: #fff;
+  font-family: var(--font-label);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+}
+
+.todoDescription {
+  display: -webkit-box;
+  max-width: 30ch;
   overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  background: var(--background);
-  color: var(--accent);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
-.upcomingIcon img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.upcomingIcon svg {
-  width: 21px;
-  height: 21px;
-  stroke-width: 1.5;
+.todoPost:hover .postImage {
+  filter: grayscale(0.62) saturate(0.55) brightness(0.76);
 }
 
 .resourceGrid {

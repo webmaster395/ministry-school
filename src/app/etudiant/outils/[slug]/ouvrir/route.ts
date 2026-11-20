@@ -9,6 +9,10 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
   if (!app) return NextResponse.redirect(new URL("/etudiant", request.url));
   const { data: allowed } = await supabase.rpc("can_access_catalog_app", { p_app: app.id, p_user: user.id });
   if (!allowed) return new NextResponse("Accès refusé", { status: 403 });
-  await supabase.from("featured_content_views").upsert({ content_type: "tool", content_id: app.id, user_id: user.id, generation: app.featured_generation || 1 }, { onConflict: "content_type,content_id,user_id,generation", ignoreDuplicates: true });
+  const [{ error: progressError }] = await Promise.all([
+    supabase.rpc("record_app_open", { p_app_id: app.id }),
+    supabase.from("featured_content_views").upsert({ content_type: "tool", content_id: app.id, user_id: user.id, generation: app.featured_generation || 1 }, { onConflict: "content_type,content_id,user_id,generation", ignoreDuplicates: true }),
+  ]);
+  if (progressError) return new NextResponse("Impossible d’enregistrer l’ouverture de cet outil.", { status: 500 });
   return NextResponse.redirect(new URL(app.destination_url, request.url));
 }

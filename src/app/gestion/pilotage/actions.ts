@@ -7,6 +7,7 @@ import { TYPES_ENABLED } from "@/lib/material-types";
 import { invalidateStudentProgram } from "@/lib/cache/program";
 import { parseAvailability } from "@/lib/availability";
 import { assertPilotageRequestScope } from "@/lib/pilotage-scope";
+import { saveResourceAccessFromForm } from "@/lib/resource-access";
 
 /** Ajoute un support (lien ou fichier déposé) à une séance. La base vérifie le droit d'écriture. */
 export async function addSupport(formData: FormData) {
@@ -22,7 +23,7 @@ export async function addSupport(formData: FormData) {
 
   const visibleAt = parseAvailability(formData);
 
-  const { error } = await supabase.from("materials").insert({
+  const { data: created, error } = await supabase.from("materials").insert({
     session_id: sessionId,
     title: text("title"),
     link_url: text("link_url") || null,
@@ -34,8 +35,9 @@ export async function addSupport(formData: FormData) {
     ...(TYPES_ENABLED && text("resource_type")
       ? { resource_type: text("resource_type") }
       : {}),
-  });
+  }).select("id").single();
   if (error) throw new Error("L'ajout du support a échoué : " + error.message);
+  await saveResourceAccessFromForm(supabase, "material", created.id, formData);
 
   revalidatePath(`/gestion/enseignement/preparation/${sessionId}`);
   revalidatePath("/gestion/pilotage", "layout");
@@ -333,6 +335,7 @@ export async function updateSupport(formData: FormData) {
   if (error) throw new Error("La modification a échoué : " + error.message);
   if (!data?.length)
     throw new Error("Vous n'avez pas le droit de modifier ce support.");
+  await saveResourceAccessFromForm(supabase, "material", str(formData, "id"), formData);
   refreshPrep(str(formData, "session_id"));
 }
 
