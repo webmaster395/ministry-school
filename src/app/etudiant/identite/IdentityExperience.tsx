@@ -18,6 +18,7 @@ export type IdentityStoryItem = {
   status: "not-started" | "completed" | "available";
   measurable: boolean;
   external?: boolean;
+  dismissOnOpen?: boolean;
   links?: Array<{ name: string; href: string; external?: boolean }>;
 };
 export type IdentityTodoItem = {
@@ -205,6 +206,7 @@ function TodoPost({ item, onOpen }: { item: IdentityTodoItem; onOpen: () => void
 
 export default function IdentityExperience(props: Props) {
   const [hiddenTodoKeys, setHiddenTodoKeys] = useState<Set<string>>(() => new Set());
+  const [hiddenStoryKeys, setHiddenStoryKeys] = useState<Set<string>>(() => new Set());
   const feedRef = useRef<HTMLElement>(null);
   const nameParts = props.fullName.trim().split(/\s+/).filter(Boolean);
   const firstName = nameParts[0] || "Mon identité";
@@ -215,7 +217,8 @@ export default function IdentityExperience(props: Props) {
 
   const visibleFeed = props.feed.filter((item) => item.type === "result" || !hiddenTodoKeys.has(item.key));
   const publicationLabel = `publication${visibleFeed.length > 1 ? "s" : ""}`;
-  const measurableStories = props.stories.filter((story) => story.measurable);
+  const visibleStories = props.stories.filter((story) => !hiddenStoryKeys.has(story.key));
+  const measurableStories = visibleStories.filter((story) => story.measurable);
   const completedStoryCount = measurableStories.filter((story) => story.status === "completed").length;
   const remainingStoryCount = measurableStories.length - completedStoryCount;
   const nextStory = measurableStories.find((story) => story.status !== "completed");
@@ -250,10 +253,10 @@ export default function IdentityExperience(props: Props) {
         </div>
       </header>
 
-      {props.stories.length ? (
+      {visibleStories.length ? (
         <section className={styles.storySection} aria-label="Mes outils">
           <div className={styles.stories}>
-            {props.stories.map((story) => story.links ? (
+            {visibleStories.map((story) => story.links ? (
               <Link
                 className={`${styles.story} ${styles[`story_${story.status}`]}`}
                 key={story.key}
@@ -273,6 +276,7 @@ export default function IdentityExperience(props: Props) {
                 key={story.key}
                 target={story.external ? "_blank" : undefined}
                 rel={story.external ? "noreferrer" : undefined}
+                onClick={story.dismissOnOpen ? () => setHiddenStoryKeys((current) => new Set(current).add(story.key)) : undefined}
                 aria-label={`${story.status === "completed" ? "Consulter" : "Ouvrir"} ${story.name}`}
               >
                 <span className={styles.storyRing} data-story-key={story.key}>

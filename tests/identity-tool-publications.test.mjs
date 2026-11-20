@@ -103,6 +103,8 @@ test("les outils externes restent accessibles dans Mes outils après leur retrai
 
 test("le Test des héros est proposé aux Collaborateurs puis attend le résultat publié", () => {
   const migration = read("supabase/migrations/20261120223000_heroes_collaborators_feed.sql");
+  const page = read("src/app/etudiant/identite/page.tsx");
+  const experience = read("src/app/etudiant/identite/IdentityExperience.tsx");
 
   assert.match(migration, /lower\(trim\(name\)\) = lower\('Collaborateurs'\)/);
   assert.match(migration, /visibility_mode = 'selected_lists'/);
@@ -111,5 +113,11 @@ test("le Test des héros est proposé aux Collaborateurs puis attend le résulta
   assert.match(migration, /identity_result_mode = 'manual'/);
   assert.match(migration, /placement_post = true/);
   assert.doesNotMatch(migration, /submission_confirmed_at/);
+  assert.match(page, /heroes-motors-todo/);
+  assert.match(page, /!wasOpenedAfterReset\(progressByApp\.get\(heroesTool\.id\)\)/);
+  assert.match(page, /href: "\/etudiant\/outils\/test-des-heros\/ouvrir"/);
+  assert.match(page, /dismissOnOpen: true/);
+  assert.match(experience, /hiddenStoryKeys/);
+  assert.match(experience, /story\.dismissOnOpen/);
 });
 

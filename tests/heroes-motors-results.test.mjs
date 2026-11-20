@@ -70,10 +70,12 @@ test("la page étudiante conserve le portrait validé et le refus de communicati
   assert.match(page, /replace\(\/&nbsp;/);
   assert.match(identity, /Test des héros/);
   assert.match(identity, /Moi, \{firstName\}, je suis…/);
+  assert.match(identity, /dismissOnOpen/);
 });
 
 test("la super administration gère résultats, statistiques et anomalies", () => {
   const page = read("src/app/admin/apps/test-des-heros/results/page.tsx");
+  const form = read("src/app/admin/apps/test-des-heros/results/HeroesResultForm.tsx");
   const actions = read("src/app/admin/apps/test-des-heros/actions.ts");
   const lib = read("src/lib/admin/heroes-motors.ts");
   assert.match(page, /Anomalies d&apos;attribution/);
@@ -83,6 +85,13 @@ test("la super administration gère résultats, statistiques et anomalies", () =
   assert.match(page, /Toute publication/);
   assert.match(page, /Publiés aux étudiants/);
   assert.match(page, /Chargement interrompu/);
+  assert.match(page, /HeroesResultForm/);
+  assert.match(form, /useActionState\(saveHeroesResult/);
+  assert.match(form, /role="alert"/);
+  assert.match(form, /required=\{authorized\}/);
+  assert.match(actions, /split\(\/\[\\n;,\]\+\//);
+  assert.match(actions, /au moins un moteur et au moins un héros/);
+  assert.match(actions, /heroes_manual_result_save_failed/);
   assert.match(actions, /viewer\?\.roles\.superAdmin/);
   assert.match(actions, /heroes_motors_result_audit/);
   assert.match(actions, /confirmReassignment/);
