@@ -23,16 +23,19 @@ export async function GET(request: Request) {
   let configured = false;
   let mode = "all_authenticated";
   let selectedListIds: string[] = [];
+  let selectedCategories: string[] = [];
   let selectedUserIds: string[] = [];
   if (resourceId) {
-    const [{ data: control }, { data: listLinks }, { data: userLinks }] = await Promise.all([
+    const [{ data: control }, { data: listLinks }, { data: categoryLinks }, { data: userLinks }] = await Promise.all([
       supabase.from("resource_access_controls").select("visibility_mode").eq("resource_type", resourceType).eq("resource_id", resourceId).maybeSingle(),
       supabase.from("resource_access_lists").select("list_id").eq("resource_type", resourceType).eq("resource_id", resourceId),
+      supabase.from("resource_access_categories").select("category").eq("resource_type", resourceType).eq("resource_id", resourceId),
       supabase.from("resource_access_users").select("user_id").eq("resource_type", resourceType).eq("resource_id", resourceId),
     ]);
     configured = Boolean(control);
     mode = control?.visibility_mode ?? mode;
     selectedListIds = (listLinks ?? []).map((item) => item.list_id);
+    selectedCategories = (categoryLinks ?? []).map((item) => item.category);
     selectedUserIds = (userLinks ?? []).map((item) => item.user_id);
   }
 
@@ -43,6 +46,7 @@ export async function GET(request: Request) {
     configured,
     mode,
     selectedListIds,
+    selectedCategories,
     selectedUserIds,
     lists: (lists ?? []).map((list) => ({ ...list, memberCount: memberCounts.get(list.id) ?? 0 })),
     users: members.filter((member) => !member.deactivated).map((member) => ({ id: member.id, name: member.full_name, email: member.email })),

@@ -4,6 +4,7 @@ import test from "node:test";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 const migration = read("supabase/migrations/20261120113000_user_lists_and_resource_access.sql");
+const categoryMigration = read("supabase/migrations/20261120170000_resource_access_list_categories.sql");
 
 test("les listes sont distinctes des rôles et modifiables uniquement par un super administrateur", () => {
   assert.match(migration, /create table if not exists public\.user_lists/);
@@ -28,6 +29,15 @@ test("les ressources acceptent plusieurs listes et les listes utilisent une logi
   assert.match(migration, /join public\.user_list_members membership on membership\.list_id = list_access\.list_id/);
   assert.match(migration, /membership\.user_id = p_user/);
   assert.doesNotMatch(migration, /bool_and|every\(/);
+});
+
+test("les accès peuvent cumuler plusieurs listes et plusieurs catégories de listes", () => {
+  assert.match(categoryMigration, /create table if not exists public\.resource_access_categories/);
+  assert.match(categoryMigration, /resource_access_lists list_access[\s\S]*or exists[\s\S]*resource_access_categories category_access/);
+  assert.match(categoryMigration, /category_access\.category = selected_list\.category/);
+  const editor = read("src/components/admin/ResourceAccessEditor.tsx");
+  assert.match(editor, /name="accessCategories"/);
+  assert.match(editor, /Super administrateurs[\s\S]*listes[\s\S]*catégories/);
 });
 
 test("l'accès individuel est indépendant des listes", () => {
