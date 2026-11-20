@@ -101,3 +101,15 @@ test("les outils externes restent accessibles dans Mes outils après leur retrai
   assert.match(page, /status: "available"[\s\S]*measurable: false/);
 });
 
+test("le Test des héros est proposé aux Collaborateurs puis attend le résultat publié", () => {
+  const migration = read("supabase/migrations/20261120223000_heroes_collaborators_feed.sql");
+
+  assert.match(migration, /lower\(trim\(name\)\) = lower\('Collaborateurs'\)/);
+  assert.match(migration, /visibility_mode = 'selected_lists'/);
+  assert.match(migration, /1eBDRa5df-3TFhygN02K9sxcP_QzywsIjsYkYYwWrwMg\/preview/);
+  assert.match(migration, /tool_type = 'external'/);
+  assert.match(migration, /identity_result_mode = 'manual'/);
+  assert.match(migration, /placement_post = true/);
+  assert.doesNotMatch(migration, /submission_confirmed_at/);
+});
+
