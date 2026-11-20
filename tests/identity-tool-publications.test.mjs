@@ -81,3 +81,14 @@ test("l’administration configure le résultat et peut remettre un clic externe
   assert.doesNotMatch(actions, /from\("app_user_progress"\)\.delete/);
 });
 
+test("les quatre outils demandés sont publiés pour tous avec le bon comportement de feed", () => {
+  const defaults = read("supabase/migrations/20261120222000_identity_feed_default_tools.sql");
+
+  assert.match(defaults, /student_tools_enabled = true/);
+  assert.match(defaults, /'profil-mapp', 'test-des-heros', 'generopoly', 'ma-generosite'/);
+  assert.match(defaults, /visibility_mode = 'all_authenticated'/);
+  assert.match(defaults, /placement_post = true,[\s\S]*where slug = 'profil-mapp'/);
+  assert.match(defaults, /placement_post = false,[\s\S]*where slug = 'test-des-heros'/);
+  assert.match(defaults, /identity_result_mode = 'none',[\s\S]*where slug in \('generopoly', 'ma-generosite'\)/);
+});
+
