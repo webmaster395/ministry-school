@@ -22,9 +22,10 @@ test("Fruit de l’Esprit suit désormais sa propre configuration de catalogue",
   assert.match(identity, /graceIdentityToolSlugs/);
   assert.match(identity, /visibleTools = tools/);
   assert.match(identity, /visibleResults = allResults\.filter/);
-  assert.match(identity, /availableGraceKinds\.has\(result\.kind as GraceTestKey\)/);
+  assert.match(identity, /accessibleResultKinds\.has\(result\.kind\)/);
   assert.match(identity, /completedTests=\{visibleResults\.length\}/);
-  assert.match(identity, /upcoming=\{buildUpcoming\(visibleTools, completedKinds\)\}/);
+  assert.match(identity, /buildTodoItems\(visibleTools, completedKinds, progressByApp\)/);
+  assert.match(identity, /feed=\{feed\}/);
 });
 
 test("la DA Fruit de l’Esprit utilise les baies dans l’eau et garde le parcours clair", () => {

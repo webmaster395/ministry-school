@@ -33,7 +33,7 @@ test("le tableau de bord privé consolide ses lectures et ne rapproche jamais pa
   assert.match(migration, /grant execute on function public\.student_identity_dashboard\(\) to authenticated/);
 });
 
-test("la page reprend le profil, les stories, les onglets et les résultats réels", () => {
+test("la page reprend le profil, les stories et la galerie unique de résultats", () => {
   const page = read("src/app/etudiant/identite/page.tsx");
   const experience = read("src/app/etudiant/identite/IdentityExperience.tsx");
 
@@ -42,13 +42,14 @@ test("la page reprend le profil, les stories, les onglets et les résultats rée
   assert.match(page, /"Aimée"[\s\S]*?"Aimé"/);
   assert.match(page, /buildStories\(\{[\s\S]*tools,/);
   assert.doesNotMatch(page, /key: "recommendations"/);
-  assert.match(page, /buildUpcoming\(tools, completedKinds\)/);
+  assert.match(page, /buildTodoItems\(visibleTools, completedKinds, progressByApp\)/);
   assert.doesNotMatch(page, /seenKinds/);
-  assert.match(page, /results=\{allResults\}/);
+  assert.match(page, /feed=\{feed\}/);
   assert.match(experience, /Mes résultats/);
   assert.match(experience, /À faire/);
+  assert.doesNotMatch(experience, /role="tablist"|setActiveTab/);
   assert.match(experience, /props\.stories\.map/);
-  assert.match(experience, /Les résultats apparaîtront après la finalisation d’un test/);
+  assert.match(experience, /Les outils à découvrir et les résultats publiés apparaîtront ici/);
   assert.match(experience, /result\.attemptId[\s\S]*\/apps\/profil-mapp\/test\/\$\{result\.attemptId\}\/resultat/);
   assert.match(experience, /competences-naturelles\.webp/);
   assert.match(experience, /dons-spirituels\.webp/);

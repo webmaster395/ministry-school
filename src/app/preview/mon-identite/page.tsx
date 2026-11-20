@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import IdentityExperience, { type IdentityStoryItem } from "@/app/etudiant/identite/IdentityExperience";
+import IdentityExperience, { type IdentityFeedItem, type IdentityStoryItem } from "@/app/etudiant/identite/IdentityExperience";
 
 const stories: IdentityStoryItem[] = [
   { key: "mapp", name: "Profil MAPP", category: "Identité", href: "#", image: "/identity/stories/identity-v2.webp", status: "completed", measurable: true },
@@ -24,6 +24,9 @@ export default async function IdentityPreviewPage({ searchParams }: { searchPara
     { kind: "gifts" as const, completedAt: "2026-11-03T12:00:00Z" },
     { kind: "generopoly" as const, completedAt: "2026-11-02T12:00:00Z" },
   ];
-  const upcoming = state === "empty" ? [] : [];
-  return <div style={{ minHeight: "100vh", background: "var(--surface)", padding: "clamp(16px,4vw,56px)" }}><div style={{ maxWidth: 1040, margin: "0 auto" }}><IdentityExperience userId="preview-user" fullName="Rose Martin" status="Aimée" avatarUrl={null} studentCount={337} months={2} completedTests={results.length} stories={stories} results={results} upcoming={upcoming} /></div></div>;
+  const feed: IdentityFeedItem[] = state === "empty" ? [] : [
+    { type: "todo", key: "todo-preview", todo: { key: "preview", appId: "preview", name: "Test des héros", description: "Découvre les personnes qui t’inspirent et ce qui te met en mouvement.", href: "#", imageUrl: "/identity/heroes/dove-abstract-v1.webp", category: "Identité", importance: "priority", order: 0, external: false } },
+    ...results.map((result) => ({ type: "result" as const, key: `result-${result.kind}-${result.completedAt}`, result })),
+  ];
+  return <div style={{ minHeight: "100vh", background: "var(--surface)", padding: "clamp(16px,4vw,56px)" }}><div style={{ maxWidth: 1040, margin: "0 auto" }}><IdentityExperience userId="preview-user" fullName="Rose Martin" status="Aimée" avatarUrl={null} studentCount={337} months={2} completedTests={results.length} stories={stories} feed={feed} /></div></div>;
 }

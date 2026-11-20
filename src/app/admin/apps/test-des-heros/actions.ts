@@ -52,12 +52,14 @@ export async function importHeroesCsv(formData: FormData) {
   if (header.length < 13 || rawRows.length !== 249) throw new Error("Le fichier validé doit contenir exactement 249 réponses et 13 colonnes.");
 
   const supabase = await createClient();
-  const [{ data: accountRows, error: accountError }, { data: existingRows, error: existingError }] = await Promise.all([
+  const [{ data: accountRows, error: accountError }, { data: existingRows, error: existingError }, { data: heroesApp, error: appError }] = await Promise.all([
     supabase.rpc("heroes_motors_admin_accounts"),
     supabase.from("heroes_motors_results").select("id,user_id,source_response_id,publication_status"),
+    supabase.from("app_catalog").select("id").eq("slug", "test-des-heros").single(),
   ]);
   if (accountError) throw new Error(`Comptes Ministry indisponibles : ${accountError.message}`);
   if (existingError) throw new Error(`Contrôle des résultats existants impossible : ${existingError.message}`);
+  if (appError || !heroesApp) throw new Error(`Configuration du Test des héros indisponible : ${appError?.message ?? "outil introuvable"}`);
   const accountsByEmail = new Map<string, Array<{ user_id: string; email: string; full_name: string }>>();
   for (const account of accountRows ?? []) { const email = normalizeEmail(account.email); const matches = accountsByEmail.get(email) ?? []; matches.push(account); accountsByEmail.set(email, matches); }
   const existingBySource = new Map((existingRows ?? []).map((row) => [row.source_response_id, row]));
@@ -112,6 +114,17 @@ export async function importHeroesCsv(formData: FormData) {
     const audits = (saved ?? []).map((savedRow) => { const item = bySource.get(savedRow.source_response_id)!; return { result_id: savedRow.id, actor_id: viewer.id, action: item.previous ? "update" : "insert", changed_fields: ["csv_import"], previous_value: item.previous ? { source_response_id: item.previous.source_response_id } : null, next_value: { source_response_id: savedRow.source_response_id, source_file_hash: APPROVED_SOURCE_HASH } }; });
     if (audits.length) { const { error: auditError } = await supabase.from("heroes_motors_result_audit").insert(audits); if (auditError) throw new Error(`Import effectué mais journalisation interrompue : ${auditError.message}`); }
   }
+  const submissionsByUser = new Map<string, string>();
+  for (const item of payloads) {
+    if (!item.row.user_id || !item.row.source_submitted_at) continue;
+    const current = submissionsByUser.get(item.row.user_id);
+    if (!current || item.row.source_submitted_at > current) submissionsByUser.set(item.row.user_id, item.row.source_submitted_at);
+  }
+  const { error: progressError } = await supabase.rpc("confirm_app_submissions", {
+    p_app_id: heroesApp.id,
+    p_submissions: [...submissionsByUser].map(([user_id, submitted_at]) => ({ user_id, submitted_at })),
+  });
+  if (progressError) throw new Error(`Réponses importées mais confirmation de soumission impossible : ${progressError.message}`);
   revalidatePath("/admin/apps/test-des-heros/results");
   redirect(`/admin/apps/test-des-heros/results?imported=${inserted}&updated=${updated}&preserved=${preserved}`);
 }

@@ -1,9 +1,8 @@
 "use client";
 
-/* eslint-disable @next/next/no-img-element -- avatars et icônes administrables */
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BadgeCheck, BookOpen, Check, Clock3, Grid3X3, Network, Plus } from "lucide-react";
+import { ArrowRight, BadgeCheck, BookOpen, Check, Grid3X3, Network, Plus } from "lucide-react";
 import { useRef, useState } from "react";
 import AvatarEditor from "@/components/AvatarEditor";
 import type { IdentityResult } from "@/lib/identity/dashboard";
@@ -21,7 +20,22 @@ export type IdentityStoryItem = {
   external?: boolean;
   links?: Array<{ name: string; href: string; external?: boolean }>;
 };
-export type IdentityUpcomingItem = { key: string; name: string; href: string; iconUrl: string | null; category: string };
+export type IdentityTodoItem = {
+  key: string;
+  appId: string;
+  name: string;
+  description: string;
+  href: string;
+  imageUrl: string;
+  category: string;
+  importance: "priority" | "recommended" | "optional";
+  order: number;
+  external: boolean;
+};
+
+export type IdentityFeedItem =
+  | { type: "todo"; key: string; todo: IdentityTodoItem }
+  | { type: "result"; key: string; result: IdentityResult };
 
 type Props = {
   userId: string;
@@ -32,8 +46,7 @@ type Props = {
   months: number;
   completedTests: number;
   stories: IdentityStoryItem[];
-  results: IdentityResult[];
-  upcoming: IdentityUpcomingItem[];
+  feed: IdentityFeedItem[];
   toolArtwork?: Partial<Record<"fruit" | "gifts" | "skills", { title: string; image: string; href: string }>>;
 };
 
@@ -167,15 +180,23 @@ function ResultPost({ result, firstName, toolArtwork }: { result: IdentityResult
   );
 }
 
-function UpcomingPost({ item }: { item: IdentityUpcomingItem }) {
+function TodoPost({ item, onOpen }: { item: IdentityTodoItem; onOpen: () => void }) {
   return (
-    <Link className={`${styles.post} ${styles.upcomingPost}`} href={item.href} aria-label={`Ouvrir ${item.name}`}>
-      <span className={styles.upcomingIcon} aria-hidden="true">
-        {item.iconUrl ? <img src={item.iconUrl} alt="" /> : <Clock3 />}
-      </span>
+    <Link
+      className={`${styles.post} ${styles.todoPost} ${styles.imagePost}`}
+      href={item.href}
+      target={item.external ? "_blank" : undefined}
+      rel={item.external ? "noreferrer" : undefined}
+      onClick={item.external ? onOpen : undefined}
+      aria-label={`Commencer ${item.name}`}
+    >
+      <Image className={styles.postImage} src={item.imageUrl} alt="" fill sizes="(max-width: 767px) 33vw, 320px" />
+      <span className={styles.todoShade} aria-hidden="true" />
+      <span className={styles.todoBadge}>À faire</span>
       <span className={styles.postCopy}>
         <span className={styles.postKicker}>{item.category}</span>
         <strong>{item.name}</strong>
+        {item.description ? <small className={styles.todoDescription}>{item.description}</small> : null}
         <span className={styles.openPost}>Commencer <ArrowRight size={15} /></span>
       </span>
     </Link>
@@ -183,20 +204,17 @@ function UpcomingPost({ item }: { item: IdentityUpcomingItem }) {
 }
 
 export default function IdentityExperience(props: Props) {
-  const [activeTab, setActiveTab] = useState<"results" | "upcoming">("results");
+  const [hiddenTodoKeys, setHiddenTodoKeys] = useState<Set<string>>(() => new Set());
   const feedRef = useRef<HTMLElement>(null);
   const nameParts = props.fullName.trim().split(/\s+/).filter(Boolean);
   const firstName = nameParts[0] || "Mon identité";
 
   function openUpcoming() {
-    setActiveTab("upcoming");
     requestAnimationFrame(() => feedRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
   }
 
-  const activeCount = activeTab === "results" ? props.results.length : props.upcoming.length;
-  const activeCountLabel = activeTab === "results"
-    ? `publication${activeCount > 1 ? "s" : ""}`
-    : `outil${activeCount > 1 ? "s" : ""} à faire`;
+  const visibleFeed = props.feed.filter((item) => item.type === "result" || !hiddenTodoKeys.has(item.key));
+  const publicationLabel = `publication${visibleFeed.length > 1 ? "s" : ""}`;
   const measurableStories = props.stories.filter((story) => story.measurable);
   const completedStoryCount = measurableStories.filter((story) => story.status === "completed").length;
   const remainingStoryCount = measurableStories.length - completedStoryCount;
@@ -286,31 +304,27 @@ export default function IdentityExperience(props: Props) {
       ) : null}
 
       <section ref={feedRef} className={styles.feed} aria-label="Publications de mon identité">
-        <div className={styles.tabs} role="tablist" aria-label="Filtrer les publications">
-          <button type="button" role="tab" aria-selected={activeTab === "results"} className={activeTab === "results" ? styles.activeTab : ""} onClick={() => setActiveTab("results")}>
+        <div className={styles.tabs}>
+          <h2 className={`${styles.singleTab} ${styles.activeTab}`}>
             <Grid3X3 /> Mes résultats
-          </button>
-          <button type="button" role="tab" aria-selected={activeTab === "upcoming"} className={activeTab === "upcoming" ? styles.activeTab : ""} onClick={() => setActiveTab("upcoming")}>
-            <Clock3 /> À faire
-          </button>
+          </h2>
         </div>
-        <p className={styles.publicationCount} aria-live="polite">{activeCount} {activeCountLabel}</p>
+        <p className={styles.publicationCount} aria-live="polite">{visibleFeed.length} {publicationLabel}</p>
 
-        {activeTab === "results" ? (
-          props.results.length ? (
-            <div className={styles.grid}>{props.results.map((result) => <ResultPost key={`${result.kind}-${result.attemptId ?? result.completedAt}`} result={result} firstName={firstName} toolArtwork={props.toolArtwork} />)}</div>
+        {visibleFeed.length ? (
+          <div className={styles.grid}>{visibleFeed.map((item) => item.type === "todo" ? (
+            <TodoPost
+              item={item.todo}
+              key={item.key}
+              onOpen={() => setHiddenTodoKeys((current) => new Set(current).add(item.key))}
+            />
           ) : (
-            <div className={styles.empty}>
-              <span><BookOpen /></span>
-              <div><strong>Ta collection commence ici</strong><p>Les résultats apparaîtront après la finalisation d’un test. Un test en cours ne publie rien.</p></div>
-            </div>
-          )
-        ) : activeTab === "upcoming" && props.upcoming.length ? (
-          <div className={styles.grid}>{props.upcoming.map((item) => <UpcomingPost item={item} key={item.key} />)}</div>
+            <ResultPost key={item.key} result={item.result} firstName={firstName} toolArtwork={props.toolArtwork} />
+          ))}</div>
         ) : (
           <div className={styles.empty}>
-            <span><Clock3 /></span>
-            <div><strong>Rien à afficher pour le moment</strong><p>Les prochains tests apparaîtront ici dès leur publication dans Ministry School.</p></div>
+            <span><BookOpen /></span>
+            <div><strong>Ta collection commence ici</strong><p>Les outils à découvrir et les résultats publiés apparaîtront ici dès qu’ils seront disponibles.</p></div>
           </div>
         )}
       </section>

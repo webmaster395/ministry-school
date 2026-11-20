@@ -106,13 +106,21 @@ export async function saveCatalogApp(formData: FormData) {
   const resourceImageUrl = await imageFor("resourceImage", "currentResourceImage");
   const toolType = value(formData, "toolType", 20);
   const trackingMode = value(formData, "trackingMode", 20);
+  const identityResultMode = value(formData, "identityResultMode", 20);
+  const identityImportance = value(formData, "identityImportance", 20);
   const accessScope = value(formData, "accessScope", 20);
   const accessConfigured = formData.get("accessConfigured") === "1";
   const resourceAccessMode = value(formData, "accessMode", 40);
   const effectiveAccessScope = accessConfigured
     ? resourceAccessMode === "super_admin_only" ? "super_admin" : "students"
     : accessScope;
-  if (!["test","interactive","simulator","external"].includes(toolType) || !["result","explicit","none"].includes(trackingMode) || !["super_admin","students","selected"].includes(effectiveAccessScope)) throw new Error("Configuration de l’outil invalide.");
+  if (
+    !["test","interactive","simulator","external"].includes(toolType)
+    || !["result","explicit","none"].includes(trackingMode)
+    || !["none","automatic","manual"].includes(identityResultMode)
+    || !["priority","recommended","optional"].includes(identityImportance)
+    || !["super_admin","students","selected"].includes(effectiveAccessScope)
+  ) throw new Error("Configuration de l’outil invalide.");
   const payload = {
     slug,
     name,
@@ -133,7 +141,12 @@ export async function saveCatalogApp(formData: FormData) {
     long_description: value(formData, "longDescription", 4000) || null,
     tags: list(formData, "tags"),
     result_url: value(formData, "resultUrl", 1000) ? validUrl(value(formData, "resultUrl", 1000)) : null,
-    tool_type: toolType, tracking_mode: trackingMode,
+    tool_type: toolType,
+    tracking_mode: trackingMode,
+    identity_result_mode: identityResultMode,
+    identity_importance: identityImportance,
+    result_provider: identityResultMode === "none" ? null : value(formData, "resultProvider", 80) || null,
+    post_description: value(formData, "postDescription", 500) || null,
     story_title: value(formData, "storyTitle", 140) || name,
     story_image_url: storyImageUrl,
     story_destination_url: validUrl(value(formData, "storyDestination", 1000) || value(formData, "url", 1000)),
@@ -176,6 +189,29 @@ export async function resetFeaturedCatalogApp(formData: FormData) {
   if (error) throw new Error(`Remise à la une impossible : ${error.message}`);
   revalidateCatalog();
   redirect(`/admin/apps/${value(formData, "slug", 80)}/settings?reset=1`);
+}
+
+export async function resetExternalToolProgress(formData: FormData) {
+  await requireSuperAdmin();
+  const id = value(formData, "id", 100);
+  const slug = value(formData, "slug", 80);
+  const email = value(formData, "email", 320).toLowerCase();
+  if (!id || !slug || !email) throw new Error("Renseignez l’adresse e-mail du compte à remettre à faire.");
+
+  const supabase = await createClient();
+  const [{ data: app, error: appError }, { data: accounts, error: accountsError }] = await Promise.all([
+    supabase.from("app_catalog").select("id,tool_type").eq("id", id).single(),
+    supabase.rpc("admin_user_emails"),
+  ]);
+  if (appError || !app || app.tool_type !== "external") throw new Error("Cette action est réservée aux outils externes.");
+  if (accountsError) throw new Error(`Recherche du compte impossible : ${accountsError.message}`);
+  const account = (accounts ?? []).find((candidate: { id: string; email: string | null }) => candidate.email?.trim().toLowerCase() === email);
+  if (!account) redirect(`/admin/apps/${slug}/settings?todoReset=not-found`);
+
+  const { error } = await supabase.rpc("reset_app_progress", { p_app_id: id, p_user_id: account.id });
+  if (error) throw new Error(`Remise à faire impossible : ${error.message}`);
+  revalidatePath("/etudiant/identite");
+  redirect(`/admin/apps/${slug}/settings?todoReset=1`);
 }
 
 export async function deleteCatalogApp(formData: FormData) {
