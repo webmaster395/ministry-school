@@ -19,11 +19,14 @@ test("les restitutions héros sont privées et rattachées au compte exact", () 
 
 test("Mon identité ne montre que la restitution publiée de l'étudiant", () => {
   const identityPage = read("src/app/etudiant/identite/page.tsx");
+  const identityFeed = read("supabase/migrations/20261120170000_student_identity_feed.sql");
   const resultLoader = read("src/lib/identity/heroes-motors.ts");
   const resultPage = read("src/app/etudiant/identite/mes-moteurs/page.tsx");
 
-  assert.match(identityPage, /getPublishedHeroesMotorsResult\(viewer\.id\)/);
+  assert.match(identityPage, /getStudentIdentityFeed\(viewer\.id\)/);
   assert.match(identityPage, /kind: "heroes-motors"/);
+  assert.match(identityFeed, /result\.user_id = current_user_id/);
+  assert.match(identityFeed, /result\.publication_status = 'published'/);
   assert.match(resultLoader, /\.eq\("user_id", userId\)/);
   assert.match(resultLoader, /\.eq\("publication_status", "published"\)/);
   assert.match(resultPage, /result\.portrait/);

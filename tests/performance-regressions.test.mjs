@@ -6,7 +6,8 @@ const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf
 
 test("la connexion arrive directement sur la Home sans refresh supplémentaire", () => {
   const login = read("src/app/login/page.tsx");
-  assert.match(login, /router\.replace\("\/etudiant"\)/);
+  assert.match(login, /: "\/etudiant"/);
+  assert.match(login, /router\.replace\(nextPath\)/);
   assert.doesNotMatch(login, /router\.(?:push|replace)\("\/app"\)/);
   assert.doesNotMatch(login, /router\.refresh\(\)/);
 });
@@ -99,6 +100,39 @@ test("les lectures globales du premier écran sont mutualisées", () => {
   assert.match(student, /getCachedStudentAssignments = unstable_cache/);
   assert.match(home, /getStudentProgramAssignments\(/);
   assert.doesNotMatch(home, /getStudentAssignments\(/);
+});
+
+test("Qui je suis utilise un flux Supabase consolidé sans N+1", () => {
+  const page = read("src/app/etudiant/identite/page.tsx");
+  const feed = read("src/lib/identity/feed.ts");
+  const migration = read("supabase/migrations/20261120170000_student_identity_feed.sql");
+  assert.match(page, /getStudentIdentityFeed\(viewer\.id\)/);
+  assert.doesNotMatch(page, /getStudentTools|getIdentityDashboard|life_line_journeys|heroes_motors_results/);
+  assert.equal((feed.match(/rpc\("student_identity_feed"\)/g) ?? []).length, 1);
+  assert.match(migration, /left join public\.resource_access_controls/);
+  assert.match(migration, /join public\.user_list_members/);
+  assert.match(migration, /grace_identity_assessments_user_completed_idx/);
+  assert.match(migration, /profiles_active_student_count_idx/);
+});
+
+test("le clic Grâce de Dieu et sa publication sont consolidés", () => {
+  const page = read("src/components/student/GraceIdentityStudentPage.tsx");
+  const route = read("src/app/api/apps/grace-identity/route.ts");
+  assert.match(page, /getGraceIdentityToolData/);
+  assert.doesNotMatch(page, /getStudentTools|grace_identity_assessments|createClient/);
+  assert.match(route, /rpc\("save_grace_identity_assessment"/);
+  assert.match(route, /error\?\.code === "PGRST202"/);
+  assert.match(route, /\.upsert\(/);
+});
+
+test("la charge Identité 300–500 utilisateurs est reproductible hors production", () => {
+  const loadTest = read("scripts/load-test-identity.mjs");
+  assert.match(loadTest, /new Set\(\[50, 300, 400, 500\]\)/);
+  assert.match(loadTest, /LOAD_TEST_AUTHORIZED/);
+  assert.match(loadTest, /PRODUCTION_PROJECT_REF/);
+  assert.match(loadTest, /single-generator-simultaneous-burst/);
+  assert.match(loadTest, /afterPublication/);
+  assert.match(loadTest, /ce script refuse explicitement les productions/);
 });
 
 test("le générateur de charge refuse explicitement la production", () => {

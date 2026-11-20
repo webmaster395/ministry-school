@@ -1,13 +1,10 @@
-import { getStudentTools, type CatalogApp } from "@/lib/apps/catalog";
 import { getViewer } from "@/lib/data/viewer";
-import { getIdentityDashboard } from "@/lib/identity/dashboard";
 import { getOfficialMappIdentityResults } from "@/lib/mapp/official-results";
 import IdentityExperience, { type IdentityStoryItem } from "./IdentityExperience";
 import { isMappGuestOpen } from "@/lib/mapp/access-window";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import type { IdentityResult } from "@/lib/identity/dashboard";
-import { getPublishedHeroesMotorsResult } from "@/lib/identity/heroes-motors";
+import { getStudentIdentityFeed, type IdentityTool } from "@/lib/identity/feed";
 
 export const dynamic = "force-dynamic";
 
@@ -21,7 +18,7 @@ function buildStories({
   heroesAvailable,
   graceAvailable,
 }: {
-  tools: CatalogApp[];
+  tools: IdentityTool[];
   results: IdentityResult[];
   heroesAvailable: boolean;
   graceAvailable: boolean;
@@ -125,7 +122,7 @@ function resultKindForItem(item: { key: string }) {
   return null;
 }
 
-function graceToolItems(tool: CatalogApp) {
+function graceToolItems(tool: IdentityTool) {
   return [
     { key: `${tool.id}-fruit`, name: "Fruit de l’Esprit", href: graceTestHref("fruit"), iconUrl: tool.iconUrl },
     { key: `${tool.id}-gifts`, name: "Dons spirituels", href: graceTestHref("gifts"), iconUrl: tool.iconUrl },
@@ -141,7 +138,7 @@ function graceTestHref(kind: "fruit" | "gifts" | "skills") {
   }[kind];
 }
 
-function buildUpcoming(tools: CatalogApp[], completedKinds: Set<string>) {
+function buildUpcoming(tools: IdentityTool[], completedKinds: Set<string>) {
   return tools.flatMap((tool) => {
     if (tool.slug === "profil-mapp") return completedKinds.has("mapp") ? [] : [{ key: tool.id, name: "Profil MAPP", href: "/apps/profil-mapp", iconUrl: tool.iconUrl, category: "Identité" }];
     if (tool.slug === "je-suis-par-la-grace-de-dieu") return graceToolItems(tool).flatMap((item) => {
@@ -162,20 +159,16 @@ export default async function StudentIdentityPage() {
   if (!viewer) redirect("/login");
   if (viewer.deactivated) redirect("/auth/desactive");
   if (!viewer.roles.superAdmin && !isMappGuestOpen()) redirect("/etudiant");
-  const supabase = await createClient();
-  const [dashboard, tools, officialMappResults, lifeLine, heroesMotors] = await Promise.all([
-    getIdentityDashboard(),
-    getStudentTools(),
+  const [feed, officialMappResults] = await Promise.all([
+    getStudentIdentityFeed(viewer.id),
     getOfficialMappIdentityResults(),
-    supabase.from("life_line_journeys").select("events,reflection,completed_at,updated_at").eq("user_id", viewer.id).maybeSingle(),
-    getPublishedHeroesMotorsResult(viewer.id),
   ]);
+  const { dashboard, tools, lifeLine, heroesMotors } = feed;
   // La création de la ligne de vie est déjà une réalisation personnelle : elle
   // doit être retrouvable depuis Identité, même si certains champs sont restés
   // volontairement vides ou si elle a été enregistrée avant ce correctif.
-  const hasLifeLineContent = Boolean(lifeLine.data);
-  const lifeLineResults: IdentityResult[] = hasLifeLineContent
-    ? [{ kind: "life-line", completedAt: lifeLine.data?.completed_at ?? lifeLine.data?.updated_at ?? new Date().toISOString() }]
+  const lifeLineResults: IdentityResult[] = lifeLine
+    ? [{ kind: "life-line", completedAt: lifeLine.completedAt }]
     : [];
   const nonMappIdentityResults = dashboard.identityResults.filter((result) => result.kind !== "mapp");
   const heroesResults: IdentityResult[] = heroesMotors

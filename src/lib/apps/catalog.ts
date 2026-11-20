@@ -132,26 +132,6 @@ const getCachedStudentToolsEnabled = unstable_cache(
   { tags: [STUDENT_TOOLS_SETTINGS_CACHE_TAG], revalidate: 300 },
 );
 
-async function loadStudentCatalogRows() {
-  const supabase = createServiceClient();
-  const { data, error } = await supabase
-    .from("app_catalog")
-    .select("id,slug,name,short_description,category,icon_url,destination_url,status,display_order,integration_key,public_enabled,public_publish_at,student_enabled,student_publish_at,archived_at")
-    .is("archived_at", null)
-    .in("status", ["scheduled", "published"])
-    .eq("student_enabled", true)
-    .order("display_order", { ascending: true })
-    .order("name", { ascending: true });
-  if (error) return [] as CatalogRow[];
-  return data as CatalogRow[];
-}
-
-const getCachedStudentCatalogRows = unstable_cache(
-  loadStudentCatalogRows,
-  ["student-tools-catalog-v1"],
-  { tags: [STUDENT_TOOLS_SETTINGS_CACHE_TAG], revalidate: 300 },
-);
-
 export async function getStudentToolsEnabled() {
   // En production, ce réglage global est identique pour les 400 participants :
   // une lecture partagée remplace donc 400 requêtes PostgREST simultanées.
@@ -168,12 +148,8 @@ export async function getStudentToolsEnabled() {
 
 export async function getStudentTools() {
   if (!(await getStudentToolsEnabled())) return [];
-  if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    const now = Date.now();
-    return (await getCachedStudentCatalogRows())
-      .map((row) => mapRow(row, now))
-      .filter((app) => app.studentVisible && isToolVisibleInPortals(app));
-  }
+  // Cette lecture doit rester liée à la session : la RLS applique les listes
+  // et accès individuels dynamiquement, sans attendre une reconnexion.
   return (await getCatalogApps({ channel: "student" })).filter(isToolVisibleInPortals);
 }
 
@@ -181,16 +157,20 @@ export async function getStudentTools() {
 export async function getPublicToolsPortal() {
   const now = Date.now();
   const supabase = createServiceClient();
-  const { data, error } = await supabase
-    .from("app_catalog")
-    .select("id,slug,name,short_description,category,icon_url,destination_url,status,display_order,integration_key,public_enabled,public_publish_at,student_enabled,student_publish_at,archived_at")
-    .is("archived_at", null)
-    .order("display_order", { ascending: true })
-    .order("name", { ascending: true });
+  const [{ data, error }, { data: controlled }] = await Promise.all([
+    supabase
+      .from("app_catalog")
+      .select("id,slug,name,short_description,category,icon_url,destination_url,status,display_order,integration_key,public_enabled,public_publish_at,student_enabled,student_publish_at,archived_at")
+      .is("archived_at", null)
+      .order("display_order", { ascending: true })
+      .order("name", { ascending: true }),
+    supabase.from("resource_access_controls").select("resource_id").eq("resource_type", "app_catalog"),
+  ]);
   if (error) return [];
+  const privateIds = new Set((controlled ?? []).map((item) => item.resource_id));
   return (data as CatalogRow[])
     .map((row) => mapRow(row, now))
-    .filter((app) => (app.publicVisible || app.slug === "profil-mapp") && isToolVisibleInPortals(app));
+    .filter((app) => !privateIds.has(app.id) && (app.publicVisible || app.slug === "profil-mapp") && isToolVisibleInPortals(app));
 }
 
 export async function getCatalogAppBySlug(slug: string) {
