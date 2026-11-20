@@ -197,7 +197,7 @@ export async function PreparationPageContent({
     assignments ?? [],
     materials ?? [],
     assignmentSteps ?? [],
-    { privateResources: isDeepening },
+    { privateResources: isDeepening, canManageAccess: viewer.roles.superAdmin },
   );
   const color = sessionColor(s.track, "commun", "#1d2625");
   const teacher = s.speaker_name ?? s.teacher?.full_name;

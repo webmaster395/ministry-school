@@ -8,6 +8,7 @@ import { addSupport } from "@/app/gestion/pilotage/actions";
 import { RESOURCE_TYPES } from "@/lib/material-types";
 import AdminSelect from "@/components/admin/AdminSelect";
 import AvailabilityPicker from "@/components/AvailabilityPicker";
+import ResourceAccessEditor from "@/components/admin/ResourceAccessEditor";
 
 const ALLOWED = /\.(pdf|pptx?|docx?|xlsx?|odp|odt|ods)$/i;
 const MAX_BYTES = 20 * 1024 * 1024;
@@ -18,7 +19,7 @@ const label = "mb-1.5 block text-[14px] text-muted";
  * « Ajouter une ressource » : type, titre, lien ou fichier (PDF, PowerPoint, Word, Excel ; 20 Mo)
  * et moment où elle devient visible pour les étudiants.
  */
-export default function ResourceDialog({ sessionId, withTypes, privateFiles = false }: { sessionId: string; withTypes: boolean; privateFiles?: boolean }) {
+export default function ResourceDialog({ sessionId, withTypes, privateFiles = false, canManageAccess = false }: { sessionId: string; withTypes: boolean; privateFiles?: boolean; canManageAccess?: boolean }) {
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -41,6 +42,7 @@ export default function ResourceDialog({ sessionId, withTypes, privateFiles = fa
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
+    const segmentedAccess = form.get("accessConfigured") === "1";
     setError(null);
     const typedUrl = String(form.get("link_url") ?? "").trim();
     if (!file && !typedUrl) return setError("Ajoutez un lien ou choisissez un fichier.");
@@ -54,12 +56,20 @@ export default function ResourceDialog({ sessionId, withTypes, privateFiles = fa
         const supabase = createClient();
         const safe = file.name.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-zA-Z0-9._-]+/g, "-");
         const path = `${sessionId}/${crypto.randomUUID()}/${safe}`;
-        const bucket = privateFiles ? "formation-private-resources" : "supports-cours";
+        const bucket = privateFiles
+          ? "formation-private-resources"
+          : segmentedAccess
+            ? "course-materials"
+            : "supports-cours";
         const { error: uploadError } = await supabase.storage
           .from(bucket)
           .upload(path, file, { contentType: file.type || undefined });
         if (uploadError) throw new Error("Le dépôt du fichier a échoué. Réessayez dans un instant.");
-        url = privateFiles ? `private://${path}` : supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl;
+        url = privateFiles
+          ? `private://${path}`
+          : segmentedAccess
+            ? `storage://course-materials/${path}`
+            : supabase.storage.from(bucket).getPublicUrl(path).data.publicUrl;
       }
       form.set(privateFiles && file ? "file_url" : "link_url", url);
       form.set("session_id", sessionId);
@@ -148,6 +158,8 @@ export default function ResourceDialog({ sessionId, withTypes, privateFiles = fa
             <AvailabilityPicker label="Disponibilité du support" />
 
             {privateFiles && <div><label className={label}>Accès</label><AdminSelect name="audience" defaultValue="present" options={[{value:"present",label:"Uniquement les présents à cette séance"},{value:"enrolled",label:"Tous les inscrits à l’approfondissement"}]} /></div>}
+
+            {canManageAccess && <ResourceAccessEditor resourceType="material" />}
 
             {error && <p role="alert" className="rounded-lg border border-m-doctoral/30 bg-m-doctoral/10 px-3 py-2 text-[14px] text-link">{error}</p>}
 

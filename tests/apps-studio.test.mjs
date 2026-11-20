@@ -55,8 +55,8 @@ test("publication, accès et emplacements sont enregistrés indépendamment", ()
   assert.match(migration, /public_publish_at <= now\(\)/);
   assert.match(migration, /student_publish_at <= now\(\)/);
   assert.match(actions, /parisLocalToIso/);
-  assert.match(actions, /public_enabled: checked\(formData, "publicAccess"\)/);
-  assert.match(actions, /student_enabled: accessScope !== "super_admin"/);
+  assert.match(actions, /public_enabled: !accessConfigured && checked\(formData, "publicAccess"\)/);
+  assert.match(actions, /student_enabled: effectiveAccessScope !== "super_admin"/);
   assert.match(actions, /placement_story: checked\(formData, "placementStory"\)/);
 });
 

@@ -6,6 +6,7 @@ import { getViewer } from "@/lib/data/viewer";
 import { parisLocalToIso } from "@/lib/availability";
 import { createClient } from "@/lib/supabase/server";
 import { invalidateStudentToolsSettings } from "@/lib/cache/apps";
+import { saveResourceAccessFromForm } from "@/lib/resource-access";
 
 async function requireSuperAdmin() {
   const viewer = await getViewer();
@@ -106,7 +107,12 @@ export async function saveCatalogApp(formData: FormData) {
   const toolType = value(formData, "toolType", 20);
   const trackingMode = value(formData, "trackingMode", 20);
   const accessScope = value(formData, "accessScope", 20);
-  if (!["test","interactive","simulator","external"].includes(toolType) || !["result","explicit","none"].includes(trackingMode) || !["super_admin","students","selected"].includes(accessScope)) throw new Error("Configuration de l’outil invalide.");
+  const accessConfigured = formData.get("accessConfigured") === "1";
+  const resourceAccessMode = value(formData, "accessMode", 40);
+  const effectiveAccessScope = accessConfigured
+    ? resourceAccessMode === "super_admin_only" ? "super_admin" : "students"
+    : accessScope;
+  if (!["test","interactive","simulator","external"].includes(toolType) || !["result","explicit","none"].includes(trackingMode) || !["super_admin","students","selected"].includes(effectiveAccessScope)) throw new Error("Configuration de l’outil invalide.");
   const payload = {
     slug,
     name,
@@ -117,10 +123,10 @@ export async function saveCatalogApp(formData: FormData) {
     status,
     display_order: Number.parseInt(value(formData, "order", 8), 10) || 0,
     integration_key: value(formData, "integrationKey", 80) || null,
-    public_enabled: checked(formData, "publicAccess"),
-    public_publish_at: checked(formData, "publicAccess") ? publishAt : null,
-    student_enabled: accessScope !== "super_admin",
-    student_publish_at: accessScope !== "super_admin" ? publishAt : null,
+    public_enabled: !accessConfigured && checked(formData, "publicAccess"),
+    public_publish_at: !accessConfigured && checked(formData, "publicAccess") ? publishAt : null,
+    student_enabled: effectiveAccessScope !== "super_admin",
+    student_publish_at: effectiveAccessScope !== "super_admin" ? publishAt : null,
     archived_at: null,
     updated_by: viewer.id,
     display_title: value(formData, "displayTitle", 140) || name,
@@ -144,15 +150,16 @@ export async function saveCatalogApp(formData: FormData) {
     resource_destination_url: validUrl(value(formData, "resourceDestination", 1000) || value(formData, "url", 1000)),
     resource_order: Number.parseInt(value(formData, "resourceOrder", 8), 10) || 0,
     placement_story: checked(formData, "placementStory"), placement_post: checked(formData, "placementPost"), placement_resources: checked(formData, "placementResources"), placement_work: checked(formData, "placementWork"), placement_ministry: checked(formData, "placementMinistry"),
-    access_scope: accessScope, allowed_user_ids: uuidList(formData, "allowedUsers"), allowed_ministry_ids: uuidList(formData, "allowedMinistries"), public_access: checked(formData, "publicAccess"),
+    access_scope: effectiveAccessScope, allowed_user_ids: uuidList(formData, "allowedUsers"), allowed_ministry_ids: uuidList(formData, "allowedMinistries"), public_access: !accessConfigured && checked(formData, "publicAccess"),
     featured: checked(formData, "featured"),
     featured_start_at: value(formData, "featuredStart", 40) ? parisLocalToIso(...value(formData, "featuredStart", 40).split("T") as [string,string]) : null,
     featured_end_at: value(formData, "featuredEnd", 40) ? parisLocalToIso(...value(formData, "featuredEnd", 40).split("T") as [string,string]) : null,
   };
   const supabase = await createClient();
   const mutation = id ? supabase.from("app_catalog").update(payload).eq("id", id) : supabase.from("app_catalog").insert(payload);
-  const { data, error } = await mutation.select("slug").single();
+  const { data, error } = await mutation.select("id,slug").single();
   if (error) throw new Error(`Enregistrement impossible : ${error.message}`);
+  await saveResourceAccessFromForm(supabase, "app_catalog", data.id, formData);
   revalidateCatalog();
   const requestedReturn = value(formData, "returnTo", 300);
   const returnTo = requestedReturn.startsWith("/admin/apps/") ? requestedReturn : `/admin/apps/${data.slug}/settings`;

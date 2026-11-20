@@ -14,6 +14,7 @@ const tabLabels: Record<string, string> = {
   statistiques: "Statistiques",
   programme: "Programme",
   membres: "Membres",
+  listes: "Listes",
   permissions: "Permissions",
   contenus: "Outils et ressources",
   outils: "Outils et ressources",

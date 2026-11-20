@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BadgeCheck, BookOpen, ChartNoAxesColumnIncreasing, ChevronRight, Church, FolderKanban, ShieldCheck, UsersRound } from "lucide-react";
+import { BadgeCheck, BookOpen, ChartNoAxesColumnIncreasing, ChevronRight, Church, FolderKanban, ListTree, ShieldCheck, UsersRound } from "lucide-react";
 import type { Viewer } from "@/lib/data/viewer";
 
 const commonSections = [
@@ -13,6 +13,7 @@ export default function AdminHome({ viewer }: { viewer: Viewer }) {
     ...commonSections,
     { title: "À valider", description: "Demandes, corrections et publications programmées.", href: "/gestion/a-valider", icon: BadgeCheck, badge: true },
     { title: "Membres", description: "Annuaire de l’ensemble des membres de la plateforme.", href: "/gestion/admin?onglet=membres", icon: UsersRound },
+    { title: "Listes", description: "Groupes réutilisables pour les accès aux outils et aux documents.", href: "/gestion/admin?onglet=listes", icon: ListTree },
     { title: "Permissions", description: "Rôles, affectations, niveaux d’accès et commentaires internes.", href: "/gestion/admin?onglet=permissions", icon: ShieldCheck },
     { title: "Pilotage global", description: "Vue d’ensemble, statistiques réelles et organisation du programme.", href: "/gestion/super-admin/pilotage", icon: ChartNoAxesColumnIncreasing },
   ] : [

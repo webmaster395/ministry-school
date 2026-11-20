@@ -190,16 +190,20 @@ export async function getStudentTools() {
 export async function getPublicToolsPortal() {
   const now = Date.now();
   const supabase = createServiceClient();
-  const { data, error } = await supabase
-    .from("app_catalog")
-    .select(catalogSelect)
-    .is("archived_at", null)
-    .order("display_order", { ascending: true })
-    .order("name", { ascending: true });
+  const [{ data, error }, { data: controlled }] = await Promise.all([
+    supabase
+      .from("app_catalog")
+      .select(catalogSelect)
+      .is("archived_at", null)
+      .order("display_order", { ascending: true })
+      .order("name", { ascending: true }),
+    supabase.from("resource_access_controls").select("resource_id").eq("resource_type", "app_catalog"),
+  ]);
   if (error) return [];
+  const privateIds = new Set((controlled ?? []).map((item) => item.resource_id));
   return (data as CatalogRow[])
     .map((row) => mapRow(row, now))
-    .filter((app) => (app.publicVisible || app.slug === "profil-mapp") && isToolVisibleInPortals(app));
+    .filter((app) => !privateIds.has(app.id) && (app.publicVisible || app.slug === "profil-mapp") && isToolVisibleInPortals(app));
 }
 
 export async function getCatalogAppBySlug(slug: string) {

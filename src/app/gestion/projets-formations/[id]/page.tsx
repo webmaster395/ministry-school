@@ -70,7 +70,7 @@ export default async function ProjectsTrainingManageDetail({ params, searchParam
   const publicationLabel = opportunity.publication_status === "scheduled" ? "Publication programmée" : opportunity.publication_status === "published" ? "Publié" : opportunity.publication_status === "archived" ? "Archivé" : "Non publié";
 
   const editExtras = <div className="space-y-5">
-    {canEdit && <OpportunityResourcesEditor opportunityId={id} resources={resources} />}
+    {canEdit && <OpportunityResourcesEditor opportunityId={id} resources={resources} canManageAccess={superAdminView} />}
     {superAdminView && <AssignmentEditor opportunityId={id} members={members.filter((member) => !member.deactivated).map(({ id: memberId, full_name, email }) => ({ id: memberId, full_name, email }))} managers={teamRows.filter((person) => person.responsibility === "manager").map((person) => person.user_id)} contributors={teamRows.filter((person) => person.responsibility === "contributor").map((person) => person.user_id)} />}
     {superAdminView && <DeleteOpportunityButton opportunityId={id} title={opportunity.title} />}
   </div>;

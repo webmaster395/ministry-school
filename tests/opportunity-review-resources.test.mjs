@@ -62,5 +62,6 @@ test("supports, ressources et liens sont privés jusqu’à l’accès autorisé
   assert.match(actions, /description,\s*kind,/);
   assert.match(studentPage, /getOpportunityResources/);
   assert.match(studentPage, /resource\.description &&/);
-  assert.match(route, /createSignedUrl/);
+  assert.match(route, /download\(resource\.file_path\)/);
+  assert.match(route, /private, no-store/);
 });

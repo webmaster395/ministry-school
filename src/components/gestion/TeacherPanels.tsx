@@ -10,6 +10,7 @@ import {
   X,
 } from "lucide-react";
 import ResourceDialog from "@/components/ResourceDialog";
+import ResourceAccessEditor from "@/components/admin/ResourceAccessEditor";
 import MaterialLink from "@/components/MaterialLink";
 import FormSubmitButton from "@/components/FormSubmitButton";
 import RichTextEditor from "@/components/gestion/RichTextEditor";
@@ -133,10 +134,11 @@ export function teacherPanels(
   assignments: Assignment[],
   materialRows: readonly unknown[],
   assignmentSteps: AssignmentStep[] = [],
-  options: { privateResources?: boolean } = {},
+  options: { privateResources?: boolean; canManageAccess?: boolean } = {},
 ): Record<string, ReactNode> {
   const materials = materialRows as Material[];
   const privateResources = !!options.privateResources;
+  const canManageAccess = !!options.canManageAccess;
   const isScheduled = (value: string | null | undefined) =>
     !!value && new Date(value).getTime() > Date.now();
   const before = assignments.filter((a) =>
@@ -745,13 +747,14 @@ export function teacherPanels(
                       <AvailabilityPicker value={m.visible_at} scheduled={isScheduled(m.visible_at)} label="Disponibilité du support" />
                     </div>
                     {privateResources && <AdminSelect name="audience" defaultValue={m.audience ?? "present"} options={[{value:"present",label:"Uniquement les présents à cette séance"},{value:"enrolled",label:"Tous les inscrits"}]} />}
+                    {canManageAccess && <div className="w-full"><ResourceAccessEditor resourceType="material" resourceId={m.id} /></div>}
                   </Edit>
                 </div>
               </li>
             ))}
           </ul>
         )}
-        <ResourceDialog sessionId={s.id} withTypes privateFiles={privateResources} />
+        <ResourceDialog sessionId={s.id} withTypes privateFiles={privateResources} canManageAccess={canManageAccess} />
       </div>
     ),
     apres: (
