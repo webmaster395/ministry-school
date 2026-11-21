@@ -18,6 +18,8 @@ test("la production expose son commit sans cache pour vérifier l’alias réell
   assert.match(guard, /window\.location\.reload\(\)/);
   assert.match(guard, /visibilitychange/);
   assert.match(layout, /updateViaCache: 'none'/);
-  assert.match(worker, /const CACHE_NAME = "ms-v3"/);
-  assert.match(worker, /client\.navigate\(client\.url\)/);
+  assert.match(worker, /const CACHE_NAME = "ms-v4-static-only"/);
+  assert.doesNotMatch(worker, /client\.navigate\(client\.url\)/);
+  assert.doesNotMatch(worker, /fetch\(event\.request\)\.catch/);
+  assert.doesNotMatch(worker, /STATIC_ASSETS = \[\s*"\/"/);
 });
