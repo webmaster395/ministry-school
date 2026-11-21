@@ -1,12 +1,15 @@
 /* Service Worker — Ministry School
- * Stratégie "cache then network" pour les assets statiques,
- * réseau prioritaire pour les pages et API.
+ * Le worker ne prend en charge que les assets visuels immuables.
+ *
+ * Les pages, les navigations Next.js, les Server Actions et les API restent
+ * entièrement gérées par le navigateur. Les intercepter avec une stratégie
+ * "network first" peut laisser un clic suspendu pendant plusieurs minutes sur
+ * un réseau mobile instable, sans que le navigateur puisse reprendre la main.
  */
 
-const CACHE_NAME = "ms-v3";
+const CACHE_NAME = "ms-v4-static-only";
 
 const STATIC_ASSETS = [
-  "/",
   "/manifest.json",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
@@ -34,22 +37,12 @@ self.addEventListener("activate", (event) => {
         )
       )
       .then(() => self.clients.claim())
-      // Une PWA restée ouverte peut conserver l'ancien JavaScript pendant plusieurs
-      // déploiements. Cette navigation unique charge le nouveau build dès activation.
-      .then(() => self.clients.matchAll({ type: "window", includeUncontrolled: true }))
-      .then((clients) => Promise.all(clients.map((client) => client.navigate(client.url).catch(() => undefined))))
   );
 });
 
-// Fetch : réseau prioritaire, cache en fallback
+// Fetch : seul le cache des assets visuels est pris en charge ici.
 self.addEventListener("fetch", (event) => {
-  // Ignorer les requêtes non-GET et les API Supabase
-  if (
-    event.request.method !== "GET" ||
-    event.request.url.includes("supabase.co")
-  ) {
-    return;
-  }
+  if (event.request.method !== "GET") return;
 
   // Fonts & images statiques : cache first
   const url = new URL(event.request.url);
@@ -72,11 +65,5 @@ self.addEventListener("fetch", (event) => {
           })
       )
     );
-    return;
   }
-
-  // Pages & API : réseau d'abord, cache en fallback silencieux
-  event.respondWith(
-    fetch(event.request).catch(() => caches.match(event.request))
-  );
 });
