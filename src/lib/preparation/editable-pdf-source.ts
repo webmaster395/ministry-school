@@ -3,8 +3,13 @@ export const EDITABLE_PDF_VERSION = 1 as const;
 export const EDITABLE_PDF_ATTACHMENT_NAME = "ministry-school-source.v1.json";
 export const EDITABLE_PDF_MEDIA_TYPE = "application/vnd.ministry-school.editable-pdf+json";
 
-export type EditablePdfBlockKind = "title" | "heading" | "paragraph" | "list-item" | "quote";
+export type EditablePdfBlockKind = "title" | "heading" | "paragraph" | "list-item" | "quote" | "table";
 export type EditablePdfFontRole = "display" | "body" | "label";
+
+export type EditablePdfTableV1 = {
+  columns: string[];
+  rows: string[][];
+};
 
 export type EditablePdfBlockV1 = {
   id: string;
@@ -22,6 +27,7 @@ export type EditablePdfBlockV1 = {
   };
   breakBefore: boolean;
   listLevel?: number;
+  table?: EditablePdfTableV1;
 };
 
 export type EditablePdfSourceV1 = {
@@ -52,6 +58,11 @@ export type EditablePdfOperation =
   | { type: "color"; blockId: string; color: string }
   | { type: "text-style"; blockId: string; style: "bold" | "underline"; value: boolean }
   | { type: "list-item"; blockId: string; value: boolean }
+  | { type: "text-set"; blockId: string; value: string }
+  | { type: "insert-block"; blockId: string; newBlockId: string; kind: "paragraph" | "table" }
+  | { type: "delete-block"; blockId: string }
+  | { type: "table-cell"; blockId: string; area: "header" | "body"; row?: number; column: number; value: string }
+  | { type: "table-row"; blockId: string; action: "add" | "remove"; row?: number }
   | { type: "spacing"; blockId: string; edge: "before" | "after"; delta: number }
   | { type: "line-break"; blockId: string; index: number }
   | { type: "page-break"; blockId: string; value: boolean }
@@ -73,8 +84,18 @@ function isBlock(value: unknown): value is EditablePdfBlockV1 {
   if (!value || typeof value !== "object") return false;
   const block = value as Partial<EditablePdfBlockV1>;
   const style = block.style as Partial<EditablePdfBlockV1["style"]> | undefined;
+  const validTable = block.table === undefined || (
+    Array.isArray(block.table.columns)
+    && block.table.columns.length >= 1
+    && block.table.columns.length <= 6
+    && block.table.columns.every((cell) => typeof cell === "string")
+    && Array.isArray(block.table.rows)
+    && block.table.rows.length >= 1
+    && block.table.rows.length <= 12
+    && block.table.rows.every((row) => Array.isArray(row) && row.length === block.table!.columns.length && row.every((cell) => typeof cell === "string"))
+  );
   return typeof block.id === "string"
-    && ["title", "heading", "paragraph", "list-item", "quote"].includes(block.kind ?? "")
+    && ["title", "heading", "paragraph", "list-item", "quote", "table"].includes(block.kind ?? "")
     && typeof block.text === "string"
     && typeof block.breakBefore === "boolean"
     && !!style
@@ -87,6 +108,8 @@ function isBlock(value: unknown): value is EditablePdfBlockV1 {
     && typeof style.spaceAfter === "number"
     && (style.bold === undefined || typeof style.bold === "boolean")
     && (style.underline === undefined || typeof style.underline === "boolean")
+    && validTable
+    && (block.kind === "table" ? block.table !== undefined : block.table === undefined)
     && (block.listLevel === undefined || (Number.isInteger(block.listLevel) && block.listLevel >= 0 && block.listLevel <= 2));
 }
 
@@ -137,6 +160,32 @@ export function applyEditablePdfOperation(source: EditablePdfSourceV1, operation
     return { ...source, blocks };
   }
 
+  if (operation.type === "insert-block") {
+    const index = source.blocks.findIndex((block) => block.id === operation.blockId);
+    if (index < 0) throw new Error(`Bloc introuvable : ${operation.blockId}`);
+    if (!operation.newBlockId || source.blocks.some((block) => block.id === operation.newBlockId)) throw new Error("Identifiant du nouveau bloc invalide.");
+    const anchor = source.blocks[index];
+    const base = {
+      id: operation.newBlockId,
+      text: "",
+      style: { ...anchor.style, fontRole: "body" as const, fontSize: 9, bold: false, underline: false, spaceBefore: 8, spaceAfter: 10 },
+      breakBefore: false,
+    };
+    const inserted: EditablePdfBlockV1 = operation.kind === "table"
+      ? { ...base, kind: "table", table: { columns: ["Colonne 1", "Colonne 2"], rows: [["", ""], ["", ""]] } }
+      : { ...base, kind: "paragraph" };
+    const blocks = [...source.blocks];
+    blocks.splice(index + 1, 0, inserted);
+    return { ...source, blocks };
+  }
+
+  if (operation.type === "delete-block") {
+    const index = source.blocks.findIndex((block) => block.id === operation.blockId);
+    if (index < 0) throw new Error(`Bloc introuvable : ${operation.blockId}`);
+    if (source.blocks.length === 1) throw new Error("Le document doit conserver au moins un bloc.");
+    return { ...source, blocks: source.blocks.filter((block) => block.id !== operation.blockId) };
+  }
+
   let found = false;
   const blocks = source.blocks.map((block) => {
     if (block.id !== operation.blockId) return block;
@@ -155,6 +204,30 @@ export function applyEditablePdfOperation(source: EditablePdfSourceV1, operation
       return operation.value
         ? { ...block, kind: "list-item" as const, listLevel: block.listLevel ?? 0 }
         : { ...block, kind: "paragraph" as const, listLevel: undefined };
+    }
+    if (operation.type === "text-set") return { ...block, text: operation.value.slice(0, 20_000) };
+    if (operation.type === "table-cell") {
+      if (!block.table) throw new Error("Ce bloc n’est pas un tableau.");
+      const table = { columns: [...block.table.columns], rows: block.table.rows.map((row) => [...row]) };
+      if (operation.column < 0 || operation.column >= table.columns.length) throw new Error("Colonne de tableau invalide.");
+      if (operation.area === "header") table.columns[operation.column] = operation.value.slice(0, 1_000);
+      else {
+        const row = operation.row ?? -1;
+        if (row < 0 || row >= table.rows.length) throw new Error("Ligne de tableau invalide.");
+        table.rows[row][operation.column] = operation.value.slice(0, 4_000);
+      }
+      return { ...block, table };
+    }
+    if (operation.type === "table-row") {
+      if (!block.table) throw new Error("Ce bloc n’est pas un tableau.");
+      if (operation.action === "add") {
+        if (block.table.rows.length >= 12) return block;
+        return { ...block, table: { ...block.table, rows: [...block.table.rows, block.table.columns.map(() => "")] } };
+      }
+      if (block.table.rows.length <= 1) return block;
+      const row = operation.row ?? block.table.rows.length - 1;
+      if (row < 0 || row >= block.table.rows.length) throw new Error("Ligne de tableau invalide.");
+      return { ...block, table: { ...block.table, rows: block.table.rows.filter((_, index) => index !== row) } };
     }
     if (operation.type === "spacing") {
       const key = operation.edge === "before" ? "spaceBefore" : "spaceAfter";
@@ -179,6 +252,10 @@ function lineCount(text: string, charactersPerLine: number) {
 }
 
 export function estimateEditablePdfBlockHeight(block: EditablePdfBlockV1) {
+  if (block.kind === "table" && block.table) {
+    const rowHeight = Math.max(24, block.style.fontSize * block.style.lineHeight * 2 + 10);
+    return block.style.spaceBefore + (block.table.rows.length + 1) * rowHeight + block.style.spaceAfter + 4;
+  }
   const characters = Math.max(24, Math.floor(76 * (9.5 / block.style.fontSize)));
   const lines = lineCount(block.text, block.kind === "title" ? Math.max(24, characters - 18) : characters);
   const textHeight = lines * block.style.fontSize * block.style.lineHeight;
@@ -206,20 +283,21 @@ export function paginateEditablePdfBlocks(blocks: EditablePdfBlockV1[], budget =
     used += height;
   }
 
-  const last = pages.at(-1);
-  const previous = pages.at(-2);
-  if (last && previous && !last.blocks[0]?.breakBefore) {
-    const pageHeight = (page: EditablePdfPageGroup) => page.blocks.reduce((total, block) => total + estimateEditablePdfBlockHeight(block), page.continuationOf ? 28 : 0);
-    let lastHeight = pageHeight(last);
+  const pageHeight = (page: EditablePdfPageGroup) => page.blocks.reduce((total, block) => total + estimateEditablePdfBlockHeight(block), page.continuationOf ? 28 : 0);
+  for (let index = pages.length - 1; index > 0; index -= 1) {
+    const current = pages[index];
+    const previous = pages[index - 1];
+    if (current.blocks[0]?.breakBefore) continue;
+    let currentHeight = pageHeight(current);
     let previousHeight = pageHeight(previous);
-    while (lastHeight < 175 && previous.blocks.length > 1) {
+    while (currentHeight < 175 && previous.blocks.length > 1) {
       const candidate = previous.blocks.at(-1)!;
       const candidateHeight = estimateEditablePdfBlockHeight(candidate);
       if (candidate.kind === "title" || previousHeight - candidateHeight < 260) break;
       previous.blocks.pop();
-      last.blocks.unshift(candidate);
+      current.blocks.unshift(candidate);
       previousHeight -= candidateHeight;
-      lastHeight += candidateHeight;
+      currentHeight += candidateHeight;
     }
   }
 
