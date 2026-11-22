@@ -52,6 +52,8 @@ Dans ces cas, le PDF reste consultable mais n'est pas présenté comme éditable
 
 L'aperçu et l'export utilisent le même composant de rendu et la même source. L'ajout de la pièce jointe intervient après le rendu et ne modifie pas les pages visibles.
 
-## Limite du prototype
+## Cas de validation Nathalie
 
-La source Nathalie fournie dans la preuve est une source de test créée à partir du contenu connu. Elle ne prétend pas avoir été extraite fidèlement d'un PDF existant.
+La preuve utilise l'intégralité du document Word fourni pour le cours « Découvre ce qui te rend unique » : 4 métadonnées et 130 blocs de contenu structurés. La couverture et les 14 pages intérieures reprennent le gabarit anthracite Ministry School du document Paul Goulet.
+
+Le prototype valide le fichier unique, le rendu commun et les opérations de source. La barre flottante d'édition et la persistance du brouillon ne font pas encore partie de cette preuve de faisabilité.

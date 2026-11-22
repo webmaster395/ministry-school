@@ -3,7 +3,7 @@ export const EDITABLE_PDF_VERSION = 1 as const;
 export const EDITABLE_PDF_ATTACHMENT_NAME = "ministry-school-source.v1.json";
 export const EDITABLE_PDF_MEDIA_TYPE = "application/vnd.ministry-school.editable-pdf+json";
 
-export type EditablePdfBlockKind = "title" | "heading" | "paragraph" | "quote";
+export type EditablePdfBlockKind = "title" | "heading" | "paragraph" | "list-item" | "quote";
 export type EditablePdfFontRole = "display" | "body" | "label";
 
 export type EditablePdfBlockV1 = {
@@ -19,6 +19,7 @@ export type EditablePdfBlockV1 = {
     spaceAfter: number;
   };
   breakBefore: boolean;
+  listLevel?: number;
 };
 
 export type EditablePdfSourceV1 = {
@@ -30,6 +31,9 @@ export type EditablePdfSourceV1 = {
     title: string;
     date: string;
     speakers: string[];
+    schedule?: string;
+    location?: string;
+    category?: string;
   };
   template: {
     id: "ministry-editorial-anthracite";
@@ -59,7 +63,7 @@ function isBlock(value: unknown): value is EditablePdfBlockV1 {
   const block = value as Partial<EditablePdfBlockV1>;
   const style = block.style as Partial<EditablePdfBlockV1["style"]> | undefined;
   return typeof block.id === "string"
-    && ["title", "heading", "paragraph", "quote"].includes(block.kind ?? "")
+    && ["title", "heading", "paragraph", "list-item", "quote"].includes(block.kind ?? "")
     && typeof block.text === "string"
     && typeof block.breakBefore === "boolean"
     && !!style
@@ -69,7 +73,8 @@ function isBlock(value: unknown): value is EditablePdfBlockV1 {
     && typeof style.color === "string"
     && HEX_COLOR.test(style.color)
     && typeof style.spaceBefore === "number"
-    && typeof style.spaceAfter === "number";
+    && typeof style.spaceAfter === "number"
+    && (block.listLevel === undefined || (Number.isInteger(block.listLevel) && block.listLevel >= 0 && block.listLevel <= 2));
 }
 
 export function isEditablePdfSource(value: unknown): value is EditablePdfSourceV1 {
@@ -84,6 +89,9 @@ export function isEditablePdfSource(value: unknown): value is EditablePdfSourceV
     && ISO_DATE.test(source.document.date)
     && Array.isArray(source.document.speakers)
     && source.document.speakers.every((speaker) => typeof speaker === "string")
+    && (source.document.schedule === undefined || typeof source.document.schedule === "string")
+    && (source.document.location === undefined || typeof source.document.location === "string")
+    && (source.document.category === undefined || typeof source.document.category === "string")
     && source.template?.id === "ministry-editorial-anthracite"
     && source.template.version === 1
     && source.template.pageSize === "A4"

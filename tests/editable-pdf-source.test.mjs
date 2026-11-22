@@ -15,31 +15,35 @@ import {
 test("le format V1 est autonome, versionné et sérialisable", () => {
   assert.equal(EDITABLE_PDF_ATTACHMENT_NAME, "ministry-school-source.v1.json");
   assert.equal(isEditablePdfSource(NATHALIE_PROOF_SOURCE), true);
+  assert.equal(NATHALIE_PROOF_SOURCE.blocks.length, 130);
+  assert.equal(NATHALIE_PROOF_SOURCE.blocks.filter((block) => block.kind === "title").length, 9);
+  assert.equal(NATHALIE_PROOF_SOURCE.document.location, "MLK Studio (MLK 2) — 2 Rue Tirard, 94000 Créteil");
+  assert.match(NATHALIE_PROOF_SOURCE.blocks.at(-1).text, /instrument façonné par Dieu/);
   assert.deepEqual(parseEditablePdfSource(serializeEditablePdfSource(NATHALIE_PROOF_SOURCE)), NATHALIE_PROOF_SOURCE);
 });
 
-test("les cinq opérations modifient uniquement la source ciblée", () => {
-  const original = NATHALIE_PROOF_SOURCE.blocks.find((block) => block.id === "grace-paragraph");
-  const edited = NATHALIE_PROOF_EDITED_SOURCE.blocks.find((block) => block.id === "grace-paragraph");
-  const conclusion = NATHALIE_PROOF_EDITED_SOURCE.blocks.find((block) => block.id === "conclusion");
-  assert.equal(original.style.fontSize, 10.5);
-  assert.equal(edited.style.fontSize, 12.5);
-  assert.equal(edited.style.color, "#e34d1b");
-  assert.equal(edited.style.spaceBefore, 12);
-  assert.equal(edited.style.spaceAfter, 22);
-  assert.match(edited.text, /Saint-Esprit\.\nLa grâce/);
-  assert.equal(conclusion.breakBefore, true);
-  assert.equal(NATHALIE_PROOF_SOURCE.blocks.find((block) => block.id === "conclusion").breakBefore, false);
+test("les opérations visuelles modifient uniquement les blocs ciblés", () => {
+  const original = NATHALIE_PROOF_SOURCE.blocks.find((block) => block.id === "paragraph-050");
+  const edited = NATHALIE_PROOF_EDITED_SOURCE.blocks.find((block) => block.id === "paragraph-050");
+  const profile = NATHALIE_PROOF_EDITED_SOURCE.blocks.find((block) => block.id === "profile-053");
+  assert.equal(original.style.fontSize, 9.8);
+  assert.equal(edited.style.fontSize, 11.3);
+  assert.equal(edited.style.color, "#27a8bd");
+  assert.equal(edited.style.spaceBefore, 8);
+  assert.equal(edited.style.spaceAfter, 15);
+  assert.match(NATHALIE_PROOF_EDITED_SOURCE.blocks.find((block) => block.id === "paragraph-051").text, /profil principal ;\n- un profil secondaire/);
+  assert.equal(profile.breakBefore, true);
+  assert.equal(NATHALIE_PROOF_SOURCE.blocks.find((block) => block.id === "profile-053").breakBefore, false);
 });
 
 test("la taille et l’espacement restent dans les bornes éditoriales", () => {
-  const tiny = applyEditablePdfOperation(NATHALIE_PROOF_SOURCE, { type: "font-size", blockId: "identity-intro", delta: -100 });
-  const spaced = applyEditablePdfOperation(NATHALIE_PROOF_SOURCE, { type: "spacing", blockId: "identity-intro", edge: "after", delta: 200 });
-  assert.equal(tiny.blocks.find((block) => block.id === "identity-intro").style.fontSize, 7);
-  assert.equal(spaced.blocks.find((block) => block.id === "identity-intro").style.spaceAfter, 72);
+  const tiny = applyEditablePdfOperation(NATHALIE_PROOF_SOURCE, { type: "font-size", blockId: "list-item-002", delta: -100 });
+  const spaced = applyEditablePdfOperation(NATHALIE_PROOF_SOURCE, { type: "spacing", blockId: "list-item-002", edge: "after", delta: 200 });
+  assert.equal(tiny.blocks.find((block) => block.id === "list-item-002").style.fontSize, 7);
+  assert.equal(spaced.blocks.find((block) => block.id === "list-item-002").style.spaceAfter, 72);
 });
 
 test("une couleur invalide et un bloc inconnu sont refusés", () => {
-  assert.throws(() => applyEditablePdfOperation(NATHALIE_PROOF_SOURCE, { type: "color", blockId: "identity-intro", color: "red" }), /Couleur invalide/);
+  assert.throws(() => applyEditablePdfOperation(NATHALIE_PROOF_SOURCE, { type: "color", blockId: "list-item-002", color: "red" }), /Couleur invalide/);
   assert.throws(() => applyEditablePdfOperation(NATHALIE_PROOF_SOURCE, { type: "page-break", blockId: "absent", value: true }), /Bloc introuvable/);
 });

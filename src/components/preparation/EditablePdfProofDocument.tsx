@@ -1,10 +1,13 @@
-import { Document, Font, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
+/* eslint-disable jsx-a11y/alt-text -- @react-pdf/renderer Image does not expose the DOM alt prop. */
+import { Document, Font, Image, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 import { formatSynthesisDate } from "@/lib/preparation/synthesis";
 import type { EditablePdfBlockV1, EditablePdfSourceV1 } from "@/lib/preparation/editable-pdf-source";
 
 const COLORS = {
   paper: "#fffcf7",
+  anthracite: "#25302f",
   ink: "#25302f",
+  cream: "#fff0dc",
   muted: "#68706f",
   border: "#d9d7d0",
   turquoise: "#27bdc2",
@@ -14,42 +17,64 @@ const COLORS = {
   green: "#c9dc6a",
 };
 
-const STRIPES = [COLORS.orange, COLORS.turquoise, COLORS.red, COLORS.pink, COLORS.green];
+const STRIPES = [COLORS.green, COLORS.turquoise, COLORS.pink, COLORS.orange, COLORS.red];
 const A4 = { width: 595.28, height: 841.89 };
 
 Font.registerHyphenationCallback((word) => [word]);
 
 const styles = StyleSheet.create({
-  page: {
-    backgroundColor: COLORS.paper,
-    color: COLORS.ink,
-    fontFamily: "Helvetica",
-    paddingTop: 84,
-    paddingRight: 76,
-    paddingBottom: 66,
-    paddingLeft: 76,
-  },
-  stripeBar: { position: "absolute", top: 0, left: 0, right: 0, height: 10, flexDirection: "row" },
+  cover: { backgroundColor: COLORS.anthracite, color: COLORS.cream, fontFamily: "Helvetica" },
+  coverStripeBar: { position: "absolute", top: 0, left: 0, right: 0, height: 26, flexDirection: "row" },
   stripe: { flexGrow: 1 },
-  header: { position: "absolute", top: 31, left: 76, right: 76, borderBottomWidth: 0.55, borderBottomColor: COLORS.border, paddingBottom: 10, flexDirection: "row", justifyContent: "space-between" },
-  brand: { fontFamily: "Helvetica-Bold", fontSize: 6.8, letterSpacing: 1.2 },
-  headerTitle: { maxWidth: 260, textAlign: "right", color: COLORS.muted, fontSize: 6.8 },
-  footerLine: { position: "absolute", bottom: 44, left: 76, right: 76, borderTopWidth: 0.55, borderTopColor: COLORS.border },
-  footerText: { position: "absolute", bottom: 26, left: 76, width: 340, color: COLORS.muted, fontSize: 6.3, letterSpacing: 0.35 },
-  pageNumber: { position: "absolute", bottom: 26, right: 76, width: 50, textAlign: "right", color: COLORS.muted, fontSize: 6.3 },
-  sectionLabel: { marginBottom: 11, color: COLORS.turquoise, fontFamily: "Helvetica-Bold", fontSize: 7.5, letterSpacing: 1.65, textAlign: "center", textTransform: "uppercase" },
-  titleRule: { width: 64, height: 1.7, marginTop: 14, marginBottom: 4, alignSelf: "center", backgroundColor: COLORS.turquoise },
-  quote: { borderWidth: 0.7, borderColor: COLORS.border, borderLeftWidth: 3, borderLeftColor: COLORS.turquoise, backgroundColor: "#ffffff", paddingTop: 15, paddingRight: 17, paddingBottom: 14, paddingLeft: 17 },
+  coverLogo: { position: "absolute", top: 92, left: 191, width: 213, height: 82, objectFit: "contain" },
+  coverFallbackLogo: { position: "absolute", top: 118, left: 76, right: 76, color: COLORS.cream, fontFamily: "Times-Roman", fontSize: 27, textAlign: "center" },
+  coverCategory: { position: "absolute", top: 254, left: 77, color: COLORS.cream, fontFamily: "Helvetica-Bold", fontSize: 7.8, letterSpacing: 0.35, textTransform: "uppercase" },
+  coverTitle: { position: "absolute", top: 330, left: 77, right: 77, color: COLORS.cream, fontFamily: "Times-Roman", fontSize: 39, lineHeight: 1.13 },
+  coverRule: { position: "absolute", top: 510, left: 77, width: 128, height: 4, borderRadius: 2, backgroundColor: COLORS.turquoise },
+  coverSpeaker: { position: "absolute", bottom: 126, left: 77, color: COLORS.cream, fontFamily: "Helvetica-Bold", fontSize: 10.8, textTransform: "uppercase" },
+  coverMeta: { position: "absolute", bottom: 101, left: 77, right: 77, color: COLORS.cream, fontSize: 8.8, lineHeight: 1.45 },
+
+  page: { backgroundColor: COLORS.paper, color: COLORS.ink, fontFamily: "Helvetica", paddingTop: 88, paddingRight: 92, paddingBottom: 76, paddingLeft: 92 },
+  stripeBar: { position: "absolute", top: 0, left: 0, right: 0, height: 11, flexDirection: "row" },
+  header: { position: "absolute", top: 36, left: 76, right: 76, flexDirection: "row", justifyContent: "space-between" },
+  brand: { color: COLORS.muted, fontFamily: "Helvetica-Bold", fontSize: 6.7 },
+  headerTitle: { maxWidth: 265, color: COLORS.muted, fontSize: 6.7, textAlign: "right", textTransform: "uppercase" },
+  footerLine: { position: "absolute", bottom: 48, left: 76, right: 76, borderTopWidth: 0.55, borderTopColor: COLORS.border },
+  footerText: { position: "absolute", bottom: 28, left: 76, width: 350, color: COLORS.muted, fontSize: 6.3, textTransform: "uppercase" },
+  pageNumber: { position: "absolute", bottom: 28, right: 76, width: 50, color: COLORS.muted, fontSize: 6.3, textAlign: "right" },
+
+  sectionWrap: { marginBottom: 20 },
+  sectionLabel: { marginBottom: 13, color: COLORS.turquoise, fontFamily: "Helvetica-Bold", fontSize: 7.6, letterSpacing: 0.9, textTransform: "uppercase" },
+  sectionTitle: { color: COLORS.ink, fontFamily: "Times-Roman", fontSize: 27, lineHeight: 1.05 },
+  titleRule: { width: 68, height: 3, marginTop: 22, marginBottom: 10, alignSelf: "center", backgroundColor: COLORS.turquoise },
+  quote: { borderWidth: 0.65, borderColor: COLORS.border, borderLeftWidth: 3.5, borderLeftColor: COLORS.turquoise, backgroundColor: "#ffffff", paddingTop: 15, paddingRight: 20, paddingBottom: 15, paddingLeft: 28 },
+  listRow: { flexDirection: "row" },
+  listBullet: { width: 18, color: COLORS.turquoise, fontFamily: "Helvetica-Bold" },
+  listText: { flexGrow: 1, flexBasis: 0 },
+  continuationLabel: { marginBottom: 24, color: COLORS.turquoise, fontFamily: "Helvetica-Bold", fontSize: 7.6, letterSpacing: 0.9, textTransform: "uppercase" },
 });
 
+function Cover({ source, logoSrc }: { source: EditablePdfSourceV1; logoSrc?: string }) {
+  const meta = [source.document.schedule ?? formatSynthesisDate(source.document.date), source.document.location].filter(Boolean).join("  ·  ");
+  return <Page size={A4} style={styles.cover}>
+    <View style={styles.coverStripeBar}>{STRIPES.map((color) => <View key={color} style={[styles.stripe, { backgroundColor: color }]} />)}</View>
+    {logoSrc ? <Image src={logoSrc} style={styles.coverLogo} /> : <Text style={styles.coverFallbackLogo}>MINISTRY SCHOOL</Text>}
+    <Text style={styles.coverCategory}>{source.document.category ?? "Support de cours"}  ·  2026–2027</Text>
+    <Text style={styles.coverTitle}>{source.document.title}</Text>
+    <View style={styles.coverRule} />
+    <Text style={styles.coverSpeaker}>{source.document.speakers.join(" · ")}</Text>
+    <Text style={styles.coverMeta}>{meta}</Text>
+  </Page>;
+}
+
 function FixedFurniture({ source }: { source: EditablePdfSourceV1 }) {
-  const identity = `${source.document.speakers.join(" · ")} · ${formatSynthesisDate(source.document.date)}`;
+  const identity = `${source.document.speakers.join(" · ")}  ·  ${formatSynthesisDate(source.document.date)}`;
   return <>
     <View style={styles.stripeBar}>{STRIPES.map((color) => <View key={color} style={[styles.stripe, { backgroundColor: color }]} />)}</View>
     <View style={styles.header}><Text style={styles.brand}>MINISTRY SCHOOL</Text><Text style={styles.headerTitle}>{source.document.title}</Text></View>
     <View style={styles.footerLine} />
     <Text style={styles.footerText}>{identity}</Text>
-    <Text render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`} style={styles.pageNumber} />
+    <Text render={({ pageNumber, totalPages }) => String(pageNumber - 1).padStart(2, "0") + (totalPages > 2 ? `  /  ${String(totalPages - 1).padStart(2, "0")}` : "")} style={styles.pageNumber} />
   </>;
 }
 
@@ -59,7 +84,12 @@ function blockFont(block: EditablePdfBlockV1) {
   return "Helvetica";
 }
 
-function EditableBlock({ block, first }: { block: EditablePdfBlockV1; first: boolean }) {
+function sectionParts(text: string) {
+  const match = text.match(/^(\d+)\.\s*([\s\S]*)$/);
+  return match ? { label: `Section ${match[1].padStart(2, "0")}`, title: match[2] } : { label: "Section", title: text };
+}
+
+function EditableBlock({ block }: { block: EditablePdfBlockV1 }) {
   const dynamicStyle = {
     color: block.style.color,
     fontFamily: blockFont(block),
@@ -67,31 +97,56 @@ function EditableBlock({ block, first }: { block: EditablePdfBlockV1; first: boo
     lineHeight: block.style.lineHeight,
     marginTop: block.style.spaceBefore,
     marginBottom: block.style.spaceAfter,
-    textAlign: block.kind === "title" ? "center" as const : "left" as const,
   };
-  return <View wrap={block.kind !== "quote"}>
-    {first ? <Text style={styles.sectionLabel}>Preuve de source éditable</Text> : null}
-    {block.kind === "quote"
-      ? <View wrap={false} style={[styles.quote, { marginTop: block.style.spaceBefore, marginBottom: block.style.spaceAfter }]}><Text orphans={3} widows={3} style={{ ...dynamicStyle, marginTop: 0, marginBottom: 0 }}>{block.text}</Text></View>
-      : <Text orphans={3} widows={3} style={dynamicStyle}>{block.text}</Text>}
-    {block.kind === "title" ? <View style={styles.titleRule} /> : null}
+
+  if (block.kind === "title") {
+    const section = sectionParts(block.text);
+    return <View wrap={false} style={[styles.sectionWrap, { marginTop: block.style.spaceBefore }]}>
+      <Text style={styles.sectionLabel}>{section.label}</Text>
+      <Text style={{ ...dynamicStyle, marginTop: 0, marginBottom: 0 }}>{section.title}</Text>
+      <View style={styles.titleRule} />
+    </View>;
+  }
+
+  if (block.kind === "quote") return <View wrap={false} style={[styles.quote, { marginTop: block.style.spaceBefore, marginBottom: block.style.spaceAfter }]}>
+    <Text orphans={3} widows={3} style={{ ...dynamicStyle, marginTop: 0, marginBottom: 0 }}>{block.text}</Text>
   </View>;
+
+  if (block.kind === "list-item") {
+    const level = block.listLevel ?? 0;
+    return <View wrap={false} style={[styles.listRow, { marginLeft: level * 18, marginTop: block.style.spaceBefore, marginBottom: block.style.spaceAfter }]}>
+      <Text style={[styles.listBullet, { color: level ? COLORS.orange : COLORS.turquoise }]}>{level ? "–" : "•"}</Text>
+      <Text style={[styles.listText, { ...dynamicStyle, marginTop: 0, marginBottom: 0 }]}>{block.text}</Text>
+    </View>;
+  }
+
+  return <Text minPresenceAhead={block.kind === "heading" ? 44 : 0} orphans={3} widows={3} style={dynamicStyle}>{block.text}</Text>;
 }
 
 function pageGroups(blocks: EditablePdfBlockV1[]) {
-  const pages: EditablePdfBlockV1[][] = [];
+  const pages: { blocks: EditablePdfBlockV1[]; continuationOf?: string }[] = [];
+  let currentSection = "";
   for (const block of blocks) {
-    if (!pages.length || block.breakBefore) pages.push([]);
-    pages.at(-1)!.push(block);
+    if (block.kind === "title") currentSection = block.text;
+    if (!pages.length || block.breakBefore) pages.push({ blocks: [], continuationOf: block.kind === "title" ? undefined : currentSection });
+    pages.at(-1)!.blocks.push(block);
   }
   return pages;
 }
 
-export default function EditablePdfProofDocument({ source }: { source: EditablePdfSourceV1 }) {
-  return <Document title={source.document.title} author="Ministry School" subject="Preuve PDF avec source structurée intégrée" creator="Ministry School — Prototype source V1">
-    {pageGroups(source.blocks).map((blocks, pageIndex) => <Page key={`proof-page-${pageIndex}`} size={A4} wrap style={styles.page}>
-        <FixedFurniture source={source} />
-        {blocks.map((block, blockIndex) => <EditableBlock key={block.id} block={block} first={pageIndex === 0 && blockIndex === 0} />)}
-      </Page>)}
+function continuationLabel(title?: string) {
+  if (!title) return null;
+  const section = sectionParts(title);
+  return <Text style={styles.continuationLabel}>{section.label} · suite</Text>;
+}
+
+export default function EditablePdfProofDocument({ source, logoSrc }: { source: EditablePdfSourceV1; logoSrc?: string }) {
+  return <Document title={source.document.title} author={source.document.speakers.join(", ")} subject="Support de cours Ministry School avec source structurée intégrée" creator="Ministry School — Source V1">
+    <Cover source={source} logoSrc={logoSrc} />
+    {pageGroups(source.blocks).map((group, pageIndex) => <Page key={`proof-page-${pageIndex}`} size={A4} wrap={false} style={styles.page}>
+      <FixedFurniture source={source} />
+      {continuationLabel(group.continuationOf)}
+      {group.blocks.map((block) => <EditableBlock key={block.id} block={block} />)}
+    </Page>)}
   </Document>;
 }
