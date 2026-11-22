@@ -51,6 +51,11 @@ export type EditablePdfOperation =
   | { type: "line-break"; blockId: string; index: number }
   | { type: "page-break"; blockId: string; value: boolean };
 
+export type EditablePdfPageGroup = {
+  blocks: EditablePdfBlockV1[];
+  continuationOf?: string;
+};
+
 const HEX_COLOR = /^#[0-9a-f]{6}$/i;
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -139,4 +144,39 @@ export function applyEditablePdfOperation(source: EditablePdfSourceV1, operation
 
 export function applyEditablePdfOperations(source: EditablePdfSourceV1, operations: EditablePdfOperation[]) {
   return operations.reduce(applyEditablePdfOperation, source);
+}
+
+function lineCount(text: string, charactersPerLine: number) {
+  return text.split("\n").reduce((total, line) => total + Math.max(1, Math.ceil(line.length / charactersPerLine)), 0);
+}
+
+export function estimateEditablePdfBlockHeight(block: EditablePdfBlockV1) {
+  const characters = Math.max(24, Math.floor(76 * (9.5 / block.style.fontSize)));
+  const lines = lineCount(block.text, block.kind === "title" ? Math.max(24, characters - 18) : characters);
+  const textHeight = lines * block.style.fontSize * block.style.lineHeight;
+  const furniture = block.kind === "title" ? 58 : block.kind === "quote" ? 30 : block.kind === "heading" ? 10 : 4;
+  return block.style.spaceBefore + textHeight + block.style.spaceAfter + furniture;
+}
+
+export function paginateEditablePdfBlocks(blocks: EditablePdfBlockV1[], budget = 650): EditablePdfPageGroup[] {
+  const pages: EditablePdfPageGroup[] = [];
+  let current: EditablePdfPageGroup | null = null;
+  let used = 0;
+  let currentSection = "";
+
+  for (const block of blocks) {
+    if (block.kind === "title") currentSection = block.text;
+    const height = estimateEditablePdfBlockHeight(block);
+    const forcedBreak = block.breakBefore && !!current?.blocks.length;
+    const automaticBreak = !!current?.blocks.length && used + height > budget;
+    if (!current || forcedBreak || automaticBreak) {
+      current = { blocks: [], continuationOf: block.kind === "title" ? undefined : currentSection || undefined };
+      pages.push(current);
+      used = current.continuationOf ? 28 : 0;
+    }
+    current.blocks.push(block);
+    used += height;
+  }
+
+  return pages.length ? pages : [{ blocks: [] }];
 }

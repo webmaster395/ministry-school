@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text -- @react-pdf/renderer Image does not expose the DOM alt prop. */
 import { Document, Font, Image, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 import { formatSynthesisDate } from "@/lib/preparation/synthesis";
-import type { EditablePdfBlockV1, EditablePdfSourceV1 } from "@/lib/preparation/editable-pdf-source";
+import { paginateEditablePdfBlocks, type EditablePdfBlockV1, type EditablePdfSourceV1 } from "@/lib/preparation/editable-pdf-source";
 
 const COLORS = {
   paper: "#fffcf7",
@@ -123,17 +123,6 @@ function EditableBlock({ block }: { block: EditablePdfBlockV1 }) {
   return <Text minPresenceAhead={block.kind === "heading" ? 44 : 0} orphans={3} widows={3} style={dynamicStyle}>{block.text}</Text>;
 }
 
-function pageGroups(blocks: EditablePdfBlockV1[]) {
-  const pages: { blocks: EditablePdfBlockV1[]; continuationOf?: string }[] = [];
-  let currentSection = "";
-  for (const block of blocks) {
-    if (block.kind === "title") currentSection = block.text;
-    if (!pages.length || block.breakBefore) pages.push({ blocks: [], continuationOf: block.kind === "title" ? undefined : currentSection });
-    pages.at(-1)!.blocks.push(block);
-  }
-  return pages;
-}
-
 function continuationLabel(title?: string) {
   if (!title) return null;
   const section = sectionParts(title);
@@ -143,7 +132,7 @@ function continuationLabel(title?: string) {
 export default function EditablePdfProofDocument({ source, logoSrc }: { source: EditablePdfSourceV1; logoSrc?: string }) {
   return <Document title={source.document.title} author={source.document.speakers.join(", ")} subject="Support de cours Ministry School avec source structurée intégrée" creator="Ministry School — Source V1">
     <Cover source={source} logoSrc={logoSrc} />
-    {pageGroups(source.blocks).map((group, pageIndex) => <Page key={`proof-page-${pageIndex}`} size={A4} wrap={false} style={styles.page}>
+    {paginateEditablePdfBlocks(source.blocks).map((group, pageIndex) => <Page key={`proof-page-${pageIndex}`} size={A4} wrap={false} style={styles.page}>
       <FixedFurniture source={source} />
       {continuationLabel(group.continuationOf)}
       {group.blocks.map((block) => <EditableBlock key={block.id} block={block} />)}

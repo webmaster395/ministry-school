@@ -1,12 +1,14 @@
 "use client";
 
-import dynamic from "next/dynamic";
-
-const EditablePdfProofViewer = dynamic(() => import("@/components/preparation/EditablePdfProofViewer"), {
-  ssr: false,
-  loading: () => <div className="grid min-h-screen place-items-center bg-[#e6e3dd] text-sm text-[#68706f]">Composition de la preuve A4…</div>,
-});
+import SynthesisStudio from "@/components/preparation/SynthesisStudio";
+import { createEmptySynthesis } from "@/lib/preparation/synthesis";
 
 export default function EditablePdfProofPageClient() {
-  return <main className="h-screen bg-[#d8d5cf] p-3"><EditablePdfProofViewer /></main>;
+  return <SynthesisStudio
+    initialSynthesis={createEmptySynthesis("2026-11-07")}
+    initialDrafts={[]}
+    draftsUnavailable={null}
+    creatorName="Prévisualisation"
+    onModeChange={() => undefined}
+  />;
 }
