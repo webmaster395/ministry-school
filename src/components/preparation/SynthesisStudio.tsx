@@ -3,6 +3,9 @@
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent, type RefObject } from "react";
 import {
+  ArrowDown,
+  ArrowUp,
+  Bold,
   CornerDownLeft,
   Download,
   FileDown,
@@ -11,6 +14,7 @@ import {
   Minus,
   Plus,
   Redo2,
+  Underline,
   Undo2,
   Upload,
 } from "lucide-react";
@@ -56,26 +60,46 @@ function downloadBlob(blob: Blob, filename: string) {
   window.setTimeout(() => URL.revokeObjectURL(url), 1200);
 }
 
-function FloatingTools({ block, onOperation, onLineBreak }: {
+function FloatingTools({ block, canMoveUp, canMoveDown, onOperation, onLineBreak }: {
   block: EditablePdfBlockV1;
+  canMoveUp: boolean;
+  canMoveDown: boolean;
   onOperation: (operation: EditablePdfOperation) => void;
   onLineBreak: () => void;
 }) {
-  const keepFocus = (event: MouseEvent) => event.preventDefault();
+  const keepFocus = (event: MouseEvent) => {
+    if ((event.target as HTMLElement).closest("input")) return;
+    event.preventDefault();
+  };
+  const commitFontSize = (value: string) => {
+    const parsed = Number.parseFloat(value.replace(",", "."));
+    if (Number.isFinite(parsed) && Math.abs(parsed - block.style.fontSize) >= 0.01) {
+      onOperation({ type: "font-size-set", blockId: block.id, value: parsed });
+    }
+  };
   const button = "inline-flex h-8 min-w-8 items-center justify-center rounded-md px-2 text-xs font-semibold text-white hover:bg-white/15 disabled:opacity-40";
-  return <div role="toolbar" aria-label="Mise en forme du paragraphe" onMouseDown={keepFocus} className="absolute -top-11 left-0 z-30 flex items-center gap-0.5 rounded-lg bg-[#202b2a] p-1 shadow-xl">
+  const activeButton = `${button} bg-white/20`;
+  return <div role="toolbar" aria-label="Mise en forme du paragraphe" onMouseDown={keepFocus} className="absolute -top-12 left-0 z-30 flex w-max max-w-[620px] items-center gap-0.5 rounded-lg bg-[#202b2a] p-1 shadow-xl">
     <button type="button" title="Réduire la taille" aria-label="Réduire la taille" className={button} onClick={() => onOperation({ type: "font-size", blockId: block.id, delta: -1 })}><Minus size={14} /></button>
-    <span className="min-w-10 px-1 text-center text-[10px] text-white/70">{block.style.fontSize} pt</span>
+    <label className="flex h-8 items-center rounded-md bg-white/10 px-1.5 text-white"><span className="sr-only">Taille de police en points</span><input key={`${block.id}-${block.style.fontSize}`} type="number" min="6" max="72" step="0.5" inputMode="decimal" defaultValue={block.style.fontSize} onBlur={(event) => commitFontSize(event.currentTarget.value)} onKeyDown={(event) => { if (event.key === "Enter") event.currentTarget.blur(); }} className="w-11 border-0 bg-transparent p-0 text-center text-xs font-semibold text-white outline-none" /><span className="text-[9px] text-white/60">pt</span></label>
     <button type="button" title="Augmenter la taille" aria-label="Augmenter la taille" className={button} onClick={() => onOperation({ type: "font-size", blockId: block.id, delta: 1 })}><Plus size={14} /></button>
+    <span className="mx-1 h-5 w-px bg-white/20" />
+    <button type="button" title="Gras" aria-label="Gras" aria-pressed={!!block.style.bold} className={block.style.bold ? activeButton : button} onClick={() => onOperation({ type: "text-style", blockId: block.id, style: "bold", value: !block.style.bold })}><Bold size={14} /></button>
+    <button type="button" title="Souligné" aria-label="Souligné" aria-pressed={!!block.style.underline} className={block.style.underline ? activeButton : button} onClick={() => onOperation({ type: "text-style", blockId: block.id, style: "underline", value: !block.style.underline })}><Underline size={14} /></button>
+    <span className="mx-1 h-5 w-px bg-white/20" />
+    <button type="button" title="Monter le bloc" aria-label="Monter le bloc" disabled={!canMoveUp} className={button} onClick={() => onOperation({ type: "move-block", blockId: block.id, direction: "up" })}><ArrowUp size={14} /></button>
+    <button type="button" title="Descendre le bloc" aria-label="Descendre le bloc" disabled={!canMoveDown} className={button} onClick={() => onOperation({ type: "move-block", blockId: block.id, direction: "down" })}><ArrowDown size={14} /></button>
     <span className="mx-1 h-5 w-px bg-white/20" />
     <button type="button" title="Insérer un retour à la ligne au curseur" className={button} onClick={onLineBreak}><CornerDownLeft size={14} /><span className="ml-1.5 hidden sm:inline">Ligne</span></button>
     <button type="button" title={block.breakBefore ? "Retirer le saut de page" : "Envoyer à la page suivante"} className={button} onClick={() => onOperation({ type: "page-break", blockId: block.id, value: !block.breakBefore })}><FileDown size={14} /><span className="ml-1.5 hidden sm:inline">Page</span></button>
   </div>;
 }
 
-function EditableBlock({ block, selected, onSelect, onOperation, onLineBreak, textRef }: {
+function EditableBlock({ block, selected, canMoveUp, canMoveDown, onSelect, onOperation, onLineBreak, textRef }: {
   block: EditablePdfBlockV1;
   selected: boolean;
+  canMoveUp: boolean;
+  canMoveDown: boolean;
   onSelect: () => void;
   onOperation: (operation: EditablePdfOperation) => void;
   onLineBreak: () => void;
@@ -88,6 +112,8 @@ function EditableBlock({ block, selected, onSelect, onOperation, onLineBreak, te
     fontFamily: block.style.fontRole === "display" ? "var(--font-title)" : "var(--font-body)",
     fontSize,
     lineHeight: block.style.lineHeight,
+    fontWeight: block.style.bold ? 700 : 400,
+    textDecoration: block.style.underline ? "underline" : "none",
     height: Math.max(fontSize * block.style.lineHeight * rows + 3, fontSize * 1.4),
   };
   const wrapperStyle: CSSProperties = {
@@ -106,7 +132,7 @@ function EditableBlock({ block, selected, onSelect, onOperation, onLineBreak, te
   />;
 
   return <div data-editable-pdf-block={block.id} className={`relative rounded-sm ${selected ? "ring-2 ring-[#27bdc2]/70 ring-offset-4 ring-offset-[#fffcf7]" : "hover:ring-1 hover:ring-black/15"}`} style={wrapperStyle} onClick={onSelect}>
-    {selected ? <FloatingTools block={block} onOperation={onOperation} onLineBreak={onLineBreak} /> : null}
+    {selected ? <FloatingTools block={block} canMoveUp={canMoveUp} canMoveDown={canMoveDown} onOperation={onOperation} onLineBreak={onLineBreak} /> : null}
     {block.breakBefore ? <span className="absolute -top-3 right-0 text-[7px] font-semibold uppercase tracking-[0.12em] text-[#27a8bd]">Saut de page</span> : null}
     {block.kind === "title" ? (() => {
       const section = sectionParts(block.text);
@@ -128,6 +154,7 @@ export default function SynthesisStudio({ onModeChange }: StudioProps) {
   const fileInput = useRef<HTMLInputElement>(null);
   const selectedText = useRef<HTMLTextAreaElement>(null);
   const pages = useMemo(() => source ? paginateEditablePdfBlocks(source.blocks) : [], [source]);
+  const blockPositions = useMemo(() => new Map(source?.blocks.map((block, index) => [block.id, index]) ?? []), [source]);
 
   useEffect(() => () => { if (readonlyUrl) URL.revokeObjectURL(readonlyUrl); }, [readonlyUrl]);
 
@@ -306,9 +333,9 @@ export default function SynthesisStudio({ onModeChange }: StudioProps) {
       {!source && !readonlyUrl ? <section className="mx-auto grid min-h-[560px] max-w-3xl place-items-center rounded-2xl border-2 border-dashed border-black/15 bg-white/60 p-8 text-center"><div><Upload className="mx-auto text-[#27a8bd]" size={34} /><h2 className="font-title mt-5 text-3xl">Déposez votre PDF Ministry School</h2><p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-muted">Le PDF doit contenir sa source structurée. Utilisez « Exemple Nathalie » pour essayer immédiatement.</p><button type="button" onClick={() => fileInput.current?.click()} className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-lg bg-accent px-5 text-sm font-semibold text-on-accent"><Upload size={16} /> Choisir un PDF</button></div></section> : null}
       {!source && readonlyUrl ? <section className="mx-auto max-w-5xl"><div className="mb-4 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950"><strong>Lecture seule.</strong> Ce PDF ne contient pas les paragraphes structurés nécessaires pour modifier les tailles et les sauts sans dégrader sa mise en page.</div><iframe title="PDF importé en lecture seule" src={readonlyUrl} className="h-[78vh] w-full rounded-xl border-0 bg-white shadow-xl" /></section> : null}
       {source ? <div className="mx-auto w-max max-w-full">
-        <div className="mb-4 rounded-xl border border-black/10 bg-white/80 px-4 py-3 text-sm text-[#34403d] shadow-sm"><strong>Cliquez dans un texte</strong>, placez le curseur où vous voulez couper la ligne, puis utilisez la petite barre noire.</div>
+        <div className="mb-4 rounded-xl border border-black/10 bg-white/80 px-4 py-3 text-sm text-[#34403d] shadow-sm"><strong>Cliquez dans un texte</strong> pour choisir sa taille, le mettre en gras ou le souligner. Les flèches déplacent le bloc et la pagination se recalcule seule.</div>
         <div style={{ width: A4.width * zoom, height: A4.height * zoom }} className="mx-auto mb-6"><article className="relative origin-top-left overflow-hidden bg-[#25302f] text-[#fff0dc] shadow-2xl" style={{ width: A4.width, height: A4.height, transform: `scale(${zoom})` }}><div className="absolute inset-x-0 top-0 flex h-8">{STRIPES.map((color) => <span key={color} className="flex-1" style={{ backgroundColor: color }} />)}</div><Image src="/logo-compact.png" alt="Ministry School" width={466} height={122} className="absolute left-1/2 top-24 h-auto w-[260px] -translate-x-1/2" /><div className="absolute left-[84px] right-[84px] top-[300px]"><p className="text-[11px] font-bold uppercase tracking-[0.12em]">{source.document.category ?? "Synthèse de cours"} · 2026–2027</p><h2 className="mt-20 max-w-[570px] font-title text-[52px] leading-[1.06]">{source.document.title}</h2><div className="mt-24 h-1 w-36 rounded-full bg-[#27bdc2]" /></div><div className="absolute bottom-24 left-[84px] right-[84px]"><p className="text-sm font-bold uppercase">{source.document.speakers.join(" · ")}</p><p className="mt-4 text-xs">{source.document.schedule ?? source.document.date}{source.document.location ? ` · ${source.document.location}` : ""}</p></div></article></div>
-        {pages.map((page, pageIndex) => <div key={pageIndex} style={{ width: A4.width * zoom, height: A4.height * zoom }} className="mx-auto mb-6 [contain-intrinsic-size:1018px] [content-visibility:auto]"><article className="relative origin-top-left overflow-hidden bg-[#fffcf7] text-[#25302f] shadow-2xl" style={{ width: A4.width, height: A4.height, transform: `scale(${zoom})` }} onClick={(event) => event.stopPropagation()}><div className="absolute inset-x-0 top-0 flex h-3">{STRIPES.map((color) => <span key={color} className="flex-1" style={{ backgroundColor: color }} />)}</div><header className="absolute left-[76px] right-[76px] top-10 flex justify-between text-[8px] uppercase text-[#68706f]"><strong>MINISTRY SCHOOL</strong><span>{source.document.title}</span></header><main className="absolute bottom-[72px] left-[92px] right-[92px] top-[90px]">{page.continuationOf ? <p className="mb-7 text-[10px] font-bold uppercase tracking-[0.16em] text-[#27a8bd]">{sectionParts(page.continuationOf).label} · suite</p> : null}{page.blocks.map((block) => <EditableBlock key={block.id} block={block} selected={selectedId === block.id} onSelect={() => setSelectedId(block.id)} onOperation={commitOperation} onLineBreak={insertLineBreak} textRef={selectedText} />)}</main><footer className="absolute bottom-7 left-[76px] right-[76px] flex justify-between border-t border-[#d9d7d0] pt-3 text-[8px] uppercase text-[#68706f]"><span>{source.document.speakers.join(" · ")} · {source.document.date}</span><span>{String(pageIndex + 1).padStart(2, "0")} / {String(pages.length).padStart(2, "0")}</span></footer></article></div>)}
+        {pages.map((page, pageIndex) => <div key={pageIndex} style={{ width: A4.width * zoom, height: A4.height * zoom }} className="mx-auto mb-6 [contain-intrinsic-size:1018px] [content-visibility:auto]"><article className="relative origin-top-left overflow-hidden bg-[#fffcf7] text-[#25302f] shadow-2xl" style={{ width: A4.width, height: A4.height, transform: `scale(${zoom})` }} onClick={(event) => event.stopPropagation()}><div className="absolute inset-x-0 top-0 flex h-3">{STRIPES.map((color) => <span key={color} className="flex-1" style={{ backgroundColor: color }} />)}</div><header className="absolute left-[76px] right-[76px] top-10 flex justify-between text-[8px] uppercase text-[#68706f]"><strong>MINISTRY SCHOOL</strong><span>{source.document.title}</span></header><main className="absolute bottom-[72px] left-[92px] right-[92px] top-[90px]">{page.continuationOf ? <p className="mb-7 text-[10px] font-bold uppercase tracking-[0.16em] text-[#27a8bd]">{sectionParts(page.continuationOf).label} · suite</p> : null}{page.blocks.map((block) => { const position = blockPositions.get(block.id) ?? 0; return <EditableBlock key={block.id} block={block} selected={selectedId === block.id} canMoveUp={position > 0} canMoveDown={position < source.blocks.length - 1} onSelect={() => setSelectedId(block.id)} onOperation={commitOperation} onLineBreak={insertLineBreak} textRef={selectedText} />; })}</main><footer className="absolute bottom-7 left-[76px] right-[76px] flex justify-between border-t border-[#d9d7d0] pt-3 text-[8px] uppercase text-[#68706f]"><span>{source.document.speakers.join(" · ")} · {source.document.date}</span><span>{String(pageIndex + 1).padStart(2, "0")} / {String(pages.length).padStart(2, "0")}</span></footer></article></div>)}
       </div> : null}
     </main>
   </div>;
