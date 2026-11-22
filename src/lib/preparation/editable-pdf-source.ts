@@ -9,6 +9,8 @@ export type EditablePdfFontRole = "display" | "body" | "label";
 export type EditablePdfTableV1 = {
   columns: string[];
   rows: string[][];
+  widthPercent?: number;
+  cellPadding?: number;
 };
 
 export type EditablePdfBlockV1 = {
@@ -62,7 +64,10 @@ export type EditablePdfOperation =
   | { type: "insert-block"; blockId: string; newBlockId: string; kind: "paragraph" | "table" }
   | { type: "delete-block"; blockId: string }
   | { type: "table-cell"; blockId: string; area: "header" | "body"; row?: number; column: number; value: string }
+  | { type: "table-cell-list"; blockId: string; row: number; column: number; value: boolean }
   | { type: "table-row"; blockId: string; action: "add" | "remove"; row?: number }
+  | { type: "table-column"; blockId: string; action: "add" | "remove"; column?: number }
+  | { type: "table-size"; blockId: string; widthPercent?: number; paddingDelta?: number }
   | { type: "spacing"; blockId: string; edge: "before" | "after"; delta: number }
   | { type: "line-break"; blockId: string; index: number }
   | { type: "page-break"; blockId: string; value: boolean }
@@ -93,6 +98,8 @@ function isBlock(value: unknown): value is EditablePdfBlockV1 {
     && block.table.rows.length >= 1
     && block.table.rows.length <= 12
     && block.table.rows.every((row) => Array.isArray(row) && row.length === block.table!.columns.length && row.every((cell) => typeof cell === "string"))
+    && (block.table.widthPercent === undefined || (typeof block.table.widthPercent === "number" && block.table.widthPercent >= 50 && block.table.widthPercent <= 100))
+    && (block.table.cellPadding === undefined || (typeof block.table.cellPadding === "number" && block.table.cellPadding >= 4 && block.table.cellPadding <= 20))
   );
   return typeof block.id === "string"
     && ["title", "heading", "paragraph", "list-item", "quote", "table"].includes(block.kind ?? "")
@@ -172,7 +179,7 @@ export function applyEditablePdfOperation(source: EditablePdfSourceV1, operation
       breakBefore: false,
     };
     const inserted: EditablePdfBlockV1 = operation.kind === "table"
-      ? { ...base, kind: "table", table: { columns: ["Colonne 1", "Colonne 2"], rows: [["", ""], ["", ""]] } }
+      ? { ...base, kind: "table", table: { columns: ["Colonne 1", "Colonne 2"], rows: [["", ""], ["", ""]], widthPercent: 100, cellPadding: 8 } }
       : { ...base, kind: "paragraph" };
     const blocks = [...source.blocks];
     blocks.splice(index + 1, 0, inserted);
@@ -218,6 +225,17 @@ export function applyEditablePdfOperation(source: EditablePdfSourceV1, operation
       }
       return { ...block, table };
     }
+    if (operation.type === "table-cell-list") {
+      if (!block.table) throw new Error("Ce bloc n’est pas un tableau.");
+      if (operation.row < 0 || operation.row >= block.table.rows.length) throw new Error("Ligne de tableau invalide.");
+      if (operation.column < 0 || operation.column >= block.table.columns.length) throw new Error("Colonne de tableau invalide.");
+      const table = { ...block.table, rows: block.table.rows.map((row) => [...row]) };
+      const current = table.rows[operation.row][operation.column];
+      table.rows[operation.row][operation.column] = operation.value
+        ? (current.trim() ? current.split("\n").map((line) => line.trim() && !/^\s*•\s*/.test(line) ? `• ${line}` : line).join("\n") : "• ")
+        : current.split("\n").map((line) => line.replace(/^(\s*)•\s*/, "$1")).join("\n");
+      return { ...block, table };
+    }
     if (operation.type === "table-row") {
       if (!block.table) throw new Error("Ce bloc n’est pas un tableau.");
       if (operation.action === "add") {
@@ -228,6 +246,23 @@ export function applyEditablePdfOperation(source: EditablePdfSourceV1, operation
       const row = operation.row ?? block.table.rows.length - 1;
       if (row < 0 || row >= block.table.rows.length) throw new Error("Ligne de tableau invalide.");
       return { ...block, table: { ...block.table, rows: block.table.rows.filter((_, index) => index !== row) } };
+    }
+    if (operation.type === "table-column") {
+      if (!block.table) throw new Error("Ce bloc n’est pas un tableau.");
+      if (operation.action === "add") {
+        if (block.table.columns.length >= 6) return block;
+        return { ...block, table: { ...block.table, columns: [...block.table.columns, `Colonne ${block.table.columns.length + 1}`], rows: block.table.rows.map((row) => [...row, ""]) } };
+      }
+      if (block.table.columns.length <= 1) return block;
+      const column = operation.column ?? block.table.columns.length - 1;
+      if (column < 0 || column >= block.table.columns.length) throw new Error("Colonne de tableau invalide.");
+      return { ...block, table: { ...block.table, columns: block.table.columns.filter((_, index) => index !== column), rows: block.table.rows.map((row) => row.filter((_, index) => index !== column)) } };
+    }
+    if (operation.type === "table-size") {
+      if (!block.table) throw new Error("Ce bloc n’est pas un tableau.");
+      const widthPercent = operation.widthPercent === undefined ? (block.table.widthPercent ?? 100) : clamp(Math.round(operation.widthPercent / 5) * 5, 50, 100);
+      const cellPadding = clamp((block.table.cellPadding ?? 8) + (operation.paddingDelta ?? 0), 4, 20);
+      return { ...block, table: { ...block.table, widthPercent, cellPadding } };
     }
     if (operation.type === "spacing") {
       const key = operation.edge === "before" ? "spaceBefore" : "spaceAfter";
@@ -253,7 +288,7 @@ function lineCount(text: string, charactersPerLine: number) {
 
 export function estimateEditablePdfBlockHeight(block: EditablePdfBlockV1) {
   if (block.kind === "table" && block.table) {
-    const rowHeight = Math.max(24, block.style.fontSize * block.style.lineHeight * 2 + 10);
+    const rowHeight = Math.max(24, block.style.fontSize * block.style.lineHeight * 2 + (block.table.cellPadding ?? 8) * 2);
     return block.style.spaceBefore + (block.table.rows.length + 1) * rowHeight + block.style.spaceAfter + 4;
   }
   const characters = Math.max(24, Math.floor(76 * (9.5 / block.style.fontSize)));
