@@ -39,9 +39,23 @@ test("les opérations visuelles modifient uniquement les blocs ciblés", () => {
 
 test("la taille et l’espacement restent dans les bornes éditoriales", () => {
   const tiny = applyEditablePdfOperation(NATHALIE_PROOF_SOURCE, { type: "font-size", blockId: "list-item-002", delta: -100 });
+  const exact = applyEditablePdfOperation(NATHALIE_PROOF_SOURCE, { type: "font-size-set", blockId: "list-item-002", value: 13.5 });
   const spaced = applyEditablePdfOperation(NATHALIE_PROOF_SOURCE, { type: "spacing", blockId: "list-item-002", edge: "after", delta: 200 });
-  assert.equal(tiny.blocks.find((block) => block.id === "list-item-002").style.fontSize, 7);
+  assert.equal(tiny.blocks.find((block) => block.id === "list-item-002").style.fontSize, 6);
+  assert.equal(exact.blocks.find((block) => block.id === "list-item-002").style.fontSize, 13.5);
   assert.equal(spaced.blocks.find((block) => block.id === "list-item-002").style.spaceAfter, 72);
+});
+
+test("le gras, le soulignement et l’ordre des blocs restent éditables", () => {
+  const blockId = NATHALIE_PROOF_SOURCE.blocks[1].id;
+  const nextId = NATHALIE_PROOF_SOURCE.blocks[2].id;
+  const bold = applyEditablePdfOperation(NATHALIE_PROOF_SOURCE, { type: "text-style", blockId, style: "bold", value: true });
+  const underlined = applyEditablePdfOperation(bold, { type: "text-style", blockId, style: "underline", value: true });
+  const moved = applyEditablePdfOperation(underlined, { type: "move-block", blockId, direction: "down" });
+  assert.equal(moved.blocks.find((block) => block.id === blockId).style.bold, true);
+  assert.equal(moved.blocks.find((block) => block.id === blockId).style.underline, true);
+  assert.equal(moved.blocks[1].id, nextId);
+  assert.equal(moved.blocks[2].id, blockId);
 });
 
 test("une couleur invalide et un bloc inconnu sont refusés", () => {

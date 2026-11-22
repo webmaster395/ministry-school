@@ -79,9 +79,9 @@ function FixedFurniture({ source }: { source: EditablePdfSourceV1 }) {
 }
 
 function blockFont(block: EditablePdfBlockV1) {
-  if (block.style.fontRole === "display") return "Times-Roman";
+  if (block.style.fontRole === "display") return block.style.bold ? "Times-Bold" : "Times-Roman";
   if (block.style.fontRole === "label") return "Helvetica-Bold";
-  return "Helvetica";
+  return block.style.bold ? "Helvetica-Bold" : "Helvetica";
 }
 
 function sectionParts(text: string) {
@@ -97,6 +97,7 @@ function EditableBlock({ block }: { block: EditablePdfBlockV1 }) {
     lineHeight: block.style.lineHeight,
     marginTop: block.style.spaceBefore,
     marginBottom: block.style.spaceAfter,
+    textDecoration: block.style.underline ? ("underline" as const) : undefined,
   };
 
   if (block.kind === "title") {

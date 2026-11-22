@@ -17,6 +17,8 @@ export type EditablePdfBlockV1 = {
     color: string;
     spaceBefore: number;
     spaceAfter: number;
+    bold?: boolean;
+    underline?: boolean;
   };
   breakBefore: boolean;
   listLevel?: number;
@@ -46,10 +48,13 @@ export type EditablePdfSourceV1 = {
 
 export type EditablePdfOperation =
   | { type: "font-size"; blockId: string; delta: number }
+  | { type: "font-size-set"; blockId: string; value: number }
   | { type: "color"; blockId: string; color: string }
+  | { type: "text-style"; blockId: string; style: "bold" | "underline"; value: boolean }
   | { type: "spacing"; blockId: string; edge: "before" | "after"; delta: number }
   | { type: "line-break"; blockId: string; index: number }
-  | { type: "page-break"; blockId: string; value: boolean };
+  | { type: "page-break"; blockId: string; value: boolean }
+  | { type: "move-block"; blockId: string; direction: "up" | "down" };
 
 export type EditablePdfPageGroup = {
   blocks: EditablePdfBlockV1[];
@@ -79,6 +84,8 @@ function isBlock(value: unknown): value is EditablePdfBlockV1 {
     && HEX_COLOR.test(style.color)
     && typeof style.spaceBefore === "number"
     && typeof style.spaceAfter === "number"
+    && (style.bold === undefined || typeof style.bold === "boolean")
+    && (style.underline === undefined || typeof style.underline === "boolean")
     && (block.listLevel === undefined || (Number.isInteger(block.listLevel) && block.listLevel >= 0 && block.listLevel <= 2));
 }
 
@@ -119,15 +126,30 @@ export function serializeEditablePdfSource(source: EditablePdfSourceV1) {
 }
 
 export function applyEditablePdfOperation(source: EditablePdfSourceV1, operation: EditablePdfOperation): EditablePdfSourceV1 {
+  if (operation.type === "move-block") {
+    const index = source.blocks.findIndex((block) => block.id === operation.blockId);
+    if (index < 0) throw new Error(`Bloc introuvable : ${operation.blockId}`);
+    const target = operation.direction === "up" ? index - 1 : index + 1;
+    if (target < 0 || target >= source.blocks.length) return source;
+    const blocks = [...source.blocks];
+    [blocks[index], blocks[target]] = [blocks[target], blocks[index]];
+    return { ...source, blocks };
+  }
+
   let found = false;
   const blocks = source.blocks.map((block) => {
     if (block.id !== operation.blockId) return block;
     found = true;
-    if (operation.type === "font-size") return { ...block, style: { ...block.style, fontSize: clamp(block.style.fontSize + operation.delta, 7, 42) } };
+    if (operation.type === "font-size") return { ...block, style: { ...block.style, fontSize: clamp(block.style.fontSize + operation.delta, 6, 72) } };
+    if (operation.type === "font-size-set") {
+      if (!Number.isFinite(operation.value)) throw new Error("Taille de police invalide.");
+      return { ...block, style: { ...block.style, fontSize: clamp(Math.round(operation.value * 2) / 2, 6, 72) } };
+    }
     if (operation.type === "color") {
       if (!HEX_COLOR.test(operation.color)) throw new Error("Couleur invalide.");
       return { ...block, style: { ...block.style, color: operation.color.toLowerCase() } };
     }
+    if (operation.type === "text-style") return { ...block, style: { ...block.style, [operation.style]: operation.value } };
     if (operation.type === "spacing") {
       const key = operation.edge === "before" ? "spaceBefore" : "spaceAfter";
       return { ...block, style: { ...block.style, [key]: clamp(block.style[key] + operation.delta, 0, 72) } };
