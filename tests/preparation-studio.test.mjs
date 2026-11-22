@@ -23,6 +23,8 @@ test("la page, les mutations et le PDF répètent le contrôle super admin", () 
   const pdf = source("src/app/api/admin/preparation/pdf/route.ts");
   const synthesisImport = source("src/app/api/admin/preparation/synthesis/import/route.ts");
   const synthesisPdf = source("src/app/api/admin/preparation/synthesis/pdf/route.ts");
+  const editablePdf = source("src/app/api/admin/preparation/editable-pdf/route.tsx");
+  const editablePdfImport = source("src/app/api/admin/preparation/editable-pdf/import/route.ts");
   assert.match(layout, /!viewer\?\.roles\.superAdmin/);
   assert.match(actions, /requireSuperAdmin/);
   assert.match(actions, /!viewer\?\.roles\.superAdmin/);
@@ -30,6 +32,10 @@ test("la page, les mutations et le PDF répètent le contrôle super admin", () 
   assert.match(pdf, /status: 403/);
   assert.match(synthesisImport, /!viewer\?\.roles\.superAdmin/);
   assert.match(synthesisPdf, /!viewer\?\.roles\.superAdmin/);
+  assert.match(editablePdf, /!viewer\?\.roles\.superAdmin/);
+  assert.match(editablePdf, /status: 403/);
+  assert.match(editablePdfImport, /!viewer\?\.roles\.superAdmin/);
+  assert.match(editablePdfImport, /MAX_PDF_BYTES/);
 });
 
 test("Préparation propose les modes Programme et Synthèse", () => {
@@ -42,41 +48,38 @@ test("Préparation propose les modes Programme et Synthèse", () => {
   assert.match(tabs, /role="tablist"/);
 });
 
-test("une synthèse accepte un Word ou un copier-coller sans perdre le texte", () => {
+test("une synthèse importe un PDF compatible et limite l’édition aux opérations simples", () => {
   const studio = source("src/components/preparation/SynthesisStudio.tsx");
-  const importer = source("src/app/api/admin/preparation/synthesis/import/route.ts");
-  const synthesis = source("src/lib/preparation/synthesis.ts");
-  assert.match(studio, /Importer un Word/);
-  assert.match(studio, /Structurer le texte/);
-  assert.match(studio, /Texte intégral/);
-  assert.match(importer, /mammoth\.convertToHtml/);
-  assert.match(importer, /MAX_WORD_BYTES/);
-  assert.match(importer, /blocks\.length >= 800/);
-  assert.match(synthesis, /blocksFromPastedText/);
-  assert.match(synthesis, /slice\(0, 800\)/);
+  assert.match(studio, /Importer un PDF/);
+  assert.match(studio, /application\/pdf/);
+  assert.match(studio, /EDITABLE_PDF_ATTACHMENT_NAME/);
+  assert.match(studio, /convertPdfToSource/);
+  assert.match(studio, /editable-pdf\/import/);
+  assert.match(studio, /font-size/);
+  assert.match(studio, /line-break/);
+  assert.match(studio, /page-break/);
+  assert.match(studio, /Annuler/);
+  assert.match(studio, /Rétablir/);
+  assert.match(studio, /Lecture seule/);
+  assert.doesNotMatch(studio, /Importer un Word|Structurer le texte|Couleur du titre/);
 });
 
-test("les synthèses ont une couverture sombre et des pages blanches avec titres colorables", () => {
+test("l’éditeur PDF présente la couverture sombre et les pages blanches cliquables", () => {
   const studio = source("src/components/preparation/SynthesisStudio.tsx");
-  const preview = source("src/components/preparation/SynthesisPreview.tsx");
-  const styles = source("src/components/preparation/SynthesisPreview.module.css");
-  assert.match(studio, /MINISTRY_PROGRAM_COLORS/);
-  assert.match(studio, /Couleur du titre/);
-  assert.match(preview, /data-synthesis-page/);
-  assert.match(preview, /coverImage/);
-  assert.match(styles, /background: #101816/);
-  assert.match(styles, /background: #fffdfa/);
-  assert.match(styles, /--block-color/);
+  assert.match(studio, /bg-\[#25302f\]/);
+  assert.match(studio, /bg-\[#fffcf7\]/);
+  assert.match(studio, /data-editable-pdf-block/);
+  assert.match(studio, /FloatingTools/);
+  assert.match(studio, /Exemple Nathalie/);
 });
 
-test("l’export Synthèse produit un PDF A4 vectoriel multipage", () => {
-  const pdf = source("src/app/api/admin/preparation/synthesis/pdf/route.ts");
-  assert.match(pdf, /PDFDocument\.create/);
-  assert.match(pdf, /registerFontkit/);
-  assert.match(pdf, /hero-formation-programme\.jpg/);
-  assert.match(pdf, /page\.drawText/);
-  assert.match(pdf, /if \(y < 58\)/);
-  assert.match(pdf, /Ministry-School-Synthese-\$\{synthesis\.date\}\.pdf/);
+test("l’export de l’éditeur réutilise le moteur commun et rattache la source", () => {
+  const pdf = source("src/app/api/admin/preparation/editable-pdf/route.tsx");
+  assert.match(pdf, /EditablePdfProofDocument/);
+  assert.match(pdf, /renderToBuffer/);
+  assert.match(pdf, /attachEditablePdfSource/);
+  assert.match(pdf, /isEditablePdfSource/);
+  assert.match(pdf, /private, no-store/);
 });
 
 test("les brouillons Programme et Synthèse sont chargés en une requête Supabase", () => {

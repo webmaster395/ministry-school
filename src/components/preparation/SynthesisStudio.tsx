@@ -1,276 +1,315 @@
 "use client";
 
-import { useDeferredValue, useRef, useState } from "react";
+import Image from "next/image";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent, type RefObject } from "react";
 import {
-  ArrowDown,
-  ArrowUp,
-  Check,
-  ChevronDown,
-  Copy,
+  CornerDownLeft,
   Download,
+  FileDown,
   FileText,
-  ImageDown,
   LoaderCircle,
   Minus,
   Plus,
-  Save,
-  Sparkles,
-  Trash2,
+  Redo2,
+  Undo2,
   Upload,
 } from "lucide-react";
 import {
-  deleteSynthesisDraft,
-  duplicateSynthesisDraft,
-  saveSynthesisDraft,
-} from "@/app/gestion/preparation/actions";
-import { MINISTRY_PROGRAM_COLORS } from "@/lib/preparation/program";
-import {
-  blocksFromPastedText,
-  createEmptySynthesis,
-  formatSynthesisDate,
-  normalizeTrainingSynthesis,
-  type SynthesisBlock,
-  type SynthesisDraft,
-  type TrainingSynthesis,
-} from "@/lib/preparation/synthesis";
+  EDITABLE_PDF_ATTACHMENT_NAME,
+  applyEditablePdfOperation,
+  paginateEditablePdfBlocks,
+  parseEditablePdfSource,
+  type EditablePdfBlockV1,
+  type EditablePdfOperation,
+  type EditablePdfSourceV1,
+} from "@/lib/preparation/editable-pdf-source";
+import type { SynthesisDraft, TrainingSynthesis } from "@/lib/preparation/synthesis";
 import PreparationModeTabs, { type PreparationMode } from "./PreparationModeTabs";
-import SynthesisPreview from "./SynthesisPreview";
 
-const fieldClass = "mt-1 min-h-11 w-full rounded-lg border border-border px-3 py-2.5 text-sm";
+const A4 = { width: 720, height: 1018 };
+const STRIPES = ["#c9dc6a", "#27bdc2", "#ee9a9c", "#f19f00", "#e34d1b"];
 
-function newBlock(type: SynthesisBlock["type"] = "paragraph"): SynthesisBlock {
-  return { id: crypto.randomUUID(), type, level: 1, text: "", color: "#59c9ca" };
-}
-
-function BlockEditor({ block, index, count, onChange, onMove, onDelete }: {
-  block: SynthesisBlock;
-  index: number;
-  count: number;
-  onChange: (patch: Partial<SynthesisBlock>) => void;
-  onMove: (direction: -1 | 1) => void;
-  onDelete: () => void;
-}) {
-  return <article className="rounded-xl border border-border bg-background p-3 [content-visibility:auto] [contain-intrinsic-size:180px]">
-    <div className="flex flex-wrap items-center gap-2">
-      <select value={block.type} onChange={(event) => onChange({ type: event.target.value as SynthesisBlock["type"] })} aria-label={`Type du bloc ${index + 1}`} className="min-h-9 rounded-lg border border-border bg-background px-2 text-xs font-semibold">
-        <option value="heading">Titre</option><option value="paragraph">Paragraphe</option><option value="bullet">Liste</option><option value="quote">Citation</option>
-      </select>
-      {block.type === "heading" ? <div className="flex rounded-lg border border-border p-0.5" aria-label="Niveau du titre">{([1, 2, 3] as const).map((level) => <button key={level} type="button" onClick={() => onChange({ level })} className={`h-8 min-w-8 rounded-md text-xs font-semibold ${block.level === level ? "bg-accent text-on-accent" : "text-muted"}`}>T{level}</button>)}</div> : null}
-      <span className="ml-auto text-[10px] text-muted">{index + 1}/{count}</span>
-      <button type="button" aria-label="Monter" disabled={index === 0} onClick={() => onMove(-1)} className="rounded-md p-1.5 text-muted hover:bg-surface disabled:opacity-30"><ArrowUp size={14} /></button>
-      <button type="button" aria-label="Descendre" disabled={index === count - 1} onClick={() => onMove(1)} className="rounded-md p-1.5 text-muted hover:bg-surface disabled:opacity-30"><ArrowDown size={14} /></button>
-      <button type="button" aria-label="Supprimer" onClick={onDelete} className="rounded-md p-1.5 text-red-700 hover:bg-red-50"><Trash2 size={14} /></button>
-    </div>
-    {block.type === "heading" ? <div className="mt-3 flex flex-wrap gap-2" aria-label="Couleur du titre">{MINISTRY_PROGRAM_COLORS.map((color) => <button key={color.value} type="button" title={color.label} aria-label={`Couleur ${color.label}`} aria-pressed={block.color === color.value} onClick={() => onChange({ color: color.value })} className={`h-7 w-7 rounded-full border-2 transition ${block.color === color.value ? "scale-110 border-foreground" : "border-transparent"}`} style={{ backgroundColor: color.value }} />)}</div> : null}
-    <textarea rows={block.type === "heading" ? 2 : 3} value={block.text} onChange={(event) => onChange({ text: event.target.value })} placeholder={block.type === "heading" ? "Titre de section" : "Texte intégral"} className={`${fieldClass} resize-y leading-relaxed`} />
-  </article>;
-}
-
-export default function SynthesisStudio({ initialSynthesis, initialDrafts, draftsUnavailable, creatorName, onModeChange }: {
+type StudioProps = {
   initialSynthesis: TrainingSynthesis;
   initialDrafts: SynthesisDraft[];
   draftsUnavailable: string | null;
   creatorName: string;
   onModeChange: (mode: PreparationMode) => void;
+};
+
+function sectionParts(text: string) {
+  const match = text.match(/^(\d+)\.\s*([\s\S]*)$/);
+  return match ? { label: `Section ${match[1].padStart(2, "0")}`, title: match[2] } : { label: "Section", title: text };
+}
+
+function rowsFor(block: EditablePdfBlockV1) {
+  const characters = Math.max(24, Math.floor(72 * (9.5 / block.style.fontSize)));
+  return block.text.split("\n").reduce((total, line) => total + Math.max(1, Math.ceil(line.length / characters)), 0);
+}
+
+function downloadBlob(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.click();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1200);
+}
+
+function FloatingTools({ block, onOperation, onLineBreak }: {
+  block: EditablePdfBlockV1;
+  onOperation: (operation: EditablePdfOperation) => void;
+  onLineBreak: () => void;
 }) {
-  const [synthesis, setSynthesis] = useState(() => normalizeTrainingSynthesis(initialSynthesis));
-  const deferredSynthesis = useDeferredValue(synthesis);
-  const [drafts, setDrafts] = useState(() => initialDrafts.map((draft) => ({ ...draft, payload: normalizeTrainingSynthesis(draft.payload) })));
-  const [draftId, setDraftId] = useState<string | null>(null);
-  const [dirty, setDirty] = useState(false);
-  const [busy, setBusy] = useState<"save" | "import" | "export" | "png" | "duplicate" | "delete" | null>(null);
+  const keepFocus = (event: MouseEvent) => event.preventDefault();
+  const button = "inline-flex h-8 min-w-8 items-center justify-center rounded-md px-2 text-xs font-semibold text-white hover:bg-white/15 disabled:opacity-40";
+  return <div role="toolbar" aria-label="Mise en forme du paragraphe" onMouseDown={keepFocus} className="absolute -top-11 left-0 z-30 flex items-center gap-0.5 rounded-lg bg-[#202b2a] p-1 shadow-xl">
+    <button type="button" title="Réduire la taille" aria-label="Réduire la taille" className={button} onClick={() => onOperation({ type: "font-size", blockId: block.id, delta: -1 })}><Minus size={14} /></button>
+    <span className="min-w-10 px-1 text-center text-[10px] text-white/70">{block.style.fontSize} pt</span>
+    <button type="button" title="Augmenter la taille" aria-label="Augmenter la taille" className={button} onClick={() => onOperation({ type: "font-size", blockId: block.id, delta: 1 })}><Plus size={14} /></button>
+    <span className="mx-1 h-5 w-px bg-white/20" />
+    <button type="button" title="Insérer un retour à la ligne au curseur" className={button} onClick={onLineBreak}><CornerDownLeft size={14} /><span className="ml-1.5 hidden sm:inline">Ligne</span></button>
+    <button type="button" title={block.breakBefore ? "Retirer le saut de page" : "Envoyer à la page suivante"} className={button} onClick={() => onOperation({ type: "page-break", blockId: block.id, value: !block.breakBefore })}><FileDown size={14} /><span className="ml-1.5 hidden sm:inline">Page</span></button>
+  </div>;
+}
+
+function EditableBlock({ block, selected, onSelect, onOperation, onLineBreak, textRef }: {
+  block: EditablePdfBlockV1;
+  selected: boolean;
+  onSelect: () => void;
+  onOperation: (operation: EditablePdfOperation) => void;
+  onLineBreak: () => void;
+  textRef: RefObject<HTMLTextAreaElement | null>;
+}) {
+  const fontSize = block.style.fontSize * 1.34;
+  const rows = rowsFor(block);
+  const textStyle: CSSProperties = {
+    color: block.style.color,
+    fontFamily: block.style.fontRole === "display" ? "var(--font-title)" : "var(--font-body)",
+    fontSize,
+    lineHeight: block.style.lineHeight,
+    height: Math.max(fontSize * block.style.lineHeight * rows + 3, fontSize * 1.4),
+  };
+  const wrapperStyle: CSSProperties = {
+    marginTop: block.style.spaceBefore * 1.15,
+    marginBottom: block.style.spaceAfter * 1.15,
+  };
+  const textarea = <textarea
+    ref={selected ? textRef : undefined}
+    readOnly
+    value={block.text}
+    aria-label={`Texte : ${block.text.slice(0, 60)}`}
+    onFocus={onSelect}
+    onClick={(event) => { event.stopPropagation(); onSelect(); }}
+    style={textStyle}
+    className="block w-full cursor-text resize-none overflow-hidden border-0 bg-transparent p-0 outline-none selection:bg-[#27bdc2]/30"
+  />;
+
+  return <div data-editable-pdf-block={block.id} className={`relative rounded-sm ${selected ? "ring-2 ring-[#27bdc2]/70 ring-offset-4 ring-offset-[#fffcf7]" : "hover:ring-1 hover:ring-black/15"}`} style={wrapperStyle} onClick={onSelect}>
+    {selected ? <FloatingTools block={block} onOperation={onOperation} onLineBreak={onLineBreak} /> : null}
+    {block.breakBefore ? <span className="absolute -top-3 right-0 text-[7px] font-semibold uppercase tracking-[0.12em] text-[#27a8bd]">Saut de page</span> : null}
+    {block.kind === "title" ? (() => {
+      const section = sectionParts(block.text);
+      return <div className="pb-4"><p className="mb-3 text-[10px] font-bold uppercase tracking-[0.16em] text-[#27a8bd]">{section.label}</p><textarea ref={selected ? textRef : undefined} readOnly value={section.title} aria-label={`Titre : ${section.title}`} onFocus={onSelect} onClick={(event) => { event.stopPropagation(); onSelect(); }} style={{ ...textStyle, height: Math.max(58, textStyle.height as number) }} className="block w-full cursor-text resize-none overflow-hidden border-0 bg-transparent p-0 font-title outline-none selection:bg-[#27bdc2]/30" /><div className="mx-auto mt-5 h-[3px] w-16 bg-[#27bdc2]" /></div>;
+    })() : block.kind === "list-item" ? <div className="flex gap-3"><span className={`pt-0.5 text-sm font-bold ${(block.listLevel ?? 0) > 0 ? "text-[#f19f00]" : "text-[#27bdc2]"}`}>{(block.listLevel ?? 0) > 0 ? "–" : "•"}</span>{textarea}</div> : block.kind === "quote" ? <div className="border border-[#d9d7d0] border-l-4 border-l-[#27bdc2] bg-white px-5 py-4">{textarea}</div> : textarea}
+  </div>;
+}
+
+export default function SynthesisStudio({ onModeChange }: StudioProps) {
+  const [source, setSource] = useState<EditablePdfSourceV1 | null>(null);
+  const [past, setPast] = useState<EditablePdfSourceV1[]>([]);
+  const [future, setFuture] = useState<EditablePdfSourceV1[]>([]);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [busy, setBusy] = useState<"import" | "demo" | "export" | null>(null);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
-  const [paste, setPaste] = useState("");
-  const [mobileTab, setMobileTab] = useState<"edit" | "preview">("edit");
-  const [zoom, setZoom] = useState(0.72);
-  const [fitWidth, setFitWidth] = useState(true);
+  const [readonlyUrl, setReadonlyUrl] = useState<string | null>(null);
+  const [filename, setFilename] = useState("");
+  const [zoom, setZoom] = useState(0.78);
   const fileInput = useRef<HTMLInputElement>(null);
+  const selectedText = useRef<HTMLTextAreaElement>(null);
+  const pages = useMemo(() => source ? paginateEditablePdfBlocks(source.blocks) : [], [source]);
 
-  const change = (update: (current: TrainingSynthesis) => TrainingSynthesis) => {
-    setSynthesis((current) => update(current));
-    setDirty(true);
-    setMessage(null);
+  useEffect(() => () => { if (readonlyUrl) URL.revokeObjectURL(readonlyUrl); }, [readonlyUrl]);
+
+  const replaceReadonlyUrl = (next: string | null) => {
+    setReadonlyUrl((current) => {
+      if (current) URL.revokeObjectURL(current);
+      return next;
+    });
   };
 
-  const updateBlock = (index: number, patch: Partial<SynthesisBlock>) => change((current) => ({ ...current, blocks: current.blocks.map((block, position) => position === index ? { ...block, ...patch } : block) }));
-  const moveBlock = (index: number, direction: -1 | 1) => change((current) => {
-    const blocks = [...current.blocks];
-    const target = index + direction;
-    if (target < 0 || target >= blocks.length) return current;
-    [blocks[index], blocks[target]] = [blocks[target], blocks[index]];
-    return { ...current, blocks };
-  });
-
-  const loadDraft = (id: string) => {
-    const draft = drafts.find((item) => item.id === id);
-    if (!draft) return;
-    if (dirty && !window.confirm("Ouvrir ce brouillon remplacera les modifications non enregistrées. Continuer ?")) return;
-    setSynthesis(normalizeTrainingSynthesis(draft.payload));
-    setDraftId(draft.id);
-    setDirty(false);
-    setMessage({ type: "success", text: "Synthèse chargée." });
+  const installSource = (next: EditablePdfSourceV1, name: string, success = "PDF compatible chargé. Cliquez directement sur un texte.") => {
+    replaceReadonlyUrl(null);
+    setSource(next);
+    setPast([]);
+    setFuture([]);
+    setSelectedId(null);
+    setFilename(name);
+    setMessage({ type: "success", text: success });
   };
 
-  const startNew = () => {
-    if (dirty && !window.confirm("Créer une nouvelle synthèse abandonnera les modifications non enregistrées. Continuer ?")) return;
-    setSynthesis(createEmptySynthesis());
-    setDraftId(null);
-    setPaste("");
-    setDirty(false);
-    setMessage(null);
+  const readCompatibleSource = async (blob: Blob) => {
+    const {
+      PDFArray,
+      PDFDict,
+      PDFDocument,
+      PDFHexString,
+      PDFName,
+      PDFRawStream,
+      PDFString,
+      decodePDFRawStream,
+    } = await import("pdf-lib");
+    const document = await PDFDocument.load(new Uint8Array(await blob.arrayBuffer()));
+    const names = document.catalog.lookupMaybe(PDFName.of("Names"), PDFDict);
+    const embeddedFiles = names?.lookupMaybe(PDFName.of("EmbeddedFiles"), PDFDict);
+    const attachments = embeddedFiles?.lookupMaybe(PDFName.of("Names"), PDFArray);
+
+    for (let index = 0; index < (attachments?.size() ?? 0); index += 2) {
+      const rawName = attachments!.lookup(index);
+      const name = rawName instanceof PDFString || rawName instanceof PDFHexString ? rawName.decodeText() : "";
+      if (name !== EDITABLE_PDF_ATTACHMENT_NAME) continue;
+      const fileSpec = attachments!.lookup(index + 1, PDFDict);
+      const embeddedFile = fileSpec.lookup(PDFName.of("EF"), PDFDict);
+      const stream = embeddedFile.lookup(PDFName.of("F"));
+      if (!(stream instanceof PDFRawStream)) throw new Error("La source intégrée au PDF est illisible.");
+      return parseEditablePdfSource(decodePDFRawStream(stream).decode());
+    }
+
+    throw new Error("Ce PDF ne contient pas la source Ministry School nécessaire pour déplacer le texte sans l’abîmer.");
   };
 
-  const importWord = async (file: File) => {
+  const convertPdfToSource = async (file: File) => {
+    const endpoint = window.location.pathname === "/preview/editable-pdf-proof"
+      ? "/api/preview/editable-pdf-proof"
+      : "/api/admin/preparation/editable-pdf/import";
+    const form = new FormData();
+    form.set("file", file);
+    const response = await fetch(endpoint, { method: "POST", body: form });
+    const result = await response.json().catch(() => null) as { source?: unknown; warning?: string; error?: string } | null;
+    if (!response.ok || !result?.source) throw new Error(result?.error || (response.redirected ? "Votre session a expiré. Reconnectez-vous avant d’importer." : "Ce PDF n’a pas pu être converti."));
+    return { source: parseEditablePdfSource(JSON.stringify(result.source)), warning: result.warning };
+  };
+
+  const importPdf = async (file: File) => {
     setBusy("import");
     setMessage(null);
     try {
-      const form = new FormData();
-      form.set("file", file);
-      const response = await fetch("/api/admin/preparation/synthesis/import", { method: "POST", body: form });
-      const result = await response.json().catch(() => null) as { synthesis?: TrainingSynthesis; importedBlocks?: number; error?: string } | null;
-      if (!response.ok || !result?.synthesis) throw new Error(result?.error || "Import Word impossible.");
-      const imported = normalizeTrainingSynthesis(result.synthesis);
-      change((current) => ({ ...imported, coverImage: current.coverImage }));
-      setDraftId(null);
-      setMessage({ type: "success", text: `${result.importedBlocks ?? imported.blocks.length} éléments importés. Tout le texte reste modifiable.` });
+      try {
+        installSource(await readCompatibleSource(file), file.name);
+      } catch {
+        const converted = await convertPdfToSource(file);
+        installSource(converted.source, file.name, `${converted.warning ?? "PDF converti sans réécriture."} Cliquez sur un texte pour l’ajuster.`);
+      }
     } catch (error) {
-      setMessage({ type: "error", text: error instanceof Error ? error.message : "Import Word impossible." });
+      setSource(null);
+      setPast([]);
+      setFuture([]);
+      replaceReadonlyUrl(URL.createObjectURL(file));
+      setFilename(file.name);
+      setMessage({ type: "error", text: error instanceof Error ? `${error.message} Il reste affiché en lecture seule.` : "PDF incompatible." });
     } finally {
       setBusy(null);
       if (fileInput.current) fileInput.current.value = "";
     }
   };
 
-  const structurePaste = () => {
-    const blocks = blocksFromPastedText(paste);
-    if (!blocks.length) return setMessage({ type: "error", text: "Collez d’abord le texte de la synthèse." });
-    change((current) => ({ ...current, blocks }));
-    setMessage({ type: "success", text: `${blocks.length} éléments structurés. Vous pouvez corriger chaque titre et paragraphe.` });
-  };
-
-  const save = async () => {
-    setBusy("save");
+  const loadDemo = async () => {
+    setBusy("demo");
     setMessage(null);
     try {
-      const saved = await saveSynthesisDraft({ id: draftId, synthesis });
-      setDrafts((current) => [saved, ...current.filter((item) => item.id !== saved.id)]);
-      setDraftId(saved.id);
-      setSynthesis(normalizeTrainingSynthesis(saved.payload));
-      setDirty(false);
-      setMessage({ type: "success", text: "Synthèse enregistrée." });
+      const response = await fetch("/api/preview/editable-pdf-proof");
+      if (!response.ok) throw new Error("L’exemple n’est pas disponible.");
+      const blob = await response.blob();
+      installSource(await readCompatibleSource(blob), "Ministry-School-Nathalie.pdf");
     } catch (error) {
-      setMessage({ type: "error", text: error instanceof Error ? error.message : "Enregistrement impossible." });
+      setMessage({ type: "error", text: error instanceof Error ? error.message : "Chargement impossible." });
     } finally { setBusy(null); }
   };
 
-  const duplicate = async () => {
-    if (!draftId) return;
-    setBusy("duplicate");
-    try {
-      const copy = await duplicateSynthesisDraft(draftId);
-      setDrafts((current) => [copy, ...current]);
-      setDraftId(copy.id);
-      setSynthesis(normalizeTrainingSynthesis(copy.payload));
-      setDirty(false);
-      setMessage({ type: "success", text: "Synthèse dupliquée." });
-    } catch (error) { setMessage({ type: "error", text: error instanceof Error ? error.message : "Duplication impossible." }); }
-    finally { setBusy(null); }
+  const commitOperation = (operation: EditablePdfOperation) => {
+    setSource((current) => {
+      if (!current) return current;
+      const next = applyEditablePdfOperation(current, operation);
+      setPast((history) => [...history.slice(-49), current]);
+      setFuture([]);
+      return next;
+    });
   };
 
-  const remove = async () => {
-    if (!draftId || !window.confirm("Supprimer définitivement cette synthèse ?")) return;
-    setBusy("delete");
-    try {
-      await deleteSynthesisDraft(draftId);
-      setDrafts((current) => current.filter((item) => item.id !== draftId));
-      setSynthesis(createEmptySynthesis());
-      setDraftId(null);
-      setDirty(false);
-      setMessage({ type: "success", text: "Synthèse supprimée." });
-    } catch (error) { setMessage({ type: "error", text: error instanceof Error ? error.message : "Suppression impossible." }); }
-    finally { setBusy(null); }
+  const insertLineBreak = () => {
+    if (!source || !selectedId) return;
+    const block = source.blocks.find((item) => item.id === selectedId);
+    if (!block) return;
+    const titlePrefixLength = block.kind === "title" ? block.text.length - sectionParts(block.text).title.length : 0;
+    const index = (selectedText.current?.selectionStart ?? block.text.length) + titlePrefixLength;
+    commitOperation({ type: "line-break", blockId: selectedId, index });
+    window.setTimeout(() => {
+      selectedText.current?.focus();
+      selectedText.current?.setSelectionRange(index + 1, index + 1);
+    });
   };
 
-  const downloadBlob = (blob: Blob, filename: string) => {
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = filename;
-    link.click();
-    window.setTimeout(() => URL.revokeObjectURL(url), 1200);
+  const undo = () => {
+    if (!source || !past.length) return;
+    const previous = past.at(-1)!;
+    setPast((history) => history.slice(0, -1));
+    setFuture((history) => [source, ...history].slice(0, 50));
+    setSource(previous);
+  };
+
+  const redo = () => {
+    if (!source || !future.length) return;
+    const next = future[0];
+    setFuture((history) => history.slice(1));
+    setPast((history) => [...history.slice(-49), source]);
+    setSource(next);
   };
 
   const exportPdf = async () => {
+    if (!source) return;
     setBusy("export");
     setMessage(null);
     try {
-      const response = await fetch("/api/admin/preparation/synthesis/pdf", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ synthesis }) });
-      if (!response.ok) {
-        const result = await response.json().catch(() => null) as { error?: string } | null;
-        throw new Error(result?.error || "Export PDF impossible.");
+      const endpoint = window.location.pathname === "/preview/editable-pdf-proof"
+        ? "/api/preview/editable-pdf-proof"
+        : "/api/admin/preparation/editable-pdf";
+      const response = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ source }) });
+      const result = response.ok ? null : await response.json().catch(() => null) as { error?: string } | null;
+      if (!response.ok) throw new Error(result?.error || "Export impossible.");
+      if (!response.headers.get("content-type")?.includes("application/pdf")) {
+        throw new Error(response.redirected ? "Votre session a expiré. Reconnectez-vous avant d’exporter." : "Le serveur n’a pas renvoyé un PDF valide.");
       }
-      downloadBlob(await response.blob(), `Ministry-School-Synthese-${synthesis.date}.pdf`);
-      setMessage({ type: "success", text: "PDF généré avec succès." });
-    } catch (error) { setMessage({ type: "error", text: error instanceof Error ? error.message : "Export PDF impossible." }); }
-    finally { setBusy(null); }
-  };
-
-  const exportPng = async () => {
-    setBusy("png");
-    setMessage(null);
-    try {
-      const pages = Array.from(document.querySelectorAll<HTMLElement>("[data-synthesis-page]"));
-      if (!pages.length) throw new Error("Aucune page à exporter.");
-      await document.fonts.ready;
-      const { toPng } = await import("html-to-image");
-      for (let index = 0; index < pages.length; index++) {
-        const data = await toPng(pages[index], { width: 720, height: 1018, pixelRatio: 2, cacheBust: true, backgroundColor: index === 0 ? "#101816" : "#fffdfa", style: { inset: "auto", position: "relative", transform: "none" } });
-        const blob = await (await fetch(data)).blob();
-        downloadBlob(blob, `Ministry-School-Synthese-${synthesis.date}-page-${index + 1}.png`);
-      }
-      setMessage({ type: "success", text: `${pages.length} page${pages.length > 1 ? "s" : ""} PNG générée${pages.length > 1 ? "s" : ""}.` });
-    } catch (error) { setMessage({ type: "error", text: error instanceof Error ? error.message : "Export PNG impossible." }); }
-    finally { setBusy(null); }
-  };
-
-  const fitPreview = () => {
-    const available = window.innerWidth >= 1024 ? window.innerWidth * 0.6 - 88 : window.innerWidth - 32;
-    setFitWidth(true);
-    setZoom(Math.max(0.4, Math.min(1.15, Number((available / 720).toFixed(2)))));
+      downloadBlob(await response.blob(), `Ministry-School-Synthese-${source.document.date}.pdf`);
+      setMessage({ type: "success", text: "PDF exporté avec sa source éditable." });
+    } catch (error) {
+      setMessage({ type: "error", text: error instanceof Error ? error.message : "Export impossible." });
+    } finally { setBusy(null); }
   };
 
   return <div className="-mx-4 -mt-2 sm:-mx-7">
-    <header className="border-b border-border bg-background px-4 pb-4 pt-1 sm:px-7">
+    <header className="sticky top-0 z-40 border-b border-border bg-background/95 px-4 pb-4 pt-1 backdrop-blur sm:px-7">
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <div><p className="label text-[10px] text-link">Studio éditorial</p><h1 className="font-title mt-1 text-[30px] leading-tight sm:text-[36px]">Préparation</h1><p className="mt-1 text-sm text-muted">Transformez un Word ou un texte collé en synthèse institutionnelle.</p><PreparationModeTabs mode="synthesis" onChange={onModeChange} /></div>
+        <div><p className="label text-[10px] text-link">Éditeur PDF simple</p><h1 className="font-title mt-1 text-[30px] leading-tight sm:text-[36px]">Préparation</h1><p className="mt-1 text-sm text-muted">Importez le PDF, cliquez sur un texte, ajustez-le.</p><PreparationModeTabs mode="synthesis" onChange={onModeChange} /></div>
         <div className="flex flex-wrap items-center gap-2">
-          <button type="button" onClick={startNew} className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-border bg-background px-4 text-sm font-semibold hover:border-foreground"><FileText size={16} /> Nouvelle</button>
-          <button type="button" onClick={save} disabled={!!busy || !!draftsUnavailable} className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-border bg-background px-4 text-sm font-semibold hover:border-foreground disabled:opacity-50">{busy === "save" ? <LoaderCircle className="animate-spin" size={16} /> : <Save size={16} />} Enregistrer</button>
-          <button type="button" onClick={exportPng} disabled={!!busy} className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-border bg-background px-4 text-sm font-semibold hover:border-foreground disabled:opacity-50">{busy === "png" ? <LoaderCircle className="animate-spin" size={16} /> : <ImageDown size={16} />} PNG</button>
-          <button type="button" onClick={exportPdf} disabled={!!busy} className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-accent px-4 text-sm font-semibold text-on-accent disabled:opacity-50">{busy === "export" ? <LoaderCircle className="animate-spin" size={16} /> : <Download size={16} />} PDF</button>
+          <input ref={fileInput} type="file" accept=".pdf,application/pdf" className="sr-only" onChange={(event) => { const file = event.target.files?.[0]; if (file) void importPdf(file); }} />
+          <button type="button" onClick={() => fileInput.current?.click()} disabled={!!busy} className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-border bg-background px-4 text-sm font-semibold hover:border-foreground disabled:opacity-50">{busy === "import" ? <LoaderCircle className="animate-spin" size={16} /> : <Upload size={16} />} Importer un PDF</button>
+          <button type="button" onClick={loadDemo} disabled={!!busy} className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-border bg-background px-4 text-sm font-semibold hover:border-foreground disabled:opacity-50">{busy === "demo" ? <LoaderCircle className="animate-spin" size={16} /> : <FileText size={16} />} Exemple Nathalie</button>
+          <div className="flex rounded-lg border border-border bg-background p-1"><button type="button" onClick={undo} disabled={!past.length} aria-label="Annuler" className="rounded-md p-2 hover:bg-surface disabled:opacity-30"><Undo2 size={16} /></button><button type="button" onClick={redo} disabled={!future.length} aria-label="Rétablir" className="rounded-md p-2 hover:bg-surface disabled:opacity-30"><Redo2 size={16} /></button></div>
+          <button type="button" onClick={exportPdf} disabled={!source || !!busy} className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-accent px-4 text-sm font-semibold text-on-accent disabled:opacity-50">{busy === "export" ? <LoaderCircle className="animate-spin" size={16} /> : <Download size={16} />} Exporter</button>
         </div>
       </div>
-      <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-muted"><span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 ${dirty ? "bg-amber-50 text-amber-900" : "bg-emerald-50 text-emerald-800"}`}>{dirty ? "Modifications non enregistrées" : <><Check size={13} /> À jour</>}</span>{creatorName ? <span>Connecté : {creatorName}</span> : null}</div>
-      {draftsUnavailable ? <p role="alert" className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">{draftsUnavailable}</p> : null}
-      {message ? <p role="status" className={`mt-3 rounded-lg border px-3 py-2 text-sm ${message.type === "success" ? "border-emerald-200 bg-emerald-50 text-emerald-900" : "border-red-200 bg-red-50 text-red-900"}`}>{message.text}</p> : null}
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-xs text-muted"><span>{filename || "Aucun PDF chargé"}</span><div className="flex items-center gap-1"><button type="button" aria-label="Zoom arrière" onClick={() => setZoom((value) => Math.max(0.45, Number((value - 0.08).toFixed(2))))} className="rounded-md p-2 hover:bg-surface"><Minus size={14} /></button><span className="min-w-11 text-center font-semibold">{Math.round(zoom * 100)}%</span><button type="button" aria-label="Zoom avant" onClick={() => setZoom((value) => Math.min(1.1, Number((value + 0.08).toFixed(2))))} className="rounded-md p-2 hover:bg-surface"><Plus size={14} /></button></div></div>
+      {message ? <p role="status" className={`mt-3 rounded-lg border px-3 py-2 text-sm ${message.type === "success" ? "border-emerald-200 bg-emerald-50 text-emerald-900" : "border-amber-200 bg-amber-50 text-amber-950"}`}>{message.text}</p> : null}
     </header>
 
-    <div className="grid grid-cols-2 border-b border-border bg-background lg:hidden"><button type="button" onClick={() => setMobileTab("edit")} className={`min-h-11 text-sm font-semibold ${mobileTab === "edit" ? "border-b-2 border-foreground" : "text-muted"}`}>Édition</button><button type="button" onClick={() => setMobileTab("preview")} className={`min-h-11 text-sm font-semibold ${mobileTab === "preview" ? "border-b-2 border-foreground" : "text-muted"}`}>Aperçu</button></div>
-
-    <div className="grid min-h-[calc(100vh-180px)] lg:grid-cols-[minmax(380px,40%)_minmax(0,60%)]">
-      <aside className={`${mobileTab === "preview" ? "hidden" : "block"} border-r border-border bg-surface p-4 lg:block lg:max-h-[calc(100vh-64px)] lg:overflow-y-auto sm:p-5`}>
-        <div className="space-y-5">
-          <details className="group rounded-xl border border-border bg-background" open={drafts.length > 0}><summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3 text-sm font-semibold [&::-webkit-details-marker]:hidden">Synthèses enregistrées <ChevronDown size={16} className="transition group-open:rotate-180" /></summary><div className="border-t border-border p-3">{drafts.length ? <><select value={draftId ?? ""} onChange={(event) => event.target.value && loadDraft(event.target.value)} className="min-h-11 w-full rounded-lg border border-border px-3 text-sm"><option value="">Choisir un brouillon…</option>{drafts.map((draft) => <option key={draft.id} value={draft.id}>{draft.title} · {formatSynthesisDate(draft.synthesis_date)}</option>)}</select><div className="mt-2 grid grid-cols-2 gap-2"><button type="button" disabled={!draftId || !!busy} onClick={duplicate} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-border text-xs font-semibold disabled:opacity-40"><Copy size={14} /> Dupliquer</button><button type="button" disabled={!draftId || !!busy} onClick={remove} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-red-200 text-xs font-semibold text-red-800 disabled:opacity-40"><Trash2 size={14} /> Supprimer</button></div></> : <p className="text-sm text-muted">Aucune synthèse enregistrée.</p>}</div></details>
-
-          <section className="rounded-xl border border-border bg-background p-4"><div className="mb-4 flex items-center gap-2"><Upload size={17} className="text-link" /><h2 className="font-title text-xl">Importer le contenu</h2></div><input ref={fileInput} type="file" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" className="sr-only" onChange={(event) => { const file = event.target.files?.[0]; if (file) void importWord(file); }} /><button type="button" disabled={busy === "import"} onClick={() => fileInput.current?.click()} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-accent px-4 text-sm font-semibold text-on-accent disabled:opacity-50">{busy === "import" ? <LoaderCircle className="animate-spin" size={16} /> : <Upload size={16} />} Importer un Word</button><div className="my-4 flex items-center gap-3 text-[10px] uppercase tracking-[0.16em] text-muted"><span className="h-px flex-1 bg-border" />ou coller<span className="h-px flex-1 bg-border" /></div><textarea rows={6} value={paste} onChange={(event) => setPaste(event.target.value)} placeholder="Collez ici la synthèse complète…" className={`${fieldClass} resize-y leading-relaxed`} /><button type="button" onClick={structurePaste} className="mt-2 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-lg border border-border text-xs font-semibold hover:border-foreground"><Sparkles size={14} /> Structurer le texte</button></section>
-
-          <section className="rounded-xl border border-border bg-background p-4"><div className="mb-4 flex items-center gap-2"><Sparkles size={17} className="text-link" /><h2 className="font-title text-xl">Couverture</h2></div><div className="space-y-3"><label className="block text-xs font-medium text-muted">Titre<input value={synthesis.title} onChange={(event) => change((current) => ({ ...current, title: event.target.value }))} className={fieldClass} /></label><label className="block text-xs font-medium text-muted">Sous-titre<input value={synthesis.subtitle} onChange={(event) => change((current) => ({ ...current, subtitle: event.target.value }))} className={fieldClass} /></label><label className="block text-xs font-medium text-muted">Date<input type="date" value={synthesis.date} onChange={(event) => change((current) => ({ ...current, date: event.target.value }))} className={fieldClass} /></label><label className="block text-xs font-medium text-muted">Intervenant(s)<input value={synthesis.speakers} onChange={(event) => change((current) => ({ ...current, speakers: event.target.value }))} placeholder="Nathalie Boudehent" className={fieldClass} /></label><label className="block text-xs font-medium text-muted">Introduction<textarea rows={3} value={synthesis.introduction} onChange={(event) => change((current) => ({ ...current, introduction: event.target.value }))} className={`${fieldClass} resize-y`} /></label></div></section>
-
-          <section className="rounded-xl border border-border bg-background p-4"><div className="mb-4 flex items-center justify-between gap-3"><div><p className="label text-[9px] text-link">Corps du document</p><h2 className="font-title mt-1 text-xl">Texte intégral</h2></div><span className="text-xs text-muted">{synthesis.blocks.length} éléments</span></div><div className="space-y-3">{synthesis.blocks.length ? synthesis.blocks.map((block, index) => <BlockEditor key={block.id} block={block} index={index} count={synthesis.blocks.length} onChange={(patch) => updateBlock(index, patch)} onMove={(direction) => moveBlock(index, direction)} onDelete={() => change((current) => ({ ...current, blocks: current.blocks.filter((_, position) => position !== index) }))} />) : <div className="rounded-xl border border-dashed border-border px-4 py-7 text-center text-sm text-muted">Importez votre Word ou collez le texte complet.</div>}</div><button type="button" onClick={() => change((current) => ({ ...current, blocks: [...current.blocks, newBlock()] }))} className="mt-3 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-border text-sm font-semibold hover:border-foreground"><Plus size={16} /> Ajouter un élément</button></section>
-        </div>
-      </aside>
-
-      <section className={`${mobileTab === "edit" ? "hidden" : "flex"} min-w-0 flex-col bg-[#e9e5dd] lg:flex lg:max-h-[calc(100vh-64px)]`}><div className="sticky top-0 z-10 flex min-h-14 items-center justify-between border-b border-black/10 bg-[#f6f3ec]/95 px-4 backdrop-blur sm:px-5"><div><p className="text-sm font-semibold">Aperçu PDF</p><p className="text-xs text-muted">Couverture sombre · pages de lecture blanches</p></div><div className="flex items-center gap-1 rounded-lg border border-border bg-background p-1"><button type="button" onClick={() => { setFitWidth(false); setZoom((value) => Math.max(0.4, Number((value - 0.1).toFixed(2)))); }} aria-label="Zoom arrière" className="rounded-md p-2 hover:bg-surface"><Minus size={15} /></button><button type="button" onClick={fitPreview} aria-label="Ajuster à la largeur" className="min-w-12 rounded-md px-2 py-1.5 text-xs font-semibold hover:bg-surface">{fitWidth ? "Largeur" : `${Math.round(zoom * 100)}%`}</button><button type="button" onClick={() => { setFitWidth(false); setZoom((value) => Math.min(1.15, Number((value + 0.1).toFixed(2)))); }} aria-label="Zoom avant" className="rounded-md p-2 hover:bg-surface"><Plus size={15} /></button></div></div><div className="min-h-0 flex-1"><SynthesisPreview synthesis={deferredSynthesis} zoom={zoom} fitWidth={fitWidth} /></div></section>
-    </div>
+    <main className="min-h-[calc(100vh-180px)] overflow-auto bg-[#e9e5dd] p-4 sm:p-7" onClick={() => setSelectedId(null)}>
+      {!source && !readonlyUrl ? <section className="mx-auto grid min-h-[560px] max-w-3xl place-items-center rounded-2xl border-2 border-dashed border-black/15 bg-white/60 p-8 text-center"><div><Upload className="mx-auto text-[#27a8bd]" size={34} /><h2 className="font-title mt-5 text-3xl">Déposez votre PDF Ministry School</h2><p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-muted">Le PDF doit contenir sa source structurée. Utilisez « Exemple Nathalie » pour essayer immédiatement.</p><button type="button" onClick={() => fileInput.current?.click()} className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-lg bg-accent px-5 text-sm font-semibold text-on-accent"><Upload size={16} /> Choisir un PDF</button></div></section> : null}
+      {!source && readonlyUrl ? <section className="mx-auto max-w-5xl"><div className="mb-4 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950"><strong>Lecture seule.</strong> Ce PDF ne contient pas les paragraphes structurés nécessaires pour modifier les tailles et les sauts sans dégrader sa mise en page.</div><iframe title="PDF importé en lecture seule" src={readonlyUrl} className="h-[78vh] w-full rounded-xl border-0 bg-white shadow-xl" /></section> : null}
+      {source ? <div className="mx-auto w-max max-w-full">
+        <div className="mb-4 rounded-xl border border-black/10 bg-white/80 px-4 py-3 text-sm text-[#34403d] shadow-sm"><strong>Cliquez dans un texte</strong>, placez le curseur où vous voulez couper la ligne, puis utilisez la petite barre noire.</div>
+        <div style={{ width: A4.width * zoom, height: A4.height * zoom }} className="mx-auto mb-6"><article className="relative origin-top-left overflow-hidden bg-[#25302f] text-[#fff0dc] shadow-2xl" style={{ width: A4.width, height: A4.height, transform: `scale(${zoom})` }}><div className="absolute inset-x-0 top-0 flex h-8">{STRIPES.map((color) => <span key={color} className="flex-1" style={{ backgroundColor: color }} />)}</div><Image src="/logo-compact.png" alt="Ministry School" width={466} height={122} className="absolute left-1/2 top-24 h-auto w-[260px] -translate-x-1/2" /><div className="absolute left-[84px] right-[84px] top-[300px]"><p className="text-[11px] font-bold uppercase tracking-[0.12em]">{source.document.category ?? "Synthèse de cours"} · 2026–2027</p><h2 className="mt-20 max-w-[570px] font-title text-[52px] leading-[1.06]">{source.document.title}</h2><div className="mt-24 h-1 w-36 rounded-full bg-[#27bdc2]" /></div><div className="absolute bottom-24 left-[84px] right-[84px]"><p className="text-sm font-bold uppercase">{source.document.speakers.join(" · ")}</p><p className="mt-4 text-xs">{source.document.schedule ?? source.document.date}{source.document.location ? ` · ${source.document.location}` : ""}</p></div></article></div>
+        {pages.map((page, pageIndex) => <div key={pageIndex} style={{ width: A4.width * zoom, height: A4.height * zoom }} className="mx-auto mb-6 [contain-intrinsic-size:1018px] [content-visibility:auto]"><article className="relative origin-top-left overflow-hidden bg-[#fffcf7] text-[#25302f] shadow-2xl" style={{ width: A4.width, height: A4.height, transform: `scale(${zoom})` }} onClick={(event) => event.stopPropagation()}><div className="absolute inset-x-0 top-0 flex h-3">{STRIPES.map((color) => <span key={color} className="flex-1" style={{ backgroundColor: color }} />)}</div><header className="absolute left-[76px] right-[76px] top-10 flex justify-between text-[8px] uppercase text-[#68706f]"><strong>MINISTRY SCHOOL</strong><span>{source.document.title}</span></header><main className="absolute bottom-[72px] left-[92px] right-[92px] top-[90px]">{page.continuationOf ? <p className="mb-7 text-[10px] font-bold uppercase tracking-[0.16em] text-[#27a8bd]">{sectionParts(page.continuationOf).label} · suite</p> : null}{page.blocks.map((block) => <EditableBlock key={block.id} block={block} selected={selectedId === block.id} onSelect={() => setSelectedId(block.id)} onOperation={commitOperation} onLineBreak={insertLineBreak} textRef={selectedText} />)}</main><footer className="absolute bottom-7 left-[76px] right-[76px] flex justify-between border-t border-[#d9d7d0] pt-3 text-[8px] uppercase text-[#68706f]"><span>{source.document.speakers.join(" · ")} · {source.document.date}</span><span>{String(pageIndex + 1).padStart(2, "0")} / {String(pages.length).padStart(2, "0")}</span></footer></article></div>)}
+      </div> : null}
+    </main>
   </div>;
 }
