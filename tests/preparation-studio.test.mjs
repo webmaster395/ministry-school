@@ -59,6 +59,8 @@ test("une synthèse importe un PDF compatible et limite l’édition aux opérat
   assert.match(studio, /font-size-set/);
   assert.match(studio, /text-style/);
   assert.match(studio, /move-block/);
+  assert.match(studio, /list-item/);
+  assert.match(studio, /Liste à puces/);
   assert.match(studio, /Taille de police en points/);
   assert.match(studio, /Gras/);
   assert.match(studio, /Souligné/);

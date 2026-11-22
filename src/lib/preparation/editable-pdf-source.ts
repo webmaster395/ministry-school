@@ -51,6 +51,7 @@ export type EditablePdfOperation =
   | { type: "font-size-set"; blockId: string; value: number }
   | { type: "color"; blockId: string; color: string }
   | { type: "text-style"; blockId: string; style: "bold" | "underline"; value: boolean }
+  | { type: "list-item"; blockId: string; value: boolean }
   | { type: "spacing"; blockId: string; edge: "before" | "after"; delta: number }
   | { type: "line-break"; blockId: string; index: number }
   | { type: "page-break"; blockId: string; value: boolean }
@@ -150,6 +151,11 @@ export function applyEditablePdfOperation(source: EditablePdfSourceV1, operation
       return { ...block, style: { ...block.style, color: operation.color.toLowerCase() } };
     }
     if (operation.type === "text-style") return { ...block, style: { ...block.style, [operation.style]: operation.value } };
+    if (operation.type === "list-item") {
+      return operation.value
+        ? { ...block, kind: "list-item" as const, listLevel: block.listLevel ?? 0 }
+        : { ...block, kind: "paragraph" as const, listLevel: undefined };
+    }
     if (operation.type === "spacing") {
       const key = operation.edge === "before" ? "spaceBefore" : "spaceAfter";
       return { ...block, style: { ...block.style, [key]: clamp(block.style[key] + operation.delta, 0, 72) } };
