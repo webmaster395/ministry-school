@@ -1,0 +1,253 @@
+.viewport {
+  overflow: auto;
+  background: #e9e5dd;
+}
+
+.pageSpace {
+  width: calc(720px * var(--preview-scale));
+  height: calc(1018px * var(--preview-scale));
+  margin: 0 auto 24px;
+}
+
+.pageSpace.fitWidth {
+  width: min(100%, calc(720px * var(--preview-scale)));
+}
+
+.page {
+  position: relative;
+  width: 720px;
+  height: 1018px;
+  overflow: hidden;
+  transform: scale(var(--preview-scale));
+  transform-origin: top left;
+  background: #fffdfa;
+  box-shadow: 0 18px 50px rgb(33 38 35 / 0.16);
+  color: #202624;
+}
+
+.cover {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  background: #101816;
+  color: #feead1;
+}
+
+.coverImage {
+  object-fit: cover;
+  filter: saturate(0.72) contrast(1.04);
+}
+
+.coverOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(11 20 18 / 0.42), rgb(11 20 18 / 0.9) 70%, #101816 100%);
+}
+
+.coverContent {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 64px 58px 66px;
+}
+
+.logo {
+  width: 204px;
+  height: auto;
+  object-fit: contain;
+}
+
+.coverMain {
+  max-width: 590px;
+}
+
+.eyebrow {
+  margin-bottom: 18px;
+  color: var(--synthesis-primary);
+  font-family: var(--font-label);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.coverTitle {
+  max-width: 610px;
+  font-family: var(--font-title);
+  font-size: 55px;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+}
+
+.coverSubtitle {
+  max-width: 540px;
+  margin-top: 20px;
+  color: rgb(254 234 209 / 0.72);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.coverMeta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  padding-top: 24px;
+  border-top: 1px solid rgb(254 234 209 / 0.2);
+}
+
+.metaLabel {
+  display: block;
+  margin-bottom: 7px;
+  color: rgb(254 234 209 / 0.48);
+  font-family: var(--font-label);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.metaValue {
+  font-family: var(--font-title);
+  font-size: 17px;
+  line-height: 1.25;
+}
+
+.paperHeader {
+  position: absolute;
+  top: 0;
+  right: 54px;
+  left: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 78px;
+  border-bottom: 1px solid #deddd7;
+}
+
+.paperBrand {
+  color: #26302d;
+  font-family: var(--font-label);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.19em;
+}
+
+.paperDocument {
+  max-width: 430px;
+  overflow: hidden;
+  color: #757b78;
+  font-size: 8px;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.paperBody {
+  position: absolute;
+  top: 105px;
+  right: 62px;
+  bottom: 66px;
+  left: 62px;
+}
+
+.introduction {
+  margin-bottom: 26px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #deddd7;
+  color: #4d5652;
+  font-family: var(--font-title);
+  font-size: 16px;
+  line-height: 1.48;
+}
+
+.heading {
+  margin: 0;
+  color: var(--block-color);
+  font-family: var(--font-title);
+  break-after: avoid;
+}
+
+.heading1 {
+  margin-top: 23px;
+  margin-bottom: 12px;
+  font-size: 25px;
+  line-height: 1.1;
+  letter-spacing: -0.018em;
+}
+
+.heading2 {
+  margin-top: 18px;
+  margin-bottom: 9px;
+  font-size: 19px;
+  line-height: 1.18;
+}
+
+.heading3 {
+  margin-top: 14px;
+  margin-bottom: 7px;
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+.paragraph,
+.bullet,
+.quote {
+  margin: 0 0 9px;
+  color: #303735;
+  font-size: 10.5px;
+  line-height: 1.48;
+  white-space: pre-wrap;
+}
+
+.bullet {
+  position: relative;
+  padding-left: 18px;
+}
+
+.bullet::before {
+  position: absolute;
+  top: 0.62em;
+  left: 2px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--block-color);
+  content: "";
+}
+
+.quote {
+  margin: 14px 0 15px;
+  padding-left: 16px;
+  border-left: 2px solid var(--block-color);
+  color: #515b57;
+  font-family: var(--font-title);
+  font-size: 12px;
+  font-style: italic;
+}
+
+.paperFooter {
+  position: absolute;
+  right: 54px;
+  bottom: 24px;
+  left: 54px;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px solid #deddd7;
+  color: #8a8f8c;
+  font-size: 7px;
+  letter-spacing: 0.06em;
+}
+
+.empty {
+  color: #8a8f8c;
+  font-size: 12px;
+  font-style: italic;
+}
+
+@media (max-width: 767px) {
+  .viewport { border-radius: 0; }
+  .pageSpace.fitWidth { --preview-scale: 0.44 !important; }
+}

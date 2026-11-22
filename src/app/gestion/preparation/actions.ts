@@ -10,6 +10,11 @@ import {
   type ProgramSlot,
   type TrainingProgram,
 } from "@/lib/preparation/program";
+import {
+  normalizeTrainingSynthesis,
+  type SynthesisDraft,
+  type TrainingSynthesis,
+} from "@/lib/preparation/synthesis";
 
 async function requireSuperAdmin() {
   const viewer = await getViewer();
@@ -143,6 +148,59 @@ export async function deleteProgramDraft(id: string) {
   await requireSuperAdmin();
   const supabase = await createClient();
   const { error } = await supabase.from("training_program_drafts").delete().eq("id", id);
+  if (error) throw new Error(`Suppression impossible : ${error.message}`);
+  revalidatePath("/gestion/preparation");
+  return { success: true };
+}
+
+const synthesisSelect = "id, title, synthesis_date, speakers, payload, created_by, created_at, updated_at";
+
+export async function saveSynthesisDraft(input: { id?: string | null; synthesis: TrainingSynthesis }): Promise<SynthesisDraft> {
+  const viewer = await requireSuperAdmin();
+  const synthesis = normalizeTrainingSynthesis(input.synthesis);
+  const supabase = await createClient();
+  const values = {
+    title: synthesis.title,
+    synthesis_date: synthesis.date,
+    speakers: synthesis.speakers,
+    payload: synthesis,
+  };
+  const query = input.id
+    ? supabase.from("training_synthesis_drafts").update(values).eq("id", input.id)
+    : supabase.from("training_synthesis_drafts").insert({ ...values, created_by: viewer.id });
+  const { data, error } = await query.select(synthesisSelect).single();
+  if (error) throw new Error(`Enregistrement impossible : ${error.message}`);
+  revalidatePath("/gestion/preparation");
+  return data as unknown as SynthesisDraft;
+}
+
+export async function duplicateSynthesisDraft(id: string): Promise<SynthesisDraft> {
+  const viewer = await requireSuperAdmin();
+  const supabase = await createClient();
+  const { data: source, error: readError } = await supabase
+    .from("training_synthesis_drafts")
+    .select("payload")
+    .eq("id", id)
+    .single();
+  if (readError || !source) throw new Error("Brouillon introuvable.");
+  const synthesis = normalizeTrainingSynthesis(source.payload);
+  synthesis.title = `${synthesis.title} — copie`;
+  const { data, error } = await supabase.from("training_synthesis_drafts").insert({
+    title: synthesis.title,
+    synthesis_date: synthesis.date,
+    speakers: synthesis.speakers,
+    payload: synthesis,
+    created_by: viewer.id,
+  }).select(synthesisSelect).single();
+  if (error) throw new Error(`Duplication impossible : ${error.message}`);
+  revalidatePath("/gestion/preparation");
+  return data as unknown as SynthesisDraft;
+}
+
+export async function deleteSynthesisDraft(id: string) {
+  await requireSuperAdmin();
+  const supabase = await createClient();
+  const { error } = await supabase.from("training_synthesis_drafts").delete().eq("id", id);
   if (error) throw new Error(`Suppression impossible : ${error.message}`);
   revalidatePath("/gestion/preparation");
   return { success: true };

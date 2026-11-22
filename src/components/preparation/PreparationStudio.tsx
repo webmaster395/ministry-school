@@ -37,6 +37,7 @@ import {
   type TrainingProgram,
 } from "@/lib/preparation/program";
 import ProgramPreview from "./ProgramPreview";
+import PreparationModeTabs, { type PreparationMode } from "./PreparationModeTabs";
 import SlotEditor from "./SlotEditor";
 
 type SectionKey = "morning" | "afternoon";
@@ -96,11 +97,13 @@ export default function PreparationStudio({
   initialDrafts,
   draftsUnavailable,
   creatorName,
+  onModeChange,
 }: {
   initialProgram: TrainingProgram;
   initialDrafts: ProgramDraft[];
   draftsUnavailable: string | null;
   creatorName: string;
+  onModeChange: (mode: PreparationMode) => void;
 }) {
   const [program, setProgram] = useState(() => normalizeTrainingProgram(initialProgram));
   const deferredProgram = useDeferredValue(program);
@@ -320,7 +323,7 @@ export default function PreparationStudio({
   return <div className="-mx-4 -mt-2 sm:-mx-7">
     <header className="border-b border-border bg-background px-4 pb-4 pt-1 sm:px-7">
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <div><p className="label text-[10px] text-link">Studio éditorial</p><h1 className="font-title mt-1 text-[30px] leading-tight sm:text-[36px]">Préparation</h1><p className="mt-1 text-sm text-muted">Créez, ajustez et exportez un programme institutionnel en quelques minutes.</p></div>
+        <div><p className="label text-[10px] text-link">Studio éditorial</p><h1 className="font-title mt-1 text-[30px] leading-tight sm:text-[36px]">Préparation</h1><p className="mt-1 text-sm text-muted">Créez, ajustez et exportez un programme institutionnel en quelques minutes.</p><PreparationModeTabs mode="program" onChange={onModeChange} /></div>
         <div className="flex flex-wrap items-center gap-2">
           <button type="button" onClick={newProgram} className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-border bg-background px-4 text-sm font-semibold hover:border-foreground"><FilePlus2 size={16} /> Nouveau</button>
           <button type="button" onClick={save} disabled={!!busy || !!draftsUnavailable} className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-border bg-background px-4 text-sm font-semibold hover:border-foreground disabled:opacity-50">{busy === "save" ? <LoaderCircle className="animate-spin" size={16} /> : <Save size={16} />} Enregistrer</button>
