@@ -5,6 +5,7 @@ import { renderToBuffer } from "@react-pdf/renderer";
 import EditablePdfProofDocument from "@/components/preparation/EditablePdfProofDocument";
 import { getViewer } from "@/lib/data/viewer";
 import { attachEditablePdfSource } from "@/lib/preparation/editable-pdf-container";
+import { extractEditablePdfSourceFromPdf } from "@/lib/preparation/editable-pdf-import";
 import { NATHALIE_PROOF_EDITED_SOURCE, NATHALIE_PROOF_SOURCE } from "@/lib/preparation/editable-pdf-proof";
 import { isEditablePdfSource, type EditablePdfSourceV1 } from "@/lib/preparation/editable-pdf-source";
 
@@ -43,6 +44,17 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   if (process.env.NODE_ENV === "production") return Response.json({ error: "Aperçu indisponible." }, { status: 404 });
+  if (request.headers.get("content-type")?.includes("multipart/form-data")) {
+    const form = await request.formData().catch(() => null);
+    const file = form?.get("file");
+    if (!(file instanceof File)) return Response.json({ error: "Ajoutez un fichier PDF." }, { status: 400 });
+    try {
+      const result = await extractEditablePdfSourceFromPdf(new Uint8Array(await file.arrayBuffer()), file.name);
+      return Response.json({ ...result, warning: "La mise en page a été reconstruite à partir du texte du PDF. Le texte n’a pas été réécrit." });
+    } catch (error) {
+      return Response.json({ error: error instanceof Error ? error.message : "Le PDF n’a pas pu être converti." }, { status: 422 });
+    }
+  }
   let raw: unknown;
   try { raw = await request.json(); }
   catch { return Response.json({ error: "PDF Ministry School invalide." }, { status: 400 }); }

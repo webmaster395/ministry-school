@@ -2,6 +2,9 @@
   "name": "app",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "prebuild": "node scripts/validate-server-env.mjs",
     "dev": "next dev",
@@ -28,7 +31,8 @@
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^5.4.624",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "unpdf": "^2.2.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

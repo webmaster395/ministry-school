@@ -9,6 +9,7 @@ import {
   applyEditablePdfOperation,
   isEditablePdfSource,
   parseEditablePdfSource,
+  paginateEditablePdfBlocks,
   serializeEditablePdfSource,
 } from "../src/lib/preparation/editable-pdf-source.ts";
 
@@ -46,4 +47,18 @@ test("la taille et l’espacement restent dans les bornes éditoriales", () => {
 test("une couleur invalide et un bloc inconnu sont refusés", () => {
   assert.throws(() => applyEditablePdfOperation(NATHALIE_PROOF_SOURCE, { type: "color", blockId: "list-item-002", color: "red" }), /Couleur invalide/);
   assert.throws(() => applyEditablePdfOperation(NATHALIE_PROOF_SOURCE, { type: "page-break", blockId: "absent", value: true }), /Bloc introuvable/);
+});
+
+test("la pagination rééquilibre une dernière page presque vide", () => {
+  const prototype = NATHALIE_PROOF_SOURCE.blocks.find((block) => block.kind === "paragraph");
+  const blocks = Array.from({ length: 8 }, (_, index) => ({
+    ...prototype,
+    id: `balance-${index}`,
+    text: `Paragraphe ${index + 1}`,
+    style: { ...prototype.style, spaceAfter: 72 },
+    breakBefore: false,
+  }));
+  const pages = paginateEditablePdfBlocks(blocks);
+  assert.equal(pages.length, 2);
+  assert.equal(pages.at(-1).blocks.length, 2);
 });

@@ -138,14 +138,14 @@ export default function SynthesisStudio({ onModeChange }: StudioProps) {
     });
   };
 
-  const installSource = (next: EditablePdfSourceV1, name: string) => {
+  const installSource = (next: EditablePdfSourceV1, name: string, success = "PDF compatible chargé. Cliquez directement sur un texte.") => {
     replaceReadonlyUrl(null);
     setSource(next);
     setPast([]);
     setFuture([]);
     setSelectedId(null);
     setFilename(name);
-    setMessage({ type: "success", text: "PDF compatible chargé. Cliquez directement sur un texte." });
+    setMessage({ type: "success", text: success });
   };
 
   const readCompatibleSource = async (blob: Blob) => {
@@ -178,11 +178,28 @@ export default function SynthesisStudio({ onModeChange }: StudioProps) {
     throw new Error("Ce PDF ne contient pas la source Ministry School nécessaire pour déplacer le texte sans l’abîmer.");
   };
 
+  const convertPdfToSource = async (file: File) => {
+    const endpoint = window.location.pathname === "/preview/editable-pdf-proof"
+      ? "/api/preview/editable-pdf-proof"
+      : "/api/admin/preparation/editable-pdf/import";
+    const form = new FormData();
+    form.set("file", file);
+    const response = await fetch(endpoint, { method: "POST", body: form });
+    const result = await response.json().catch(() => null) as { source?: unknown; warning?: string; error?: string } | null;
+    if (!response.ok || !result?.source) throw new Error(result?.error || (response.redirected ? "Votre session a expiré. Reconnectez-vous avant d’importer." : "Ce PDF n’a pas pu être converti."));
+    return { source: parseEditablePdfSource(JSON.stringify(result.source)), warning: result.warning };
+  };
+
   const importPdf = async (file: File) => {
     setBusy("import");
     setMessage(null);
     try {
-      installSource(await readCompatibleSource(file), file.name);
+      try {
+        installSource(await readCompatibleSource(file), file.name);
+      } catch {
+        const converted = await convertPdfToSource(file);
+        installSource(converted.source, file.name, `${converted.warning ?? "PDF converti sans réécriture."} Cliquez sur un texte pour l’ajuster.`);
+      }
     } catch (error) {
       setSource(null);
       setPast([]);

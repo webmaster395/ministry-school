@@ -178,5 +178,22 @@ export function paginateEditablePdfBlocks(blocks: EditablePdfBlockV1[], budget =
     used += height;
   }
 
+  const last = pages.at(-1);
+  const previous = pages.at(-2);
+  if (last && previous && !last.blocks[0]?.breakBefore) {
+    const pageHeight = (page: EditablePdfPageGroup) => page.blocks.reduce((total, block) => total + estimateEditablePdfBlockHeight(block), page.continuationOf ? 28 : 0);
+    let lastHeight = pageHeight(last);
+    let previousHeight = pageHeight(previous);
+    while (lastHeight < 175 && previous.blocks.length > 1) {
+      const candidate = previous.blocks.at(-1)!;
+      const candidateHeight = estimateEditablePdfBlockHeight(candidate);
+      if (candidate.kind === "title" || previousHeight - candidateHeight < 260) break;
+      previous.blocks.pop();
+      last.blocks.unshift(candidate);
+      previousHeight -= candidateHeight;
+      lastHeight += candidateHeight;
+    }
+  }
+
   return pages.length ? pages : [{ blocks: [] }];
 }

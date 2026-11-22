@@ -24,6 +24,7 @@ test("la page, les mutations et le PDF répètent le contrôle super admin", () 
   const synthesisImport = source("src/app/api/admin/preparation/synthesis/import/route.ts");
   const synthesisPdf = source("src/app/api/admin/preparation/synthesis/pdf/route.ts");
   const editablePdf = source("src/app/api/admin/preparation/editable-pdf/route.tsx");
+  const editablePdfImport = source("src/app/api/admin/preparation/editable-pdf/import/route.ts");
   assert.match(layout, /!viewer\?\.roles\.superAdmin/);
   assert.match(actions, /requireSuperAdmin/);
   assert.match(actions, /!viewer\?\.roles\.superAdmin/);
@@ -33,6 +34,8 @@ test("la page, les mutations et le PDF répètent le contrôle super admin", () 
   assert.match(synthesisPdf, /!viewer\?\.roles\.superAdmin/);
   assert.match(editablePdf, /!viewer\?\.roles\.superAdmin/);
   assert.match(editablePdf, /status: 403/);
+  assert.match(editablePdfImport, /!viewer\?\.roles\.superAdmin/);
+  assert.match(editablePdfImport, /MAX_PDF_BYTES/);
 });
 
 test("Préparation propose les modes Programme et Synthèse", () => {
@@ -50,6 +53,8 @@ test("une synthèse importe un PDF compatible et limite l’édition aux opérat
   assert.match(studio, /Importer un PDF/);
   assert.match(studio, /application\/pdf/);
   assert.match(studio, /EDITABLE_PDF_ATTACHMENT_NAME/);
+  assert.match(studio, /convertPdfToSource/);
+  assert.match(studio, /editable-pdf\/import/);
   assert.match(studio, /font-size/);
   assert.match(studio, /line-break/);
   assert.match(studio, /page-break/);
