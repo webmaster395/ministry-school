@@ -4,7 +4,7 @@ import { NextResponse, type NextRequest } from "next/server";
 export async function proxy(request: NextRequest) {
   // Route locale de contrôle visuel du livret MAPP. Elle répond elle-même 404 en
   // production et ne doit pas dépendre d'une session Supabase pour la QA locale.
-  if (request.nextUrl.pathname === "/api/preview/mapp-pdf" && process.env.NODE_ENV !== "production") {
+  if ((request.nextUrl.pathname === "/api/preview/mapp-pdf" || request.nextUrl.pathname === "/api/preview/editable-pdf-proof") && process.env.NODE_ENV !== "production") {
     return NextResponse.next({ request });
   }
   let response = NextResponse.next({ request });
