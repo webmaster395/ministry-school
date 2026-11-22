@@ -65,7 +65,14 @@ test("une synthèse importe un PDF compatible et limite l’édition aux opérat
   assert.match(studio, /insert-block/);
   assert.match(studio, /delete-block/);
   assert.match(studio, /table-cell/);
+  assert.match(studio, /table-cell-list/);
+  assert.match(studio, /Puces dans la cellule/);
   assert.match(studio, /table-row/);
+  assert.match(studio, /table-column/);
+  assert.match(studio, /table-size/);
+  assert.match(studio, /Largeur du tableau/);
+  assert.match(studio, /Ajouter une colonne/);
+  assert.match(studio, /Supprimer la colonne/);
   assert.match(studio, /Ajouter un tableau après/);
   assert.match(studio, /Supprimer ce bloc/);
   assert.match(studio, /Taille de police en points/);

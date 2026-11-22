@@ -68,7 +68,7 @@ test("un paragraphe peut devenir une puce puis revenir en texte normal", () => {
   assert.equal(restored.blocks.find((block) => block.id === paragraph.id).listLevel, undefined);
 });
 
-test("le texte, les blocs et les lignes d’un tableau restent entièrement éditables", () => {
+test("le texte, les blocs, la taille, les lignes et les colonnes d’un tableau restent entièrement éditables", () => {
   const anchor = NATHALIE_PROOF_SOURCE.blocks.find((block) => block.kind === "paragraph");
   const changed = applyEditablePdfOperation(NATHALIE_PROOF_SOURCE, { type: "text-set", blockId: anchor.id, value: "Texte corrigé" });
   const withParagraph = applyEditablePdfOperation(changed, { type: "insert-block", blockId: anchor.id, newBlockId: "manual-paragraph", kind: "paragraph" });
@@ -76,12 +76,26 @@ test("le texte, les blocs et les lignes d’un tableau restent entièrement édi
   const withHeader = applyEditablePdfOperation(withTable, { type: "table-cell", blockId: "manual-table", area: "header", column: 0, value: "Profil" });
   const withCell = applyEditablePdfOperation(withHeader, { type: "table-cell", blockId: "manual-table", area: "body", row: 0, column: 0, value: "Conquérant" });
   const withRow = applyEditablePdfOperation(withCell, { type: "table-row", blockId: "manual-table", action: "add" });
-  const withoutRow = applyEditablePdfOperation(withRow, { type: "table-row", blockId: "manual-table", action: "remove", row: 1 });
+  const withColumn = applyEditablePdfOperation(withRow, { type: "table-column", blockId: "manual-table", action: "add" });
+  const withThirdHeader = applyEditablePdfOperation(withColumn, { type: "table-cell", blockId: "manual-table", area: "header", column: 2, value: "Expression" });
+  const withListText = applyEditablePdfOperation(withThirdHeader, { type: "table-cell", blockId: "manual-table", area: "body", row: 0, column: 2, value: "Écouter\nEncourager" });
+  const withCellList = applyEditablePdfOperation(withListText, { type: "table-cell-list", blockId: "manual-table", row: 0, column: 2, value: true });
+  const resized = applyEditablePdfOperation(withCellList, { type: "table-size", blockId: "manual-table", widthPercent: 75, paddingDelta: 4 });
+  const withoutColumn = applyEditablePdfOperation(resized, { type: "table-column", blockId: "manual-table", action: "remove", column: 1 });
+  const withoutRow = applyEditablePdfOperation(withoutColumn, { type: "table-row", blockId: "manual-table", action: "remove", row: 1 });
   const withoutParagraph = applyEditablePdfOperation(withoutRow, { type: "delete-block", blockId: "manual-paragraph" });
   assert.equal(changed.blocks.find((block) => block.id === anchor.id).text, "Texte corrigé");
   assert.equal(withTable.blocks.find((block) => block.id === "manual-table").table.rows.length, 2);
   assert.equal(withCell.blocks.find((block) => block.id === "manual-table").table.rows[0][0], "Conquérant");
   assert.equal(withRow.blocks.find((block) => block.id === "manual-table").table.rows.length, 3);
+  assert.equal(withColumn.blocks.find((block) => block.id === "manual-table").table.columns.length, 3);
+  assert.equal(withColumn.blocks.find((block) => block.id === "manual-table").table.rows.every((row) => row.length === 3), true);
+  assert.equal(withThirdHeader.blocks.find((block) => block.id === "manual-table").table.columns[2], "Expression");
+  assert.equal(withCellList.blocks.find((block) => block.id === "manual-table").table.rows[0][2], "• Écouter\n• Encourager");
+  assert.equal(resized.blocks.find((block) => block.id === "manual-table").table.widthPercent, 75);
+  assert.equal(resized.blocks.find((block) => block.id === "manual-table").table.cellPadding, 12);
+  assert.deepEqual(withoutColumn.blocks.find((block) => block.id === "manual-table").table.columns, ["Profil", "Expression"]);
+  assert.equal(withoutColumn.blocks.find((block) => block.id === "manual-table").table.rows.every((row) => row.length === 2), true);
   assert.equal(withoutRow.blocks.find((block) => block.id === "manual-table").table.rows.length, 2);
   assert.equal(withoutParagraph.blocks.some((block) => block.id === "manual-paragraph"), false);
   assert.equal(isEditablePdfSource(withoutParagraph), true);

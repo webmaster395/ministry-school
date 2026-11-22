@@ -127,9 +127,10 @@ function EditableBlock({ block }: { block: EditablePdfBlockV1 }) {
 
   if (block.kind === "table" && block.table) {
     const width = `${100 / block.table.columns.length}%`;
-    return <View wrap={false} style={[styles.table, { marginTop: block.style.spaceBefore, marginBottom: block.style.spaceAfter }] }>
-      <View style={styles.tableRow}>{block.table.columns.map((cell, column) => <View key={`header-${column}`} style={[styles.tableHeaderCell, { width, borderRightWidth: column === block.table!.columns.length - 1 ? 0 : 0.65 }]}><Text style={{ ...dynamicStyle, marginTop: 0, marginBottom: 0, fontFamily: "Helvetica-Bold" }}>{cell}</Text></View>)}</View>
-      {block.table.rows.map((row, rowIndex) => <View key={`row-${rowIndex}`} style={styles.tableRow}>{row.map((cell, column) => <View key={`cell-${rowIndex}-${column}`} style={[styles.tableCell, { width, borderRightWidth: column === row.length - 1 ? 0 : 0.65, borderBottomWidth: rowIndex === block.table!.rows.length - 1 ? 0 : 0.65 }]}><Text style={{ ...dynamicStyle, marginTop: 0, marginBottom: 0 }}>{cell}</Text></View>)}</View>)}
+    const padding = block.table.cellPadding ?? 8;
+    return <View wrap={false} style={[styles.table, { width: `${block.table.widthPercent ?? 100}%`, alignSelf: "center", marginTop: block.style.spaceBefore, marginBottom: block.style.spaceAfter }] }>
+      <View style={styles.tableRow}>{block.table.columns.map((cell, column) => <View key={`header-${column}`} style={[styles.tableHeaderCell, { width, padding, borderRightWidth: column === block.table!.columns.length - 1 ? 0 : 0.65 }]}><Text style={{ ...dynamicStyle, marginTop: 0, marginBottom: 0, fontFamily: "Helvetica-Bold" }}>{cell}</Text></View>)}</View>
+      {block.table.rows.map((row, rowIndex) => <View key={`row-${rowIndex}`} style={styles.tableRow}>{row.map((cell, column) => <View key={`cell-${rowIndex}-${column}`} style={[styles.tableCell, { width, padding, borderRightWidth: column === row.length - 1 ? 0 : 0.65, borderBottomWidth: rowIndex === block.table!.rows.length - 1 ? 0 : 0.65 }]}><Text style={{ ...dynamicStyle, marginTop: 0, marginBottom: 0 }}>{cell}</Text></View>)}</View>)}
     </View>;
   }
 
@@ -145,7 +146,7 @@ function continuationLabel(title?: string) {
 export default function EditablePdfProofDocument({ source, logoSrc }: { source: EditablePdfSourceV1; logoSrc?: string }) {
   return <Document title={source.document.title} author={source.document.speakers.join(", ")} subject="Support de cours Ministry School avec source structurée intégrée" creator="Ministry School — Source V1">
     <Cover source={source} logoSrc={logoSrc} />
-    {paginateEditablePdfBlocks(source.blocks).map((group, pageIndex) => <Page key={`proof-page-${pageIndex}`} size={A4} wrap={false} style={styles.page}>
+    {paginateEditablePdfBlocks(source.blocks).map((group, pageIndex) => <Page key={`proof-page-${pageIndex}`} size={A4} style={styles.page}>
       <FixedFurniture source={source} />
       {continuationLabel(group.continuationOf)}
       {group.blocks.map((block) => <EditableBlock key={block.id} block={block} />)}
