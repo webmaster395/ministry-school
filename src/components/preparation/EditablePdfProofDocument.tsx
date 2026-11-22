@@ -51,6 +51,10 @@ const styles = StyleSheet.create({
   listRow: { flexDirection: "row" },
   listBullet: { width: 18, color: COLORS.turquoise, fontFamily: "Helvetica-Bold" },
   listText: { flexGrow: 1, flexBasis: 0 },
+  table: { borderWidth: 0.65, borderColor: COLORS.border },
+  tableRow: { flexDirection: "row" },
+  tableHeaderCell: { borderRightWidth: 0.65, borderBottomWidth: 0.65, borderColor: COLORS.border, backgroundColor: "#eef7f5", padding: 8 },
+  tableCell: { borderRightWidth: 0.65, borderBottomWidth: 0.65, borderColor: COLORS.border, padding: 8 },
   continuationLabel: { marginBottom: 24, color: COLORS.turquoise, fontFamily: "Helvetica-Bold", fontSize: 7.6, letterSpacing: 0.9, textTransform: "uppercase" },
 });
 
@@ -118,6 +122,14 @@ function EditableBlock({ block }: { block: EditablePdfBlockV1 }) {
     return <View wrap={false} style={[styles.listRow, { marginLeft: level * 18, marginTop: block.style.spaceBefore, marginBottom: block.style.spaceAfter }]}>
       <Text style={[styles.listBullet, { color: level ? COLORS.orange : COLORS.turquoise }]}>{level ? "–" : "•"}</Text>
       <Text style={[styles.listText, { ...dynamicStyle, marginTop: 0, marginBottom: 0 }]}>{block.text}</Text>
+    </View>;
+  }
+
+  if (block.kind === "table" && block.table) {
+    const width = `${100 / block.table.columns.length}%`;
+    return <View wrap={false} style={[styles.table, { marginTop: block.style.spaceBefore, marginBottom: block.style.spaceAfter }] }>
+      <View style={styles.tableRow}>{block.table.columns.map((cell, column) => <View key={`header-${column}`} style={[styles.tableHeaderCell, { width, borderRightWidth: column === block.table!.columns.length - 1 ? 0 : 0.65 }]}><Text style={{ ...dynamicStyle, marginTop: 0, marginBottom: 0, fontFamily: "Helvetica-Bold" }}>{cell}</Text></View>)}</View>
+      {block.table.rows.map((row, rowIndex) => <View key={`row-${rowIndex}`} style={styles.tableRow}>{row.map((cell, column) => <View key={`cell-${rowIndex}-${column}`} style={[styles.tableCell, { width, borderRightWidth: column === row.length - 1 ? 0 : 0.65, borderBottomWidth: rowIndex === block.table!.rows.length - 1 ? 0 : 0.65 }]}><Text style={{ ...dynamicStyle, marginTop: 0, marginBottom: 0 }}>{cell}</Text></View>)}</View>)}
     </View>;
   }
 

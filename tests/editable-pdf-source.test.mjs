@@ -68,6 +68,25 @@ test("un paragraphe peut devenir une puce puis revenir en texte normal", () => {
   assert.equal(restored.blocks.find((block) => block.id === paragraph.id).listLevel, undefined);
 });
 
+test("le texte, les blocs et les lignes d’un tableau restent entièrement éditables", () => {
+  const anchor = NATHALIE_PROOF_SOURCE.blocks.find((block) => block.kind === "paragraph");
+  const changed = applyEditablePdfOperation(NATHALIE_PROOF_SOURCE, { type: "text-set", blockId: anchor.id, value: "Texte corrigé" });
+  const withParagraph = applyEditablePdfOperation(changed, { type: "insert-block", blockId: anchor.id, newBlockId: "manual-paragraph", kind: "paragraph" });
+  const withTable = applyEditablePdfOperation(withParagraph, { type: "insert-block", blockId: "manual-paragraph", newBlockId: "manual-table", kind: "table" });
+  const withHeader = applyEditablePdfOperation(withTable, { type: "table-cell", blockId: "manual-table", area: "header", column: 0, value: "Profil" });
+  const withCell = applyEditablePdfOperation(withHeader, { type: "table-cell", blockId: "manual-table", area: "body", row: 0, column: 0, value: "Conquérant" });
+  const withRow = applyEditablePdfOperation(withCell, { type: "table-row", blockId: "manual-table", action: "add" });
+  const withoutRow = applyEditablePdfOperation(withRow, { type: "table-row", blockId: "manual-table", action: "remove", row: 1 });
+  const withoutParagraph = applyEditablePdfOperation(withoutRow, { type: "delete-block", blockId: "manual-paragraph" });
+  assert.equal(changed.blocks.find((block) => block.id === anchor.id).text, "Texte corrigé");
+  assert.equal(withTable.blocks.find((block) => block.id === "manual-table").table.rows.length, 2);
+  assert.equal(withCell.blocks.find((block) => block.id === "manual-table").table.rows[0][0], "Conquérant");
+  assert.equal(withRow.blocks.find((block) => block.id === "manual-table").table.rows.length, 3);
+  assert.equal(withoutRow.blocks.find((block) => block.id === "manual-table").table.rows.length, 2);
+  assert.equal(withoutParagraph.blocks.some((block) => block.id === "manual-paragraph"), false);
+  assert.equal(isEditablePdfSource(withoutParagraph), true);
+});
+
 test("une couleur invalide et un bloc inconnu sont refusés", () => {
   assert.throws(() => applyEditablePdfOperation(NATHALIE_PROOF_SOURCE, { type: "color", blockId: "list-item-002", color: "red" }), /Couleur invalide/);
   assert.throws(() => applyEditablePdfOperation(NATHALIE_PROOF_SOURCE, { type: "page-break", blockId: "absent", value: true }), /Bloc introuvable/);
