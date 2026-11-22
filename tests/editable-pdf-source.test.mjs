@@ -58,6 +58,16 @@ test("le gras, le soulignement et l’ordre des blocs restent éditables", () =>
   assert.equal(moved.blocks[2].id, blockId);
 });
 
+test("un paragraphe peut devenir une puce puis revenir en texte normal", () => {
+  const paragraph = NATHALIE_PROOF_SOURCE.blocks.find((block) => block.kind === "paragraph");
+  const listed = applyEditablePdfOperation(NATHALIE_PROOF_SOURCE, { type: "list-item", blockId: paragraph.id, value: true });
+  const restored = applyEditablePdfOperation(listed, { type: "list-item", blockId: paragraph.id, value: false });
+  assert.equal(listed.blocks.find((block) => block.id === paragraph.id).kind, "list-item");
+  assert.equal(listed.blocks.find((block) => block.id === paragraph.id).listLevel, 0);
+  assert.equal(restored.blocks.find((block) => block.id === paragraph.id).kind, "paragraph");
+  assert.equal(restored.blocks.find((block) => block.id === paragraph.id).listLevel, undefined);
+});
+
 test("une couleur invalide et un bloc inconnu sont refusés", () => {
   assert.throws(() => applyEditablePdfOperation(NATHALIE_PROOF_SOURCE, { type: "color", blockId: "list-item-002", color: "red" }), /Couleur invalide/);
   assert.throws(() => applyEditablePdfOperation(NATHALIE_PROOF_SOURCE, { type: "page-break", blockId: "absent", value: true }), /Bloc introuvable/);
